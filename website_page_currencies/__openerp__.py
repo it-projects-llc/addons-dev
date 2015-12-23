@@ -9,7 +9,6 @@
     'version': '1.0',
     'depends': ['website', 'base'],
     'data': [
-        'views/website_page_currencies_views.xml',
         'views/website_page_currencies_templates.xml',
     ],
 }
