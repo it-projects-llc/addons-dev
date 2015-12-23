@@ -10,6 +10,5 @@
     'depends': ['lunch'],
     'data': [
         'views/lunch_random_by_categories_views.xml',
-        'views/lunch_random_by_categories_templates.xml',
     ],
 }
