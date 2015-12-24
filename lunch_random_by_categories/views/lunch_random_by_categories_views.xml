@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+        <record id="view_lunch_order_line_lucky" model="ir.ui.view">
+              <field name="name">view.lunch.order.line.lucky</field>
+              <field name="model">lunch.order.line.lucky</field>
+              <field name="inherit_id" ref="lunch.view_lunch_order_line_lucky"/>
+              <field name="arch" type="xml">
+              <xpath expr="//group[1]" position="replace">
+                    <group string="Select your category">
+                        <field name="is_max_budget"/>
+                        <field name="max_budget" attrs="{'required': [('is_max_budget', '=', True)], 'invisible': [('is_max_budget', '=', False)]}"/>
+                        <field name="category_ids" widget="many2many_checkboxes"/>
+                    </group>
+                </xpath>
+              </field>
+        </record>
+</data>
+</openerp>
