@@ -4,7 +4,7 @@ from openerp.addons.base import res
 import werkzeug
 
 class website_page_currencies(http.Controller): 
-    @http.route('/currencies/<string(model("res.currency")):currencyline>/', auth='public', website=True)
+    @http.route('/currencies/<string:currencyline>/', auth='public', website=True)
     def index(self, currencyline, **kw):
         currencies = http.request.env['res.currency']
         currency_object = currencies.search([('name', '=', currencyline)])
