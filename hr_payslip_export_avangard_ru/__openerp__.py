@@ -4,10 +4,11 @@
     'version': '1.0.0',
     'category': 'Human Resources',
     'author': 'IT-Projects LLC',
-    'license': 'GPL-3',
-    'website': 'https://yelizariev.github.io',
+    'license': 'LGPL-3',
+    'website': 'https://twitter.com/yelizariev',
     'description': """Module allows to export HR Payslips as excel files showing net amount.""",
     'depends': ['base','hr_payroll','hr_payslip_net'],
+    'extern_dependencies': ['libreoffice'],
     'data': ['wizard/export_wizard.xml'],
     'installable': True,
 }

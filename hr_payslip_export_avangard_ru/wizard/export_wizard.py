@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from openerp import api, fields, models
 import xlwt
-from datetime import datetime
+import tempfile
 import os
 
 class ExportPayslips(models.TransientModel):
@@ -33,23 +33,22 @@ class ExportPayslips(models.TransientModel):
         ws.write(str_num, 3, 'Net amount', style0)
         str_num += 1
         for record in self.env['hr.payslip'].browse(active_ids):
-            net_lines = [r for r in record.details_by_salary_rule_category if r.code == 'NET']
-            if net_lines.__len__() == 0:
+            if not record.net:
                 continue
-            net_line = net_lines[0]
-            empl_name = net_line.employee_id.name
-            empl_birthday = net_line.employee_id.birthday
-            empl_acc_number = net_line.employee_id.bank_account_id.acc_number
-            net_sum = net_line.total
+            empl_name = record.employee_id.name
+            empl_birthday = record.employee_id.birthday
+            empl_acc_number = record.employee_id.bank_account_id.acc_number
+            net_sum = record.net
 
             ws.write(str_num, 0, empl_name, style1)
             ws.write(str_num, 1, empl_birthday, style1)
             ws.write(str_num, 2, empl_acc_number, style1)
             ws.write(str_num, 3, net_sum,style0)
             str_num += 1
-        file_name = 'NetReport_'+str(datetime.now().strftime("%d-%m-%Y_%H-%M-%S"))+'.xls'
-        wb.save(file_name)
-        os.system('libreoffice ' + file_name)
+
+        file = tempfile.NamedTemporaryFile()
+        wb.save(file.name)
+        os.system('libreoffice ' + file.name)
         return {'type': 'ir.actions.act_window_close'}
 
     @api.model
