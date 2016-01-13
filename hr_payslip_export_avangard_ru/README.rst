@@ -1,5 +1,5 @@
 HR Payslip Excel Export for Avangard Bank
-====================
+=========================================
 
 Module allows to export HR Payslips as excel files in Avangard bank format showing net amount.
 
