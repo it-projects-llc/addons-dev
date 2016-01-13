@@ -1,0 +1,32 @@
+<openerp>
+    <data>
+        <record id="account_invoice_confirm_view" model="ir.ui.view">
+            <field name="name">Selected payslips to report</field>
+            <field name="model">hr.payslip.export.excel</field>
+            <field name="arch" type="xml">
+                <form string="Export in excel this">
+                    <p class="oe_grey">Selected records</p>
+                    <field name="line_ids">
+                        <tree>
+                            <field name="name"/>
+                            <field name="state"/>
+                        </tree>
+                    </field>
+                    <footer>
+                        <button string="Show XLS Report File" name="method_in_model" type="object" default_focus="1" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <act_window id="export_excel"
+                    multi="True"
+                    key2="client_action_multi"
+                    name="Export Payslips in Excel"
+                    res_model="hr.payslip.export.excel"
+                    src_model="hr.payslip"
+                    view_mode="form"
+                    target="new"
+                    view_type="form"/>
+    </data>
+</openerp>
