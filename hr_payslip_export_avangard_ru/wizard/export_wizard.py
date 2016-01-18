@@ -3,6 +3,7 @@ from openerp import api, fields, models
 import xlwt
 import base64
 import cStringIO
+from datetime import datetime
 
 class ExportPayslips(models.TransientModel):
     _name = "hr.payslip.export.excel"
@@ -67,7 +68,7 @@ class ExportPayslips(models.TransientModel):
         wb.save(f)
         out = base64.encodestring(f.getvalue())
         self.mdata = out
-        self.fname = 'payslip_export.xls'
+        self.fname = 'payslip_export_'+str(datetime.now().strftime("%d-%m-%Y_%H-%M-%S"))+'.xls'
         self.hide = True
         return
 
