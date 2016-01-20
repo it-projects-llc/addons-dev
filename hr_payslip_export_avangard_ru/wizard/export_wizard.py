@@ -10,7 +10,7 @@ class ExportPayslips(models.TransientModel):
     _description = "Export payslips in excel"
     line_ids = fields.Many2many('hr.payslip')
     mdata = fields.Binary()
-    hide = fields.Boolean(default=False)
+    visible = fields.Boolean(default=False)
     fname = fields.Char()
 
     @api.multi
@@ -69,7 +69,7 @@ class ExportPayslips(models.TransientModel):
         out = base64.encodestring(f.getvalue())
         self.mdata = out
         self.fname = 'payslip_export_'+str(datetime.now().strftime("%d-%m-%Y_%H-%M-%S"))+'.xls'
-        self.hide = True
+        self.visible = True
         return
 
     @api.model

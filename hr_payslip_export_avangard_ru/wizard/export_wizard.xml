@@ -5,8 +5,8 @@
             <field name="model">hr.payslip.export.excel</field>
             <field name="arch" type="xml">
                 <form string="Export in excel this">
-                    <field name="hide" readonly="1" invisible="1"/>
-                    <p attrs ="{'invisible': [('hide','=',False)]}">Here is the exported client bank file:
+                    <field name="visible" readonly="1" invisible="1"/>
+                    <p attrs ="{'invisible': [('visible','=',False)]}">Here is the exported client bank file:
                         <field name="mdata" readonly="1" filename="fname"/>
                     </p>
                     <field name="line_ids">
@@ -15,9 +15,9 @@
                             <field name="state"/>
                         </tree>
                     </field>
-                    <p attrs ="{'invisible': [('hide','=',True)]}">Press Make file button:</p>
+                    <p attrs ="{'invisible': [('visible','=',True)]}">Press Make file button:</p>
                     <footer>
-                        <button name="open_website_url" string="Make file" type="object" class="btn-primary" attrs ="{'invisible': [('hide','=',True)]}" />
+                        <button name="open_website_url" string="Make file" type="object" class="btn-primary" attrs ="{'invisible': [('visible','=',True)]}" />
                         <button string="Cancel" class="btn-default" special="cancel"/>
                     </footer>
                 </form>
