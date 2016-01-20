@@ -1,13 +1,31 @@
 # -*- coding: utf-8 -*-
 from openerp import api, fields, models
 import xlwt
-import tempfile
-import os
+import base64
+import cStringIO
+from datetime import datetime
 
 class ExportPayslips(models.TransientModel):
     _name = "hr.payslip.export.excel"
     _description = "Export payslips in excel"
     line_ids = fields.Many2many('hr.payslip')
+    mdata = fields.Binary()
+    visible = fields.Boolean(default=False)
+    fname = fields.Char()
+
+    @api.multi
+    def open_website_url(self):
+        self.ensure_one()
+        self.method_in_model()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'hr.payslip.export.excel',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'res_id': self.id,
+            'views': [(False, 'form')],
+            'target': 'new',
+            }
 
     @api.multi
     def method_in_model(self):
@@ -46,10 +64,13 @@ class ExportPayslips(models.TransientModel):
             ws.write(str_num, 3, net_sum,style0)
             str_num += 1
 
-        file = tempfile.NamedTemporaryFile()
-        wb.save(file.name)
-        os.system('libreoffice ' + file.name)
-        return {'type': 'ir.actions.act_window_close'}
+        f = cStringIO.StringIO()
+        wb.save(f)
+        out = base64.encodestring(f.getvalue())
+        self.mdata = out
+        self.fname = 'payslip_export_'+str(datetime.now().strftime("%d-%m-%Y_%H-%M-%S"))+'.xls'
+        self.visible = True
+        return
 
     @api.model
     def default_get(self, fields):

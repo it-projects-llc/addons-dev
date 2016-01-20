@@ -5,15 +5,19 @@
             <field name="model">hr.payslip.export.excel</field>
             <field name="arch" type="xml">
                 <form string="Export in excel this">
-                    <p class="oe_grey">Selected records</p>
+                    <field name="visible" readonly="1" invisible="1"/>
+                    <p attrs ="{'invisible': [('visible','=',False)]}">Here is the exported client bank file:
+                        <field name="mdata" readonly="1" filename="fname"/>
+                    </p>
                     <field name="line_ids">
-                        <tree>
+                        <tree editable="top" create="false" delete="false">
                             <field name="name"/>
                             <field name="state"/>
                         </tree>
                     </field>
+                    <p attrs ="{'invisible': [('visible','=',True)]}">Press Make file button:</p>
                     <footer>
-                        <button string="Show XLS Report File" name="method_in_model" type="object" default_focus="1" class="btn-primary"/>
+                        <button name="open_website_url" string="Make file" type="object" class="btn-primary" attrs ="{'invisible': [('visible','=',True)]}" />
                         <button string="Cancel" class="btn-default" special="cancel"/>
                     </footer>
                 </form>
