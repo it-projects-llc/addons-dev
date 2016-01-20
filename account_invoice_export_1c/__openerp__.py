@@ -12,7 +12,7 @@
                    т.о. /мы/ всегда выступаем платильщиком.
 
                    Зависит от локализации l10n_ru OdooRussia исользуются поля ИНН КПП и много чего другого""",
-    'depends': ['base','account','l10n_ru'],
+    'depends': ['base', 'account', 'l10n_ru'],
     'data': ['wizard/export_wizard.xml'],
     'installable': True,
 }
