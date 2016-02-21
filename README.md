@@ -10,7 +10,7 @@ Addons Forge
 * [Get branch from upstream](#get-branch-from-upstream) - once per addon
 * [PR to addons-dev](#pr-to-addons-dev) - as much as needed.
 * [Final PR to target repo](#final-pr-to-target-repo) - once per addon
-* Addons is published at [apps store](https://www.odoo.com/apps/modules/browse?order=Newest) automatically
+* After accepting Final PR, addon is published at [apps store](https://www.odoo.com/apps/modules/browse?order=Newest) automatically with a delay of up to 24 hours
 * Further updates - PRs are sent directly to target repo.
 
 # Fork
