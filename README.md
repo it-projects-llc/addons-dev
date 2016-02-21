@@ -24,8 +24,8 @@ Addons Forge
 # Create new branch
 *(For managers only, because push access is needed)*
 
-    # specify target repo and branch:
-    export REPO=addons-yelizariev BRANCH=9.0 FEATURE=some-feature
+    # specify target, repo and branch:
+    export REPO=addons-yelizariev BRANCH=9.0 FEATURE=some_feature
 
     # fetch remote
     git fetch ${REPO}
@@ -36,22 +36,20 @@ Addons Forge
     # push to upstream
     git push upstream ${REPO}-${BRANCH}-${FEATURE}
     
-    #
+    # done
 
 # Work on existed branch
 
 
-    # get updates form upstream
-    git fetch upstream
-    
     # get branch from upstream
-    git checkout -b addons-yelizariev-9.0-some-feature upstream/addons-yelizariev-9.0-some-feature
+    git fetch upstream addons-yelizariev-9.0-some_feature
+    git checkout -b addons-yelizariev-9.0-some_feature upstream/addons-yelizariev-9.0-some_feature
    
     # work and make commits
     git commit ...
    
     # push branch to origin
-    git push origin addons-yelizariev-9.0-some-feature
+    git push origin addons-yelizariev-9.0-some_feature
    
     # create pull request via github interface to yelizariev/addons-dev repo
 
@@ -68,7 +66,7 @@ Addons Forge
     git fetch addons-dev
 
     # create branch
-    git checkout -b 9.0-some-feature addons-dev/addons-yelizariev-9.0-some-feature
+    git checkout -b 9.0-some-feature addons-dev/addons-yelizariev-9.0-some_feature
 
     # push to your fork of target repo
     git push origin 9.0-some-feature
