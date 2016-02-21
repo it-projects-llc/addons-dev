@@ -2,22 +2,27 @@
 
 Addons Forge
 
-## Typical addon creating workflow:
+## Typical addon development workflow:
 
-* [Init](#init) - once per computer
-* [Create new branch](#create-new-branch) - once per module (or set of modules). For managers only, because push access is needed.
-* [Get branch from upstream](#get-branch-from-upstream) - once per module
+* [Fork](#fork) - once per person
+* [Clone](#clone) - once per computer
+* [Create new branch](#create-new-branch) - once per addon (or set of addons). For managers only, because push access is needed.
+* [Get branch from upstream](#get-branch-from-upstream) - once per addon
 * [PR to addons-dev](#pr-to-addons-dev) - as much as needed.
-* [Final PR to target repo](#final-pr-to-target-repo) - once per module
+* [Final PR to target repo](#final-pr-to-target-repo) - once per addon
+* Addons is published at [apps store](https://www.odoo.com/apps/modules/browse?order=Newest) automatically
+* Further updates - PRs are sent directly to target repo.
 
-# Init
+# Fork
+Fork this repo
 
-1. Fork this repo
-2. Clone to your machine:
+# Clone
+
+* Clone your fork to your machine:
 
         git clone git@github.com:USERNAME/addons-dev.git
 
-3. Add remotes
+* Add remotes
 
         cd addons-dev
 
