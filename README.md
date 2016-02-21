@@ -41,6 +41,9 @@ Addons Forge
 # Work on existed branch
 
 
+    # get updates form upstream
+    git fetch upstream
+    
     # get branch from upstream
     git checkout -b addons-yelizariev-9.0-some-feature upstream/addons-yelizariev-9.0-some-feature
    
