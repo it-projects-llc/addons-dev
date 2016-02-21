@@ -2,7 +2,7 @@
 
 Addons Forge
 
-Typical addon creating workflow:
+## Typical addon creating workflow:
 
 * [Init](#init) - once per computer
 * [Create new branch](#create-new-branch) - once per module (or set of modules). For managers only, because push access is needed.
