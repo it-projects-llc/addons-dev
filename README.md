@@ -22,7 +22,7 @@ Addons Forge
         git remote add l10n-addons       https://github.com/yelizariev/l10n-addons.git
 
 # Create new branch
-*(push access is needed)*
+*(For managers only, because push access is needed)*
 
     # specify target repo and branch:
     export REPO=addons-yelizariev BRANCH=9.0 FEATURE=some-feature
@@ -38,11 +38,20 @@ Addons Forge
     
     #
 
-# PR to existed branch
+# Work on existed branch
 
-If branch (e.g. *addons-yelizariev-9.0-some-feature*) already exists in **addons-dev**, send commits to your fork first and then create PR to **addons-dev**
 
+    # get branch from upstream
+    git checkout -b addons-yelizariev-9.0-some-feature upstream/addons-yelizariev-9.0-some-feature
+   
+    # work and make commits
+    git commit ...
+   
+    # push branch to origin
     git push origin addons-yelizariev-9.0-some-feature
+   
+    # create pull request via github interface to yelizariev/addons-dev repo
+
 
 # Final PR to target repo
 
