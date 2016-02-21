@@ -2,7 +2,7 @@
 
 Addons Forge
 
-## Typical addon development workflow:
+## Typical development workflow:
 
 * [Fork](#fork) - once per person
 * [Clone](#clone) - once per computer
