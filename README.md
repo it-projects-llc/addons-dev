@@ -59,7 +59,7 @@ Addons Forge
     # work and make commits
     git commit ...
    
-    # push branch to origin
+    # push to origin
     git push origin addons-yelizariev-9.0-some_feature
    
     # create pull request via github interface to yelizariev/addons-dev repo
