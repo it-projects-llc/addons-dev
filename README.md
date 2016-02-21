@@ -14,7 +14,7 @@ Addons Forge
 * Further updates - PRs are sent directly to target repo.
 
 # Fork
-Fork this repo
+Click Fork button at top right hand corner
 
 # Clone
 
