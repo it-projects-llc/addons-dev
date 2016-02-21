@@ -2,6 +2,9 @@
 
 Addons Forge
 
+Typical addons creating workflow:
+* [Initialization](#initialization)
+
 # Initialization
 
 1. Fork this repo
