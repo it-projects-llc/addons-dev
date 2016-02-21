@@ -2,10 +2,15 @@
 
 Addons Forge
 
-Typical addons creating workflow:
-* [Initialization](#initialization)
+Typical addon creating workflow:
 
-# Initialization
+* [Init](#init) - once per computer
+* [Create new branch](#create-new-branch) - once per module (or set of modules). For managers only, because push access is needed.
+* [Get branch from upstream](#get-branch-from-upstream) - once per module
+* [Work](#work) - as much as needed.
+* [Make final PR to target repo](#make-final-pr-to-target-repo) - once per module
+
+# Init
 
 1. Fork this repo
 2. Clone to your machine:
@@ -25,7 +30,6 @@ Typical addons creating workflow:
         git remote add l10n-addons       https://github.com/yelizariev/l10n-addons.git
 
 # Create new branch
-*(For managers only, because push access is needed)*
 
     # specify target, repo and branch:
     export REPO=addons-yelizariev BRANCH=9.0 FEATURE=some_feature
@@ -41,12 +45,16 @@ Typical addons creating workflow:
     
     # done
 
-# Work on existed branch
+# Get branch from upstream
 
 
     # get branch from upstream
     git fetch upstream addons-yelizariev-9.0-some_feature
     git checkout -b addons-yelizariev-9.0-some_feature upstream/addons-yelizariev-9.0-some_feature
+
+
+# Work
+
    
     # work and make commits
     git commit ...
@@ -57,7 +65,7 @@ Typical addons creating workflow:
     # create pull request via github interface to yelizariev/addons-dev repo
 
 
-# Final PR to target repo
+# Make final PR to target repo
 
     # example for addons-yelizariev
     cd /path/to/addons-yelizariev
