@@ -7,8 +7,8 @@ Addons Forge
 * [Init](#init) - once per computer
 * [Create new branch](#create-new-branch) - once per module (or set of modules). For managers only, because push access is needed.
 * [Get branch from upstream](#get-branch-from-upstream) - once per module
-* [Work](#work) - as much as needed.
-* [Make final PR to target repo](#make-final-pr-to-target-repo) - once per module
+* [PR to addons-dev](#pr-to-addons-dev) - as much as needed.
+* [Final PR to target repo](#final-pr-to-target-repo) - once per module
 
 # Init
 
@@ -53,7 +53,7 @@ Addons Forge
     git checkout -b addons-yelizariev-9.0-some_feature upstream/addons-yelizariev-9.0-some_feature
 
 
-# Work
+# PR to addons-dev
 
    
     # work and make commits
@@ -65,7 +65,7 @@ Addons Forge
     # create pull request via github interface to yelizariev/addons-dev repo
 
 
-# Make final PR to target repo
+# Final PR to target repo
 
     # example for addons-yelizariev
     cd /path/to/addons-yelizariev
