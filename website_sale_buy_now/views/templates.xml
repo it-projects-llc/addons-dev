@@ -24,7 +24,7 @@
 
 <template id="continue_shopping" inherit_id="website_sale.continue_shopping">
   <xpath expr="//a[@href='/shop']" position="attributes">
-    <attribute name="t-att-style">order.buy_now and 'display:none' or ''</attribute>
+    <attribute name="t-att-style">website_sale_order.buy_now and 'display:none' or ''</attribute>
   </xpath>
 </template>
 

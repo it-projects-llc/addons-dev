@@ -13,7 +13,7 @@
   </xpath>
 </template>
 
-<template id="cart" inherit_id="website_sale.cart">
+<template id="cart_lines" inherit_id="website_sale.cart_lines">
     <xpath expr="//div[@class='input-group oe_website_spinner']" position="attributes">
       <attribute name="t-att-style">line.product_id.sale_one_only and 'display:none' or ''</attribute>
     </xpath>
