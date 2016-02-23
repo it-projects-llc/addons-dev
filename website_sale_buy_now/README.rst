@@ -14,4 +14,4 @@ After clicking on "buy now" at web shop:
 * page /shop/cart is still availabe, but
   * it doesn't have "continue shopping button"
 
-Tested on Odoo 8.0 f89220a51313e1bf46ec82175f2449c2e1a0455c
+Tested on Odoo 9.0 380a1fd544ef352b82224610c669ebb075199216
