@@ -11,4 +11,4 @@ List of repositories:
 * https://github.com/yelizariev/access-addons
 * https://github.com/yelizariev/website-addons
 * https://github.com/yelizariev/l10n-addons
-* https://github.com/yelizariev/odoo-saas-tools
+* https://github.com/yelizariev/odoo-saas-toolsgit status
