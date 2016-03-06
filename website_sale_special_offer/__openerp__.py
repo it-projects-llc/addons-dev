@@ -2,7 +2,7 @@
     'name' : 'Special offer in eCommerce',
     'version' : '1.0.0',
     'author' : 'IT-Projects LLC, Ivan Yelizariev',
-    'license': 'GPL-3',
+    'license': 'LGPL-3',
     'category' : 'Sale',
     'website' : 'https://yelizariev.github.io',
     'description': """
@@ -17,5 +17,5 @@ Tested on Odoo 8.0 f8d5a6727d3e8d428d9bef93da7ba6b11f344284.
         'website_sale_special_offer_views.xml',
         'security/ir.model.access.csv',
         ],
-    'installable': True
+    'installable': False
 }

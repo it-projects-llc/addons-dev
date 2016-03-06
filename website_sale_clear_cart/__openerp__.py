@@ -2,7 +2,7 @@
     'name' : 'Clear cart button',
     'version' : '1.0.0',
     'author' : 'IT-Projects LLC, Ivan Yelizariev',
-    'license': 'GPL-3',
+    'license': 'LGPL-3',
     'category' : 'Website',
     'website' : 'https://twitter.com/yelizariev',
     'price': 9.00,
@@ -11,5 +11,5 @@
     'data':[
         'website_sale_clear_cart_views.xml',
     ],
-    'installable': True
+    'installable': False
 }

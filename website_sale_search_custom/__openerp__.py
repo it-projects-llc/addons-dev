@@ -3,7 +3,7 @@
     'summary': 'Check WARNING before installing!',
     'version': '1.0.0',
     'author': 'IT-Projects LLC, Ivan Yelizariev',
-    'license': 'GPL-3',
+    'license': 'LGPL-3',
     'category': 'Custom',
     'website': 'https://twitter.com/yelizariev',
     'price': 9.00,
