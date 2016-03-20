@@ -6,6 +6,7 @@ The modules adds extra feature to built-in *Sales/Contracts*:
 * *Prepaid Service Units* is computed based on paid invoices with products marked as *Timesheets on contracts*.
 * Contract Reports - report on paid, used, unused hours for specific period
 * Invoice Extra Timesheets (Timesheet minus prepaid service, minus invoiced timesheet)
+* Smart button *Unpaid Invoices*.
 
 
 Usage
@@ -71,36 +72,17 @@ Usage
 
       * Date of Next Report is some passed date (for testing only)
 
+    * Create timesheets as described above in order to exceed prepaid hours (optional)
+
   * Open *Settings\Technical\Automation\Scheduled Actions*:
 
     * *Generate Recurring Reports from Contracts*: change *Next Execution Date* to Now.
     * wait a minute
     * Check new invoices in *Sales/Contract Reports* - they have a draft state and have to be validated and sent manually
 
-      * sent report to customer
-  
-* Recurring invoices on Extra Timesheets
+      * Create invoice if timesheets are exceeded
+      * Sent report or report  with invoice on extra timesheets to customer. 
 
-  * open contract
-
-    * switch *Generate recurring invoices automatically  (on extra timehsheets)* on
-
-      * Date of Next Invoice is some passed date (for testing only)
-      * *Extra Timesheet Product* - any service product.
-
-    * Create timesheets as described above in order to exceed prepaid hours
-  * Open *Settings\Technical\Automation\Scheduled Actions*:
-
-    * *Generate Recurring Invoices from Contracts (on extra timesheets)*: change *Next Execution Date* to Now.
-    * wait a minute
-    * Check new invoices in *Accounting/Customer Invoices* - they have a draft state and have to be validated and sent manually
-
-      * Validate and register payment for one of invoices
-
-  * open contract
-
-    * prepaid Service units is updated
-      
 
 Further information
 -------------------
