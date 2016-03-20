@@ -4,9 +4,15 @@ Hours-based service sales
 The modules adds extra feature to built-in *Sales/Contracts*:
 
 * *Prepaid Service Units* is computed based on paid invoices with products marked as *Timesheets on contracts*.
-* Contract Reports - report on paid, used, unused hours for specific period
-* Invoice Extra Timesheets (Timesheet minus prepaid service, minus invoiced timesheet)
-* Smart button *Unpaid Invoices*.
+* Extended Sale Order
+  * used as periodic report on work done:
+    * Period start
+    * Period end
+    * Prepaid hours before period
+    * Used hours on period
+    * Prepaid hours after period
+  * Invoice Extra Timesheets (Timesheet minus prepaid service, minus invoiced timesheet)
+* Smart button *Unpaid Invoices* (amount)
 
 
 Usage
@@ -39,9 +45,9 @@ Usage
       * Use (create) product with following values:
         * UoM: *Hour(s)*.
 
-    * Units consumed is changed (built-in feature)
+    * Units consumed is changed (built-in)
 
-* Recurring invoices
+* Recurring invoices (built-in)
 
   * open contract
 
@@ -62,7 +68,7 @@ Usage
 
   * open contract
 
-    * prepaid Service units is updated
+    * prepaid Service units is updated (new)
 
 * Recurring Reports
 
@@ -78,10 +84,13 @@ Usage
 
     * *Generate Recurring Reports from Contracts*: change *Next Execution Date* to Now.
     * wait a minute
-    * Check new invoices in *Sales/Contract Reports* - they have a draft state and have to be validated and sent manually
+    * Check new sale.order records in *Sales/Quotattion* - they have a draft state and have to be validated and sent manually
 
-      * Create invoice if timesheets are exceeded
-      * Sent report or report  with invoice on extra timesheets to customer. 
+      * sale order has:
+        * positive lines from timesheets
+        * negative lines from prepaid hours
+      * if there is not extra timesheets (i.e. customer has enough prepaid hours), total would be zero and sale.order can be canceled
+      * if total > 0, then invoice must be created and sent
 
 
 Further information
