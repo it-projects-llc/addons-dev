@@ -2,6 +2,7 @@ Hours-based service sales
 =========================
 
 The modules adds extra feature to built-in *Sales/Contracts*:
+
 * *Prepaid Service Units* is computed based on paid invoices with products marked as *Timesheets on contracts*.
 * Contract Reports - report on paid, used, unused hours for specific period
 * Invoice Extra Timesheets (Timesheet minus prepaid service, minus invoiced timesheet)
