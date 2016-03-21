@@ -1,7 +1,7 @@
 from openerp import models, fields
 
 
-class ProductAttributeSaaS(models.Model):
+class ProductAttribute(models.Model):
     _inherit = "product.attribute"
 
     code = fields.Selection('_get_codes', string='Technical code')
