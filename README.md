@@ -79,7 +79,7 @@ Click Fork button at top right hand corner
     git remote add addons-dev https://github.com/yelizariev/addons-dev.git
 
     # fetch remote
-    git fetch addons-dev
+    git fetch addons-dev addons-yelizariev-9.0-some_feature
 
     # create branch
     git checkout -b 9.0-some-feature addons-dev/addons-yelizariev-9.0-some_feature
