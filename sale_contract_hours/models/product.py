@@ -6,4 +6,4 @@ class ProductAttributeSaaS(models.Model):
 
     def _get_codes(self):
         res = super(ProductAttributeSaaS, self)._get_codes()
-        return res + [('TIMESHEET', 'TIMESHEET')]
+        return res + [('sale_contract_hours.prepaid_service_units', 'Prepaid Service Units')]

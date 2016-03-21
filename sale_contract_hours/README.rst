@@ -3,7 +3,7 @@ Hours-based service sales
 
 The modules adds extra feature to built-in *Sales/Contracts*:
 
-* *Prepaid Service Units* is computed based on paid invoices with products marked as *Timesheets on contracts*.
+* *Prepaid Service Units* is computed based on paid invoices with products with *Prepaid Service Units* attributes.
 * Extended Sale Order
   * used as periodic report on work done:
     * Period start
@@ -21,9 +21,8 @@ Usage
 * Grant access *Manage Multiple Units of Measure* to your user (in odoo 8.0 you have to grant *Technical features* first and then refresh user form)
 * Create product.template:
 
-  * set *Track service* field to *Timesheets on contracts*
   * *Unit of Measure* is *Hour(s)* by default, but you can change to  value (days, weeks etc.)
-  * On *Variants* tab create attribute with *Technical Name* equal to *TIMESHEET* and add Attribue Values with some *Technical Values*, e.g. 20, 40, 80
+  * On *Variants* tab create attribute with *Technical Name* equal to *Prepaid Service Units* and add Attribue Values with some *Technical Values*, e.g. 20, 40, 80
 
 * Create contract on *Sales \ Contract*:
 
