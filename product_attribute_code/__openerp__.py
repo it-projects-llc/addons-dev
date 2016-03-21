@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": """Technical codes and values on product attributes""",
-    "summary": """Modules allows attach codes on attributes to use it in other modules""",
+    "summary": """Allows attach codes on attributes to use it in other modules""",
     "category": "Sales Management",
     "images": [],
     "version": "1.0.0",

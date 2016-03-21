@@ -1,16 +1,20 @@
 Technical codes and values on product attributes
 ================================================
 
-Modules allows attach codes on attributes to use it in other modules.
+Module allows attach codes on attributes to use it in other modules.
 
 Example
 -------
 
 If product is a Hosting, then attribute codes and values could be:
+
 * product.attribute: code=RAM
+
   * product.attribute.value: code_value="100MB"
   * product.attribute.value: code_value="500MB"
+
 * product.attribute: code=OS
+
   * product.attribute.value: code_value="Ubuntu 12.04"
   * product.attribute.value: code_value="Ubuntu 14.04"
 
@@ -20,11 +24,15 @@ Usage
 -----
 
 * Open Product (e.g. via *Sales/Products/*)
+
   * *Variants* tab
   * click *Edit*
   * add new *Attribute* via *Create and Edit*
-    * specify *Technical Code*
+
+    * specify *Technical Code* (selection is non-empty only with custom modules)
+
   * add new Product Attribute Value via *Create and Edit*
+
     * specify *Technival Value*
 
 Further information
