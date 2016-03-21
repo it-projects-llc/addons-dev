@@ -13,6 +13,7 @@
     #"currency": "EUR",
 
     "depends": [
+        "sale",
         "product_price_factor",
         "product_attribute_code"
     ],
@@ -20,6 +21,7 @@
     "data": [
     ],
     "demo": [
+        'demo/product_demo.xml'
     ],
     "installable": True,
     "auto_install": False,

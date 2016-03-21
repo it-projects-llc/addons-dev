@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="product_attribute_hours" model="product.attribute">
+            <field name="name">Hours</field>
+            <field name="code">TIMESHEET</field>
+        </record>
+
+        <record id="product_attribute_value_hours_20" model="product.attribute.value">
+            <field name="name">Plan #1 (20 hours)</field>
+            <field name="attribute_id" ref="product_attribute_hours"/>
+        </record>
+        
+        <record id="product_attribute_value_hours_40" model="product.attribute.value">
+            <field name="name">Plan #2 (40 hours)</field>
+            <field name="attribute_id" ref="product_attribute_hours"/>
+        </record>
+        
+        <record id="product_attribute_value_hours_80" model="product.attribute.value">
+            <field name="name">Plan #3 (80 hours)</field>
+            <field name="attribute_id" ref="product_attribute_hours"/>
+        </record>
+        
+        <record id="product_template" model="product.template">
+            <field name="name">Monthly payment</field>
+            <field name="list_price">640</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product.product_uom_hour"/>
+            <field name="uom_po_id" ref="product.product_uom_hour"/>
+        </record>
+
+        <record id="product_attribute_line_hours" model="product.attribute.line">
+            <field name="product_tmpl_id" ref="product_template"/>
+            <field name="attribute_id" ref="product_attribute_hours"/>
+            <field name="value_ids" eval="[(6,0,[ref('sale_contract_hours.product_attribute_value_hours_20'),ref('sale_contract_hours.product_attribute_value_hours_40'),ref('sale_contract_hours.product_attribute_value_hours_80')])]"/>
+        </record>
+
+
+        <record id="product_template" model="product.template">
+            <field name="attribute_line_ids" eval="[(6,0,[ref('sale_contract_hours.product_attribute_line_hours')])]"/>
+        </record>
+
+
+        <record id="product_attribute_price_hours_20" model="product.attribute.price">
+            <field name="product_tmpl_id" ref="product_template"/>
+            <field name="value_id" ref="product_attribute_value_hours_20"/>
+            <field name="price_factor">1</field>
+        </record>
+        
+        <record id="product_attribute_price_hours_40" model="product.attribute.price">
+            <field name="product_tmpl_id" ref="product_template"/>
+            <field name="value_id" ref="product_attribute_value_hours_40"/>
+            <field name="price_factor">2</field>
+        </record>
+        
+        <record id="product_attribute_price_hours_80" model="product.attribute.price">
+            <field name="product_tmpl_id" ref="product_template"/>
+            <field name="value_id" ref="product_attribute_value_hours_80"/>
+            <field name="price_factor">4</field>
+        </record>
+
+
+    </data>
+</openerp>
