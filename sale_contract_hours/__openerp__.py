@@ -14,8 +14,9 @@
 
     "depends": [
         "sale",
+        "account_analytic_analysis",
         "product_price_factor",
-        "product_attribute_code"
+        "product_attribute_code",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [

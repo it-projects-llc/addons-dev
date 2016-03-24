@@ -4,22 +4,25 @@
 
         <record id="product_attribute_hours" model="product.attribute">
             <field name="name">Hours</field>
-            <field name="code">TIMESHEET</field>
+            <field name="code">sale_contract_hours.prepaid_service_units</field>
         </record>
 
         <record id="product_attribute_value_hours_20" model="product.attribute.value">
-            <field name="name">Plan #1 (20 hours)</field>
+            <field name="name">Plan #1: 20 hours</field>
             <field name="attribute_id" ref="product_attribute_hours"/>
+            <field name="code_value">20</field>
         </record>
 
         <record id="product_attribute_value_hours_40" model="product.attribute.value">
-            <field name="name">Plan #2 (40 hours)</field>
+            <field name="name">Plan #2: 40 hours</field>
             <field name="attribute_id" ref="product_attribute_hours"/>
+            <field name="code_value">40</field>
         </record>
 
         <record id="product_attribute_value_hours_80" model="product.attribute.value">
-            <field name="name">Plan #3 (80 hours)</field>
+            <field name="name">Plan #3: 80 hours</field>
             <field name="attribute_id" ref="product_attribute_hours"/>
+            <field name="code_value">80</field>
         </record>
 
         <record id="product_template" model="product.template">
