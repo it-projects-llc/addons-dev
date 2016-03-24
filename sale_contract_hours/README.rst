@@ -18,7 +18,12 @@ The modules adds extra feature to built-in *Sales/Contracts*:
 Usage
 -----
 
-* Grant access *Manage Multiple Units of Measure* to your user (in odoo 8.0 you have to grant *Technical features* first and then refresh user form)
+* Grant access to your user (in odoo 8.0 you have to grant *Technical features* first and then refresh user form):
+
+  * *Manage Multiple Units of Measure*
+  * *Analytic Accounting*
+  * *Analytic Accounting for Sales*
+
 * Create product.template:
 
   * *Unit of Measure* is *Hour(s)* by default, but you can change to  value (days, weeks etc.)
@@ -55,7 +60,7 @@ Usage
       * Date of Next Invoice is some passed date (for testing only)
       * Invoice lines
 
-        * One of TIMESHEET Product
+        * One of *Prepaid Service Units* Product
 
   * Open *Settings\Technical\Automation\Scheduled Actions*:
 
@@ -86,8 +91,9 @@ Usage
     * Check new sale.order records in *Sales/Quotattion* - they have a draft state and have to be validated and sent manually
 
       * sale order has:
-        * positive lines from timesheets
-        * negative lines from prepaid hours
+        * lines from timesheets (qty > 0, price = 0)
+        * lines from prepaid hours (qty < 0, price = 0)
+        * lines on extra timesheets
       * if there is not extra timesheets (i.e. customer has enough prepaid hours), total would be zero and sale.order can be canceled
       * if total > 0, then invoice must be created and sent
 
