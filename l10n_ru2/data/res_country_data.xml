@@ -3,6 +3,7 @@
 	<data noupdate="0">
 
 		<record id="base.ab" model="res.country">
+			<field name="name">Abhasiya</field>
 			<field name="code">ab</field>
 			<field name="full_name">Республика Абхазия</field>
 			<field name="numeral_code">895</field>
@@ -1233,6 +1234,7 @@
 		</record>
 
 		<record id="base.tl" model="res.country">
+			<field name="name">Timor Leste</field>
 			<field name="code">tl</field>
 			<field name="full_name">Демократическая Республика Тимор-Лесте</field>
 			<field name="numeral_code">626</field>
@@ -1485,6 +1487,7 @@
 		</record>
 
 		<record id="base.os" model="res.country">
+			<field name="name">Osetiya</field>
 			<field name="code">os</field>
 			<field name="full_name">Республика Южная Осетия</field>
 			<field name="numeral_code">896</field>
