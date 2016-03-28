@@ -20,9 +20,10 @@
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
+        'views/analytic.xml',
     ],
     "demo": [
-        'demo/product_demo.xml'
+        'demo/product_demo.xml',
     ],
     "installable": True,
     "auto_install": False,

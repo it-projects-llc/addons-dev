@@ -24,3 +24,12 @@ class account_analytic_account(models.Model):
         'quantity_max': old_fields.function(_compute_quantity_max, string='Prepaid Service Units', help='')
     }
  
+    unpaid_invoices_amount = fields.Float('Amount of unpaid invoices', compute='_compute_unpaid_invoices_amount')
+
+    def _compute_unpaid_invoices_amount(self):
+        for r in self:
+            qty = 0
+            for line in self.env['account.invoice.line'].search([('account_analytic_id', '=', r.id), ('invoice_id.state', 'not in', ['paid', 'draft', 'cancel'])]):
+                qty += line.price_subtotal
+
+            r.unpaid_invoices_amount = qty
