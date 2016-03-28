@@ -1,19 +1,20 @@
 chart_template_id:id,name,description,amount
-l10n_ru_account_chart_template,t_nrf,Налоги РФ,4
-l10n_ru_account_chart_template,VAT,НДС,4
-l10n_ru_account_chart_template,VATin,НДС входящий,4
-l10n_ru_account_chart_template,VATout,НДС исходящий,4
-l10n_ru_account_chart_template,Acc,Акцизы,4
-l10n_ru_account_chart_template,NDFL,НДФЛ,4
-l10n_ru_account_chart_template,STRAH,Страховые взносы,4
-l10n_ru_account_chart_template,t_nnp,Налог на прибыль,4
-l10n_ru_account_chart_template,t_s,Сборы,4
-l10n_ru_account_chart_template,t_vn,Водный налог,4
-l10n_ru_account_chart_template,t_gp,Государственная пошлина,4
-l10n_ru_account_chart_template,t_ndpi,НДПИ,4
-l10n_ru_account_chart_template,t_usno,УСНО,4
-l10n_ru_account_chart_template,t_envd,ЕНВД,4
+l10n_ru_account_chart_template,VAT0,НДС0,0
+l10n_ru_account_chart_template,VAT10,НДС10,10
+l10n_ru_account_chart_template,VAT18,НДС18,18
+l10n_ru_account_chart_template,VATout18,НДС исходящий 18,18
+l10n_ru_account_chart_template,NDFL,НДФЛ,13
+l10n_ru_account_chart_template,RK,РК,15
+l10n_ru_account_chart_template,PF,Пенсионный Фонд,22
+l10n_ru_account_chart_template,FFMOS,ФФМОС,5.1
+l10n_ru_account_chart_template,FSS,ФСС,2.9
+l10n_ru_account_chart_template,FSSt,ФСС травматизм,8.5
+l10n_ru_account_chart_template,t_nnp,Налог на прибыль,20
+l10n_ru_account_chart_template,t_usno,УСНО,6
+l10n_ru_account_chart_template,t_envd,ЕНВД,15
 l10n_ru_account_chart_template,t_tn,Транспортный налог,4
 l10n_ru_account_chart_template,t_nnib,Налог на игорный бизнес,4
 l10n_ru_account_chart_template,t_nnio,Налог на имущество организации,4
 l10n_ru_account_chart_template,t_zn,Земельный налог,4
+l10n_ru_account_chart_template,t_vn,Водный налог,4
+l10n_ru_account_chart_template,t_ndpi,НДПИ,4
