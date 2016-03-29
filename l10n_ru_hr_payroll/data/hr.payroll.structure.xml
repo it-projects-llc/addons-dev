@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+     <record model="hr.salary.rule" id="1">
+        <field name="id">hr_payroll.hr_rule_basic</field>
+        <field name="active">True</field>
+        <field name="amount_select">Python Code</field>
+        <field name="appears_on_payslip">True</field>
+        <field name="category_id_id">hr_payroll.BASIC</field>
+        <field name="code">BASIC</field>
+        <field name="condition_select">Always True</field>
+        <field name="amount_fix">0</field>
+        <field name="name">Basic</field>
+        <field name="amount_percentage">0</field>
+        <field name="amount_python_compute">result = contract.wage</field>
+        <field name="condition_python">result = rules.NET &gt; categories.NET * 0.10</field>
+        <field name="quantity">1</field>
+        <field name="condition_range">contract.wage</field>
+        <field name="sequence">1</field>
+        <field name="register_id_id">hr_payroll.contrib_register_employees</field>
+    </record>
+     <record model="hr.salary.rule" id="1">
+        <field name="id">hr_payroll.hr_rule_taxable</field>
+        <field name="active">True</field>
+        <field name="amount_select">Python Code</field>
+        <field name="appears_on_payslip">True</field>
+        <field name="category_id_id">hr_payroll.GROSS</field>
+        <field name="code">GROSS</field>
+        <field name="condition_select">Always True</field>
+        <field name="amount_fix">0</field>
+        <field name="name">Gross</field>
+        <field name="amount_percentage">0</field>
+        <field name="amount_python_compute">result = categories.BASIC + categories.ALW</field>
+        <field name="condition_python">result = rules.NET &gt; categories.NET * 0.10</field>
+        <field name="quantity">1</field>
+        <field name="condition_range">contract.wage</field>
+        <field name="sequence">6</field>
+        <field name="register_id_id">hr_payroll.contrib_register_employees</field>
+    </record>
+     <record model="hr.salary.rule" id="1">
+        <field name="id">hr_payroll.hr_rule_net</field>
+        <field name="active">True</field>
+        <field name="amount_select">Python Code</field>
+        <field name="appears_on_payslip">True</field>
+        <field name="category_id_id">hr_payroll.NET</field>
+        <field name="code">NET</field>
+        <field name="condition_select">Always True</field>
+        <field name="amount_fix">0</field>
+        <field name="name">Net</field>
+        <field name="amount_percentage">0</field>
+        <field name="amount_python_compute">result = categories.BASIC + categories.ALW - categories.DED</field>
+        <field name="condition_python">result = rules.NET &gt; categories.NET * 0.10</field>
+        <field name="quantity">1</field>
+        <field name="condition_range">contract.wage</field>
+        <field name="sequence">8</field>
+        <field name="register_id_id">hr_payroll.contrib_register_employees</field>
+    </record>
+     <record model="hr.salary.rule" id="1">
+        <field name="id">__export__.hr_salary_rule_4</field>
+        <field name="active">True</field>
+        <field name="amount_select">Python Code</field>
+        <field name="appears_on_payslip">True</field>
+        <field name="category_id_id">hr_payroll.BASIC</field>
+        <field name="code">BAS</field>
+        <field name="condition_select">Always True</field>
+        <field name="amount_fix">22222.22</field>
+        <field name="name">ÐÐºÐ»Ð°Ð´</field>
+        <field name="amount_percentage">0</field>
+        <field name="amount_python_compute">result = contract.wage</field>
+        <field name="condition_python">result = rules.NET &gt; categories.NET * 0.10</field>
+        <field name="quantity">1</field>
+        <field name="condition_range">contract.wage</field>
+        <field name="sequence">5</field>
+        <field name="register_id_id">hr_payroll.contrib_register_employees</field>
+    </record>
+     <record model="hr.salary.rule" id="1">
+        <field name="id">__export__.hr_salary_rule_5</field>
+        <field name="active">True</field>
+        <field name="amount_select">Python Code</field>
+        <field name="appears_on_payslip">True</field>
+        <field name="category_id_id">hr_payroll.BASIC</field>
+        <field name="code">RK</field>
+        <field name="condition_select">Always True</field>
+        <field name="amount_fix">0</field>
+        <field name="name">Ð Ð</field>
+        <field name="amount_percentage">0</field>
+        <field name="amount_python_compute">result = contract.wage*0.15</field>
+        <field name="condition_python">result = rules.NET &gt; categories.NET * 0.10</field>
+        <field name="quantity">1</field>
+        <field name="condition_range">contract.wage</field>
+        <field name="sequence">5</field>
+        <field name="register_id_id">hr_payroll.contrib_register_employees</field>
+    </record>
+     <record model="hr.salary.rule" id="1">
+        <field name="id">__export__.hr_salary_rule_6</field>
+        <field name="active">True</field>
+        <field name="amount_select">Python Code</field>
+        <field name="appears_on_payslip">True</field>
+        <field name="category_id_id">hr_payroll.DED</field>
+        <field name="code">TAX</field>
+        <field name="condition_select">Always True</field>
+        <field name="amount_fix">0</field>
+        <field name="name">ÐÐÐ¤Ð</field>
+        <field name="amount_percentage">0</field>
+        <field name="amount_python_compute">result = int(categories.GROSS*0.13 + 0.5) + (inputs.FIX_NDFL and inputs.FIX_NDFL.amount or 0)</field>
+        <field name="condition_python">result = categories.NET*0.13 result = rules.NET &gt; categories.NET * 0.10</field>
+        <field name="quantity">1</field>
+        <field name="condition_range">contract.wage</field>
+        <field name="sequence">7</field>
+        <field name="register_id_id">hr_payroll.contrib_register_employees</field>
+    </record>
+     <record model="hr.salary.rule" id="1">
+        <field name="id">__export__.hr_salary_rule_7</field>
+        <field name="active">True</field>
+        <field name="amount_select">Python Code</field>
+        <field name="appears_on_payslip">False</field>
+        <field name="category_id_id">hr_payroll.DED
+        </field>
+        <field name="code">ÐÐ¤</field>
+        <field name="condition_select">Always True</field>
+        <field name="amount_fix">0</field>
+        <field name="name">ÐÐ¤</field>
+        <field name="amount_percentage">0</field>
+        <field name="amount_python_compute">result = categories.GROSS*0.22</field>
+        <field name="condition_python">result = rules.NET &gt; categories.NET * 0.10</field>
+        <field name="quantity">1</field>
+        <field name="condition_range">contract.wage</field>
+        <field name="sequence">9</field>
+        <field name="register_id_id">hr_payroll.contrib_register_employees</field>
+    </record>
+     <record model="hr.salary.rule" id="1">
+        <field name="id">__export__.hr_salary_rule_8</field>
+        <field name="active">True</field>
+        <field name="amount_select">Python Code</field>
+        <field name="appears_on_payslip">False</field>
+        <field name="category_id_id">hr_payroll.DED
+        </field>
+        <field name="code">FFOMS</field>
+        <field name="condition_select">Always True</field>
+        <field name="amount_fix">0</field>
+        <field name="name">Ð¤Ð¤ÐÐÐ¡</field>
+        <field name="amount_percentage">0</field>
+        <field name="amount_python_compute">result = categories.GROSS*0.051</field>
+        <field name="condition_python">result = rules.NET &gt; categories.NET * 0.10</field>
+        <field name="quantity">1</field>
+        <field name="condition_range">contract.wage</field>
+        <field name="sequence">10</field>
+        <field name="register_id_id">hr_payroll.contrib_register_employees</field>
+    </record>
+     <record model="hr.salary.rule" id="1">
+        <field name="id">__export__.hr_salary_rule_9</field>
+        <field name="active">True</field>
+        <field name="amount_select">Python Code</field>
+        <field name="appears_on_payslip">False</field>
+        <field name="category_id_id">hr_payroll.DED
+        </field>
+        <field name="code">FSS</field>
+        <field name="condition_select">Always True</field>
+        <field name="amount_fix">0</field>
+        <field name="name">Ð¤CÐ¡</field>
+        <field name="amount_percentage">0</field>
+        <field name="amount_python_compute">result = categories.GROSS*0.029</field>
+        <field name="condition_python">result = rules.NET &gt; categories.NET * 0.10</field>
+        <field name="quantity">1</field>
+        <field name="condition_range">contract.wage</field>
+        <field name="sequence">11</field>
+        <field name="register_id_id">hr_payroll.contrib_register_employees</field>
+    </record>
+     <record model="hr.salary.rule" id="1">
+        <field name="id">__export__.hr_salary_rule_10</field>
+        <field name="active">True</field>
+        <field name="amount_select">Python Code</field>
+        <field name="appears_on_payslip">False</field>
+        <field name="category_id_id">hr_payroll.DED</field>
+        <field name="code">FSS_TRAVM</field>
+        <field name="condition_select">Always True</field>
+        <field name="amount_fix">0</field>
+        <field name="name">Ð¤CÐ¡ ÑÑÐ°Ð²Ð¼</field>
+        <field name="amount_percentage">0</field>
+        <field name="amount_python_compute">result = categories.GROSS*0.002</field>
+        <field name="condition_python">result = rules.NET &gt; categories.NET * 0.10</field>
+        <field name="quantity">1</field>
+        <field name="condition_range">contract.wage</field>
+        <field name="sequence">12</field>
+        <field name="register_id_id">hr_payroll.contrib_register_employees</field>
+    </record>
+</odoo>    

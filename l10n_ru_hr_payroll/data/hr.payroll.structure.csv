@@ -1,2 +1,0 @@
-id,code,create_uid/id,name,parent_id/id,rule_ids/id,write_uid/id
-main,main,base.user_root,Main count,hr_payroll.structure_base,"hr_payroll.hr_rule_taxable,hr_payroll.hr_rule_net,__export__.hr_salary_rule_4,__export__.hr_salary_rule_5,__export__.hr_salary_rule_6,__export__.hr_salary_rule_7,__export__.hr_salary_rule_8,__export__.hr_salary_rule_9,__export__.hr_salary_rule_10",base.user_root
