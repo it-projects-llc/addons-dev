@@ -17,8 +17,8 @@
      ],
      'external_dependencies': {'python': [], 'bin': []},
      'data': [
-          'data/hr.salary.rule.csv',
-          'data/hr.payroll.structure.csv'
+          'data/hr.salary.rule.xml',
+          'data/hr.payroll.structure.xml'
      ],
      'demo': [
      ],

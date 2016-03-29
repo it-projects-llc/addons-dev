@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <odoo>
-     <record model="hr.payroll.structure" id="main">
-        <field name="id">main</field>
+    <record model="hr.payroll.structure" id="main">
+        <field name="name">Структура зарплаты</field>
+        <field name="id">21</field>
         <field name="code">main</field>
-        <field name="code">main</field>
-        <field name="create_uid/id" ref="base.user_root">
-        <field name="name">Main count</field>
-        <field name="parent_id/id" ref="hr_payroll.structure_base">
-        <field name="rule_ids/id" ref="hr_payroll.hr_rule_taxable,hr_payroll.hr_rule_net,salary_BAS,salary_RK,salary_RK,salary_PF,salary_FFOMS,salary_FSS,salary_FSS_TRAVM">
-        <field name="write_uid/id" ref="base.user_root">
-     </record>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="parent_id/id" ref="hr_payroll.structure_base"/>
+        <field eval="[(6, 0, [
+        ref('hr_payroll.hr_rule_taxable'),
+        ref('hr_payroll.hr_rule_net'),
+        ref('salary_BAS'),
+        ref('salary_RK'),
+        ref('salary_NDFL'),
+        ref('salary_PF'),
+        ref('salary_FFOMS'),
+        ref('salary_FSS'),
+        ref('salary_FSS_TRAVM')
+        ])]" name="rule_ids"/>
+        <field name="write_uid/id" ref="base.user_root"/>
+    </record>
 </odoo>
