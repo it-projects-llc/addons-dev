@@ -9,4 +9,5 @@
         <field name="parent_id/id" ref="hr_payroll.structure_base">
         <field name="rule_ids/id" ref="hr_payroll.hr_rule_taxable,hr_payroll.hr_rule_net,salary_BAS,salary_RK,salary_RK,salary_PF,salary_FFOMS,salary_FSS,salary_FSS_TRAVM">
         <field name="write_uid/id" ref="base.user_root">
+     </record>
 </odoo>
