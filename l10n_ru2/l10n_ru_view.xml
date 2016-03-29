@@ -1,0 +1,172 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+
+    <record id="product_uom_new_form" model="ir.ui.view">
+        <field name="name">product.uom.form</field>
+        <field name="model">product.uom</field>
+        <field name="inherit_id" ref="product.product_uom_form_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="full_name"/>
+            </field>
+            <field name="rounding" position="after">
+                <field name="okei"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_currency_form_l10n_ru" model="ir.ui.view">
+      <field name="name">res.currency.form_new</field>
+      <field name="model">res.currency</field>
+      <field name="inherit_id" ref="base.view_currency_form"/>
+      <field name="arch" type="xml">
+        <field name="name" position="before">
+          <field name="full_name"/>
+        </field>
+        <xpath expr="//form/sheet/group//field[@name='active']" position="after">
+          <field name="code"/>
+        </xpath>
+      </field>
+    </record>
+
+    <record id="view_currency_tree_l10n_ru" model="ir.ui.view">
+        <field name="name">res.currency.tree</field>
+        <field name="model">res.currency</field>
+        <field name="inherit_id" ref="base.view_currency_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="full_name"/>
+            </field>
+            <field name="name" position="after">
+                <field name="code"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_normal_form_view_l10n_ru" model="ir.ui.view">
+        <field name="name">product.normal.form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <field name="standard_price" position="after">
+                <field name="declaration_code"/>
+                <field name="country_origin_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_country_form_l10n_ru" model="ir.ui.view">
+        <field name="name">res.country.form</field>
+        <field name="model">res.country</field>
+        <field name="inherit_id" ref="base.view_country_form"/>
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="full_name"/>
+            </field>
+            <field name="code" position="after">
+                <field name="numeral_code"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_partner_form_l10n_ru" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <field name="street2" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <xpath expr="//page[@name='accounting']/group[1]" position="before">
+                    <label for="name_official"/>
+                    <group>
+                        <field name="name_official" colspan="4" nolabel="1"/>
+                        <group>
+                            <field name="inn"/>
+                            <field name="kpp"/>
+                            <field name="okpo"/>
+                            <field name="ceo"/>
+                            <field name="ceo_function"/>
+                            <field name="accountant"/>
+                        </group>
+                        <group>
+                            <field name="contract_num"/>
+                            <field name="contract_date"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_res_bank_form_l10n_ru" model="ir.ui.view">
+            <field name="name">res.bank.form</field>
+            <field name="model">res.bank</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_res_bank_form"/>
+            <field name="arch" type="xml">
+                <field name="bic" position="after">
+                    <field name="acc_corr" select="1"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_res_bank_tree_l10n_ru" model="ir.ui.view">
+            <field name="name">res.bank.tree</field>
+            <field name="model">res.bank</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="base.view_res_bank_tree"/>
+            <field name="arch" type="xml">
+                <field name="bic" position="after">
+                    <field name="acc_corr"/>
+                    <field name="city"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_partner_bank_form_l10n_ru" model="ir.ui.view">
+            <field name="name">res.partner.bank.form</field>
+            <field name="model">res.partner.bank</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_bank_form"/>
+            <field name="arch" type="xml">
+                <form position="inside">
+                  <group name="bank" string="Information About the Bank">
+                    <field name="bank_acc_corr"/>
+                  </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_wizard_update_banks" model="ir.ui.view">
+            <field name="name">wizard.update.banks.form</field>
+            <field name="model">wizard.update.banks</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Create Account" version="7.0">
+                    <header>
+                        <button name="update_banks" string="Update" type="object"
+                                context="{'location_bnkseek': location_bnkseek, 'location_bnkdel': location_bnkdel}"/>
+                        <button special="cancel" type="object" string="Cancel"/>
+                    </header>
+                    <group>
+                        <field name="location_bnkseek"/>
+                        <field name="location_bnkdel"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <act_window id="action_wizard_update_banks"
+                    name="Update Banks"
+                    target="new"
+                    res_model="wizard.update.banks"
+                    src_model="res.bank"
+                    view_type="form" view_mode="form"/>
+
+        <menuitem sequence="1" action="action_wizard_update_banks"
+                  id="menu_update_banks" parent="account.account_account_menu"/>
+
+    </data>
+</openerp>

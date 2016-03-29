@@ -1,0 +1,7 @@
+id,name,shortcut
+res_partner_title_pvt_ltd,Закрытое акционерное общество,ЗАО
+res_partner_title_ltd,Общество с ограниченной ответственностью,ООО
+res_partner_title_oao,Открытое акционерное общество,ОАО
+res_partner_title_ip,Индивидуальный предприниматель,ИП
+res_partner_title_madam,Г-жа,Г-жа
+res_partner_title_sir,Г-н,Г-н
