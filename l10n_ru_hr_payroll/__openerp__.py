@@ -15,6 +15,8 @@
      'depends': [
          'account',
          'hr_payroll',
+         'hr_payroll_account',
+         'l10n_ru',
      ],
      'external_dependencies': {'python': [], 'bin': []},
      'data': [
