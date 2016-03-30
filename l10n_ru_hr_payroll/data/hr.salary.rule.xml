@@ -14,6 +14,8 @@
         <field name="condition_range">contract.wage</field>
         <field name="sequence">5</field>
         <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
+        <field name="account_debit" ref="l10n_ru.ru_acc_20_01"/>
+        <field name="account_credit" ref="l10n_ru.ru_acc_70"/>
     </record>
     <record model="hr.salary.rule" id="salary_RK">
         <field name="name">Районный коэффициент</field>
@@ -29,6 +31,8 @@
         <field name="condition_range">contract.wage</field>
         <field name="sequence">5</field>
         <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
+        <field name="account_debit" ref="l10n_ru.ru_acc_20_01"/>
+        <field name="account_credit" ref="l10n_ru.ru_acc_70"/>
     </record>
     <record model="hr.salary.rule" id="salary_NDFL">
         <field name="name">НДФЛ</field>
@@ -39,12 +43,13 @@
         <field name="code">NDFL</field>
         <field name="amount_fix">0</field>
         <field name="amount_percentage">0</field>
-        <field name="amount_python_compute">result = int(categories.GROSS*0.13 + 0.5) + (inputs.FIX_NDFL and inputs.FIX_NDFL.amount or 0)
-        </field>
+        <field name="amount_python_compute">result = int(categories.GROSS*0.13 + 0.5) + (inputs.FIX_NDFL and inputs.FIX_NDFL.amount or 0)</field>
         <field name="quantity">1</field>
         <field name="condition_range">contract.wage</field>
         <field name="sequence">7</field>
         <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
+        <field name="account_debit" ref="l10n_ru.ru_acc_70"/>
+        <field name="account_credit" ref="l10n_ru.ru_acc_68_01"/>
     </record>
     <record model="hr.salary.rule" id="salary_PF">
         <field name="name">Пенсионный фонд</field>
@@ -60,6 +65,8 @@
         <field name="condition_range">contract.wage</field>
         <field name="sequence">9</field>
         <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
+        <field name="account_debit" ref="l10n_ru.ru_acc_20_01"/>
+        <field name="account_credit" ref="l10n_ru.ru_acc_69_02"/>
     </record>
     <record model="hr.salary.rule" id="salary_FFOMS">
         <field name="name">ФФОМС</field>
@@ -75,6 +82,8 @@
         <field name="condition_range">contract.wage</field>
         <field name="sequence">10</field>
         <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
+        <field name="account_debit" ref="l10n_ru.ru_acc_20_01"/>
+        <field name="account_credit" ref="l10n_ru.ru_acc_69_03"/>
     </record>
     <record model="hr.salary.rule" id="salary_FSS">
         <field name="name">ФСС</field>
@@ -90,6 +99,8 @@
         <field name="condition_range">contract.wage</field>
         <field name="sequence">11</field>
         <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
+        <field name="account_debit" ref="l10n_ru.ru_acc_20_01"/>
+        <field name="account_credit" ref="l10n_ru.ru_acc_69_12"/>
     </record>
     <record model="hr.salary.rule" id="salary_FSS_TRAVM">
         <field name="name">ФСС Травматизм</field>
@@ -105,5 +116,7 @@
         <field name="condition_range">contract.wage</field>
         <field name="sequence">12</field>
         <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
+        <field name="account_debit" ref="l10n_ru.ru_acc_20_01"/>
+        <field name="account_credit" ref="l10n_ru.ru_acc_69_11"/>
     </record>
 </odoo>
