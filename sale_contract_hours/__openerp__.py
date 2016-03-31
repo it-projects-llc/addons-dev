@@ -15,12 +15,14 @@
     "depends": [
         "sale",
         "account_analytic_analysis",
+        "hr_timesheet_invoice",
         "product_price_factor",
         "product_attribute_code",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
         'views/analytic.xml',
+        'views/account_invoice.xml',
     ],
     "demo": [
         'demo/product_demo.xml',
