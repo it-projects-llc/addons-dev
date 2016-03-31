@@ -4,7 +4,7 @@ Hours-based service sales
 The modules adds extra feature to built-in *Sales/Contracts*:
 
 * *Prepaid Service Units* is computed based on paid invoices with products with *Prepaid Service Units* attributes.
-* Extended Sale Order
+* Extended Invoice
   * used as periodic report on work done:
     * Period start
     * Period end
@@ -88,14 +88,12 @@ Usage
 
     * *Generate Recurring Reports from Contracts*: change *Next Execution Date* to Now.
     * wait a minute
-    * Check new sale.order records in *Sales/Quotattion* - they have a draft state and have to be validated and sent manually
+    * Check new account.invoice records in *Invoicing/Invoices* - they have a draft state and have to be validated and sent manually
 
-      * sale order has:
+      * invoice has:
         * lines from timesheets (qty > 0, price = 0)
         * lines from prepaid hours (qty < 0, price = 0)
         * lines on extra timesheets
-      * if there is not extra timesheets (i.e. customer has enough prepaid hours), total would be zero and sale.order can be canceled
-      * if total > 0, then invoice must be created and sent
 
 
 Further information
