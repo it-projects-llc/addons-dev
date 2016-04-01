@@ -16,6 +16,8 @@
                         </group>
                         <group attrs="{'invisible': [('account_analytic_id', '=', False)]}">
                             <field name="is_contract_hours_report" attrs="{'readonly': [('state', 'not in', ['draft'])]}" />
+                            <field name="contract_hours_product_id" attrs="{'invisible': [('is_contract_hours_report', '=', False)], 'readonly': [('state', 'not in', ['draft'])]}"/>
+
                             <field name="contract_hours_start_date" attrs="{'invisible': [('is_contract_hours_report', '=', False)], 'readonly': [('state', 'not in', ['draft'])]}"/>
                             <field name="contract_hours_end_date" attrs="{'invisible': [('is_contract_hours_report', '=', False)], 'readonly': [('state', 'not in', ['draft'])]}"/>
                         </group>

@@ -12,6 +12,7 @@ The modules adds extra feature to built-in *Sales/Contracts*:
     * Used hours on period
     * Prepaid hours after period
   * Invoice Extra Timesheets (Timesheet minus prepaid service, minus invoiced timesheet)
+  * Change meaning of *Invoicable* field (e.g. *Yes (100%)*). It's used to change quantity of hours, while out-of-box it means discount (i.e. change price only). 
 * Smart button *Unpaid Invoices* (amount)
 
 
@@ -23,11 +24,12 @@ Usage
   * *Manage Multiple Units of Measure*
   * *Analytic Accounting*
   * *Analytic Accounting for Sales*
+  * *Accounting & Finance: Financial Manager*
 
 * Create product.template:
 
   * *Unit of Measure* is *Hour(s)* by default, but you can change to  value (days, weeks etc.)
-  * On *Variants* tab create attribute with *Technical Name* equal to *Prepaid Service Units* and add Attribue Values with some *Technical Values*, e.g. 20, 40, 80
+  * On *Variants* tab create attribute with *Technical Name* equal to *Prepaid Service Units*
 
 * Create contract on *Sales \ Contract*:
 
@@ -61,6 +63,7 @@ Usage
       * Invoice lines
 
         * One of *Prepaid Service Units* Product
+        * Quantity
 
   * Open *Settings\Technical\Automation\Scheduled Actions*:
 
@@ -91,9 +94,20 @@ Usage
     * Check new account.invoice records in *Invoicing/Invoices* - they have a draft state and have to be validated and sent manually
 
       * invoice has:
-        * lines from timesheets (qty > 0, price = 0)
-        * lines from prepaid hours (qty < 0, price = 0)
-        * lines on extra timesheets
+
+        * lines with prepaid timesheets (price = 0)
+        * lines on extra timesheets (price > 0)
+
+* Analytic account
+
+  * open *Invoicing/Analytic Journal Items*
+
+    * Apply *Group by "Analytic Account"*
+    * then Apply *Group by "Journal"*
+    * Column *Quantity* is used to count service
+
+      * In Sale journal - invoiced hours
+      * In Timesheet journal - used hours
 
 
 Further information
