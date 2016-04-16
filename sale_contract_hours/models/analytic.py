@@ -7,26 +7,34 @@ class account_analytic_account(models.Model):
     _inherit = 'account.analytic.account'
 
     def _compute_quantity_max(self, cr, uid, ids, fields, arg, context=None):
-        res = {}
+        res = dict([(i, {'quantity_max': 0, 'quantity_max_invoiced': 0, 'hours_quantity': 0}) for i in ids])
         for id in ids:
-            qty = 0
-            line_ids = self.pool['account.invoice.line'].search(cr, uid, [('account_analytic_id', '=', id), ('invoice_id.state', '=', 'paid')])
-            for line in self.pool['account.invoice.line'].browse(cr, uid, line_ids):
+            domain = [('account_id', '=', id)]
+            if context and context.get('contract_hours_start_date'):
+                domain.append(('date', '<', context.get('contract_hours_start_date')))
+
+            line_ids = self.pool['account.analytic.line'].search(cr, uid, domain)
+            for line in self.pool['account.analytic.line'].browse(cr, uid, line_ids):
+                if line.journal_id.type == 'general':
+                    res[id]['hours_quantity'] += line.unit_amount
+                    continue
+
                 attribute_value = line.product_id.attribute_value_ids.filtered(lambda r: r.attribute_id.code == 'sale_contract_hours.prepaid_service_units')
                 if not attribute_value:
                     continue
-                qty += line.quantity
-
-            res[id] = qty
+                res[id]['quantity_max_invoiced'] += line.unit_amount
+                if line.invoice_id.state == 'paid':
+                    res[id]['quantity_max'] += line.unit_amount
         return res
 
     _columns = {
-        'quantity_max': old_fields.function(_compute_quantity_max, string='Prepaid Service Units', help='')
+        'quantity_max_invoiced': old_fields.function(_compute_quantity_max, string='Prepaid Service Units (Invoiced)', help='', multi='quantity_max'),
+        'quantity_max': old_fields.function(_compute_quantity_max, string='Prepaid Service Units', help='', multi='quantity_max'),
+        'hours_quantity': old_fields.function(_compute_quantity_max, multi='quantity_max', type='float', string='Total Worked Time',
+            help="Number of time you spent on the analytic account (from timesheet). It computes quantities on all journal of type 'general'."),
     }
  
     unpaid_invoices_amount = fields.Float('Amount of unpaid invoices', compute='_compute_unpaid_invoices_amount')
-
-    unit_amount_invoicable = fields.Float('Invoicable Amount', compute='_compute_unit_amount_invoicable', store=True)
 
     def _compute_unpaid_invoices_amount(self):
         for r in self:
@@ -35,11 +43,6 @@ class account_analytic_account(models.Model):
                 qty += line.price_subtotal
 
             r.unpaid_invoices_amount = qty
-
-    @api.depends('unit_amount', 'to_invoice.factor')
-    def _compute_unpaid_invoices_amount(self):
-        for r in self:
-            r.unit_amount_invoicable = r.unit_amount * (100 - r.to_invoice.factor)/100.0
 
     def generate_recurring_invoice(self):
         # TODO
@@ -64,4 +67,14 @@ class account_analytic_account(models.Model):
             'fiscal_position': account.partner_id.property_account_position.id
         }
         return curr_invoice
+
+class account_analytic_account(models.Model):
+    _inherit = 'account.analytic.line'
+
+    unit_amount_invoicable = fields.Float('Invoicable Amount', compute='_compute_unit_amount_invoicable', store=True)
+
+    @api.depends('unit_amount', 'to_invoice.factor')
+    def _compute_unit_amount_invoicable(self):
+        for r in self:
+            r.unit_amount_invoicable = r.unit_amount * (100 - r.to_invoice.factor)/100.0
 

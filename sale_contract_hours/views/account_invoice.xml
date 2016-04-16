@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="account.invoice_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='state']" position="before">
-                    <button name="generate_contract_hours_report" string="Generate Contract Hours"  type="object" attrs="{'invisible': ['|', '|', '|',  '|', ('state', 'not in', ['draft']), ('is_contract_hours_report', '=', False),('contract_hours_start_date', '=', False),('contract_hours_end_date', '=', False),('account_analytic_id', '=', False)]}"/>
+                    <button name="generate_contract_hours_report" string="Generate Contract Hours" help="Generate invoice lines for uninvoiced timesheets" type="object" attrs="{'invisible': ['|', '|', '|',  '|', ('state', 'not in', ['draft']), ('is_contract_hours_report', '=', False),('contract_hours_start_date', '=', False),('contract_hours_end_date', '=', False),('account_analytic_id', '=', False)]}"/>
                 </xpath>
                 <xpath expr="//notebook">
                     <page string="Contract">
@@ -16,7 +16,8 @@
                         </group>
                         <group attrs="{'invisible': [('account_analytic_id', '=', False)]}">
                             <field name="is_contract_hours_report" attrs="{'readonly': [('state', 'not in', ['draft'])]}" />
-                            <field name="contract_hours_product_id" attrs="{'invisible': [('is_contract_hours_report', '=', False)], 'readonly': [('state', 'not in', ['draft'])]}"/>
+                            <field name="contract_hours_prepaid_product_id" attrs="{'invisible': [('is_contract_hours_report', '=', False)], 'readonly': [('state', 'not in', ['draft'])]}"/>
+                            <field name="contract_hours_extra_product_id" attrs="{'invisible': [('is_contract_hours_report', '=', False)], 'readonly': [('state', 'not in', ['draft'])]}"/>
 
                             <field name="contract_hours_start_date" attrs="{'invisible': [('is_contract_hours_report', '=', False)], 'readonly': [('state', 'not in', ['draft'])]}"/>
                             <field name="contract_hours_end_date" attrs="{'invisible': [('is_contract_hours_report', '=', False)], 'readonly': [('state', 'not in', ['draft'])]}"/>

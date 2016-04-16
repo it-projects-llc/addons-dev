@@ -57,6 +57,36 @@
             <field name="value_id" ref="product_attribute_value_hours_80"/>
         </record>
 
+        <record id="product_extra_hours_1" model="product.product">
+            <field name="list_price">64</field>
+            <field name="uom_id" ref="product.product_uom_hour"/>
+            <field name="uom_po_id" ref="product.product_uom_hour"/>
+            <field name="name">Extra hours in Plan #1</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="type">service</field>
+            <field name="sale_ok" eval="False"/>
+        </record>
+
+        <record id="product_extra_hours_2" model="product.product">
+            <field name="list_price">32</field>
+            <field name="uom_id" ref="product.product_uom_hour"/>
+            <field name="uom_po_id" ref="product.product_uom_hour"/>
+            <field name="name">Extra hours in Plan #2</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="type">service</field>
+            <field name="sale_ok" eval="False"/>
+        </record>
+
+        <record id="product_extra_hours_3" model="product.product">
+            <field name="list_price">16</field>
+            <field name="uom_id" ref="product.product_uom_hour"/>
+            <field name="uom_po_id" ref="product.product_uom_hour"/>
+            <field name="name">Extra hours in Plan #3</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="type">service</field>
+            <field name="sale_ok" eval="False"/>
+        </record>
+
 
     </data>
 </openerp>

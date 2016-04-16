@@ -22,6 +22,7 @@
     "data": [
         'views/analytic.xml',
         'views/account_invoice.xml',
+        'data/product_data.xml',
     ],
     "demo": [
         'demo/product_demo.xml',
