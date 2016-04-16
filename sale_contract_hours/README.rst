@@ -77,26 +77,27 @@ Usage
 
     * prepaid Service units is updated (new)
 
-* Recurring Reports
+* Reports
 
-  * open contract
+  * Before generating reports, there must be confirmed timesheets. It can be done via *Human Resources/Time Tracking*
 
-    * switch *Generate recurring reports automatically* on
+    * Employee create timesheet via *My current timesheet* menu
+    * Manager validate timesheets via *Timesheets to Validate* menu
 
-      * Date of Next Report is some passed date (for testing only)
+  * open Sales/Contracts menu
 
-    * Create timesheets as described above in order to exceed prepaid hours (optional)
+    * select contracts
+    * click Action -> Generate reports
 
-  * Open *Settings\Technical\Automation\Scheduled Actions*:
+      * Select start and end date
+      * click Apply
 
-    * *Generate Recurring Reports from Contracts*: change *Next Execution Date* to Now.
-    * wait a minute
-    * Check new account.invoice records in *Invoicing/Invoices* - they have a draft state and have to be validated and sent manually
+  * Check new account.invoice records in *Invoicing/Invoices* - they have a draft state and have to be validated and sent manually
 
-      * invoice has:
+    * invoice has:
 
-        * lines with prepaid timesheets (price = 0)
-        * lines on extra timesheets (price > 0)
+      * lines with prepaid timesheets (price = 0)
+      * lines on extra timesheets (price > 0)
 
 * Analytic account
 
