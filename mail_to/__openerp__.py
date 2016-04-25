@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    "name": """Label on the message about recipient""",
+    "name": """Label on the message about recipients""",
     "summary": """Add recipient label on the right of message in the Inbox channel""",
     "category": "Discuss",
     "images": [],
@@ -12,9 +12,14 @@
     #"price": 9.00,
     #"currency": "EUR",
 
-    "depends": [],
+    "depends": [
+        'mail',
+    ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [],
+    "qweb": [
+        'static/src/xml/recipient.xml',
+    ],
     "demo": [],
     "installable": True,
     "auto_install": False,

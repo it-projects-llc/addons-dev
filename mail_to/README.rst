@@ -1,8 +1,8 @@
-======================================
- Label on the message about recipient
-======================================
+=======================================
+ Label on the message about recipients
+=======================================
 
-Add recipient label on the right of message in the Inbox channel.
+Add recipients label the right of message in the Inbox channel.
 
 Further information
 -------------------
