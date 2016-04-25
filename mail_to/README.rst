@@ -2,7 +2,7 @@
  Show message recipients
 =========================
 
-Allows you be sure, that all discussion participants were notified. Add recipients label the right of message.
+Allows you be sure, that all discussion participants were notified. Adds recipients label the right of message.
 
 Further information
 -------------------
