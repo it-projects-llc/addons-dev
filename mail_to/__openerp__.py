@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
-    "name": """Label on the message about recipients""",
-    "summary": """Add recipient label on the right of message in the Inbox channel""",
+    "name": """Show message recipients""",
+    "summary": """Allows you be sure, that all discussion participants were notified""",
     "category": "Discuss",
     "images": [],
     "version": "1.0.0",

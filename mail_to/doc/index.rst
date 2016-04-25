@@ -1,8 +1,11 @@
-=======================================
- Label on the message about recipients
-=======================================
+=========================
+ Show message recipients
+=========================
 
 Usage
 =====
 
-The right of the message should be the recipient's label in the Inbox channel.
+The right of the message should be the recipient's label.
+
+* Open Discuss menu
+* All messages have Recipients info

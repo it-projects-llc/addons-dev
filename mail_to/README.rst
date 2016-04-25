@@ -1,8 +1,8 @@
-=======================================
- Label on the message about recipients
-=======================================
+=========================
+ Show message recipients
+=========================
 
-Add recipients label the right of message in the Inbox channel.
+Allows you be sure, that all discussion participants were notified. Add recipients label the right of message.
 
 Further information
 -------------------
