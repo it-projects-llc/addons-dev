@@ -1,13 +1,14 @@
-=================
-Rent some car man
-=================
+=============================
+ Integrated temporary module
+=============================
 
-123
+Im gonna place all the code and modifications here.
+Then when time will come i will separate it on parts according to functional objective.
 
 Further information
 -------------------
 
-HTML Description: https://apps.odoo.com/apps/modules/9.0/ ???????????????????????
+HTML Description: https://apps.odoo.com/apps/modules/9.0/fleet_booking
 
 Usage instructions: `<doc/index.rst>`_
 
