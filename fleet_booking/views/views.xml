@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<record id="fleet_open_module_tree_department" model="ir.actions.act_window">
+    <field name="name">Departments</field>
+    <field name="res_model">fleet_booking.department</field>
+    <field name="view_type">form</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="hr.open_module_tree_department"/>
+    <field name="arch" type="html">
+        <data></data>
+    </field>
+</record>
+<record id="fleet_booking_department_form_view" model="ir.ui.view">
+    <field name="name">fb.department.form</field>
+    <field name="model">fleet_booking.department</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="hr.view_department_form"/>
+    <field eval="50" name="priority"/>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//group[@col='4']/field[@name='name']" position="attributes">
+                <attribute name="string">Branch name</attribute>
+            </xpath>
+            <xpath expr="//group[@col='4']/field[@name='manager_id']" position="attributes">
+                <attribute name="string">Branch Officer</attribute>
+            </xpath>
+            <xpath expr="//group[@col='4']/field[@name='parent_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//group[@col='4']" position="inside">
+                <field name="city"/>
+                <field name="phone"/>
+                <field name="branch_target"/>
+            </xpath>
+        </data>
+    </field>
+</record>
+<menuitem name="Fleet booking" id="menu_fb_root" groups="base.group_user" action="fleet_open_module_tree_department"/>
+<menuitem id="menu_fb_one" parent="menu_fb_root" name="fb one" sequence="0"/>
+
+</data>
+</openerp>
