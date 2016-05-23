@@ -5,7 +5,9 @@ The modules adds extra feature to built-in *Sales/Contracts*:
 
 * *Prepaid Service Units* is computed based on paid invoices with products with *Prepaid Service Units* attributes.
 * Extended Invoice
+
   * used as periodic report on work done:
+
     * Period start
     * Period end
     * Prepaid hours before period
