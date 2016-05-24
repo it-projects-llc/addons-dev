@@ -2,6 +2,8 @@
  Custom system for car renting
 ===============================
 
+It uses (inherits) HR and Fleet odoo 9 genuine modules.
+
 How to check it:
 
 * Install module
@@ -14,6 +16,9 @@ Updates is here: https://github.com/yelizariev/addons-dev/pull/57
 ==============
 Specifications
 ==============
+
+Customer features
+-----------------
 
 1 Stage::
 
@@ -38,3 +43,28 @@ Specifications
     Create new contact (Contacts & Addresses section) for emergency cases.
     Enter additional information in Internal Notes section.
     Press save.
+
+
+Add (Edit), Remove Vehicle
+--------------------------
+
+1 Stage::
+
+   * Go to Fleet.
+   * Open Vehicles.
+   * Open some vehicle.
+   * Press Edit button.
+   * Fill required fields.
+   * Vehicle Model -> Model
+   * Vehicle Brand -> Make (open form Create: Model)
+   * Color -> Dropdown selection
+   * Car Plate Number -> License Plate
+   * Car chassis number -> Chassis number
+   * Daily rental price (Daily Rate)
+   * Rate per extra km
+   * Allowed kilometer per day
+   * Vehicle registration expiry date
+   * Insurance expiry date
+   * Lease Installments dates Table
+   * Insurance Installments dates Table
+   * Odometer -> Last Odometer
