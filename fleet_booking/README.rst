@@ -1,9 +1,9 @@
-=============================
- Integrated temporary module
-=============================
+===============================
+ Custom system for car renting
+===============================
 
-Im gonna place all the code and modifications here.
-Then when time will come i will separate it on parts according to functional objective.
+Adds departments in fleet module.
+
 
 Further information
 -------------------
