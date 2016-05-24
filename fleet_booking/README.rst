@@ -2,7 +2,8 @@
  Custom system for car renting
 ===============================
 
-Adds departments in fleet module.
+Adds roles (res.groups) with xml.
+Adds branches in fleet module.
 
 
 Further information

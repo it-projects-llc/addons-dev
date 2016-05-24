@@ -18,7 +18,8 @@
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
-        "views/views.xml"
+        "views/views.xml",
+        "records.xml"
     ],
     "qweb": [
     ],
