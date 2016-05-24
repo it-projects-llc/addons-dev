@@ -5,10 +5,16 @@
     <field name="name">Departments</field>
     <field name="res_model">fleet_booking.department</field>
     <field name="view_type">form</field>
-    <field name="mode">primary</field>
-    <field name="inherit_id" ref="hr.open_module_tree_department"/>
-    <field name="arch" type="html">
-        <data></data>
+    <field name="view_mode">tree,form</field>
+    <field name="help" type="html">
+        <p class="oe_view_nocontent_create">
+            Click to create a department.
+        </p>
+        <p>
+            Odoo's department structure is used to manage all documents
+            related to employees by departments: expenses, timesheets,
+            leaves and holidays, recruitments, etc.
+        </p>
     </field>
 </record>
 <record id="fleet_booking_department_form_view" model="ir.ui.view">
@@ -36,8 +42,7 @@
         </data>
     </field>
 </record>
-<menuitem name="Fleet booking" id="menu_fb_root" groups="base.group_user" action="fleet_open_module_tree_department"/>
-<menuitem id="menu_fb_one" parent="menu_fb_root" name="fb one" sequence="0"/>
+<menuitem id="menu_fb_one" parent="fleet.fleet_configuration" name="Departments" sequence="100" action="fleet_open_module_tree_department"/>
 
 </data>
 </openerp>

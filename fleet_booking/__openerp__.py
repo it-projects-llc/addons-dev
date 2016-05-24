@@ -14,6 +14,7 @@
 
     "depends": [
         "hr",
+        "fleet"
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
