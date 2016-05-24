@@ -2,16 +2,6 @@
  Custom system for car renting
 ===============================
 
-It uses (inherits) HR and Fleet odoo 9 genuine modules.
-
-How to check it:
-
-* Install module
-* Go to fleet in main menu
-* Go to department in Configuration section
-
-Updates is here: https://github.com/yelizariev/addons-dev/pull/57
-
 
 ==============
 Specifications
@@ -38,9 +28,9 @@ Customer features
     * Select one from dropdown License Type (Privatem General, International).
     * Enter License Number string.
     * Enter Work Phone Number string.
-    * Enter Customer Home Address string.
-    * Enter Customer Work Address string.
-    * Create new contact (Contacts & Addresses section) for emergency cases.
+    * Create new work contact (Contacts & Addresses section).
+    * Create new home (Contacts & Addresses section) .
+    * Create new emergency contact (Contacts & Addresses section).
     * Enter additional information in Internal Notes section.
     * Press save.
 

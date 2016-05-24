@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "Fleet booking",
+    "name": "Custom system for car renting",
     "summary": """Fleet leasing and management""",
     "category": "Managing vehicles and contracts",
     "images": ['images/1.jpg'],
