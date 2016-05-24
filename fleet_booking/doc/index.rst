@@ -134,3 +134,37 @@ Stage 1::
     * Remaining amount - оставшаяся сумма оплаты, вычисляется автоматически по формуле:
             Remaining amount = Total - Deposit
 
+2 Stage::
+
+    * Go to Fleet.
+    * You will see Return Vehicle in *Movements* section.
+    * If you are Branch Officer you will see next fields:
+        * Customer
+        * Interactive Car -> Vehicle
+        * Damage Cost - стоимость повреждений ТС
+        * Way to cover damage costs - способ возмещения - выпадалка с 3мя значениями:
+            * Direct from customer
+            * By customer’s insurance
+            * lessor's insurance
+        * Extra charge - дополнительная плата
+        * Return Date и Return Time - дата и время возврата ТС
+    * If you are Branch Employee you will see next fields:
+        * Odometer in receiving - километраж при получении ТС
+        * Vehicle Body - выпадалка с 2мя значениями: In good condition, Not in good condition
+        * Inside Vehicle - выпадалка с 2мя значениями: In good condition, Not in good condition
+        * Damage Type - тип повреждения
+        * Notes - дополнительные заметки
+    * Agreement expiry date, Exit Date, Exit Time
+    * Exit Vehicle status checkbox line (automatically taken from rental document)
+    * Return Vehicle status checkbox line
+    * Exceeded kilometers/hours - превышенное кол-во км и часов - вычисляется автоматически
+            Exceeded kilometers = Odometer in receiving - Odometer (берем из карточки ТС) - Rented Period * Allowed kilometer per day (берем из карточки ТС),
+                    где Rented Period = Return Date - Exit Date
+            Exceeded hours = Return date and time – Exit date and time – Allowed hours to be late (о последнем параметре ни в какой из форм не упоминается, поэтому будем уточнять)
+    * Total - вычисляется автоматически:
+            Total = Total (из контракта Rent) + Exceeded kilometers cost + Exceeded hours cost + Extra charge,
+                    где Exceeded kilometers cost = Rate per extra km (берем из карточки ТС) * Exceeded kilometers,
+                         Exceeded hours cost = Rate per extra hour (по этому параметру тоже нет инфо в документе, будем уточниять) * Exceeded hours
+    * Deposit - подтягивается автоматически из контракта Rent
+    * Remaining amount - вычисляется автоматически:
+            Remaining amount = Total - Deposit
