@@ -2,10 +2,44 @@
  Custom system for car renting
 ===============================
 
+Current module overview
+=======================
+
+This module installing next build-in modules:hr, fleet, account.
+
+    * hr needed for branches inheritance and for basic hr stuff like payroll and so on.
+    * fleet in functional basis that going to be significantly extended and modified.
+    * account is for accounting purposes.
 
 ==============
 Specifications
 ==============
+
+Ready functions
+===============
+
+Roles (access groups)
+---------------------
+
+Its made using build-in access groups odoo functionality.
+
+    * Open database as admin in debug mode (.../web?debug).
+    * Go to Settings->Users->Groups. Here you will see new access groups with Fleet booking prefix.
+    * Go to Settings->Users->Users. Here is new users, one for every group.
+    * You can login with any of that users to see database representation for each of them.
+
+Branches
+--------
+Built with *hr.departments* inheritance.
+
+    * Login in system as General Manager (gm/gm) or Admin (admin/admin). *login/password*
+    * Go to fleet in main menu and next Configuration->Branches. Create and edit branches here.
+
+
+Not ready functions
+===================
+
+Below stuff planned but not completed yet. It partially finished or developing now.
 
 Customer features
 -----------------
