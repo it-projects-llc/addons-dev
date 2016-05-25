@@ -24,8 +24,8 @@ Roles (access groups)
 Its made using build-in access groups odoo functionality.
 
     * Open database as admin in debug mode (.../web?debug).
-    * Go to Settings->Users->Groups. Here you will see new access groups with Fleet booking prefix.
-    * Go to Settings->Users->Users. Here is new users, one for every group.
+    * Go to ``Settings / Users / Groups``. Here you will see new access groups with Fleet booking prefix.
+    * Go to ``Settings / Users / Users``. Here is new users, one for every group.
     * You can login with any of that users to see database representation for each of them.
 
 Branches
@@ -33,7 +33,7 @@ Branches
 Built with *hr.departments* inheritance.
 
     * Login in system as General Manager (gm/gm) or Admin (admin/admin). *login/password*
-    * Go to fleet in main menu and next Configuration->Branches. Create and edit branches here.
+    * Go to fleet in main menu and next ``Configuration / Branches``. Create and edit branches here.
 
 
 Not ready functions
@@ -75,7 +75,7 @@ Add (Edit) Vehicle
     * Open some vehicle.
     * Press Edit button.
         * Fill required fields.
-        * Vehicle Model -> Model
+        * Vehicle ``Model -> Model``
         * Vehicle Brand -> Make (open form Create: Model)
         * Color -> Dropdown selection
         * Car Plate Number -> License Plate
@@ -98,7 +98,7 @@ Remove Vehicle
     * Open some vehicle.
     * Press Edit button.
         * PressRemove button.
-        * Fill poped up form. If it sold put also Selling price.
+        * Fill popped up form. If it sold put also Selling price.
 
 
 Vehicle Contracts
@@ -187,4 +187,4 @@ Vehicle Contracts
                          Exceeded hours cost = Rate per extra hour (по этому параметру тоже нет инфо в документе, будем уточниять) * Exceeded hours
     * Deposit - подтягивается автоматически из контракта Rent
     * Remaining amount - вычисляется автоматически:
-            Remaining amount = Total - Deposit
+            Remaining amount = Deposit - Total
