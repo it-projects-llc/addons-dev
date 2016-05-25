@@ -44,8 +44,6 @@ Below stuff planned but not completed yet. It partially finished or developing n
 Customer features
 -----------------
 
-1 Stage::
-
     * Create or edit customer
     * User with Branch Officer role enters in database.
     * Open Contacts.
@@ -69,10 +67,8 @@ Customer features
     * Press save.
 
 
-Add (Edit), Remove Vehicle
---------------------------
-
-1 Stage::
+Add (Edit) Vehicle
+------------------
 
     * Go to Fleet.
     * Open Vehicles.
@@ -93,8 +89,9 @@ Add (Edit), Remove Vehicle
         * Insurance Installments dates Table
         * Odometer -> Last Odometer
     * Press save.
-   
-2 Stage::
+
+Remove Vehicle
+--------------
 
     * Go to Fleet.
     * Open Vehicles.
@@ -106,8 +103,6 @@ Add (Edit), Remove Vehicle
 
 Vehicle Contracts
 -----------------
-
-Stage 1::
 
     * Go to Fleet.
     * You will see *Movements* section in left panel menu. This section has 3 rows.  Rent, Receive, Extending Contract, Return Vehicle. Actually its just a different representation fo same model with contract type binding.
@@ -159,7 +154,7 @@ Stage 1::
     * Remaining amount - оставшаяся сумма оплаты, вычисляется автоматически по формуле:
             Remaining amount = Total - Deposit
 
-2 Stage::
+
 
     * Go to Fleet.
     * You will see Return Vehicle in *Movements* section.
