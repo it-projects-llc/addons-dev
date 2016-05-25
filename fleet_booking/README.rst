@@ -3,7 +3,7 @@
 ===============================
 
 Adds roles (res.groups) with xml.
-Adds branches in fleet module.
+Adds branches in fleet module (inherited from hr module).
 
 
 Further information
