@@ -52,7 +52,7 @@ Create or edit customer
     * Enter **Work Phone** string.
     * Open ``Personal information`` tab.
         * Enter **Birthdate**.
-    TODO    * If customer age less than 21 you will not be able to save contact and you will see according notification.
+        * If customer age less than 21 you will not be able to save contact and you will see according notification.
         * Enter **Nationality** string.
         * Select one from dropdown **ID Type** (National Id, Iqama, Passport).
         * Enter **ID Number** string.

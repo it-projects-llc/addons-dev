@@ -29,3 +29,13 @@ class Person(models.Model):
                                      (u'International', u'International')],
                                     string='License Type')
     license_number = fields.Char(string='License Number')
+
+    def check_age(self, cr, uid, ids, context=None, parent=None):
+        for r in self.browse(cr, uid, ids, context=context):
+            if r.age < 21:
+                return False
+        return True
+
+    _constraints = [
+        (check_age, 'Age restriction. Person must be elder than 20.', ['parent_id']),
+    ]
