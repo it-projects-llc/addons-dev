@@ -12,13 +12,9 @@
             <field name="implied_ids" eval="[(4, ref('fleet.group_fleet_manager')),
                                              (4, ref('base.group_hr_manager')),
                                              (4, ref('base.group_system')),
-                                             (4, ref('partner_person.person_ni')),
                                              (4, ref('partner_person.person_passport')),
-                                             (4, ref('partner_person.personal_marital_information')),
                                              (4, ref('partner_person.person_birthdate')),
-                                             (4, ref('partner_person.person_family')),
                                              (4, ref('partner_person.person_nationality')),
-                                             (4, ref('partner_person.person_disabilities')),
                                              ]"/>
         </record>
         <record id="group_branch_officer" model="res.groups">
