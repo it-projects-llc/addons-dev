@@ -4,7 +4,7 @@
 
 Adds roles (res.groups) with xml.
 Adds branches in fleet module (inherited from hr module).
-
+Adds partner personality info (inherited from partner_person).
 
 Further information
 -------------------

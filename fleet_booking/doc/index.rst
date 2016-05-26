@@ -44,7 +44,9 @@ Below stuff planned but not completed yet. It partially finished or developing n
 Customer features
 -----------------
 
-    * Create or edit customer
+Create or edit customer
+^^^^^^^^^^^^^^^^^^^^^^^
+
     * User with Branch Officer role enters in database.
     * Open Contacts.
     * Open some contact.

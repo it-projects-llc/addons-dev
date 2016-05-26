@@ -15,7 +15,8 @@
     "depends": [
         "hr",
         "fleet",
-        "account"
+        "account",
+        "partner_person"
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
