@@ -35,6 +35,37 @@ Built with *hr.departments* inheritance.
     * Login in system as General Manager (gm/gm) or Admin (admin/admin). *login/password*
     * Go to fleet in main menu and next ``Configuration / Branches``. Create and edit branches here.
 
+Customer features
+-----------------
+
+Create or edit customer
+^^^^^^^^^^^^^^^^^^^^^^^
+
+    * User with Branch Officer role enters in database.
+    * Open ``Contacts``.
+    * Open some contact.
+    * You will see customer form.
+    * Press ``[Edit]`` button.
+    * Enter **First Name** string.
+    * Enter **Last Name** string.
+    * Enter **Work Phone** string.
+    * Open ``Personal information`` tab.
+        * Enter **Birthdate**.
+    TODO    * If customer age less than 21 you will not be able to save contact and you will see according notification.
+        * Enter **Nationality** string.
+        * Select one from dropdown **ID Type** (National Id, Iqama, Passport).
+        * Enter **ID Number** string.
+        * Enter **Issuer** string.
+        * Enter **Date of Issue**.
+        * Select one from dropdown **License Type** (Privatem General, International).
+        * Enter **License Number** string.
+    * Open ``Contacts & Addresses`` tab.
+        * Create new work contact (Contacts & Addresses section).
+        * Create new home (Contacts & Addresses section) .
+        * Create new emergency contact (Contacts & Addresses section).
+    * Open ``Internal notes`` tab.
+        * Enter additional information here.
+    * Press save.
 
 Not ready functions
 ===================
@@ -43,31 +74,6 @@ Below stuff planned but not completed yet. It partially finished or developing n
 
 Customer features
 -----------------
-
-Create or edit customer
-^^^^^^^^^^^^^^^^^^^^^^^
-
-    * User with Branch Officer role enters in database.
-    * Open Contacts.
-    * Open some contact.
-    * You will see customer form.
-    * Press edit button.
-        * Enter Date of Birth.
-        * If customer age less than 21 you will not be able to save contact and you will see according notification.
-        * Enter Nationality string.
-        * Select one from dropdown ID Type (National Id, Iqama, Passport).
-        * Enter ID Number string.
-        * Enter Issuer string.
-        * Enter Date of Issue.
-        * Select one from dropdown License Type (Privatem General, International).
-        * Enter License Number string.
-        * Enter Work Phone Number string.
-        * Create new work contact (Contacts & Addresses section).
-        * Create new home (Contacts & Addresses section) .
-        * Create new emergency contact (Contacts & Addresses section).
-        * Enter additional information in Internal Notes section.
-    * Press save.
-
 
 Add (Edit) Vehicle
 ------------------
