@@ -24,7 +24,8 @@ class Person(models.Model):
         )
     issuer = fields.Char(string='Issuer string')
     issuer_date = fields.Date(string='Date of Issue')
-    license_type = fields.Selection([(u'Privatem General', u'Privatem General'),
+    license_type = fields.Selection([(u'Private', u'Private'),
+                                     (u'General', u'General'),
                                      (u'International', u'International')],
                                     string='License Type')
     license_number = fields.Char(string='License Number')

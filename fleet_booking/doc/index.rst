@@ -57,7 +57,7 @@ Create or edit customer
         * Enter **ID Number** string.
         * Enter **Issuer** string.
         * Enter **Date of Issue**.
-        * Select one from dropdown **License Type** (Privatem General, International).
+        * Select one from dropdown **License Type** (Private, General, International).
         * Enter **License Number** string.
     * Open ``Contacts & Addresses`` tab.
         * Create new work contact (Contacts & Addresses section).
