@@ -10,6 +10,7 @@ This module installing next build-in modules:hr, fleet, account.
     * hr needed for branches inheritance and for basic hr stuff like payroll and so on.
     * fleet in functional basis that going to be significantly extended and modified.
     * account is for accounting purposes.
+    * partner_person is for partner(customer) fields extension.
 
 ==============
 Specifications
