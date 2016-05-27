@@ -85,13 +85,12 @@ Add (Edit) Vehicle
 * Open Vehicles.
 * Open some vehicle.
 * Press Edit button.
-    * Fill required fields.
-    * Vehicle ``Model -> Model``
-    * Vehicle Brand -> Make (open form Create: Model)
-    * Color -> Dropdown selection
-    * Car Plate Number -> License Plate
-    * Car chassis number -> Chassis number
-    * Daily rental price (Daily Rate)
+    * Select model or create new one. Enter ``Model name`` and ``Make (brand)``.
+    * Secect color from dropdown. // add
+    * Enter Model Year. //rename Acquisition Date
+    * Car Plate Number // rename License Plate
+    * Car chassis number
+    * Go to Costs. Create new cost with Rent type. Enter here Daily rental price (Daily Rate).
     * Rate per extra km
     * Allowed kilometer per day
     * Vehicle registration expiry date

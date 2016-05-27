@@ -55,7 +55,7 @@
         <!--PARTNERS-->
         <record id="fb_gm_partner" model="res.partner">
             <field name="name">General Manager</field>
-            <field name="email">gm@cars.sa</field>
+            <field name="email">gm@example.com</field>
             <field name="supplier" eval="False"/>
             <field name="customer" eval="False"/>
             <field name="notify_email">none</field>
@@ -63,7 +63,7 @@
         </record>
         <record id="fb_bo_partner" model="res.partner">
             <field name="name">Branch Officer</field>
-            <field name="email">bo@cars.sa</field>
+            <field name="email">bo@example.com</field>
             <field name="supplier" eval="False"/>
             <field name="customer" eval="False"/>
             <field name="notify_email">none</field>
@@ -71,7 +71,7 @@
         </record>
         <record id="fb_vso_partner" model="res.partner">
             <field name="name">Vehicles Support Officer</field>
-            <field name="email">vso@cars.sa</field>
+            <field name="email">vso@example.com</field>
             <field name="supplier" eval="False"/>
             <field name="customer" eval="False"/>
             <field name="notify_email">none</field>
@@ -79,7 +79,7 @@
         </record>
         <record id="fb_be_partner" model="res.partner">
             <field name="name">Branch Employee</field>
-            <field name="email">be@cars.sa</field>
+            <field name="email">be@example.com</field>
             <field name="supplier" eval="False"/>
             <field name="customer" eval="False"/>
             <field name="notify_email">none</field>
@@ -87,7 +87,7 @@
         </record>
         <record id="fb_ac_partner" model="res.partner">
             <field name="name">Accountant</field>
-            <field name="email">ac@cars.sa</field>
+            <field name="email">ac@example.com</field>
             <field name="supplier" eval="False"/>
             <field name="customer" eval="False"/>
             <field name="notify_email">none</field>
@@ -95,7 +95,7 @@
         </record>
         <record id="fb_po_partner" model="res.partner">
             <field name="name">Payroll Officer</field>
-            <field name="email">po@cars.sa</field>
+            <field name="email">po@example.com</field>
             <field name="supplier" eval="False"/>
             <field name="customer" eval="False"/>
             <field name="notify_email">none</field>
