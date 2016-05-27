@@ -18,6 +18,8 @@ Adds partner personality info:
 
     - Date of birth (from partner_person module)
     - Nationality (from partner_person module)
+    - Third Name
+    - Family Name
     - ID Type
     - ID Number
     - Issuer

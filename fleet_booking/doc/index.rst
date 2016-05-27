@@ -48,7 +48,9 @@ Create or edit customer:
 * You will see customer form.
 * Press ``[Edit]`` button.
 * Enter **First Name** string.
-* Enter **Last Name** string.
+* Enter **Second Name** string.
+* Enter **Third Name** string.
+* Enter **Family Name** string.
 * Enter **Work Phone** string.
 * Open ``Personal information`` tab.
     * Enter **Birthdate**.
