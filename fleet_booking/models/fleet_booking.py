@@ -29,6 +29,8 @@ class Person(models.Model):
                                      (u'International', u'International')],
                                     string='License Type')
     license_number = fields.Char(string='License Number')
+    third_name = fields.Char(string='Third Name')
+    family_name = fields.Char(string='Family Name')
 
     def check_age(self, cr, uid, ids, context=None, parent=None):
         for r in self.browse(cr, uid, ids, context=context):

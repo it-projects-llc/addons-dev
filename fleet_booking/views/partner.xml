@@ -25,6 +25,15 @@
             <xpath expr="//group/field[@name='fax']" position="attributes">
                 <attribute name="string">Work phone</attribute>
             </xpath>
+            <xpath expr="//div/field[@name='lastname']" position="attributes">
+                <attribute name="string">Second Name</attribute>
+            </xpath>
+            <xpath expr="//div/field[@name='lastname']" position="after">
+                <field name='third_name' placeholder="Third Name"/>
+            </xpath>
+            <xpath expr="//div/field[@name='third_name']" position="after">
+                <field name='family_name' placeholder="Family Name"/>
+            </xpath>
         </data>
     </field>
 </record>
