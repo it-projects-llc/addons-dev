@@ -14,12 +14,13 @@ Adds roles:
 
 
 Adds branches in fleet module. Branches is stations between which cars are moved.
+
 Adds partner personality info:
 
     - Date of birth (from partner_person module)
     - Nationality (from partner_person module)
     - Third Name
-    - Family Name
+    - Family Namep
     - ID Type
     - ID Number
     - Issuer
