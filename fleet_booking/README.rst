@@ -2,9 +2,31 @@
  Custom system for car renting
 ===============================
 
-Adds roles (res.groups) with xml.
-Adds branches in fleet module (inherited from hr module).
-Adds partner personality info (inherited from partner_person).
+
+Adds roles:
+
+    - Branch Officer
+    - Vehicles Support Officer
+    - Branch Employee
+    - General Manager
+    - Accountant
+    - Payroll Officer
+
+
+Adds branches in fleet module. Branches is stations between which cars are moved.
+Adds partner personality info:
+
+    - Date of birth (from partner_person module)
+    - Nationality (from partner_person module)
+    - ID Type
+    - ID Number
+    - Issuer
+    - Date of Issue
+    - License Type
+    - License Number
+
+Adds partner age restriction (must be 21 or elder).
+
 
 Further information
 -------------------
