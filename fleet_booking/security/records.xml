@@ -42,6 +42,16 @@
             <field name="category_id" ref="module_fleet_booking_category"/>
             <field name="implied_ids" eval="[(4, ref('base.group_hr_manager'))]"/>
         </record>
+        <!--ALTER BUILD-IN GROUPS-->
+        <record id="base.group_system" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('fleet.group_fleet_manager')),
+                                             (4, ref('base.group_hr_manager')),
+                                             (4, ref('base.group_system')),
+                                             (4, ref('partner_person.person_passport')),
+                                             (4, ref('partner_person.person_birthdate')),
+                                             (4, ref('partner_person.person_nationality')),
+                                             ]"/>
+        </record>
         <!--PARTNERS-->
         <record id="fb_gm_partner" model="res.partner">
             <field name="name">General Manager</field>
