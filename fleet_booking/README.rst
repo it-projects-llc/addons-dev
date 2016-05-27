@@ -28,7 +28,7 @@ Adds partner personality info:
     - License Type
     - License Number
 
-Adds partner age restriction (must be 21 or elder).
+Adds partner age restriction (must be 21 or elder) if he is customer (is customer field).
 
 
 Further information
