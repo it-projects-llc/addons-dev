@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<record id="membership_view_partner_person_form_inherit" model="ir.ui.view">
+    <field name="name">membership.form.inherit</field>
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="partner_person.view_partner_person_form"/>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//page[@name='sales_purchases']/group/group[@name='sale']" position="after">
+                <field name='membership_id'/>
+            </xpath>
+        </data>
+    </field>
+</record>
+</data>
+</openerp>
