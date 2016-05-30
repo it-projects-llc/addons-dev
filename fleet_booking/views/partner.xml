@@ -1,12 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-    <record id="fb_membership_action" model="ir.actions.act_window">
-    <field name="name">Membership</field>
-    <field name="res_model">fb.member_type</field>
-    <field name="view_type">form</field>
-    <field name="view_mode">tree,form</field>
-    </record>
-    <menuitem id="fb_membership_menu" parent="base.menu_sale_config" name="Membership" sequence="10" action="fb_membership_action"/>
+<record id="view_partner_person_form_inherit" model="ir.ui.view">
+    <field name="name">partner.person.form.inherit</field>
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="partner_person.view_partner_person_form"/>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//page[@name='personal_information']//field[@name='passport']" position="attributes">
+                <attribute name="string">ID Number</attribute>
+            </xpath>
+            <xpath expr="//page[@name='personal_information']//field[@name='passport']" position="before">
+                <field name='id_type'/>
+            </xpath>
+            <xpath expr="//page[@name='personal_information']//field[@name='sex']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//page[@name='personal_information']//field[@name='sex']" position="before">
+                <field name='license_type'/>
+                <field name='license_number'/>
+                <field name='issuer'/>
+                <field name='issuer_date'/>
+            </xpath>
+            <xpath expr="//group/field[@name='fax']" position="attributes">
+                <attribute name="string">Work phone</attribute>
+            </xpath>
+            <xpath expr="//div/field[@name='lastname']" position="attributes">
+                <attribute name="string">Second Name</attribute>
+            </xpath>
+            <xpath expr="//div/field[@name='lastname']" position="after">
+                <field name='third_name' placeholder="Third Name"/>
+            </xpath>
+            <xpath expr="//div/field[@name='third_name']" position="after">
+                <field name='family_name' placeholder="Family Name"/>
+            </xpath>
+        </data>
+    </field>
+</record>
 </data>
 </openerp>

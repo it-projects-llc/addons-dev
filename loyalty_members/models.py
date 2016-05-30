@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # fb - fleet booking
 
-from openerp import fields, models
+from openerp import fields, models, api
 
 class MemberType(models.Model):
     _name = 'fb.member_type'
@@ -31,10 +31,13 @@ class Person(models.Model):
     points = fields.Integer(string='Points')
     membership_id = fields.Many2one('fb.member_log', compute='get_membership', string='Membership')
 
+    @api.one
     def get_membership(self):
-        query = """SELECT MAX(a.date)
-                   FROM fb_member_log as a
-                   WHERE a.id = %s""" % (self.id)
+        query = """SELECT member_type
+                   FROM fb_member_log
+                   WHERE id = %s
+                   ORDER BY date DESC
+                   LIMIT 1""" % (self.id)
         self.env.cr.execute(query)
         query_results = self.env.cr.dictfetchall()
         return query_results
