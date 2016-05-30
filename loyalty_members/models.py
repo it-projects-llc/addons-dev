@@ -4,7 +4,7 @@
 from openerp import fields, models, api
 
 class MemberType(models.Model):
-    _name = 'fb.member_type'
+    _name = 'member.type'
     _order = 'sequence'
 
     name = fields.Char('Membership type')
@@ -14,9 +14,9 @@ class MemberType(models.Model):
 
 class MemberLog(models.Model):
 
-    _name = 'fb.member_log'
+    _name = 'member.log'
 
-    member_type = fields.Many2one('fleet_booking.member_type')
+    member_type = fields.Many2one('member_type')
     date = fields.Date(string='Date of change', required=True, readonly=True,
                        default=fields.Date.context_today, timestamp=True)
     reason = fields.Selection([(u'Promote', u'Promote'),
@@ -30,7 +30,7 @@ class Person(models.Model):
     _inherit = 'res.partner'
 
     points = fields.Integer(string='Points')
-    membership_id = fields.Many2one('fb.member_type', compute='get_membership',
+    membership_id = fields.Many2one('member.type', compute='get_membership',
                                     string='Membership')
 
     @api.one

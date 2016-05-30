@@ -1,2 +1,0 @@
-id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
-gm_access,member_type,model_fb_member_type,fleet_booking.group_general_manager,1,1,1,1
