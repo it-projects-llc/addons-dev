@@ -23,6 +23,7 @@
     "data": [
         "views/views.xml",
         "views/partner.xml",
+        "views/fleet.xml",
         "security/records.xml",
         "security/ir.model.access.csv"
     ],

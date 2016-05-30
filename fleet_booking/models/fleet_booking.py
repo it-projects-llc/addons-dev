@@ -43,3 +43,8 @@ class Person(models.Model):
         (check_age, 'Age restriction. Person must be elder than 20.', ['birthdate_date']),
     ]
 
+class FleetBranch(models.Model):
+
+    _inherit = 'fleet.vehicle'
+
+    branch = fields.Many2one('fb.branch')
