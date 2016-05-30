@@ -18,10 +18,11 @@
     "external_dependencies": {"python": [], "bin": []},
     "data": [
         "views/partner.xml",
+        "security/ir.model.access.csv"
     ],
     "qweb": [
     ],
-    "demo": ['demo/demo.xml'],
+    "demo": [],
     'installable': True,
     "auto_install": False,
 }

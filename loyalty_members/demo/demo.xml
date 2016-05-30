@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-    <!--RECORDS-->
-     <record id="fb_bronze" model="fb.member_type">
+
+        <!--RECORDS-->
+     <record id="fb_bronze" model="member_type">
             <field name="name">Bronze</field>
             <field name="points">0</field>
             <field name="sequence">1</field>
     </record>
-     <record id="fb_silver" model="fb.member_type">
+     <record id="fb_silver" model="member_type">
             <field name="name">Silver</field>
             <field name="points">2000</field>
             <field name="sequence">2</field>
     </record>
-     <record id="fb_gold" model="fb.member_type">
+     <record id="fb_gold" model="member_type">
             <field name="name">Gold</field>
             <field name="points">5000</field>
             <field name="sequence">3</field>

@@ -4,7 +4,7 @@
 from openerp import fields, models, api
 
 class MemberType(models.Model):
-    _name = 'member.type'
+    _name = 'member_type'
     _order = 'sequence'
 
     name = fields.Char('Membership type')
@@ -14,7 +14,7 @@ class MemberType(models.Model):
 
 class MemberLog(models.Model):
 
-    _name = 'member.log'
+    _name = 'member_log'
 
     member_type = fields.Many2one('member_type')
     date = fields.Date(string='Date of change', required=True, readonly=True,
@@ -30,7 +30,7 @@ class Person(models.Model):
     _inherit = 'res.partner'
 
     points = fields.Integer(string='Points')
-    membership_id = fields.Many2one('member.type', compute='get_membership',
+    membership_id = fields.Many2one('member_type', compute='get_membership',
                                     string='Membership')
 
     @api.one

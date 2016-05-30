@@ -1,2 +1,2 @@
 id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
-gm_access,branch,model_fb_branch,group_general_manager,1,1,1,1
+gm_access2,member_type,model_member_type,base.group_sale_manager,1,1,1,1
