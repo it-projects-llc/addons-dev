@@ -53,10 +53,7 @@ class Membership(models.Model):
                                     (u'Gold', u'Gold')],
                                    string='Membership')
     date = fields.Date(string='Date of change')
-    reason = fields.Selection([(u'Manual up', u'Manual up'),
-                               (u'Manual down', u'Manual down'),
-                               (u'Points up', u'Points up'),
-                               (u'Points down', u'Points down'),
+    reason = fields.Selection([(u'Ascend', u'Ascend'),
                                (u'Demote', u'Demote'),
                                (u'Other', u'Other')],
                               string='Membership')
