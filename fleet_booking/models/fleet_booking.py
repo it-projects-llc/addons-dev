@@ -57,13 +57,3 @@ class Membership(models.Model):
                                (u'Demote', u'Demote'),
                                (u'Other', u'Other')],
                               string='Membership')
-
-    def check_age(self, cr, uid, ids, context=None, parent=None):
-        for r in self.browse(cr, uid, ids, context=context):
-            if r.customer and r.birthdate_date and r.age < 21:
-                return False
-        return True
-
-    _constraints = [
-        (check_age, 'Age restriction. Person must be elder than 20.', ['birthdate_date']),
-    ]
