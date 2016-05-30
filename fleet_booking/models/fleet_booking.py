@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+# fb - fleet booking
 
 from openerp import api, fields, models
 
 
 class HrDepartment(models.Model):
 
-    _name = "fleet_booking.branch"
+    _name = "fb.branch"
     _inherit = 'hr.department'
 
     city = fields.Char(string='City')
@@ -31,6 +32,7 @@ class Person(models.Model):
     license_number = fields.Char(string='License Number')
     third_name = fields.Char(string='Third Name')
     family_name = fields.Char(string='Family Name')
+    membership_id = fields.Many2one('membership')
 
     def check_age(self, cr, uid, ids, context=None, parent=None):
         for r in self.browse(cr, uid, ids, context=context):
@@ -43,17 +45,23 @@ class Person(models.Model):
     ]
 
 
-class Membership(models.Model):
+class MemberType(models.Model):
+    _name = 'fb.member_type'
+    _order = 'sequence'
 
-    _name = 'membership'
+    name = fields.Char('Membership type')
+    points = fields.Integer('Promote at', default=0)
+    sequence = fields.Integer(help='Membership order')
 
-    partner = fields.Many2one('res.partner')
-    member_type = fields.Selection([(u'Bronze', u'Bronze'),
-                                    (u'Silver', u'Silver'),
-                                    (u'Gold', u'Gold')],
-                                   string='Membership')
-    date = fields.Date(string='Date of change')
-    reason = fields.Selection([(u'Ascend', u'Ascend'),
+
+class MemberLog(models.Model):
+
+    _name = 'fb.member_log'
+
+    member_type = fields.Many2one('fleet_booking.member_type')
+    date = fields.Date(string='Date of change', required=True, readonly=True,
+                       default=fields.Date.context_today, timestamp=True)
+    reason = fields.Selection([(u'Promote', u'Promote'),
                                (u'Demote', u'Demote'),
                                (u'Other', u'Other')],
-                              string='Membership')
+                              string='Reason')

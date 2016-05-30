@@ -34,6 +34,9 @@
             <xpath expr="//div/field[@name='third_name']" position="after">
                 <field name='family_name' placeholder="Family Name"/>
             </xpath>
+            <xpath expr="//page[@name='sales_purchases']/group/group[@name='sale']" position="after">
+                <field name='membership_id'/>
+            </xpath>
         </data>
     </field>
 </record>

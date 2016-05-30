@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <record id="fb_membership_action" model="ir.actions.act_window">
+    <field name="name">Membership</field>
+    <field name="res_model">fb.member_type</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="fb_membership_menu" parent="base.menu_sale_config" name="Membership" sequence="10" action="fb_membership_action"/>
+    <!--RECORDS-->
+     <record id="fb_bronze" model="fb.member_type">
+            <field name="name">Bronze</field>
+            <field name="points">0</field>
+            <field name="sequence">1</field>
+    </record>
+     <record id="fb_silver" model="fb.member_type">
+            <field name="name">Silver</field>
+            <field name="points">2000</field>
+            <field name="sequence">2</field>
+    </record>
+     <record id="fb_gold" model="fb.member_type">
+            <field name="name">Gold</field>
+            <field name="points">5000</field>
+            <field name="sequence">3</field>
+    </record>
+</data>
+</openerp>
