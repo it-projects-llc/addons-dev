@@ -30,7 +30,8 @@ class Person(models.Model):
     _inherit = 'res.partner'
 
     points = fields.Integer(string='Points')
-    membership_id = fields.Many2one('fb.member_type', compute='get_membership', string='Membership')
+    membership_id = fields.Many2one('fb.member_type', compute='get_membership',
+                                    string='Membership')
 
     @api.one
     # @api.depends('name', 'street', 'website')
