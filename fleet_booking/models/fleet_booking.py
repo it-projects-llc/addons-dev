@@ -32,7 +32,6 @@ class Person(models.Model):
     license_number = fields.Char(string='License Number')
     third_name = fields.Char(string='Third Name')
     family_name = fields.Char(string='Family Name')
-    membership_id = fields.Many2one('membership')
 
     def check_age(self, cr, uid, ids, context=None, parent=None):
         for r in self.browse(cr, uid, ids, context=context):
@@ -44,24 +43,3 @@ class Person(models.Model):
         (check_age, 'Age restriction. Person must be elder than 20.', ['birthdate_date']),
     ]
 
-
-class MemberType(models.Model):
-    _name = 'fb.member_type'
-    _order = 'sequence'
-
-    name = fields.Char('Membership type')
-    points = fields.Integer('Promote at', default=0)
-    sequence = fields.Integer(help='Membership order')
-
-
-class MemberLog(models.Model):
-
-    _name = 'fb.member_log'
-
-    member_type = fields.Many2one('fleet_booking.member_type')
-    date = fields.Date(string='Date of change', required=True, readonly=True,
-                       default=fields.Date.context_today, timestamp=True)
-    reason = fields.Selection([(u'Promote', u'Promote'),
-                               (u'Demote', u'Demote'),
-                               (u'Other', u'Other')],
-                              string='Reason')
