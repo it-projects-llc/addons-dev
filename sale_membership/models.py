@@ -16,6 +16,7 @@ class MemberLog(models.Model):
 
     _name = 'sale_membership.log'
 
+    partner = fields.Many2one('res.partner', string='Partner')
     member_type = fields.Many2one('sale_membership.type')
     date = fields.Date(string='Date of change', required=True, readonly=True,
                        default=fields.Date.context_today, timestamp=True)
@@ -30,20 +31,20 @@ class Person(models.Model):
     _inherit = 'res.partner'
 
     points = fields.Integer(string='Points')
-    membership_id = fields.Many2one('sale_membership.type', string='Membership')
+    membership_id = fields.Many2one('sale_membership.type', compute='get_membership', string='Membership')
 
-    # @api.one
-    # # @api.depends('name', 'street', 'website')
-    # def get_membership(self):
-    #     # query = """SELECT member_type
-    #     #            FROM fb_member_log
-    #     #            WHERE id = %s
-    #     #            ORDER BY date DESC
-    #     #            LIMIT 1""" % ('1')
-    #     #            # LIMIT 1""" % (self.id)
-    #     # self.env.cr.execute(query)
-    #     # query_results = self.env.cr.dictfetchall()
-    #     self.membership_id = self.env.ref('loyalty_members.fb_bronze').id
+    @api.one
+    # @api.depends('name', 'street', 'website')
+    def get_membership(self):
+        # query = """SELECT member_type
+        #            FROM fb_member_log
+        #            WHERE id = %s
+        #            ORDER BY date DESC
+        #            LIMIT 1""" % ('1')
+        #            # LIMIT 1""" % (self.id)
+        # self.env.cr.execute(query)
+        # query_results = self.env.cr.dictfetchall()
+        self.membership_id = self.env.ref('fleet_booking.fb_bronze').id
 
 
 
