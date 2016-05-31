@@ -30,6 +30,7 @@ class Person(models.Model):
                                      (u'International', u'International')],
                                     string='License Type')
     license_number = fields.Char(string='License Number')
+    license_expiry_date = fields.Date(string='License Expiry Date')
     third_name = fields.Char(string='Third Name')
     family_name = fields.Char(string='Family Name')
 
