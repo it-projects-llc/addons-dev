@@ -19,4 +19,5 @@ Edit partner
 * By default membership level is on minimum that accords to 0 points.
 * ``[Demote]`` button will decrease membership rank by one level and set point to this level minimum. If it pressed ``Reason of demotion`` window will appear.
 * ``[Block/Unblock]`` button will add "blocked" attribute to customer. Assumes that customer is banned. If it pressed ``Reason of block`` window will appear.
+* If customer on most minimum level ``[Demote]`` button is not available (its grey and can not be pressed).
 * If customer already blocked that button turns to ``[Unblock]``. So you can now unblock customer and to put unblock reason.
