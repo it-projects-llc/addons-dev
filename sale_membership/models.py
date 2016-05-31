@@ -16,14 +16,11 @@ class MemberLog(models.Model):
 
     _name = 'sale_membership.log'
 
-    partner = fields.Many2one('res.partner', string='Partner')
-    member_type = fields.Many2one('sale_membership.type')
+    partner_id = fields.Many2one('res.partner', string='Partner')
+    member_type_id = fields.Many2one('sale_membership.type')
     date = fields.Date(string='Date of change', required=True, readonly=True,
                        default=fields.Date.context_today, timestamp=True)
-    reason = fields.Selection([(u'Promote', u'Promote'),
-                               (u'Demote', u'Demote'),
-                               (u'Other', u'Other')],
-                              string='Reason')
+    reason = fields.Char(string='Reason')
 
 
 class Person(models.Model):
