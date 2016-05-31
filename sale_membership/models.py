@@ -21,6 +21,7 @@ class MemberLog(models.Model):
     date = fields.Date(string='Date of change', required=True, readonly=True,
                        default=fields.Date.context_today, timestamp=True)
     reason = fields.Char(string='Reason')
+    blocked = fields.Boolean('Blocked', default='False')
 
 
 class Person(models.Model):
