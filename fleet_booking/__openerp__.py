@@ -17,7 +17,7 @@
         "fleet",
         "account",
         "partner_person",
-        "loyalty_members"
+        "sale_membership"
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
