@@ -6,19 +6,17 @@
     <field name="model">sale_membership.manage_wizard</field>
     <field name="arch" type="xml">
         <form string="Manage membership">
-            <sheet>
                 <group>
                     <field name="type_id" class="oe_inline"/>
                     <field name="reason" class="oe_inline"/>
                 </group>
                 <footer>
-                    <button string="Save" class="oe_link" special="cancel"/>
+                    <button type="object" name="save_changes" string="Save"/>
                 </footer>
-            </sheet>
         </form>
     </field>
  </record>
-<record id="sale_membership_action" model="ir.actions.act_window">
+<record id="sale_membership_action_wizard" model="ir.actions.act_window">
     <field name="name">Manage membership</field>
     <field name="res_model">sale_membership.manage_wizard</field>
     <field name="view_mode">form</field>
@@ -33,9 +31,9 @@
     <field name="arch" type="xml">
         <data>
             <xpath expr="//page[@name='sales_purchases']/group/group[@name='sale']" position="inside">
-                <field name='type_id'/>
+                <field name='log_id'/>
                 <button type="action"
-                        name="%(sale_membership_action)d"
+                        name="%(sale_membership_action_wizard)d"
                         string="Manage membership"/>
             </xpath>
         </data>

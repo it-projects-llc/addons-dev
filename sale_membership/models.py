@@ -28,21 +28,22 @@ class Person(models.Model):
 
     _inherit = 'res.partner'
 
-    points = fields.Integer(string='Points')
-    type_id = fields.Many2one('sale_membership.type', compute='get_membership', string='Membership type')
+    points = fields.Integer(string='Points', default=0)
+    log_id = fields.Many2one('sale_membership.log', compute='get_membership', string='Membership type', store=True)
 
     @api.one
-    # @api.depends('name', 'street', 'website')
+    @api.depends('points')
     def get_membership(self):
-        # query = """SELECT member_type
-        #            FROM fb_member_log
-        #            WHERE id = %s
-        #            ORDER BY date DESC
-        #            LIMIT 1""" % ('1')
-        #            # LIMIT 1""" % (self.id)
-        # self.env.cr.execute(query)
-        # query_results = self.env.cr.dictfetchall()
-        self.type_id = self.env.ref('fleet_booking.fb_bronze').id
+        query = """SELECT type_id
+                   FROM sale_membership_log
+                   WHERE id = %s
+                   ORDER BY date DESC
+                   LIMIT 1""" % (self.id)
+                   # LIMIT 1""" % (self.id)
+        self.env.cr.execute(query)
+        query_results = self.env.cr.dictfetchall()
+        print '# query_results:', query_results
+        self.log_id = query_results[0]
 
 
 
