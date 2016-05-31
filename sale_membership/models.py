@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# fb - fleet booking
 
 from openerp import fields, models, api
+
 
 class MemberType(models.Model):
     _name = 'sale_membership.type'
