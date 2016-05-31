@@ -18,7 +18,7 @@ class MemberLog(models.Model):
 
     partner_id = fields.Many2one('res.partner', string='Partner')
     member_type_id = fields.Many2one('sale_membership.type')
-    date = fields.Date(string='Date of change', required=True, readonly=True,
+    log_record_date = fields.Date(string='Date of change', required=True, readonly=True,
                        default=fields.Date.context_today, timestamp=True)
     reason = fields.Char(string='Reason')
     blocked = fields.Boolean('Blocked', default='False')
@@ -29,7 +29,7 @@ class Person(models.Model):
     _inherit = 'res.partner'
 
     points = fields.Integer(string='Points')
-    membership_id = fields.Many2one('sale_membership.type', compute='get_membership', string='Membership')
+    type_id = fields.Many2one('sale_membership.type', compute='get_membership', string='Membership type')
 
     @api.one
     # @api.depends('name', 'street', 'website')
@@ -42,7 +42,7 @@ class Person(models.Model):
         #            # LIMIT 1""" % (self.id)
         # self.env.cr.execute(query)
         # query_results = self.env.cr.dictfetchall()
-        self.membership_id = self.env.ref('fleet_booking.fb_bronze').id
+        self.type_id = self.env.ref('fleet_booking.fb_bronze').id
 
 
 
