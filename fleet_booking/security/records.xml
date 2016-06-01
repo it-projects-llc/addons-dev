@@ -24,7 +24,8 @@
             <field name="implied_ids" eval="[(4, ref('fleet.group_fleet_manager')),
                                              (4, ref('partner_person.person_passport')),
                                              (4, ref('partner_person.person_birthdate')),
-                                             (4, ref('partner_person.person_nationality')),]"/>
+                                             (4, ref('partner_person.person_nationality')),
+                                             (4, ref('sale_membership.group_manager')),]"/>
         </record>
         <record id="group_vehicles_support_officer" model="res.groups">
             <field name="name">Vehicles Support Officer</field>

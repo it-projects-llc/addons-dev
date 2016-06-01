@@ -37,7 +37,7 @@
                 <field name='points' string="Points"/>
                 <button type="action"
                         name="%(sale_membership_action_wizard)d"
-                        string="Manage membership"/>
+                        string="Manage membership" groups="sale_membership.group_manager"/>
             </xpath>
         </data>
     </field>

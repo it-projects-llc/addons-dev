@@ -1,2 +1,4 @@
 id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
-adm,member_type,sale_membership.model_sale_membership_log,base.group_configuration,1,1,1,1
+adm1,member_type1,model_sale_membership_log,group_manager,1,1,1,1
+adm2,member_type2,model_sale_membership_type,group_manager,1,1,1,1
+adm3,member_type3,model_sale_membership_manage_wizard,group_manager,1,1,1,1
