@@ -8,6 +8,7 @@ class ManageMembershipWizard(models.TransientModel):
 
     type_id = fields.Many2one('sale_membership.type', string='Type')
     reason = fields.Char(string='Reason')
+    blocked = fields.Boolean(string='Blocked')
 
     @api.multi
     def save_changes(self):
@@ -19,8 +20,10 @@ class ManageMembershipWizard(models.TransientModel):
                     'log_record_date': fields.Datetime.now(),
                     'reason': self.reason,
                     'name': self.type_id.name,
+                    'blocked': self.blocked,
                     'points': record.points,
             }
             log_rec = self.env['sale_membership.log'].create(vals)
             record.points = self.type_id.points
-            record.log_id = log_rec.id
+            record.type_id = self.type_id.id
+            record.blocked = self.blocked

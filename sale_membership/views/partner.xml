@@ -8,6 +8,7 @@
         <form string="Manage membership">
                 <group>
                     <field name="type_id" class="oe_inline" string="Membership"/>
+                    <field name="blocked" class="oe_inline" string="Blocked"/>
                     <field name="reason" class="oe_inline" string="Reason"/>
                 </group>
                 <footer>
