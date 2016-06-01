@@ -46,21 +46,24 @@ class Person(models.Model):
     @api.depends('points')
     def set_membership(self):
         smt = self.env['sale_membership.type'].search([('name', '!=', '')])
-        if self.points >= smt[len(smt) - 1].points:
-            self.type_id = smt[len(smt) - 1].id
+        smt_last_index = len(smt) - 1
+        if not smt_last_index:
+            return
+        if self.points >= smt[smt_last_index].points:
+            self.type_id = smt[smt_last_index].id
         else:
-            for r in range(len(smt)-1):
+            for r in range(smt_last_index):
                 if self.points >= smt[r].points and self.points < smt[r+1].points:
                     self.type_id = smt[r].id
                     break
-        vals = {'partner_id': self.id,
-                'member_type_id': self.type_id.id,
-                'log_record_date': fields.Datetime.now(),
-                'reason': 'Automatic',
-                'name': self.type_id.name,
-                'points': self.points,
-                }
-        log_rec = self.env['sale_membership.log'].create(vals)
+        # vals = {'partner_id': self.id,
+        #         'member_type_id': self.type_id.id,
+        #         'log_record_date': fields.Datetime.now(),
+        #         'reason': 'Automatic',
+        #         'name': self.type_id.name,
+        #         'points': self.points,
+        #         }
+        # log_rec = self.env['sale_membership.log'].create(vals)
 
     def get_membership(self, partner_id=None):
         query_results = []
