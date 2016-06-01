@@ -1,17 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
+<record id="sale_membership_log_tree_form" model="ir.ui.view">
+    <field name="name">sale_membership.tree</field>
+    <field name="model">sale_membership.log</field>
+    <field eval="20" name="priority"/>
+    <field name="arch" type="xml">
+        <tree string="Log">
+            <field name="name"/>
+            <field name="partner_id"/>
+            <field name="member_type_id"/>
+            <field name="log_record_date"/>
+            <field name="reason"/>
+            <field name="points"/>
+            <field name="blocked"/>
+        </tree>
+    </field>
+</record>
+<record id="sale_membership_type_tree_form" model="ir.ui.view">
+    <field name="name">sale_membership.tree</field>
+    <field name="model">sale_membership.type</field>
+    <field eval="20" name="priority"/>
+    <field name="arch" type="xml">
+        <tree string="Type">
+            <field name="name"/>
+            <field name="points"/>
+            <field name="sequence"/>
+        </tree>
+    </field>
+</record>
 <record id="sale_membership_action" model="ir.actions.act_window">
     <field name="name">Membership log</field>
     <field name="res_model">sale_membership.log</field>
     <field name="view_type">form</field>
     <field name="view_mode">tree,form</field>
+    <field name="view_id" ref="sale_membership_log_tree_form"/>
 </record>
 <record id="sale_membership_types_action" model="ir.actions.act_window">
     <field name="name">Membership types</field>
     <field name="res_model">sale_membership.type</field>
     <field name="view_type">form</field>
     <field name="view_mode">tree,form</field>
+    <field name="view_id" ref="sale_membership_type_tree_form"/>
 </record>
     <menuitem id="fb_membership_menu" parent="base.menu_sale_config" name="Membership log" sequence="10" action="sale_membership_action"/>
     <menuitem id="fb_membership_log_menu" parent="base.menu_sale_config" name="Membership types" sequence="11" action="sale_membership_types_action"/>
