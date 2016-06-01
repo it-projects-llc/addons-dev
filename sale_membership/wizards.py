@@ -10,6 +10,18 @@ class ManageMembershipWizard(models.TransientModel):
     reason = fields.Char(string='Reason')
     blocked = fields.Boolean(string='Blocked')
 
+    @api.model
+    def default_get(self, fields_list):
+        defaults = super(ManageMembershipWizard, self).default_get(fields_list)
+        context = dict(self._context or {})
+        active_ids = context.get('active_ids', []) or []
+        for record in self.env['res.partner'].browse(active_ids):
+            if 'type_id' in fields_list:
+                defaults.setdefault('type_id', record.type_id.id)
+                defaults.setdefault('blocked', record.blocked)
+        return defaults
+
+
     @api.multi
     def save_changes(self):
         context = dict(self._context or {})
