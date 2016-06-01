@@ -43,11 +43,18 @@
     </field>
 </record>
 <record id="sale_membership_action" model="ir.actions.act_window">
-    <field name="name">Membership</field>
+    <field name="name">Membership log</field>
     <field name="res_model">sale_membership.log</field>
     <field name="view_type">form</field>
     <field name="view_mode">tree,form</field>
 </record>
-    <menuitem id="fb_membership_menu" parent="base.menu_sale_config" name="Membership" sequence="10" action="sale_membership_action"/>
+<record id="sale_membership_types_action" model="ir.actions.act_window">
+    <field name="name">Membership types</field>
+    <field name="res_model">sale_membership.type</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+</record>
+    <menuitem id="fb_membership_menu" parent="base.menu_sale_config" name="Membership log" sequence="10" action="sale_membership_action"/>
+    <menuitem id="fb_membership_log_menu" parent="base.menu_sale_config" name="Membership types" sequence="11" action="sale_membership_types_action"/>
 </data>
 </openerp>
