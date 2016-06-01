@@ -7,8 +7,8 @@
     <field name="arch" type="xml">
         <form string="Manage membership">
                 <group>
-                    <field name="type_id" class="oe_inline"/>
-                    <field name="reason" class="oe_inline"/>
+                    <field name="type_id" class="oe_inline" string="Membership"/>
+                    <field name="reason" class="oe_inline" string="Reason"/>
                 </group>
                 <footer>
                     <button type="object" name="save_changes" string="Save"/>
@@ -31,7 +31,8 @@
     <field name="arch" type="xml">
         <data>
             <xpath expr="//page[@name='sales_purchases']/group/group[@name='sale']" position="inside">
-                <field name='log_id' string="Membership"/>
+                <field name='type_id' string="Membership"/>
+                <field name='blocked' string="Blocked"/>
                 <field name='points' string="Points"/>
                 <button type="action"
                         name="%(sale_membership_action_wizard)d"

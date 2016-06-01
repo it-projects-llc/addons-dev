@@ -20,8 +20,9 @@ class MemberLog(models.Model):
     partner_id = fields.Many2one('res.partner', string='Partner')
     member_type_id = fields.Many2one('sale_membership.type')
     log_record_date = fields.Datetime(string='Date of change', required=True, readonly=True,
-                                  default=fields.Date.context_today, timestamp=True)
+                                      default=fields.Date.context_today, timestamp=True)
     reason = fields.Char(string='Reason')
+    points = fields.Integer(string='Points', default=0)
     blocked = fields.Boolean('Blocked', default='False')
 
 
@@ -29,20 +30,62 @@ class Person(models.Model):
 
     _inherit = 'res.partner'
 
-    points = fields.Integer(string='Points', default=0, readonly=True)
-    log_id = fields.Many2one('sale_membership.log', compute='get_membership', string='Membership type', store=True)
+    points = fields.Integer(string='Points', default=0)
+    type_id = fields.Many2one('sale_membership.type', compute='set_membership', string='Membership type', store=True)
+    blocked = fields.Boolean(default=False, string='Blocked', readonly=True)
+
+    @api.model
+    def default_get(self, fields_list):
+        defaults = super(Person, self).default_get(fields_list)
+        type_id = self.get_membership()
+        if 'type_id' in fields_list:
+            defaults.setdefault('type_id', type_id)
+        return defaults
 
     @api.one
     @api.depends('points')
-    def get_membership(self):
-        query = """SELECT id
-                   FROM sale_membership_log
-                   WHERE partner_id = %s
-                   ORDER BY log_record_date DESC
-                   LIMIT 1""" % (self.id)
-        self.env.cr.execute(query)
-        query_results = self.env.cr.dictfetchall()
-        self.log_id = query_results[0]
+    def set_membership(self):
+        smt = self.env['sale_membership.type'].search([('name', '!=', '')])
+        if self.points >= smt[len(smt) - 1].points:
+            self.type_id = smt[len(smt) - 1].id
+        else:
+            for r in range(len(smt)-1):
+                if self.points >= smt[r].points and self.points < smt[r+1].points:
+                    self.type_id = smt[r].id
+                    break
+        vals = {'partner_id': self.id,
+                'member_type_id': self.type_id.id,
+                'log_record_date': fields.Datetime.now(),
+                'reason': 'Automatic',
+                'name': self.type_id.name,
+                'points': self.points,
+                }
+        log_rec = self.env['sale_membership.log'].create(vals)
+
+    def get_membership(self, partner_id=None):
+        query_results = []
+        if partner_id:
+            query = """SELECT id
+                       FROM sale_membership_log
+                       WHERE partner_id = %s
+                       ORDER BY log_record_date DESC
+                       LIMIT 1""" % (partner_id)
+            self.env.cr.execute(query)
+            query_results = self.env.cr.dictfetchall()
+        if len(query_results):
+            type_id = query_results[0].member_type_id
+        else:
+            query = """SELECT id
+                       FROM sale_membership_type
+                       ORDER BY sequence ASC
+                       LIMIT 1"""
+            self.env.cr.execute(query)
+            query_results = self.env.cr.dictfetchall()
+            if len(query_results):
+                type_id = query_results[0]['id']
+            else:
+                type_id = None
+        return type_id
         # Exceptions ?
 
 

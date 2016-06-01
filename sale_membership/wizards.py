@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from openerp import models, fields, api
-import datetime
+
 
 class ManageMembershipWizard(models.TransientModel):
     _name = 'sale_membership.manage_wizard'
@@ -19,6 +19,7 @@ class ManageMembershipWizard(models.TransientModel):
                     'log_record_date': fields.Datetime.now(),
                     'reason': self.reason,
                     'name': self.type_id.name,
+                    'points': record.points,
             }
             log_rec = self.env['sale_membership.log'].create(vals)
             record.points = self.type_id.points
