@@ -31,7 +31,8 @@
     <field name="arch" type="xml">
         <data>
             <xpath expr="//page[@name='sales_purchases']/group/group[@name='sale']" position="inside">
-                <field name='log_id'/>
+                <field name='log_id' string="Membership"/>
+                <field name='points' string="Points"/>
                 <button type="action"
                         name="%(sale_membership_action_wizard)d"
                         string="Manage membership"/>

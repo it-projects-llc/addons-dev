@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models, fields
-
+from openerp import models, fields, api
+import datetime
 
 class ManageMembershipWizard(models.TransientModel):
     _name = 'sale_membership.manage_wizard'
@@ -9,25 +9,17 @@ class ManageMembershipWizard(models.TransientModel):
     type_id = fields.Many2one('sale_membership.type', string='Type')
     reason = fields.Char(string='Reason')
 
-    # def default_get(self, cr, uid, fields, context=None):
-    #     result = super(ManageMembershipWizard, self).default_get(cr, uid, fields, context=context)
-    #     active_id = context and context.get('active_id', False)
-    #     active_partner = self.pool['res.partner'].browse(cr, uid, active_id, context=context)
-    #     if active_partner:
-    #         result.update({
-    #             'type_id': 1,
-    #         })
-    #     return result
-
-    def save_changes(self, cr, uid, fields, context=None):
-        active_id = context and context.get('active_id', False)
-        active_partner = self.pool['res.partner'].browse(cr, uid, active_id, context=context)
-        if active_partner:
-            vals = {'partner_id': active_partner,
-                    'member_type_id': self.type_id,
-                    'log_record_date': fields.Date.context_today,
+    @api.multi
+    def save_changes(self):
+        context = dict(self._context or {})
+        active_ids = context.get('active_ids', []) or []
+        for record in self.env['res.partner'].browse(active_ids):
+            vals = {'partner_id': record.id,
+                    'member_type_id': self.type_id.id,
+                    'log_record_date': fields.Datetime.now(),
                     'reason': self.reason,
+                    'name': self.type_id.name,
             }
-            rec = self.pool['sale_membership'].create(cr, uid, vals, context=context)
-            active_partner.points = self.type_id.points
-            active_partner.log_id = rec
+            log_rec = self.env['sale_membership.log'].create(vals)
+            record.points = self.type_id.points
+            record.log_id = log_rec.id
