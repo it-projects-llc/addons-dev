@@ -48,6 +48,7 @@ class Person(models.Model):
         smt = self.env['sale_membership.type'].search([('name', '!=', '')])
         smt_last_index = len(smt) - 1
         if not smt_last_index:
+            self.type_id = None
             return
         if self.points >= smt[smt_last_index].points:
             self.type_id = smt[smt_last_index].id
