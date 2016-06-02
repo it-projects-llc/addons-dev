@@ -70,29 +70,14 @@ Create or edit customer:
     * Enter additional information here.
 * Press save.
 
+Customer membership:
+
+* TODO
+
 Not ready functions
 ===================
 
 Below stuff planned but not completed yet. It partially finished or developing now.
-
-Customer features
------------------
-
-2. Customer Membership Management form
-     Можно закинуть например в Sales/Configuration
-     Поля
-      - Customer Membership Or ID Number
-      - Customer name - подгружается автоматически исходя из Customer Membership Or ID Number
-      - Membership Type - подгружается автоматически исходя из Customer Membership Or ID Number
-      - Action Type - выпадалка с 2мя значениями: Demote, Block
-           * если выбрано Demote появляется
-                       выпадалка Choose new membership с 2мя значениями: silver, bronze
-                       поле Demoting reason
-           * если выбрано Block появляется
-
-                    поле Blocking reason
-    Замечание: если у клиента Membership Type = 'Bronze', то понижать его уже некуда. В этом случае можно например при выборе Demote выдавать предупреждение вида:
-        "Membership Type cannot be demoted"  (Membership Type не может быть понижен) или "Customer membership cannot be demoted"
 
 Add (Edit) Vehicle
 ------------------
@@ -103,29 +88,28 @@ Add (Edit) Vehicle
 * Press Edit button.
     * Select model or create new one. Enter ``Model name`` and ``Make (brand)``.
     * Select color from drop-down. // add
-    * Enter Model Year. //rename Acquisition Date
-    * Car Plate Number // rename License Plate
+    * Enter Model Year. // add
+    * Car Plate Number //
     * Car chassis number
-    * Go to Costs.
-        * Create new cost with **Daily Rate** type. Enter in **Total price** daily rental price. // add xml rec
-        * Create new cost with **Rate per extra km** type. Enter in **Total price** rate per extra km. // add xml rec
+    * Daily Rate type // add
+    * Rate per extra km // add
     * Enter allowed kilometer per day // add
     * Enter Vehicle registration expiry date // add
     * Enter Insurance expiry date // add
     * Enter Lease Installments dates // add Table ( model) . даты платежей за прокат
     * Enter Insurance Installments dates // add Table ( model) . даты платежей за страховку
     * Enter Odometer
-    *  Purchase Price // rename car value
-    *  Paid Amount // add
-    *  Remaining Amount  // add
-    *  Asset Account  // add
-    *  Paid Amount Account  // add
-    *  Remaining Amount Account  // add
-    *  Vehicle Depreciation - амортизация ТС - в табличном виде (возможно one2many)
-    *  Depreciation Expense Account - счет для расходов на амортизацию (Many2one)
-    *  Accumulated Depreciation Account - счет для накопленной амортизации  (Many2one)
-    *  Next Maintenance Date - дата следующего сервисного обслуживания (тип Date)
-    *  Press save.
+    * Purchase Price // rename car value
+    * Paid Amount // add
+    * Remaining Amount  // add
+    * Asset Account  // add
+    * Paid Amount Account  // add
+    * Remaining Amount Account  // add
+    * Vehicle Depreciation - амортизация ТС - в табличном виде (возможно one2many)
+    * Depreciation Expense Account - счет для расходов на амортизацию (Many2one)
+    * Accumulated Depreciation Account - счет для накопленной амортизации  (Many2one)
+    * Next Maintenance Date - дата следующего сервисного обслуживания (тип Date)
+    * Press save.
 
 Remove Vehicle
 --------------

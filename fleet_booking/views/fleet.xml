@@ -7,8 +7,29 @@
     <field name="inherit_id" ref="fleet.fleet_vehicle_form"/>
     <field name="arch" type="xml">
         <data>
+            <!-- NEW FIELDS -->
             <xpath expr="//field[@name='company_id']" position="after">
                 <field name='branch'/>
+            </xpath>
+            <xpath expr="//field[@name='doors']" position="after">
+                    <field name='model_year'/>
+                    <field name='daily_rate'/>
+                    <field name='extra_rate'/>
+                    <field name='allowed_per_day'/>
+                    <field name='paid'/>
+                    <field name='remain'/>
+                    <field name='reg_expiry'/>
+                    <field name='ins_expiry'/>
+                    <field name='next_maintain'/>
+            </xpath>
+            <!-- ALTERED FIELDS -->
+            <xpath expr="//h2/field[@name='license_plate']" position="attributes">
+                <!--НЕ РАБОТАЕТ ЧТО ТО-->
+                <attribute name='string'>Plate Number</attribute>
+            </xpath>
+            <xpath expr="//field[@name='color']" position="replace">
+                <!--СТРАННОЕ ПОВЕДЕНИЕ-->
+                <field name='colour'/>
             </xpath>
         </data>
     </field>

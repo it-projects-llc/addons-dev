@@ -2,6 +2,7 @@
 
 from openerp import api, fields, models
 
+# INHERITED MODELS
 
 class HrDepartment(models.Model):
 
@@ -49,3 +50,33 @@ class FleetBranch(models.Model):
     _inherit = 'fleet.vehicle'
 
     branch = fields.Many2one('fleet_booking.branch')
+
+
+class Fleet(models.Model):
+
+    _inherit = 'fleet.vehicle'
+
+    colour = fields.Selection([('black', 'Black'),
+                              ('blue', 'Blue'),
+                              ('red', 'Red'),
+                              ('white', 'White'),
+                              ('sliver', 'Sliver'),
+                              ('yellow', 'Yellow'),
+                              ('green', 'Green'),
+                              ('gold', 'Gold'),
+                              ('orange', 'Orange'),
+                              ('brown', 'Brown'),
+                              ], string='Color', default='black')
+    model_year = fields.Date('Model Year')
+    daily_rate = fields.Float('Daily Rate')
+    extra_rate = fields.Float('Rate per extra km')
+    allowed_per_day = fields.Float('Allowed km per day')
+    paid = fields.Float('Paid amount')
+    remain = fields.Float('Remaining amount')
+    reg_expiry = fields.Date('Registration expiry')
+    ins_expiry = fields.Date('Insurance expiry')
+    next_maintain = fields.Date('Next maintenance')
+
+
+
+# OWN MODELS
