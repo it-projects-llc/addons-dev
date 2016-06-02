@@ -80,3 +80,10 @@ class Fleet(models.Model):
 
 
 # OWN MODELS
+
+class Payments(models.Model):
+    _name = 'fleet_booking.payments'
+
+    serial_num = fields.Integer(string='N')
+    payment_date = fields.Datetime(string='Date')
+    amount = fields.Datetime(string='Amount')
