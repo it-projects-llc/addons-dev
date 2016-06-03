@@ -47,6 +47,17 @@
                                 </tree>
                             </field>
                         </page>
+                        <page string="Deprecation">
+                            <field name="deprecation_ids" nolabel="1" widget="one2many_list" mode="tree"
+                                   context="{'vehicle_id': id}">
+                                <tree string="Insurance" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="sequence"/>
+                                    <field name='deprecation_date'/>
+                                    <field name='amount'/>
+                                </tree>
+                            </field>
+                        </page>
                     </notebook>
                 </sheet>
             </xpath>
