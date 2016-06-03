@@ -78,6 +78,7 @@ class Fleet(models.Model):
     ins_expiry = fields.Date('Insurance expiry')
     next_maintain = fields.Date('Next maintenance')
     payments_ids = fields.One2many('fleet_booking.payments', 'fleet_vehicle_id', string='Payments')
+    insurance_ids = fields.One2many('fleet_booking.insurances', 'fleet_vehicle_id', string='Insurance Installments')
 
 
 # OWN MODELS
@@ -90,6 +91,17 @@ class Payments(models.Model):
     sequence = fields.Integer(default=1,
                               help="Gives the sequence of this line when displaying the vehicle.")
     payment_date = fields.Datetime(string='Date', default=fields.Datetime.now())
+    amount = fields.Float(string='Amount')
+
+
+class InsuranceInstallments(models.Model):
+    _name = 'fleet_booking.insurances'
+    _order = 'fleet_vehicle_id, sequence, id'
+
+    fleet_vehicle_id = fields.Many2one('fleet.vehicle')
+    sequence = fields.Integer(default=1,
+                              help="Gives the sequence of this line when displaying the vehicle.")
+    insurance_date = fields.Datetime(string='Date', default=fields.Datetime.now())
     amount = fields.Float(string='Amount')
 
     # @api.one

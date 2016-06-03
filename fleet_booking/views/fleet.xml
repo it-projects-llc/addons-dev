@@ -23,19 +23,32 @@
                     <field name='next_maintain'/>
             </xpath>
             <xpath expr="//sheet" position="inside">
-                <notebook colspan="4">
-                    <page string="Payments">
-                        <field name="payments_ids" nolabel="1" widget="one2many_list" mode="tree"
-                               context="{'vehicle_id': id}">
-                            <tree string="Payments" editable="bottom">
-                                <field name="sequence" widget="handle"/>
-                                <field name="sequence"/>
-                                <field name='payment_date'/>
-                                <field name='amount'/>
-                            </tree>
-                        </field>
-                    </page>
-                </notebook>
+                <sheet string="Invoice">
+                    <notebook colspan="4">
+                        <page string="Payments">
+                            <field name="payments_ids" nolabel="1" widget="one2many_list" mode="tree"
+                                   context="{'vehicle_id': id}">
+                                <tree string="Payments" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="sequence"/>
+                                    <field name='payment_date'/>
+                                    <field name='amount'/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Insurance">
+                            <field name="insurance_ids" nolabel="1" widget="one2many_list" mode="tree"
+                                   context="{'vehicle_id': id}">
+                                <tree string="Insurance" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="sequence"/>
+                                    <field name='insurance_date'/>
+                                    <field name='amount'/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
             </xpath>
             <!-- ALTERED FIELDS -->
             <xpath expr="//h2/field[@name='license_plate']" position="attributes">
