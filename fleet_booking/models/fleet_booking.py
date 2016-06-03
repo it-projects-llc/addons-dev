@@ -2,6 +2,7 @@
 
 from openerp import api, fields, models
 
+
 # INHERITED MODELS
 
 class HrDepartment(models.Model):
@@ -67,7 +68,7 @@ class Fleet(models.Model):
                               ('orange', 'Orange'),
                               ('brown', 'Brown'),
                               ], string='Color', default='black')
-    model_year = fields.Date('Model Year')
+    model_year = fields.Integer('Model Year')
     daily_rate = fields.Float('Daily Rate')
     extra_rate = fields.Float('Rate per extra km')
     allowed_per_day = fields.Float('Allowed km per day')
@@ -76,14 +77,33 @@ class Fleet(models.Model):
     reg_expiry = fields.Date('Registration expiry')
     ins_expiry = fields.Date('Insurance expiry')
     next_maintain = fields.Date('Next maintenance')
-
+    payments_ids = fields.One2many('fleet_booking.payments', 'fleet_vehicle_id', string='Payments')
 
 
 # OWN MODELS
 
 class Payments(models.Model):
     _name = 'fleet_booking.payments'
+    _order = 'fleet_vehicle_id, sequence, id'
 
-    serial_num = fields.Integer(string='N')
-    payment_date = fields.Datetime(string='Date')
-    amount = fields.Datetime(string='Amount')
+    fleet_vehicle_id = fields.Many2one('fleet.vehicle')
+    sequence = fields.Integer(default=1,
+                              help="Gives the sequence of this line when displaying the vehicle.")
+    payment_date = fields.Datetime(string='Date', default=fields.Datetime.now())
+    amount = fields.Float(string='Amount')
+
+    # @api.one
+    # @api.depends('payment_date')
+    # def get_serial_num(self):
+    #    print '# :',    self._context.get('active_ids', []) or []
+    #    print '# :',    self._context.get('active_id', []) or []
+
+    # @api.model
+    # def default_get(self, fields_list):
+    #     defaults = super(Payments, self).default_get(fields_list)
+    #     res = self.env['fleet_booking.payments'].search(
+    #         [('fleet_vehicle_id', '=', self.fleet_vehicle_id)],
+    #         limit=1, order='serial_num ASC')
+    #     if res:
+    #         defaults.setdefault('serial_num', res.serial_num + 1)
+    #     return defaults

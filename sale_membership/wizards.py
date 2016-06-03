@@ -21,7 +21,6 @@ class ManageMembershipWizard(models.TransientModel):
                 defaults.setdefault('blocked', record.blocked)
         return defaults
 
-
     @api.multi
     def save_changes(self):
         context = dict(self._context or {})

@@ -22,6 +22,15 @@
                     <field name='ins_expiry'/>
                     <field name='next_maintain'/>
             </xpath>
+            <xpath expr="//sheet" position="inside">
+            <field name="payments_ids" nolabel="1" widget="one2many_list" mode="tree" context="{'vehicle_id': id}">
+                    <tree string="Payments" editable="bottom">
+                        <field name='sequence'/>
+                        <field name='payment_date'/>
+                        <field name='amount'/>
+                    </tree>
+                </field>
+            </xpath>
             <!-- ALTERED FIELDS -->
             <xpath expr="//h2/field[@name='license_plate']" position="attributes">
                 <!--НЕ РАБОТАЕТ ЧТО ТО-->
