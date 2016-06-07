@@ -54,7 +54,8 @@ a user.
 Under ``Rent Quotations`` are ``Rent`` and ``Extended Rent`` documents with ``Quotation`` or ``Booked`` states.
 After confirmation they are available uder the ``Confirmed Rents``.
 
-Buttons ``[Book Only]``, ``[Confirm Rental]``, ``[Return]``, ``[Extend]`` are available in Rent Quotation.
+Buttons ``[Book Only]``, ``[Confirm Rental]`` are available in Rent Quotation.
+Buttons ``[Return]``, ``[Extend]`` are available in Confirmed Rents.
 A new record with type ``[Extended Rent]`` is created when a user clicks ``[Extend]`` button in Confirmed Rents. 
 Also a new record with type ``[Return]`` is created when a user clicks ``[Return]`` button.
 The ``[Confirm Rental]`` and ``[Book Only]`` buttons change the state of existing records.
