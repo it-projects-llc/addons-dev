@@ -34,9 +34,9 @@ Adds partner age restriction (must be 21 or elder) if he/she is customer (is cus
  Vehicle Rental Workflow
 -------------------------
 
-One model ``fleet_booking.rental`` is used for working with different types of rental documents:
-The types of document are ``Rent``, ``Extended Rent``, ``Return``.
-Each type of the documents has several states.
+One model ``fleet_booking.rental`` is used for working with different types of rental documents.
+ The types of the documents are ``Rent``, ``Extended Rent``, ``Return``.
+ Each type of the documents has several states.
 ``Rent`` has the states that are ``Quotation``, ``Booked``, ``Confirmed``, ``Extended``, ``Returned``.
 ``Extended Rent`` has the same states: ``Quotation``, ``Booked``, ``Confirmed``, ``Extended``, ``Open Return``, ``Closed Return``.
 ``Return`` may be ``Return Draft``, ``Return Open``, ``Closed``.
