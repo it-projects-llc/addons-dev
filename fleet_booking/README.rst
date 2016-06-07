@@ -54,12 +54,11 @@ a user.
 Under ``Rent Quotations`` are ``Rent`` and ``Extended Rent`` documents with ``Quotation`` or ``Booked`` states.
 After confirmation they are available uder the ``Confirmed Rents``.
 
+Buttons ``[Book Only]``, ``[Confirm]``, ``[Return]``, ``[Extend]`` are available in Rent Quotation.
+
 Under ``Draft Return Contracts`` are ``Return`` documents that are not confirmed yet.
 After confirmation as closed they are available under ``Closed Return Contracts``.
 After confirmation as open they are availbale under ``Open Return Contracts``.
-
-Buttons ``[Book Only]``, ``[Confirm]``, ``[Return]``, ``[Extend]`` are available in
-Rent Quotation.
 
 The ``[Confirm Rental]`` and ``[Book Only]`` buttons change the state of existing records.
 ``[Confirm Rental]`` is only enabled if all fields related to payment are filled.
