@@ -38,7 +38,7 @@ One model ``fleet_booking.rental`` is used for working with different types of r
 The types of the documents are ``Rent``, ``Extended Rent``, ``Return``.
 Each type of the documents has several states.
 ``Rent`` has the states that are ``Quotation``, ``Booked``, ``Confirmed``, ``Extended``, ``Returned``.
-``Extended Rent`` has the same states: ``Quotation``, ``Booked``, ``Confirmed``, ``Extended``, ``Open Return``, ``Closed Return``.
+``Extended Rent`` has the same states: ``Quotation``, ``Booked``, ``Confirmed``, ``Extended``, ``Returned``.
 ``Return`` may be ``Return Draft``, ``Return Open``, ``Closed``.
 
 All rental views are grouped under ``Fleet Rental`` top-level menu. There are the following submenu items available for
