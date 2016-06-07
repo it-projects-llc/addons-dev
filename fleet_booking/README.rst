@@ -44,14 +44,15 @@ One model ``fleet_booking.rental`` is used for working with different rental for
 Rental functions are grouped under ``Fleet Rental`` menu.
 
 Workflow and buttons
-^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
 
-**Quotation -> Quotation Booked**
+``fleet_booking.rental`` has several states. The states in workflow are: Quotaion, Quotation Booked, Rental Order, Extended Rental Order, Return Order.
+Buttons ``[Book Only]``, ``[Confirm Rental]``, ``[Return Rental]`` are used to modify the states of ``fleet_booking.rental`` records.
+
 A Quotation goes to the ``Quotation Booked`` state when a user clicks ``[Book Only]`` button on a Rental Quotation form view.
 ``[Book Only]`` button is only enabled when the ``Edit Date`` and ``Return Date`` fields are filled.
 Booked quotations become visible on the calendar view of the ``fleet_booking.rental`` model.
 
-**Quotation -> Rental Order**, **Quotation Booked -> Rental Order**
 A Quotation goes to the ``Rental Order`` state when a user clicks ``[Confirm Rental]`` button on a Rental Quotation from view.
 ``[Confirm Rental]`` is only enabled if all fields related to payment are filled.
 Confirmed quotations become visible on the calendar view.
