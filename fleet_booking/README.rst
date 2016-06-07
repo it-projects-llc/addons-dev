@@ -54,21 +54,23 @@ a user.
 Under ``Rent Quotations`` are ``Rent`` and ``Extended Rent`` documents with ``Quotation`` or ``Booked`` states.
 After confirmation they are available uder the ``Confirmed Rents``.
 
-Buttons ``[Book Only]``, ``[Confirm]``, ``[Return]``, ``[Extend]`` are available in Rent Quotation.
+Buttons ``[Book Only]``, ``[Confirm Rental]``, ``[Return]``, ``[Extend]`` are available in Rent Quotation.
+A new record with type ``[Extended Rent]`` is created when a user clicks ``[Extend]`` button in Confirmed Rents. 
+Also a new record with type ``[Return]`` is created when a user clicks ``[Return]`` button.
+The ``[Confirm Rental]`` and ``[Book Only]`` buttons change the state of existing records.
+``[Confirm Rental]`` is only enabled if all fields related to payment are filled.
+``[Print Rental Agreement]`` and ``[Create Invoice]`` buttons become enabled for Confirmed Rents.
+When a document has related invoices then ``[Invoices]`` button become visible.
+A user can click to it to see all related invoices.
 
 Under ``Draft Return Contracts`` are ``Return`` documents that are not confirmed yet.
 After confirmation as closed they are available under ``Closed Return Contracts``.
 After confirmation as open they are availbale under ``Open Return Contracts``.
 
-The ``[Confirm Rental]`` and ``[Book Only]`` buttons change the state of existing records.
-``[Confirm Rental]`` is only enabled if all fields related to payment are filled.
+Buttons ``[Confirm Return]`` and ``[Return car and keep contract open]`` are available in Draft Return Contracts.
+``[Confirm Return]`` button is only enabled if ``Balance`` is negative or ``Balance`` is positive and ``Paid Ammount`` is equal to ``Customer Shall Pay``.
+``[Return Car and Keep Contract Open]`` button shall be enabled only if previous condition is false.
 
-``[Print Rental Agreement]`` and ``[Create Invoice]`` buttons become enabled for Confirmed Rents.
-When a document has related invoices then ``[Invoices]`` button become visible.
-A user can click to it to see all related invoices.
-
-A new record with type ``[Extended Rent]`` is created when a user clicks ``[Extend]`` button in Confirmed Rents. 
-Also a new record with type ``[Return]`` is created when a user clicks ``[Return]`` button.
 
 
 Further information
