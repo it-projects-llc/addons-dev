@@ -30,11 +30,11 @@ Adds partner personality info:
 
 Adds partner age restriction (must be 21 or elder) if he/she is customer (is customer field).
 
-------------------------
- Vehicle Rental Process
-------------------------
+-----------------------
+ Vehicle Rental Prcess
+-----------------------
 
-One model ``Rental`` is used for working with different rental forms that are:
+One model ``fleet_booking.rental`` is used for working with different rental forms that are:
 
  * Rental Quotations
  * Rental Orders
@@ -44,12 +44,12 @@ One model ``Rental`` is used for working with different rental forms that are:
 Rental functions are grouped under ``Fleet Rental`` menu.
 
 Workflow and buttons
-^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
 
 **Quotation -> Quotation Booked**
 A Quotation goes to the ``Quotation Booked`` state when a user clicks ``[Book Only]`` button on a Rental Quotation form view.
 ``[Book Only]`` button is only enabled when the ``Edit Date`` and ``Return Date`` fields are filled.
-Booked quotations become visible on the calendar view of the ``Rental`` model.
+Booked quotations become visible on the calendar view of the ``fleet_booking.rental`` model.
 
 **Quotation -> Rental Order**, **Quotation Booked -> Rental Order**
 A Quotation goes to the ``Rental Order`` state when a user clicks ``[Confirm Rental]`` button on a Rental Quotation from view.
@@ -59,3 +59,15 @@ Confirmed quotations become visible on the calendar view.
 ``[Create Invoice]`` button become enabled. 
 
 When invoices are created on a Rental the ``[Invoices]`` smart button become visible on a Rental Order form view.
+
+
+Further information
+-------------------
+
+HTML Description: https://apps.odoo.com/apps/modules/9.0/fleet_booking
+
+Usage instructions: `<doc/index.rst>`_
+
+Changelog: `<doc/changelog.rst>`_
+
+Tested on Odoo 9.0 d3dd4161ad0598ebaa659fbd083457c77aa9448d
