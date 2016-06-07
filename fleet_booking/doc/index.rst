@@ -220,3 +220,20 @@ Vehicle Contracts
     Exceeded hours cost = Rate per extra hour (по этому параметру тоже нет инфо в документе, будем уточниять) * Exceeded hours
 * Deposit - подтягивается автоматически из контракта Rent
 * Remaining amount - вычисляется автоматически: Remaining amount = Deposit - Total.
+
+
+Maintenance
+-----------
+
+New model fleet_booking.maintenance.
+Branch officer create new Maintenance and fill:
+
+* Select *vehicle*. Relational fields (Car Plate Number) filed automatically.
+* Select *Maintenance Type* (selection).
+* Enter *Description of required maintenance*.
+* Check box *in branch*.
+* If *in branch* is false then *Odometer* and *Service Description* and *Attachments* tables will appear.
+    * Odometer table columns: Mileage (float in km), Description (string)
+    * Service Description table columns: Item (string), Cost (float). Has total row.
+* Maintenance Invoice square like in orders in right corner. Only accountant can see.
+    Accountant may create invoices to provide some acc entries. Optionally when he create invoice it line filled automatically.
