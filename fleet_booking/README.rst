@@ -34,32 +34,45 @@ Adds partner age restriction (must be 21 or elder) if he/she is customer (is cus
  Vehicle Rental Prcess
 -----------------------
 
-One model ``fleet_booking.rental`` is used for working with different rental forms that are:
+One model ``fleet_booking.rental`` is used for working with different types of rental documents:
+The types of document are ``Rent``, ``Extended Rent``, ``Return``.
+Each type of the documents has several states.
+``Rent`` has the states that are ``Quotation``, ``Booked``, ``Confirmed``, ``Close``.
+``Extended Rent`` has the same statuses as ``Rent``.
+``Return`` may be ``Quotation``, ``Confirmed`` or ``Close``.
+
+All rental views are grouped under ``Fleet Rental``. There are the following items available for
+a user.
 
  * Rental Quotations
  * Rental Orders
- * Extended Rental Orders
+ * Retrun Quotations
  * Return Orders
+ * All confirmed documents
 
-Rental functions are grouped under ``Fleet Rental`` menu.
+Under ``Rental Quotations`` are ``Rent`` and ``Extended Rent`` documents with ``Quotation`` or ``Booked`` states.
+After confirmation they are available uder the ``Rental Orders``.
 
-Workflow and buttons
-^^^^^^^^^^^^^^^^^^^^
+Under ``Ruturn Quotations`` are ``Return`` documents that are not confirmed yet.
+After confirmation they are available under ``Return Orders``.
 
-``fleet_booking.rental`` has several states. The states in workflow are: Quotaion, Quotation Booked, Rental Order, Extended Rental Order, Return Order.
-Buttons ``[Book Only]``, ``[Confirm Rental]``, ``[Return Rental]`` are used to modify the states of ``fleet_booking.rental`` records.
+Buttons
+^^^^^^^
 
-A Quotation goes to the ``Quotation Booked`` state when a user clicks ``[Book Only]`` button on a Rental Quotation form view.
-``[Book Only]`` button is only enabled when the ``Edit Date`` and ``Return Date`` fields are filled.
-Booked quotations become visible on the calendar view of the ``fleet_booking.rental`` model.
+Buttons ``[Book Only]``, ``[Confirm]``, ``[Return]``, ``[Extend]`` are available in
+Rental Quotation. There is no ``[Extend]`` for ``Extended Rent``.
 
-A Quotation goes to the ``Rental Order`` state when a user clicks ``[Confirm Rental]`` button on a Rental Quotation from view.
+Only booked or confirmed rents are visible on the calendar view of the documents form.
+
+The ``[Confirm Rental]`` and ``[Book Only]`` buttons change the state of existing records.
 ``[Confirm Rental]`` is only enabled if all fields related to payment are filled.
-Confirmed quotations become visible on the calendar view.
-``[Print Rental Agreement]`` button become enabled.
-``[Create Invoice]`` button become enabled. 
 
-When invoices are created on a Rental the ``[Invoices]`` smart button become visible on a Rental Order form view.
+``[Print Rental Agreement]`` and ``[Create Invoice]`` buttons become enabled after confirmation on Rentals and Returns.
+Whe a document has related invoices then ``[Invoices]`` button become visible.
+
+A new record with type ``[Extended Rent]`` is created when a user clicks ``[Extend]`` button on a Rental Quotation from view.
+Also a new record with type ``[Return]`` is created when a user clicks ``[Return]`` button.
+Confirmed quotations become visible on the calendar view.
 
 
 Further information
