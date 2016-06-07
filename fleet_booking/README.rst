@@ -30,49 +30,46 @@ Adds partner personality info:
 
 Adds partner age restriction (must be 21 or elder) if he/she is customer (is customer field).
 
------------------------
- Vehicle Rental Prcess
------------------------
+-------------------------
+ Vehicle Rental Workflow
+-------------------------
 
 One model ``fleet_booking.rental`` is used for working with different types of rental documents:
 The types of document are ``Rent``, ``Extended Rent``, ``Return``.
 Each type of the documents has several states.
-``Rent`` has the states that are ``Quotation``, ``Booked``, ``Confirmed``, ``Close``.
-``Extended Rent`` has the same statuses as ``Rent``.
-``Return`` may be ``Quotation``, ``Confirmed`` or ``Close``.
+``Rent`` has the states that are ``Quotation``, ``Booked``, ``Confirmed``, ``Extended``, ``Returned``.
+``Extended Rent`` has the same states: ``Quotation``, ``Booked``, ``Confirmed``, ``Extended``, ``Open Return``, ``Closed Return``.
+``Return`` may be ``Return Draft``, ``Return Open``, ``Closed``.
 
-All rental views are grouped under ``Fleet Rental``. There are the following items available for
+All rental views are grouped under ``Fleet Rental`` top-level menu. There are the following submenu items available for
 a user.
 
- * Rental Quotations
- * Rental Orders
- * Retrun Quotations
- * Return Orders
- * All confirmed documents
+ * Rent Quotations
+ * Confirmed Rents 
+ * Draft Return Contracts
+ * Open Return Contracts 
+ * Closed Return Contracts 
+ * All Records 
 
-Under ``Rental Quotations`` are ``Rent`` and ``Extended Rent`` documents with ``Quotation`` or ``Booked`` states.
-After confirmation they are available uder the ``Rental Orders``.
+Under ``Rent Quotations`` are ``Rent`` and ``Extended Rent`` documents with ``Quotation`` or ``Booked`` states.
+After confirmation they are available uder the ``Confirmed Rents``.
 
-Under ``Ruturn Quotations`` are ``Return`` documents that are not confirmed yet.
-After confirmation they are available under ``Return Orders``.
-
-Buttons
-^^^^^^^
+Under ``Draft Return Contracts`` are ``Return`` documents that are not confirmed yet.
+After confirmation as closed they are available under ``Closed Return Contracts``.
+After confirmation as open they are availbale under ``Open Return Contracts``.
 
 Buttons ``[Book Only]``, ``[Confirm]``, ``[Return]``, ``[Extend]`` are available in
-Rental Quotation. There is no ``[Extend]`` for ``Extended Rent``.
-
-Only booked or confirmed rents are visible on the calendar view of the documents form.
+Rent Quotation.
 
 The ``[Confirm Rental]`` and ``[Book Only]`` buttons change the state of existing records.
 ``[Confirm Rental]`` is only enabled if all fields related to payment are filled.
 
-``[Print Rental Agreement]`` and ``[Create Invoice]`` buttons become enabled after confirmation on Rentals and Returns.
-Whe a document has related invoices then ``[Invoices]`` button become visible.
+``[Print Rental Agreement]`` and ``[Create Invoice]`` buttons become enabled for Confirmed Rents.
+When a document has related invoices then ``[Invoices]`` button become visible.
+A user can click to it to see all related invoices.
 
-A new record with type ``[Extended Rent]`` is created when a user clicks ``[Extend]`` button on a Rental Quotation from view.
+A new record with type ``[Extended Rent]`` is created when a user clicks ``[Extend]`` button in Confirmed Rents. 
 Also a new record with type ``[Return]`` is created when a user clicks ``[Return]`` button.
-Confirmed quotations become visible on the calendar view.
 
 
 Further information
