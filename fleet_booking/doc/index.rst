@@ -229,57 +229,59 @@ Used build-in fleet.vehicle.log.services model.
 
 Maintenance state stages: Draft -> Request -> Done -> Paid.
 
-Maintenance records shown for vehicle support officer must have: State = Request AND Service Type != In branch.
+Configure record filter (to see what records needs your attention):
 
-Maintenance records shown for accountant must have:: State = Done.
+* Open menu.
+* Depending on your role choose filter:
+    * For accountant (show records with State = Request AND Service Type != In branch.)
+    * For vehicle support officer (show records with State = Done)
 
 First maintenance scheme (in branch):
 
-    Branch officer actions:
+* Branch officer actions:
+    * Opens vehicle to be maintenanced.
+    * Push ``[Services]`` button. Opens ``Vehicles Services Logs`` menu.
+    * Create new vehicle service document.
+    * Select ``Service Type`` as ``In branch``. "B" section now is visible.
+    * Enters odometer.
+    * Puts ``Included Services`` lines.
+    * Change ``State`` from ``Draft`` to ``Request``.
+    * When all jobs finished change ``State`` from ``Request`` to ``Done``.
+    * Saves service document.
 
-        * Opens vehicle to be maintenanced.
-        * Push ``[Services]`` button. Opens ``Vehicles Services Logs`` menu.
-        * Create new vehicle service document.
-        * Select ``Service Type`` as ``In branch``. "B" section now is visible.
-        * Enters odometer.
-        * Puts ``Included Services`` lines.
-        * Change ``State`` from ``Draft`` to ``Request``.
-        * When all jobs finished change ``State`` from ``Request`` to ``Done``.
-        * Saves service document.
+* Vehicle support officer actions:
 
-    Vehicle support officer actions:
+    * No actions required.
 
-        * No actions required.
+* Accountant actions:
 
-    Accountant actions:
-
-        * Opens service document.
-        * Creates invoices (``[New invoice]`` button). All created invoices visible in table.
-        * When costs invoices paid change ``State`` from ``Done`` to ``Paid``.
-        * Saves service document.
+    * Opens service document.
+    * Creates invoices (``[New invoice]`` button). All created invoices visible in table.
+    * When costs invoices paid change ``State`` from ``Done`` to ``Paid``.
+    * Saves service document.
 
 Second maintenance scheme (not in branch):
 
-    Branch officer actions:
+* Branch officer actions:
 
-        * Opens vehicle to be maintenanced.
-        * Push ``[Services]`` button. Opens ``Vehicles Services Logs`` menu.
-        * Create new vehicle service document.
-        * Select ``Service Type`` that is not ``In branch``. "B" section now is hidden.
-        * Change ``State`` from ``Draft`` to ``Request``.
-        * Saves service document.
+    * Opens vehicle to be maintenanced.
+    * Push ``[Services]`` button. Opens ``Vehicles Services Logs`` menu.
+    * Create new vehicle service document.
+    * Select ``Service Type`` that is not ``In branch``. "B" section now is hidden.
+    * Change ``State`` from ``Draft`` to ``Request``.
+    * Saves service document.
 
-    Vehicle support officer actions:
+* Vehicle support officer actions:
 
-        * Opens service document.
-        * Enters new odometer.
-        * Puts ``Included Services`` lines.
-        * When jobs finished change ``State`` from ``Request`` to ``Done``.
-        * Saves service document.
+    * Opens service document.
+    * Enters new odometer.
+    * Puts ``Included Services`` lines.
+    * When jobs finished change ``State`` from ``Request`` to ``Done``.
+    * Saves service document.
 
-    Accountant actions:
+* Accountant actions:
 
-        * Opens service document.
-        * Creates invoices (``[New invoice]`` button). All created invoices visible in table.
-        * When costs invoices paid change ``State`` from ``Done`` to ``Paid``.
-        * Saves service document.
+    * Opens service document.
+    * Creates invoices (``[New invoice]`` button). All created invoices visible in table.
+    * When costs invoices paid change ``State`` from ``Done`` to ``Paid``.
+    * Saves service document.
