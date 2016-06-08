@@ -82,6 +82,11 @@
             <xpath expr="//field[@name='cost_subtype_id']" position="after">
                 <field name="state"/>
             </xpath>
+            <xpath expr="//field[@name='cost_ids']/.." position="after">
+                <group string="Invoices">
+                    <field name="account_invoice_ids"  nolabel="1"/>
+                </group>
+            </xpath>
         </data>
     </field>
 </record>
