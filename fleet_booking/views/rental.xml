@@ -17,7 +17,7 @@
         </record>
 
         <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" sequence="2"/>
-        <menuitem action="fleet_vehicle_act" parent="rental_contracts" id="rent_quotations_menu"/>
+        <menuitem action="fleet_rent_quotations_act" parent="rental_contracts" id="rent_quotations_menu"/>
 
    </data>
 </openerp>
