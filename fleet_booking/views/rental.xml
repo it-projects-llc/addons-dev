@@ -16,7 +16,7 @@
           </field>
         </record>
 
-        <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" sequence="2" groups="group_fleet_user"/>
+        <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" sequence="2"/>
         <menuitem action="fleet_vehicle_act" parent="rental_contracts" id="rent_quotations_menu"/>
 
    </data>
