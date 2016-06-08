@@ -25,6 +25,11 @@ class FleetBookingDocument(models.Model):
         ], readonly=True, index=True, change_default=True)
 
 
+    origin = fields.Char(string='Source Document',
+        help="Reference of the document that produced this document.",
+        readonly=True, states={'draft': [('readonly', False)]})
+
+
 class FleetBookingRentDocument(models.Model):
     _name = 'fleet_booking.rent_document'
 
@@ -32,6 +37,6 @@ class FleetBookingRentDocument(models.Model):
                  'fleet_booking.document': 'document_id',
                  }
 
-    document_id = fields.Many2one('fleet_booking', required=True,
+    document_id = fields.Many2one('fleet_booking.document', required=True,
             string='Related Document', ondelete='restrict',
             help='common part of all three types of the documents', auto_join=True)
