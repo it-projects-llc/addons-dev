@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <menuitem name="Fleet Rental" id="menu_root" sequence="115" icon="fa-car"/>
+        <menuitem name="Rental Contracts" parent="menu_root" id="rental_contracts" sequence="2"/>
+    </data>
+</openerp>
