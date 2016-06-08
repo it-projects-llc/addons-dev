@@ -36,6 +36,8 @@ Adds partner age restriction (must be 21 or elder) if he/she is customer (is cus
 
 The model ``fleet_booking.rental`` is used for working with different types of rental documents.
 
+Each type of the documents has several states.
+
 The types of the documents and their states are
  * ``Rent``
 
@@ -56,11 +58,6 @@ The types of the documents and their states are
    * Return Draft
    * Return Open
    * Return Closed
-
-Each type of the documents has several states.
-``Rent`` has the states that are ``Quotation``, ``Booked``, ``Confirmed``, ``Extended``, ``Returned``.
-``Extended Rent`` has the same states: ``Quotation``, ``Booked``, ``Confirmed``, ``Extended``, ``Returned``.
-``Return`` may be ``Return Draft``, ``Return Open``, ``Return Closed``.
 
 All rental views are grouped under ``Fleet Rental`` top-level menu. There are the following submenu items available for
 a user.
