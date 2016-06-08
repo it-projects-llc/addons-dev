@@ -247,8 +247,8 @@ First maintenance scheme (in branch)
     * Select ``Service Type`` as ``In branch``. "B" section now is visible.
     * Enters odometer.
     * Puts ``Included Services`` lines.
-    * When all jobs finished change ``State`` from ``Request`` to ``Done``.
-    * Press ``[Submit]``. It automatically changes ``State`` from ``Draft`` to ``Request``, saves and closes document.
+    * Press ``[Submit]`` to submit order and to set status from ``Draft`` to ``Request``.
+    * When all jobs finished press ``[Confirm]``. It automatically changes ``State`` from ``Request`` to ``Done``, saves and closes document.
 
 * Vehicle support officer actions:
     * No actions required.
@@ -266,8 +266,7 @@ Second maintenance scheme (not in branch)
     * Push ``[Services]`` button. Opens ``Vehicles Services Logs`` menu.
     * Create new vehicle service document.
     * Select ``Service Type`` that is not ``In branch``. "B" section now is hidden.
-    * Change ``State`` from ``Draft`` to ``Request``.
-    * Saves service document.
+    * Press ``[Submit]`` to submit order and to set status from ``Draft`` to ``Request``.
 
 * Vehicle support officer actions:
     * Opens service document.

@@ -94,6 +94,18 @@ class Service(models.Model):
     account_invoice_ids = fields.One2many('account.invoice', 'fleet_vehicle_log_services_ids', string='Invoices', copy=False)
     cost_subtype_in_branch = fields.Boolean(related='cost_subtype_id.in_branch')
 
+    @api.multi
+    def submit(self):
+        self.write({'state': 'request'})
+
+    @api.multi
+    def confirm(self):
+        self.write({'state': 'done'})
+
+    @api.multi
+    def approve(self):
+        self.write({'state': 'paid'})
+
 
 class ServiceType(models.Model):
     _inherit = 'fleet.service.type'
