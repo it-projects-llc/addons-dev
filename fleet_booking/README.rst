@@ -38,11 +38,13 @@ The model ``fleet_booking.rental`` is used for working with different types of r
 
 The types of the documents and their states are
  * ``Rent``
+
    ** Quotation
    ** Booked
    ** Confirmed
    ** Extended
    ** Returned
+
  * ``Extended Rent``,
  * ``Return``.
 
