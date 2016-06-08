@@ -249,11 +249,9 @@ First maintenance scheme (in branch):
     * Press ``[Submit]``. It automatically changes ``State`` from ``Draft`` to ``Request``, saves and closes document.
 
 * Vehicle support officer actions:
-
     * No actions required.
 
 * Accountant actions:
-
     * Opens service document.
     * Creates invoices (``[New invoice]`` button). All created invoices visible in table.
     * When costs invoices paid press ``[Approve]``. It automatically changes ``State`` from ``Done`` to ``Paid``, saves and closes document.
@@ -261,7 +259,6 @@ First maintenance scheme (in branch):
 Second maintenance scheme (not in branch):
 
 * Branch officer actions:
-
     * Opens vehicle to be maintenanced.
     * Push ``[Services]`` button. Opens ``Vehicles Services Logs`` menu.
     * Create new vehicle service document.
@@ -270,14 +267,12 @@ Second maintenance scheme (not in branch):
     * Saves service document.
 
 * Vehicle support officer actions:
-
     * Opens service document.
     * Enters new odometer.
     * Puts ``Included Services`` lines.
     * When jobs finished press ``[Confirm]``. It automatically changes ``State`` from ``Request`` to ``Done``, saves and closes document.
 
 * Accountant actions:
-
     * Opens service document.
     * Creates invoices (``[New invoice]`` button). All created invoices visible in table.
     * When costs invoices paid press ``[Approve]``. It automatically changes ``State`` from ``Done`` to ``Paid``, saves and closes document.
