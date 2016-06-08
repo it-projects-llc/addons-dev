@@ -225,8 +225,55 @@ Vehicle Contracts
 Maintenance
 -----------
 
-New model fleet_booking.maintenance.
-Branch officer create new Maintenance and fill:
+Used build-in fleet.vehicle.log.services model.
+
+First maintenance scheme (in branch):
+
+    Branch officer actions:
+
+        * Opens vehicle to be maintenanced.
+        * Push ``[Services]`` button. Opens ``Vehicles Services Logs`` menu.
+        * Create new vehicle service document.
+        * Select ``Service Type`` as ``In branch``. "B" section now is visible.
+        * Enters odometer.
+        * Puts ``Included Services`` lines.
+        * Saves service document.
+
+    Vehicle support officer actions:
+
+        * No actions required.
+
+    Accountant actions:
+
+        * Opens service document.
+        * Creates invoices (``[New invoice]`` button). All created invoices visible in table.
+        * Saves service document.
+
+Second maintenance scheme (not in branch):
+
+    Branch officer actions:
+
+        * Opens vehicle to be maintenanced.
+        * Push ``[Services]`` button. Opens ``Vehicles Services Logs`` menu.
+        * Create new vehicle service document.
+        * Select ``Service Type`` that is not ``In branch``. "B" section now is hidden.
+        * Saves service document.
+
+    Vehicle support officer actions:
+
+        * Opens service document.
+        * Enters new odometer.
+        * Puts ``Included Services`` lines.
+        * Saves service document.
+
+    Accountant actions:
+
+        * Opens service document.
+        * Creates invoices (``[New invoice]`` button). All created invoices visible in table.
+        * Saves service document.
+
+
+
 
 * Select *vehicle*. Relational fields (Car Plate Number) filed automatically.
 * Select *Maintenance Type* (selection).
