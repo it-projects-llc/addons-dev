@@ -227,6 +227,12 @@ Maintenance
 
 Used build-in fleet.vehicle.log.services model.
 
+State stages: Draft -> Request -> Done -> Paid.
+
+Vehicle support officer criteria to look up service document is: State = Request AND Service Type != In branch.
+
+Accountant criteria to look up service document is: State = Done.
+
 First maintenance scheme (in branch):
 
     Branch officer actions:
@@ -237,6 +243,8 @@ First maintenance scheme (in branch):
         * Select ``Service Type`` as ``In branch``. "B" section now is visible.
         * Enters odometer.
         * Puts ``Included Services`` lines.
+        * Change ``State`` from ``Draft`` to ``Request``.
+        * When all jobs finished change ``State`` from ``Request`` to ``Done``.
         * Saves service document.
 
     Vehicle support officer actions:
@@ -247,6 +255,7 @@ First maintenance scheme (in branch):
 
         * Opens service document.
         * Creates invoices (``[New invoice]`` button). All created invoices visible in table.
+        * When costs invoices paid change ``State`` from ``Done`` to ``Paid``.
         * Saves service document.
 
 Second maintenance scheme (not in branch):
@@ -257,6 +266,7 @@ Second maintenance scheme (not in branch):
         * Push ``[Services]`` button. Opens ``Vehicles Services Logs`` menu.
         * Create new vehicle service document.
         * Select ``Service Type`` that is not ``In branch``. "B" section now is hidden.
+        * Change ``State`` from ``Draft`` to ``Request``.
         * Saves service document.
 
     Vehicle support officer actions:
@@ -264,12 +274,14 @@ Second maintenance scheme (not in branch):
         * Opens service document.
         * Enters new odometer.
         * Puts ``Included Services`` lines.
+        * When jobs finished change ``State`` from ``Request`` to ``Done``.
         * Saves service document.
 
     Accountant actions:
 
         * Opens service document.
         * Creates invoices (``[New invoice]`` button). All created invoices visible in table.
+        * When costs invoices paid change ``State`` from ``Done`` to ``Paid``.
         * Saves service document.
 
 
