@@ -92,6 +92,13 @@ class Service(models.Model):
                               ('paid', 'Paid')],
                              string='State', default='draft')
     account_invoice_ids = fields.One2many('account.invoice', 'fleet_vehicle_log_services_ids', string='Invoices', copy=False)
+    cost_subtype_in_branch = fields.Boolean(related='cost_subtype_id.in_branch')
+
+
+class ServiceType(models.Model):
+    _inherit = 'fleet.service.type'
+
+    in_branch = fields.Boolean(default=False, readonly=True, invisible=True)
 
 
 class AccountInvoice(models.Model):

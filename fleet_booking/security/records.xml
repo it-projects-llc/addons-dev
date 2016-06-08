@@ -42,7 +42,8 @@
         <record id="group_accountant" model="res.groups">
             <field name="name">Accountant</field>
             <field name="category_id" ref="module_fleet_booking_category"/>
-            <field name="implied_ids" eval="[(4, ref('account.group_account_user'))]"/>
+            <field name="implied_ids" eval="[(4, ref('account.group_account_user')),
+                                             (4, ref('fleet.group_fleet_manager'))]"/>
         </record>
         <record id="group_payroll_officer" model="res.groups">
             <field name="name">Payroll Officer</field>

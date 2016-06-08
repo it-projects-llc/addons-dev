@@ -80,12 +80,26 @@
     <field name="arch" type="xml">
         <data>
             <xpath expr="//field[@name='cost_subtype_id']" position="after">
-                <field name="state"/>
+                <field name="state" />
+                <field name="cost_subtype_in_branch" invisible="True"/>
             </xpath>
             <xpath expr="//field[@name='cost_ids']/.." position="after">
-                <group string="Invoices">
-                    <field name="account_invoice_ids"  nolabel="1"/>
+                <group string="Invoices" groups="fleet_booking.group_accountant">
+                    <field name="account_invoice_ids" nolabel="1"/>
                 </group>
+            </xpath>
+        </data>
+    </field>
+</record>
+<record id="fleet_vehicle_log_services_form_inherit_bo" model="ir.ui.view">
+    <field name="name">fleet.vehicle.log.services.form.inherit.bo</field>
+    <field name="model">fleet.vehicle.log.services</field>
+    <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_form"/>
+    <field name="groups_id" eval="[(4, ref('fleet_booking.group_branch_officer'), 0)]"/>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='cost_ids']/.." position="attributes">
+                <attribute name='attrs'>{'invisible': [('cost_subtype_in_branch', '=', False)]}</attribute>
             </xpath>
         </data>
     </field>

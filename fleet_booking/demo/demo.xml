@@ -103,5 +103,11 @@
             <field name="points">5000</field>
             <field name="sequence">3</field>
     </record>
+    <!--OTHER-->
+    <record model="fleet.service.type" id="in_branch">
+        <field name="name">In branch</field>
+        <field name="category">service</field>
+        <field name="in_branch">True</field>
+    </record>
 </data>
 </openerp>
