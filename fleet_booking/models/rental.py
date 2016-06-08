@@ -25,11 +25,6 @@ class FleetBookingDocument(models.Model):
         ], readonly=True, index=True, change_default=True)
 
 
-    origin = fields.Char(string='Source Document',
-        help="Reference of the document that produced this document.",
-        readonly=True, states={'draft': [('readonly', False)]})
-
-
 class FleetBookingRentDocument(models.Model):
     _name = 'fleet_booking.rent_document'
 
