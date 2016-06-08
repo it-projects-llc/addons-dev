@@ -30,9 +30,9 @@ Adds partner personality info:
 
 Adds partner age restriction (must be 21 or elder) if he/she is customer (is customer field).
 
--------------------------
- Vehicle Rental Workflow
--------------------------
+----------------
+ Vehicle Rental
+----------------
 
 The model ``fleet_booking.rental`` is used for working with different types of rental documents.
 The types of the documents are ``Rent``, ``Extended Rent``, ``Return``.
