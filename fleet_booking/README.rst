@@ -44,8 +44,18 @@ The types of the documents and their states are
    * Confirmed
    * Extended
    * Returned
- * ``Extended Rent``,
- * ``Return``.
+ * ``Extended Rent``
+
+   * Quotation
+   * Booked
+   * Confirmed
+   * Extended
+   * Returned
+ * ``Return``
+
+   * Return Draft
+   * Return Open
+   * Return Closed
 
 Each type of the documents has several states.
 ``Rent`` has the states that are ``Quotation``, ``Booked``, ``Confirmed``, ``Extended``, ``Returned``.
