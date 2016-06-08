@@ -227,11 +227,11 @@ Maintenance
 
 Used build-in fleet.vehicle.log.services model.
 
-State stages: Draft -> Request -> Done -> Paid.
+Maintenance state stages: Draft -> Request -> Done -> Paid.
 
-Vehicle support officer criteria to look up service document is: State = Request AND Service Type != In branch.
+Maintenance records shown for vehicle support officer must have: State = Request AND Service Type != In branch.
 
-Accountant criteria to look up service document is: State = Done.
+Maintenance records shown for accountant must have:: State = Done.
 
 First maintenance scheme (in branch):
 
@@ -283,16 +283,3 @@ Second maintenance scheme (not in branch):
         * Creates invoices (``[New invoice]`` button). All created invoices visible in table.
         * When costs invoices paid change ``State`` from ``Done`` to ``Paid``.
         * Saves service document.
-
-
-
-
-* Select *vehicle*. Relational fields (Car Plate Number) filed automatically.
-* Select *Maintenance Type* (selection).
-* Enter *Description of required maintenance*.
-* Check box *in branch*.
-* If *in branch* is false then *Odometer* and *Service Description* and *Attachments* tables will appear.
-    * Odometer table columns: Mileage (float in km), Description (string)
-    * Service Description table columns: Item (string), Cost (float). Has total row.
-* Maintenance Invoice square like in orders in right corner. Only accountant can see.
-    Accountant may create invoices to provide some acc entries. Optionally when he create invoice it line filled automatically.
