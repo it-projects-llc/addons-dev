@@ -229,14 +229,16 @@ Used build-in fleet.vehicle.log.services model.
 
 Maintenance state stages: Draft -> Request -> Done -> Paid.
 
-Configure record filter (to see what records needs your attention):
+Configure record filter (to see what records needs your attention)
+------------------------------------------------------------------
 
 * Open menu.
 * Depending on your role choose filter:
     * For accountant (show records with State = Request AND Service Type != In branch.)
     * For vehicle support officer (show records with State = Done)
 
-First maintenance scheme (in branch):
+First maintenance scheme (in branch)
+------------------------------------
 
 * Branch officer actions:
     * Opens vehicle to be maintenanced.
@@ -256,7 +258,8 @@ First maintenance scheme (in branch):
     * Creates invoices (``[New invoice]`` button). All created invoices visible in table.
     * When costs invoices paid press ``[Approve]``. It automatically changes ``State`` from ``Done`` to ``Paid``, saves and closes document.
 
-Second maintenance scheme (not in branch):
+Second maintenance scheme (not in branch)
+-----------------------------------------
 
 * Branch officer actions:
     * Opens vehicle to be maintenanced.
