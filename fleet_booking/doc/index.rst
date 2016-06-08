@@ -245,9 +245,8 @@ First maintenance scheme (in branch):
     * Select ``Service Type`` as ``In branch``. "B" section now is visible.
     * Enters odometer.
     * Puts ``Included Services`` lines.
-    * Change ``State`` from ``Draft`` to ``Request``.
     * When all jobs finished change ``State`` from ``Request`` to ``Done``.
-    * Saves service document.
+    * Press ``[Submit]``. It automatically changes ``State`` from ``Draft`` to ``Request``, saves and closes document.
 
 * Vehicle support officer actions:
 
@@ -257,8 +256,7 @@ First maintenance scheme (in branch):
 
     * Opens service document.
     * Creates invoices (``[New invoice]`` button). All created invoices visible in table.
-    * When costs invoices paid change ``State`` from ``Done`` to ``Paid``.
-    * Saves service document.
+    * When costs invoices paid press ``[Approve]``. It automatically changes ``State`` from ``Done`` to ``Paid``, saves and closes document.
 
 Second maintenance scheme (not in branch):
 
@@ -276,12 +274,10 @@ Second maintenance scheme (not in branch):
     * Opens service document.
     * Enters new odometer.
     * Puts ``Included Services`` lines.
-    * When jobs finished change ``State`` from ``Request`` to ``Done``.
-    * Saves service document.
+    * When jobs finished press ``[Confirm]``. It automatically changes ``State`` from ``Request`` to ``Done``, saves and closes document.
 
 * Accountant actions:
 
     * Opens service document.
     * Creates invoices (``[New invoice]`` button). All created invoices visible in table.
-    * When costs invoices paid change ``State`` from ``Done`` to ``Paid``.
-    * Saves service document.
+    * When costs invoices paid press ``[Approve]``. It automatically changes ``State`` from ``Done`` to ``Paid``, saves and closes document.
