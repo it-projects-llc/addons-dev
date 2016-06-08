@@ -82,6 +82,17 @@ class Fleet(models.Model):
     deprecation_ids = fields.One2many('fleet_booking.deprecation', 'fleet_vehicle_id', string='Vehicle Depreciation')
 
 
+class Service(models.Model):
+    _inherit = 'fleet.vehicle.log.services'
+
+    state = fields.Selection([('draft', 'Draft'),
+                              ('request', 'Request'),
+                              ('done', 'Done'),
+                              ('paid', 'Paid')],
+                             string='State', default='draft')
+
+
+
 # OWN MODELS
 
 class Payments(models.Model):

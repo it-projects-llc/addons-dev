@@ -73,5 +73,17 @@
         </data>
     </field>
 </record>
+<record id="fleet_vehicle_log_services_form_inherit" model="ir.ui.view">
+    <field name="name">fleet.vehicle.log.services.form.inherit</field>
+    <field name="model">fleet.vehicle.log.services</field>
+    <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_form"/>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='cost_subtype_id']" position="after">
+                <field name="state"/>
+            </xpath>
+        </data>
+    </field>
+</record>
 </data>
 </openerp>
