@@ -24,14 +24,16 @@ class FleetBookingDocument(models.Model):
             ('return','Return'),
         ], readonly=True, index=True, change_default=True)
 
-
     origin = fields.Char(string='Source Document',
         help="Reference of the document that produced this document.",
         readonly=True, states={'draft': [('readonly', False)]})
 
+    partner_id = fields.Many2one('res.partner', string="Customer", domain=[('customer', '=', True)])
 
-class FleetBookingRentDocument(models.Model):
-    _name = 'fleet_booking.rent_document'
+    vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle")
+
+class FleetBookingRent(models.Model):
+    _name = 'fleet_booking.rent'
 
     _inherits = {
                  'fleet_booking.document': 'document_id',
@@ -40,3 +42,21 @@ class FleetBookingRentDocument(models.Model):
     document_id = fields.Many2one('fleet_booking.document', required=True,
             string='Related Document', ondelete='restrict',
             help='common part of all three types of the documents', auto_join=True)
+
+
+class FleetBookingReturn(models.Model):
+    _name = 'fleet_booking.return'
+
+    _inherits = {
+                 'fleet_booking.document': 'document_id',
+                 }
+
+    document_id = fields.Many2one('fleet_booking.document', required=True,
+            string='Related Document', ondelete='restrict',
+            help='common part of all three types of the documents', auto_join=True)
+
+
+class FleetBookingItemsToBeChecked(models.Models):
+    _name = 'fleet_booking.items_to_be_checked'
+
+    name = fields.Char(string='Item', help='Item to be checked before and after rent')

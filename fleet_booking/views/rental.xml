@@ -6,7 +6,7 @@
 
         <record id='fleet_rent_quotations_act' model='ir.actions.act_window'>
           <field name="name">Rent Quotations</field>
-          <field name="res_model">fleet_booking.rent_document</field>
+          <field name="res_model">fleet_booking.rent</field>
           <field name="view_type">form</field>
           <field name="view_mode">tree,form</field>
           <field name="help" type="html">
@@ -20,7 +20,7 @@
 
         <record id='fleet_rent_confirmed_act' model='ir.actions.act_window'>
           <field name="name">Rent Confirmed</field>
-          <field name="res_model">fleet_booking.rent_document</field>
+          <field name="res_model">fleet_booking.rent</field>
           <field name="view_type">form</field>
           <field name="view_mode">tree,form</field>
           <field name="help" type="html">
@@ -34,7 +34,7 @@
 
         <record id='fleet_return_draft_act' model='ir.actions.act_window'>
           <field name="name">Return Draft</field>
-          <field name="res_model">fleet_booking.rent_document</field>
+          <field name="res_model">fleet_booking.return</field>
           <field name="view_type">form</field>
           <field name="view_mode">tree,form</field>
           <field name="help" type="html">
@@ -48,7 +48,7 @@
 
         <record id='fleet_return_confirmed_open_act' model='ir.actions.act_window'>
           <field name="name">Return Confirmed but Open</field>
-          <field name="res_model">fleet_booking.rent_document</field>
+          <field name="res_model">fleet_booking.return</field>
           <field name="view_type">form</field>
           <field name="view_mode">tree,form</field>
           <field name="help" type="html">
@@ -62,7 +62,7 @@
 
         <record id='fleet_return_confirmed_closed_act' model='ir.actions.act_window'>
           <field name="name">Return Confirmed and Closed</field>
-          <field name="res_model">fleet_booking.rent_document</field>
+          <field name="res_model">fleet_booking.return</field>
           <field name="view_type">form</field>
           <field name="view_mode">tree,form</field>
           <field name="help" type="html">
@@ -73,6 +73,24 @@
         </record>
 
         <menuitem action="fleet_return_confirmed_closed_act" parent="rental_contracts" id="return_confirmed_closed_menu"/>
+
+        <menuitem name="Configuration" parent="menu_root" id="fleet_rent_configuration" sequence="100"/>
+
+        <record id='fleet_rental_items_to_be_checked_act' model='ir.actions.act_window'>
+            <field name="name">Items to be checked</field>
+            <field name="res_model">fleet_booking.items_to_be_checked</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create an item to be checked before and after rent.
+              </p><p>
+                Example: oil, triangle, wrench, toolbox, spare tire, fire extinguisher.
+              </p>
+            </field>
+        </record>
+
+        <menuitem action="fleet_rental_items_to_be_checked_act" parent="fleet_rent_configuration" id="fleet_rent_items_to_be_checked_menu"/>
 
    </data>
 </openerp>
