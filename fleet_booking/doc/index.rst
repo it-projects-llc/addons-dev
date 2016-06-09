@@ -144,6 +144,31 @@ Remove Vehicle
 Vehicle Contracts
 -----------------
 
+To create new rent document:
+ * from ``Fleet Rental / Rent Quotations`` click ``[Create]``
+ Fill the opened form with client and car information.
+ To be able to confirm the document you should also fill the ``Exit Date`` and ``Return Date``
+ along with a payment information. When it is done click ``[Confirm Rental]`` button.
+ If don't have payment information at this point you can still book the rent without confirmation.
+ The ``Exit Date`` and ``Return Date`` should be filled. Then click ``[Book only]`` button.
+
+To create extended rent:
+ * from ``Fleet Rental / Confirmed Rents`` select rent that you want to extended.
+ * Click ``[Extend]`` button to create new extended rent.
+
+To create return document:
+ * from ``Fleet Rental / Confirmed Rents`` select rent that should be returned.
+ * Click ``Return`` button to create new return document.
+
+To confirm return document:
+ * from ``Fleet Rental / Draft Return Contracts`` open the document to confirm.
+ * Depending on current payment state you can confirm as open or confirm as closed.
+ * If the car is returned but client hasn't fully paid for the rent then click ``[Return Car and Keep Contract Open]`` button.
+ * If the car is returned and client has fully paid for the rent then click ``[Confirm Return]`` button.
+
+
+
+
 * Go to Fleet.
 * You will see *Movements* section in left panel menu. This section has 3 rows.  Rent, Receive, Extending Contract, Return Vehicle. Actually its just a different representation fo same model with contract type binding.
 * Press Rent.

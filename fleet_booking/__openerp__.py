@@ -24,6 +24,7 @@
         "views/views.xml",
         "views/partner.xml",
         "views/fleet.xml",
+        "views/rental.xml",
         "security/records.xml",
         "security/ir.model.access.csv"
     ],
