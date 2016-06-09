@@ -99,7 +99,7 @@
             <form string="Vehicle Rent">
               <sheet>
                <group col="2" string="Vehicle Status">
-                 <field name="exit_checked_item_ids" widget='many2many_checkboxes'"/>
+                 <field name="exit_checked_item_ids" widget='many2many_checkboxes'/>
                </group>
               </sheet>
               <div class="oe_chatter">
