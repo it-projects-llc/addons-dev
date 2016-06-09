@@ -90,6 +90,22 @@
         </data>
     </field>
 </record>
+<record model="ir.ui.view" id="fleet_vehicle_log_services_form_inherit_buttons">
+    <field name="name">fleet.vehicle.log.services.form.inherit.buttons</field>
+    <field name="model">fleet.vehicle.log.services</field>
+    <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_form"/>
+    <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <button name="submit" states="draft" string="Submit" type="object" class="oe_highlight"/>
+                    <button name="confirm" attrs="{'invisible': [('state', '!=', 'request')]}"  string="Confirm" type="object" class="oe_highlight"/>
+                    <button name="approve" states="done" string="Approve" type="object" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,request,done,paid"/>
+                </header>
+            </xpath>
+    </field>
+</record>
+<!--BRANCH OFFICER FORM BEHAVIOR CUSTOMISATION-->
 <record id="fleet_vehicle_log_services_form_inherit_bo" model="ir.ui.view">
     <field name="name">fleet.vehicle.log.services.form.inherit.bo</field>
     <field name="model">fleet.vehicle.log.services</field>
@@ -103,20 +119,24 @@
         </data>
     </field>
 </record>
-<record model="ir.ui.view" id="fleet_vehicle_log_services_form_inherit_buttons">
-    <field name="name">fleet.vehicle.log.services.form.inherit.buttons</field>
+<record id="fleet_vehicle_log_services_form_inherit_bos" model="ir.ui.view">
+    <field name="name">fleet.vehicle.log.services.form.inherit.bos</field>
     <field name="model">fleet.vehicle.log.services</field>
-    <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_form"/>
+    <field name="inherit_id" ref="fleet_vehicle_log_services_form_inherit_buttons"/>
+    <field name="groups_id" eval="[(4, ref('fleet_booking.group_branch_officer'), 0)]"/>
     <field name="arch" type="xml">
-            <xpath expr="//sheet" position="before">
-                <header>
-                    <button name="submit" states="draft" string="Submit" type="object" class="oe_highlight"/>
-                    <button name="confirm" states="request" string="Confirm" type="object" class="oe_highlight"/>
-                    <button name="approve" states="done" string="Approve" type="object" class="oe_highlight"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,request,done,paid"/>
-                </header>
+        <data>
+            <xpath expr="//button[@name='confirm']" position="attributes">
+                <attribute name='attrs'>{'invisible': ['|', ('state', '!=', 'request'),
+                                                      '&amp;',('state', '=', 'request') , ('cost_subtype_in_branch', '=', False)]}</attribute>
             </xpath>
+        </data>
     </field>
 </record>
 </data>
 </openerp>
+<!--state   inbranch  invisible visible-->
+<!--request  true      0           1-->
+<!--request  false     1           0-->
+<!--any      true      1           0-->
+<!--any      false     1           0-->
