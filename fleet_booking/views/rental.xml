@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-        <menuitem name="Fleet Rental" id="menu_root" sequence="115" icon="fa-car"/>
-        <menuitem name="Rental Contracts" parent="menu_root" id="rental_contracts" sequence="2"/>
+        <menuitem name="Rental" parent="base.menu_base_partner" id="rental_contracts" sequence="2"/>
 
         <record id='fleet_rent_quotations_act' model='ir.actions.act_window'>
           <field name="name">Rent Quotations</field>
