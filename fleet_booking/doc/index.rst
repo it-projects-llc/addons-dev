@@ -303,3 +303,28 @@ Second maintenance scheme (not in branch)
     * Opens service document.
     * Creates invoices (``[New invoice]`` button). All created invoices visible in table.
     * When costs invoices paid press ``[Approve]``. It automatically changes ``State`` from ``Done`` to ``Paid``, saves and closes document.
+
+Vehicle Transfer
+================
+
+New model fleet_booking.transfer.
+
+Workflow is like that:
+
+* Vehicles Support Officer creates transfer.
+    * Select vehicle. Relational fields (Car Plate Number) auto-filled.
+    * Select source branch.
+    * Select destination branch.
+    * Enter current odometer.
+    * ``Delivery Status`` auto-sets to ``Not delivered``. Vehicles Support Officer cant edit it.
+    * ``Receiving Status`` auto-sets to ``Not received``. Vehicles Support Officer cant edit it.
+    * Presses ``[Save]`` button.
+    * Vehicle branch auto-sets to ``In transfer``. Vehicle status auto-sets to ``In transfer``.
+
+* When car is delivered
+    * Vehicles Support Officer enters new odometer.
+    * Source Branch Officer sets ``Delivery Status`` to ``Delivered``.
+    * Destination Branch Officer sets ``Receiving Status`` to ``Delivered``.
+    * Vehicle branch auto-sets equal to destination branch. Vehicle status auto-sets to ``Active``.
+
+
