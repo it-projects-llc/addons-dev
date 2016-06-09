@@ -16,8 +16,63 @@
           </field>
         </record>
 
-        <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" sequence="2"/>
         <menuitem action="fleet_rent_quotations_act" parent="rental_contracts" id="rent_quotations_menu"/>
+
+        <record id='fleet_rent_confirmed_act' model='ir.actions.act_window'>
+          <field name="name">Rent Confirmed</field>
+          <field name="res_model">fleet_booking.rent_document</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+              Click to create a new rental document.
+            </p>
+          </field>
+        </record>
+
+        <menuitem action="fleet_rent_confirmed_act" parent="rental_contracts" id="rent_confirmed_menu"/>
+
+        <record id='fleet_return_draft_act' model='ir.actions.act_window'>
+          <field name="name">Return Draft</field>
+          <field name="res_model">fleet_booking.rent_document</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+              Click to create a new rental document.
+            </p>
+          </field>
+        </record>
+
+        <menuitem action="fleet_return_draft_act" parent="rental_contracts" id="return_draft_menu"/>
+
+        <record id='fleet_return_confirmed_open_act' model='ir.actions.act_window'>
+          <field name="name">Return Confirmed but Open</field>
+          <field name="res_model">fleet_booking.rent_document</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+              Click to create a new rental document.
+            </p>
+          </field>
+        </record>
+
+        <menuitem action="fleet_return_confirmed_open_act" parent="rental_contracts" id="return_confirmed_open_menu"/>
+
+        <record id='fleet_return_confirmed_closed_act' model='ir.actions.act_window'>
+          <field name="name">Return Confirmed and Closed</field>
+          <field name="res_model">fleet_booking.rent_document</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+              Click to create a new rental document.
+            </p>
+          </field>
+        </record>
+
+        <menuitem action="fleet_return_confirmed_closed_act" parent="rental_contracts" id="return_confirmed_closed_menu"/>
 
    </data>
 </openerp>
