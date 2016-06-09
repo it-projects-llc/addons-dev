@@ -7,12 +7,9 @@
     <field eval="20" name="priority"/>
     <field name="arch" type="xml">
         <tree string="Log">
-            <field name="name"/>
             <field name="partner_id"/>
             <field name="member_type_id"/>
-            <field name="log_record_date"/>
             <field name="reason"/>
-            <field name="points"/>
             <field name="blocked"/>
         </tree>
     </field>
