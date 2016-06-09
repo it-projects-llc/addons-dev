@@ -309,6 +309,11 @@ Vehicle Transfer
 
 New model fleet_booking.transfer.
 
+Menu items:
+
+* Open ``Fleet`` in main menu.
+* Go to ``Transfers``. Here is ``Incoming`` and ``Outgoing`` menu sections.
+
 Workflow is like that:
 
 * Vehicles Support Officer creates transfer.
