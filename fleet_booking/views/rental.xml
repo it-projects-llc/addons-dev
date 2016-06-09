@@ -73,8 +73,6 @@
 
         <menuitem action="fleet_return_confirmed_closed_act" parent="rental_contracts" id="return_confirmed_closed_menu"/>
 
-        <menuitem name="Configuration" parent="menu_root" id="fleet_rent_configuration" sequence="100"/>
-
         <record id='fleet_rental_items_to_be_checked_act' model='ir.actions.act_window'>
             <field name="name">Items to be checked</field>
             <field name="res_model">fleet_booking.item_to_be_checked</field>
@@ -89,7 +87,7 @@
             </field>
         </record>
 
-        <menuitem action="fleet_rental_items_to_be_checked_act" parent="fleet_rent_configuration" id="fleet_rent_items_to_be_checked_menu"/>
+        <menuitem action="fleet_rental_items_to_be_checked_act" parent="base.menu_sale_config" id="fleet_rent_items_to_be_checked_menu"/>
 
         <record model='ir.ui.view' id='fleet_rent_form'>
           <field name="name">fleet.rent.form</field>
