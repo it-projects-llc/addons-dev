@@ -25,7 +25,6 @@
         <tree string="Type">
             <field name="name"/>
             <field name="points"/>
-            <field name="sequence"/>
         </tree>
     </field>
 </record>

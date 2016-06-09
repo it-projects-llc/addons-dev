@@ -5,11 +5,10 @@ from openerp import fields, models, api
 
 class MemberType(models.Model):
     _name = 'sale_membership.type'
-    _order = 'sequence'
+    _order = 'points'
 
     name = fields.Char('Membership type')
     points = fields.Integer('Promote at', default=0)
-    sequence = fields.Integer(help='Membership order')
 
 
 class MemberLog(models.Model):
