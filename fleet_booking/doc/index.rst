@@ -313,6 +313,8 @@ Menu items:
 
 * Open ``Fleet`` in main menu.
 * Go to ``Transfers``. Here is ``Incoming`` and ``Outgoing`` menu sections.
+* Тут надо сказать про то что в Incoming по умолчанию видны только входящие для бранча активного эмплоера. Я не знаю как это делать то ли фильтрами то ли что.
+* Аналогично для  Outgoing
 
 Workflow is like that:
 
