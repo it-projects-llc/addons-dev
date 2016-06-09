@@ -56,7 +56,7 @@ class FleetBookingReturn(models.Model):
             help='common part of all three types of the documents', auto_join=True)
 
 
-class FleetBookingItemsToBeChecked(models.Models):
+class FleetBookingItemsToBeChecked(models.Model):
     _name = 'fleet_booking.items_to_be_checked'
 
     name = fields.Char(string='Item', help='Item to be checked before and after rent')
