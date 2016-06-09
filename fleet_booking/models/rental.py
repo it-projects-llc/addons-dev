@@ -32,7 +32,7 @@ class FleetBookingDocument(models.Model):
 
     vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle")
 
-    exit_checked_item_ids = fields.Many2many('fleet_booking.item_to_be_checked', 'document_exit_checking_items_rel', 'document_id', 'item_id', copy=False)
+    exit_checked_item_ids = fields.Many2many('fleet_booking.item_to_be_checked', 'document_exit_checking_items_rel', 'document_id', 'item_id', copy=False, string='On Exit')
 
 class FleetBookingRent(models.Model):
     _name = 'fleet_booking.rent'
