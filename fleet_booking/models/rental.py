@@ -2,6 +2,7 @@
 import openerp
 from openerp import models, fields, api
 
+
 class FleetBookingDocument(models.Model):
     _name = 'fleet_booking.document'
 

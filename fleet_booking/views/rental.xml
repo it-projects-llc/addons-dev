@@ -97,6 +97,9 @@
           <field name="model">fleet_booking.rent</field>
           <field name="arch" type="xml">
             <form string="Vehicle Rent">
+              <header>
+               <field name="state" widget="statusbar" statusbar_visible="draft,booked,confirmed,extended,returned"/>
+              </header>
               <sheet>
                <group col="2" string="Vehicle Status">
                  <field name="exit_checked_item_ids" widget='many2many_checkboxes'/>
