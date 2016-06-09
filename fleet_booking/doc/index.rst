@@ -234,8 +234,8 @@ Configure record filter (to see what records needs your attention)
 
 * Open menu.
 * Depending on your role choose filter:
-    * For accountant (show records with State = Request AND Service Type != In branch.)
-    * For vehicle support officer (show records with State = Done)
+    * For vehicle support officer (show records with State = Request AND Service Type != In branch.)
+    * For accountant (show records with State = Done)
 
 First maintenance scheme (in branch)
 ------------------------------------
