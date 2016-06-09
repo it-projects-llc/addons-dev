@@ -7,17 +7,6 @@ class FleetBookingDocument(models.Model):
 
     name = fields.Char(string='Document Reference', required=True, copy=False, readonly=True, index=True, default='New')
 
-    state = fields.Selection([
-        ('draft', 'Quotation'),
-        ('booked', 'Booked'),
-        ('confirmed', 'Confirmed'),
-        ('extended', 'Extended'),
-        ('cancel', 'Cancelled'),
-        ('return_draft', 'Return Draft'),
-        ('return_open', 'Return Open'),
-        ('return_closed', 'Return Closed'),
-        ], string='Status', readonly=True, copy=False, index=True, default='draft')
-
     type = fields.Selection([
             ('rent','Rent'),
             ('extended_rent','Extended Rent'),
@@ -34,8 +23,18 @@ class FleetBookingDocument(models.Model):
 
     exit_checked_item_ids = fields.Many2many('fleet_booking.item_to_be_checked', 'document_exit_checking_items_rel', 'document_id', 'item_id', copy=False, string='On Exit')
 
+
 class FleetBookingRent(models.Model):
     _name = 'fleet_booking.rent'
+
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('booked', 'Booked'),
+        ('confirmed', 'Confirmed'),
+        ('extended', 'Extended'),
+        ('returned', 'Returned'),
+        ('cancel', 'Cancelled'),
+        ], string='Status', readonly=True, copy=False, index=True, default='draft')
 
     _inherits = {
                  'fleet_booking.document': 'document_id',
@@ -48,6 +47,12 @@ class FleetBookingRent(models.Model):
 
 class FleetBookingReturn(models.Model):
     _name = 'fleet_booking.return'
+
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('open', 'Returned but Open'),
+        ('closed', 'Returned and Closed'),
+        ], string='Status', readonly=True, copy=False, index=True, default='draft')
 
     _inherits = {
                  'fleet_booking.document': 'document_id',
