@@ -79,56 +79,42 @@ Not ready functions
 
 Below stuff planned but not completed yet. It partially finished or developing now.
 
-Add (Edit) Vehicle
-------------------
+Vehicle workflow
+----------------
 
-Жизненный цикл авто:
+For depreciation purposes used build-in module ``Assets management``.
 
-1. Покупка:
-    Создается vendor bill.
-    Добавляется строка:
-        Создается продукт (машина).
-        Выбирается счет (для основных средств).
-        Выбирается asset category.
-    Документ переводится в сосстояние done и регистрируется платеж. Это формирует проводки списания денег со счета (банк или кеш) и поступление активов. Тут может быть совсем другая схема если покупка в кредит или в долг или еще как то.
-2. Создание актива (ОС).
-    Создаем asset.
-    Задаем bill которым купили авто.
-    Создаем vehicle и выбираем его в соответствующем поле (это поле надо добавить).
-3. Амортизация используя этот asset.
+Firstly you need to enroll asset (vehicle):
 
-Таким образом по самой простой схеме приобретения авто опиходуется как основное седство с помощью vendor bill и предлявлено тремя связаными рекордами: Product, Vehicle, Asset.
+* Go to ``Accounting \ Purchases \ Vendor bills``.
+* Create new ``Vendor bill``.
+* Select vendor (partner).
+* Add product representing vehicle. Create it if  needed.
+* Select ``Asset Category``. Edit it or create new category if needed.
+    * Pay special attention to ``Journal Entries``. Make sure correct journal and accounts selected.
+    * Configure ``Depreciation Method`` and ``Periodicity``.
+* Fill other fields.
+* Then press ``[Validate]`` and ``[Register payment]``.
+* This document makes asset enrollment and money write-off accounting entries.
+* Save and close document.
 
+Secondly create asset model record:
 
+* Go to ``Accounting \ Adviser \ Assets``.
+* Create new asset.
+    * Select ``Category``. Depreciation information will be auto-filled.
+    * Select vehicle. Create it if needed.
+    * Select invoice. Put here vendor bill you created earlier.
+    * Enter ``Gross Value``. It is an amount to be depreciated.
+    * Fill other fields.
+    * Press ``[Confirm]`` and ``[Save]``.
+    * Now you will see depreciation lines.
+    * Press red circle on line you need to create accounting depreciation entries and press ``[Save]`` (it will become green).
+    * In upper right corner ``Items`` count will increase. Press it to look up accounting entries.
+    * Press ``[Modify Depreciation]`` to make some changes those like period extension or to select another strategy.
 
-* Go to Fleet.
-* Open Vehicles.
-* Open some vehicle.
-* Press Edit button.
-    * Select model or create new one. Enter ``Model name`` and ``Make (brand)``.
-    * Select color from drop-down. // add
-    * Enter Model Year. // add
-    * Car Plate Number //
-    * Car chassis number
-    * Daily Rate type // add
-    * Rate per extra km // add
-    * Enter allowed kilometer per day // add
-    * Enter Vehicle registration expiry date // add
-    * Enter Insurance expiry date // add
-    * Enter Lease Installments dates // add Table ( model) . даты платежей за прокат
-    * Enter Insurance Installments dates // add Table ( model) . даты платежей за страховку
-    * Enter Odometer
-    * Purchase Price // rename car value
-    * Paid Amount // add
-    * Remaining Amount  // add
-    * Asset Account  // add
-    * Paid Amount Account  // add
-    * Remaining Amount Account  // add
-    * Vehicle Depreciation - амортизация ТС - в табличном виде (возможно one2many)
-    * Depreciation Expense Account - счет для расходов на амортизацию (Many2one)
-    * Accumulated Depreciation Account - счет для накопленной амортизации  (Many2one)
-    * Next Maintenance Date - дата следующего сервисного обслуживания (тип Date)
-    * Press save.
+So vehicle is represented by three records: Product, Vehicle, Asset. Product and asset is needed only for accounting aims. Vehicle is main object you going to work with.
+
 
 Remove Vehicle
 --------------

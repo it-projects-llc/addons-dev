@@ -16,8 +16,9 @@
         "hr",
         "fleet",
         "account",
+        "account_asset",
         "partner_person",
-        "sale_membership"
+        "sale_membership",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
@@ -27,6 +28,7 @@
         "views/partner.xml",
         "views/fleet.xml",
         "views/rental.xml",
+        "views/asset.xml",
     ],
     "qweb": [
     ],

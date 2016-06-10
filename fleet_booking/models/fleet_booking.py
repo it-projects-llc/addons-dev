@@ -80,6 +80,7 @@ class Fleet(models.Model):
     payments_ids = fields.One2many('fleet_booking.payments', 'fleet_vehicle_id', string='Payments')
     insurance_ids = fields.One2many('fleet_booking.insurances', 'fleet_vehicle_id', string='Insurance Installments')
     deprecation_ids = fields.One2many('fleet_booking.deprecation', 'fleet_vehicle_id', string='Vehicle Depreciation')
+    asset_id = fields.Many2one('account.asset.asset')
     # TODO Rename deprecation to depreciation
 
 
@@ -123,6 +124,13 @@ class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
     fleet_vehicle_log_services_ids = fields.Many2one('fleet.vehicle.log.services')
+
+
+class Asset(models.Model):
+    _inherit = 'account.asset.asset'
+
+    vehicle_id = fields.Many2one('fleet.vehicle', string='Vehicle')
+
 
 # OWN MODELS
 

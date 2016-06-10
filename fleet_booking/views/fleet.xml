@@ -10,6 +10,7 @@
             <!-- NEW FIELDS -->
             <xpath expr="//field[@name='company_id']" position="after">
                 <field name='branch'/>
+                <field name='asset_id'/>
             </xpath>
             <xpath expr="//field[@name='doors']" position="after">
                     <field name='model_year'/>
