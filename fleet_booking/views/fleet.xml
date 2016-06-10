@@ -76,6 +76,9 @@
                 <group string="Invoices" groups="fleet_booking.group_accountant">
                     <field name="account_invoice_ids" nolabel="1"/>
                 </group>
+                <group string="Attachments">
+                    <field name="attachment_ids" filter_domain="[('attachment_ids.index_content', 'ilike', self)]"  nolabel="1"/>
+                </group>
             </xpath>
         </data>
     </field>
@@ -87,15 +90,15 @@
     <field name="arch" type="xml">
             <xpath expr="//sheet" position="before">
                 <header>
-                    <button name="submit" states="draft" string="Submit" type="object" class="oe_highlight"/>
-                    <button name="confirm" attrs="{'invisible': [('state', '!=', 'request')]}"  string="Confirm" type="object" class="oe_highlight"/>
-                    <button name="approve" states="done" string="Approve" type="object" class="oe_highlight"/>
+                    <button name="submit" states="draft" string="Submit" type="object" class="oe_highlight" groups="fleet_booking.group_branch_officer"/>
+                    <button name="confirm" attrs="{'invisible': [('state', '!=', 'request')]}"  string="Confirm" type="object" class="oe_highlight" groups="fleet_booking.group_branch_officer,fleet_booking.group_vehicles_support_officer"/>
+                    <button name="approve" states="done" string="Approve" type="object" class="oe_highlight" groups="fleet_booking.group_accountant"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,request,done,paid"/>
                 </header>
             </xpath>
     </field>
 </record>
-<record model="ir.ui.view" id="fleet_vehicle_log_services_form_inherit_buttonsddddd">
+<record model="ir.ui.view" id="fleet_vehicle_log_services_form_inherit_invoice">
     <field name="name">fleet.vehicle.form.inheritt</field>
     <field name="model">fleet.vehicle</field>
     <field name="inherit_id" ref="fleet.fleet_vehicle_form"/>
@@ -118,6 +121,7 @@
     </field>
 </record>
 <!--BRANCH OFFICER FORM BEHAVIOR CUSTOMISATION-->
+<!--HIDE Included Services-->
 <record id="fleet_vehicle_log_services_form_inherit_bo" model="ir.ui.view">
     <field name="name">fleet.vehicle.log.services.form.inherit.bo</field>
     <field name="model">fleet.vehicle.log.services</field>

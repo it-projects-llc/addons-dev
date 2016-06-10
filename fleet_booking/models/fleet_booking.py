@@ -123,6 +123,9 @@ class Service(models.Model):
                              string='State', default='draft')
     account_invoice_ids = fields.One2many('account.invoice', 'fleet_vehicle_log_services_ids', string='Invoices', copy=False)
     cost_subtype_in_branch = fields.Boolean(related='cost_subtype_id.in_branch')
+    attachment_ids = fields.One2many('ir.attachment', 'res_id',
+                                domain=[('res_model', '=', 'fleet.vehicle.log.services')],
+                                string='Attachments')
 
     @api.multi
     def submit(self):
