@@ -77,7 +77,7 @@ class Fleet(models.Model):
     reg_expiry = fields.Date('Registration expiry')
     ins_expiry = fields.Date('Insurance expiry')
     next_maintain = fields.Date('Next maintenance')
-    payments_ids = fields.One2many('fleet_booking.payments', 'fleet_vehicle_id', string='Payments')
+    payments_ids = fields.One2many('account.invoice', 'fleet_vehicle_id', string='Payments')
     insurance_ids = fields.One2many('fleet_booking.insurances', 'fleet_vehicle_id', string='Insurance Installments')
     deprecation_ids = fields.One2many(related='asset_id.depreciation_line_ids')
     asset_id = fields.Many2one('account.asset.asset', compute='compute_asset', inverse='asset_inverse')
@@ -139,6 +139,7 @@ class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
     fleet_vehicle_log_services_ids = fields.Many2one('fleet.vehicle.log.services')
+    fleet_vehicle_id = fields.Many2one('fleet.vehicle')
 
 
 class Asset(models.Model):
@@ -148,16 +149,6 @@ class Asset(models.Model):
 
 
 # OWN MODELS
-
-class Payments(models.Model):
-    _name = 'fleet_booking.payments'
-    _order = 'fleet_vehicle_id, sequence, id'
-
-    fleet_vehicle_id = fields.Many2one('fleet.vehicle')
-    sequence = fields.Integer(default=1,
-                              help="Gives the sequence of this line when displaying the vehicle.")
-    payment_date = fields.Datetime(string='Date', default=fields.Datetime.now())
-    amount = fields.Float(string='Amount')
 
 
 class InsuranceInstallments(models.Model):
@@ -169,30 +160,3 @@ class InsuranceInstallments(models.Model):
                               help="Gives the sequence of this line when displaying the vehicle.")
     insurance_date = fields.Datetime(string='Date', default=fields.Datetime.now())
     amount = fields.Float(string='Amount')
-
-
-class VehicleDepreciation(models.Model):
-    _name = 'fleet_booking.deprecation'
-    _order = 'fleet_vehicle_id, sequence, id'
-
-    fleet_vehicle_id = fields.Many2one('fleet.vehicle')
-    sequence = fields.Integer(default=1,
-                              help="Gives the sequence of this line when displaying the vehicle.")
-    deprecation_date = fields.Datetime(string='Date', default=fields.Datetime.now())
-    amount = fields.Float(string='Amount')
-
-    # @api.one
-    # @api.depends('payment_date')
-    # def get_serial_num(self):
-    #    print '# :',    self._context.get('active_ids', []) or []
-    #    print '# :',    self._context.get('active_id', []) or []
-
-    # @api.model
-    # def default_get(self, fields_list):
-    #     defaults = super(Payments, self).default_get(fields_list)
-    #     res = self.env['fleet_booking.payments'].search(
-    #         [('fleet_vehicle_id', '=', self.fleet_vehicle_id)],
-    #         limit=1, order='serial_num ASC')
-    #     if res:
-    #         defaults.setdefault('serial_num', res.serial_num + 1)
-    #     return defaults
