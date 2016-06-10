@@ -79,9 +79,24 @@ class Fleet(models.Model):
     next_maintain = fields.Date('Next maintenance')
     payments_ids = fields.One2many('fleet_booking.payments', 'fleet_vehicle_id', string='Payments')
     insurance_ids = fields.One2many('fleet_booking.insurances', 'fleet_vehicle_id', string='Insurance Installments')
-    deprecation_ids = fields.One2many('fleet_booking.deprecation', 'fleet_vehicle_id', string='Vehicle Depreciation')
-    asset_id = fields.Many2one('account.asset.asset')
+    deprecation_ids = fields.One2many(related='asset_id.depreciation_line_ids')
+    asset_id = fields.Many2one('account.asset.asset', compute='compute_asset', inverse='asset_inverse')
+    asset_ids = fields.One2many('account.asset.asset', 'vehicle_id')
     # TODO Rename deprecation to depreciation
+
+    @api.one
+    @api.depends('asset_ids')
+    def compute_asset(self):
+        if len(self.asset_ids) > 0:
+            self.asset_id = self.asset_ids[0]
+
+    @api.one
+    def asset_inverse(self):
+        new_asset = self.env['account.asset.asset'].browse(self.asset_id.id)
+        if len(self.asset_ids) > 0:
+            asset = self.env['account.asset.asset'].browse(self.asset_ids[0].id)
+            asset.vehicle_id = False
+        new_asset.vehicle_id = self
 
 
 class Service(models.Model):
