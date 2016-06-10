@@ -78,6 +78,7 @@ class Fleet(models.Model):
     ins_expiry = fields.Date('Insurance expiry')
     next_maintain = fields.Date('Next maintenance')
     payments_ids = fields.One2many('account.invoice', 'fleet_vehicle_id', string='Payments')
+    total_invoiced = fields.Float(default=0)
     insurance_ids = fields.One2many('fleet_booking.insurances', 'fleet_vehicle_id', string='Insurance Installments')
     deprecation_ids = fields.One2many(related='asset_id.depreciation_line_ids')
     asset_id = fields.Many2one('account.asset.asset', compute='compute_asset', inverse='asset_inverse')
@@ -97,6 +98,19 @@ class Fleet(models.Model):
             asset = self.env['account.asset.asset'].browse(self.asset_ids[0].id)
             asset.vehicle_id = False
         new_asset.vehicle_id = self
+
+    # def act_show_invoices(self, cr, uid, ids, context=None):
+    #     if context is None:
+    #         context = {}
+    #     res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'account', 'action_invoice_refund_out_tree_form',
+    #                                                             context=context)
+    #     res['context'] = context
+    #     # res['context'].update({
+    #     #     'default_vehicle_id': ids[0],
+    #     #     'search_default_parent_false': True
+    #     # })
+    #     # res['domain'] = [('vehicle_id', '=', ids[0])]
+    #     return res
 
 
 class Service(models.Model):

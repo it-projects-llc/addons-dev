@@ -74,13 +74,11 @@ Customer membership:
 
 * TODO
 
-Not ready functions
-===================
-
-Below stuff planned but not completed yet. It partially finished or developing now.
-
 Vehicle workflow
-----------------
+================
+
+Depreciation and enrollment
+---------------------------
 
 For depreciation purposes used build-in module ``Assets management``.
 
@@ -103,7 +101,7 @@ Secondly create asset model record:
 * Go to ``Accounting \ Adviser \ Assets``.
 * Create new asset.
     * Select ``Category``. Depreciation information will be auto-filled.
-    * Select vehicle. Create it if needed.
+    * Select vehicle. Create it if needed. Just fill necessary fields.
     * Select invoice. Put here vendor bill you created earlier.
     * Enter ``Gross Value``. It is an amount to be depreciated.
     * Fill other fields.
@@ -115,17 +113,28 @@ Secondly create asset model record:
 
 So vehicle is represented by three records: Product, Vehicle, Asset. Product and asset is needed only for accounting aims. Vehicle is main object you going to work with.
 
+Register payments
+-----------------
+
+* Open vehicle.
+* Go to ``Payments`` tab.
+* Press ``[Add new item]``.
+* Fill invoice with according data.
 
 Remove Vehicle
 --------------
 
-* Go to Fleet.
-* Open Vehicles.
+* Go to ``Fleet``.
+* Open ``Vehicles``.
 * Open some vehicle.
-* Press Edit button.
-    * PressRemove button.
-    * Fill popped up form. If it sold put also Selling price.
+* Press ``[Action]``.
+* Press ``[Delete]``.
 
+
+Not ready functions
+===================
+
+Below stuff planned but not completed yet. It partially finished or developing now.
 
 Vehicle Contracts
 -----------------
