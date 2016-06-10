@@ -19,10 +19,10 @@ class FleetBookingDocument(models.Model):
         readonly=True, states={'draft': [('readonly', False)]})
 
     partner_id = fields.Many2one('res.partner', string="Customer", domain=[('customer', '=', True)])
-    customer_name = fields.Char(string='Customer name', related="partner_id.name", store=False)
-    customer_ID = fields.Integer(string='Customer ID', related='partner_id.id', store=False)
-    customer_membership_number = fields.Integer(string='Customer membership number', related='partner_id.id', store=False)
-    membership_type = fields.Char(string='Membership Type', related='partner_id.type_id.name', store=False)
+    # customer_name = fields.Char(string='Customer name', related="partner_id.name", store=False)
+    # customer_ID = fields.Integer(string='Customer ID', related='partner_id.id', store=False)
+    # customer_membership_number = fields.Integer(string='Customer membership number', related='partner_id.id', store=False)
+    # membership_type = fields.Char(string='Membership Type', related='partner_id.type_id.name', store=False)
 
     vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle")
 
