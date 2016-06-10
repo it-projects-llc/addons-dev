@@ -6,7 +6,7 @@ vso2,vso2,model_fleet_booking_insurances,group_vehicles_support_officer,1,1,1,1
 vso4,vso4,model_fleet_vehicle_log_services,group_vehicles_support_officer,1,1,1,1
 vso5,vso5,model_account_invoice,group_vehicles_support_officer,1,0,0,0
 bo1,bo1,model_fleet_vehicle_log_services,group_branch_officer,1,1,1,1
-bo2,bo2,model_account_invoice,group_branch_officer,0,0,0,0
+bo2,bo2,model_account_invoice,group_branch_officer,1,0,0,0
 bo5,bo5,model_fleet_booking_insurances,group_branch_officer,1,0,0,0
 acc1,acc1,model_fleet_vehicle_log_services,group_accountant,1,0,0,1
 acc2,acc2,model_account_invoice,group_accountant,1,1,1,1
