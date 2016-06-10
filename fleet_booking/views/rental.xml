@@ -101,8 +101,8 @@
                 <group>
                   <field name="name"/>
                   <field name="partner_id"/>
-                  <!-- <field name="customer_name"/> -->
-                  <!-- <field name="customer_ID"/> -->
+                  <field name="customer_name"/>
+                  <field name="customer_ID"/>
                   <!-- <field name="customer_membership_number"/> -->
                   <!-- <field name="membership_type"/> -->
                 </group>
