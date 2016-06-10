@@ -101,10 +101,7 @@
                 <group>
                   <field name="name"/>
                   <field name="partner_id"/>
-                  <field name="customer_name"/>
-                  <!-- <field name="customer_ID"/> -->
-                  <!-- <field name="customer_membership_number"/> -->
-                  <!-- <field name="membership_type"/> -->
+                  <field name="membership_type"/>
                 </group>
                 <group col="2" string="Vehicle Status">
                  <field name="exit_checked_item_ids" widget='many2many_checkboxes'/>
