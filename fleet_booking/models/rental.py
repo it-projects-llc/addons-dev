@@ -69,3 +69,27 @@ class FleetBookingItemsToBeChecked(models.Model):
     _name = 'fleet_booking.item_to_be_checked'
 
     name = fields.Char(string='Item', help='Item to be checked before and after rent')
+
+
+class ResPartner(models.Model):
+    _inherit = 'res.partner'
+
+    _display_name_store_triggers = {
+        'res.partner': (lambda self, cr, uid, ids, context=None: self.search(cr, uid,
+                        [('id', 'child_of', ids)], context=dict(active_test=False)),
+                        ['parent_id', 'is_company', 'name', 'id'], 10)
+        }
+
+    _display_name = lambda self, *args, **kwargs: self._display_name_compute(*args, **kwargs)
+    _columns = {
+        'display_name': fields.function(_display_name, type='char', string='Name',
+                                        store=_display_name_store_triggers, select=True)
+        }
+
+    def name_get(self, cr, uid, ids, context=None):
+        result = dict(super(ResPartnerPhone, self).name_get(cr, uid, ids, context=None))
+        records = self.browse(cr, uid, result.keys(), context)
+        for r in records:
+            if r.id:
+                result[r.id] = result[r.id] + ' (' + r.id+ ')'
+        return result.items()
