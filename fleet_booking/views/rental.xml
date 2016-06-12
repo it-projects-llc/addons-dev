@@ -15,7 +15,7 @@
           </field>
         </record>
 
-        <menuitem action="fleet_rent_draft_act" parent="rental_contracts" id="rent_draft_menu"/>
+        <menuitem action="fleet_rent_draft_act" parent="rental_contracts" id="rent_draft_menu" sequence="1"/>
 
         <record id='fleet_rent_booked_act' model='ir.actions.act_window'>
           <field name="name">Rent Booked</field>
@@ -29,7 +29,7 @@
           </field>
         </record>
 
-        <menuitem action="fleet_rent_booked_act" parent="rental_contracts" id="rent_booked_menu"/>
+        <menuitem action="fleet_rent_booked_act" parent="rental_contracts" id="rent_booked_menu" sequence="2"/>
 
         <record id='fleet_rent_confirmed_act' model='ir.actions.act_window'>
           <field name="name">Rent Confirmed</field>
@@ -43,7 +43,7 @@
           </field>
         </record>
 
-        <menuitem action="fleet_rent_confirmed_act" parent="rental_contracts" id="rent_confirmed_menu"/>
+        <menuitem action="fleet_rent_confirmed_act" parent="rental_contracts" id="rent_confirmed_menu" sequence="3"/>
 
         <record id='fleet_return_draft_act' model='ir.actions.act_window'>
           <field name="name">Return Draft</field>
@@ -57,7 +57,7 @@
           </field>
         </record>
 
-        <menuitem action="fleet_return_draft_act" parent="rental_contracts" id="return_draft_menu"/>
+        <menuitem action="fleet_return_draft_act" parent="rental_contracts" id="return_draft_menu" sequence="4"/>
 
         <record id='fleet_return_confirmed_open_act' model='ir.actions.act_window'>
           <field name="name">Return Confirmed but Open</field>
@@ -71,7 +71,7 @@
           </field>
         </record>
 
-        <menuitem action="fleet_return_confirmed_open_act" parent="rental_contracts" id="return_confirmed_open_menu"/>
+        <menuitem action="fleet_return_confirmed_open_act" parent="rental_contracts" id="return_confirmed_open_menu" sequence="5"/>
 
         <record id='fleet_return_confirmed_closed_act' model='ir.actions.act_window'>
           <field name="name">Return Confirmed and Closed</field>
@@ -85,7 +85,7 @@
           </field>
         </record>
 
-        <menuitem action="fleet_return_confirmed_closed_act" parent="rental_contracts" id="return_confirmed_closed_menu"/>
+        <menuitem action="fleet_return_confirmed_closed_act" parent="rental_contracts" id="return_confirmed_closed_menu" sequence="6"/>
 
         <record id='fleet_rental_items_to_be_checked_act' model='ir.actions.act_window'>
             <field name="name">Items to be checked</field>
