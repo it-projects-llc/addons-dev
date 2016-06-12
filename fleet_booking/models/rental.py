@@ -7,30 +7,30 @@ from openerp.osv import fields
 class FleetBookingDocument(models.Model):
     _name = 'fleet_booking.document'
 
-    name = fields.Char(string='Agreement Number', required=True, copy=False, readonly=True, index=True, default='New')
+    name = openerp.fields.Char(string='Agreement Number', required=True, copy=False, readonly=True, index=True, default='New')
 
-    type = fields.Selection([
+    type = openerp.fields.Selection([
             ('rent','Rent'),
             ('extended_rent','Extended Rent'),
             ('return','Return'),
         ], readonly=True, index=True, change_default=True)
 
-    origin = fields.Char(string='Source Document',
+    origin = openerp.fields.Char(string='Source Document',
         help="Reference of the document that produced this document.",
         readonly=True, states={'draft': [('readonly', False)]})
 
-    partner_id = fields.Many2one('res.partner', string="Customer", domain=[('customer', '=', True)])
-    membership_type = fields.Char(string='Membership Type', related='partner_id.type_id.name', store=False, readonly=True)
+    partner_id = openerp.fields.Many2one('res.partner', string="Customer", domain=[('customer', '=', True)])
+    membership_type = openerp.fields.Char(string='Membership Type', related='partner_id.type_id.name', store=False, readonly=True)
 
-    vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle")
+    vehicle_id = openerp.fields.Many2one('fleet.vehicle', string="Vehicle")
 
-    exit_checked_item_ids = fields.Many2many('fleet_booking.item_to_be_checked', 'document_exit_checking_items_rel', 'document_id', 'item_id', copy=False, string='On Exit')
+    exit_checked_item_ids = openerp.fields.Many2many('fleet_booking.item_to_be_checked', 'document_exit_checking_items_rel', 'document_id', 'item_id', copy=False, string='On Exit')
 
 
 class FleetBookingRent(models.Model):
     _name = 'fleet_booking.rent'
 
-    state = fields.Selection([
+    state = openerp.fields.Selection([
         ('draft', 'Draft'),
         ('booked', 'Booked'),
         ('confirmed', 'Confirmed'),
@@ -43,7 +43,7 @@ class FleetBookingRent(models.Model):
                  'fleet_booking.document': 'document_id',
                  }
 
-    document_id = fields.Many2one('fleet_booking.document', required=True,
+    document_id = openerp.fields.Many2one('fleet_booking.document', required=True,
             string='Related Document', ondelete='restrict',
             help='common part of all three types of the documents', auto_join=True)
 
@@ -51,7 +51,7 @@ class FleetBookingRent(models.Model):
 class FleetBookingReturn(models.Model):
     _name = 'fleet_booking.return'
 
-    state = fields.Selection([
+    state = openerp.fields.Selection([
         ('draft', 'Draft'),
         ('open', 'Returned but Open'),
         ('closed', 'Returned and Closed'),
@@ -61,7 +61,7 @@ class FleetBookingReturn(models.Model):
                  'fleet_booking.document': 'document_id',
                  }
 
-    document_id = fields.Many2one('fleet_booking.document', required=True,
+    document_id = openerp.fields.Many2one('fleet_booking.document', required=True,
             string='Related Document', ondelete='restrict',
             help='common part of all three types of the documents', auto_join=True)
 
@@ -69,7 +69,7 @@ class FleetBookingReturn(models.Model):
 class FleetBookingItemsToBeChecked(models.Model):
     _name = 'fleet_booking.item_to_be_checked'
 
-    name = fields.Char(string='Item', help='Item to be checked before and after rent')
+    name = openerp.fields.Char(string='Item', help='Item to be checked before and after rent')
 
 
 class ResPartner(models.Model):
@@ -88,7 +88,7 @@ class ResPartner(models.Model):
         }
 
     def name_get(self, cr, uid, ids, context=None):
-        result = dict(super(ResPartnerPhone, self).name_get(cr, uid, ids, context=None))
+        result = dict(super(ResPartner, self).name_get(cr, uid, ids, context=None))
         records = self.browse(cr, uid, result.keys(), context)
         for r in records:
             if r.id:
