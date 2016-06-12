@@ -99,7 +99,7 @@
               </header>
               <sheet>
                 <group>
-                  <field name="name"/>
+                  <field name="name" class="oe_inline"/>
                   <field name="partner_id"/>
                   <field name="membership_type"/>
                 </group>
