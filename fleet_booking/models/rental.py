@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import openerp
 from openerp import models, fields, api
+from openerp.osv import fields
 
 
 class FleetBookingDocument(models.Model):
