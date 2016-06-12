@@ -3,8 +3,8 @@
     <data>
         <menuitem name="Rental" parent="base.menu_base_partner" id="rental_contracts" sequence="2"/>
 
-        <record id='fleet_rent_quotations_act' model='ir.actions.act_window'>
-          <field name="name">Rent Quotations</field>
+        <record id='fleet_rent_draft_act' model='ir.actions.act_window'>
+          <field name="name">Rent Draft</field>
           <field name="res_model">fleet_booking.rent</field>
           <field name="view_type">form</field>
           <field name="view_mode">tree,form</field>
@@ -15,7 +15,21 @@
           </field>
         </record>
 
-        <menuitem action="fleet_rent_quotations_act" parent="rental_contracts" id="rent_quotations_menu"/>
+        <menuitem action="fleet_rent_draft_act" parent="rental_contracts" id="rent_draft_menu"/>
+
+        <record id='fleet_rent_booked_act' model='ir.actions.act_window'>
+          <field name="name">Rent Booked</field>
+          <field name="res_model">fleet_booking.rent</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+              Click to create a new rental document.
+            </p>
+          </field>
+        </record>
+
+        <menuitem action="fleet_rent_booked_act" parent="rental_contracts" id="rent_booked_menu"/>
 
         <record id='fleet_rent_confirmed_act' model='ir.actions.act_window'>
           <field name="name">Rent Confirmed</field>
