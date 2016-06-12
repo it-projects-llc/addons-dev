@@ -2,3 +2,4 @@
 
 import fleet_booking
 import rental
+import res_partner
