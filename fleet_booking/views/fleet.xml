@@ -66,10 +66,6 @@
                 <!--НЕ РАБОТАЕТ ЧТО ТО-->
                 <attribute name='string'>Plate Number</attribute>
             </xpath>
-            <xpath expr="//field[@name='color']" position="replace">
-                <!--СТРАННОЕ ПОВЕДЕНИЕ-->
-                <field name='colour'/>
-            </xpath>
         </data>
     </field>
 </record>

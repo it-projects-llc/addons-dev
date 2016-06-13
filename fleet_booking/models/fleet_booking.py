@@ -57,17 +57,6 @@ class Fleet(models.Model):
 
     _inherit = 'fleet.vehicle'
 
-    colour = fields.Selection([('black', 'Black'),
-                              ('blue', 'Blue'),
-                              ('red', 'Red'),
-                              ('white', 'White'),
-                              ('sliver', 'Sliver'),
-                              ('yellow', 'Yellow'),
-                              ('green', 'Green'),
-                              ('gold', 'Gold'),
-                              ('orange', 'Orange'),
-                              ('brown', 'Brown'),
-                              ], string='Color', default='black')
     model_year = fields.Integer('Model Year')
     daily_rate = fields.Float('Daily Rate')
     extra_rate = fields.Float('Rate per extra km')
