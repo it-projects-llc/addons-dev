@@ -17,7 +17,8 @@
         <field name="arch" type="xml">
           <tree string="Vehicle Colors">
             <field name="name"/>
-            <field name="color" widget="color"/>
+            <!-- <field name="color" widget="color"/> -->
+            <!-- TODO: port web_widget_color on 9.0 -->
           </tree>
         </field>
       </record>
