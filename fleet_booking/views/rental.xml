@@ -117,7 +117,8 @@
                   <field name="partner_id"/>
                   <field name="membership_type"/>
                 </group>
-                <group col="2" string="Vehicle Status">
+                <group col="2" string="Vehicle Information">
+                 <field name="vehicle_id"/>
                  <field name="exit_checked_item_ids" widget='many2many_checkboxes'/>
                </group>
               </sheet>
