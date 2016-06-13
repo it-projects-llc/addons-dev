@@ -14,7 +14,8 @@
 
     "depends": [
         "fleet",
-        "web_widget_color",
+#        "web_widget_color",
+# TODO: port web_widget_color on 9.0
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
