@@ -2,9 +2,9 @@
 <openerp>
     <data>
 
-      <record model='ir.ui.view' id='fleet_rent_form'>
-        <field name="name">fleet.rent.form</field>
-        <field name="model">fleet_booking.rent</field>
+      <record id='fleet_rental_document_form' model='ir.ui.view' >
+        <field name="name">fleet.rental.document.form</field>
+        <field name="model">fleet_rental.document</field>
         <field name="arch" type="xml">
           <form string="Vehicle Rent">
             <sheet>
