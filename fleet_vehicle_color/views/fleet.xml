@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+      <record id="fleet_vehicle_color_form" model="ir.ui.view">
+        <field name="name">fleet.vehicle.color.form</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_form"/>
+        <field name="arch" type="xml">
+          <xpath expr="//field[@name='color']" position="replace">
+            <field name='color_id'/>
+          </xpath>
+        </field>
+      </record>
+ 
+    </data>
+</openerp>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+      <record id="fleet_vehicle_color_act" model="ir.actions.act_window">
+        <field name="name">Vehicle Color</field>
+        <field name="res_model">fleet.vehicle_color</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+      </record>
+
+      <menuitem id="fleet_vehicle_color_menu" parent="fleet.fleet_configuration" name="Vehicle Color" sequence="100" action="fleet_vehicle_color_act"/>
+
+      <record id="fleet_vehicle_color_tree" model="ir.ui.view">
+        <field name="name">fleet.vehicle_color_tree</field>
+        <field name="model">fleet.vehicle_color</field>
+        <field name="arch" type="xml">
+          <tree string="Vehicle Colors">
+            <field name="name"/>
+            <!-- <field name="color" widget="color"/> -->
+            <!-- TODO: port web_widget_color on 9.0 -->
+          </tree>
+        </field>
+      </record>
+
+    </data>
+</openerp>
