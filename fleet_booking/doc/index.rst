@@ -130,6 +130,68 @@ Remove Vehicle
 * Press ``[Action]``.
 * Press ``[Delete]``.
 
+Maintenance
+===========
+
+Used build-in fleet.vehicle.log.services model.
+
+Maintenance state stages: Draft -> Request -> Done -> Paid.
+
+Configure record filter (to see what records needs your attention)
+------------------------------------------------------------------
+
+* Open menu.
+* Depending on your role choose filter:
+    * For vehicle support officer (show records with State = Request AND Service Type != In branch.)
+    * For accountant (show records with State = Done)
+
+First maintenance scheme (in branch)
+------------------------------------
+
+* Branch officer actions:
+    * Opens vehicle to be maintenanced.
+    * Push ``[Services]`` button. Opens ``Vehicles Services Logs`` menu.
+    * Create new vehicle service document.
+    * Select ``Service Type`` as ``In branch``. "B" section now is visible.
+    * Enters odometer.
+    * Puts ``Included Services`` lines.
+    * Press ``[Submit]`` to submit order and to set status from ``Draft`` to ``Request``. Vehicle state becomes ``In shop``. It cant be rented now.
+    * If for some reason rollback is required press ``[Cancel submit]``.
+    * When all jobs finished press ``[Confirm]``. It automatically changes ``State`` from ``Request`` to ``Done``. Vehicle state becomes ``Active``.
+
+* Vehicle support officer actions:
+    * No actions required.
+
+* Accountant actions:
+    * Opens service document.
+    * Creates invoices (``[New invoice]`` button). All created invoices visible in table.
+    * When costs invoices paid press ``[Approve]``. It automatically changes ``State`` from ``Done`` to ``Paid``.
+    * If for some reason rollback is required press ``[Cancel approve]``.
+
+Second maintenance scheme (not in branch)
+-----------------------------------------
+
+* Branch officer actions:
+    * Opens vehicle to be maintenanced.
+    * Push ``[Services]`` button. Opens ``Vehicles Services Logs`` menu.
+    * Create new vehicle service document.
+    * Select ``Service Type`` that is not ``In branch``. "B" section now is hidden.
+    * Press ``[Submit]`` to submit order and to set status from ``Draft`` to ``Request``.  Vehicle state becomes ``In shop``. It cant be rented now.
+    * If for some reason rollback is required press ``[Cancel submit]``.
+
+* Vehicle support officer actions:
+    * Opens service document.
+    * Enters new odometer.
+    * Puts ``Included Services`` lines.
+    * When jobs finished press ``[Confirm]``. It automatically changes ``State`` from ``Request`` to ``Done``. Vehicle state becomes ``Active``.
+    * If for some reason rollback is required press ``[Cancel confirm]``.
+
+* Accountant actions:
+    * Opens service document.
+    * Creates invoices (``[New invoice]`` button). All created invoices visible in table.
+    * When costs invoices paid press ``[Approve]``. It automatically changes ``State`` from ``Done`` to ``Paid``.
+    * If for some reason rollback is required press ``[Cancel approve]``.
+
 
 Not ready functions
 ===================
@@ -242,62 +304,6 @@ To confirm return document:
 * Remaining amount - вычисляется автоматически: Remaining amount = Deposit - Total.
 
 
-Maintenance
-===========
-
-Used build-in fleet.vehicle.log.services model.
-
-Maintenance state stages: Draft -> Request -> Done -> Paid.
-
-Configure record filter (to see what records needs your attention)
-------------------------------------------------------------------
-
-* Open menu.
-* Depending on your role choose filter:
-    * For vehicle support officer (show records with State = Request AND Service Type != In branch.)
-    * For accountant (show records with State = Done)
-
-First maintenance scheme (in branch)
-------------------------------------
-
-* Branch officer actions:
-    * Opens vehicle to be maintenanced.
-    * Push ``[Services]`` button. Opens ``Vehicles Services Logs`` menu.
-    * Create new vehicle service document.
-    * Select ``Service Type`` as ``In branch``. "B" section now is visible.
-    * Enters odometer.
-    * Puts ``Included Services`` lines.
-    * Press ``[Submit]`` to submit order and to set status from ``Draft`` to ``Request``. Vehicle state becomes ``In shop``. It cant be rented now.
-    * When all jobs finished press ``[Confirm]``. It automatically changes ``State`` from ``Request`` to ``Done``, saves and closes document. Vehicle state becomes ``Active``.
-
-* Vehicle support officer actions:
-    * No actions required.
-
-* Accountant actions:
-    * Opens service document.
-    * Creates invoices (``[New invoice]`` button). All created invoices visible in table.
-    * When costs invoices paid press ``[Approve]``. It automatically changes ``State`` from ``Done`` to ``Paid``, saves and closes document.
-
-Second maintenance scheme (not in branch)
------------------------------------------
-
-* Branch officer actions:
-    * Opens vehicle to be maintenanced.
-    * Push ``[Services]`` button. Opens ``Vehicles Services Logs`` menu.
-    * Create new vehicle service document.
-    * Select ``Service Type`` that is not ``In branch``. "B" section now is hidden.
-    * Press ``[Submit]`` to submit order and to set status from ``Draft`` to ``Request``.  Vehicle state becomes ``In shop``. It cant be rented now.
-
-* Vehicle support officer actions:
-    * Opens service document.
-    * Enters new odometer.
-    * Puts ``Included Services`` lines.
-    * When jobs finished press ``[Confirm]``. It automatically changes ``State`` from ``Request`` to ``Done``, saves and closes document. Vehicle state becomes ``Active``.
-
-* Accountant actions:
-    * Opens service document.
-    * Creates invoices (``[New invoice]`` button). All created invoices visible in table.
-    * When costs invoices paid press ``[Approve]``. It automatically changes ``State`` from ``Done`` to ``Paid``, saves and closes document.
 
 Vehicle Transfer
 ================
