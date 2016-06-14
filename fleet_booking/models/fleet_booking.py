@@ -70,7 +70,7 @@ class Fleet(models.Model):
     total_invoiced = fields.Float(default=0)
     insurance_ids = fields.One2many('fleet_booking.insurances', 'fleet_vehicle_id', string='Insurance Installments')
     deprecation_ids = fields.One2many(related='asset_id.depreciation_line_ids')
-    asset_id = fields.Many2one('account.asset.asset', compute='compute_asset', inverse='asset_inverse')
+    asset_id = fields.Many2one('account.asset.asset', compute='compute_asset', inverse='asset_inverse', required=True, string='Asset')
     asset_ids = fields.One2many('account.asset.asset', 'vehicle_id')
     # TODO Rename deprecation to depreciation
 

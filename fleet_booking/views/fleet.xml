@@ -10,6 +10,9 @@
             <!-- NEW FIELDS -->
             <xpath expr="//field[@name='company_id']" position="after">
                 <field name='branch'/>
+            </xpath>
+            <xpath expr="//label[@for='tag_ids']" position="before">
+                <label for="asset_id" class="oe_edit_only"/>
                 <field name='asset_id'/>
             </xpath>
             <xpath expr="//field[@name='doors']" position="after">
