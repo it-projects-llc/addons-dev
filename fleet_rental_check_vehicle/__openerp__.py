@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    "name": """Fleet Rental Document""",
+    "name": """Fleet Rental Check Vehicle""",
     "summary": """With this module you can create a list of items to be checked on the vehicle before and after rent.""",
     "category": "Managing vehicles and contracts",
     "images": [],
