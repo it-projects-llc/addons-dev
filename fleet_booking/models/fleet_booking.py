@@ -67,7 +67,7 @@ class Fleet(models.Model):
     ins_expiry = fields.Date('Insurance expiry')
     next_maintain = fields.Date('Next maintenance')
     payments_ids = fields.One2many('account.invoice', 'fleet_vehicle_id', string='Payments')
-    total_invoiced = fields.Float(default=0)
+    total_invoiced = fields.Monetary(compute='_invoice_total', string="Total Invoiced")
     insurance_ids = fields.One2many('fleet_booking.insurances', 'fleet_vehicle_id', string='Insurance Installments')
     deprecation_ids = fields.One2many(related='asset_id.depreciation_line_ids')
     asset_id = fields.Many2one('account.asset.asset', compute='compute_asset', inverse='asset_inverse', required=True, string='Asset')
@@ -88,18 +88,39 @@ class Fleet(models.Model):
             asset.vehicle_id = False
         new_asset.vehicle_id = self
 
-    # def act_show_invoices(self, cr, uid, ids, context=None):
-    #     if context is None:
-    #         context = {}
-    #     res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'account', 'action_invoice_refund_out_tree_form',
-    #                                                             context=context)
-    #     res['context'] = context
-    #     # res['context'].update({
-    #     #     'default_vehicle_id': ids[0],
-    #     #     'search_default_parent_false': True
-    #     # })
-    #     # res['domain'] = [('vehicle_id', '=', ids[0])]
-    #     return res
+    @api.multi
+    def _invoice_total(self):
+        account_invoice_report = self.env['account.invoice.report']
+        if not self.ids:
+            self.total_invoiced = 0.0
+            return True
+
+        user_currency_id = self.env.user.company_id.currency_id.id
+        for partner in self:
+            all_partner_ids = self.search([('id', 'child_of', partner.id)]).ids
+
+            # searching account.invoice.report via the orm is comparatively expensive
+            # (generates queries "id in []" forcing to build the full table).
+            # In simple cases where all invoices are in the same currency than the user's company
+            # access directly these elements
+
+            # generate where clause to include multicompany rules
+            where_query = account_invoice_report._where_calc([
+                ('partner_id', 'in', all_partner_ids), ('state', 'not in', ['draft', 'cancel']), ('company_id', '=', self.env.user.company_id.id),
+                ('type', 'in', ('out_invoice', 'out_refund'))
+            ])
+            account_invoice_report._apply_ir_rules(where_query, 'read')
+            from_clause, where_clause, where_clause_params = where_query.get_sql()
+
+            query = """
+                      SELECT SUM(price_total) as total
+                        FROM account_invoice_report account_invoice_report
+                       WHERE %s
+                    """ % where_clause
+
+            # price_total is in the company currency
+            self.env.cr.execute(query, where_clause_params)
+            partner.total_invoiced = self.env.cr.fetchone()[0]
 
 
 class Service(models.Model):
