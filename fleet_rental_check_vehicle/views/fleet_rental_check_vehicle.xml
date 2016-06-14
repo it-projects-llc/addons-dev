@@ -6,7 +6,7 @@
 
       <record id='fleet_rental_items_to_be_checked_act' model='ir.actions.act_window'>
         <field name="name">Items to be checked</field>
-        <field name="res_model">fleet_rental.check_vehicle</field>
+        <field name="res_model">fleet_rental.item_to_check</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
