@@ -88,8 +88,11 @@
             <xpath expr="//sheet" position="before">
                 <header>
                     <button name="submit" states="draft" string="Submit" type="object" class="oe_highlight" groups="fleet_booking.group_branch_officer"/>
+                    <button name="un_submit" states="request" string="Cancel submit" type="object" groups="fleet_booking.group_branch_officer"/>
                     <button name="confirm" attrs="{'invisible': [('state', '!=', 'request')]}"  string="Confirm" type="object" class="oe_highlight" groups="fleet_booking.group_branch_officer,fleet_booking.group_vehicles_support_officer"/>
+                    <button name="submit" attrs="{'invisible': [('state', '!=', 'done')]}"  string="Cancel confirm" type="object" groups="fleet_booking.group_branch_officer,fleet_booking.group_vehicles_support_officer"/>
                     <button name="approve" states="done" string="Approve" type="object" class="oe_highlight" groups="fleet_booking.group_accountant"/>
+                    <button name="confirm" states="paid" string="Cancel approve" type="object" groups="fleet_booking.group_accountant"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,request,done,paid"/>
                 </header>
             </xpath>
@@ -99,7 +102,7 @@
                         class="oe_stat_button"
                         icon="fa-book"
                         type="object">
-                    <field name="attachment_number" widget="statinfo" string="Documents"/>
+                    <field name="attachment_number" widget="statinfo" string="Attachments"/>
                 </button>
             </div>
         </xpath>

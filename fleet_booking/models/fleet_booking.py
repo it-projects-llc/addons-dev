@@ -136,6 +136,13 @@ class Service(models.Model):
         self.write({'state': 'request'})
 
     @api.multi
+    def un_submit(self):
+        active_vehicle_state = self.env['fleet.vehicle.state'].browse(2)
+        vehicle = self.env['fleet.vehicle'].browse(self.vehicle_id.id)
+        vehicle.state_id = active_vehicle_state
+        self.write({'state': 'draft'})
+
+    @api.multi
     def confirm(self):
         active_vehicle_state = self.env['fleet.vehicle.state'].browse(2)
         vehicle = self.env['fleet.vehicle'].browse(self.vehicle_id.id)
