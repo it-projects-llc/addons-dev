@@ -5,6 +5,7 @@
       <record id='fleet_rental_document_form' model='ir.ui.view' >
         <field name="name">fleet.rental.document.form</field>
         <field name="model">fleet_rental.document</field>
+        <field name="inherit_id" ref="fleet_rental_document.fleet_rental_document_form"/>
         <field name="arch" type="xml">
           <xpath expr="//sheet/group[2]" position="after">
             <field name="check_line_ids"/>
