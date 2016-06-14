@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+ 
+      <menuitem name="Rental" parent="base.menu_sale_config" id="rental_config" sequence="2"/>
+
+      <record id='fleet_rental_items_to_be_checked_act' model='ir.actions.act_window'>
+        <field name="name">Items to be checked</field>
+        <field name="res_model">fleet_rental.check_vehicle</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create an item to be checked before and after rent.
+            </p><p>
+            Example: oil, triangle, wrench, toolbox, spare tire, fire extinguisher.
+          </p>
+        </field>
+      </record>
+
+      <menuitem action="fleet_rental_items_to_be_checked_act" parent="rental_config" id="fleet_rent_items_to_be_checked_menu"/>
+
+    </data>
+</openerp>
