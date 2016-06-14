@@ -76,9 +76,6 @@
                 <group string="Invoices" groups="fleet_booking.group_accountant">
                     <field name="account_invoice_ids" nolabel="1"/>
                 </group>
-                <group string="Attachments">
-                    <field name="attachment_ids" filter_domain="[('attachment_ids.index_content', 'ilike', self)]"  nolabel="1"/>
-                </group>
             </xpath>
         </data>
     </field>
@@ -96,9 +93,19 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,request,done,paid"/>
                 </header>
             </xpath>
+        <xpath expr="//label[@for='odometer']/../.." position="before">
+            <div class="oe_button_box" name="button_box">
+                <button name="action_get_attachment_tree_view"
+                        class="oe_stat_button"
+                        icon="fa-book"
+                        type="object">
+                    <field name="attachment_number" widget="statinfo" string="Documents"/>
+                </button>
+            </div>
+        </xpath>
     </field>
 </record>
-<record model="ir.ui.view" id="fleet_vehicle_log_services_form_inherit_invoice">
+<record model="ir.ui.view" id="fleet_vehicle_form_inherit_invoice">
     <field name="name">fleet.vehicle.form.inheritt</field>
     <field name="model">fleet.vehicle</field>
     <field name="inherit_id" ref="fleet.fleet_vehicle_form"/>

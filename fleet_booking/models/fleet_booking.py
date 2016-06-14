@@ -126,6 +126,7 @@ class Service(models.Model):
     attachment_ids = fields.One2many('ir.attachment', 'res_id',
                                 domain=[('res_model', '=', 'fleet.vehicle.log.services')],
                                 string='Attachments')
+    attachment_number = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
 
     @api.multi
     def submit(self):
@@ -144,6 +145,25 @@ class Service(models.Model):
     @api.multi
     def approve(self):
         self.write({'state': 'paid'})
+
+    @api.multi
+    def action_get_attachment_tree_view(self):
+        action = self.env.ref('base.action_attachment').read()[0]
+        action['context'] = {
+            'default_res_model': self._name,
+            'default_res_id': self.ids[0]
+        }
+        action['domain'] = ['&', ('res_model', '=', 'fleet.vehicle.log.services'), ('res_id', 'in', self.ids)]
+        return action
+
+    @api.multi
+    def _get_attachment_number(self):
+        read_group_res = self.env['ir.attachment'].read_group(
+            [('res_model', '=', 'fleet.vehicle.log.services'), ('res_id', 'in', self.ids)],
+            ['res_id'], ['res_id'])
+        attach_data = dict((res['res_id'], res['res_id_count']) for res in read_group_res)
+        for record in self:
+            record.attachment_number = attach_data.get(record.id, 0)
 
 
 class ServiceType(models.Model):
