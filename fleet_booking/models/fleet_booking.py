@@ -50,7 +50,7 @@ class FleetBranch(models.Model):
 
     _inherit = 'fleet.vehicle'
 
-    branch = fields.Many2one('fleet_booking.branch')
+    branch_id = fields.Many2one('fleet_booking.branch')
 
 
 class Fleet(models.Model):
@@ -201,9 +201,9 @@ class VehicleTransfer(models.Model):
                               ('done', 'Done')],
                              string='State', default='draft')
     vehicle_id = fields.Many2one('fleet.vehicle', string='Vehicle')
-    source_branch = fields.Many2one('fleet_booking.branch', string='Source')
-    dest_branch = fields.Many2one('fleet_booking.branch', string='Destination')
-    current_odometer = fields.Float(related='vehicle_id.odometer', string='Destination')
+    source_branch = fields.Many2one('fleet_booking.branch', string='From')
+    dest_branch = fields.Many2one('fleet_booking.branch', string='To')
+    current_odometer = fields.Float(related='vehicle_id.odometer', string='Current odometer')
     delivery_state = fields.Selection([('not_delivered', 'Not delivered'), ('delivered', 'Delivered')],
                                       string='Delivery state', default='not_delivered')
     receiving_state = fields.Selection([('not_received', 'Not received'), ('received', 'Received')],
@@ -214,7 +214,7 @@ class VehicleTransfer(models.Model):
         in_transfer_vehicle_state = self.env['fleet.vehicle.state'].browse(5)
         vehicle = self.env['fleet.vehicle'].browse(self.vehicle_id.id)
         vehicle.state_id = in_transfer_vehicle_state
-        self.write({'state': 'transfer'})
+        self.write({'state': 'transfer', 'branch_id': False})
 
     @api.multi
     def confirm(self):
@@ -223,3 +223,15 @@ class VehicleTransfer(models.Model):
         vehicle.state_id = active_vehicle_state
         self.write({'state': 'done'})
 
+    @api.onchange('current_odometer')
+    @api.multi
+    def on_change_current_odometer(self):
+        for rec in self:
+            vehicle = self.env['fleet.vehicle'].browse(rec.vehicle_id.id)
+            vehicle.odometer = rec.current_odometer
+
+    @api.onchange('vehicle_id')
+    @api.multi
+    def on_change_vehicle_id(self):
+        for rec in self:
+            rec.source_branch = rec.vehicle_id.branch_id

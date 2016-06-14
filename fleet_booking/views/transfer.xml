@@ -11,13 +11,31 @@
                     <button name="confirm" states="transfer" string="Confirm" type="object" class="oe_highlight"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,transfer,done"/>
                 </header>
-                <sheet string="Data">
-                    <field name="vehicle_id"/>
-                    <field name="source_branch"/>
-                    <field name="dest_branch"/>
-                    <field name="current_odometer"/>
-                    <field name="delivery_state"/>
-                    <field name="receiving_state"/>
+                <sheet>
+                    <group col="2" string="Vehicle transfer">
+                        <group>
+                            <field name="vehicle_id"/>
+                        </group>
+                        <group>
+                            <field name="current_odometer"/>
+                        </group>
+                    </group>
+                    <group col="2" string="Route">
+                        <group>
+                            <field name="source_branch"/>
+                        </group>
+                        <group>
+                            <field name="dest_branch"/>
+                        </group>
+                    </group>
+                    <group col="2" string="State">
+                        <group>
+                            <field name="delivery_state"/>
+                        </group>
+                        <group>
+                            <field name="receiving_state"/>
+                        </group>
+                    </group>
                 </sheet>
             </form>
         </field>
