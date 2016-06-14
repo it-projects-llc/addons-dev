@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+      <record model='ir.ui.view' id='fleet_rent_form'>
+        <field name="name">fleet.rent.form</field>
+        <field name="model">fleet_booking.rent</field>
+        <field name="arch" type="xml">
+          <form string="Vehicle Rent">
+            <sheet>
+              <group>
+                <field name="name" class="oe_inline"/>
+                <field name="partner_id"/>
+              </group>
+              <group col="2" string="Vehicle Information">
+                <field name="vehicle_id"/>
+              </group>
+            </sheet>
+          </form>
+        </field>
+      </record>
+
+    </data>
+</openerp>
