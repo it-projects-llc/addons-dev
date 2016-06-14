@@ -228,7 +228,8 @@ class VehicleTransfer(models.Model):
     def on_change_current_odometer(self):
         for rec in self:
             vehicle = self.env['fleet.vehicle'].browse(rec.vehicle_id.id)
-            vehicle.odometer = rec.current_odometer
+            if vehicle.id:
+                vehicle.odometer = rec.current_odometer
 
     @api.onchange('vehicle_id')
     @api.multi
