@@ -56,11 +56,11 @@ Create or edit customer:
     * Enter **Birthdate**.
     * If customer age less than 21 you will not be able to save contact and you will see according notification.
     * Enter **Nationality** string.
-    * Select one from dropdown **ID Type** (National Id, Iqama, Passport).
+    * Select one from drop-down **ID Type** (National Id, Iqama, Passport).
     * Enter **ID Number** string.
     * Enter **Issuer** string.
     * Enter **Date of Issue**.
-    * Select one from dropdown **License Type** (Private, General, International).
+    * Select one from drop-down **License Type** (Private, General, International).
     * Enter **License Number** string.
 * Open ``Contacts & Addresses`` tab.
     * Create new work contact (Contacts & Addresses section).
@@ -70,35 +70,65 @@ Create or edit customer:
     * Enter additional information here.
 * Press save.
 
+Customer membership:
+
+* TODO
+
 Not ready functions
 ===================
 
 Below stuff planned but not completed yet. It partially finished or developing now.
 
-Customer features
------------------
-
 Add (Edit) Vehicle
 ------------------
+
+Жизненный цикл авто:
+
+1. Покупка:
+    Создается vendor bill.
+    Добавляется строка:
+        Создается продукт (машина).
+        Выбирается счет (для основных средств).
+        Выбирается asset category.
+    Документ переводится в сосстояние done и регистрируется платеж. Это формирует проводки списания денег со счета (банк или кеш) и поступление активов. Тут может быть совсем другая схема если покупка в кредит или в долг или еще как то.
+2. Создание актива (ОС).
+    Создаем asset.
+    Задаем bill которым купили авто.
+    Создаем vehicle и выбираем его в соответствующем поле (это поле надо добавить).
+3. Амортизация используя этот asset.
+
+Таким образом по самой простой схеме приобретения авто опиходуется как основное седство с помощью vendor bill и предлявлено тремя связаными рекордами: Product, Vehicle, Asset.
+
+
 
 * Go to Fleet.
 * Open Vehicles.
 * Open some vehicle.
 * Press Edit button.
     * Select model or create new one. Enter ``Model name`` and ``Make (brand)``.
-    * Secect color from dropdown. // add
-    * Enter Model Year. //rename Acquisition Date
-    * Car Plate Number // rename License Plate
+    * Select color from drop-down. // add
+    * Enter Model Year. // add
+    * Car Plate Number //
     * Car chassis number
-    * Go to Costs. Create new cost with Rent type. Enter here Daily rental price (Daily Rate).
-    * Rate per extra km
-    * Allowed kilometer per day
-    * Vehicle registration expiry date
-    * Insurance expiry date
-    * Lease Installments dates Table
-    * Insurance Installments dates Table
-    * Odometer -> Last Odometer
-* Press save.
+    * Daily Rate type // add
+    * Rate per extra km // add
+    * Enter allowed kilometer per day // add
+    * Enter Vehicle registration expiry date // add
+    * Enter Insurance expiry date // add
+    * Enter Lease Installments dates // add Table ( model) . даты платежей за прокат
+    * Enter Insurance Installments dates // add Table ( model) . даты платежей за страховку
+    * Enter Odometer
+    * Purchase Price // rename car value
+    * Paid Amount // add
+    * Remaining Amount  // add
+    * Asset Account  // add
+    * Paid Amount Account  // add
+    * Remaining Amount Account  // add
+    * Vehicle Depreciation - амортизация ТС - в табличном виде (возможно one2many)
+    * Depreciation Expense Account - счет для расходов на амортизацию (Many2one)
+    * Accumulated Depreciation Account - счет для накопленной амортизации  (Many2one)
+    * Next Maintenance Date - дата следующего сервисного обслуживания (тип Date)
+    * Press save.
 
 Remove Vehicle
 --------------
@@ -114,14 +144,39 @@ Remove Vehicle
 Vehicle Contracts
 -----------------
 
+To create new rent document:
+ * from ``Fleet Rental / Rent Quotations`` click ``[Create]``
+ Fill the opened form with client and car information.
+ To be able to confirm the document you should also fill the ``Exit Date`` and ``Return Date``
+ along with a payment information. When it is done click ``[Confirm Rental]`` button.
+ If don't have payment information at this point you can still book the rent without confirmation.
+ The ``Exit Date`` and ``Return Date`` should be filled. Then click ``[Book only]`` button.
+
+To create extended rent:
+ * from ``Fleet Rental / Confirmed Rents`` select rent that you want to extended.
+ * Click ``[Extend]`` button to create new extended rent.
+
+To create return document:
+ * from ``Fleet Rental / Confirmed Rents`` select rent that should be returned.
+ * Click ``Return`` button to create new return document.
+
+To confirm return document:
+ * from ``Fleet Rental / Draft Return Contracts`` open the document to confirm.
+ * Depending on current payment state you can confirm as open or confirm as closed.
+ * If the car is returned but client hasn't fully paid for the rent then click ``[Return Car and Keep Contract Open]`` button.
+ * If the car is returned and client has fully paid for the rent then click ``[Confirm Return]`` button.
+
+
+
+
 * Go to Fleet.
 * You will see *Movements* section in left panel menu. This section has 3 rows.  Rent, Receive, Extending Contract, Return Vehicle. Actually its just a different representation fo same model with contract type binding.
 * Press Rent.
-* Select customer (dropdown). After that next fields will be filled automatically (in customer block):
+* Select customer (drop-down). After that next fields will be filled automatically (in customer block):
     * Customer name
     * Customer membership number
     * Membership Type
-* Select Vehicle (dropdown). After that next fields will be filled automatically  (in vehicle block):
+* Select Vehicle (drop-down). After that next fields will be filled automatically  (in vehicle block):
     * Vehicle Model
     * Car Plate
     * Color

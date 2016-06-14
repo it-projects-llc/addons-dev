@@ -8,7 +8,7 @@
     <field name="view_mode">tree,form</field>
 </record>
 <record id="fleet_booking_branch_form_view" model="ir.ui.view">
-    <field name="name">fb.department.form</field>
+    <field name="name">fleet_booking.department.form</field>
     <field name="model">fleet_booking.branch</field>
     <field name="mode">primary</field>
     <field name="inherit_id" ref="hr.view_department_form"/>

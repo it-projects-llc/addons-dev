@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<record id="view_fleet_form_inherit" model="ir.ui.view">
+    <field name="name">fleet.vehicle.form.inherit</field>
+    <field name="model">fleet.vehicle</field>
+    <field name="inherit_id" ref="fleet.fleet_vehicle_form"/>
+    <field name="arch" type="xml">
+        <data>
+            <!-- NEW FIELDS -->
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name='branch'/>
+            </xpath>
+            <xpath expr="//field[@name='doors']" position="after">
+                    <field name='model_year'/>
+                    <field name='daily_rate'/>
+                    <field name='extra_rate'/>
+                    <field name='allowed_per_day'/>
+                    <field name='paid'/>
+                    <field name='remain'/>
+                    <field name='reg_expiry'/>
+                    <field name='ins_expiry'/>
+                    <field name='next_maintain'/>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <sheet string="Invoice">
+                    <notebook colspan="4">
+                        <page string="Payments">
+                            <field name="payments_ids" nolabel="1" widget="one2many_list" mode="tree"
+                                   context="{'vehicle_id': id}">
+                                <tree string="Payments" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="sequence"/>
+                                    <field name='payment_date'/>
+                                    <field name='amount'/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Insurance">
+                            <field name="insurance_ids" nolabel="1" widget="one2many_list" mode="tree"
+                                   context="{'vehicle_id': id}">
+                                <tree string="Insurance" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="sequence"/>
+                                    <field name='insurance_date'/>
+                                    <field name='amount'/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Deprecation">
+                            <field name="deprecation_ids" nolabel="1" widget="one2many_list" mode="tree"
+                                   context="{'vehicle_id': id}">
+                                <tree string="Insurance" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="sequence"/>
+                                    <field name='deprecation_date'/>
+                                    <field name='amount'/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </xpath>
+            <!-- ALTERED FIELDS -->
+            <xpath expr="//h2/field[@name='license_plate']" position="attributes">
+                <!--НЕ РАБОТАЕТ ЧТО ТО-->
+                <attribute name='string'>Plate Number</attribute>
+            </xpath>
+        </data>
+    </field>
+</record>
+</data>
+</openerp>

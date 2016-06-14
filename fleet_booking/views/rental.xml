@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <menuitem name="Rental" parent="base.menu_base_partner" id="rental_contracts" sequence="2"/>
+
+        <record id='fleet_rent_draft_act' model='ir.actions.act_window'>
+          <field name="name">Rent Draft</field>
+          <field name="res_model">fleet_booking.rent</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+              Click to create a new rental document.
+            </p>
+          </field>
+        </record>
+
+        <menuitem action="fleet_rent_draft_act" parent="rental_contracts" id="rent_draft_menu" sequence="1"/>
+
+        <record id='fleet_rent_booked_act' model='ir.actions.act_window'>
+          <field name="name">Rent Booked</field>
+          <field name="res_model">fleet_booking.rent</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+              Click to create a new rental document.
+            </p>
+          </field>
+        </record>
+
+        <menuitem action="fleet_rent_booked_act" parent="rental_contracts" id="rent_booked_menu" sequence="2"/>
+
+        <record id='fleet_rent_confirmed_act' model='ir.actions.act_window'>
+          <field name="name">Rent Confirmed</field>
+          <field name="res_model">fleet_booking.rent</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+              Click to create a new rental document.
+            </p>
+          </field>
+        </record>
+
+        <menuitem action="fleet_rent_confirmed_act" parent="rental_contracts" id="rent_confirmed_menu" sequence="3"/>
+
+        <record id='fleet_return_draft_act' model='ir.actions.act_window'>
+          <field name="name">Return Draft</field>
+          <field name="res_model">fleet_booking.return</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+              Click to create a new rental document.
+            </p>
+          </field>
+        </record>
+
+        <menuitem action="fleet_return_draft_act" parent="rental_contracts" id="return_draft_menu" sequence="4"/>
+
+        <record id='fleet_return_open_act' model='ir.actions.act_window'>
+          <field name="name">Return Open</field>
+          <field name="res_model">fleet_booking.return</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+              Click to create a new rental document.
+            </p>
+          </field>
+        </record>
+
+        <menuitem action="fleet_return_open_act" parent="rental_contracts" id="return_open_menu" sequence="5"/>
+
+        <record id='fleet_return_closed_act' model='ir.actions.act_window'>
+          <field name="name">Return Closed</field>
+          <field name="res_model">fleet_booking.return</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+              Click to create a new rental document.
+            </p>
+          </field>
+        </record>
+
+        <menuitem action="fleet_return_closed_act" parent="rental_contracts" id="return_closed_menu" sequence="6"/>
+
+        <record id='fleet_rental_items_to_be_checked_act' model='ir.actions.act_window'>
+            <field name="name">Items to be checked</field>
+            <field name="res_model">fleet_booking.item_to_be_checked</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create an item to be checked before and after rent.
+              </p><p>
+                Example: oil, triangle, wrench, toolbox, spare tire, fire extinguisher.
+              </p>
+            </field>
+        </record>
+
+        <menuitem action="fleet_rental_items_to_be_checked_act" parent="base.menu_sale_config" id="fleet_rent_items_to_be_checked_menu"/>
+
+        <record model='ir.ui.view' id='fleet_rent_form'>
+          <field name="name">fleet.rent.form</field>
+          <field name="model">fleet_booking.rent</field>
+          <field name="arch" type="xml">
+            <form string="Vehicle Rent">
+              <header>
+               <field name="state" widget="statusbar" statusbar_visible="draft,booked,confirmed,extended,returned"/>
+              </header>
+              <sheet>
+                <group>
+                  <field name="name" class="oe_inline"/>
+                  <field name="partner_id"/>
+                  <field name="membership_type"/>
+                </group>
+                <group col="2" string="Vehicle Information">
+                 <field name="vehicle_id"/>
+                 <field name="exit_checked_item_ids" widget='many2many_checkboxes'/>
+               </group>
+              </sheet>
+           </form>
+          </field>
+        </record>
+        
+   </data>
+</openerp>

@@ -1,5 +1,3 @@
 # -*- coding: utf-8 -*-
-
-import fleet_booking
-import rental
+import fleet_rental_document
 import res_partner

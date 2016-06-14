@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "Custom system for car renting",
-    "summary": """Fleet leasing and management""",
-    "category": "Managing vehicles and contracts",
-    "images": ['images/1.jpg'],
+    "name": "Customers membership",
+    "summary": """Loyalty membership""",
+    "category": "Customers",
+    "images": [],
     "version": "1.0.0",
 
     "author": "IT-Projects LLC",
@@ -13,24 +13,18 @@
     # 'currency': 'EUR',
 
     "depends": [
-        "hr",
-        "fleet",
-        "account",
-        "partner_person",
-        "sale_membership"
+        "base",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
-        "views/views.xml",
         "views/partner.xml",
-        "views/fleet.xml",
-        "views/rental.xml",
+        "views/membership.xml",
         "security/records.xml",
-        "security/ir.model.access.csv"
+        "security/ir.model.access.csv",
     ],
     "qweb": [
     ],
-    "demo": ['demo/demo.xml'],
+    "demo": [],
     'installable': True,
     "auto_install": False,
 }
