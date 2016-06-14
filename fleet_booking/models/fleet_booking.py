@@ -5,7 +5,7 @@ from openerp import api, fields, models
 
 # INHERITED MODELS
 
-class HrDepartment(models.Model):
+class Branch(models.Model):
 
     _name = "fleet_booking.branch"
     _inherit = 'hr.department'
@@ -67,12 +67,15 @@ class Fleet(models.Model):
     ins_expiry = fields.Date('Insurance expiry')
     next_maintain = fields.Date('Next maintenance')
     payments_ids = fields.One2many('account.invoice', 'fleet_vehicle_id', string='Payments')
-    total_invoiced = fields.Monetary(compute='_invoice_total', string="Total Invoiced")
+    total_invoiced = fields.Monetary(compute='_invoice_total', string="Total Invoiced", currency_field='currency_id')
     insurance_ids = fields.One2many('fleet_booking.insurances', 'fleet_vehicle_id', string='Insurance Installments')
     deprecation_ids = fields.One2many(related='asset_id.depreciation_line_ids')
     asset_id = fields.Many2one('account.asset.asset', compute='compute_asset', inverse='asset_inverse', required=True, string='Asset')
     asset_ids = fields.One2many('account.asset.asset', 'vehicle_id')
     # TODO Rename deprecation to depreciation
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True,
+                                  states={'draft': [('readonly', False)]},
+                                  default=lambda self: self.env.user.company_id.currency_id)
 
     @api.one
     @api.depends('asset_ids')
@@ -94,33 +97,7 @@ class Fleet(models.Model):
         if not self.ids:
             self.total_invoiced = 0.0
             return True
-
-        user_currency_id = self.env.user.company_id.currency_id.id
-        for partner in self:
-            all_partner_ids = self.search([('id', 'child_of', partner.id)]).ids
-
-            # searching account.invoice.report via the orm is comparatively expensive
-            # (generates queries "id in []" forcing to build the full table).
-            # In simple cases where all invoices are in the same currency than the user's company
-            # access directly these elements
-
-            # generate where clause to include multicompany rules
-            where_query = account_invoice_report._where_calc([
-                ('partner_id', 'in', all_partner_ids), ('state', 'not in', ['draft', 'cancel']), ('company_id', '=', self.env.user.company_id.id),
-                ('type', 'in', ('out_invoice', 'out_refund'))
-            ])
-            account_invoice_report._apply_ir_rules(where_query, 'read')
-            from_clause, where_clause, where_clause_params = where_query.get_sql()
-
-            query = """
-                      SELECT SUM(price_total) as total
-                        FROM account_invoice_report account_invoice_report
-                       WHERE %s
-                    """ % where_clause
-
-            # price_total is in the company currency
-            self.env.cr.execute(query, where_clause_params)
-            partner.total_invoiced = self.env.cr.fetchone()[0]
+#    TODO
 
 
 class Service(models.Model):
@@ -214,3 +191,35 @@ class InsuranceInstallments(models.Model):
                               help="Gives the sequence of this line when displaying the vehicle.")
     insurance_date = fields.Datetime(string='Date', default=fields.Datetime.now())
     amount = fields.Float(string='Amount')
+
+
+class VehicleTransfer(models.Model):
+    _name = 'fleet_booking.transfer'
+
+    state = fields.Selection([('draft', 'Draft'),
+                              ('transfer', 'Transfer'),
+                              ('done', 'Done')],
+                             string='State', default='draft')
+    vehicle_id = fields.Many2one('fleet.vehicle', string='Vehicle')
+    source_branch = fields.Many2one('fleet_booking.branch', string='Source')
+    dest_branch = fields.Many2one('fleet_booking.branch', string='Destination')
+    current_odometer = fields.Float(related='vehicle_id.odometer', string='Destination')
+    delivery_state = fields.Selection([('not_delivered', 'Not delivered'), ('delivered', 'Delivered')],
+                                      string='Delivery state', default='not_delivered')
+    receiving_state = fields.Selection([('not_received', 'Not received'), ('received', 'Received')],
+                                       string='Receiving state', default='not_received')
+
+    @api.multi
+    def submit(self):
+        in_transfer_vehicle_state = self.env['fleet.vehicle.state'].browse(5)
+        vehicle = self.env['fleet.vehicle'].browse(self.vehicle_id.id)
+        vehicle.state_id = in_transfer_vehicle_state
+        self.write({'state': 'transfer'})
+
+    @api.multi
+    def confirm(self):
+        active_vehicle_state = self.env['fleet.vehicle.state'].browse(2)
+        vehicle = self.env['fleet.vehicle'].browse(self.vehicle_id.id)
+        vehicle.state_id = active_vehicle_state
+        self.write({'state': 'done'})
+

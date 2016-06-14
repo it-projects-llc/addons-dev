@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <record model='ir.ui.view' id='fleet_booking_transfer_form'>
+        <field name="name">fleet.vehicle.model.form</field>
+        <field name="model">fleet_booking.transfer</field>
+        <field name="arch" type="xml">
+            <form string="Transfer">
+                <header>
+                    <button name="submit" states="draft" string="Submit" type="object" class="oe_highlight"/>
+                    <button name="confirm" states="transfer" string="Confirm" type="object" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,transfer,done"/>
+                </header>
+                <sheet string="Data">
+                    <field name="vehicle_id"/>
+                    <field name="source_branch"/>
+                    <field name="dest_branch"/>
+                    <field name="current_odometer"/>
+                    <field name="delivery_state"/>
+                    <field name="receiving_state"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model='ir.ui.view' id='fleet_booking_transfer_tree'>
+        <field name="name">fleet_booking.transfer.tree</field>
+        <field name="model">fleet_booking.transfer</field>
+        <field name="arch" type="xml">
+            <tree string="Transfers">
+                <field name="vehicle_id"/>
+                <field name="source_branch"/>
+                <field name="dest_branch"/>
+                <field name="current_odometer"/>
+                <field name="delivery_state"/>
+                <field name="receiving_state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model='ir.actions.act_window' id='fleet_transfers_act'>
+        <field name="name">Transfers</field>
+        <field name="res_model">fleet_booking.transfer</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new transfer.
+            </p>
+            <p>
+                You will be able to manage your fleet by keeping track of the
+                contracts, services, fixed and recurring costs, odometers and
+                fuel logs associated to each vehicle.
+            </p>
+            <p>
+                Odoo will warn you when services or contract have to be
+                renewed.
+            </p>
+        </field>
+    </record>
+
+    <menuitem name="Transfers" parent="fleet.menu_root" id="fleet_transfers" sequence="3" groups="fleet.group_fleet_user"/>
+    <menuitem action="fleet_transfers_act" parent="fleet_transfers" id="fleet_transfers_menu" groups="fleet.group_fleet_user"/>
+
+</data>
+</openerp>

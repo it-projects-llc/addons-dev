@@ -29,6 +29,7 @@
         "views/fleet.xml",
         "views/rental.xml",
         "views/asset.xml",
+        "views/transfer.xml",
     ],
     "qweb": [
     ],

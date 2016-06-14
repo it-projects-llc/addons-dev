@@ -87,7 +87,7 @@
         <field name="password">po</field>
         <field name="groups_id" eval="[(4, ref('group_payroll_officer'))]"/>
     </record>
-        <!--RECORDS-->
+     <!--RECORDS-->
      <record id="fb_bronze" model="sale_membership.type">
             <field name="name">Bronze</field>
             <field name="points">0</field>
@@ -108,6 +108,10 @@
         <field name="name">In branch</field>
         <field name="category">service</field>
         <field name="in_branch">True</field>
+    </record>
+    <record id="vehicle_state_in_transfer" model="fleet.vehicle.state">
+        <field name="name">In transfer</field>
+        <field name="sequence">5</field>
     </record>
 </data>
 </openerp>
