@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+      <record id='fleet_rental_document_form' model='ir.ui.view' >
+        <field name="name">fleet.rental.document.form</field>
+        <field name="model">fleet_rental.document</field>
+        <field name="arch" type="xml">
+          <xpath expr="//sheet/group[2]" position="after">
+            <field name="check_line_ids"/>
+          </xpath>
+        </field>
+      </record>
+
+    </data>
+</openerp>
