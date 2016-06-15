@@ -3,9 +3,6 @@
 =====================
 
 This module allows to select color of a vehicle from pre-defined list of colors.
-"Web Widget Color" module from https://github.com/OCA/web.git is used to
-identify colors.
-
 
 Credits
 =======
