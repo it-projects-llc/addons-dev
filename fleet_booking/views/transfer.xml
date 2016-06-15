@@ -19,7 +19,7 @@
                             <field name="vehicle_id"/>
                         </group>
                         <group>
-                            <field name="current_odometer"/>
+                            <field name="current_odometer" readonly="1"/>
                         </group>
                     </group>
                     <group col="2" string="Route">
@@ -111,5 +111,19 @@
     <menuitem action="fleet_transfers_out" parent="fleet_transfers" id="fleet_transfers_out_menu" groups="fleet.group_fleet_user"/>
     <menuitem action="fleet_transfers_act" parent="fleet_transfers" id="fleet_transfers_all_menu" groups="fleet.group_fleet_user"/>
 
+    <!--VEHICLE SUPPORT OFFICER EXTRA RIGHTS-->
+    <record id="fleet_booking_transfer_form_vso" model="ir.ui.view">
+    <field name="name">fleet.booking.transfer.form.vso.inherit</field>
+    <field name="model">fleet_booking.transfer</field>
+    <field name="inherit_id" ref="fleet_booking_transfer_form"/>
+    <field name="groups_id" eval="[(4, ref('fleet_booking.group_vehicles_support_officer'), 0)]"/>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='current_odometer']" position="replace">
+                <field name="current_odometer" readonly="0"/>
+            </xpath>
+        </data>
+    </field>
+</record>
 </data>
 </openerp>

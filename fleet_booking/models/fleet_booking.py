@@ -65,7 +65,7 @@ class Fleet(models.Model):
     total_invoiced = fields.Monetary(compute='_invoice_total', string="Total Invoiced", currency_field='currency_id')
     insurance_ids = fields.One2many('fleet_booking.insurances', 'fleet_vehicle_id', string='Insurance Installments')
     deprecation_ids = fields.One2many(related='asset_id.depreciation_line_ids')
-    asset_id = fields.Many2one('account.asset.asset', compute='compute_asset', inverse='asset_inverse', required=True, string='Asset')
+    asset_id = fields.Many2one('account.asset.asset', compute='compute_asset', inverse='asset_inverse', string='Asset')
     asset_ids = fields.One2many('account.asset.asset', 'vehicle_id')
     # TODO Rename deprecation to depreciation
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True,
@@ -205,10 +205,8 @@ class VehicleTransfer(models.Model):
     source_branch = fields.Many2one('fleet_booking.branch', string='From', required=True)
     dest_branch = fields.Many2one('fleet_booking.branch', string='To', required=True)
     current_odometer = fields.Float(related='vehicle_id.odometer', string='Current odometer')
-    delivery_state = fields.Selection([('not_delivered', 'Not delivered'), ('delivered', 'Delivered')],
-                                      string='Delivery state', default='not_delivered')
-    receiving_state = fields.Selection([('not_received', 'Not received'), ('received', 'Received')],
-                                       string='Receiving state', default='not_received')
+    delivery_state = fields.Selection([('not_delivered', 'Not delivered'), ('delivered', 'Delivered')], string='Delivery state', default='not_delivered')
+    receiving_state = fields.Selection([('not_received', 'Not received'), ('received', 'Received')], string='Receiving state', default='not_received')
     user_branch_id = fields.Many2one('res.users', 'Creator', default=lambda self: self.env.user.branch_id.id)
 
     @api.multi
