@@ -30,6 +30,7 @@
         "views/rental.xml",
         "views/asset.xml",
         "views/transfer.xml",
+        "views/user.xml",
     ],
     "qweb": [
     ],

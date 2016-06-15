@@ -13,6 +13,7 @@ class Branch(models.Model):
     city = fields.Char(string='City')
     phone = fields.Char(string='Phone')
     branch_target = fields.Char(string='Branch Target')
+    users_ids = fields.One2many('res.users', 'branch_id')
 
 
 class Person(models.Model):
@@ -173,6 +174,11 @@ class Asset(models.Model):
     vehicle_id = fields.Many2one('fleet.vehicle', string='Vehicle')
 
 
+class User(models.Model):
+    _inherit = 'res.users'
+
+    branch_id = fields.Many2one('fleet_booking.branch')
+
 # OWN MODELS
 
 
@@ -196,13 +202,14 @@ class VehicleTransfer(models.Model):
                              string='State', default='draft')
     vehicle_id = fields.Many2one('fleet.vehicle', string='Vehicle')
     old_branch = fields.Many2one('fleet_booking.branch')
-    source_branch = fields.Many2one('fleet_booking.branch', string='From')
-    dest_branch = fields.Many2one('fleet_booking.branch', string='To')
+    source_branch = fields.Many2one('fleet_booking.branch', string='From', required=True)
+    dest_branch = fields.Many2one('fleet_booking.branch', string='To', required=True)
     current_odometer = fields.Float(related='vehicle_id.odometer', string='Current odometer')
     delivery_state = fields.Selection([('not_delivered', 'Not delivered'), ('delivered', 'Delivered')],
                                       string='Delivery state', default='not_delivered')
     receiving_state = fields.Selection([('not_received', 'Not received'), ('received', 'Received')],
                                        string='Receiving state', default='not_received')
+    user_branch_id = fields.Many2one('res.users', 'Creator', default=lambda self: self.env.user.branch_id.id)
 
     @api.multi
     def submit(self):

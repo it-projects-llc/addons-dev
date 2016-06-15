@@ -48,6 +48,7 @@
         <field name="model">fleet_booking.transfer</field>
         <field name="arch" type="xml">
             <tree string="Transfers">
+                <field name="user_branch_id" />
                 <field name="vehicle_id"/>
                 <field name="source_branch"/>
                 <field name="dest_branch"/>
@@ -58,8 +59,34 @@
         </field>
     </record>
 
+    <record model='ir.actions.act_window' id='fleet_transfers_in'>
+        <field name="name">Incoming</field>
+        <field name="res_model">fleet_booking.transfer</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('dest_branch.users_ids','=', uid)]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new transfer.
+            </p>
+        </field>
+    </record>
+
+    <record model='ir.actions.act_window' id='fleet_transfers_out'>
+        <field name="name">Outgoing</field>
+        <field name="res_model">fleet_booking.transfer</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('source_branch.users_ids','=', uid)]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new transfer.
+            </p>
+        </field>
+    </record>
+
     <record model='ir.actions.act_window' id='fleet_transfers_act'>
-        <field name="name">Transfers</field>
+        <field name="name">All transfers</field>
         <field name="res_model">fleet_booking.transfer</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
@@ -80,7 +107,9 @@
     </record>
 
     <menuitem name="Transfers" parent="fleet.menu_root" id="fleet_transfers" sequence="3" groups="fleet.group_fleet_user"/>
-    <menuitem action="fleet_transfers_act" parent="fleet_transfers" id="fleet_transfers_menu" groups="fleet.group_fleet_user"/>
+    <menuitem action="fleet_transfers_in" parent="fleet_transfers" id="fleet_transfers_in_menu" groups="fleet.group_fleet_user"/>
+    <menuitem action="fleet_transfers_out" parent="fleet_transfers" id="fleet_transfers_out_menu" groups="fleet.group_fleet_user"/>
+    <menuitem action="fleet_transfers_act" parent="fleet_transfers" id="fleet_transfers_all_menu" groups="fleet.group_fleet_user"/>
 
 </data>
 </openerp>

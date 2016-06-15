@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
+    <!--BRANCH-->
+    <record model="fleet_booking.branch" id="main_branch">
+        <field name="name">Main branch</field>
+        <field name="sequence">1</field>
+    </record>
     <!--PARTNERS-->
     <record id="fb_gm_partner" model="res.partner">
         <field name="name">General Manager</field>
@@ -55,36 +60,42 @@
         <field name="partner_id" ref="fb_gm_partner"/>
         <field name="login">gm</field>
         <field name="password">gm</field>
+        <field name="branch_id" ref="main_branch"/>
         <field name="groups_id" eval="[(4, ref('group_general_manager'))]"/>
     </record>
     <record id="fb_bo_user" model="res.users">
         <field name="partner_id" ref="fb_bo_partner"/>
         <field name="login">bo</field>
         <field name="password">bo</field>
+        <field name="branch_id" ref="main_branch"/>
         <field name="groups_id" eval="[(4, ref('group_branch_officer'))]"/>
     </record>
     <record id="fb_vso_user" model="res.users">
         <field name="partner_id" ref="fb_vso_partner"/>
         <field name="login">vso</field>
         <field name="password">vso</field>
+        <field name="branch_id" ref="main_branch"/>
         <field name="groups_id" eval="[(4, ref('group_vehicles_support_officer'))]"/>
     </record>
     <record id="fb_be_user" model="res.users">
         <field name="partner_id" ref="fb_be_partner"/>
         <field name="login">be</field>
         <field name="password">be</field>
+        <field name="branch_id" ref="main_branch"/>
         <field name="groups_id" eval="[(4, ref('group_branch_employee'))]"/>
     </record>
     <record id="fb_ac_user" model="res.users">
         <field name="partner_id" ref="fb_ac_partner"/>
         <field name="login">ac</field>
         <field name="password">ac</field>
+        <field name="branch_id" ref="main_branch"/>
         <field name="groups_id" eval="[(4, ref('group_accountant'))]"/>
     </record>
     <record id="fb_po_user" model="res.users">
         <field name="partner_id" ref="fb_po_partner"/>
         <field name="login">po</field>
         <field name="password">po</field>
+        <field name="branch_id" ref="main_branch"/>
         <field name="groups_id" eval="[(4, ref('group_payroll_officer'))]"/>
     </record>
      <!--RECORDS-->
@@ -103,7 +114,7 @@
             <field name="points">5000</field>
             <field name="sequence">3</field>
     </record>
-    <!--OTHER-->
+    <!--FLEET-->
     <record model="fleet.service.type" id="in_branch">
         <field name="name">In branch</field>
         <field name="category">service</field>
@@ -113,5 +124,7 @@
         <field name="name">In transfer</field>
         <field name="sequence">5</field>
     </record>
+    <!--OTHER-->
+
 </data>
 </openerp>

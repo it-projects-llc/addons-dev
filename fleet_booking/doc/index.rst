@@ -193,6 +193,37 @@ Second maintenance scheme (not in branch)
     * If for some reason rollback is required press ``[Cancel approve]``.
 
 
+Vehicle Transfer
+================
+
+New model fleet_booking.transfer.
+
+Menu items:
+
+* Open ``Fleet`` in main menu.
+* Go to ``Transfers``. Here is ``Incoming`` and ``Outgoing`` menu sections.
+* Тут надо сказать про то что в Incoming по умолчанию видны только входящие для бранча активного эмплоера. Я не знаю как это делать то ли фильтрами то ли что.
+* Аналогично для  Outgoing
+
+Workflow is like that:
+
+* Vehicles Support Officer creates transfer.
+    * Select vehicle. Relational fields (Car Plate Number) auto-filled.
+    * Select source branch.
+    * Select destination branch.
+    * Enter current odometer.
+    * ``Delivery Status`` auto-sets to ``Not delivered``. Vehicles Support Officer cant edit it.
+    * ``Receiving Status`` auto-sets to ``Not received``. Vehicles Support Officer cant edit it.
+    * Presses ``[Save]`` button.
+    * Vehicle branch auto-sets to ``In transfer``. Vehicle status auto-sets to ``In transfer``.
+
+* When car is delivered
+    * Vehicles Support Officer enters new odometer.
+    * Source Branch Officer sets ``Delivery Status`` to ``Delivered``.
+    * Destination Branch Officer sets ``Receiving Status`` to ``Delivered``.
+    * Vehicle branch auto-sets equal to destination branch. Vehicle status auto-sets to ``Active``.
+
+
 Not ready functions
 ===================
 
@@ -303,36 +334,5 @@ To confirm return document:
 * Deposit - подтягивается автоматически из контракта Rent
 * Remaining amount - вычисляется автоматически: Remaining amount = Deposit - Total.
 
-
-
-Vehicle Transfer
-================
-
-New model fleet_booking.transfer.
-
-Menu items:
-
-* Open ``Fleet`` in main menu.
-* Go to ``Transfers``. Here is ``Incoming`` and ``Outgoing`` menu sections.
-* Тут надо сказать про то что в Incoming по умолчанию видны только входящие для бранча активного эмплоера. Я не знаю как это делать то ли фильтрами то ли что.
-* Аналогично для  Outgoing
-
-Workflow is like that:
-
-* Vehicles Support Officer creates transfer.
-    * Select vehicle. Relational fields (Car Plate Number) auto-filled.
-    * Select source branch.
-    * Select destination branch.
-    * Enter current odometer.
-    * ``Delivery Status`` auto-sets to ``Not delivered``. Vehicles Support Officer cant edit it.
-    * ``Receiving Status`` auto-sets to ``Not received``. Vehicles Support Officer cant edit it.
-    * Presses ``[Save]`` button.
-    * Vehicle branch auto-sets to ``In transfer``. Vehicle status auto-sets to ``In transfer``.
-
-* When car is delivered
-    * Vehicles Support Officer enters new odometer.
-    * Source Branch Officer sets ``Delivery Status`` to ``Delivered``.
-    * Destination Branch Officer sets ``Receiving Status`` to ``Delivered``.
-    * Vehicle branch auto-sets equal to destination branch. Vehicle status auto-sets to ``Active``.
 
 
