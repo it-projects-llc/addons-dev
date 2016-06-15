@@ -46,17 +46,11 @@ class Person(models.Model):
     ]
 
 
-class FleetBranch(models.Model):
-
-    _inherit = 'fleet.vehicle'
-
-    branch_id = fields.Many2one('fleet_booking.branch')
-
-
 class Fleet(models.Model):
 
     _inherit = 'fleet.vehicle'
 
+    branch_id = fields.Many2one('fleet_booking.branch', string='Current branch')
     model_year = fields.Integer('Model Year')
     daily_rate = fields.Float('Daily Rate')
     extra_rate = fields.Float('Rate per extra km')
