@@ -5,7 +5,7 @@ from openerp.osv import fields
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
-
+    # TODO: move this part in own module
     _display_name_store_triggers = {
         'res.partner': (lambda self, cr, uid, ids, context=None: self.search(cr, uid,
                         [('id', 'child_of', ids)], context=dict(active_test=False)),
