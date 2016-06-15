@@ -6,6 +6,10 @@
         <field name="name">Main branch</field>
         <field name="sequence">1</field>
     </record>
+    <record model="fleet_booking.branch" id="filial_branch">
+        <field name="name">Filial branch</field>
+        <field name="sequence">2</field>
+    </record>
     <!--PARTNERS-->
     <record id="fb_gm_partner" model="res.partner">
         <field name="name">General Manager</field>
@@ -18,6 +22,14 @@
     <record id="fb_bo_partner" model="res.partner">
         <field name="name">Branch Officer</field>
         <field name="email">bo@example.com</field>
+        <field name="supplier" eval="False"/>
+        <field name="customer" eval="False"/>
+        <field name="notify_email">none</field>
+        <field name="city">Medina</field>
+    </record>
+    <record id="fb_bo2_partner" model="res.partner">
+        <field name="name">Branch Officer 2</field>
+        <field name="email">bo2@example.com</field>
         <field name="supplier" eval="False"/>
         <field name="customer" eval="False"/>
         <field name="notify_email">none</field>
@@ -68,6 +80,13 @@
         <field name="login">bo</field>
         <field name="password">bo</field>
         <field name="branch_id" ref="main_branch"/>
+        <field name="groups_id" eval="[(4, ref('group_branch_officer'))]"/>
+    </record>
+    <record id="fb_bo2_user" model="res.users">
+        <field name="partner_id" ref="fb_bo2_partner"/>
+        <field name="login">bo2</field>
+        <field name="password">bo2</field>
+        <field name="branch_id" ref="filial_branch"/>
         <field name="groups_id" eval="[(4, ref('group_branch_officer'))]"/>
     </record>
     <record id="fb_vso_user" model="res.users">

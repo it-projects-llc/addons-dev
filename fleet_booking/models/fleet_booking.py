@@ -208,6 +208,8 @@ class VehicleTransfer(models.Model):
     delivery_state = fields.Selection([('not_delivered', 'Not delivered'), ('delivered', 'Delivered')], string='Delivery state', default='not_delivered')
     receiving_state = fields.Selection([('not_received', 'Not received'), ('received', 'Received')], string='Receiving state', default='not_received')
     user_branch_id = fields.Many2one('res.users', 'Creator', default=lambda self: self.env.user.branch_id.id)
+    cant_change_delivery_state = fields.Boolean(compute='get_cant_change_delivery_state', default=True)
+    cant_change_receiving_state = fields.Boolean(compute='get_cant_change_receiving_state', default=True)
 
     @api.multi
     def submit(self):
@@ -255,3 +257,39 @@ class VehicleTransfer(models.Model):
     def on_change_vehicle_id(self):
         for rec in self:
             rec.source_branch = rec.vehicle_id.branch_id
+
+    @api.multi
+    def get_cant_change_delivery_state(self):
+        for record in self:
+            if (self.env.user.branch_id.id == self.source_branch.id) and (self.env.ref('fleet_booking.group_branch_officer') in self.env.user.groups_id):
+                record.cant_change_delivery_state = False
+                print '# : record.cant_change_delivery_state',  record.cant_change_delivery_state
+
+    @api.multi
+    def get_cant_change_receiving_state(self):
+        for record in self:
+            if (self.env.user.branch_id.id == self.dest_branch.id) and (self.env.ref('fleet_booking.group_branch_officer') in self.env.user.groups_id):
+                record.cant_change_receiving_state = False
+
+
+def dump(obj):
+  for attr in dir(obj):
+    print "obj.%s = %s" % (attr, getattr(obj, attr))
+
+
+def dumpclean(obj):
+    if type(obj) == dict:
+        for k, v in obj.items():
+            if hasattr(v, '__iter__'):
+                print k
+                dumpclean(v)
+            else:
+                print '%s : %s' % (k, v)
+    elif type(obj) == list:
+        for v in obj:
+            if hasattr(v, '__iter__'):
+                dumpclean(v)
+            else:
+                print v
+    else:
+        print obj
