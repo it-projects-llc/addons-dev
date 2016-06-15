@@ -97,7 +97,7 @@ class Fleet(models.Model):
         if not self.ids:
             self.total_invoiced = 0.0
             return True
-#    TODO
+        #    TODO
 
 
 class Service(models.Model):
@@ -201,6 +201,7 @@ class VehicleTransfer(models.Model):
                               ('done', 'Done')],
                              string='State', default='draft')
     vehicle_id = fields.Many2one('fleet.vehicle', string='Vehicle')
+    old_branch = fields.Many2one('fleet_booking.branch')
     source_branch = fields.Many2one('fleet_booking.branch', string='From')
     dest_branch = fields.Many2one('fleet_booking.branch', string='To')
     current_odometer = fields.Float(related='vehicle_id.odometer', string='Current odometer')
@@ -214,13 +215,32 @@ class VehicleTransfer(models.Model):
         in_transfer_vehicle_state = self.env['fleet.vehicle.state'].browse(5)
         vehicle = self.env['fleet.vehicle'].browse(self.vehicle_id.id)
         vehicle.state_id = in_transfer_vehicle_state
-        self.write({'state': 'transfer', 'branch_id': False})
+        self.old_branch = vehicle.branch_id
+        vehicle.branch_id = False
+        self.write({'state': 'transfer'})
+
+    @api.multi
+    def un_submit(self):
+        active_vehicle_state = self.env['fleet.vehicle.state'].browse(2)
+        vehicle = self.env['fleet.vehicle'].browse(self.vehicle_id.id)
+        vehicle.state_id = active_vehicle_state
+        vehicle.branch_id = self.old_branch
+        self.write({'state': 'draft'})
 
     @api.multi
     def confirm(self):
         active_vehicle_state = self.env['fleet.vehicle.state'].browse(2)
         vehicle = self.env['fleet.vehicle'].browse(self.vehicle_id.id)
         vehicle.state_id = active_vehicle_state
+        vehicle.branch_id = self.dest_branch
+        self.write({'state': 'done'})
+
+    @api.multi
+    def un_confirm(self):
+        in_transfer_vehicle_state = self.env['fleet.vehicle.state'].browse(5)
+        vehicle = self.env['fleet.vehicle'].browse(self.vehicle_id.id)
+        vehicle.state_id = in_transfer_vehicle_state
+        vehicle.branch_id = False
         self.write({'state': 'done'})
 
     @api.onchange('current_odometer')

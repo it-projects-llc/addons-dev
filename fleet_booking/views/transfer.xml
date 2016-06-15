@@ -9,6 +9,8 @@
                 <header>
                     <button name="submit" states="draft" string="Submit" type="object" class="oe_highlight"/>
                     <button name="confirm" states="transfer" string="Confirm" type="object" class="oe_highlight"/>
+                    <button name="un_submit" states="transfer" string="Cancel submit" type="object"/>
+                    <button name="un_confirm" states="done" string="Cancel confirm" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,transfer,done"/>
                 </header>
                 <sheet>
