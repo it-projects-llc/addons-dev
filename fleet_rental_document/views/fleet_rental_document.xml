@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+      <menuitem name="Rental" parent="base.menu_base_partner" id="fleet_rental_sale" sequence="2"/>
+
+      <record id='fleet_rental_document_form' model='ir.ui.view' >
+        <field name="name">fleet.rental.document.form</field>
+        <field name="model">fleet_rental.document</field>
+        <field name="arch" type="xml">
+          <form string="Vehicle Rent">
+            <sheet>
+              <group>
+                <field name="name" class="oe_inline"/>
+                <field name="partner_id"/>
+              </group>
+              <group col="2" string="Vehicle Information">
+                <field name="vehicle_id"/>
+              </group>
+            </sheet>
+          </form>
+        </field>
+      </record>
+
+      <record id='fleet_rental_document_act' model='ir.actions.act_window'>
+        <field name="name">Documents</field>
+        <field name="res_model">fleet_rental.document</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a new rental document.
+          </p>
+        </field>
+      </record>
+
+      <menuitem action='fleet_rental_document_act' parent="fleet_rental_sale" id="fleet_rental_documents" sequence="2"/>
+
+    </data>
+</openerp>
