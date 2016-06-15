@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--GROUPS-->
+        <record model="ir.module.category" id="module_sale_membership_category">
+            <field name="name">Sale Membership</field>
+            <field name="sequence">19</field>
+        </record>
+        <record id="group_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="module_sale_membership_category"/>
+        </record>
+    </data>
+</openerp>

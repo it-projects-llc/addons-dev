@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<record id="sale_membership_manage_membership_form" model="ir.ui.view">
+    <field name="name">sale_membership.manage_membership.form</field>
+    <field name="model">sale_membership.manage_wizard</field>
+    <field name="arch" type="xml">
+        <form string="Manage membership">
+                <group>
+                    <field name="type_id" class="oe_inline" string="Membership"/>
+                    <field name="blocked" class="oe_inline" string="Blocked"/>
+                    <field name="reason" class="oe_inline" string="Reason"/>
+                </group>
+                <footer>
+                    <button type="object" name="save_changes" string="Save"/>
+                </footer>
+        </form>
+    </field>
+ </record>
+<record id="sale_membership_action_wizard" model="ir.actions.act_window">
+    <field name="name">Manage membership</field>
+    <field name="res_model">sale_membership.manage_wizard</field>
+    <field name="view_mode">form</field>
+    <field name="view_type">form</field>
+    <field name="view_id" ref="sale_membership_manage_membership_form"/>
+    <field name="target">new</field>
+</record>
+<record id="sale_membership_view_partner_person_form_inherit" model="ir.ui.view">
+    <field name="name">membership.form.inherit</field>
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_partner_form"/>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//page[@name='sales_purchases']/group/group[@name='sale']" position="inside">
+                <field name='type_id' string="Membership"/>
+                <field name='blocked' string="Blocked"/>
+                <field name='points' string="Points"/>
+                <button type="action"
+                        name="%(sale_membership_action_wizard)d"
+                        string="Manage membership" groups="sale_membership.group_manager"/>
+            </xpath>
+        </data>
+    </field>
+</record>
+</data>
+</openerp>

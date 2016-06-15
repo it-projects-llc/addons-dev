@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<record id="account_asset_asset_form_inherit" model="ir.ui.view">
+    <field name="name">account.asset.asset.form.inherit</field>
+    <field name="model">account.asset.asset</field>
+    <field name="inherit_id" ref="account_asset.view_account_asset_asset_form"/>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='date']" position="after">
+                <field name="vehicle_id"/>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+</data>
+</openerp>

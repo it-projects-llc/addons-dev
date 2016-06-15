@@ -56,11 +56,11 @@ Create or edit customer:
     * Enter **Birthdate**.
     * If customer age less than 21 you will not be able to save contact and you will see according notification.
     * Enter **Nationality** string.
-    * Select one from dropdown **ID Type** (National Id, Iqama, Passport).
+    * Select one from drop-down **ID Type** (National Id, Iqama, Passport).
     * Enter **ID Number** string.
     * Enter **Issuer** string.
     * Enter **Date of Issue**.
-    * Select one from dropdown **License Type** (Private, General, International).
+    * Select one from drop-down **License Type** (Private, General, International).
     * Enter **License Number** string.
 * Open ``Contacts & Addresses`` tab.
     * Create new work contact (Contacts & Addresses section).
@@ -70,58 +70,170 @@ Create or edit customer:
     * Enter additional information here.
 * Press save.
 
+Customer membership:
+
+* TODO
+
+Vehicle workflow
+================
+
+Depreciation and enrollment
+---------------------------
+
+For depreciation purposes used build-in module ``Assets management``.
+
+Firstly you need to enroll asset (vehicle):
+
+* Go to ``Accounting \ Purchases \ Vendor bills``.
+* Create new ``Vendor bill``.
+* Select vendor (partner).
+* Add product representing vehicle. Create it if  needed.
+* Select ``Asset Category``. Edit it or create new category if needed.
+    * Pay special attention to ``Journal Entries``. Make sure correct journal and accounts selected.
+    * Configure ``Depreciation Method`` and ``Periodicity``.
+* Fill other fields.
+* Then press ``[Validate]`` and ``[Register payment]``.
+* This document makes asset enrollment and money write-off accounting entries.
+* Save and close document.
+
+Secondly create asset model record:
+
+* Go to ``Accounting \ Adviser \ Assets``.
+* Create new asset.
+    * Select ``Category``. Depreciation information will be auto-filled.
+    * Select vehicle. Create it if needed. Just fill necessary fields.
+    * Select invoice. Put here vendor bill you created earlier.
+    * Enter ``Gross Value``. It is an amount to be depreciated.
+    * Fill other fields.
+    * Press ``[Confirm]`` and ``[Save]``.
+    * Now you will see depreciation lines.
+    * Press red circle on line you need to create accounting depreciation entries and press ``[Save]`` (it will become green).
+    * In upper right corner ``Items`` count will increase. Press it to look up accounting entries.
+    * Press ``[Modify Depreciation]`` to make some changes those like period extension or to select another strategy.
+
+So vehicle is represented by three records: Product, Vehicle, Asset. Product and asset is needed only for accounting aims. Vehicle is main object you going to work with.
+
+Register payments
+-----------------
+
+* Open vehicle.
+* Go to ``Payments`` tab.
+* Press ``[Add new item]``.
+* Fill invoice with according data.
+
+Remove Vehicle
+--------------
+
+* Go to ``Fleet``.
+* Open ``Vehicles``.
+* Open some vehicle.
+* Press ``[Action]``.
+* Press ``[Delete]``.
+
+Maintenance
+===========
+
+Used build-in fleet.vehicle.log.services model.
+
+Maintenance state stages: Draft -> Request -> Done -> Paid.
+
+Configure record filter (to see what records needs your attention)
+------------------------------------------------------------------
+
+* Open menu.
+* Depending on your role choose filter:
+    * For vehicle support officer (show records with State = Request AND Service Type != In branch.)
+    * For accountant (show records with State = Done)
+
+First maintenance scheme (in branch)
+------------------------------------
+
+* Branch officer actions:
+    * Opens vehicle to be maintenanced.
+    * Push ``[Services]`` button. Opens ``Vehicles Services Logs`` menu.
+    * Create new vehicle service document.
+    * Select ``Service Type`` as ``In branch``. "B" section now is visible.
+    * Enters odometer.
+    * Puts ``Included Services`` lines.
+    * Press ``[Submit]`` to submit order and to set status from ``Draft`` to ``Request``. Vehicle state becomes ``In shop``. It cant be rented now.
+    * If for some reason rollback is required press ``[Cancel submit]``.
+    * When all jobs finished press ``[Confirm]``. It automatically changes ``State`` from ``Request`` to ``Done``. Vehicle state becomes ``Active``.
+
+* Vehicle support officer actions:
+    * No actions required.
+
+* Accountant actions:
+    * Opens service document.
+    * Creates invoices (``[New invoice]`` button). All created invoices visible in table.
+    * When costs invoices paid press ``[Approve]``. It automatically changes ``State`` from ``Done`` to ``Paid``.
+    * If for some reason rollback is required press ``[Cancel approve]``.
+
+Second maintenance scheme (not in branch)
+-----------------------------------------
+
+* Branch officer actions:
+    * Opens vehicle to be maintenanced.
+    * Push ``[Services]`` button. Opens ``Vehicles Services Logs`` menu.
+    * Create new vehicle service document.
+    * Select ``Service Type`` that is not ``In branch``. "B" section now is hidden.
+    * Press ``[Submit]`` to submit order and to set status from ``Draft`` to ``Request``.  Vehicle state becomes ``In shop``. It cant be rented now.
+    * If for some reason rollback is required press ``[Cancel submit]``.
+
+* Vehicle support officer actions:
+    * Opens service document.
+    * Enters new odometer.
+    * Puts ``Included Services`` lines.
+    * When jobs finished press ``[Confirm]``. It automatically changes ``State`` from ``Request`` to ``Done``. Vehicle state becomes ``Active``.
+    * If for some reason rollback is required press ``[Cancel confirm]``.
+
+* Accountant actions:
+    * Opens service document.
+    * Creates invoices (``[New invoice]`` button). All created invoices visible in table.
+    * When costs invoices paid press ``[Approve]``. It automatically changes ``State`` from ``Done`` to ``Paid``.
+    * If for some reason rollback is required press ``[Cancel approve]``.
+
+
 Not ready functions
 ===================
 
 Below stuff planned but not completed yet. It partially finished or developing now.
 
-Customer features
------------------
-
-Add (Edit) Vehicle
-------------------
-
-* Go to Fleet.
-* Open Vehicles.
-* Open some vehicle.
-* Press Edit button.
-    * Select model or create new one. Enter ``Model name`` and ``Make (brand)``.
-    * Secect color from dropdown. // add
-    * Enter Model Year. //rename Acquisition Date
-    * Car Plate Number // rename License Plate
-    * Car chassis number
-    * Go to Costs. Create new cost with Rent type. Enter here Daily rental price (Daily Rate).
-    * Rate per extra km
-    * Allowed kilometer per day
-    * Vehicle registration expiry date
-    * Insurance expiry date
-    * Lease Installments dates Table
-    * Insurance Installments dates Table
-    * Odometer -> Last Odometer
-* Press save.
-
-Remove Vehicle
---------------
-
-* Go to Fleet.
-* Open Vehicles.
-* Open some vehicle.
-* Press Edit button.
-    * PressRemove button.
-    * Fill popped up form. If it sold put also Selling price.
-
-
 Vehicle Contracts
 -----------------
+
+To create new rent document:
+ * from ``Fleet Rental / Rent Quotations`` click ``[Create]``
+ Fill the opened form with client and car information.
+ To be able to confirm the document you should also fill the ``Exit Date`` and ``Return Date``
+ along with a payment information. When it is done click ``[Confirm Rental]`` button.
+ If don't have payment information at this point you can still book the rent without confirmation.
+ The ``Exit Date`` and ``Return Date`` should be filled. Then click ``[Book only]`` button.
+
+To create extended rent:
+ * from ``Fleet Rental / Confirmed Rents`` select rent that you want to extended.
+ * Click ``[Extend]`` button to create new extended rent.
+
+To create return document:
+ * from ``Fleet Rental / Confirmed Rents`` select rent that should be returned.
+ * Click ``Return`` button to create new return document.
+
+To confirm return document:
+ * from ``Fleet Rental / Draft Return Contracts`` open the document to confirm.
+ * Depending on current payment state you can confirm as open or confirm as closed.
+ * If the car is returned but client hasn't fully paid for the rent then click ``[Return Car and Keep Contract Open]`` button.
+ * If the car is returned and client has fully paid for the rent then click ``[Confirm Return]`` button.
+
+
+
 
 * Go to Fleet.
 * You will see *Movements* section in left panel menu. This section has 3 rows.  Rent, Receive, Extending Contract, Return Vehicle. Actually its just a different representation fo same model with contract type binding.
 * Press Rent.
-* Select customer (dropdown). After that next fields will be filled automatically (in customer block):
+* Select customer (drop-down). After that next fields will be filled automatically (in customer block):
     * Customer name
     * Customer membership number
     * Membership Type
-* Select Vehicle (dropdown). After that next fields will be filled automatically  (in vehicle block):
+* Select Vehicle (drop-down). After that next fields will be filled automatically  (in vehicle block):
     * Vehicle Model
     * Car Plate
     * Color
@@ -190,3 +302,37 @@ Vehicle Contracts
     Exceeded hours cost = Rate per extra hour (по этому параметру тоже нет инфо в документе, будем уточниять) * Exceeded hours
 * Deposit - подтягивается автоматически из контракта Rent
 * Remaining amount - вычисляется автоматически: Remaining amount = Deposit - Total.
+
+
+
+Vehicle Transfer
+================
+
+New model fleet_booking.transfer.
+
+Menu items:
+
+* Open ``Fleet`` in main menu.
+* Go to ``Transfers``. Here is ``Incoming`` and ``Outgoing`` menu sections.
+* Тут надо сказать про то что в Incoming по умолчанию видны только входящие для бранча активного эмплоера. Я не знаю как это делать то ли фильтрами то ли что.
+* Аналогично для  Outgoing
+
+Workflow is like that:
+
+* Vehicles Support Officer creates transfer.
+    * Select vehicle. Relational fields (Car Plate Number) auto-filled.
+    * Select source branch.
+    * Select destination branch.
+    * Enter current odometer.
+    * ``Delivery Status`` auto-sets to ``Not delivered``. Vehicles Support Officer cant edit it.
+    * ``Receiving Status`` auto-sets to ``Not received``. Vehicles Support Officer cant edit it.
+    * Presses ``[Save]`` button.
+    * Vehicle branch auto-sets to ``In transfer``. Vehicle status auto-sets to ``In transfer``.
+
+* When car is delivered
+    * Vehicles Support Officer enters new odometer.
+    * Source Branch Officer sets ``Delivery Status`` to ``Delivered``.
+    * Destination Branch Officer sets ``Receiving Status`` to ``Delivered``.
+    * Vehicle branch auto-sets equal to destination branch. Vehicle status auto-sets to ``Active``.
+
+

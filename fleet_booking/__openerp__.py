@@ -16,14 +16,19 @@
         "hr",
         "fleet",
         "account",
-        "partner_person"
+        "account_asset",
+        "partner_person",
+        "sale_membership",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
+        "security/records.xml",
+        "security/ir.model.access.csv",
         "views/views.xml",
         "views/partner.xml",
-        "security/records.xml",
-        "security/ir.model.access.csv"
+        "views/fleet.xml",
+        "views/rental.xml",
+        "views/asset.xml",
     ],
     "qweb": [
     ],
