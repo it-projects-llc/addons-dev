@@ -14,13 +14,7 @@ class FleetRentalDocument(models.Model):
         items = self.env['fleet_rental.item_to_check'].search([])
         check_line_obj = self.env['fleet_rental.check_line']
 
-        if result.get('check_line_ids') and len(result['check_line_ids']) == len(items):
-            pass
-        # if we click create/discard/create on the document
-        # items are duplicated
-        # It isn't desirable. We only want one line for each active item
-        else:
-            result['check_line_ids'] = [(0, 0, {'item_id': item.id}) for item in items]
+        result['check_line_ids'] = [(0, 0, {'item_id': item.id}) for item in items]
 
         return result
 
