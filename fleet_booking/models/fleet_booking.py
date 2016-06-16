@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+# fb - fleet booking
 
 from openerp import api, fields, models
 
 
 class HrDepartment(models.Model):
 
-    _name = "fleet_booking.branch"
+    _name = "fb.branch"
     _inherit = 'hr.department'
 
     city = fields.Char(string='City')
@@ -41,3 +42,9 @@ class Person(models.Model):
     _constraints = [
         (check_age, 'Age restriction. Person must be elder than 20.', ['birthdate_date']),
     ]
+
+class FleetBranch(models.Model):
+
+    _inherit = 'fleet.vehicle'
+
+    branch = fields.Many2one('fb.branch')

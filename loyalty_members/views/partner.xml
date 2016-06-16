@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<record id="membership_view_partner_person_form_inherit" model="ir.ui.view">
+    <field name="name">membership.form.inherit</field>
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_partner_form"/>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//page[@name='sales_purchases']/group/group[@name='sale']" position="inside">
+                <field name='membership_id'/>
+            </xpath>
+        </data>
+    </field>
+</record>
+<record id="fb_membership_action" model="ir.actions.act_window">
+    <field name="name">Membership</field>
+    <field name="res_model">member_type</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+</record>
+    <menuitem id="fb_membership_menu" parent="base.menu_sale_config" name="Membership" sequence="10" action="fb_membership_action"/>
+</data>
+</openerp>

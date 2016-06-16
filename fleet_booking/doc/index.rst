@@ -56,11 +56,11 @@ Create or edit customer:
     * Enter **Birthdate**.
     * If customer age less than 21 you will not be able to save contact and you will see according notification.
     * Enter **Nationality** string.
-    * Select one from dropdown **ID Type** (National Id, Iqama, Passport).
+    * Select one from drop-down **ID Type** (National Id, Iqama, Passport).
     * Enter **ID Number** string.
     * Enter **Issuer** string.
     * Enter **Date of Issue**.
-    * Select one from dropdown **License Type** (Private, General, International).
+    * Select one from drop-down **License Type** (Private, General, International).
     * Enter **License Number** string.
 * Open ``Contacts & Addresses`` tab.
     * Create new work contact (Contacts & Addresses section).
@@ -78,6 +78,22 @@ Below stuff planned but not completed yet. It partially finished or developing n
 Customer features
 -----------------
 
+2. Customer Membership Management form
+     Можно закинуть например в Sales/Configuration
+     Поля
+      - Customer Membership Or ID Number
+      - Customer name - подгружается автоматически исходя из Customer Membership Or ID Number
+      - Membership Type - подгружается автоматически исходя из Customer Membership Or ID Number
+      - Action Type - выпадалка с 2мя значениями: Demote, Block
+           * если выбрано Demote появляется
+                       выпадалка Choose new membership с 2мя значениями: silver, bronze
+                       поле Demoting reason
+           * если выбрано Block появляется
+
+                    поле Blocking reason
+    Замечание: если у клиента Membership Type = 'Bronze', то понижать его уже некуда. В этом случае можно например при выборе Demote выдавать предупреждение вида:
+        "Membership Type cannot be demoted"  (Membership Type не может быть понижен) или "Customer membership cannot be demoted"
+
 Add (Edit) Vehicle
 ------------------
 
@@ -86,19 +102,30 @@ Add (Edit) Vehicle
 * Open some vehicle.
 * Press Edit button.
     * Select model or create new one. Enter ``Model name`` and ``Make (brand)``.
-    * Secect color from dropdown. // add
+    * Select color from drop-down. // add
     * Enter Model Year. //rename Acquisition Date
     * Car Plate Number // rename License Plate
     * Car chassis number
-    * Go to Costs. Create new cost with Rent type. Enter here Daily rental price (Daily Rate).
-    * Rate per extra km
-    * Allowed kilometer per day
-    * Vehicle registration expiry date
-    * Insurance expiry date
-    * Lease Installments dates Table
-    * Insurance Installments dates Table
-    * Odometer -> Last Odometer
-* Press save.
+    * Go to Costs.
+        * Create new cost with **Daily Rate** type. Enter in **Total price** daily rental price. // add xml rec
+        * Create new cost with **Rate per extra km** type. Enter in **Total price** rate per extra km. // add xml rec
+    * Enter allowed kilometer per day // add
+    * Enter Vehicle registration expiry date // add
+    * Enter Insurance expiry date // add
+    * Enter Lease Installments dates // add Table ( model) . даты платежей за прокат
+    * Enter Insurance Installments dates // add Table ( model) . даты платежей за страховку
+    * Enter Odometer
+    *  Purchase Price // rename car value
+    *  Paid Amount // add
+    *  Remaining Amount  // add
+    *  Asset Account  // add
+    *  Paid Amount Account  // add
+    *  Remaining Amount Account  // add
+    *  Vehicle Depreciation - амортизация ТС - в табличном виде (возможно one2many)
+    *  Depreciation Expense Account - счет для расходов на амортизацию (Many2one)
+    *  Accumulated Depreciation Account - счет для накопленной амортизации  (Many2one)
+    *  Next Maintenance Date - дата следующего сервисного обслуживания (тип Date)
+    *  Press save.
 
 Remove Vehicle
 --------------
@@ -117,11 +144,11 @@ Vehicle Contracts
 * Go to Fleet.
 * You will see *Movements* section in left panel menu. This section has 3 rows.  Rent, Receive, Extending Contract, Return Vehicle. Actually its just a different representation fo same model with contract type binding.
 * Press Rent.
-* Select customer (dropdown). After that next fields will be filled automatically (in customer block):
+* Select customer (drop-down). After that next fields will be filled automatically (in customer block):
     * Customer name
     * Customer membership number
     * Membership Type
-* Select Vehicle (dropdown). After that next fields will be filled automatically  (in vehicle block):
+* Select Vehicle (drop-down). After that next fields will be filled automatically  (in vehicle block):
     * Vehicle Model
     * Car Plate
     * Color
