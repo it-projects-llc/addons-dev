@@ -95,6 +95,8 @@ Buttons ``[Confirm Return]`` and ``[Return car and keep contract open]`` are ava
 Further information
 -------------------
 
+Demo: http://runbot.it-projects.info/runbot/34/addons-yelizariev-9.0-fleet_booking
+
 HTML Description: https://apps.odoo.com/apps/modules/9.0/fleet_booking
 
 Usage instructions: `<doc/index.rst>`_
