@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
+    <!--FORMS-->
     <record model='ir.ui.view' id='fleet_booking_transfer_form'>
         <field name="name">fleet.vehicle.model.form</field>
         <field name="model">fleet_booking.transfer</field>
@@ -24,10 +25,10 @@
                     </group>
                     <group col="2" string="Route">
                         <group>
-                            <field name="source_branch"/>
+                            <field name="source_branch" readonly="1"/>
                         </group>
                         <group>
-                            <field name="dest_branch"/>
+                            <field name="dest_branch" readonly="1"/>
                         </group>
                     </group>
                     <group col="2" string="State">
@@ -44,7 +45,6 @@
             </form>
         </field>
     </record>
-
     <record model='ir.ui.view' id='fleet_booking_transfer_tree'>
         <field name="name">fleet_booking.transfer.tree</field>
         <field name="model">fleet_booking.transfer</field>
@@ -61,6 +61,7 @@
         </field>
     </record>
 
+    <!--ACTIONS-->
     <record model='ir.actions.act_window' id='fleet_transfers_in'>
         <field name="name">Incoming</field>
         <field name="res_model">fleet_booking.transfer</field>
@@ -73,7 +74,6 @@
             </p>
         </field>
     </record>
-
     <record model='ir.actions.act_window' id='fleet_transfers_out'>
         <field name="name">Outgoing</field>
         <field name="res_model">fleet_booking.transfer</field>
@@ -86,7 +86,6 @@
             </p>
         </field>
     </record>
-
     <record model='ir.actions.act_window' id='fleet_transfers_act'>
         <field name="name">All transfers</field>
         <field name="res_model">fleet_booking.transfer</field>
@@ -99,11 +98,13 @@
         </field>
     </record>
 
+    <!--MENU-->
     <menuitem name="Transfers" parent="fleet.menu_root" id="fleet_transfers" sequence="3" groups="fleet.group_fleet_user"/>
     <menuitem action="fleet_transfers_in" parent="fleet_transfers" id="fleet_transfers_in_menu" groups="fleet.group_fleet_user"/>
     <menuitem action="fleet_transfers_out" parent="fleet_transfers" id="fleet_transfers_out_menu" groups="fleet.group_fleet_user"/>
     <menuitem action="fleet_transfers_act" parent="fleet_transfers" id="fleet_transfers_all_menu" groups="fleet.group_fleet_user"/>
 
+    <!--ACCESS RIGHTS-->
     <!--VEHICLE SUPPORT OFFICER EXTRA RIGHTS-->
     <record id="fleet_booking_transfer_form_vso" model="ir.ui.view">
         <field name="name">fleet.booking.transfer.form.vso.inherit</field>
@@ -115,13 +116,35 @@
                 <xpath expr="//field[@name='current_odometer']" position="replace">
                     <field name="current_odometer" readonly="0"/>
                 </xpath>
+                <xpath expr="//field[@name='source_branch']" position="replace">
+                    <field name="source_branch" readonly="0"/>
+                </xpath>
+                <xpath expr="//field[@name='dest_branch']" position="replace">
+                    <field name="dest_branch" readonly="0"/>
+                </xpath>
             </data>
         </field>
     </record>
-
     <!--BRANCH OFFICER EXTRA RIGHTS-->
     <record id="fleet_booking_transfer_form_bo" model="ir.ui.view">
         <field name="name">fleet.booking.transfer.form.bo.inherit</field>
+        <field name="model">fleet_booking.transfer</field>
+        <field name="inherit_id" ref="fleet_booking_transfer_form"/>
+        <field name="groups_id" eval="[(4, ref('fleet_booking.group_branch_officer'))]"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='delivery_state']" position="replace">
+                    <field name="delivery_state" attrs="{'readonly':[('can_change_delivery_state', '=', False)]}"/>
+                </xpath>
+                <xpath expr="//field[@name='receiving_state']" position="replace">
+                    <field name="receiving_state" attrs="{'readonly':[('can_change_receiving_state', '=', False)]}"/>
+                </xpath>
+            </data>
+        </field>
+    </record>
+    <!--COMMONERS EXTRA RIGHTS-->
+    <record id="fleet_booking_transfer_form_all" model="ir.ui.view">
+        <field name="name">fleet.booking.transfer.form.all.inherit</field>
         <field name="model">fleet_booking.transfer</field>
         <field name="inherit_id" ref="fleet_booking_transfer_form"/>
         <field name="groups_id" eval="[(4, ref('fleet_booking.group_general_manager')),
@@ -132,24 +155,10 @@
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//field[@name='delivery_state']" position="replace">
-                    <field name="delivery_state" attrs="{'readonly':[('can_change_delivery_state', '=', False)]}"/>
+                    <field name="delivery_state" readonly="1"/>
                 </xpath>
-            </data>
-        </field>
-    </record>
-    <record id="fleet_booking_transfer_form_bo_to" model="ir.ui.view">
-        <field name="name">fleet.booking.transfer.form.bo.to.inherit</field>
-        <field name="model">fleet_booking.transfer</field>
-        <field name="inherit_id" ref="fleet_booking_transfer_form"/>
-        <field name="groups_id" eval="[(4, ref('fleet_booking.group_general_manager')),
-                                       (4, ref('fleet_booking.group_vehicles_support_officer')),
-                                       (4, ref('fleet_booking.group_branch_employee')),
-                                       (4, ref('fleet_booking.group_accountant')),
-                                       (4, ref('fleet_booking.group_payroll_officer'))]"/>
-        <field name="arch" type="xml">
-            <data>
                 <xpath expr="//field[@name='receiving_state']" position="replace">
-                    <field name="receiving_state" attrs="{'readonly':[('can_change_receiving_state', '=', False)]}"/>
+                    <field name="receiving_state" readonly="1"/>
                 </xpath>
             </data>
         </field>
