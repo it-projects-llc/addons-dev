@@ -62,15 +62,12 @@ class Fleet(models.Model):
     ins_expiry = fields.Date('Insurance expiry')
     next_maintain = fields.Date('Next maintenance')
     payments_ids = fields.One2many('account.invoice', 'fleet_vehicle_id', string='Payments')
-    total_invoiced = fields.Monetary(compute='_invoice_total', string="Total Invoiced", currency_field='currency_id')
+    total_documents = fields.Integer(compute='_count_total_documents', string="Total documents", default=0)
     insurance_ids = fields.One2many('fleet_booking.insurances', 'fleet_vehicle_id', string='Insurance Installments')
     deprecation_ids = fields.One2many(related='asset_id.depreciation_line_ids')
     asset_id = fields.Many2one('account.asset.asset', compute='compute_asset', inverse='asset_inverse', string='Asset')
     asset_ids = fields.One2many('account.asset.asset', 'vehicle_id')
     # TODO Rename deprecation to depreciation
-    currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True,
-                                  states={'draft': [('readonly', False)]},
-                                  default=lambda self: self.env.user.company_id.currency_id)
 
     @api.one
     @api.depends('asset_ids')
@@ -87,12 +84,10 @@ class Fleet(models.Model):
         new_asset.vehicle_id = self
 
     @api.multi
-    def _invoice_total(self):
-        account_invoice_report = self.env['account.invoice.report']
-        if not self.ids:
-            self.total_invoiced = 0.0
-            return True
-        #    TODO
+    def _count_total_documents(self):
+        for rec in self:
+            docs_ids = self.env['fleet_rental.document'].search([('vehicle_id.id', '=', rec.id)])
+            rec.total_documents = len(docs_ids)
 
 
 class Service(models.Model):

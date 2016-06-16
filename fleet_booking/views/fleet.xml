@@ -107,8 +107,15 @@
         </xpath>
     </field>
 </record>
-<record model="ir.ui.view" id="fleet_vehicle_form_inherit_invoice">
-    <field name="name">fleet.vehicle.form.inherit.invoice</field>
+<record model='ir.actions.act_window' id='vehicle_documents_act'>
+    <field name="name">Vehicle documents</field>
+    <field name="res_model">fleet_rental.document</field>
+    <field name="view_type">form</field>
+    <field name="domain">[('vehicle_id', '=', active_id)]</field>
+    <field name="view_mode">tree,form</field>
+</record>
+<record model="ir.ui.view" id="fleet_vehicle_form_inherit_documents">
+    <field name="name">fleet.vehicle.form.inherit.documents</field>
     <field name="model">fleet.vehicle</field>
     <field name="inherit_id" ref="fleet.fleet_vehicle_form"/>
     <field name="arch" type="xml">
@@ -117,13 +124,12 @@
                     class="oe_stat_button"
                     id="invoice_button"
                     icon="fa-pencil-square-o"
-                    name="%(account.action_invoice_refund_out_tree)d">
-                    <!--context="{'search_default_partner_id': active_id,'default_partner_id': active_id}">-->
+                    name="%(vehicle_documents_act)d">
                 <div class="o_form_field o_stat_info">
                     <span class="o_stat_value">
-                        <field name="total_invoiced" widget='monetary' options="{'currency_field': 0}"/>
+                        <field name="total_documents"/>
                     </span>
-                    <span class="o_stat_text">Invoiced</span>
+                    <span class="o_stat_text">Documents</span>
                 </div>
             </button>
         </xpath>
@@ -160,8 +166,3 @@
 </record>
 </data>
 </openerp>
-<!--state   inbranch  invisible visible-->
-<!--request  true      0           1-->
-<!--request  false     1           0-->
-<!--any      true      1           0-->
-<!--any      false     1           0-->
