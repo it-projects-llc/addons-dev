@@ -6,16 +6,16 @@ from openerp import models, fields, api
 class FleetRentalItemToCheck(models.Model):
     _name = 'fleet_rental.item_to_check'
 
-    name = fields.Char(string='Item', help='Item to be checked before and after rent')
+    name = fields.Char(string='Item', help='Item to be checked before and after rent', required=True)
 
 
 class FleetRentalCheckLine(models.Model):
     _name = 'fleet_rental.check_line'
 
-    item_id = fields.Many2one('fleet_rental.item_to_check', string='Item')
-    document_id = fields.Many2one('fleet_rental.document', string='Document')
-    check_yes = fields.Boolean(string='yes')
-    check_no = fields.Boolean(string='no')
+    item_id = fields.Many2one('fleet_rental.item_to_check', string='Item', ondelete='restrict', required=True, readonly=True)
+    document_id = fields.Many2one('fleet_rental.document', string='Document', ondelete='cascade', required=True)
+    check_yes = fields.Boolean(string='yes', default=False)
+    check_no = fields.Boolean(string='no', default=False)
 
     @api.multi
     def write(self, vals):
