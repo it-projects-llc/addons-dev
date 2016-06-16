@@ -5,7 +5,7 @@ from openerp import models, fields, api
 class FleetRentalDocument(models.Model):
     _inherit = 'fleet_rental.document'
 
-    check_line_ids = fields.One2many('fleet_rental.check_line', 'document_id', string='Vehicle rental checklist')
+    check_line_ids = fields.One2many('fleet_rental.check_line', 'document_id', string='Vehicle rental check lines')
 
     @api.model
     def default_get(self, fields_list):
