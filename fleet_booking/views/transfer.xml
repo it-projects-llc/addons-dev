@@ -32,14 +32,14 @@
                     </group>
                     <group col="2" string="State">
                         <group>
-                            <field name="delivery_state" readonly="1"/>
+                            <field name="delivery_state" readonly="0"/>
                         </group>
                         <group>
-                            <field name="receiving_state" readonly="1"/>
+                            <field name="receiving_state" readonly="0"/>
                         </group>
                     </group>
-                    <field name="cant_change_delivery_state" invisible="1"/>
-                    <field name="cant_change_receiving_state" invisible="1"/>
+                    <field name="can_change_delivery_state" invisible="1"/>
+                    <field name="can_change_receiving_state" invisible="1"/>
                 </sheet>
             </form>
         </field>
@@ -96,15 +96,6 @@
             <p class="oe_view_nocontent_create">
                 Click to create a new transfer.
             </p>
-            <p>
-                You will be able to manage your fleet by keeping track of the
-                contracts, services, fixed and recurring costs, odometers and
-                fuel logs associated to each vehicle.
-            </p>
-            <p>
-                Odoo will warn you when services or contract have to be
-                renewed.
-            </p>
         </field>
     </record>
 
@@ -133,11 +124,15 @@
         <field name="name">fleet.booking.transfer.form.bo.inherit</field>
         <field name="model">fleet_booking.transfer</field>
         <field name="inherit_id" ref="fleet_booking_transfer_form"/>
-        <field name="groups_id" eval="[(4, ref('fleet_booking.group_branch_officer'), 0)]"/>
+        <field name="groups_id" eval="[(4, ref('fleet_booking.group_general_manager')),
+                                       (4, ref('fleet_booking.group_vehicles_support_officer')),
+                                       (4, ref('fleet_booking.group_branch_employee')),
+                                       (4, ref('fleet_booking.group_accountant')),
+                                       (4, ref('fleet_booking.group_payroll_officer'))]"/>
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//field[@name='delivery_state']" position="replace">
-                    <field name="delivery_state" readonly="0"/>
+                    <field name="delivery_state" attrs="{'readonly':[('can_change_delivery_state', '=', False)]}"/>
                 </xpath>
             </data>
         </field>
@@ -146,11 +141,15 @@
         <field name="name">fleet.booking.transfer.form.bo.to.inherit</field>
         <field name="model">fleet_booking.transfer</field>
         <field name="inherit_id" ref="fleet_booking_transfer_form"/>
-        <field name="groups_id" eval="[(4, ref('fleet_booking.group_branch_officer'), 0)]"/>
+        <field name="groups_id" eval="[(4, ref('fleet_booking.group_general_manager')),
+                                       (4, ref('fleet_booking.group_vehicles_support_officer')),
+                                       (4, ref('fleet_booking.group_branch_employee')),
+                                       (4, ref('fleet_booking.group_accountant')),
+                                       (4, ref('fleet_booking.group_payroll_officer'))]"/>
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//field[@name='receiving_state']" position="replace">
-                    <field name="receiving_state" readonly="0"/>
+                    <field name="receiving_state" attrs="{'readonly':[('can_change_receiving_state', '=', False)]}"/>
                 </xpath>
             </data>
         </field>
