@@ -4,11 +4,9 @@
     <!--BRANCH-->
     <record model="fleet_booking.branch" id="main_branch">
         <field name="name">Main branch</field>
-        <field name="sequence">1</field>
     </record>
     <record model="fleet_booking.branch" id="filial_branch">
         <field name="name">Filial branch</field>
-        <field name="sequence">2</field>
     </record>
     <!--PARTNERS-->
     <record id="fb_gm_partner" model="res.partner">
