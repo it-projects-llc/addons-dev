@@ -119,17 +119,14 @@
      <record id="fb_bronze" model="sale_membership.type">
             <field name="name">Bronze</field>
             <field name="points">0</field>
-            <field name="sequence">1</field>
     </record>
      <record id="fb_silver" model="sale_membership.type">
             <field name="name">Silver</field>
             <field name="points">2000</field>
-            <field name="sequence">2</field>
     </record>
      <record id="fb_gold" model="sale_membership.type">
             <field name="name">Gold</field>
             <field name="points">5000</field>
-            <field name="sequence">3</field>
     </record>
     <!--FLEET-->
     <record model="fleet.service.type" id="in_branch">
