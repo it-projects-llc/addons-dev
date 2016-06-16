@@ -19,6 +19,7 @@
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
+        'security/ir.model.access.csv',
         "views/fleet_vehicle_color.xml",
         "views/fleet.xml",
     ],
