@@ -8,8 +8,8 @@
         <field name="inherit_id" ref="fleet_rental_document.fleet_rental_document_form"/>
         <field name="arch" type="xml">
           <xpath expr="//sheet/group[2]" position="after">
-            <field name="check_line_ids" options='{"no_open": true}' mode="tree">
-              <tree string="Vehicle checklist" editable="top" create="0" delete="false" open="false">
+            <field name="check_line_ids" mode="tree">
+              <tree string="Vehicle checklist" editable="top" create="0" delete="false">
                 <field name="item_id"/>
                 <field name="check_yes"/>
                 <field name="check_no"/>
