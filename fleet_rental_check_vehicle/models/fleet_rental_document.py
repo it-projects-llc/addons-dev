@@ -14,7 +14,7 @@ class FleetRentalDocument(models.Model):
         items = self.env['fleet_rental.item_to_check'].search([])
         check_line_obj = self.env['fleet_rental.check_line']
 
-        if len(result['check_line_ids']) == len(items):
+        if result.get('check_line_ids') and len(result['check_line_ids']) == len(items):
             pass
         # if we click create/discard/create on the document
         # items are duplicated
