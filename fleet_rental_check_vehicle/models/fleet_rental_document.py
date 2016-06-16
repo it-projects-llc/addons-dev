@@ -14,8 +14,7 @@ class FleetRentalDocument(models.Model):
         items = self.env['fleet_rental.item_to_check'].search([])
         check_line_obj = self.env['fleet_rental.check_line']
 
-        for item in items:
-            check_line_obj.create({'document_id': document_id, 'item_id': item.id})
-
+        if len(items) > 0:
+           result['check_line_ids'] =  [(0, 0, {'item_id': items[0].id})]
         return result
 

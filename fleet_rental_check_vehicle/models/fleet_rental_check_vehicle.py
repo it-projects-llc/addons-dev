@@ -13,7 +13,7 @@ class FleetRentalCheckLine(models.Model):
     _name = 'fleet_rental.check_line'
 
     item_id = fields.Many2one('fleet_rental.item_to_check', string='Item', ondelete='restrict', required=True)
-    document_id = fields.Many2one('fleet_rental.document', string='Document', ondelete='cascade', required=True)
+    document_id = fields.Many2one('fleet_rental.document', string='Document', ondelete='cascade')
     check_yes = fields.Boolean(string='yes', default=False)
     check_no = fields.Boolean(string='no', default=False)
 
