@@ -19,6 +19,9 @@
         "account_asset",
         "partner_person",
         "sale_membership",
+        "fleet_rental_document",
+        "fleet_rental_check_vehicle",
+        "fleet_vehicle_color",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [

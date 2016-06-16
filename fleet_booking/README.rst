@@ -28,7 +28,7 @@ Adds partner personality info:
     - License Type
     - License Number
 
-Adds partner age restriction (must be 21 or elder) if he/she is customer (is customer field).
+Adds partner age restriction (must be 21 or elder) if he is customer (is customer field).
 
 ----------------
  Vehicle Rental
@@ -63,18 +63,18 @@ All rental views are grouped under ``Fleet Rental`` top-level menu. There are th
 a user.
 
  * Rent Quotations
- * Confirmed Rents 
+ * Confirmed Rents
  * Draft Return Contracts
- * Open Return Contracts 
- * Closed Return Contracts 
- * All Records 
+ * Open Return Contracts
+ * Closed Return Contracts
+ * All Records
 
 Under ``Rent Quotations`` are ``Rent`` and ``Extended Rent`` documents with ``Quotation`` or ``Booked`` states.
 After confirmation they are available uder the ``Confirmed Rents``.
 
 Buttons ``[Book Only]``, ``[Confirm Rental]`` are available in Rent Quotation.
 Buttons ``[Return]``, ``[Extend]`` are available in Confirmed Rents.
-A new record with type ``[Extended Rent]`` is created when a user clicks ``[Extend]`` button in Confirmed Rents. 
+A new record with type ``[Extended Rent]`` is created when a user clicks ``[Extend]`` button in Confirmed Rents.
 Also a new record with type ``[Return]`` is created when a user clicks ``[Return]`` button.
 The ``[Confirm Rental]`` and ``[Book Only]`` buttons change the state of existing records.
 ``[Confirm Rental]`` is only enabled if all fields related to payment are filled.
