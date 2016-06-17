@@ -16,6 +16,7 @@
     "depends": [
         "fleet",
         "fleet_rental_document",
+        "fleet_rental_check_vehicle",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
