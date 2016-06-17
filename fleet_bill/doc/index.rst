@@ -9,6 +9,7 @@ Preparation
 -----------
 
 * Enter in debug mode.
+ * `Enable technical features <https://odoo-development.readthedocs.io/en/latest/odoo/usage/technical-features.html>`_
 * Go to ``Fleet / Configuration / Service Types``.
 * Select according product for every service type you need.
 

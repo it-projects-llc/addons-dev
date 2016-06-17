@@ -15,6 +15,7 @@ class VehicleTransfer(models.Model):
     source_branch = fields.Many2one('fleet_booking.branch', string='From', required=True)
     dest_branch = fields.Many2one('fleet_booking.branch', string='To', required=True)
     current_odometer = fields.Float(related='vehicle_id.odometer', string='Current odometer')
+    vehicle_state_id = fields.Many2one(related='vehicle_id.state_id', string='Vehicle state')
     delivery_state = fields.Selection([('not_delivered', 'Not delivered'), ('delivered', 'Delivered')], string='Delivery state', default='not_delivered')
     receiving_state = fields.Selection([('not_received', 'Not received'), ('received', 'Received')], string='Receiving state', default='not_received')
     user_branch_id = fields.Many2one('res.users', 'Creator', default=lambda self: self.env.user.branch_id.id)
