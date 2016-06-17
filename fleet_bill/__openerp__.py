@@ -13,6 +13,7 @@
     #"currency": "EUR",
 
     "depends": [
+        'fleet',
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
