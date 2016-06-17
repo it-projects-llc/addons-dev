@@ -13,7 +13,7 @@ Products is taken from fleet.service.type product field.
 Further information
 -------------------
 
-Demo: http://runbot.it-projects.info/runbot/[TODO]/addons-yelizariev-9.0-fleet_bill
+Demo: http://runbot.it-projects.info/runbot/misc-addons/9.0/fleet_bill
 
 HTML Description: https://apps.odoo.com/apps/modules/9.0/fleet_bill
 
