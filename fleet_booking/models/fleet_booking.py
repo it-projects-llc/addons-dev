@@ -77,6 +77,8 @@ class Fleet(models.Model):
 
     @api.one
     def asset_inverse(self):
+        if not self.asset_id.id:
+            return
         new_asset = self.env['account.asset.asset'].browse(self.asset_id.id)
         if len(self.asset_ids) > 0:
             asset = self.env['account.asset.asset'].browse(self.asset_ids[0].id)
