@@ -3,8 +3,8 @@ import openerp
 from openerp import models, fields, api
 
 
-class FleetBookingDocumentRent(models.Model):
-    _name = 'fleet_booking.document_rent'
+class FleetRentalDocumentRent(models.Model):
+    _name = 'fleet_rental.document_rent'
 
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -16,7 +16,7 @@ class FleetBookingDocumentRent(models.Model):
         ], string='Status', readonly=True, copy=False, index=True, default='draft')
 
     _inherits = {
-                 'fleet_booking.document': 'document_id',
+                 'fleet_rental.document': 'document_id',
                  }
 
     document_id = fields.Many2one('fleet_rental.document', required=True,

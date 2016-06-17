@@ -4,7 +4,7 @@
 
       <record id='fleet_rental_document_draft_act' model='ir.actions.act_window'>
         <field name="name">Rent Draft</field>
-        <field name="res_model">fleet_booking.document_rent</field>
+        <field name="res_model">fleet_rental.document_rent</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
@@ -18,7 +18,7 @@
 
       <record id='fleet_rental_document_booked_act' model='ir.actions.act_window'>
         <field name="name">Rent Booked</field>
-        <field name="res_model">fleet_booking.document_rent</field>
+        <field name="res_model">fleet_rental.document_rent</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
@@ -32,7 +32,7 @@
 
       <record id='fleet_rental_document_confirmed_act' model='ir.actions.act_window'>
         <field name="name">Rent Confirmed</field>
-        <field name="res_model">fleet_booking.rent</field>
+        <field name="res_model">fleet_rental.document_rent</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
@@ -46,7 +46,7 @@
 
       <record id='fleet_rent_form' model='ir.ui.view'>
         <field name="name">fleet.rent.form</field>
-        <field name="model">fleet_booking.document_rent</field>
+        <field name="model">fleet_rental.document_rent</field>
         <field name="inherit_id" ref="fleet_rental_document.fleet_rental_document_form"/>
         <field name="arch" type="xml">
           <xpath expr="//form" position="inside">
