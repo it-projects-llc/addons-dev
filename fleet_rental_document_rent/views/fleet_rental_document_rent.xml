@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+      <record id='fleet_rental_document_draft_act' model='ir.actions.act_window'>
+        <field name="name">Rent Draft</field>
+        <field name="res_model">fleet_booking.document_rent</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a new rental document.
+          </p>
+        </field>
+      </record>
+
+      <menuitem action="fleet_rental_document_draft_act" parent="fleet_rental_document.fleet_rental_sale" id="rent_draft_menu" sequence="1"/>
+
+      <record id='fleet_rental_document_booked_act' model='ir.actions.act_window'>
+        <field name="name">Rent Booked</field>
+        <field name="res_model">fleet_booking.document_rent</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a new rental document.
+          </p>
+        </field>
+      </record>
+
+      <menuitem action="fleet_rental_document_booked_act" parent="fleet_rental_document.fleet_rental_sale" id="rent_booked_menu" sequence="2"/>
+
+      <record id='fleet_rental_document_confirmed_act' model='ir.actions.act_window'>
+        <field name="name">Rent Confirmed</field>
+        <field name="res_model">fleet_booking.rent</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a new rental document.
+          </p>
+        </field>
+      </record>
+
+      <menuitem action="fleet_rental_document_confirmed_act" parent="fleet_rental_document.fleet_rental_sale" id="rent_confirmed_menu" sequence="3"/>
+
+      <record id='fleet_rent_form' model='ir.ui.view'>
+        <field name="name">fleet.rent.form</field>
+        <field name="model">fleet_booking.document_rent</field>
+        <field name="inherit_id" ref="fleet_rental_document.fleet_rental_document_form"/>
+        <field name="arch" type="xml">
+          <xpath expr="//form" position="inside">
+            <header>
+              <field name="state" widget="statusbar" statusbar_visible="draft,booked,confirmed,extended,returned"/>
+            </header>
+          </xpath>
+        </field>
+      </record>
+
+    </data>
+</openerp>
