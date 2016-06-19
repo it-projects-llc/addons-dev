@@ -21,3 +21,5 @@ class FleetRentalDocument(models.Model):
     partner_id = fields.Many2one('res.partner', string="Customer", domain=[('customer', '=', True)])
 
     vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle")
+
+    document_datetime = fields.Datetime(string='Date and Time')
