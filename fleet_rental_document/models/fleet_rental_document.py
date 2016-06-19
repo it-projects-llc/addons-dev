@@ -22,4 +22,6 @@ class FleetRentalDocument(models.Model):
 
     vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle")
 
-    document_datetime = fields.Datetime(string='Date and Time')
+    exit_datetime = fields.Datetime(string='Exit Date and Time')
+
+    return_datetime = fields.Datetime(string='Return Date and Time')

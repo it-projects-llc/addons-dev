@@ -16,7 +16,8 @@
               </group>
               <group col="2" string="Vehicle Information">
                 <field name="vehicle_id"/>
-                <field name="document_datetime"/>
+                <field name="exit_datetime" class="oe_inline"/>
+                <field name="return_datetime" class="oe_inline"/>
               </group>
             </sheet>
           </form>
