@@ -18,6 +18,7 @@
                 <field name="vehicle_id"/>
                 <field name="exit_datetime" class="oe_inline"/>
                 <field name="return_datetime" class="oe_inline"/>
+                <field name="total_rental_period" class="oe_inline"/>
               </group>
             </sheet>
           </form>

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import openerp
 from openerp import models, fields, api
+from datetime import datetime, date, timedelta
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 
 
 class FleetRentalDocument(models.Model):
@@ -25,3 +27,14 @@ class FleetRentalDocument(models.Model):
     exit_datetime = fields.Datetime(string='Exit Date and Time')
 
     return_datetime = fields.Datetime(string='Return Date and Time')
+
+    total_rental_period = fields.Integer(string='Total Rental Period', required=True, readonly=True)
+
+    @api.onchange('exit_datetime', 'return_datetime')
+    def _on_change_rent_datetime(self):
+        if self.exit_datetime and self.return_datetime:
+            start = datetime.strptime(self.exit_datetime, DTF)
+            end = datetime.strptime(self.return_datetime, DTF)
+            self.total_rental_period = (end - start).days
+
+
