@@ -21,6 +21,8 @@
     "data": [
         'security/ir.model.access.csv',
         "views/fleet_rental_document.xml",
+        "views/fleet_rental_document_rent.xml",
+        "views/fleet_rental_document_return.xml",
         "views/fleet.xml",
     ],
     "qweb": [

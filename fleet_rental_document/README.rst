@@ -2,7 +2,11 @@
  Fleet Rental Document
 =======================
 
-This module implements base part of rental documents.
+With this module rental managers can create Rent document from ``Sale / Rental``
+menu.
+
+With this module rental managers can create Return documents from ``Sale / Rental``
+menu.
 
 This module introduces rental information in fleet vehicle.
 The information such as:
