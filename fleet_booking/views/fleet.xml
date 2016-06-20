@@ -39,7 +39,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Depreciation">
+                        <page string="Depreciation" groups="fleet_booking.group_accountant">
                             <field name="deprecation_ids" nolabel="1" widget="one2many_list" mode="tree" context="{'vehicle_id': id}">
                                 <tree string="Depreciation Lines" decoration-info="(move_check == False)" create="false">
                                     <field name="depreciation_date"/>

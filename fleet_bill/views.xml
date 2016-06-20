@@ -22,7 +22,7 @@
                 <xpath expr="//notebook" position="inside">
                     <page string="Vendor Bills">
                         <group>
-                            <field name="invoice_ids" context="{'vehicle_id': vehicle_id}" nolabel="1"/>
+                            <field name="invoice_ids" context="{'vehicle_id': vehicle_id}" nolabel="1" groups="fleet_booking.group_accountant"/>
                         </group>
                         <!--<div class="oe_right">-->
                             <!--<group>-->
