@@ -15,6 +15,7 @@
 
     "depends": [
         "fleet",
+        "decimal_precision",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
