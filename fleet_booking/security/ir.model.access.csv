@@ -1,2 +1,16 @@
 id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
-gm_access,branch,model_fleet_booking_branch,group_general_manager,1,1,1,1
+gm1,gm1,model_fleet_booking_branch,group_general_manager,1,1,1,1
+gm2,gm2,sale_membership.model_sale_membership_type,group_general_manager,1,1,1,1
+gm4,gm4,model_fleet_booking_insurances,group_general_manager,1,1,1,1
+vso1,vso1,model_fleet_booking_insurances,group_vehicles_support_officer,1,1,1,1
+vso2,vso2,model_fleet_vehicle_log_services,group_vehicles_support_officer,1,1,1,1
+vso3,vso3,model_account_invoice,group_vehicles_support_officer,1,0,0,0
+vso4,vso4,model_fleet_booking_transfer,group_vehicles_support_officer,1,1,1,1
+vso5,vso5,model_fleet_booking_branch,group_vehicles_support_officer,1,0,0,0
+bo1,bo1,model_fleet_vehicle_log_services,group_branch_officer,1,1,1,1
+bo2,bo2,model_account_invoice,group_branch_officer,1,0,0,0
+bo3,bo3,model_fleet_booking_insurances,group_branch_officer,1,0,0,0
+bo4,bo4,model_fleet_booking_transfer,group_branch_officer,1,1,0,1
+bo5,bo5,model_fleet_booking_branch,group_branch_officer,1,0,0,0
+acc1,acc1,model_fleet_vehicle_log_services,group_accountant,1,0,0,1
+acc2,acc2,model_account_invoice,group_accountant,1,1,1,1

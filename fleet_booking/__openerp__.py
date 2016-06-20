@@ -16,14 +16,24 @@
         "hr",
         "fleet",
         "account",
-        "partner_person"
+        "account_asset",
+        "partner_person",
+        "sale_membership",
+        "fleet_rental_document",
+        "fleet_rental_check_vehicle",
+        "fleet_vehicle_color",
+        "fleet_bill",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
+        "security/records.xml",
+        "security/ir.model.access.csv",
         "views/views.xml",
         "views/partner.xml",
-        "security/records.xml",
-        "security/ir.model.access.csv"
+        "views/fleet.xml",
+        "views/asset.xml",
+        "views/transfer.xml",
+        "views/user.xml",
     ],
     "qweb": [
     ],
