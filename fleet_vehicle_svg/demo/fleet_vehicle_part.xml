@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+     <record id="vehicle_1_part_1" model="fleet.vehicle.part">
+          <field name="name">Front Left Wheel</field>
+          <field name="vehicle_id" ref="fleet.vehicle_1"/>
+          <field name="state">broken</field>
+          <field name="part_id">wheel_front_left</field>
+     </record>
+     <record id="vehicle_1_part_2" model="fleet.vehicle.part">
+          <field name="name">Front Right Wheel</field>
+          <field name="vehicle_id" ref="fleet.vehicle_1"/>
+          <field name="state">operative</field>
+          <field name="part_id">wheel_front_right</field>
+     </record>
+     <record id="vehicle_1_part_3" model="fleet.vehicle.part">
+          <field name="name">Back Right Wheel</field>
+          <field name="vehicle_id" ref="fleet.vehicle_1"/>
+          <field name="state">operative</field>
+          <field name="part_id">wheel_back_right</field>
+     </record>
+     <record id="vehicle_1_part_4" model="fleet.vehicle.part">
+          <field name="name">Back Left Wheel</field>
+          <field name="vehicle_id" ref="fleet.vehicle_1"/>
+          <field name="state">operative</field>
+          <field name="part_id">wheel_back_left</field>
+     </record>
+     <record id="vehicle_1_part_5" model="fleet.vehicle.part">
+          <field name="name">Front Left Headlight</field>
+          <field name="vehicle_id" ref="fleet.vehicle_1"/>
+          <field name="state">operative</field>
+          <field name="part_id">front_left_headlight</field>
+     </record>
+     <record id="vehicle_1_part_6" model="fleet.vehicle.part">
+          <field name="name">Front Right Headlight</field>
+          <field name="vehicle_id" ref="fleet.vehicle_1"/>
+          <field name="state">operative</field>
+          <field name="part_id">front_right_headlight</field>
+     </record>
+     <record id="vehicle_1_part_7" model="fleet.vehicle.part">
+          <field name="name">Right Rear Light</field>
+          <field name="vehicle_id" ref="fleet.vehicle_1"/>
+          <field name="state">operative</field>
+          <field name="part_id">right_rear_light</field>
+     </record>
+     <record id="vehicle_1_part_8" model="fleet.vehicle.part">
+          <field name="name">Left Rear Light</field>
+          <field name="vehicle_id" ref="fleet.vehicle_1"/>
+          <field name="state">operative</field>
+          <field name="part_id">left_rear_light</field>
+     </record>
+     </data>
+</openerp>

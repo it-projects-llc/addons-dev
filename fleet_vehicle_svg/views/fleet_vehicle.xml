@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="fleet_vehicle_form">
+            <field name="name">fleet.vehicle.form</field>
+            <field name="model">fleet.vehicle</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" postion="inside">
+                    <field name="part_ids" widget="svg" svg_file="/fleet_vehicle_svg/static/src/img/car-cutout.svg" svg_colors='red:broken;original:operative' svg_id_field="part_id" svg_color_field="state"/>
+                </xpath>
+            </field>
+        </record>
+
+         <record model="ir.ui.view" id="fleet_vehicle_part_tree">
+            <field name="name">fleet.vehicle.part.tree</field>
+            <field name="model">fleet.vehicle.part</field>
+            <field name="arch" type="xml">
+                <tree string="Part" editable="bottom">
+                    <field name="vehicle_id"/>
+                    <field name="name"/>
+                    <field name="part_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record model='ir.actions.act_window' id='fleet_vehicle_part_act'>
+            <field name="name">Vehicle Parts</field>
+            <field name="res_model">fleet.vehicle.part</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <menuitem action="fleet_vehicle_part_act" parent="fleet.fleet_vehicles" id="fleet_vehicle_part_menu" groups="fleet.group_fleet_user"/>
+    </data>
+</openerp>
+                
+                
+                

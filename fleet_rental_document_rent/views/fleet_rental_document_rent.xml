@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+      <record id='fleet_rental_document_draft_act' model='ir.actions.act_window'>
+        <field name="name">Rent Draft</field>
+        <field name="res_model">fleet_rental.document_rent</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a new rental document.
+          </p>
+        </field>
+      </record>
+
+      <menuitem action="fleet_rental_document_draft_act" parent="fleet_rental_document.fleet_rental_sale" id="rent_draft_menu" sequence="1"/>
+
+      <record id='fleet_rental_document_booked_act' model='ir.actions.act_window'>
+        <field name="name">Rent Booked</field>
+        <field name="res_model">fleet_rental.document_rent</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a new rental document.
+          </p>
+        </field>
+      </record>
+
+      <menuitem action="fleet_rental_document_booked_act" parent="fleet_rental_document.fleet_rental_sale" id="rent_booked_menu" sequence="2"/>
+
+      <record id='fleet_rental_document_confirmed_act' model='ir.actions.act_window'>
+        <field name="name">Rent Confirmed</field>
+        <field name="res_model">fleet_rental.document_rent</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a new rental document.
+          </p>
+        </field>
+      </record>
+
+      <menuitem action="fleet_rental_document_confirmed_act" parent="fleet_rental_document.fleet_rental_sale" id="rent_confirmed_menu" sequence="3"/>
+
+      <record id='fleet_rental_document_rent_form' model='ir.ui.view'>
+        <field name="name">fleet.rental.document.rent.form</field>
+        <field name="model">fleet_rental.document_rent</field>
+        <field name="arch" type="xml">
+          <form string="Vehicle Rent">
+            <header>
+              <field name="state" widget="statusbar" statusbar_visible="draft,booked,confirmed,extended,returned"/>
+            </header>
+            <sheet>
+              <group>
+                <field name="name" class="oe_inline"/>
+                <field name="partner_id"/>
+              </group>
+              <group col="2" string="Vehicle Information">
+                <field name="vehicle_id"/>
+              </group>
+              <field name="check_line_ids" widget="one2many_list" colspan="4" nolabel="1" mode="tree">
+                <tree string="Vehicle checklist" editable="bottom" create="0" delete="false">
+                  <field name="item_id" options='{"no_open": true}'/>
+                  <field name="check_yes"/>
+                  <field name="check_no"/>
+                </tree>
+              </field>
+            </sheet>
+          </form>
+        </field>
+      </record>
+
+    </data>
+</openerp>
