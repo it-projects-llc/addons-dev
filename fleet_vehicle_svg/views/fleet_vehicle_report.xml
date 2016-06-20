@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="report_fleet_vehicle_parts">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report.external_layout">
+                        <div class="page">
+                            <h2><t t-esc="o.name"/></h2>
+                            <img t-att-src="'data:image/png;base64,%s' % o.png_file"/>
+                            <ul>
+                                <t t-foreach="o.part_ids" t-as="part">
+                                    <li><t t-esc="part.name"/> - <b><t t-esc="part.state"/></b></li>
+                                </t>
+                            </ul>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+        
+
+        <report
+            id="action_report_fleet_vehicle_parts"
+            string="Vehicle Parts"
+            model="fleet.vehicle"
+            report_type="qweb-pdf"
+            name="fleet_vehicle_svg.report_fleet_vehicle_parts"
+            file="fleet_vehicle_svg.report_fleet_vehicle_parts"
+        />
+
+    </data>
+</openerp>

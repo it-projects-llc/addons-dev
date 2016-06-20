@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template_field_svg" xml:space="preserve">
+    <t t-name="FieldSVG">
+        <div class="oe_form_field oe_form_field_percent_pie" t-att-style="widget.node.attrs.style">
+            <svg></svg>
+            <span t-if="widget.string"><t t-esc="widget.string"/></span>
+        </div>
+    </t>
+</templates>
