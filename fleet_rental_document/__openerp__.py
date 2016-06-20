@@ -16,12 +16,12 @@
     "depends": [
         "fleet",
         "decimal_precision",
-        "fleet_vehicle_rental",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
         'security/ir.model.access.csv',
         "views/fleet_rental_document.xml",
+        "views/fleet.xml",
     ],
     "qweb": [
     ],
