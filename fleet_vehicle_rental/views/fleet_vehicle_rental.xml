@@ -7,7 +7,7 @@
       <field name="model">fleet.vehicle</field>
       <field name="inherit_id" ref="fleet.fleet_vehicle_form"/>
       <field name="arch" type="xml">   
-        <xpath expr="//group[2]" position="after">
+        <xpath expr="//sheet/group[2]" position="after">
           <group string="Rental Properties">
             <field name="allowed_kilometer_per_day" />
             <field name="rate_per_extra_km" />
