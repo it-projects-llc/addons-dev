@@ -22,6 +22,8 @@
                 <field name="exit_datetime" class="oe_inline"/>
                 <field name="return_datetime" class="oe_inline"/>
                 <field name="total_rental_period" class="oe_inline"/>
+              </group>
+              <group string="Payment Details">
                 <field name="period_rent_price" class="oe_inline"/>
               </group>
             </sheet>
