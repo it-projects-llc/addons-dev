@@ -4,6 +4,15 @@
 
 This module implements base part of rental documents.
 
+This module introduces rental information in fleet vehicle.
+The information such as:
+
+* daily rental price
+* rate per extra km
+* allowed kilometer per day
+
+are now available in vehicle model.
+
 Credits
 =======
 
