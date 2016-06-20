@@ -5,8 +5,8 @@
 Usage
 =====
 
-* Open ``Sales / Configuration / Rental / Prices`` menu
-* For each vehicle define the following information:
+* Open ``Fleet / Vehicles`` menu
+* Under ``Rental Properties`` group for each vehicle define the following information:
 
  * Dayly rental price
  * Rate per extra km
