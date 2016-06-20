@@ -33,18 +33,18 @@ class FleetRentalDocument(models.Model):
 
     return_datetime = fields.Datetime(string='Return Date and Time')
 
-    total_rental_period = fields.Integer(string='Total Rental Period', readonly=True)
+    total_rental_period = fields.Integer(string='Total Rental Period', compute="_compute_total_rental_period", store=True, readonly=True)
 
-    period_rent_price = fields.Float(string='Period Rent Price', digits_compute=dp.get_precision('Product Price'), readonly=True)
+    period_rent_price = fields.Float(string='Period Rent Price', compute="_compute_period_rent_price", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
 
-    @api.onchange('exit_datetime', 'return_datetime')
-    def _on_change_rent_datetime(self):
+    @api.depends('exit_datetime', 'return_datetime')
+    def _compute_total_rental_period(self):
         if self.exit_datetime and self.return_datetime:
             start = datetime.strptime(self.exit_datetime, DTF)
             end = datetime.strptime(self.return_datetime, DTF)
             self.total_rental_period = (end - start).days
 
-    @api.onchange('total_rental_period')
-    def _on_change_total_rental_period(self):
+    @api.depends('total_rental_period')
+    def _compute_period_rent_price(self):
         if self.total_rental_period:
             self.period_rent_price = self.total_rental_period * self.daily_rental_price
