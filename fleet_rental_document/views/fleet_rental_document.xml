@@ -22,6 +22,13 @@
                 <field name="exit_datetime" class="oe_inline"/>
                 <field name="return_datetime" class="oe_inline"/>
                 <field name="total_rental_period" class="oe_inline"/>
+                <field name="check_line_ids" widget="one2many_list" colspan="4" nolabel="1" mode="tree">
+                  <tree string="Vehicle checklist" editable="bottom" create="0" delete="false">
+                    <field name="item_id" options='{"no_open": true}'/>
+                    <field name="check_yes"/>
+                    <field name="check_no"/>
+                  </tree>
+                </field>
               </group>
               <group string="Payment Details">
                 <field name="period_rent_price" class="oe_inline"/>

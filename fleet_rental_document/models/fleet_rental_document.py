@@ -37,6 +37,19 @@ class FleetRentalDocument(models.Model):
 
     period_rent_price = fields.Float(string='Period Rent Price', compute="_compute_period_rent_price", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
 
+    check_line_ids = fields.One2many('fleet_rental.check_line', 'document_id', string='Vehicle rental check lines')
+
+    @api.model
+    def default_get(self, fields_list):
+        result = super(FleetRentalDocument, self).default_get(fields_list)
+        document_id= self._context.get('active_id', False)
+        items = self.env['fleet_rental.item_to_check'].search([])
+        check_line_obj = self.env['fleet_rental.check_line']
+
+        result['check_line_ids'] = [(0, 0, {'item_id': item.id}) for item in items]
+
+        return result
+
     @api.depends('exit_datetime', 'return_datetime')
     def _compute_total_rental_period(self):
         if self.exit_datetime and self.return_datetime:

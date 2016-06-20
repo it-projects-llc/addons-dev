@@ -17,6 +17,10 @@ The information such as:
 
 are now available in vehicle model.
 
+If you run a Car Rental business you always need to be
+sure that the Car is checked before and after rents.
+The information about these checks is put on documents in this module.
+
 Credits
 =======
 
