@@ -7,7 +7,7 @@ Usage
 
 * Open menu ``Fleet / Configuration / Vehicle Color``
 * Click ``[create]`` button
-* fill name field
+* fill name field and select color from color-picker
 * Click ``[save]`` button
 * Create as many colors as you need
 * Open menu ``Fleet / Vehicles / Vehicles``

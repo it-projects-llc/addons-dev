@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <record id="res_users_form_inherit" model="ir.ui.view">
+        <field name="name">res.users.form.view</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form" />
+        <field name="arch" type="xml">
+            <data>
+                <field name="email" position="before">
+                    <label for="branch_id" class="oe_edit_only" string="Branch"/>
+                    <h2>
+                        <field name="branch_id"/>
+                    </h2>
+                </field>
+            </data>
+        </field>
+    </record>
+</data>
+</openerp>

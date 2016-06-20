@@ -19,6 +19,7 @@
             <xpath expr="//page[@name='personal_information']//field[@name='sex']" position="before">
                 <field name='license_type'/>
                 <field name='license_number'/>
+                <field name='license_expiry_date'/>
                 <field name='issuer'/>
                 <field name='issuer_date'/>
             </xpath>
