@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-
+    <record id="fleet_vehicle_service_types_tree_inherit" model="ir.ui.view">
+        <field name="name">fleet.vehicle.service.types.tree.inherit</field>
+        <field name="model">fleet.service.type</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_service_types_tree"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="product_id"/>
+                </xpath>
+            </data>
+        </field>
+    </record>
+    <record id="fleet_vehicle_log_contract_form_inherit" model="ir.ui.view">
+        <field name="name">fleet.vehicle.log.contract.form.inherit</field>
+        <field name="model">fleet.vehicle.log.contract</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_log_contract_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Vendor Bills">
+                        <group>
+                            <field name="invoice_ids" context="{'vehicle_id': vehicle_id}" nolabel="1"/>
+                        </group>
+                        <!--<div class="oe_right">-->
+                            <!--<group>-->
+                                <!--<field name="sum_cost" string="Indicative Costs Total"/>-->
+                            <!--</group>-->
+                        <!--</div>-->
+                    </page>
+                </xpath>
+            </data>
+        </field>
+    </record>
 </data>
 </openerp>

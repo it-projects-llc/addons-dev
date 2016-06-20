@@ -13,10 +13,11 @@
     #"currency": "EUR",
 
     "depends": [
-        'fleet',
+        "fleet",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
+        'views.xml',
     ],
     "qweb": [
     ],
