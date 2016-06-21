@@ -20,6 +20,8 @@ class Person(models.Model):
 
     _inherit = 'res.partner'
 
+    _sql_constraints = [('passport', 'unique(passport)', 'ID Number restriction. Person with same id number already exists.')]
+
     id_type = fields.Selection(
         [(u'National Id', u'National Id'), (u'Iqama', u'Iqama'),
          (u'Passport', u'Passport')],
