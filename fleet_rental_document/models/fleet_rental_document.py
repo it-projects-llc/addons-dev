@@ -61,3 +61,10 @@ class FleetRentalDocument(models.Model):
     def _compute_period_rent_price(self):
         if self.total_rental_period:
             self.period_rent_price = self.total_rental_period * self.daily_rental_price
+
+    @api.model
+    def create(self, vals):
+        if vals.get('name', 'New') == 'New':
+            vals['name'] = self.env['ir.sequence'].next_by_code('fleet_rental.document') or 'New'
+        result = super(FleetRentalDocument, self).create(vals)
+        return result
