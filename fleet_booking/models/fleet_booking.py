@@ -63,7 +63,6 @@ class Fleet(models.Model):
     next_maintain = fields.Date('Next maintenance')
     payments_ids = fields.One2many('account.invoice', 'fleet_vehicle_id', string='Payments')
     total_documents = fields.Integer(compute='_count_total_documents', string="Total documents", default=0)
-    insurance_ids = fields.One2many('fleet_booking.insurances', 'fleet_vehicle_id', string='Insurance Installments')
     deprecation_ids = fields.One2many(related='asset_id.depreciation_line_ids')
     asset_id = fields.Many2one('account.asset.asset', compute='compute_asset', inverse='asset_inverse', string='Asset')
     asset_ids = fields.One2many('account.asset.asset', 'vehicle_id')
@@ -177,37 +176,3 @@ class User(models.Model):
     branch_id = fields.Many2one('fleet_booking.branch')
 
 # OWN MODELS
-
-
-class InsuranceInstallments(models.Model):
-    _name = 'fleet_booking.insurances'
-    _order = 'fleet_vehicle_id, sequence, id'
-
-    fleet_vehicle_id = fields.Many2one('fleet.vehicle')
-    sequence = fields.Integer(default=1,
-                              help="Gives the sequence of this line when displaying the vehicle.")
-    insurance_date = fields.Datetime(string='Date', default=fields.Datetime.now())
-    amount = fields.Float(string='Amount')
-
-
-def dump(obj):
-  for attr in dir(obj):
-    print "obj.%s = %s" % (attr, getattr(obj, attr))
-
-
-def dumpclean(obj):
-    if type(obj) == dict:
-        for k, v in obj.items():
-            if hasattr(v, '__iter__'):
-                print k
-                dumpclean(v)
-            else:
-                print '%s : %s' % (k, v)
-    elif type(obj) == list:
-        for v in obj:
-            if hasattr(v, '__iter__'):
-                dumpclean(v)
-            else:
-                print v
-    else:
-        print obj

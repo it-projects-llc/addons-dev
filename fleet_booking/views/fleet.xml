@@ -27,19 +27,8 @@
                     <field name='next_maintain'/>
             </xpath>
             <xpath expr="//sheet" position="inside">
-                <sheet string="Invoice">
-                    <notebook colspan="4">
-                        <page string="Insurance">
-                            <field name="insurance_ids" nolabel="1" widget="one2many_list" mode="tree" context="{'vehicle_id': id}">
-                                <tree string="Insurance" editable="bottom">
-                                    <field name="sequence" widget="handle"/>
-                                    <field name="sequence"/>
-                                    <field name='insurance_date'/>
-                                    <field name='amount'/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="Depreciation" groups="fleet_booking.group_accountant">
+                    <notebook colspan="4" groups="fleet_booking.group_accountant">
+                        <page string="Depreciation">
                             <field name="deprecation_ids" nolabel="1" widget="one2many_list" mode="tree" context="{'vehicle_id': id}">
                                 <tree string="Depreciation Lines" decoration-info="(move_check == False)" create="false">
                                     <field name="depreciation_date"/>
@@ -52,12 +41,6 @@
                             </field>
                         </page>
                     </notebook>
-                </sheet>
-            </xpath>
-            <!-- ALTERED FIELDS -->
-            <xpath expr="//h2/field[@name='license_plate']" position="attributes">
-                <!--НЕ РАБОТАЕТ ЧТО ТО-->
-                <attribute name='string'>Plate Number</attribute>
             </xpath>
         </data>
     </field>
