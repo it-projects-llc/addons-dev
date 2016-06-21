@@ -22,3 +22,8 @@ class FleetRentalDocumentRent(models.Model):
     document_id = fields.Many2one('fleet_rental.document', required=True,
             string='Related Document', ondelete='restrict',
             help='common part of all three types of the documents', auto_join=True)
+
+    @api.multi
+    def action_book(self):
+        for rent in self:
+            rent.state = 'booked'

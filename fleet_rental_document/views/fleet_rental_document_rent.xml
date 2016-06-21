@@ -50,6 +50,7 @@
         <field name="arch" type="xml">
           <form string="Vehicle Rent">
             <header>
+              <button name="action_book" states="draft" string="Book" type="object"/>
               <field name="state" widget="statusbar" statusbar_visible="draft,booked,confirmed,extended,returned"/>
             </header>
             <sheet>
