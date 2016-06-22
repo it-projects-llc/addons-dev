@@ -39,8 +39,6 @@ class FleetRentalDocument(models.Model):
 
     check_line_ids = fields.One2many('fleet_rental.check_line', 'document_id', string='Vehicle rental check lines')
 
-    team_id = fields.Many2one('crm.team', 'Sales Team', change_default=True, default=_get_default_team)
-
     invoice_ids = fields.Many2many("account.invoice", string='Invoices', compute="_get_invoiced", readonly=True, copy=False)
 
     invoice_count = fields.Integer(string='# of Invoices', compute='_get_invoiced', readonly=True)
@@ -61,12 +59,6 @@ class FleetRentalDocument(models.Model):
                 'invoice_count': len(set(invoice_ids.ids + refund_ids.ids)),
                 'invoice_ids': invoice_ids.ids + refund_ids.ids,
             })
-
-
-    @api.model
-    def _get_default_team(self):
-        default_team_id = self.env['crm.team']._get_default_team_id()
-        return self.env['crm.team'].browse(default_team_id)
 
     @api.model
     def default_get(self, fields_list):

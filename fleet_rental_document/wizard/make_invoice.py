@@ -59,7 +59,6 @@ class FleetRentalCreateInvoiceWizard(models.TransientModel):
                 'product_id': self.product_id.id,
                 'rental_document_id': document_rent.id,
             })],
-            'team_id': document_rent.team_id.id,
         })
         return invoice
 
