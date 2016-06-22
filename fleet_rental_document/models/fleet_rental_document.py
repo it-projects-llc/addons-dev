@@ -45,7 +45,7 @@ class FleetRentalDocument(models.Model):
 
     invoice_line_ids = fields.One2many('account.invoice.line', 'document_id', string='Invoice Lines', copy=False)
 
-    @api.depends('state', 'order_line.invoice_status')
+    @api.depends('invoice_line_ids')
     def _get_invoiced(self):
 
         for document in self:
