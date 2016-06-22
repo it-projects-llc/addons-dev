@@ -16,11 +16,11 @@ class VehicleTransfer(models.Model):
     dest_branch = fields.Many2one('fleet_booking.branch', string='To', required=True)
     current_odometer = fields.Float(related='vehicle_id.odometer', string='Current odometer')
     vehicle_state_id = fields.Many2one(related='vehicle_id.state_id', string='Vehicle state')
-    delivery_state = fields.Selection([('not_delivered', 'Not delivered'), ('delivered', 'Delivered')], string='Delivery state', default='not_delivered')
-    receiving_state = fields.Selection([('not_received', 'Not received'), ('received', 'Received')], string='Receiving state', default='not_received')
+    delivery_state = fields.Selection([('not_delivered', 'Not delivered'), ('delivered', 'Delivered')], string='Delivery state', default='not_delivered', readonly=True)
+    receiving_state = fields.Selection([('not_received', 'Not received'), ('received', 'Received')], string='Receiving state', default='not_received', readonly=True)
     user_branch_id = fields.Many2one('res.users', 'Creator', default=lambda self: self.env.user.branch_id.id)
-    can_change_delivery_state = fields.Boolean(compute='get_cant_change_delivery_state', default=False)
-    can_change_receiving_state = fields.Boolean(compute='get_cant_change_receiving_state', default=False)
+    can_change_delivery_state = fields.Boolean(compute='get_can_change_delivery_state', default=False)
+    can_change_receiving_state = fields.Boolean(compute='get_can_change_receiving_state', default=False)
 
     @api.multi
     def submit(self):
@@ -40,20 +40,40 @@ class VehicleTransfer(models.Model):
         self.write({'state': 'draft'})
 
     @api.multi
-    def confirm(self):
-        active_vehicle_state = self.env['fleet.vehicle.state'].browse(2)
-        vehicle = self.env['fleet.vehicle'].browse(self.vehicle_id.id)
-        vehicle.state_id = active_vehicle_state
-        vehicle.branch_id = self.dest_branch
-        self.write({'state': 'done'})
+    def confirm_delivery(self):
+        self.write({'delivery_state': 'delivered'})
+        if self.receiving_state == 'received':
+            self.write({'state': 'done'})
+            active_vehicle_state = self.env['fleet.vehicle.state'].browse(2)
+            vehicle = self.env['fleet.vehicle'].browse(self.vehicle_id.id)
+            vehicle.state_id = active_vehicle_state
+            vehicle.branch_id = self.dest_branch
 
     @api.multi
-    def un_confirm(self):
+    def un_confirm_delivery(self):
         in_transfer_vehicle_state = self.env['fleet.vehicle.state'].browse(5)
         vehicle = self.env['fleet.vehicle'].browse(self.vehicle_id.id)
         vehicle.state_id = in_transfer_vehicle_state
         vehicle.branch_id = False
-        self.write({'state': 'done'})
+        self.write({'state': 'transfer', 'delivery_state': 'not_delivered'})
+
+    @api.multi
+    def confirm_receiving(self):
+        self.write({'receiving_state': 'received'})
+        if self.delivery_state == 'delivered':
+            self.write({'state': 'done'})
+            active_vehicle_state = self.env['fleet.vehicle.state'].browse(2)
+            vehicle = self.env['fleet.vehicle'].browse(self.vehicle_id.id)
+            vehicle.state_id = active_vehicle_state
+            vehicle.branch_id = self.dest_branch
+
+    @api.multi
+    def un_confirm_receiving(self):
+        in_transfer_vehicle_state = self.env['fleet.vehicle.state'].browse(5)
+        vehicle = self.env['fleet.vehicle'].browse(self.vehicle_id.id)
+        vehicle.state_id = in_transfer_vehicle_state
+        vehicle.branch_id = False
+        self.write({'state': 'transfer', 'receiving_state': 'not_received'})
 
     @api.onchange('current_odometer')
     @api.multi
@@ -70,13 +90,13 @@ class VehicleTransfer(models.Model):
             rec.source_branch = rec.vehicle_id.branch_id
 
     @api.multi
-    def get_cant_change_delivery_state(self):
+    def get_can_change_delivery_state(self):
         for record in self:
             if (self.env.user.branch_id.id == self.source_branch.id) and (self.env.ref('fleet_booking.group_branch_officer') in self.env.user.groups_id):
                 record.can_change_delivery_state = True
 
     @api.multi
-    def get_cant_change_receiving_state(self):
+    def get_can_change_receiving_state(self):
         for record in self:
             if (self.env.user.branch_id.id == self.dest_branch.id) and (self.env.ref('fleet_booking.group_branch_officer') in self.env.user.groups_id):
                 record.can_change_receiving_state = True

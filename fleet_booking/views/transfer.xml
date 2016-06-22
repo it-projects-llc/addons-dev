@@ -8,16 +8,28 @@
         <field name="arch" type="xml">
             <form string="Transfer">
                 <header>
-                    <button name="submit" states="draft" string="Submit" type="object" class="oe_highlight"/>
-                    <button name="confirm" states="transfer" string="Confirm" type="object" class="oe_highlight"/>
-                    <button name="un_submit" states="transfer" string="Cancel submit" type="object"/>
-                    <button name="un_confirm" states="done" string="Cancel confirm" type="object"/>
+                    <button name="submit" states="draft" string="Submit" type="object" class="oe_highlight"
+                            groups="fleet_booking.group_vehicles_support_officer"/>
+                    <button name="un_submit" states="transfer" string="Cancel submit" type="object"
+                            groups="fleet_booking.group_vehicles_support_officer"/>
+                    <button name="confirm_delivery" string="Confirm delivery" type="object" class="oe_highlight"
+                            attrs="{'invisible':['|',('can_change_delivery_state', '!=', True),('delivery_state','!=','not_delivered')]}"
+                            groups="fleet_booking.group_branch_officer"/>
+                    <button name="un_confirm_delivery" string="Cancel confirm delivery" type="object"
+                            attrs="{'invisible':['|',('can_change_delivery_state', '!=', True),('delivery_state','!=','delivered')]}"
+                            groups="fleet_booking.group_branch_officer"/>
+                    <button name="confirm_receiving" string="Confirm receiving" type="object" class="oe_highlight"
+                            attrs="{'invisible':['|',('can_change_receiving_state', '!=', True),('receiving_state','!=','not_received')]}"
+                            groups="fleet_booking.group_branch_officer"/>
+                    <button name="un_confirm_receiving" string="Cancel confirm receiving" type="object"
+                            attrs="{'invisible':['|',('can_change_receiving_state', '!=', True),('receiving_state','!=','received')]}"
+                            groups="fleet_booking.group_branch_officer"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,transfer,done"/>
                 </header>
                 <sheet>
                     <group col="2" string="Vehicle transfer">
                         <group>
-                            <field name="vehicle_id"/>
+                            <field name="vehicle_id" groups="fleet_booking.group_vehicles_support_officer"/>
                         </group>
                         <group>
                             <field name="vehicle_state_id" readonly="1"/>
@@ -34,10 +46,10 @@
                     </group>
                     <group col="2" string="State">
                         <group>
-                            <field name="delivery_state" readonly="0"/>
+                            <field name="delivery_state"/>
                         </group>
                         <group>
-                            <field name="receiving_state" readonly="0"/>
+                            <field name="receiving_state"/>
                         </group>
                     </group>
                     <field name="can_change_delivery_state" invisible="1"/>
@@ -126,43 +138,14 @@
             </data>
         </field>
     </record>
-    <!--BRANCH OFFICER EXTRA RIGHTS-->
-    <record id="fleet_booking_transfer_form_bo" model="ir.ui.view">
-        <field name="name">fleet.booking.transfer.form.bo.inherit</field>
-        <field name="model">fleet_booking.transfer</field>
-        <field name="inherit_id" ref="fleet_booking_transfer_form"/>
-        <field name="groups_id" eval="[(4, ref('fleet_booking.group_branch_officer'))]"/>
-        <field name="arch" type="xml">
-            <data>
-                <xpath expr="//field[@name='delivery_state']" position="replace">
-                    <field name="delivery_state" attrs="{'readonly':[('can_change_delivery_state', '=', False)]}"/>
-                </xpath>
-                <xpath expr="//field[@name='receiving_state']" position="replace">
-                    <field name="receiving_state" attrs="{'readonly':[('can_change_receiving_state', '=', False)]}"/>
-                </xpath>
-            </data>
-        </field>
-    </record>
-    <!--COMMONERS EXTRA RIGHTS-->
-    <record id="fleet_booking_transfer_form_all" model="ir.ui.view">
-        <field name="name">fleet.booking.transfer.form.all.inherit</field>
-        <field name="model">fleet_booking.transfer</field>
-        <field name="inherit_id" ref="fleet_booking_transfer_form"/>
-        <field name="groups_id" eval="[(4, ref('fleet_booking.group_general_manager')),
-                                       (4, ref('fleet_booking.group_vehicles_support_officer')),
-                                       (4, ref('fleet_booking.group_branch_employee')),
-                                       (4, ref('fleet_booking.group_accountant')),
-                                       (4, ref('fleet_booking.group_payroll_officer'))]"/>
-        <field name="arch" type="xml">
-            <data>
-                <xpath expr="//field[@name='delivery_state']" position="replace">
-                    <field name="delivery_state" readonly="1"/>
-                </xpath>
-                <xpath expr="//field[@name='receiving_state']" position="replace">
-                    <field name="receiving_state" readonly="1"/>
-                </xpath>
-            </data>
-        </field>
-    </record>
+
 </data>
 </openerp>
+
+
+<!--can_del   status  invisible-->
+  <!--true     done     false-->
+  <!--false    done     true-->
+  <!--true     any      true-->
+  <!--false    any      true-->
+
