@@ -12,8 +12,7 @@
             them before validation.
           </p>
           <group>
-            <field name="advance_payment_method" class="oe_inline" widget="radio"
-                   attrs="{'invisible': [('count','&gt;',1)]}"/>
+            <field name="advance_payment_method" class="oe_inline" widget="radio" />
             <field name="product_id"
                    context="{'search_default_services': 1, 'default_type': 'service', 'default_invoice_policy': 'order'}" class="oe_inline"
                    attrs="{'invisible': 1}"/>
