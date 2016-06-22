@@ -77,8 +77,6 @@ class FleetRentalCreateInvoiceWizard(models.TransientModel):
                 amount = document_rent.period_rent_price * self.amount / 100
             else:
                 amount = self.amount
-            if self.product_id.invoice_policy != 'order':
-                raise UserError(_('The product used to invoice a down payment should have an invoice policy set to "Ordered quantities". Please update your deposit product to be able to create a deposit invoice.'))
             if self.product_id.type != 'service':
                 raise UserError(_("The product used to invoice a down payment should be of type 'Service'. Please use another product or update this product."))
 
