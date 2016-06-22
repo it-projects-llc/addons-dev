@@ -50,5 +50,5 @@
       <field name="groups_id" eval="[(4,ref('base.group_sale_salesman'))]"/>
     </record>
 
-      </data>
+  </data>
 </openerp>
