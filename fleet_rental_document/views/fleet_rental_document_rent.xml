@@ -52,7 +52,7 @@
             <header>
               <button name="%(action_view_make_invoice_wizard)d" string="Create Invoice"
                       type="action" class="btn-primary"
-                      states="draft" />
+                      states="booked" />
               <button name="action_book" states="draft" string="Book" type="object"/>
               <field name="state" widget="statusbar" statusbar_visible="draft,booked,confirmed,extended,returned"/>
             </header>
