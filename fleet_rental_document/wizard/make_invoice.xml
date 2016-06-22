@@ -26,8 +26,6 @@
             </div>
             <field name="deposit_account_id" class="oe_inline"
                    attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}"/>
-            <field name="deposit_taxes_id" class="oe_inline" widget="many2many_tags"
-                   attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}"/>
           </group>
           <footer>
             <button name="create_invoices" string="Create and View Invoices" type="object"
