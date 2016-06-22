@@ -39,6 +39,35 @@ class FleetRentalDocument(models.Model):
 
     check_line_ids = fields.One2many('fleet_rental.check_line', 'document_id', string='Vehicle rental check lines')
 
+    team_id = fields.Many2one('crm.team', 'Sales Team', change_default=True, default=_get_default_team)
+
+    invoice_ids = fields.Many2many("account.invoice", string='Invoices', compute="_get_invoiced", readonly=True, copy=False)
+
+    invoice_count = fields.Integer(string='# of Invoices', compute='_get_invoiced', readonly=True)
+
+    invoice_line_ids = fields.One2many('account.invoice.line', 'document_id', string='Invoice Lines', copy=False)
+
+    @api.depends('state', 'order_line.invoice_status')
+    def _get_invoiced(self):
+
+        for document in self:
+            invoice_ids = document.invoice_line_ids.mapped('invoice_id')
+            # Search for refunds as well
+            refund_ids = self.env['account.invoice'].browse()
+            if invoice_ids:
+                refund_ids = refund_ids.search([('type', '=', 'out_refund'), ('origin', 'in', invoice_ids.mapped('number')), ('origin', '!=', False)])
+
+            document.update({
+                'invoice_count': len(set(invoice_ids.ids + refund_ids.ids)),
+                'invoice_ids': invoice_ids.ids + refund_ids.ids,
+            })
+
+
+    @api.model
+    def _get_default_team(self):
+        default_team_id = self.env['crm.team']._get_default_team_id()
+        return self.env['crm.team'].browse(default_team_id)
+
     @api.model
     def default_get(self, fields_list):
         result = super(FleetRentalDocument, self).default_get(fields_list)
@@ -68,3 +97,9 @@ class FleetRentalDocument(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('fleet_rental.document') or 'New'
         result = super(FleetRentalDocument, self).create(vals)
         return result
+
+
+class AccountInvoiceLine(models.Model):
+    _inherit = 'account.invoice.line'
+    document_id = fields.Many2one('fleet_rental.document', readonly=True, copy=False)
+

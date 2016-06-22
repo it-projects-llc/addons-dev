@@ -17,6 +17,7 @@
         "fleet",
         "decimal_precision",
         "l10n_sa",
+        "sales_team",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
