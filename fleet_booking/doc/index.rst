@@ -70,9 +70,6 @@ Create or edit customer:
     * Enter additional information here.
 * Press save.
 
-Customer membership:
-
-* TODO
 
 Vehicle workflow
 ================

@@ -7,7 +7,7 @@ Create new membership types
 ----------------------------
 
 * Open ``Sales`` in main menu.
-* Go to ``Settings \ Membership``.
+* Go to ``Settings / Membership``.
     * Create new membership types.
 
 Edit partner membership
