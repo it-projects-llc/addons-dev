@@ -27,6 +27,7 @@
         "views/fleet_rental_check_vehicle.xml",
         "views/fleet.xml",
         "views/rent_sequence.xml",
+        'wizard/make_invoice.xml',
     ],
     "qweb": [
     ],
