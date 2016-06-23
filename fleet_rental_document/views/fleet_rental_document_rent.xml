@@ -78,7 +78,7 @@
               <button name="action_book" states="draft" string="Book" type="object"/>
               <button name="action_cancel_booking" states="booked" string="Cancel Booking" type="object"/>
               <button name="action_confirm" states="booked" string="Confirm Rental" type="object"
-                      attrs="{'invisible': [('state', '!=', 'booked'),('advanced_deposit', '=', 0)]}"/>
+                      attrs="{'invisible': ['|', ('state', '!=', 'booked'), ('advanced_deposit', '&lt;=', 0)]}"/>
               <field name="state" widget="statusbar" statusbar_visible="draft,booked,confirmed,extended,returned"/>
             </header>
             <sheet>
