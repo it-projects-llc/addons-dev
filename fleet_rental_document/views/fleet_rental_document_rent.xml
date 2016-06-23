@@ -94,7 +94,6 @@
               </div>
 
               <group>
-                <field name="name" class="oe_inline"/>
                 <field name="partner_id"/>
               </group>
               <group col="2" string="Vehicle Information">
