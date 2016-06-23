@@ -91,7 +91,7 @@ class FleetRentalDocument(models.Model):
             if record.total_rental_period:
                 record.period_rent_price = record.total_rental_period * record.daily_rental_price
 
-    @api.depends('total_rental_period')
+    @api.depends('total_rental_period', 'extra_driver_charge_per_day')
     def _compute_extra_driver_charge(self):
         for record in self:
             if record.total_rental_period:
