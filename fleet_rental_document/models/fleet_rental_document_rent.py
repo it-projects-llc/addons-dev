@@ -29,6 +29,11 @@ class FleetRentalDocumentRent(models.Model):
             rent.state = 'booked'
 
     @api.multi
+    def action_cancel_booking(self):
+        for rent in self:
+            rent.state = 'cancel'
+
+    @api.multi
     def action_view_invoice(self):
         invoice_ids = self.mapped('invoice_ids')
         imd = self.env['ir.model.data']

@@ -75,6 +75,7 @@
                       type="action" class="btn-primary"
                       states="booked" />
               <button name="action_book" states="draft" string="Book" type="object"/>
+              <button name="action_cancel_booking" states="draft,booked" string="Book" type="object"/>
               <field name="state" widget="statusbar" statusbar_visible="draft,booked,confirmed,extended,returned"/>
             </header>
             <sheet>
