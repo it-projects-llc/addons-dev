@@ -53,7 +53,9 @@
         <field name="name">Rent Confirmed</field>
         <field name="res_model">fleet_rental.document_rent</field>
         <field name="view_type">form</field>
+        <field name="view_id" ref="view_fleet_rental_document_rent_tree"/>
         <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','in',('confirmed', 'extended', 'returned', 'cancel'))]</field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to create a new rental document.
