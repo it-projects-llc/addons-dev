@@ -57,7 +57,7 @@ class FleetRentalCreateInvoiceWizard(models.TransientModel):
                 'discount': 0.0,
                 'uom_id': self.product_id.uom_id.id,
                 'product_id': self.product_id.id,
-                'rental_document_id': document_rent.id,
+                'fleet_rental_document_id': document_rent.id,
             })],
         })
         return invoice

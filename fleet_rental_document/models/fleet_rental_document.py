@@ -93,5 +93,5 @@ class FleetRentalDocument(models.Model):
 
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
-    document_id = fields.Many2one('fleet_rental.document', readonly=True, copy=False)
+    fleet_rental_document_id = fields.Many2one('fleet_rental.document', readonly=True, copy=False)
 
