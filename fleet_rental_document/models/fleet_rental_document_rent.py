@@ -39,9 +39,12 @@ class FleetRentalDocumentRent(models.Model):
             rent.state = 'confirmed'
 
     @api.multi
-    def action_return(self):
+    def action_create_return(self):
+        document_return_obj = self.env['fleet_rental.document_return']
         for rent in self:
-            pass
+           document_return = document_return_obj.create({
+               'origin': rent.name,
+               })
 
     @api.multi
     def action_view_invoice(self):
