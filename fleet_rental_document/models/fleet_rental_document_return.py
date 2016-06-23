@@ -23,3 +23,11 @@ class FleetRentalDocumentReturn(models.Model):
     document_rent_id = fields.Many2one('fleet_rental.document_rent', required=True,
             string='Related Rent Document', ondelete='restrict',
             help='Source Rent document')
+
+    @api.model
+    def create(self, vals):
+        if vals.get('name', 'New') == 'New':
+            vals['name'] = self.env['ir.sequence'].next_by_code('fleet_rental.document_return') or 'New'
+        result = super(FleetRentalDocumentReturn, self).create(vals)
+        return result
+
