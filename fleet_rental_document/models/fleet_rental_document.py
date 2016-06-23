@@ -119,13 +119,6 @@ class FleetRentalDocument(models.Model):
         for record in self:
             record.balance = record.total_rent_price - record.advanced_deposit
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', 'New') == 'New':
-            vals['name'] = self.env['ir.sequence'].next_by_code('fleet_rental.document') or 'New'
-        result = super(FleetRentalDocument, self).create(vals)
-        return result
-
 
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'

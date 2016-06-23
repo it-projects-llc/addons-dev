@@ -39,6 +39,11 @@ class FleetRentalDocumentRent(models.Model):
             rent.state = 'confirmed'
 
     @api.multi
+    def action_return(self):
+        for rent in self:
+            pass
+
+    @api.multi
     def action_view_invoice(self):
         invoice_ids = self.mapped('invoice_ids')
         imd = self.env['ir.model.data']
@@ -62,5 +67,12 @@ class FleetRentalDocumentRent(models.Model):
             result['res_id'] = invoice_ids.ids[0]
         else:
             result = {'type': 'ir.actions.act_window_close'}
+        return result
+
+    @api.model
+    def create(self, vals):
+        if vals.get('name', 'New') == 'New':
+            vals['name'] = self.env['ir.sequence'].next_by_code('fleet_rental.document_rent') or 'New'
+        result = super(FleetRentalDocumentRent, self).create(vals)
         return result
 

@@ -27,7 +27,7 @@
         "views/fleet_rental_document_return.xml",
         "views/fleet_rental_check_vehicle.xml",
         "views/fleet.xml",
-        "views/rent_sequence.xml",
+        "views/ir_sequence.xml",
     ],
     "qweb": [
     ],
