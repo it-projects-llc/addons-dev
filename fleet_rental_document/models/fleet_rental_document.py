@@ -106,7 +106,7 @@ class FleetRentalDocument(models.Model):
     def _compute_advanced_deposit(self):
         for record in self:
             advanced_deposit = 0
-            for invoice_line in record.invoice_ids.filtered(lambda r: r.invoice_id.type == 'out_invoice'\
+            for invoice_line in record.invoice_line_ids.filtered(lambda r: r.invoice_id.type == 'out_invoice'\
                                                             and r.invoice_id.state == 'paid'\
                                                             and r.product_id.name == 'Down payment'):
                 advanced_deposit+= invoice_line.price_unit
