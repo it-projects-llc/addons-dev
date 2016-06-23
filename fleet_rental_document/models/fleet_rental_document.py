@@ -43,7 +43,7 @@ class FleetRentalDocument(models.Model):
 
     invoice_count = fields.Integer(string='# of Invoices', compute='_get_invoiced', readonly=True)
 
-    invoice_line_ids = fields.One2many('account.invoice.line', 'document_id', string='Invoice Lines', copy=False)
+    invoice_line_ids = fields.One2many('account.invoice.line', 'fleet_rental_document_id', string='Invoice Lines', copy=False)
 
     @api.depends('invoice_line_ids')
     def _get_invoiced(self):
