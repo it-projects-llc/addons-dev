@@ -29,6 +29,9 @@ class FleetRentalDocument(models.Model):
     rate_per_extra_km = fields.Float(string='Rate per extra km', related="vehicle_id.rate_per_extra_km", store=False, readonly=True)
     daily_rental_price = fields.Float(string='Daily Rental Price', related="vehicle_id.daily_rental_price", store=False, readonly=True)
 
+    extra_driver_charge_per_day = fields.Float(string='Extra Driver Charge per day', digits_compute=dp.get_precision('Product Price'), default=0)
+    other_extra_charges = fields.Float(string='Other Extra Charges', digits_compute=dp.get_precision('Product Price'), default=0)
+
     exit_datetime = fields.Datetime(string='Exit Date and Time')
 
     return_datetime = fields.Datetime(string='Return Date and Time')
@@ -36,6 +39,9 @@ class FleetRentalDocument(models.Model):
     total_rental_period = fields.Integer(string='Total Rental Period', compute="_compute_total_rental_period", store=True, readonly=True)
 
     period_rent_price = fields.Float(string='Period Rent Price', compute="_compute_period_rent_price", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
+    extra_driver_charge = fields.Float(string='Extra Driver Charge', compute="_compute_extra_driver_charge", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
+    total_rent_price = fields.Float(string='Total Rent Price', compute="_compute_total_rent_price", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
+    advanced_deposit = fields.Float(string='Total Rent Price', compute="_compute_advanced_deposit", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
 
     check_line_ids = fields.One2many('fleet_rental.check_line', 'document_id', string='Vehicle rental check lines')
 
@@ -73,15 +79,39 @@ class FleetRentalDocument(models.Model):
 
     @api.depends('exit_datetime', 'return_datetime')
     def _compute_total_rental_period(self):
-        if self.exit_datetime and self.return_datetime:
-            start = datetime.strptime(self.exit_datetime, DTF)
-            end = datetime.strptime(self.return_datetime, DTF)
-            self.total_rental_period = (end - start).days
+        for record in self:
+            if record.exit_datetime and record.return_datetime:
+                start = datetime.strptime(record.exit_datetime, DTF)
+                end = datetime.strptime(record.return_datetime, DTF)
+                record.total_rental_period = (end - start).days
 
     @api.depends('total_rental_period')
     def _compute_period_rent_price(self):
-        if self.total_rental_period:
-            self.period_rent_price = self.total_rental_period * self.daily_rental_price
+        for record in self:
+            if record.total_rental_period:
+                record.period_rent_price = record.total_rental_period * record.daily_rental_price
+
+    @api.depends('total_rental_period')
+    def _compute_extra_driver_charge(self):
+        for record in self:
+            if record.total_rental_period:
+                record.extra_driver_charge = record.total_rental_period * record.extra_driver_charge_per_day
+
+    @api.depends('period_rent_price', 'extra_driver_charge', 'other_extra_charges')
+    def _compute_total_rent_price(self):
+        for record in self:
+            record.total_rent_price = record.period_rent_price + record.extra_driver_charge + record.other_extra_charges
+
+    @api.depends('invoice_line_ids')
+    def _compute_advanced_deposit(self):
+        for record in self:
+            advanced_deposit = 0
+            for invoice_line in record.invoice_ids.filtered(lambda r: r.invoice_id.type == 'out_invoice'\
+                                                            and r.invoice_id.state == 'paid'\
+                                                            and r.product_id.name == 'Down payment'):
+                advanced_deposit+= invoice_line.price_unit
+
+            record.advanced_deposit = advanced_deposit
 
     @api.model
     def create(self, vals):
