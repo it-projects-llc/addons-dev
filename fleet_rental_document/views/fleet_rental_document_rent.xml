@@ -104,6 +104,7 @@
                 <field name="exit_datetime" class="oe_inline"/>
                 <field name="return_datetime" class="oe_inline"/>
                 <field name="total_rental_period" class="oe_inline"/>
+                <field name="extra_driver_charge_per_day" class="oe_inline"/>
               </group>
               <notebook>
                 <page string="Vehicle Checklist">
