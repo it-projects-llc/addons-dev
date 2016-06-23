@@ -13,13 +13,13 @@
                     <button name="un_submit" states="transfer" string="Cancel submit" type="object"
                             groups="fleet_booking.group_vehicles_support_officer"/>
                     <button name="confirm_delivery" string="Confirm delivery" type="object" class="oe_highlight"
-                            attrs="{'invisible':['|',('can_change_delivery_state', '!=', True),('delivery_state','!=','not_delivered')]}"
+                            attrs="{'invisible':['|','|',('state','in',('draft')),('can_change_delivery_state', '!=', True),('delivery_state','!=','not_delivered')]}"
                             groups="fleet_booking.group_branch_officer"/>
                     <button name="un_confirm_delivery" string="Cancel confirm delivery" type="object"
                             attrs="{'invisible':['|',('can_change_delivery_state', '!=', True),('delivery_state','!=','delivered')]}"
                             groups="fleet_booking.group_branch_officer"/>
                     <button name="confirm_receiving" string="Confirm receiving" type="object" class="oe_highlight"
-                            attrs="{'invisible':['|',('can_change_receiving_state', '!=', True),('receiving_state','!=','not_received')]}"
+                            attrs="{'invisible':['|','|',('state','in',('draft')),('can_change_receiving_state', '!=', True),('receiving_state','!=','not_received')]}"
                             groups="fleet_booking.group_branch_officer"/>
                     <button name="un_confirm_receiving" string="Cancel confirm receiving" type="object"
                             attrs="{'invisible':['|',('can_change_receiving_state', '!=', True),('receiving_state','!=','received')]}"
@@ -29,7 +29,7 @@
                 <sheet>
                     <group col="2" string="Vehicle transfer">
                         <group>
-                            <field name="vehicle_id" groups="fleet_booking.group_vehicles_support_officer"/>
+                            <field name="vehicle_id" readonly="1"/>
                         </group>
                         <group>
                             <field name="vehicle_state_id" readonly="1"/>
@@ -63,7 +63,7 @@
         <field name="model">fleet_booking.transfer</field>
         <field name="arch" type="xml">
             <tree string="Transfers">
-                <field name="user_branch_id" />
+                <field name="create_uid" />
                 <field name="vehicle_id"/>
                 <field name="source_branch"/>
                 <field name="dest_branch"/>
@@ -134,6 +134,9 @@
                 </xpath>
                 <xpath expr="//field[@name='dest_branch']" position="replace">
                     <field name="dest_branch" readonly="0"/>
+                </xpath>
+                <xpath expr="//field[@name='vehicle_id']" position="replace">
+                    <field name="vehicle_id" readonly="0"/>
                 </xpath>
             </data>
         </field>
