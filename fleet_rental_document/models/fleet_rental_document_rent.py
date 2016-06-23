@@ -34,6 +34,11 @@ class FleetRentalDocumentRent(models.Model):
             rent.state = 'cancel'
 
     @api.multi
+    def action_confirm(self):
+        for rent in self:
+            rent.state = 'confirmed'
+
+    @api.multi
     def action_view_invoice(self):
         invoice_ids = self.mapped('invoice_ids')
         imd = self.env['ir.model.data']
