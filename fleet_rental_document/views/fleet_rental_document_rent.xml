@@ -6,7 +6,7 @@
         <field name="name">fleet.rental.document.rent.tree</field>
         <field name="model">fleet_rental.document_rent</field>
         <field name="arch" type="xml">
-          <tree string="Vehicle Rent">
+          <tree string="Vehicle Rent" decoration-muted="state=='cancel'">
             <field name="name"/>
             <field name="partner_id"/>
             <field name="vehicle_id"/>
