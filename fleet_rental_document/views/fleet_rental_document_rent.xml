@@ -123,6 +123,7 @@
                 <field name="other_extra_charges" class="oe_inline"/>
                 <field name="total_rent_price" class="oe_inline"/>
                 <field name="advanced_deposit" class="oe_inline"/>
+                <field name="balance" class="oe_inline"/>
               </group>
             </sheet>
           </form>

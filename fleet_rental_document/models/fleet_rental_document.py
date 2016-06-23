@@ -42,6 +42,7 @@ class FleetRentalDocument(models.Model):
     extra_driver_charge = fields.Float(string='Extra Driver Charge', compute="_compute_extra_driver_charge", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
     total_rent_price = fields.Float(string='Total Rent Price', compute="_compute_total_rent_price", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
     advanced_deposit = fields.Float(string='Advanced Deposit', compute="_compute_advanced_deposit", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
+    balance = fields.Float(string='Balance', compute="_compute_balance", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
 
     check_line_ids = fields.One2many('fleet_rental.check_line', 'document_id', string='Vehicle rental check lines')
 
@@ -112,6 +113,11 @@ class FleetRentalDocument(models.Model):
                 advanced_deposit+= invoice_line.price_unit
 
             record.advanced_deposit = advanced_deposit
+
+    @api.depends('total_rent_price', 'advanced_deposit')
+    def _compute_balance(self):
+        for record in self:
+            record.balance = record.total_rent_price - record.advanced_deposit
 
     @api.model
     def create(self, vals):
