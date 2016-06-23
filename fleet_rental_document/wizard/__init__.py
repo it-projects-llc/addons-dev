@@ -1,2 +1,2 @@
 # -*- coding: utf-8 -*-
-import models
+import make_invoice

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- Sequences for documents -->
+        <record id="seq_fleet_rental_document_rent" model="ir.sequence">
+            <field name="name">Rent Documents</field>
+            <field name="code">fleet_rental.document_rent</field>
+            <field name="prefix">R</field>
+            <field name="padding">3</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_fleet_rental_document_return" model="ir.sequence">
+            <field name="name">Return Documents</field>
+            <field name="code">fleet_rental.document_return</field>
+            <field name="prefix">RET</field>
+            <field name="padding">3</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+    </data>
+</openerp>

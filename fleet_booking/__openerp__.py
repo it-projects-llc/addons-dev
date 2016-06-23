@@ -20,7 +20,6 @@
         "partner_person",
         "sale_membership",
         "fleet_rental_document",
-        "fleet_rental_check_vehicle",
         "fleet_vehicle_color",
         "fleet_bill",
     ],
