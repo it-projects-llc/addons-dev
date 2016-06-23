@@ -103,7 +103,7 @@ class FleetRentalDocument(models.Model):
         for record in self:
             record.total_rent_price = record.period_rent_price + record.extra_driver_charge + record.other_extra_charges
 
-    @api.depends('invoice_line_ids')
+    @api.depends('invoice_line_ids.invoice_id.state')
     def _compute_advanced_deposit(self):
         for record in self:
             advanced_deposit = 0
