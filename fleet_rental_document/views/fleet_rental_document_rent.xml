@@ -2,11 +2,28 @@
 <openerp>
     <data>
 
+      <record id='view_fleet_rental_document_rent_tree' model='ir.ui.view'>
+        <field name="name">fleet.rental.document.rent.tree</field>
+        <field name="model">fleet_rental.document_rent</field>
+        <field name="arch" type="xml">
+          <tree string="Vehicle Rent">
+            <field name="name"/>
+            <field name="partner_id"/>
+            <field name="vehicle_id"/>
+            <field name="exit_datetime"/>
+            <field name="return_datetime"/>
+            <field name="total_rental_period"/>
+          </tree>
+        </field>
+      </record>
+
       <record id='fleet_rental_document_draft_act' model='ir.actions.act_window'>
         <field name="name">Rent Draft</field>
         <field name="res_model">fleet_rental.document_rent</field>
         <field name="view_type">form</field>
+        <field name="view_id" ref="view_fleet_rental_document_rent_tree"/>
         <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','in',('draft',))]</field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to create a new rental document.
@@ -82,21 +99,6 @@
               </group>
             </sheet>
           </form>
-        </field>
-      </record>
-
-      <record id='view_fleet_rental_document_rent_tree' model='ir.ui.view'>
-        <field name="name">fleet.rental.document.rent.tree</field>
-        <field name="model">fleet_rental.document_rent</field>
-        <field name="arch" type="xml">
-          <tree string="Vehicle Rent">
-            <field name="name"/>
-            <field name="partner_id"/>
-            <field name="vehicle_id"/>
-            <field name="exit_datetime"/>
-            <field name="return_datetime"/>
-            <field name="total_rental_period"/>
-          </tree>
         </field>
       </record>
 
