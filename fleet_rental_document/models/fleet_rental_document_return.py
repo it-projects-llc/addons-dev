@@ -31,3 +31,10 @@ class FleetRentalDocumentReturn(models.Model):
         result = super(FleetRentalDocumentReturn, self).create(vals)
         return result
 
+    @api.multi
+    def action_open(self):
+        for rent in self:
+            rent.state = 'open'
+
+
+

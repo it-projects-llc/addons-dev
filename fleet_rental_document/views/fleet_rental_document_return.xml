@@ -50,16 +50,60 @@
         <field name="arch" type="xml">
           <form string="Vehicle Return">
             <header>
+              <button name="%(action_view_make_invoice_wizard)d" string="Create Invoice"
+                      type="action" class="btn-primary"
+                      states="open" />
+              <button name="action_open" states="draft" string="Open" type="object"/>
               <field name="state" widget="statusbar" statusbar_visible="draft,open,closed"/>
             </header>
             <sheet>
+              <div class="oe_button_box" name="button_box">
+                <button name="action_view_invoice"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-pencil-square-o"
+                        attrs="{'invisible': [('invoice_count', '=', 0)]}">
+                  <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                </button>
+              </div>
+              <div class="oe_title">
+                <h1>
+                  <field name="name" readonly="1"/>
+                </h1>
+              </div>
               <group>
-                <field name="name" class="oe_inline"/>
                 <field name="partner_id"/>
               </group>
               <group col="2" string="Vehicle Information">
                 <field name="vehicle_id"/>
+                <field name="allowed_kilometer_per_day"/>
+                <field name="rate_per_extra_km"/>
+                <field name="daily_rental_price"/>
+                <field name="exit_datetime" class="oe_inline"/>
+                <field name="return_datetime" class="oe_inline"/>
+                <field name="total_rental_period" class="oe_inline"/>
+                <field name="extra_driver_charge_per_day" class="oe_inline"/>
               </group>
+              <notebook>
+                <page string="Vehicle Checklist">
+                  <field name="check_line_ids" widget="one2many_list" colspan="4" nolabel="1" mode="tree">
+                    <tree string="Vehicle checklist" editable="bottom" create="0" delete="false">
+                      <field name="item_id" options='{"no_open": true}'/>
+                      <field name="check_yes"/>
+                      <field name="check_no"/>
+                    </tree>
+                  </field>
+                </page>
+              </notebook>
+              <group string="Payment Details">
+                <field name="period_rent_price" class="oe_inline"/>
+                <field name="extra_driver_charge" class="oe_inline"/>
+                <field name="other_extra_charges" class="oe_inline"/>
+                <field name="total_rent_price" class="oe_inline"/>
+                <field name="advanced_deposit" class="oe_inline"/>
+                <field name="balance" class="oe_inline"/>
+              </group>
+
             </sheet>
           </form>
         </field>
