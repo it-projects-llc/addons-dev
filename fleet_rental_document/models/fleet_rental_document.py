@@ -55,10 +55,9 @@ class FleetRentalDocument(models.Model):
     @api.multi
     def action_view_invoice(self):
         invoice_ids = self.mapped('invoice_ids')
-        imd = self.env['ir.model.data']
-        action = imd.xmlid_to_object('account.action_invoice_tree1')
-        list_view_id = imd.xmlid_to_res_id('account.invoice_tree')
-        form_view_id = imd.xmlid_to_res_id('account.invoice_form')
+        action = self.env.ref('account.action_invoice_tree1')
+        list_view_id = self.env.ref('account.invoice_tree').id
+        form_view_id = self.env.ref('account.invoice_form').id
 
         result = {
             'name': action.name,
