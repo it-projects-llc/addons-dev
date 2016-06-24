@@ -77,7 +77,7 @@
     <rect id="rect4467" rx="7.7418" ry="6.2844" height="35.19" width="16.891" stroke="#000" y="648.31" x="-216.51" stroke-width="2" fill="none"/>
     <rect id="rect4467-6" rx="7.7418" ry="6.2844" height="35.19" width="16.891" stroke="#000" y="985.57" x="-216.51" stroke-width="2" fill="none"/>
     <rect id="rect4487" height="377.24" width="30.967" stroke="#000" y="645.49" x="-62.939" stroke-width="2" fill="none"/>
-    <path id="right_rear_light" d="m1200.9 633.86v73.19h67.6v-83.05l-25.3-14.07z" stroke="#000" stroke-width="5" fill="none"/>
+    <path id="right_rear_light_c" d="m1200.9 633.86v73.19h67.6v-83.05l-25.3-14.07z" stroke="#000" stroke-width="5" fill="none"/>
     <path id="path4501" d="m1200.9 963.24h67.6v78.86l-23.9 14-43.7-18.3z" stroke="#000" stroke-width="5" fill="none"/>
     <path id="path4503" d="m1200.9 692.98v284.33" stroke="#000" stroke-width="5" fill="none"/>
     <path id="path4505" d="m1268.5 693.57v284.33" stroke="#000" stroke-width="5" fill="none"/>
@@ -89,10 +89,14 @@
     <path id="path4381-0" d="m1302.5 624.97s35.2-1.41 35.2 21.12v371.61c0 22.5-36.6 25.3-36.6 25.3" stroke="#000" stroke-width="5" fill="none"/>
     <rect id="rect4467-5" transform="scale(-1,1)" rx="7.7418" ry="6.2844" height="35.19" width="16.891" stroke="#000" y="648.9" x="-1329.9" stroke-width="2" fill="none"/>
     <rect id="rect4467-6-5" transform="scale(-1,1)" rx="7.7418" ry="6.2844" height="35.19" width="16.891" stroke="#000" y="986.17" x="-1329.9" stroke-width="2" fill="none"/>
-    <path id="path4585" d="m1199.7 632.83 67.5 74.6" stroke="#000" stroke-width="2" fill="none"/>
-    <path id="path4587" d="m1199.7 708.02 67.5-73.19" stroke="#000" stroke-width="2" fill="none"/>
-    <path id="left_rear_light" d="m1199.9 962.98 67.6 74.62" stroke="#000" stroke-width="2" fill="none"/>
-    <path id="path4587-0" d="m1199.9 1038.2 67.6-73.22" stroke="#000" stroke-width="2" fill="none"/>
+    <path id="right_rear_light"
+        d="m 1457.8743,415.93571 0.016,-34.56038 19.0663,-10.75212 c 10.4865,-5.91367 19.5341,-10.81612 20.1057,-10.89435 0.5716,-0.0782 5.8777,2.57696 11.7914,5.90042 l 10.7521,6.04265 0.1581,39.41208 0.1581,39.41208 -31.032,0 -31.0321,0 0.016,-34.56038 z"
+        transform="translate(-254,254)"
+        stroke-width="0" fill="#ffffc0"/>
+    <path id="left_rear_light"
+        d="m 1477.9846,790.40091 -20.1172,-8.43236 -0,-34.86759 -0,-34.86758 31.0275,0 31.0276,0 -4e-4,37.01801 -4e-4,37.01801 -10.7256,6.29767 c -5.899,3.46371 -10.8064,6.29059 -10.9053,6.28193 -0.099,-0.009 -9.2325,-3.81029 -20.2969,-8.44809 z"
+        transform="translate(-254,254)"
+        stroke-width="0" fill="#ffffc0"/>
     <path id="wheel_front_left" d="m195.66 202.84a76.01 76.01 0 1 1 -152.02 0 76.01 76.01 0 1 1 152.02 0z" transform="translate(78.489 1074.7)" stroke="#000" stroke-width="2" fill="#c8c8c8"/>
     <path id="path4612" d="m147.8 72.633a44.339 44.339 0 1 1 -88.681 0 44.339 44.339 0 1 1 88.681 0z" transform="translate(94.676 1204.9)" stroke="#000" stroke-width="2" fill="#fff"/>
     <path id="wheel_front_right" d="m195.66 202.84a76.01 76.01 0 1 1 -152.02 0 76.01 76.01 0 1 1 152.02 0z" transform="translate(78.489 187.66)" stroke="#000" stroke-width="2" fill="#c8c8c8"/>
