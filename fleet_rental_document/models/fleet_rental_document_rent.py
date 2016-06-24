@@ -43,7 +43,9 @@ class FleetRentalDocumentRent(models.Model):
         document_return_obj = self.env['fleet_rental.document_return']
         for rent in self:
            document_return = document_return_obj.create({
+               'document_rent_id': rent.id,
                'origin': rent.name,
+               'exit_datetime': rent.exit_datetime,
                })
 
     @api.multi
