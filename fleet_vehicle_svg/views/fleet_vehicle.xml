@@ -12,7 +12,7 @@
             </field>
         </record>
 
-         <record model="ir.ui.view" id="fleet_vehicle_part_tree">
+        <record model="ir.ui.view" id="fleet_vehicle_part_tree">
             <field name="name">fleet.vehicle.part.tree</field>
             <field name="model">fleet.vehicle.part</field>
             <field name="arch" type="xml">

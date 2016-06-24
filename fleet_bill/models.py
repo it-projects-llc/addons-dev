@@ -59,18 +59,24 @@ class Contract(models.Model):
                                                     'quantity': 1,
                                                     'price_unit': line.amount,
                                                     'account_id': account_id.id}))
-                startdate += deltas.get(contract.cost_frequency)
                 invoice_vals = {
                     'name': '',
                     'type': 'in_invoice',
                     'auto_generated': True,
                     'partner_id':  contract.insurer_id.id,
                     'account_id':  account_id.id,
-                    'journal_id':  journal_id.id,
+                    'journal_id':  journal_id,
                     'currency_id': company.currency_id.id,
                     'invoice_line_ids': invoice_line_ids,
+                    'date_invoice': startdate,
+                    'date': startdate,
+                    'contract_id': contract.id,
+                    'comment': contract.name,
                 }
-                cost_id = self.pool.get('account.invoice').create(cr, uid, invoice_vals, context=context)
+                startdate += deltas.get(contract.cost_frequency)
+                new_bill = self.pool.get('account.invoice').create(cr, uid, invoice_vals, context=context)
+                print '# new_bill:', new_bill
+                print '# contract:', contract
         return True
 
 

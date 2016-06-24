@@ -23,7 +23,7 @@ Bills creating
     * Fill all required fields. Especially pay attention to:
         * ``Recurring Cost Amount`` - amount, to be periodically billed.
         * ``Vendor`` - used in bill.
-        * ``Included Services`` - product lines, to be placed in bills.
+        * ``Included Services`` - service lines, that have product specified, to be placed in bills.
         * Save document.
 * Wait till database automatically creates costs and bills documents or you may manually make it happened:
     * Go to ``Settings / Automation / Scheduled Actions``.

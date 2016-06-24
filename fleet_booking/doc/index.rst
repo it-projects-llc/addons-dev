@@ -70,9 +70,6 @@ Create or edit customer:
     * Enter additional information here.
 * Press save.
 
-Customer membership:
-
-* TODO
 
 Vehicle workflow
 ================
@@ -202,8 +199,8 @@ Menu items:
 
 * Open ``Fleet`` in main menu.
 * Go to ``Transfers``. Here is ``Incoming`` and ``Outgoing`` menu sections.
-* Тут надо сказать про то что в Incoming по умолчанию видны только входящие для бранча активного эмплоера. Я не знаю как это делать то ли фильтрами то ли что.
-* Аналогично для  Outgoing
+* In ``Incoming`` user see only transfers were destination is his branch.
+* In ``Outgoing`` user see only transfers were source is his branch.
 
 Workflow is like that:
 
@@ -214,14 +211,14 @@ Workflow is like that:
     * Enter current odometer.
     * ``Delivery Status`` auto-sets to ``Not delivered``. Vehicles Support Officer cant edit it.
     * ``Receiving Status`` auto-sets to ``Not received``. Vehicles Support Officer cant edit it.
-    * Presses ``[Save]`` button.
-    * Vehicle branch auto-sets to ``In transfer``. Vehicle status auto-sets to ``In transfer``.
+    * Presses ``[Submit]`` and ``[Save]`` buttons.
+    * Vehicle branch auto-sets to ``In transfer``. Vehicle status auto-sets to ``In transfer``. Vehicle branch auto-sets to ``undefined``.
 
 * When car is delivered
     * Vehicles Support Officer enters new odometer.
-    * Source Branch Officer sets ``Delivery Status`` to ``Delivered``.
-    * Destination Branch Officer sets ``Receiving Status`` to ``Delivered``.
-    * Vehicle branch auto-sets equal to destination branch. Vehicle status auto-sets to ``Active``.
+    * Source Branch Officer presses ``Confirm delivery``. Vehicle ``Delivery state`` changes to ``Delivered``.
+    * Destination Branch Officer presses ``Confirm receiving``. Vehicle ``Receiving state`` changes to ``Received``.
+        * Vehicle branch auto-sets equal to destination branch. Vehicle status auto-sets to ``Active``.
 
 
 Not ready functions

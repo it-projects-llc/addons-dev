@@ -20,7 +20,7 @@
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//notebook" position="inside">
-                    <page string="Vendor Bills">
+                    <page string="Vendor Bills" groups="fleet_booking.group_accountant">
                         <group>
                             <field name="invoice_ids" context="{'vehicle_id': vehicle_id}" nolabel="1"/>
                         </group>
