@@ -80,8 +80,8 @@ class FleetRentalDocumentRent(models.Model):
     @api.multi
     def action_view_document_return(self):
         document_return_ids = self.mapped('document_return_ids')
-        action = self.env.ref('fleet_rental_return_document_draft_act')
-        form_view_id = self.env.ref('fleet_rental_return_document_form')
+        action = self.env.ref('fleet_rental_document.fleet_rental_return_document_draft_act')
+        form_view_id = self.env.ref('fleet_rental_document.fleet_rental_return_document_form')
 
         result = {
             'name': action.name,
