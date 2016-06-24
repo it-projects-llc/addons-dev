@@ -52,6 +52,32 @@ class FleetRentalDocument(models.Model):
 
     invoice_line_ids = fields.One2many('account.invoice.line', 'fleet_rental_document_id', string='Invoice Lines', copy=False)
 
+    @api.multi
+    def action_view_invoice(self):
+        invoice_ids = self.mapped('invoice_ids')
+        imd = self.env['ir.model.data']
+        action = imd.xmlid_to_object('account.action_invoice_tree1')
+        list_view_id = imd.xmlid_to_res_id('account.invoice_tree')
+        form_view_id = imd.xmlid_to_res_id('account.invoice_form')
+
+        result = {
+            'name': action.name,
+            'help': action.help,
+            'type': action.type,
+            'views': [[list_view_id, 'tree'], [form_view_id, 'form'], [False, 'graph'], [False, 'kanban'], [False, 'calendar'], [False, 'pivot']],
+            'target': action.target,
+            'context': action.context,
+            'res_model': action.res_model,
+        }
+        if len(invoice_ids) > 1:
+            result['domain'] = "[('id','in',%s)]" % invoice_ids.ids
+        elif len(invoice_ids) == 1:
+            result['views'] = [(form_view_id, 'form')]
+            result['res_id'] = invoice_ids.ids[0]
+        else:
+            result = {'type': 'ir.actions.act_window_close'}
+        return result
+
     @api.depends('invoice_line_ids')
     def _get_invoiced(self):
 
