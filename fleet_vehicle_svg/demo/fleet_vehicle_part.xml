@@ -49,5 +49,53 @@
           <field name="state">operative</field>
           <field name="part_id">left_rear_light</field>
      </record>
+     <record id="vehicle_1_part_9" model="fleet.vehicle.part">
+          <field name="name">windshield</field>
+          <field name="vehicle_id" ref="fleet.vehicle_1"/>
+          <field name="state">operative</field>
+          <field name="part_id">windshield</field>
+     </record>
+     <record id="vehicle_1_part_10" model="fleet.vehicle.part">
+          <field name="name">rear_window</field>
+          <field name="vehicle_id" ref="fleet.vehicle_1"/>
+          <field name="state">operative</field>
+          <field name="part_id">rear_window</field>
+     </record>
+     <record id="vehicle_1_part_11" model="fleet.vehicle.part">
+          <field name="name">front_right_side_window</field>
+          <field name="vehicle_id" ref="fleet.vehicle_1"/>
+          <field name="state">operative</field>
+          <field name="part_id">front_right_side_window</field>
+     </record>
+     <record id="vehicle_1_part_12" model="fleet.vehicle.part">
+          <field name="name">front_left_side_window</field>
+          <field name="vehicle_id" ref="fleet.vehicle_1"/>
+          <field name="state">operative</field>
+          <field name="part_id">front_left_side_window</field>
+     </record>
+     <record id="vehicle_1_part_13" model="fleet.vehicle.part">
+          <field name="name">rear_right_side_window</field>
+          <field name="vehicle_id" ref="fleet.vehicle_1"/>
+          <field name="state">operative</field>
+          <field name="part_id">rear_right_side_window</field>
+     </record>
+     <record id="vehicle_1_part_14" model="fleet.vehicle.part">
+          <field name="name">rear_left_side_window</field>
+          <field name="vehicle_id" ref="fleet.vehicle_1"/>
+          <field name="state">operative</field>
+          <field name="part_id">rear_left_side_window</field>
+     </record>
+     <record id="vehicle_1_part_15" model="fleet.vehicle.part">
+          <field name="name">right_boot_window</field>
+          <field name="vehicle_id" ref="fleet.vehicle_1"/>
+          <field name="state">operative</field>
+          <field name="part_id">right_boot_window</field>
+     </record>
+     <record id="vehicle_1_part_16" model="fleet.vehicle.part">
+          <field name="name">left_boot_window</field>
+          <field name="vehicle_id" ref="fleet.vehicle_1"/>
+          <field name="state">operative</field>
+          <field name="part_id">left_boot_window</field>
+     </record>
      </data>
 </openerp>
