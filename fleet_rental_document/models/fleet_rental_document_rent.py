@@ -87,12 +87,12 @@ class FleetRentalDocumentRent(models.Model):
             'name': action.name,
             'help': action.help,
             'type': action.type,
-            'views': [(form_view_id, 'form')]
+            'views': [(form_view_id, 'form')],
             'target': action.target,
             'context': action.context,
             'res_model': action.res_model,
         }
-        elif len(document_return_ids) == 1:
+        if len(document_return_ids) == 1:
             # TODO: think about what if there would be more than one return documents
             result['res_id'] = document_return_ids.ids[0]
         else:
