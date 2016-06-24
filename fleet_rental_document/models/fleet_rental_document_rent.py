@@ -53,13 +53,13 @@ class FleetRentalDocumentRent(models.Model):
                'origin': rent.name,
                'exit_datetime': rent.exit_datetime,
                })
-#        self[0].action_view_document_return()
+        return self.action_view_document_return()
 
     @api.multi
     def action_view_document_return(self):
-        document_return_ids = self.mapped('document_return_ids')
+        document_return_ids = self.mapped('document_return_ids')[0]
         action = self.env.ref('fleet_rental_document.fleet_rental_return_document_draft_act')
-        form_view_id = self.env.ref('fleet_rental_document.fleet_rental_return_document_form')
+        form_view_id = self.env.ref('fleet_rental_document.fleet_rental_return_document_form').id
 
         result = {
             'name': action.name,
