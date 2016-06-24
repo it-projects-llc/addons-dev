@@ -10,7 +10,8 @@
                 <header>
                     <button name="submit" states="draft" string="Submit" type="object" class="oe_highlight"
                             groups="fleet_booking.group_vehicles_support_officer"/>
-                    <button name="un_submit" states="transfer" string="Cancel submit" type="object"
+                    <button name="un_submit" string="Cancel submit" type="object"
+                            attrs="{'invisible':['|',('delivery_state','=','delivered'),('state','!=','transfer')]}"
                             groups="fleet_booking.group_vehicles_support_officer"/>
                     <button name="confirm_delivery" string="Confirm delivery" type="object" class="oe_highlight"
                             attrs="{'invisible':['|','|',('state','in',('draft')),('can_change_delivery_state', '!=', True),('delivery_state','!=','not_delivered')]}"
@@ -19,7 +20,7 @@
                             attrs="{'invisible':['|',('can_change_delivery_state', '!=', True),('delivery_state','!=','delivered')]}"
                             groups="fleet_booking.group_branch_officer"/>
                     <button name="confirm_receiving" string="Confirm receiving" type="object" class="oe_highlight"
-                            attrs="{'invisible':['|','|',('state','in',('draft')),('can_change_receiving_state', '!=', True),('receiving_state','!=','not_received')]}"
+                            attrs="{'invisible':['|','|','|',('state','in',('draft')),('can_change_receiving_state', '!=', True),('receiving_state','!=','not_received'),('delivery_state','!=','delivered')]}"
                             groups="fleet_booking.group_branch_officer"/>
                     <button name="un_confirm_receiving" string="Cancel confirm receiving" type="object"
                             attrs="{'invisible':['|',('can_change_receiving_state', '!=', True),('receiving_state','!=','received')]}"
@@ -144,11 +145,3 @@
 
 </data>
 </openerp>
-
-
-<!--can_del   status  invisible-->
-  <!--true     done     false-->
-  <!--false    done     true-->
-  <!--true     any      true-->
-  <!--false    any      true-->
-
