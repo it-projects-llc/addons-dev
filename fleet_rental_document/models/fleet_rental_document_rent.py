@@ -23,6 +23,8 @@ class FleetRentalDocumentRent(models.Model):
             string='Related Document', ondelete='restrict',
             help='common part of all three types of the documents', auto_join=True)
 
+    document_return_ids = fields.One2many('fleet_rental.document_return', 'document_rent_id', string='Return documents', copy=False)
+
     @api.multi
     def action_book(self):
         for rent in self:
@@ -47,6 +49,7 @@ class FleetRentalDocumentRent(models.Model):
                'origin': rent.name,
                'exit_datetime': rent.exit_datetime,
                })
+        self[0].action_view_document_return()
 
     @api.multi
     def action_view_invoice(self):
@@ -70,6 +73,28 @@ class FleetRentalDocumentRent(models.Model):
         elif len(invoice_ids) == 1:
             result['views'] = [(form_view_id, 'form')]
             result['res_id'] = invoice_ids.ids[0]
+        else:
+            result = {'type': 'ir.actions.act_window_close'}
+        return result
+
+    @api.multi
+    def action_view_document_return(self):
+        document_return_ids = self.mapped('document_return_ids')
+        action = self.env.ref('fleet_rental_return_document_draft_act')
+        form_view_id = self.env.ref('fleet_rental_return_document_form')
+
+        result = {
+            'name': action.name,
+            'help': action.help,
+            'type': action.type,
+            'views': [(form_view_id, 'form')]
+            'target': action.target,
+            'context': action.context,
+            'res_model': action.res_model,
+        }
+        elif len(document_return_ids) == 1:
+            # TODO: think about what if there would be more than one return documents
+            result['res_id'] = document_return_ids.ids[0]
         else:
             result = {'type': 'ir.actions.act_window_close'}
         return result
