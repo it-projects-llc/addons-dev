@@ -2,11 +2,29 @@
 <openerp>
     <data>
 
+      <record id='view_fleet_rental_document_return_tree' model='ir.ui.view'>
+        <field name="name">fleet.rental.document.return.tree</field>
+        <field name="model">fleet_rental.document_return</field>
+        <field name="arch" type="xml">
+          <tree string="Vehicle Return">
+            <field name="state" invisible="1"/>
+            <field name="name"/>
+            <field name="partner_id"/>
+            <field name="vehicle_id"/>
+            <field name="exit_datetime"/>
+            <field name="return_datetime"/>
+            <field name="total_rental_period"/>
+          </tree>
+        </field>
+      </record>
+
       <record id='fleet_rental_return_document_draft_act' model='ir.actions.act_window'>
         <field name="name">Return Draft</field>
         <field name="res_model">fleet_rental.document_return</field>
         <field name="view_type">form</field>
+        <field name="view_id" ref="view_fleet_rental_document_return_tree"/>
         <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','in',('draft',))]</field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to create a new rental document.
@@ -20,7 +38,9 @@
         <field name="name">Return Open</field>
         <field name="res_model">fleet_rental.document_return</field>
         <field name="view_type">form</field>
+        <field name="view_id" ref="view_fleet_rental_document_return_tree"/>
         <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','in',('open',))]</field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to create a new rental document.
@@ -34,7 +54,9 @@
         <field name="name">Return Closed</field>
         <field name="res_model">fleet_rental.document_return</field>
         <field name="view_type">form</field>
+        <field name="view_id" ref="view_fleet_rental_document_return_tree"/>
         <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','in',('closed',))]</field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to create a new rental document.
