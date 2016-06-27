@@ -126,7 +126,7 @@ class FleetRentalDocument(models.Model):
         items = self.env['fleet_rental.item_to_check'].search([])
         check_line_obj = self.env['fleet_rental.check_line']
 
-        result['check_line_ids'] = [(0, 0, {'item_id': item.id}) for item in items]
+        result['check_line_ids'] = [(5, 0, 0)] + [(0, 0, {'item_id': item.id}) for item in items]
 
         return result
 
