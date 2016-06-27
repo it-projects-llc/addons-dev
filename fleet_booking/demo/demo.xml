@@ -2,10 +2,10 @@
 <openerp>
 <data>
     <!--BRANCH-->
-    <record model="fleet_booking.branch" id="main_branch">
+    <record model="fleet_branch.branch" id="main_branch">
         <field name="name">Main branch</field>
     </record>
-    <record model="fleet_booking.branch" id="filial_branch">
+    <record model="fleet_branch.branch" id="filial_branch">
         <field name="name">Filial branch</field>
     </record>
     <!--PARTNERS-->

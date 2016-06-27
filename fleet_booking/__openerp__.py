@@ -13,7 +13,7 @@
     # 'currency': 'EUR',
 
     "depends": [
-        "hr",
+        "fleet_branch",
         "fleet",
         "account",
         "account_asset",
@@ -27,7 +27,6 @@
     "data": [
         "security/records.xml",
         "security/ir.model.access.csv",
-        "views/views.xml",
         "views/partner.xml",
         "views/fleet.xml",
         "views/asset.xml",
