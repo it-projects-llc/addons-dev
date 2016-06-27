@@ -49,7 +49,7 @@ class Person(models.Model):
     ]
 
 
-class Fleet(models.Model):
+class Vehicle(models.Model):
 
     _inherit = 'fleet.vehicle'
 

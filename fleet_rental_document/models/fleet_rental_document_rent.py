@@ -24,6 +24,7 @@ class FleetRentalDocumentRent(models.Model):
             help='common part of all three types of the documents', auto_join=True)
 
     document_return_ids = fields.One2many('fleet_rental.document_return', 'document_rent_id', string='Return documents', copy=False)
+    user_branch_id = fields.Many2one('fleet_booking.branch', default=lambda self: self.env.user.branch_id.id)
 
     @api.multi
     def action_view_invoice(self):
@@ -99,3 +100,4 @@ class FleetRentalDocumentRent(models.Model):
         vehicle = self.env['fleet.vehicle'].browse(rec.vehicle_id.id)
         active_vehicle_state = self.env['fleet.vehicle.state'].browse(2)
         vehicle.state_id = active_vehicle_state
+
