@@ -1,11 +1,11 @@
 {
     'name': "Backend debranding",
-    'version': '1.0.0',
+    'version': '1.0.5',
     'author': 'IT-Projects LLC, Ivan Yelizariev',
     'license': 'GPL-3',
     'category': 'Debranding',
     'website': 'https://twitter.com/yelizariev',
-    'price': 90.00,
+    'price': 150.00,
     'currency': 'EUR',
     'depends': ['web', 'share', 'disable_openerp_online', 'mail_delete_sent_by_footer'],
     'data': [
