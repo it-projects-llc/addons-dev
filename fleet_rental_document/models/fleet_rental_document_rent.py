@@ -33,11 +33,15 @@ class FleetRentalDocumentRent(models.Model):
     def action_book(self):
         for rent in self:
             rent.state = 'booked'
+            vehicle = self.env['fleet.vehicle'].browse(rent.vehicle_id.id)
+            booked_vehicle_state = self.env['fleet.vehicle.state'].browse(6)
+            vehicle.state_id = booked_vehicle_state
 
     @api.multi
     def action_cancel_booking(self):
         for rent in self:
             rent.state = 'cancel'
+            self.set_vehicle_active(rent)
 
     @api.multi
     def action_confirm(self):
@@ -48,7 +52,9 @@ class FleetRentalDocumentRent(models.Model):
     def action_create_return(self):
         document_return_obj = self.env['fleet_rental.document_return']
         for rent in self:
-           document_return = document_return_obj.create({
+            rent.state = 'returned'
+            self.set_vehicle_active(rent)
+            document_return = document_return_obj.create({
                'partner_id': rent.partner_id.id,
                'vehicle_id': rent.vehicle_id.id,
                'allowed_kilometer_per_day': rent.allowed_kilometer_per_day,
@@ -89,3 +95,7 @@ class FleetRentalDocumentRent(models.Model):
         result = super(FleetRentalDocumentRent, self).create(vals)
         return result
 
+    def set_vehicle_active(self, rec):
+        vehicle = self.env['fleet.vehicle'].browse(rec.vehicle_id.id)
+        active_vehicle_state = self.env['fleet.vehicle.state'].browse(2)
+        vehicle.state_id = active_vehicle_state
