@@ -57,23 +57,27 @@ class FleetRentalDocument(models.Model):
 
     invoice_line_ids = fields.One2many('account.invoice.line', 'fleet_rental_document_id', string='Invoice Lines', copy=False)
 
-    part_ids = fields.One2many('fleet.vehicle.part', 'vehicle_id', 'Parts')
+    part_ids = fields.One2many(related='vehicle_id.part_ids')
     png_file = fields.Text('PNG', compute='_compute_png', store=False)
+
+    @api.onchange('vehicle_id')
+    def on_change_vehicle_id(self):
+        self._compute_png()
 
     @api.multi
     def _compute_png(self):
-        for vehicle in self:
-            f = open('/'.join([os.path.dirname(os.path.realpath(__file__)),
-                               'static/src/img/car-cutout.svg']), 'r')
+        for rec in self:
+            f = open('/'.join([os.path.dirname(os.path.realpath(__file__+ '//..//..')),  # TODO needs better decision
+                               'fleet_vehicle_svg/static/src/img/car-cutout.svg']), 'r')
             svg_file = f.read()
             dom = etree.fromstring(svg_file)
-            for part in vehicle.part_ids:
+            for part in rec.part_ids:
                 if part.state == 'broken':
                     for el in dom.xpath('//*[@id="%s"]' % part.part_id):
                         el.attrib['fill'] = 'red'
             f.close()
             with Image(blob=etree.tostring(dom), format='svg') as img:
-                vehicle.png_file = base64.b64encode(img.make_blob('png'))
+                rec.png_file = base64.b64encode(img.make_blob('png'))
 
     @api.multi
     def action_view_invoice(self):
@@ -122,7 +126,7 @@ class FleetRentalDocument(models.Model):
         items = self.env['fleet_rental.item_to_check'].search([])
         check_line_obj = self.env['fleet_rental.check_line']
 
-        result['check_line_ids'] = [(0, 0, {'item_id': item.id}) for item in items]
+        result['check_line_ids'] = [(5, 0, 0)] + [(0, 0, {'item_id': item.id}) for item in items]
 
         return result
 
