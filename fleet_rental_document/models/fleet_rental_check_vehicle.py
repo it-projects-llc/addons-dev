@@ -22,8 +22,12 @@ class FleetRentalCheckLine(models.Model):
     @api.multi
     def write(self, vals):
         # there should be 'yes' or 'no'
-        if vals.get('check_yes'):
-            vals.update({'check_no': False})
-        if vals.get('check_no'):
-            vals.update({'check_yes': False})
+        if vals.get('exit_check_yes'):
+            vals.update({'exit_check_no': False})
+        if vals.get('exit_check_no'):
+            vals.update({'exit_check_yes': False})
+        if vals.get('return_check_yes'):
+            vals.update({'return_check_no': False})
+        if vals.get('return_check_no'):
+            vals.update({'return_check_yes': False})
         return super(FleetRentalCheckLine, self).write(vals)
