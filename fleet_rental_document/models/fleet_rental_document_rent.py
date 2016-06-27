@@ -49,6 +49,11 @@ class FleetRentalDocumentRent(models.Model):
         document_return_obj = self.env['fleet_rental.document_return']
         for rent in self:
            document_return = document_return_obj.create({
+               'partner_id': rent.partner_id.id,
+               'vehicle_id': rent.vehicle_id.id,
+               'allowed_kilometer_per_day': rent.allowed_kilometer_per_day,
+               'rate_per_extra_km': rent.rate_per_extra_km,
+               'daily_rental_price': rent.daily_rental_price,
                'document_rent_id': rent.id,
                'origin': rent.name,
                'exit_datetime': rent.exit_datetime,
