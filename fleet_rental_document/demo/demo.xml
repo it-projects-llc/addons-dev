@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+      <record id="vehicle_state_booked" model="fleet.vehicle.state">
+        <field name="name">Booked</field>
+        <field name="sequence">6</field>
+      </record>
+</data>
+</openerp>
