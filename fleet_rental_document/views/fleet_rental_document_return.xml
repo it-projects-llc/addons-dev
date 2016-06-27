@@ -106,6 +106,7 @@
                 <field name="exit_datetime" class="oe_inline" readonly="1"/>
                 <field name="return_datetime" class="oe_inline"/>
                 <field name="total_rental_period" class="oe_inline"/>
+                <field name="extra_hours" class="oe_inline" attrs="{'invisible': [('extra_hours', '=', 0)]}"/>
                 <field name="extra_driver_charge_per_day" class="oe_inline"/>
               </group>
               <notebook>

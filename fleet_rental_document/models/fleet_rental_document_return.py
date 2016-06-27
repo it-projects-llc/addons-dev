@@ -28,7 +28,7 @@ class FleetRentalDocumentReturn(models.Model):
 
     odometer_after = fields.Float(string='Odometer after Rent', related='vehicle_id.odometer')
 
-    extra_hours = fields.Integer(string='Extra Hours', compute="_compute_extra_hours", store=True, readonly=True)
+    extra_hours = fields.Integer(string='Extra Hours', compute="_compute_extra_hours", store=True, readonly=True, default=0)
 
     @api.model
     def create(self, vals):
