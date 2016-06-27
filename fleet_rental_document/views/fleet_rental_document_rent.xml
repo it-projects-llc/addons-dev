@@ -109,7 +109,8 @@
                 <field name="partner_id"/>
               </group>
               <group col="2" string="Vehicle Information">
-                <field name="vehicle_id"/>
+                <field name="user_branch_id" invisible="True"/>
+                <field name="vehicle_id" domain="[('state_id.name','=','Active'),('branch_id','=', user_branch_id)]"/>
                 <field name="allowed_kilometer_per_day"/>
                 <field name="rate_per_extra_km"/>
                 <field name="daily_rental_price"/>

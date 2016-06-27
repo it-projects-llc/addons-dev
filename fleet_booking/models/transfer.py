@@ -11,9 +11,9 @@ class VehicleTransfer(models.Model):
                               ('done', 'Done')],
                              string='State', default='draft')
     vehicle_id = fields.Many2one('fleet.vehicle', string='Vehicle')
-    old_branch = fields.Many2one('fleet_booking.branch')
-    source_branch = fields.Many2one('fleet_booking.branch', string='From', required=True)
-    dest_branch = fields.Many2one('fleet_booking.branch', string='To', required=True)
+    old_branch = fields.Many2one('fleet_branch.branch')
+    source_branch = fields.Many2one('fleet_branch.branch', string='From', required=True)
+    dest_branch = fields.Many2one('fleet_branch.branch', string='To', required=True)
     current_odometer = fields.Float(related='vehicle_id.odometer', string='Current odometer')
     vehicle_state_id = fields.Many2one(related='vehicle_id.state_id', string='Vehicle state')
     delivery_state = fields.Selection([('not_delivered', 'Not delivered'), ('delivered', 'Delivered')], string='Delivery state', default='not_delivered', readonly=True)

@@ -5,16 +5,6 @@ from openerp import api, fields, models
 
 # INHERITED MODELS
 
-class Branch(models.Model):
-
-    _name = "fleet_booking.branch"
-    _inherit = 'hr.department'
-
-    city = fields.Char(string='City')
-    phone = fields.Char(string='Phone')
-    branch_target = fields.Char(string='Branch Target')
-    users_ids = fields.One2many('res.users', 'branch_id')
-
 
 class Person(models.Model):
 
@@ -49,11 +39,10 @@ class Person(models.Model):
     ]
 
 
-class Fleet(models.Model):
+class Vehicle(models.Model):
 
     _inherit = 'fleet.vehicle'
 
-    branch_id = fields.Many2one('fleet_booking.branch', string='Current branch')
     model_year = fields.Integer('Model Year')
     daily_rate = fields.Float('Daily Rate')
     extra_rate = fields.Float('Rate per extra km')
@@ -170,11 +159,5 @@ class Asset(models.Model):
     _inherit = 'account.asset.asset'
 
     vehicle_id = fields.Many2one('fleet.vehicle', string='Vehicle')
-
-
-class User(models.Model):
-    _inherit = 'res.users'
-
-    branch_id = fields.Many2one('fleet_booking.branch')
 
 # OWN MODELS
