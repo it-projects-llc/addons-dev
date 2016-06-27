@@ -113,6 +113,7 @@
                 <field name="allowed_kilometer_per_day"/>
                 <field name="rate_per_extra_km"/>
                 <field name="daily_rental_price"/>
+                <field name="odometer"/>
                 <field name="exit_datetime" class="oe_inline"/>
                 <field name="return_datetime" class="oe_inline"/>
                 <field name="total_rental_period" class="oe_inline"/>

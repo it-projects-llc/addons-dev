@@ -32,6 +32,7 @@ class FleetRentalDocument(models.Model):
     allowed_kilometer_per_day = fields.Integer(string='Allowed kilometer per day', related="vehicle_id.allowed_kilometer_per_day", store=True, readonly=True)
     rate_per_extra_km = fields.Float(string='Rate per extra km', related="vehicle_id.rate_per_extra_km", store=True, readonly=True)
     daily_rental_price = fields.Float(string='Daily Rental Price', related="vehicle_id.daily_rental_price", store=True, readonly=True)
+    odometer = fields.Float(string='Odometer', related="vehicle_id.odometer", store=True, readonly=True)
 
     extra_driver_charge_per_day = fields.Float(string='Extra Driver Charge per day', digits_compute=dp.get_precision('Product Price'), default=0)
     other_extra_charges = fields.Float(string='Other Extra Charges', digits_compute=dp.get_precision('Product Price'), default=0)
