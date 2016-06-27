@@ -48,5 +48,5 @@ class FleetRentalDocumentReturn(models.Model):
             if record.exit_datetime and record.return_datetime:
                 start = datetime.strptime(record.exit_datetime, DTF)
                 end = datetime.strptime(record.return_datetime, DTF)
-                record.total_rental_period = (end - start).hour
+                record.extra_hours = (end - start).seconds // 3600
 
