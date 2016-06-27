@@ -32,7 +32,7 @@ class FleetRentalDocument(models.Model):
     allowed_kilometer_per_day = fields.Integer(string='Allowed kilometer per day', readonly=True)
     rate_per_extra_km = fields.Float(string='Rate per extra km', readonly=True)
     daily_rental_price = fields.Float(string='Daily Rental Price', readonly=True)
-    odometer = fields.Float(string='Odometer', readonly=True)
+    odometer_before = fields.Float(string='Odometer', readonly=True)
 
     extra_driver_charge_per_day = fields.Float(string='Extra Driver Charge per day', digits_compute=dp.get_precision('Product Price'), default=0)
     other_extra_charges = fields.Float(string='Other Extra Charges', digits_compute=dp.get_precision('Product Price'), default=0)
@@ -175,7 +175,7 @@ class FleetRentalDocument(models.Model):
             vals.update({'allowed_kilometer_per_day': vehicle.allowed_kilometer_per_day,
                          'rate_per_extra_km': vehicle.rate_per_extra_km,
                          'daily_rental_price': vehicle.daily_rental_price,
-                         'odometer': vehicle.odometer,
+                         'odometer_before': vehicle.odometer,
                          })
         return super(FleetRentalDocument, self).create(vals)
 

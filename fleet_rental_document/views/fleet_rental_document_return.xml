@@ -101,13 +101,14 @@
                 <field name="allowed_kilometer_per_day"/>
                 <field name="rate_per_extra_km"/>
                 <field name="daily_rental_price"/>
-                <field name="odometer" string="Odometer before Rent"/>
+                <field name="extra_driver_charge_per_day" class="oe_inline"/>
+                <field name="odometer_before" string="Odometer before Rent"/>
                 <field name="odometer_after"/>
                 <field name="exit_datetime" class="oe_inline" readonly="1"/>
                 <field name="return_datetime" class="oe_inline"/>
                 <field name="total_rental_period" class="oe_inline"/>
                 <field name="extra_hours" class="oe_inline" attrs="{'invisible': [('extra_hours', '=', 0)]}"/>
-                <field name="extra_driver_charge_per_day" class="oe_inline"/>
+                <field name="extra_kilometers" class="oe_inline"/>
               </group>
               <notebook>
                 <page string="Vehicle Checklist">
