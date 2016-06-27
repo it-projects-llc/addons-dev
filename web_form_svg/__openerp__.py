@@ -1,5 +1,6 @@
 {
     'name': "SVG Widget",
+    'summary': """SVG Widget""",
     'version': '1.0.0',
     'author': 'IT-Projects LLC, Veronika Kotovich',
     'license': 'LGPL-3',
