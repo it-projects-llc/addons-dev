@@ -29,7 +29,7 @@ class FleetRentalDocumentReturn(models.Model):
     odometer_after = fields.Float(string='Odometer after Rent', related='vehicle_id.odometer')
 
     extra_hours = fields.Integer(string='Extra Hours', compute="_compute_extra_hours", store=True, readonly=True, default=0)
-    extra_kilometers = fields.Integer(string='Extra Kilometers', compute="_compute_extra_kilometers", store=True, readonly=True, default=0)
+    extra_kilometers = fields.Float(string='Extra Kilometers', compute="_compute_extra_kilometers", store=True, readonly=True, default=0)
 
     @api.model
     def create(self, vals):
@@ -43,6 +43,7 @@ class FleetRentalDocumentReturn(models.Model):
         for rent in self:
             rent.state = 'open'
 
+    @api.multi
     @api.depends('exit_datetime', 'return_datetime')
     def _compute_extra_hours(self):
         for record in self:
@@ -51,8 +52,9 @@ class FleetRentalDocumentReturn(models.Model):
                 end = datetime.strptime(record.return_datetime, DTF)
                 record.extra_hours = (end - start).seconds // 3600
 
-    @api.depends('odometer_before', 'odometer_after', 'total_rental_period', 'allowed_kilometer_per_day')
+    @api.multi
+    @api.depends('odometer_before', 'vehicle_id.odometer', 'total_rental_period', 'allowed_kilometer_per_day')
     def _compute_extra_kilometers(self):
         for record in self:
-            if record.odometer_before and record.odometer_after and record.total_rental_period and record.allowed_kilometer_per_day:
+            if record.odometer_after and record.total_rental_period and record.allowed_kilometer_per_day:
                 record.extra_kilometers = record.odometer_after - record.odometer_before - (record.total_rental_period * record.allowed_kilometer_per_day)
