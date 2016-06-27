@@ -75,7 +75,7 @@
               <button name="%(action_view_make_invoice_wizard)d" string="Create Invoice"
                       type="action" class="btn-primary"
                       states="open" />
-              <button name="action_open" states="draft" string="Open" type="object"/>
+              <button name="action_open" states="draft" string="Return Cart and keep contract open" type="object"/>
               <field name="state" widget="statusbar" statusbar_visible="draft,open,closed"/>
             </header>
             <sheet>
