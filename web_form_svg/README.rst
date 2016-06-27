@@ -1,8 +1,8 @@
-===================
- Fleet Vehicle svg
-===================
+============
+ SVG Widget
+============
 
-Puts vehicle svg on vehicle form view to show what parts of the vehicle are damaged.
+SVG Widget allows to put svg on a form view
 
 Credits
 =======
