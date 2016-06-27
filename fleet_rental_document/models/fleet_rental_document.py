@@ -25,14 +25,14 @@ class FleetRentalDocument(models.Model):
         help="Reference of the document that produced this document.",
         readonly=True, states={'draft': [('readonly', False)]})
 
-    partner_id = fields.Many2one('res.partner', string="Customer", domain=[('customer', '=', True)])
+    partner_id = fields.Many2one('res.partner', string="Customer", domain=[('customer', '=', True)], required=True)
 
-    vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle")
+    vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle", required=True)
 
-    allowed_kilometer_per_day = fields.Integer(string='Allowed kilometer per day', related="vehicle_id.allowed_kilometer_per_day", store=True, readonly=True)
-    rate_per_extra_km = fields.Float(string='Rate per extra km', related="vehicle_id.rate_per_extra_km", store=True, readonly=True)
-    daily_rental_price = fields.Float(string='Daily Rental Price', related="vehicle_id.daily_rental_price", store=True, readonly=True)
-    odometer = fields.Float(string='Odometer', related="vehicle_id.odometer", store=True, readonly=True)
+    allowed_kilometer_per_day = fields.Integer(string='Allowed kilometer per day', readonly=True, default=0)
+    rate_per_extra_km = fields.Float(string='Rate per extra km', readonly=True, default=0)
+    daily_rental_price = fields.Float(string='Daily Rental Price', readonly=True, default=0)
+    odometer_before = fields.Float(string='Odometer', readonly=True, default=0)
 
     extra_driver_charge_per_day = fields.Float(string='Extra Driver Charge per day', digits_compute=dp.get_precision('Product Price'), default=0)
     other_extra_charges = fields.Float(string='Other Extra Charges', digits_compute=dp.get_precision('Product Price'), default=0)
@@ -170,6 +170,18 @@ class FleetRentalDocument(models.Model):
     def _compute_balance(self):
         for record in self:
             record.balance = record.total_rent_price - record.advanced_deposit
+
+    @api.model
+    def create(self, vals):
+        vehicle_obj = self.env['fleet.vehicle']
+        vehicle = vehicle_obj.browse(vals.get('vehicle_id', []))
+        if len(vehicle) == 1:
+            vals.update({'allowed_kilometer_per_day': vehicle.allowed_kilometer_per_day,
+                         'rate_per_extra_km': vehicle.rate_per_extra_km,
+                         'daily_rental_price': vehicle.daily_rental_price,
+                         'odometer_before': vehicle.odometer,
+                         })
+        return super(FleetRentalDocument, self).create(vals)
 
 
 class AccountInvoiceLine(models.Model):
