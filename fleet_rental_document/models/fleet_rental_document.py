@@ -29,9 +29,9 @@ class FleetRentalDocument(models.Model):
 
     vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle")
 
-    allowed_kilometer_per_day = fields.Integer(string='Allowed kilometer per day', related="vehicle_id.allowed_kilometer_per_day", store=False, readonly=True)
-    rate_per_extra_km = fields.Float(string='Rate per extra km', related="vehicle_id.rate_per_extra_km", store=False, readonly=True)
-    daily_rental_price = fields.Float(string='Daily Rental Price', related="vehicle_id.daily_rental_price", store=False, readonly=True)
+    allowed_kilometer_per_day = fields.Integer(string='Allowed kilometer per day', related="vehicle_id.allowed_kilometer_per_day", store=True, readonly=True)
+    rate_per_extra_km = fields.Float(string='Rate per extra km', related="vehicle_id.rate_per_extra_km", store=True, readonly=True)
+    daily_rental_price = fields.Float(string='Daily Rental Price', related="vehicle_id.daily_rental_price", store=True, readonly=True)
 
     extra_driver_charge_per_day = fields.Float(string='Extra Driver Charge per day', digits_compute=dp.get_precision('Product Price'), default=0)
     other_extra_charges = fields.Float(string='Other Extra Charges', digits_compute=dp.get_precision('Product Price'), default=0)
@@ -73,6 +73,31 @@ class FleetRentalDocument(models.Model):
             f.close()
             with Image(blob=etree.tostring(dom), format='svg') as img:
                 vehicle.png_file = base64.b64encode(img.make_blob('png'))
+
+    @api.multi
+    def action_view_invoice(self):
+        invoice_ids = self.mapped('invoice_ids')
+        action = self.env.ref('account.action_invoice_tree1')
+        list_view_id = self.env.ref('account.invoice_tree').id
+        form_view_id = self.env.ref('account.invoice_form').id
+
+        result = {
+            'name': action.name,
+            'help': action.help,
+            'type': action.type,
+            'views': [[list_view_id, 'tree'], [form_view_id, 'form'], [False, 'graph'], [False, 'kanban'], [False, 'calendar'], [False, 'pivot']],
+            'target': action.target,
+            'context': action.context,
+            'res_model': action.res_model,
+        }
+        if len(invoice_ids) > 1:
+            result['domain'] = "[('id','in',%s)]" % invoice_ids.ids
+        elif len(invoice_ids) == 1:
+            result['views'] = [(form_view_id, 'form')]
+            result['res_id'] = invoice_ids.ids[0]
+        else:
+            result = {'type': 'ir.actions.act_window_close'}
+        return result
 
     @api.depends('invoice_line_ids')
     def _get_invoiced(self):
