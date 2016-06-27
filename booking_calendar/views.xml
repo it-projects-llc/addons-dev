@@ -17,8 +17,6 @@
 
         <template id="assets_backend" name="custom booking calendar assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
-                <script type="text/javascript" src="/booking_calendar/static/src/js/moment.js"></script>
-                <script type="text/javascript" src="/booking_calendar/static/src/js/fullcalendar.2.4.0.js"></script>
                 <script type="text/javascript" src="/booking_calendar/static/src/js/booking_calendar.js"></script>
                 <link rel='stylesheet' href='/booking_calendar/static/src/css/booking_calendar.css'/>
             </xpath>
@@ -49,6 +47,9 @@
                        <field name="to_calendar" icon="calendar"/>
                        <field name="color" widget="color"/>
                     </group>
+                </xpath>
+                <xpath expr="//field[@name='calendar_id']" position="after">
+                    <field name="has_slot_calendar"/>
                 </xpath>
             </field>
         </record>
@@ -90,11 +91,12 @@
             <field name="name">Booking slot</field>
             <field name="model">sale.order.line</field>
             <field name="arch" type="xml">
-                <form string="Booking Form">
+              <form string="Booking Form">
+                <sheet>
                     <group>
                         <field name="partner_id" readonly="0" required="1"/>
                         <field name="project_id" domain="[('partner_id','=',partner_id)]" readonly="0" required="0"/>
-                        <field name="order_id" required="0"/>
+                        <field name="order_id" domain="[('partner_id','=',partner_id)]" required="0"/>
                     </group>
                     <group>
                         <field name="product_id"/>
@@ -104,15 +106,11 @@
                         <field name="booking_end"/>
                         <field name="price_unit"/>
                         <field name="price_subtotal" invisible="1"/>
-                        <field name="product_uom_qty" invisible="1"/>
+                        <field name="product_uom_qty" />
                     </group>
                     <field name="state" widget="statusbar"/>
-                    <group>
-                        <button type="object"
-                                name="action_open_sale_order"
-                                string="Save and open Sale Order"/>
-                    </group>
-                </form>
+                </sheet>
+                  </form>
             </field>
         </record>
 

@@ -23,6 +23,7 @@ class resource_resource(models.Model):
 
     to_calendar = fields.Boolean('Display on calendar')
     color = fields.Char('Color')
+    has_slot_calendar = fields.Boolean('Use Working Time as Slots Definition')
 
 
 class resource_calendar(models.Model):
@@ -109,6 +110,16 @@ class sale_order_line(models.Model):
     overlap = fields.Boolean(compute='_compute_date_overlap', default=False, store=True)
     automatic = fields.Boolean(default=False, store=True, help='automatically generated booking lines')
     active = fields.Boolean(default=True)
+    resource_trigger = fields.Integer(help='''we use this feild in _compute_date_overlap instead of resource_id
+    because resource_id is related to pitch in pitch_booking module. If we hadn't done it then _compute_date_overlap would be called
+    for each line with the same resource instead of only only for current new line''')
+
+    @api.one
+    def write(self, vals):
+        result = super(sale_order_line, self).write(vals)
+        if vals.get('resource_id'):
+            vals['resource_trigger'] = vals.get('resource_id')
+        return result
 
     @api.multi
     def _compute_dependent_fields(self):
@@ -117,34 +128,51 @@ class sale_order_line(models.Model):
             line.project_id = line.order_id.project_id
 
     @api.multi
-    @api.depends('resource_id', 'booking_start', 'booking_end')
+    @api.depends('resource_trigger', 'booking_start', 'booking_end', 'active')
     def _compute_date_overlap(self):
         for line in self:
-            if line.state == 'cancel':
+            if not line.active:
+                line.overlap = False
                 continue
             overlaps = 0
             if line.resource_id and line.booking_start and line.booking_end:
                 ids = getattr(self, '_origin', False) and self._origin.ids or bool(line.id) and [line.id] or []
-                overlaps = line.search_count(['&', '|', '&', ('booking_start', '>', line.booking_start), ('booking_start', '<', line.booking_end),
-                                              '&', ('booking_end', '>', line.booking_start), ('booking_end', '<', line.booking_end),
+                overlaps = line.search_count([('active', '=', True),
+                                              '&', '|', '&', ('booking_start', '>=', line.booking_start), ('booking_start', '<', line.booking_end),
+                                              '&', ('booking_end', '>', line.booking_start), ('booking_end', '<=', line.booking_end),
                                               ('resource_id', '!=', False),
                                               ('id', 'not in', ids),
                                               ('resource_id', '=', line.resource_id.id),
                                               ('state', '!=', 'cancel')])
-                overlaps += line.search_count([('id', 'not in', ids),
+                overlaps += line.search_count([('active', '=', True),
+                                               ('id', 'not in', ids),
                                                ('booking_start', '=', line.booking_start),
                                                ('booking_end', '=', line.booking_end),
                                                ('resource_id', '=', line.resource_id.id),
                                                ('state', '!=', 'cancel')])
-
             line.overlap = bool(overlaps)
 
     @api.multi
     @api.constrains('overlap')
     def _check_overlap(self):
-        for record in self:
-            if record.overlap:
-                raise ValidationError('There already is booking at that time.')
+        for line in self:
+            if line.overlap:
+                overlaps_with = self.search([('active', '=', True),
+                                              '&', '|', '&', ('booking_start', '>', line.booking_start), ('booking_start', '<', line.booking_end),
+                                              '&', ('booking_end', '>', line.booking_start), ('booking_end', '<', line.booking_end),
+                                              ('resource_id', '!=', False),
+                                              ('id', '!=', line.id),
+                                              ('resource_id', '=', line.resource_id.id),
+                                             ('state', '!=', 'cancel')])
+                overlaps_with += self.search([('active', '=', True),
+                                               ('id', '!=', line.id),
+                                               ('booking_start', '=', line.booking_start),
+                                               ('booking_end', '=', line.booking_end),
+                                               ('resource_id', '=', line.resource_id.id),
+                                              ('state', '!=', 'cancel')])
+
+                msg = 'There are bookings with overlapping times: %(this)s and %(those)s' % {'this': [line.id], 'those': overlaps_with.ids}
+                raise ValidationError(msg)
 
     @api.multi
     @api.constrains('calendar_id', 'booking_start', 'booking_end')
@@ -155,6 +183,16 @@ class sale_order_line(models.Model):
             if line.calendar_id and line.booking_start and line.booking_end:
                 if not line.calendar_id.validate_time_limits(line.booking_start, line.booking_end):
                     raise ValidationError(_('Not valid interval of booking for the product %s.') % line.product_id.name)
+
+    @api.multi
+    @api.constrains('resource_trigger', 'booking_start', 'booking_end')
+    def _check_date_fit_resource_calendar(self):
+        for line in self.sudo():
+            if line.state == 'cancel':
+                continue
+            if line.resource_id and line.resource_id.calendar_id and line.booking_start and line.booking_end:
+                if not line.resource_id.calendar_id.validate_time_limits(line.booking_start, line.booking_end):
+                    raise ValidationError(_('Not valid interval of booking for the resource %s.') % line.resource_id.name)
 
     @api.multi
     @api.constrains('booking_start')
@@ -198,15 +236,11 @@ class sale_order_line(models.Model):
             'color': b.resource_id.color
         } for b in bookings]
 
-    @api.multi
-    def unlink(self):
-        cancelled = self.filtered(lambda line: line.state == 'cancel')
-        self.write({'active': False})
-        (self - cancelled).button_cancel()
-        super(sale_order_line, cancelled).unlink()
-
     @api.onchange('booking_start', 'booking_end')
     def _on_change_booking_time(self):
+        domain = {'product_id': []}
+        if self.venue_id:
+            domain['product_id'].append(('venue_id', '=', self.venue_id.id))
         if self.booking_start and self.booking_end:
             start = datetime.strptime(self.booking_start, DTF)
             end = datetime.strptime(self.booking_end, DTF)
@@ -216,8 +250,8 @@ class sale_order_line(models.Model):
             domain_products = [p.id for p in booking_products 
                 if p.calendar_id.validate_time_limits(self.booking_start, self.booking_end)]
             if domain_products:
-                return {'domain': {'product_id': [('id', 'in', domain_products)]}}
-        return {'domain': {'product_id': []}}
+                domain['product_id'].append(('id', 'in', domain_products))
+        return {'domain': domain}
 
 
     @api.onchange('partner_id', 'project_id')
@@ -226,6 +260,7 @@ class sale_order_line(models.Model):
             self.order_id = None
         if self.order_id and self.order_id.project_id != self.project_id:
             self.order_id = None
+        return self.env['sale.order'].onchange_partner_id(self.partner_id.id)
 
     @api.onchange('order_id')
     def _on_change_order(self):
@@ -242,7 +277,10 @@ class sale_order_line(models.Model):
         if not values.get('order_id') and  values.get('partner_id'):
             order_obj = self.env['sale.order']
             order_vals = order_obj.onchange_partner_id(values.get('partner_id'))['value']
-            order_vals.update({'partner_id': values.get('partner_id')})
+            order_vals.update({
+                'partner_id': values.get('partner_id'),
+                'project_id': values.get('project_id')
+            })
             order = order_obj.create(order_vals)
             values.update({'order_id': order.id})
         return super(sale_order_line, self).create(values)
@@ -254,8 +292,18 @@ class sale_order_line(models.Model):
             if self.product_id.description_sale:
                 name += '\n' + self.product_id.description_sale
             self.name = name
+            warning = {}
+            if self.product_id.sale_line_warn != 'no-message':
+                title = _("Warning for %s") % self.product_id.name
+                message = self.product_id.sale_line_warn_msg
+                warning['title'] = title
+                warning['message'] = message
+                if self.product_id.sale_line_warn == 'block':
+                    return {'value': {'product_id': False}, 'warning': warning}
+                else:
+                    return {'warning': warning}
 
-    @api.onchange('product_id', 'partner_id')
+    @api.onchange('product_id', 'partner_id', 'product_uom_qty')
     def _on_change_product_partner_id(self):
         if self.product_id and self.partner_id:
             pricelist = self.partner_id.property_product_pricelist
@@ -267,35 +315,43 @@ class sale_order_line(models.Model):
                         setattr(self, k, data['value'][k])
 
     @api.model
-    def get_free_slots(self, start, end, offset, domain):
-        start_dt = datetime.strptime(start, '%Y-%m-%d %H:%M:%S') - timedelta(minutes=offset)
-        fixed_start_dt = start_dt
-        end_dt = datetime.strptime(end, '%Y-%m-%d %H:%M:%S') - timedelta(minutes=offset)
-        resources = self.env['resource.resource'].search([('to_calendar','=',True)])
-        slots = {}
+    def get_resources(self, venue_id, pitch_id):
+        pitch_obj = self.env['pitch_booking.pitch'].sudo()
+        venue_obj = self.env['pitch_booking.venue'].sudo()
+        if not venue_id:
+            venues = venue_obj.search([])
+            venue_id = venues[0].id if venues else None
+        resources = []
+        if pitch_id:
+            resources = [pitch_obj.browse(int(pitch_id)).resource_id]
+        elif venue_id:
+            resources = [p.resource_id for p in pitch_obj.search([('venue_id','=',int(venue_id))])]
+        return [{
+            'name': r.name,
+            'id': r.id,
+            'color': r.color
+        } for r in resources]
+
+    @api.model
+    def generate_slot(self, r, start_dt, end_dt):
+        return {
+            'start': start_dt.strftime(DTF),
+            'end': end_dt.strftime(DTF),
+            'title': r.name,
+            'color': r.color,
+            'className': 'free_slot resource_%s' % r.id,
+            'editable': False,
+            'resource_id': r.id
+        }
+
+    @api.model
+    def del_booked_slots(self, slots, start, end, resources, offset, fixed_start_dt, end_dt):
         now = datetime.now() - timedelta(minutes=SLOT_START_DELAY_MINS) - timedelta(minutes=offset)
-        while start_dt < end_dt:
-            if start_dt < now:
-                start_dt += timedelta(minutes=SLOT_DURATION_MINS)
-                continue
-            for r in resources:
-                if not r.id in slots:
-                    slots[r.id] = {}
-                slots[r.id][start_dt.strftime('%Y-%m-%d %H:%M:%S')] = {
-                    'start': start_dt.strftime('%Y-%m-%d %H:%M:%S'),
-                    'end': (start_dt + timedelta(minutes=SLOT_DURATION_MINS)).strftime('%Y-%m-%d %H:%M:%S'),
-                    'title': r.name,
-                    'color': r.color,
-                    'className': 'free_slot resource_%s' % r.id,
-                    'editable': False,
-                    'resource_id': r.id
-                }
-            start_dt += timedelta(minutes=SLOT_DURATION_MINS)
         lines = self.search_booking_lines(start, end, [('resource_id', 'in', [r['id'] for r in resources])])
         for l in lines:
             line_start_dt = datetime.strptime(l.booking_start, '%Y-%m-%d %H:%M:00') - timedelta(minutes=offset)
             line_start_dt -= timedelta(minutes=divmod(line_start_dt.minute, SLOT_DURATION_MINS)[1])
-            line_end_dt = datetime.strptime(l.booking_end, '%Y-%m-%d %H:%M:%S') - timedelta(minutes=offset)
+            line_end_dt = datetime.strptime(l.booking_end, DTF) - timedelta(minutes=offset)
             while line_start_dt < line_end_dt:
                 if line_start_dt >= end_dt:
                     break
@@ -303,18 +359,78 @@ class sale_order_line(models.Model):
                     line_start_dt += timedelta(minutes=SLOT_DURATION_MINS)
                     continue
                 try:
-                    del slots[l.resource_id.id][line_start_dt.strftime('%Y-%m-%d %H:%M:%S')]
+                    del slots[l.resource_id.id][line_start_dt.strftime(DTF)]
                 except:
                     _logger.warning('cannot free slot %s %s' % (
                         l.resource_id.id,
-                        line_start_dt.strftime('%Y-%m-%d %H:%M:%S')
+                        line_start_dt.strftime(DTF)
                     ))
                 line_start_dt += timedelta(minutes=SLOT_DURATION_MINS)
+        return slots
+
+    @api.model
+    def get_free_slots_resources(self, domain):
+        resources = self.env['resource.resource'].search([('to_calendar','=',True)])
+        return resources
+
+    @api.model
+    def get_free_slots(self, start, end, offset, domain):
+        leave_obj = self.env['resource.calendar.leaves']
+        start_dt = datetime.strptime(start, DTF) - timedelta(minutes=offset)
+        end_dt = datetime.strptime(end, DTF) - timedelta(minutes=offset)
+        fixed_start_dt = start_dt
+        resources = self.get_free_slots_resources(domain)
+        slots = {}
+        now = datetime.now() - timedelta(minutes=SLOT_START_DELAY_MINS) - timedelta(minutes=offset)
+        for r in resources:
+            if not r.id in slots:
+                slots[r.id] = {}
+            start_dt = fixed_start_dt
+            while start_dt < end_dt:
+                if start_dt < now:
+                    start_dt += timedelta(minutes=SLOT_DURATION_MINS)
+                    continue
+                if r.calendar_id:
+                    for calendar_working_day in r.calendar_id.get_attendances_for_weekdays([start_dt.weekday()])[0]:
+                        min_from = int((calendar_working_day.hour_from - int(calendar_working_day.hour_from)) * 60)
+                        min_to = int((calendar_working_day.hour_to - int(calendar_working_day.hour_to)) * 60)
+                        x = start_dt.replace(hour=int(calendar_working_day.hour_from), minute=min_from)
+                        if calendar_working_day.hour_to == 0:
+                            y = start_dt.replace(hour=0, minute=0)+timedelta(days=1)
+                        else:
+                            y = start_dt.replace(hour=int(calendar_working_day.hour_to), minute=min_to)
+                        if r.has_slot_calendar and x >= now and x >= start_dt and y <= end_dt:
+                            slots[r.id][x.strftime(DTF)] = self.generate_slot(r, x, y)
+                        elif not r.has_slot_calendar:
+                            while x < y:
+                                if x >= now:
+                                    slots[r.id][x.strftime(DTF)] = self.generate_slot(r, x, x+timedelta(minutes=SLOT_DURATION_MINS))
+                                x += timedelta(minutes=SLOT_DURATION_MINS)
+                    start_dt += timedelta(days=1)
+                    start_dt = start_dt.replace(hour=0, minute=0, second=0)
+                else:
+                    slots[r.id][start_dt.strftime(DTF)] = self.generate_slot(r, start_dt, start_dt+timedelta(minutes=SLOT_DURATION_MINS))
+                    start_dt += timedelta(minutes=SLOT_DURATION_MINS)
+                    continue
+            leaves = leave_obj.search([('name', '=', 'PH'), ('calendar_id', '=', r.calendar_id.id)])
+            for leave in leaves:
+                from_dt = datetime.strptime(leave.date_from, '%Y-%m-%d %H:%M:00') - timedelta(minutes=offset)
+                to_dt = datetime.strptime(leave.date_to, '%Y-%m-%d %H:%M:00') - timedelta(minutes=offset)
+                if r.has_slot_calendar:
+                    if from_dt >= now and from_dt >= start_dt and to_dt <= end_dt:
+                        slots[r.id][from_dt.strftime(DTF)] = self.generate_slot(r, from_dt, end_dt)
+                    else:
+                        continue
+                else:
+                    from_dt = max(now, from_dt)
+                    while from_dt < to_dt:
+                        slots[r.id][from_dt.strftime(DTF)] = self.generate_slot(r, from_dt, from_dt+timedelta(minutes=SLOT_DURATION_MINS))
+                        from_dt += timedelta(minutes=SLOT_DURATION_MINS)
 
         res = []
-        for slot in slots.values():
-            for resource in slot.values():
-                res.append(resource)
+        for slot in self.del_booked_slots(slots, start, end, resources, offset, fixed_start_dt, end_dt).values():
+            for pitch in slot.values():
+                res.append(pitch)
         return res
 
     @api.multi
