@@ -75,8 +75,13 @@
               <button name="%(action_view_make_invoice_wizard)d" string="Create Invoice"
                       type="action" class="btn-primary"
                       states="booked" />
-              <button name="action_book" states="draft" string="Book Only"
-                      attrs="{'invisible': ['|', '|', '|', ('exit_datetime', '=', False), ('return_datetime', '=', False), ('partner_id', '=', False), ('vehicle_id', '=', False)]}"
+              <button name="action_book" string="Book Only"
+                      attrs="{'invisible': ['|', '|', '|', '|',
+                             ('exit_datetime', '=', False),
+                             ('return_datetime', '=', False),
+                             ('partner_id', '=', False),
+                             ('vehicle_id', '=', False),
+                             ('state', '!=', 'draft')]}"
                       type="object"/>
               <button name="action_cancel_booking" states="booked" string="Cancel Booking" type="object"/>
               <button name="action_confirm" string="Confirm Rental" type="object"
