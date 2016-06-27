@@ -29,10 +29,10 @@ class FleetRentalDocument(models.Model):
 
     vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle", required=True)
 
-    allowed_kilometer_per_day = fields.Integer(string='Allowed kilometer per day', readonly=True)
-    rate_per_extra_km = fields.Float(string='Rate per extra km', readonly=True)
-    daily_rental_price = fields.Float(string='Daily Rental Price', readonly=True)
-    odometer_before = fields.Float(string='Odometer', readonly=True)
+    allowed_kilometer_per_day = fields.Integer(string='Allowed kilometer per day', readonly=True, default=0)
+    rate_per_extra_km = fields.Float(string='Rate per extra km', readonly=True, default=0)
+    daily_rental_price = fields.Float(string='Daily Rental Price', readonly=True, default=0)
+    odometer_before = fields.Float(string='Odometer', readonly=True, default=0)
 
     extra_driver_charge_per_day = fields.Float(string='Extra Driver Charge per day', digits_compute=dp.get_precision('Product Price'), default=0)
     other_extra_charges = fields.Float(string='Other Extra Charges', digits_compute=dp.get_precision('Product Price'), default=0)
