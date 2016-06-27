@@ -24,6 +24,8 @@ class FleetRentalDocumentReturn(models.Model):
             string='Related Rent Document', ondelete='restrict',
             help='Source Rent document')
 
+    odometer_after = fields.Float(string='Odometer after Rent', related='vehicle_id.odometer')
+
     @api.model
     def create(self, vals):
         if vals.get('name', 'New') == 'New':
@@ -35,6 +37,3 @@ class FleetRentalDocumentReturn(models.Model):
     def action_open(self):
         for rent in self:
             rent.state = 'open'
-
-
-

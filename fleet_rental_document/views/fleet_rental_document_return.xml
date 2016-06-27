@@ -102,6 +102,7 @@
                 <field name="rate_per_extra_km"/>
                 <field name="daily_rental_price"/>
                 <field name="odometer" string="Odometer before Rent"/>
+                <field name="odometer_after"/>
                 <field name="exit_datetime" class="oe_inline" readonly="1"/>
                 <field name="return_datetime" class="oe_inline"/>
                 <field name="total_rental_period" class="oe_inline"/>
