@@ -57,6 +57,7 @@ class FleetRentalDocumentRent(models.Model):
                'document_rent_id': rent.id,
                'origin': rent.name,
                'exit_datetime': rent.exit_datetime,
+               'odometer': rent.odometer,
                })
         return self.action_view_document_return()
 
