@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import openerp
 from openerp import models, fields, api
+from datetime import datetime, date, timedelta
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 
 
 class FleetRentalDocumentReturn(models.Model):
@@ -26,6 +28,8 @@ class FleetRentalDocumentReturn(models.Model):
 
     odometer_after = fields.Float(string='Odometer after Rent', related='vehicle_id.odometer')
 
+    extra_hours = fields.Integer(string='Extra Hours', compute="_compute_extra_hours", store=True, readonly=True)
+
     @api.model
     def create(self, vals):
         if vals.get('name', 'New') == 'New':
@@ -37,3 +41,12 @@ class FleetRentalDocumentReturn(models.Model):
     def action_open(self):
         for rent in self:
             rent.state = 'open'
+
+    @api.depends('exit_datetime', 'return_datetime')
+    def _compute_extra_hours(self):
+        for record in self:
+            if record.exit_datetime and record.return_datetime:
+                start = datetime.strptime(record.exit_datetime, DTF)
+                end = datetime.strptime(record.return_datetime, DTF)
+                record.total_rental_period = (end - start).hours
+
