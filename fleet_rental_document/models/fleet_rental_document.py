@@ -162,7 +162,7 @@ class FleetRentalDocument(models.Model):
     def _compute_advanced_deposit(self):
         # TODO: invokes three times on invoice validation. Think about minimize excessive calls
         for record in self:
-            account_analytic = record.partner_id.contract_ids.filtered(lambda r: r.name == 'fleet rental deposit')
+            account_analytic = record.partner_id.rental_deposit_analytic_account_id
             if account_analytic:
                 account_analytic._compute_debit_credit_balance()
             record.advanced_deposit = account_analytic and account_analytic.balance or 0.0
