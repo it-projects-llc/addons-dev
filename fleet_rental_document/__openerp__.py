@@ -30,7 +30,6 @@
         "views/fleet_rental_check_vehicle.xml",
         "views/fleet.xml",
         "views/ir_sequence.xml",
-        "demo/demo.xml",
     ],
     "qweb": [
     ],

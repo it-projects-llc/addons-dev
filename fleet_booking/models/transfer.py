@@ -23,66 +23,52 @@ class VehicleTransfer(models.Model):
 
     @api.multi
     def submit(self):
-        vehicle = self.env['fleet.vehicle'].browse(self.vehicle_id.id)
-        self.old_branch = vehicle.branch_id
-        vehicle.branch_id = False
+        self.old_branch = self.vehicle_id.branch_id
+        self.vehicle_id.branch_id = False
         self.write({'state': 'transfer'})
 
     @api.multi
     def un_submit(self):
-        active_vehicle_state = self.env['fleet.vehicle.state'].browse(2)
-        vehicle = self.env['fleet.vehicle'].browse(self.vehicle_id.id)
-        vehicle.state_id = active_vehicle_state
-        vehicle.branch_id = self.old_branch
+        self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_active')
+        self.vehicle_id.branch_id = self.old_branch
         self.write({'state': 'draft'})
 
     @api.multi
     def confirm_delivery(self):
         self.write({'delivery_state': 'delivered'})
-        vehicle = self.env['fleet.vehicle'].browse(self.vehicle_id.id)
-        in_transfer_vehicle_state = self.env['fleet.vehicle.state'].browse(5)
-        vehicle.state_id = in_transfer_vehicle_state
+        self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_in_transfer')
         if self.receiving_state == 'received':
             self.write({'state': 'done'})
-            active_vehicle_state = self.env['fleet.vehicle.state'].browse(2)
-            vehicle.state_id = active_vehicle_state
-            vehicle.branch_id = self.dest_branch
+            self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_active')
+            self.vehicle_id.branch_id = self.dest_branch
 
     @api.multi
     def un_confirm_delivery(self):
-        in_transfer_vehicle_state = self.env['fleet.vehicle.state'].browse(5)
-        vehicle = self.env['fleet.vehicle'].browse(self.vehicle_id.id)
-        vehicle.state_id = in_transfer_vehicle_state
-        vehicle.branch_id = False
+        self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_in_transfer')
+        self.vehicle_id.branch_id = False
         self.write({'state': 'transfer', 'delivery_state': 'not_delivered'})
 
     @api.multi
     def confirm_receiving(self):
         self.write({'receiving_state': 'received'})
-        vehicle = self.env['fleet.vehicle'].browse(self.vehicle_id.id)
-        in_transfer_vehicle_state = self.env['fleet.vehicle.state'].browse(5)
-        vehicle.state_id = in_transfer_vehicle_state
+        self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_in_transfer')
         if self.delivery_state == 'delivered':
             self.write({'state': 'done'})
-            active_vehicle_state = self.env['fleet.vehicle.state'].browse(2)
-            vehicle.state_id = active_vehicle_state
-            vehicle.branch_id = self.dest_branch
+            self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_active')
+            self.vehicle_id.branch_id = self.dest_branch
 
     @api.multi
     def un_confirm_receiving(self):
-        in_transfer_vehicle_state = self.env['fleet.vehicle.state'].browse(5)
-        vehicle = self.env['fleet.vehicle'].browse(self.vehicle_id.id)
-        vehicle.state_id = in_transfer_vehicle_state
-        vehicle.branch_id = False
+        self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_in_transfer')
+        self.vehicle_id.branch_id = False
         self.write({'state': 'transfer', 'receiving_state': 'not_received'})
 
     @api.onchange('current_odometer')
     @api.multi
     def on_change_current_odometer(self):
         for rec in self:
-            vehicle = self.env['fleet.vehicle'].browse(rec.vehicle_id.id)
-            if vehicle.id:
-                vehicle.odometer = rec.current_odometer
+            if rec.vehicle_id:
+                rec.vehicle_id.odometer = rec.current_odometer
 
     @api.onchange('vehicle_id')
     @api.multi
@@ -101,4 +87,3 @@ class VehicleTransfer(models.Model):
         for record in self:
             if (self.env.user.branch_id.id == self.dest_branch.id) and (self.env.ref('fleet_booking.group_branch_officer') in self.env.user.groups_id):
                 record.can_change_receiving_state = True
-

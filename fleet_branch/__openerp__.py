@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "Vehicle branch",
-    "summary": """Vehicle branch""",
+    "name": "Fleet branch",
+    "summary": """Manage branches of fleet""",
     "category": "Managing vehicles and contracts",
     "images": [],
     "version": "1.0.0",
@@ -14,6 +14,7 @@
 
     "depends": [
         "hr",
+        "fleet",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [

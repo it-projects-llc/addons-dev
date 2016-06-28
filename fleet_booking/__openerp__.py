@@ -25,6 +25,7 @@
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
+        "data/data.xml",
         "security/records.xml",
         "security/ir.model.access.csv",
         "views/partner.xml",
