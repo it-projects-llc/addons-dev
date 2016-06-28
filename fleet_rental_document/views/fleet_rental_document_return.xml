@@ -109,7 +109,7 @@
               <notebook>
                 <page string="Vehicle Checklist">
                   <field name="check_line_ids" widget="one2many_list" colspan="4" nolabel="1" mode="tree">
-                    <tree string="Vehicle checklist" editable="bottom" create="0" delete="false">
+                    <tree string="Vehicle checklist" editable="bottom" create="0" delete="false"  decoration-danger="return_check_yes and return_check_no" decoration-success="return_check_yes and not return_check_no" decoration-warning="(not return_check_yes) and return_check_no">
                       <field name="item_id" options='{"no_open": true}'/>
                       <field name="exit_check_yes" readonly="1"/>
                       <field name="exit_check_no" readonly="1"/>
