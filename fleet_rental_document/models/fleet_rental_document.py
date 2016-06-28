@@ -158,7 +158,7 @@ class FleetRentalDocument(models.Model):
             record.total_rent_price = record.period_rent_price + record.extra_driver_charge + record.other_extra_charges
 
     @api.multi
-    @api.depends('partner_id.contract_ids.line_ids.amount')
+    @api.depends('partner_id.rental_deposit_analytic_account_id.line_ids.amount')
     def _compute_advanced_deposit(self):
         # TODO: invokes three times on invoice validation. Think about minimize excessive calls
         for record in self:

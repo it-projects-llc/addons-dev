@@ -40,8 +40,8 @@ class FleetRentalCreateInvoiceWizard(models.TransientModel):
             amount = self.amount
             name = _('Down Payment')
 
-        account_analytic = document.partner_id.contract_ids.filtered(lambda r: r.name == 'fleet rental deposit') or \
-                           self.env['account.analytic.account'].create({'name': 'fleet rental deposit', 'partner_id': document.partner_id.id})
+        if not document.partner_id.rental_deposit_analytic_account_id:
+            document.partner_id.rental_deposit_analytic_account_id = self.env['account.analytic.account'].create({'name': 'fleet rental deposit', 'partner_id': document.partner_id.id}).id
 
         invoice = inv_obj.create({
             'name': document.name,
@@ -60,7 +60,7 @@ class FleetRentalCreateInvoiceWizard(models.TransientModel):
                 'uom_id': self.product_id.uom_id.id,
                 'product_id': self.product_id.id,
                 'fleet_rental_document_id': document.id,
-                'account_analytic_id': account_analytic.id,
+                'account_analytic_id': document.partner_id.rental_deposit_analytic_account_id.id,
             })],
         })
         return invoice
