@@ -23,10 +23,6 @@ class FleetRentalDocumentReturn(models.Model):
             string='Related Document', ondelete='restrict',
             help='common part of all three types of the documents', auto_join=True)
 
-    document_rent_id = fields.Many2one('fleet_rental.document_rent', required=True,
-            string='Related Rent Document', ondelete='restrict',
-            help='Source Rent document')
-
     odometer_after = fields.Float(string='Odometer after Rent', related='vehicle_id.odometer')
 
     extra_hours = fields.Integer(string='Extra Hours', compute="_compute_extra_hours", store=True, readonly=True, default=0)

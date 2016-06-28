@@ -23,8 +23,6 @@ class FleetRentalDocumentRent(models.Model):
             string='Related Document', ondelete='restrict',
             help='common part of all three types of the documents', auto_join=True)
 
-    document_return_ids = fields.One2many('fleet_rental.document_return', 'document_rent_id', string='Return documents', copy=False)
-
     @api.multi
     def action_view_invoice(self):
         return self.mapped('document_id').action_view_invoice()
@@ -54,10 +52,10 @@ class FleetRentalDocumentRent(models.Model):
                'allowed_kilometer_per_day': rent.allowed_kilometer_per_day,
                'rate_per_extra_km': rent.rate_per_extra_km,
                'daily_rental_price': rent.daily_rental_price,
-               'document_rent_id': rent.id,
                'origin': rent.name,
                'exit_datetime': rent.exit_datetime,
                'odometer_before': rent.odometer_before,
+               'parent_id': rent.document_id.id,
                })
         return self.action_view_document_return()
 
