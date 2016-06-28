@@ -151,16 +151,12 @@ class FleetRentalDocument(models.Model):
         for record in self:
             record.total_rent_price = record.period_rent_price + record.extra_driver_charge + record.other_extra_charges
 
-    @api.depends('invoice_line_ids.invoice_id.state')
+    @api.multi
+    @api.depends('partner_id.contract_ids')
     def _compute_advanced_deposit(self):
         for record in self:
-            advanced_deposit = 0
-            for invoice_line in record.invoice_line_ids.filtered(lambda r: r.invoice_id.type == 'out_invoice'\
-                                                            and r.invoice_id.state == 'paid'\
-                                                            and r.product_id.name == 'Down payment'):
-                advanced_deposit+= invoice_line.price_unit
-
-            record.advanced_deposit = advanced_deposit
+            account_analytic = record.partner_id.contract_ids.filtered(lambda r: r.name == 'fleet rental deposit')
+            record.advanced_deposit = account_analytic and account_analytic.balance or 0.0
 
     @api.depends('total_rent_price', 'advanced_deposit')
     def _compute_balance(self):
