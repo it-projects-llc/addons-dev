@@ -30,7 +30,7 @@ class VehicleTransfer(models.Model):
     @api.multi
     def un_submit(self):
         self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_active')
-        self.set_vehicle_branch(self.old_branch)
+        self.vehicle_id.branch_id = self.old_branch
         self.write({'state': 'draft'})
 
     @api.multi
