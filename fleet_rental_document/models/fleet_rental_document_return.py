@@ -58,7 +58,7 @@ class FleetRentalDocumentReturn(models.Model):
                 record.extra_hours = (end - start).seconds // 3600
 
     @api.multi
-    @api.depends('odometer_before', 'vehicle_id.odometer', 'total_rental_period', 'allowed_kilometer_per_day')
+    @api.depends('vehicle_id.odometer', 'document_id.total_rental_period')
     def _compute_extra_kilometers(self):
         for record in self:
             if record.odometer_after and record.total_rental_period and record.allowed_kilometer_per_day:
