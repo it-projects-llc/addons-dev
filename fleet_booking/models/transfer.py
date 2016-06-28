@@ -23,9 +23,8 @@ class VehicleTransfer(models.Model):
 
     @api.multi
     def submit(self):
-        vehicle = self.env['fleet.vehicle'].browse(self.vehicle_id.id)
-        self.old_branch = vehicle.branch_id
-        vehicle.branch_id = False
+        self.old_branch = self.vehicle_id.branch_id
+        self.vehicle_id.branch_id = False
         self.write({'state': 'transfer'})
 
     @api.multi
