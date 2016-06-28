@@ -99,23 +99,17 @@ class Service(models.Model):
 
     @api.multi
     def submit(self):
-        in_shop_vehicle_state = self.env['fleet.vehicle.state'].browse(1)
-        vehicle = self.env['fleet.vehicle'].browse(self.vehicle_id.id)
-        vehicle.state_id = in_shop_vehicle_state
+        self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_inshop')
         self.write({'state': 'request'})
 
     @api.multi
     def un_submit(self):
-        active_vehicle_state = self.env['fleet.vehicle.state'].browse(2)
-        vehicle = self.env['fleet.vehicle'].browse(self.vehicle_id.id)
-        vehicle.state_id = active_vehicle_state
+        self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_active')
         self.write({'state': 'draft'})
 
     @api.multi
     def confirm(self):
-        active_vehicle_state = self.env['fleet.vehicle.state'].browse(2)
-        vehicle = self.env['fleet.vehicle'].browse(self.vehicle_id.id)
-        vehicle.state_id = active_vehicle_state
+        self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_active')
         self.write({'state': 'done'})
 
     @api.multi

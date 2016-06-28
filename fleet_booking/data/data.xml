@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <!--RECORDS-->
+    <record id="fb_bronze" model="sale_membership.type">
+        <field name="name">Bronze</field>
+        <field name="points">0</field>
+    </record>
+    <record id="fb_silver" model="sale_membership.type">
+        <field name="name">Silver</field>
+        <field name="points">2000</field>
+    </record>
+    <record id="fb_gold" model="sale_membership.type">
+        <field name="name">Gold</field>
+        <field name="points">5000</field>
+    </record>
+    <!--FLEET-->
+    <record model="fleet.service.type" id="in_branch">
+        <field name="name">In branch</field>
+        <field name="category">service</field>
+        <field name="in_branch">True</field>
+    </record>
+    <!--VEHICLE STATES-->
+    <record id="fleet.vehicle_state_inshop" model="fleet.vehicle.state">
+        <field name="name">In shop</field>
+        <field name="sequence">1</field>
+    </record>
+    <record id="fleet.vehicle_state_active" model="fleet.vehicle.state">
+        <field name="name">Active</field>
+        <field name="sequence">2</field>
+    </record>
+    <record id="fleet.vehicle_state_inactive" model="fleet.vehicle.state">
+        <field name="name">Inactive</field>
+        <field name="sequence">3</field>
+    </record>
+    <record id="fleet.vehicle_state_sold" model="fleet.vehicle.state">
+        <field name="name">Sold</field>
+        <field name="sequence">4</field>
+    </record>
+    <record id="fleet.vehicle_state_in_transfer" model="fleet.vehicle.state">
+        <field name="name">In transfer</field>
+        <field name="sequence">5</field>
+    </record>
+    <record id="fleet.vehicle_state_booked" model="fleet.vehicle.state">
+        <field name="name">Booked</field>
+        <field name="sequence">6</field>
+    </record>
+</data>
+</openerp>
