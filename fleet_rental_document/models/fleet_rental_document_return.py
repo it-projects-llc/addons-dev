@@ -3,6 +3,7 @@ import openerp
 from openerp import models, fields, api
 from datetime import datetime, date, timedelta
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
+import openerp.addons.decimal_precision as dp
 
 
 class FleetRentalDocumentReturn(models.Model):
@@ -31,6 +32,10 @@ class FleetRentalDocumentReturn(models.Model):
     extra_hours = fields.Integer(string='Extra Hours', compute="_compute_extra_hours", store=True, readonly=True, default=0)
     extra_kilometers = fields.Float(string='Extra Kilometers', compute="_compute_extra_kilometers", store=True, readonly=True, default=0)
 
+    discount = fields.Float(string='Discount', digits_compute=dp.get_precision('Product Price'), default=0)
+    penalties = fields.Float(string='Penalties', digits_compute=dp.get_precision('Product Price'), default=0)
+    price_after_discount = fields.Float(string='Price After Discount', compute="_compute_price_after_discount", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
+
     @api.model
     def create(self, vals):
         if vals.get('name', 'New') == 'New':
@@ -57,4 +62,11 @@ class FleetRentalDocumentReturn(models.Model):
     def _compute_extra_kilometers(self):
         for record in self:
             if record.odometer_after and record.total_rental_period and record.allowed_kilometer_per_day:
-                record.extra_kilometers = record.odometer_after - record.odometer_before - (record.total_rental_period * record.allowed_kilometer_per_day)
+                kilometers_diff = record.odometer_after - record.odometer_before - (record.total_rental_period * record.allowed_kilometer_per_day)
+                record.extra_kilometers = kilometers_diff if kilometers_diff > 0 else 0
+
+    @api.multi
+    @api.depends('document_id.total_rent_price', 'discount')
+    def _compute_price_after_discount(self):
+        for record in self:
+            record.price_after_discount = record.total_rent_price - record.discount

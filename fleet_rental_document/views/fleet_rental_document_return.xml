@@ -94,10 +94,10 @@
                 </h1>
               </div>
               <group>
-                <field name="partner_id"/>
+                <field name="partner_id" readonly="1"/>
               </group>
               <group col="2" string="Vehicle Information">
-                <field name="vehicle_id"/>
+                <field name="vehicle_id" readonly="1"/>
                 <field name="allowed_kilometer_per_day"/>
                 <field name="rate_per_extra_km"/>
                 <field name="daily_rental_price"/>
@@ -125,7 +125,10 @@
                 <field name="period_rent_price" class="oe_inline"/>
                 <field name="extra_driver_charge" class="oe_inline"/>
                 <field name="other_extra_charges" class="oe_inline"/>
+                <field name="penalties" class="oe_inline"/>
                 <field name="total_rent_price" class="oe_inline"/>
+                <field name="discount" class="oe_inline"/>
+                <field name="price_after_discount" class="oe_inline"/>
                 <field name="advanced_deposit" class="oe_inline"/>
                 <field name="balance" class="oe_inline"/>
               </group>
