@@ -63,6 +63,13 @@ class FleetRentalDocumentRent(models.Model):
                'origin': rent.name,
                'exit_datetime': rent.exit_datetime,
                })
+            for r in self.check_line_ids:
+                for w in document_return.check_line_ids:
+                    if r.item_id == w.item_id:
+                        w.exit_check_yes = r.exit_check_yes
+                        w.exit_check_no = r.exit_check_no
+                        break
+
         return self.action_view_document_return()
 
     @api.multi
