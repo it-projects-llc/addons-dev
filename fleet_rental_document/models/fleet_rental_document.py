@@ -25,6 +25,8 @@ class FleetRentalDocument(models.Model):
         help="Reference of the document that produced this document.",
         readonly=True, states={'draft': [('readonly', False)]})
 
+    parent_id = fields.Many2one('fleet_rental.document')
+
     partner_id = fields.Many2one('res.partner', string="Customer", domain=[('customer', '=', True)], required=True)
 
     vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle", required=True)
@@ -155,16 +157,15 @@ class FleetRentalDocument(models.Model):
         for record in self:
             record.total_rent_price = record.period_rent_price + record.extra_driver_charge + record.other_extra_charges
 
-    @api.depends('invoice_line_ids.invoice_id.state')
+    @api.multi
+    @api.depends('partner_id.contract_ids.line_ids.amount')
     def _compute_advanced_deposit(self):
+        # TODO: invokes three times on invoice validation. Think about minimize excessive calls
         for record in self:
-            advanced_deposit = 0
-            for invoice_line in record.invoice_line_ids.filtered(lambda r: r.invoice_id.type == 'out_invoice'\
-                                                            and r.invoice_id.state == 'paid'\
-                                                            and r.product_id.name == 'Down payment'):
-                advanced_deposit+= invoice_line.price_unit
-
-            record.advanced_deposit = advanced_deposit
+            account_analytic = record.partner_id.contract_ids.filtered(lambda r: r.name == 'fleet rental deposit')
+            if account_analytic:
+                account_analytic._compute_debit_credit_balance()
+            record.advanced_deposit = account_analytic and account_analytic.balance or 0.0
 
     @api.depends('total_rent_price', 'advanced_deposit')
     def _compute_balance(self):
