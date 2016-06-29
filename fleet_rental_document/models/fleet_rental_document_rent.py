@@ -23,7 +23,6 @@ class FleetRentalDocumentRent(models.Model):
             string='Related Document', ondelete='restrict',
             help='common part of all three types of the documents', auto_join=True)
 
-    document_return_ids = fields.One2many('fleet_rental.document_return', 'document_rent_id', string='Return documents', copy=False)
     user_branch_id = fields.Many2one('fleet_branch.branch', default=lambda self: self.env.user.branch_id.id)
 
     @api.multi
@@ -59,16 +58,15 @@ class FleetRentalDocumentRent(models.Model):
                'allowed_kilometer_per_day': rent.allowed_kilometer_per_day,
                'rate_per_extra_km': rent.rate_per_extra_km,
                'daily_rental_price': rent.daily_rental_price,
-               'document_rent_id': rent.id,
                'origin': rent.name,
                'exit_datetime': rent.exit_datetime,
                'odometer_before': rent.odometer_before,
+               'parent_id': rent.document_id.id,
                })
-        return self.action_view_document_return()
+        return self.action_view_document_return(document_return.id)
 
     @api.multi
-    def action_view_document_return(self):
-        document_return_ids = self.mapped('document_return_ids')[0]
+    def action_view_document_return(self, document_return_id):
         action = self.env.ref('fleet_rental_document.fleet_rental_return_document_draft_act')
         form_view_id = self.env.ref('fleet_rental_document.fleet_rental_return_document_form').id
 
@@ -81,11 +79,7 @@ class FleetRentalDocumentRent(models.Model):
             'context': action.context,
             'res_model': action.res_model,
         }
-        if len(document_return_ids) == 1:
-            # TODO: think about what if there would be more than one return documents
-            result['res_id'] = document_return_ids.ids[0]
-        else:
-            result = {'type': 'ir.actions.act_window_close'}
+        result['res_id'] = document_return_id
         return result
 
     @api.model
