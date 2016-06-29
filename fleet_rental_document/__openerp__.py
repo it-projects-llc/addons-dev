@@ -29,6 +29,7 @@
         "views/fleet_rental_check_vehicle.xml",
         "views/fleet.xml",
         "views/ir_sequence.xml",
+        "data/svg_vehicle_part.xml",
     ],
     "qweb": [
     ],
