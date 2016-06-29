@@ -17,8 +17,8 @@
         "fleet",
         "decimal_precision",
         "l10n_sa",
-        "fleet_vehicle_svg",
         "fleet_branch",
+        "web_form_svg",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
