@@ -58,7 +58,6 @@ class FleetRentalDocument(models.Model):
 
     invoice_line_ids = fields.One2many('account.invoice.line', 'fleet_rental_document_id', string='Invoice Lines', copy=False)
 
-    part_ids = fields.One2many(related='vehicle_id.part_ids')
     png_file = fields.Text('PNG', compute='_compute_png', store=False)
 
     @api.onchange('vehicle_id')
