@@ -188,7 +188,7 @@
                       type="action" class="btn-primary"
                       states="booked" />
               <button name="action_confirm" string="Confirm Rental" type="object"
-                      attrs="{'invisible': [('advanced_deposit', '&lt;=', 0)]}"/>
+                      attrs="{'invisible': ['|',('advanced_deposit', '&lt;=', 0),('state','!=','booked')]}"/>
               <field name="state" widget="statusbar" statusbar_visible="draft,booked,confirmed"/>
             </header>
             <sheet>
@@ -214,7 +214,7 @@
                 <field name="allowed_kilometer_per_day"/>
                 <field name="rate_per_extra_km"/>
                 <field name="daily_rental_price"/>
-                <field name="odometer"/>
+                <field name="odometer_before"/>
                 <field name="exit_datetime" class="oe_inline"/>
                 <field name="return_datetime" class="oe_inline"/>
                 <field name="total_rental_period" class="oe_inline"/>

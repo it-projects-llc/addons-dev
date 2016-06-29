@@ -78,7 +78,6 @@ class FleetRentalDocumentRent(models.Model):
     def action_create_extend(self):
         document_rent_obj = self.env['fleet_rental.document_extend']
         for rent in self:
-            rent.state = 'extended'
             self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_active')
             document_extend = document_rent_obj.create({
                'partner_id': rent.partner_id.id,
@@ -98,7 +97,7 @@ class FleetRentalDocumentRent(models.Model):
                         w.exit_check_no = r.exit_check_no
                         break
 
-        return self.action_view_document_extend()
+        return self.action_view_document_extend(document_extend.id)
 
     @api.multi
     def action_view_document_return(self, document_return_id):
@@ -118,9 +117,8 @@ class FleetRentalDocumentRent(models.Model):
         return result
 
     @api.multi
-    def action_view_document_extend(self):
-        document_extend_ids = self.mapped('document_extend_ids')[0]
-        action = self.env.ref('fleet_rental_document.fleet_rental_document_extend_draft_act')
+    def action_view_document_extend(self, document_return_id):
+        action = self.env.ref('fleet_rental_document.fleet_rental_document_extend_act')
         form_view_id = self.env.ref('fleet_rental_document.fleet_rental_document_extend_form').id
 
         result = {
@@ -132,11 +130,7 @@ class FleetRentalDocumentRent(models.Model):
             'context': action.context,
             'res_model': action.res_model,
         }
-        if len(document_extend_ids) == 1:
-            # TODO: think about what if there would be more than one return documents
-            result['res_id'] = document_extend_ids.ids[0]
-        else:
-            result = {'type': 'ir.actions.act_window_close'}
+        result['res_id'] = document_return_id
         return result
 
     @api.model
@@ -157,11 +151,6 @@ class FleetRentalDocumentExtend(models.Model):
         ('confirmed', 'Confirmed'),
         ('cancel', 'Cancelled'),
         ], string='Status', readonly=True, copy=False, index=True, default='draft')
-
-    document_rent_id = fields.Many2one('fleet_rental.document_rent', required=True,
-                                       string='Related Rent Document', ondelete='restrict',
-                                       help='Source Rent document')
-
 
     @api.multi
     def action_submit(self):
