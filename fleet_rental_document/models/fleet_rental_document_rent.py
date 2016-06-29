@@ -25,6 +25,8 @@ class FleetRentalDocumentRent(models.Model):
 
     user_branch_id = fields.Many2one('fleet_branch.branch', default=lambda self: self.env.user.branch_id.id)
 
+    document_return_id = fields.Many2one('fleet_rental.document_return')
+
     @api.multi
     def action_view_invoice(self):
         return self.mapped('document_id').action_view_invoice()
@@ -63,9 +65,9 @@ class FleetRentalDocumentRent(models.Model):
                'type': 'return',
                'return_datetime': fields.Datetime.now(),
                'odometer_before': rent.odometer_before,
-               'parent_id': rent.document_id.id,
                })
-            for r in self.check_line_ids:
+            rent.write({'document_return_id': document_return.id})
+            for r in rent.check_line_ids:
                 for w in document_return.check_line_ids:
                     if r.item_id == w.item_id:
                         w.exit_check_yes = r.exit_check_yes
@@ -90,9 +92,8 @@ class FleetRentalDocumentRent(models.Model):
                'exit_datetime': rent.return_datetime,
                'type': 'extended_rent',
                'odometer_before': rent.odometer_before,
-               'parent_id': rent.document_id.id,
                })
-            for r in self.check_line_ids:
+            for r in rent.check_line_ids:
                 for w in document_extend.check_line_ids:
                     if r.item_id == w.item_id:
                         w.exit_check_yes = r.exit_check_yes
@@ -158,7 +159,6 @@ class FleetRentalDocumentExtend(models.Model):
     def action_submit(self):
         for rent in self:
             rent.state = 'booked'
-            rent.parent_id.state = 'extended'
             self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_booked')
 
     @api.multi
