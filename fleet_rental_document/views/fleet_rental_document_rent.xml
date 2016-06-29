@@ -232,7 +232,7 @@
         </field>
       </record>
 
-      <menuitem action="fleet_rental_document_extend_act" parent="fleet_rental_document.fleet_rental_sale" id="rent_extend_menu" sequence="1"/>
+      <menuitem action="fleet_rental_document_extend_act" parent="fleet_rental_document.fleet_rental_sale" id="rent_extend_menu" sequence="4"/>
 
     </data>
 </openerp>

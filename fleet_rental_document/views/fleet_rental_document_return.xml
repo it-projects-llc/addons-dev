@@ -32,7 +32,7 @@
         </field>
       </record>
 
-      <menuitem action="fleet_rental_return_document_draft_act" parent="fleet_rental_document.fleet_rental_sale" id="return_draft_menu" sequence="4"/>
+      <menuitem action="fleet_rental_return_document_draft_act" parent="fleet_rental_document.fleet_rental_sale" id="return_draft_menu" sequence="5"/>
 
       <record id='fleet_rental_return_document_open_act' model='ir.actions.act_window'>
         <field name="name">Return Open</field>
@@ -48,7 +48,7 @@
         </field>
       </record>
 
-      <menuitem action="fleet_rental_return_document_open_act" parent="fleet_rental_document.fleet_rental_sale" id="return_open_menu" sequence="5"/>
+      <menuitem action="fleet_rental_return_document_open_act" parent="fleet_rental_document.fleet_rental_sale" id="return_open_menu" sequence="6"/>
 
       <record id='fleet_rental_return_documnet_closed_act' model='ir.actions.act_window'>
         <field name="name">Return Closed</field>
@@ -64,7 +64,7 @@
         </field>
       </record>
 
-      <menuitem action="fleet_rental_return_documnet_closed_act" parent="fleet_rental_document.fleet_rental_sale" id="return_closed_menu" sequence="6"/>
+      <menuitem action="fleet_rental_return_documnet_closed_act" parent="fleet_rental_document.fleet_rental_sale" id="return_closed_menu" sequence="7"/>
 
       <record id='fleet_rental_return_document_form' model='ir.ui.view'>
         <field name="name">fleet.rental.document.return.form</field>
