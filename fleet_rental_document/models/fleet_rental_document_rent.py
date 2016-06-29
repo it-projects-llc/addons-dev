@@ -25,6 +25,16 @@ class FleetRentalDocumentRent(models.Model):
 
     user_branch_id = fields.Many2one('fleet_branch.branch', default=lambda self: self.env.user.branch_id.id)
 
+    document_extend_ids = fields.One2many('fleet_rental.document_extend', 'document_rent_id')
+    extends_count = fields.Integer(string='# of Extends', compute='_get_extends', readonly=True)
+
+    @api.depends('document_extend_ids')
+    def _get_extends(self):
+        for document in self:
+            document.update({
+                'extends_count': len(document.document_extend_ids),
+            })
+
     @api.multi
     def action_view_invoice(self):
         return self.mapped('document_id').action_view_invoice()
@@ -153,6 +163,25 @@ class FleetRentalDocumentExtend(models.Model):
         ('confirmed', 'Confirmed'),
         ('cancel', 'Cancelled'),
         ], string='Status', readonly=True, copy=False, index=True, default='draft')
+
+    document_rent_id = fields.Many2one('fleet_rental.document_rent')
+
+    @api.model
+    def default_get(self, fields_list):
+        defaults = super(FleetRentalDocumentExtend, self).default_get(fields_list)
+        context = dict(self._context or {})
+        active_id = context.get('active_id')
+        rent = self.env['fleet_rental.document_rent'].browse(active_id)
+        defaults.setdefault('vehicle_id', rent.vehicle_id.id)
+        defaults.setdefault('partner_id', rent.partner_id.id)
+        defaults.setdefault('exit_datetime', rent.return_datetime)
+        defaults.setdefault('rate_per_extra_km', rent.rate_per_extra_km)
+        defaults.setdefault('extra_driver_charge_per_day', rent.extra_driver_charge_per_day)
+        defaults.setdefault('odometer_before', rent.odometer_before)
+        defaults.setdefault('daily_rental_price', rent.daily_rental_price)
+        defaults.setdefault('allowed_kilometer_per_day', rent.allowed_kilometer_per_day)
+        defaults.setdefault('partner_id', rent.partner_id)
+        return defaults
 
     @api.multi
     def action_submit(self):

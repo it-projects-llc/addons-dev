@@ -32,9 +32,6 @@
                   </tree>
                 </field>
               </group>
-              <group>
-                <field name="part_ids" widget="svg" svg_file="/fleet_vehicle_svg/static/src/img/car-cutout.svg" svg_colors='red:broken;original:operative' svg_id_field="part_id" svg_color_field="state" nolabel = '1'/>
-              </group>
               <group string="Payment Details">
                 <field name="period_rent_price" class="oe_inline"/>
               </group>

@@ -17,9 +17,6 @@
             </xpath>
             <xpath expr="//field[@name='doors']" position="after">
                     <field name='model_year'/>
-                    <field name='daily_rate'/>
-                    <field name='extra_rate'/>
-                    <field name='allowed_per_day'/>
                     <field name='paid'/>
                     <field name='remain'/>
                     <field name='reg_expiry'/>
@@ -27,10 +24,10 @@
                     <field name='next_maintain'/>
             </xpath>
             <xpath expr="//sheet" position="inside">
-                    <notebook colspan="4" groups="fleet_booking.group_accountant">
-                        <page string="Depreciation">
-                            <field name="deprecation_ids" nolabel="1" widget="one2many_list" mode="tree" context="{'vehicle_id': id}">
-                                <tree string="Depreciation Lines" decoration-info="(move_check == False)" create="false">
+                <notebook colspan="4" groups="fleet_booking.group_accountant">
+                    <page string="Depreciation">
+                        <field name="deprecation_ids" nolabel="1" widget="one2many_list" mode="tree" context="{'vehicle_id': id}">
+                            <tree string="Depreciation Lines" decoration-info="(move_check == False)" create="false">
                                     <field name="depreciation_date"/>
                                     <field name="depreciated_value" readonly="1"/>
                                     <field name="amount" widget="monetary" string="Depreciation"/>
@@ -38,9 +35,9 @@
                                     <field name="move_check" invisible="1"/>
                                     <field name="parent_state" invisible="1"/>
                                 </tree>
-                            </field>
-                        </page>
-                    </notebook>
+                        </field>
+                    </page>
+                </notebook>
             </xpath>
         </data>
     </field>
@@ -96,7 +93,6 @@
     <field name="view_type">form</field>
     <field name="domain">[('vehicle_id', '=', active_id)]</field>
     <field name="view_mode">tree,form</field>
-</record>
 <record model="ir.ui.view" id="fleet_vehicle_form_inherit_documents">
     <field name="name">fleet.vehicle.form.inherit.documents</field>
     <field name="model">fleet.vehicle</field>
