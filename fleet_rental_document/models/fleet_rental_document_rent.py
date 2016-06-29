@@ -89,6 +89,8 @@ class FleetRentalDocumentRent(models.Model):
                'origin': rent.name,
                'exit_datetime': rent.return_datetime,
                'type': 'extended_rent',
+               'odometer_before': rent.odometer_before,
+               'parent_id': rent.document_id.id,
                })
             for r in self.check_line_ids:
                 for w in document_extend.check_line_ids:
@@ -156,6 +158,7 @@ class FleetRentalDocumentExtend(models.Model):
     def action_submit(self):
         for rent in self:
             rent.state = 'booked'
+            rent.parent_id.state = 'extended'
             self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_booked')
 
     @api.multi

@@ -95,8 +95,7 @@
                 <button name="action_view_invoice"
                         type="object"
                         class="oe_stat_button"
-                        icon="fa-pencil-square-o"
-                        attrs="{'invisible': [('invoice_count', '=', 0)]}">
+                        icon="fa-pencil-square-o">
                   <field name="invoice_count" widget="statinfo" string="Invoices"/>
                 </button>
               </div>
