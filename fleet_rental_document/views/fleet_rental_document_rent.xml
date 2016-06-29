@@ -66,6 +66,24 @@
 
       <menuitem action="fleet_rental_document_confirmed_act" parent="fleet_rental_document.fleet_rental_sale" id="rent_confirmed_menu" sequence="3"/>
 
+      <record id="view_extends_filter" model="ir.ui.view">
+            <field name="name">fleet_rental.document_extend.filter</field>
+            <field name="model">fleet_rental.document_extend</field>
+            <field name="arch" type="xml">
+              <search string="Active">
+                  <field name="document_rent_id"/>
+              </search>
+            </field>
+      </record>
+
+      <record model='ir.actions.act_window' id='extends_act'>
+          <field name="name">Extend documents</field>
+          <field name="res_model">fleet_rental.document_extend</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="search_view_id" ref="view_extends_filter"/>
+      </record>
+
       <record id='fleet_rental_document_rent_form' model='ir.ui.view'>
         <field name="name">fleet.rental.document.rent.form</field>
         <field name="model">fleet_rental.document_rent</field>
@@ -98,6 +116,19 @@
                         icon="fa-pencil-square-o">
                   <field name="invoice_count" widget="statinfo" string="Invoices"/>
                 </button>
+                <button type="action"
+                        class="oe_stat_button"
+                        id="extends_button"
+                        icon="fa-book"
+                        context="{'search_default_document_rent_id': active_id, 'default_model': 'fleet_rental.document_extend', 'default_res_id': active_id}"
+                        name="%(extends_act)d">
+                      <div class="o_form_field o_stat_info">
+                          <span class="o_stat_value">
+                              <field name="extends_count"/>
+                          </span>
+                          <span class="o_stat_text">Extends</span>
+                      </div>
+                  </button>
               </div>
               <div class="oe_title">
                 <h1>
