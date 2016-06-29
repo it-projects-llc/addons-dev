@@ -20,9 +20,9 @@
         'security/ir.model.access.csv',
         'views/fleet_vehicle.xml',
         'views/fleet_vehicle_report.xml',
+        'data/fleet_vehicle_part.xml',
     ],
     'demo': [
-        'demo/fleet_vehicle_part.xml',
     ],
     'installable': True
 }

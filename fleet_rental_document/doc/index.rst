@@ -39,7 +39,7 @@ Rent documents
  * ``Rent Confirmed``
 
 * Open ``Sales / Rental / Rent Draft`` to book or confirm rents.
-* Open ``Sales / Rental / Rent Booked`` to confirm or cancell booking.
+* Open ``Sales / Rental / Rent Booked`` to confirm or cancel booking.
 * Open ``Sales / Rental / Rent Confirmed`` to extend rents or create return documents on them.
 
 Return documents

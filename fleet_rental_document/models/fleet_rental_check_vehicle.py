@@ -14,10 +14,10 @@ class FleetRentalCheckLine(models.Model):
 
     item_id = fields.Many2one('fleet_rental.item_to_check', string='Item', ondelete='restrict', required=True, readonly=True)
     document_id = fields.Many2one('fleet_rental.document', string='Document', ondelete='cascade', required=True)
-    exit_check_yes = fields.Boolean(string='yes', default=False)
-    exit_check_no = fields.Boolean(string='no', default=False)
-    return_check_yes = fields.Boolean(string='yes', default=False)
-    return_check_no = fields.Boolean(string='no', default=False)
+    exit_check_yes = fields.Boolean(string='OK (on out)', default=False)
+    exit_check_no = fields.Boolean(string='NOT ok (on out)', default=False)
+    return_check_yes = fields.Boolean(string='OK (on return)', default=False)
+    return_check_no = fields.Boolean(string='NOT ok (on return)', default=False)
 
     @api.multi
     def write(self, vals):

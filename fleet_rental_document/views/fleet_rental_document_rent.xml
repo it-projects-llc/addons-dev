@@ -87,6 +87,7 @@
               <button name="action_confirm" string="Confirm Rental" type="object"
                       attrs="{'invisible': ['|', ('state', '!=', 'booked'), ('advanced_deposit', '&lt;=', 0)]}"/>
               <button name="action_create_return" states="confirmed" string="Create Return Document" type="object"/>
+              <button name="action_create_extend" states="confirmed" string="Create Extend Document" type="object"/>
               <field name="state" widget="statusbar" statusbar_visible="draft,booked,confirmed,extended,returned"/>
             </header>
             <sheet>
@@ -94,8 +95,7 @@
                 <button name="action_view_invoice"
                         type="object"
                         class="oe_stat_button"
-                        icon="fa-pencil-square-o"
-                        attrs="{'invisible': [('invoice_count', '=', 0)]}">
+                        icon="fa-pencil-square-o">
                   <field name="invoice_count" widget="statinfo" string="Invoices"/>
                 </button>
               </div>
@@ -123,7 +123,7 @@
               <notebook>
                 <page string="Vehicle Checklist">
                   <field name="check_line_ids" widget="one2many_list" colspan="4" nolabel="1" mode="tree">
-                    <tree string="Vehicle checklist" editable="bottom" create="0" delete="false">
+                    <tree string="Vehicle checklist" editable="bottom" create="0" delete="false" decoration-danger="exit_check_yes and exit_check_no" decoration-success="exit_check_yes and not exit_check_no" decoration-warning="(not exit_check_yes) and exit_check_no">
                       <field name="item_id" options='{"no_open": true}'/>
                       <field name="exit_check_yes"/>
                       <field name="exit_check_no"/>
@@ -143,6 +143,96 @@
           </form>
         </field>
       </record>
+
+      <!--RENT EXTEND-->
+      <record id='view_fleet_rental_document_extend_tree' model='ir.ui.view'>
+        <field name="name">fleet.rental.document.extend.tree</field>
+        <field name="model">fleet_rental.document_extend</field>
+        <field name="arch" type="xml">
+          <tree string="Vehicle Rent Extend" decoration-muted="state=='cancel'">
+            <field name="state" invisible="1"/>
+            <field name="name"/>
+            <field name="partner_id"/>
+            <field name="vehicle_id"/>
+            <field name="exit_datetime"/>
+            <field name="return_datetime"/>
+            <field name="total_rental_period"/>
+          </tree>
+        </field>
+      </record>
+
+      <record id='fleet_rental_document_extend_act' model='ir.actions.act_window'>
+        <field name="name">Rent Extend</field>
+        <field name="res_model">fleet_rental.document_extend</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="view_fleet_rental_document_extend_tree"/>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a new rental extend document.
+          </p>
+        </field>
+      </record>
+
+      <record id='fleet_rental_document_extend_form' model='ir.ui.view'>
+        <field name="name">fleet.rental.document.extend.form</field>
+        <field name="model">fleet_rental.document_extend</field>
+        <field name="arch" type="xml">
+          <form string="Vehicle Rent Extend">
+            <header>
+              <button name="action_submit" string="Submit"
+                      type="object" class="btn-primary"
+                      states="draft" />
+              <button name="%(action_view_make_invoice_wizard)d" string="Create Invoice"
+                      type="action" class="btn-primary"
+                      states="booked" />
+              <button name="action_confirm" string="Confirm Rental" type="object"
+                      attrs="{'invisible': ['|',('advanced_deposit', '&lt;=', 0),('state','!=','booked')]}"/>
+              <field name="state" widget="statusbar" statusbar_visible="draft,booked,confirmed"/>
+            </header>
+            <sheet>
+              <div class="oe_button_box" name="button_box">
+                <button name="action_view_invoice"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-pencil-square-o">
+                  <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                </button>
+              </div>
+              <div class="oe_title">
+                <h1>
+                  <field name="name" readonly="1"/>
+                </h1>
+              </div>
+              <group>
+                <field name="partner_id"/>
+              </group>
+              <group col="2" string="Vehicle Information">
+                <field name="user_branch_id" invisible="True"/>
+                <field name="vehicle_id" domain="[('state_id.name','=','Active'),('branch_id','=', user_branch_id)]"/>
+                <field name="allowed_kilometer_per_day"/>
+                <field name="rate_per_extra_km"/>
+                <field name="daily_rental_price"/>
+                <field name="odometer_before"/>
+                <field name="exit_datetime" class="oe_inline"/>
+                <field name="return_datetime" class="oe_inline"/>
+                <field name="total_rental_period" class="oe_inline"/>
+                <field name="extra_driver_charge_per_day" class="oe_inline"/>
+              </group>
+              <group string="Payment Details">
+                <field name="period_rent_price" class="oe_inline"/>
+                <field name="extra_driver_charge" class="oe_inline"/>
+                <field name="other_extra_charges" class="oe_inline"/>
+                <field name="total_rent_price" class="oe_inline"/>
+                <field name="advanced_deposit" class="oe_inline"/>
+                <field name="balance" class="oe_inline"/>
+              </group>
+            </sheet>
+          </form>
+        </field>
+      </record>
+
+      <menuitem action="fleet_rental_document_extend_act" parent="fleet_rental_document.fleet_rental_sale" id="rent_extend_menu" sequence="4"/>
 
     </data>
 </openerp>
