@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    
+    <record id='svg_path_path3070' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3070</field>
+    </record>
+    <record id='svg_path_path3846' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3846</field>
+    </record>
+    <record id='svg_path_path3850' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3850</field>
+    </record>
+    <record id='svg_path_path3852' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3852</field>
+    </record>
+    <record id='svg_path_front_left_side_window' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>front_left_side_window</field>
+    </record>
+    <record id='svg_path_path3888' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3888</field>
+    </record>
+    <record id='svg_path_rear_left_side_window' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>rear_left_side_window</field>
+    </record>
+    <record id='svg_path_left_boot_window' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>left_boot_window</field>
+    </record>
+    <record id='svg_path_path3900' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3900</field>
+    </record>
+    <record id='svg_path_path3900-6' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3900-6</field>
+    </record>
+    <record id='svg_path_path3920' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3920</field>
+    </record>
+    <record id='svg_path_path3920-5' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3920-5</field>
+    </record>
+    <record id='svg_path_path3940' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3940</field>
+    </record>
+    <record id='svg_path_path3942' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3942</field>
+    </record>
+    <record id='svg_path_path3944' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3944</field>
+    </record>
+    <record id='svg_path_path3946' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3946</field>
+    </record>
+    <record id='svg_path_path3948' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3948</field>
+    </record>
+    <record id='svg_path_path4141' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4141</field>
+    </record>
+    <record id='svg_path_path4143' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4143</field>
+    </record>
+    <record id='svg_path_path4145' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4145</field>
+    </record>
+    <record id='svg_path_windshield' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>windshield</field>
+    </record>
+    <record id='svg_path_path4175' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4175</field>
+    </record>
+    <record id='svg_path_path4135-9' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4135-9</field>
+    </record>
+    <record id='svg_path_path4203' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4203</field>
+    </record>
+    <record id='svg_path_rear_window' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>rear_window</field>
+    </record>
+    <record id='svg_path_path4207' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4207</field>
+    </record>
+    <record id='svg_path_path4209' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4209</field>
+    </record>
+    <record id='svg_path_path4209-7' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4209-7</field>
+    </record>
+    <record id='svg_path_path4209-76' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4209-76</field>
+    </record>
+    <record id='svg_path_path4243' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4243</field>
+    </record>
+    <record id='svg_path_path4245' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4245</field>
+    </record>
+    <record id='svg_path_path4247' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4247</field>
+    </record>
+    <record id='svg_path_path4247-2' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4247-2</field>
+    </record>
+    <record id='svg_path_path4247-1' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4247-1</field>
+    </record>
+    <record id='svg_path_path4247-0' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4247-0</field>
+    </record>
+    <record id='svg_path_path4281-1' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4281-1</field>
+    </record>
+    <record id='svg_path_path4281-8' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4281-8</field>
+    </record>
+    <record id='svg_path_path3070-9' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3070-9</field>
+    </record>
+    <record id='svg_path_path3846-2' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3846-2</field>
+    </record>
+    <record id='svg_path_path3850-6' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3850-6</field>
+    </record>
+    <record id='svg_path_path3852-6' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3852-6</field>
+    </record>
+    <record id='svg_path_front_right_side_window' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>front_right_side_window</field>
+    </record>
+    <record id='svg_path_path3888-9' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3888-9</field>
+    </record>
+    <record id='svg_path_rear_right_side_window' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>rear_right_side_window</field>
+    </record>
+    <record id='svg_path_right_boot_window' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>right_boot_window</field>
+    </record>
+    <record id='svg_path_path3900-4' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3900-4</field>
+    </record>
+    <record id='svg_path_path3900-6-8' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3900-6-8</field>
+    </record>
+    <record id='svg_path_path3920-7' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3920-7</field>
+    </record>
+    <record id='svg_path_path3920-5-1' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3920-5-1</field>
+    </record>
+    <record id='svg_path_path3940-7' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3940-7</field>
+    </record>
+    <record id='svg_path_path3942-2' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3942-2</field>
+    </record>
+    <record id='svg_path_path3944-7' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3944-7</field>
+    </record>
+    <record id='svg_path_path3946-2' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3946-2</field>
+    </record>
+    <record id='svg_path_path3948-2' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3948-2</field>
+    </record>
+    <record id='svg_path_path4335' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4335</field>
+    </record>
+    <record id='svg_path_path4281-8-0' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4281-8-0</field>
+    </record>
+    <record id='svg_path_front_left_headlight' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>front_left_headlight</field>
+    </record>
+    <record id='svg_path_front_right_headlight' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>front_right_headlight</field>
+    </record>
+    <record id='svg_path_path4377' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4377</field>
+    </record>
+    <record id='svg_path_path4381' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4381</field>
+    </record>
+    <record id='svg_path_right_rear_light_c' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>right_rear_light_c</field>
+    </record>
+    <record id='svg_path_path4501' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4501</field>
+    </record>
+    <record id='svg_path_path4503' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4503</field>
+    </record>
+    <record id='svg_path_path4505' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4505</field>
+    </record>
+    <record id='svg_path_path4536' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4536</field>
+    </record>
+    <record id='svg_path_path4536-0' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4536-0</field>
+    </record>
+    <record id='svg_path_path4556' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4556</field>
+    </record>
+    <record id='svg_path_path4377-2' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4377-2</field>
+    </record>
+    <record id='svg_path_path4381-0' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4381-0</field>
+    </record>
+    <record id='svg_path_right_rear_light' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>right_rear_light</field>
+    </record>
+    <record id='svg_path_left_rear_light' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>left_rear_light</field>
+    </record>
+    <record id='svg_path_wheel_front_left' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>wheel_front_left</field>
+    </record>
+    <record id='svg_path_path4612' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4612</field>
+    </record>
+    <record id='svg_path_wheel_front_right' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>wheel_front_right</field>
+    </record>
+    <record id='svg_path_path4612-4' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4612-4</field>
+    </record>
+    <record id='svg_path_wheel_back_right' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>wheel_back_right</field>
+    </record>
+    <record id='svg_path_path4612-1' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4612-1</field>
+    </record>
+    <record id='svg_path_wheel_back_left' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>wheel_back_left</field>
+    </record>
+    <record id='svg_path_path4612-3' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path4612-3</field>
+    </record>
+    <record id='svg_path_path3083' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3083</field>
+    </record>
+    <record id='svg_path_path3853' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3853</field>
+    </record>
+    <record id='svg_path_path3855' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3855</field>
+    </record>
+    <record id='svg_path_path3857' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3857</field>
+    </record>
+    <record id='svg_path_path3857-2' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3857-2</field>
+    </record>
+    <record id='svg_path_path3857-3' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3857-3</field>
+    </record>
+    <record id='svg_path_path3857-7' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3857-7</field>
+    </record>
+    <record id='svg_path_path3857-97' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3857-97</field>
+    </record>
+    <record id='svg_path_path3857-2-3' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3857-2-3</field>
+    </record>
+    <record id='svg_path_path3857-3-6' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3857-3-6</field>
+    </record>
+    <record id='svg_path_path3857-7-1' model='fleet_rental.svg_vehicle_part'>
+      <field name='path_ID'>path3857-7-1</field>
+    </record>
+
+  </data>
+</openerp>
