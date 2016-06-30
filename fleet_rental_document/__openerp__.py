@@ -17,8 +17,8 @@
         "fleet",
         "decimal_precision",
         "l10n_sa",
-        "fleet_vehicle_svg",
         "fleet_branch",
+        "web_form_svg",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
@@ -30,6 +30,7 @@
         "views/fleet_rental_check_vehicle.xml",
         "views/fleet.xml",
         "views/ir_sequence.xml",
+        "data/svg_vehicle_part.xml",
     ],
     "qweb": [
     ],

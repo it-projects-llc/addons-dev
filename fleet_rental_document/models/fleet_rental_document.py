@@ -25,8 +25,6 @@ class FleetRentalDocument(models.Model):
         help="Reference of the document that produced this document.",
         readonly=True, states={'draft': [('readonly', False)]})
 
-    parent_id = fields.Many2one('fleet_rental.document')
-
     partner_id = fields.Many2one('res.partner', string="Customer", domain=[('customer', '=', True)], required=True)
 
     vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle", required=True)
@@ -52,6 +50,7 @@ class FleetRentalDocument(models.Model):
     balance = fields.Float(string='Balance', compute="_compute_balance", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
 
     check_line_ids = fields.One2many('fleet_rental.check_line', 'document_id', string='Vehicle rental check lines')
+    part_line_ids = fields.One2many('fleet_rental.svg_vehicle_part_line', 'document_id', string='Vehicle part')
 
     invoice_ids = fields.Many2many("account.invoice", string='Invoices', compute="_get_invoiced", readonly=True, copy=False)
 
@@ -59,7 +58,6 @@ class FleetRentalDocument(models.Model):
 
     invoice_line_ids = fields.One2many('account.invoice.line', 'fleet_rental_document_id', string='Invoice Lines', copy=False)
 
-    part_ids = fields.One2many(related='vehicle_id.part_ids')
     png_file = fields.Text('PNG', compute='_compute_png', store=False)
 
     @api.onchange('vehicle_id')
@@ -69,13 +67,13 @@ class FleetRentalDocument(models.Model):
     @api.multi
     def _compute_png(self):
         for rec in self:
-            f = open('/'.join([os.path.dirname(os.path.realpath(__file__+ '//..//..')),  # TODO needs better decision
-                               'fleet_vehicle_svg/static/src/img/car-cutout.svg']), 'r')
+            f = open('/'.join([os.path.dirname(os.path.realpath(__file__)),
+                               'static/src/img/car-cutout.svg']), 'r')
             svg_file = f.read()
             dom = etree.fromstring(svg_file)
-            for part in rec.part_ids:
-                if part.state == 'broken':
-                    for el in dom.xpath('//*[@id="%s"]' % part.part_id):
+            for line in rec.part_line_ids:
+                if line.state == 'broken':
+                    for el in dom.xpath('//*[@id="%s"]' % line.part_id.path_ID):
                         el.attrib['fill'] = 'red'
             f.close()
             with Image(blob=etree.tostring(dom), format='svg') as img:
@@ -124,11 +122,11 @@ class FleetRentalDocument(models.Model):
     @api.model
     def default_get(self, fields_list):
         result = super(FleetRentalDocument, self).default_get(fields_list)
-        document_id= self._context.get('active_id', False)
         items = self.env['fleet_rental.item_to_check'].search([])
-        check_line_obj = self.env['fleet_rental.check_line']
+        parts = self.env['fleet_rental.svg_vehicle_part'].search([])
 
         result['check_line_ids'] = [(5, 0, 0)] + [(0, 0, {'item_id': item.id,'exit_check_yes': False, 'exit_check_no': False,'exit_check_yes': False, 'exit_check_no': False,}) for item in items]
+        result['part_line_ids'] = [(5, 0, 0)] + [(0, 0, {'part_id': part.id}) for part in parts]
 
         return result
 
