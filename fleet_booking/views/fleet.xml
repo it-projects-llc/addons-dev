@@ -34,7 +34,7 @@
                                     <field name="remaining_value" readonly="1" widget="monetary" string="Residual"/>
                                     <field name="move_check" invisible="1"/>
                                     <field name="parent_state" invisible="1"/>
-                                </tree>
+                            </tree>
                         </field>
                     </page>
                 </notebook>
@@ -93,6 +93,7 @@
     <field name="view_type">form</field>
     <field name="domain">[('vehicle_id', '=', active_id)]</field>
     <field name="view_mode">tree,form</field>
+</record>
 <record model="ir.ui.view" id="fleet_vehicle_form_inherit_documents">
     <field name="name">fleet.vehicle.form.inherit.documents</field>
     <field name="model">fleet.vehicle</field>
