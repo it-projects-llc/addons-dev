@@ -10,8 +10,8 @@
         <xpath expr="//sheet/group[2]" position="after">
           <group string="Rental Properties">
             <field name="allowed_kilometer_per_day"/>
-            <field name="rate_per_extra_km" />
-            <field name="daily_rental_price" />
+            <field name="daily_rental_price"/>
+            <field name="rate_per_extra_km"/>
           </group>
         </xpath>
       </field>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <record model="fleet_rental.item_to_check" id="itc_tires">
+        <field name="name">tires</field>
+    </record>
+    <record model="fleet_rental.item_to_check" id="itc_spare_tire">
+        <field name="name">spare tire</field>
+    </record>
+    <record model="fleet_rental.item_to_check" id="itc_oil">
+        <field name="name">oil</field>
+    </record>
+    <record model="fleet_rental.item_to_check" id="itc_floor">
+        <field name="name">floor</field>
+    </record>
+    <record model="fleet_rental.item_to_check" id="itc_jack">
+        <field name="name">jack</field>
+    </record>
+    <record model="fleet_rental.item_to_check" id="itc_horn">
+        <field name="name">horn</field>
+    </record>
+    <record model="fleet_rental.item_to_check" id="itc_tool_box">
+        <field name="name">tool box</field>
+    </record>
+    <record model="fleet_rental.item_to_check" id="itc_horn">
+        <field name="name">horn</field>
+    </record>
+    <record model="fleet_rental.item_to_check" id="itc_triangle">
+        <field name="name">triangle</field>
+    </record>
+    <record model="fleet_rental.item_to_check" id="itc_wrench">
+        <field name="name">wrench</field>
+    </record>
+    <record model="fleet_rental.item_to_check" id="itc_hubcaps">
+        <field name="name">hubcaps</field>
+    </record>
+    <record model="fleet_rental.item_to_check" id="itc_antenna">
+        <field name="name">antenna</field>
+    </record>
+    <record model="fleet_rental.item_to_check" id="itc_radio">
+        <field name="name">radio</field>
+    </record>
+    <record model="fleet_rental.item_to_check" id="itc_glass">
+        <field name="name">glass</field>
+    </record>
+</data>
+</openerp>

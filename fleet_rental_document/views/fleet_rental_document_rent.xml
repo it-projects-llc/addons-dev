@@ -138,18 +138,28 @@
 
               <group>
                 <field name="partner_id"/>
-              </group>
-              <group col="2" string="Vehicle Information">
-                <field name="user_branch_id" invisible="True"/>
                 <field name="vehicle_id" domain="[('state_id.name','=','Active'),('branch_id','=', user_branch_id)]"/>
-                <field name="allowed_kilometer_per_day"/>
-                <field name="rate_per_extra_km"/>
-                <field name="daily_rental_price"/>
-                <field name="odometer_before"/>
-                <field name="exit_datetime" class="oe_inline"/>
-                <field name="return_datetime" class="oe_inline"/>
-                <field name="total_rental_period" class="oe_inline"/>
-                <field name="extra_driver_charge_per_day" class="oe_inline"/>
+              </group>
+              <group>
+                <group col="2" string="Vehicle Information">
+                  <field name="user_branch_id" invisible="True"/>
+                  <field name="allowed_kilometer_per_day"/>
+                  <field name="rate_per_extra_km"/>
+                  <field name="daily_rental_price"/>
+                  <field name="odometer_before"/>
+                  <field name="exit_datetime" class="oe_inline"/>
+                  <field name="return_datetime" class="oe_inline"/>
+                  <field name="total_rental_period" class="oe_inline"/>
+                  <field name="extra_driver_charge_per_day" class="oe_inline"/>
+                </group>
+                <group col="2" string="Payment Details">
+                  <field name="period_rent_price" class="oe_inline"/>
+                  <field name="extra_driver_charge" class="oe_inline"/>
+                  <field name="other_extra_charges" class="oe_inline"/>
+                  <field name="total_rent_price" class="oe_inline"/>
+                  <field name="advanced_deposit" class="oe_inline"/>
+                  <field name="balance" class="oe_inline"/>
+                </group>
               </group>
               <notebook>
                 <page string="Vehicle Checklist">
@@ -162,14 +172,7 @@
                   </field>
                 </page>
               </notebook>
-              <group string="Payment Details">
-                <field name="period_rent_price" class="oe_inline"/>
-                <field name="extra_driver_charge" class="oe_inline"/>
-                <field name="other_extra_charges" class="oe_inline"/>
-                <field name="total_rent_price" class="oe_inline"/>
-                <field name="advanced_deposit" class="oe_inline"/>
-                <field name="balance" class="oe_inline"/>
-              </group>
+
             </sheet>
           </form>
         </field>
