@@ -105,31 +105,30 @@
               <button name="action_confirm" string="Confirm Rental" type="object"
                       attrs="{'invisible': ['|', ('state', '!=', 'booked'), ('advanced_deposit', '&lt;=', 0)]}"/>
               <button name="action_create_return" states="confirmed" string="Create Return Document" type="object"/>
-              <button name="action_create_extend" states="confirmed" string="Create Extend Document" type="object"/>
               <field name="state" widget="statusbar" statusbar_visible="draft,booked,confirmed,extended,returned"/>
             </header>
             <sheet>
-              <div class="oe_button_box" name="button_box">
-                <button name="action_view_invoice"
-                        type="object"
-                        class="oe_stat_button"
-                        icon="fa-pencil-square-o">
-                  <field name="invoice_count" widget="statinfo" string="Invoices"/>
-                </button>
-                <button type="action"
-                        class="oe_stat_button"
-                        id="extends_button"
-                        icon="fa-book"
-                        context="{'search_default_document_rent_id': active_id, 'default_model': 'fleet_rental.document_extend', 'default_res_id': active_id}"
-                        name="%(extends_act)d">
-                      <div class="o_form_field o_stat_info">
-                          <span class="o_stat_value">
-                              <field name="extends_count"/>
-                          </span>
-                          <span class="o_stat_text">Extends</span>
-                      </div>
-                  </button>
-              </div>
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_view_invoice"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-pencil-square-o">
+                        <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                    </button>
+                    <button type="action"
+                            class="oe_stat_button"
+                            id="extends_button"
+                            icon="fa-book"
+                            context="{'search_default_document_rent_id': active_id, 'default_model': 'fleet_rental.document_extend', 'default_res_id': active_id}"
+                            name="%(extends_act)d">
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="extends_count"/>
+                            </span>
+                            <span class="o_stat_text">Extends</span>
+                        </div>
+                    </button>
+                </div>
               <div class="oe_title">
                 <h1>
                   <field name="name" readonly="1"/>
@@ -138,18 +137,28 @@
 
               <group>
                 <field name="partner_id"/>
-              </group>
-              <group col="2" string="Vehicle Information">
-                <field name="user_branch_id" invisible="True"/>
                 <field name="vehicle_id" domain="[('state_id.name','=','Active'),('branch_id','=', user_branch_id)]"/>
-                <field name="allowed_kilometer_per_day"/>
-                <field name="rate_per_extra_km"/>
-                <field name="daily_rental_price"/>
-                <field name="odometer_before"/>
-                <field name="exit_datetime" class="oe_inline"/>
-                <field name="return_datetime" class="oe_inline"/>
-                <field name="total_rental_period" class="oe_inline"/>
-                <field name="extra_driver_charge_per_day" class="oe_inline"/>
+              </group>
+              <group>
+                <group col="2" string="Vehicle Information">
+                  <field name="user_branch_id" invisible="True"/>
+                  <field name="daily_rental_price"/>
+                  <field name="rate_per_extra_km"/>
+                  <field name="allowed_kilometer_per_day"/>
+                  <field name="odometer_before"/>
+                  <field name="exit_datetime" class="oe_inline"/>
+                  <field name="return_datetime" class="oe_inline"/>
+                  <field name="extra_driver_charge_per_day" class="oe_inline"/>
+                  <field name="other_extra_charges" class="oe_inline"/>
+                </group>
+                <group col="2" string="Payment Details">
+                  <field name="period_rent_price" class="oe_inline"/>
+                  <field name="extra_driver_charge" class="oe_inline"/>
+                  <field name="total_rent_price" class="oe_inline"/>
+                  <field name="total_rental_period" class="oe_inline"/>
+                  <field name="advanced_deposit" class="oe_inline"/>
+                  <field name="balance" class="oe_inline"/>
+                </group>
               </group>
               <notebook>
                 <page string="Vehicle Checklist">
@@ -162,14 +171,7 @@
                   </field>
                 </page>
               </notebook>
-              <group string="Payment Details">
-                <field name="period_rent_price" class="oe_inline"/>
-                <field name="extra_driver_charge" class="oe_inline"/>
-                <field name="other_extra_charges" class="oe_inline"/>
-                <field name="total_rent_price" class="oe_inline"/>
-                <field name="advanced_deposit" class="oe_inline"/>
-                <field name="balance" class="oe_inline"/>
-              </group>
+
             </sheet>
           </form>
         </field>
@@ -236,28 +238,30 @@
                 </h1>
               </div>
               <group>
-                <field name="partner_id"/>
+                <field name="partner_id"  readonly="1"/>
+                <field name="vehicle_id" domain="[('state_id.name','=','Active'),('branch_id','=', user_branch_id)]" readonly="1"/>
               </group>
-              <group col="2" string="Vehicle Information">
-                <field name="user_branch_id" invisible="True"/>
-                <field name="vehicle_id" domain="[('state_id.name','=','Active'),('branch_id','=', user_branch_id)]"/>
-                <field name="allowed_kilometer_per_day"/>
-                <field name="rate_per_extra_km"/>
-                <field name="daily_rental_price"/>
-                <field name="odometer_before"/>
-                <field name="exit_datetime" class="oe_inline"/>
-                <field name="return_datetime" class="oe_inline"/>
-                <field name="total_rental_period" class="oe_inline"/>
-                <field name="extra_driver_charge_per_day" class="oe_inline"/>
-              </group>
-              <group string="Payment Details">
-                <field name="period_rent_price" class="oe_inline"/>
-                <field name="extra_driver_charge" class="oe_inline"/>
-                <field name="other_extra_charges" class="oe_inline"/>
-                <field name="total_rent_price" class="oe_inline"/>
-                <field name="advanced_deposit" class="oe_inline"/>
-                <field name="balance" class="oe_inline"/>
-              </group>
+                <group>
+                    <group col="2" string="Vehicle Information">
+                        <field name="user_branch_id" invisible="True"/>
+                        <field name="daily_rental_price"/>
+                        <field name="rate_per_extra_km"/>
+                        <field name="allowed_kilometer_per_day"/>
+                        <field name="odometer_before"/>
+                        <field name="exit_datetime" class="oe_inline"/>
+                        <field name="return_datetime" class="oe_inline"/>
+                        <field name="extra_driver_charge_per_day" class="oe_inline"/>
+                        <field name="other_extra_charges" class="oe_inline"/>
+                    </group>
+                    <group col="2" string="Payment Details">
+                        <field name="period_rent_price" class="oe_inline"/>
+                        <field name="extra_driver_charge" class="oe_inline"/>
+                        <field name="total_rent_price" class="oe_inline"/>
+                        <field name="total_rental_period" class="oe_inline"/>
+                        <field name="advanced_deposit" class="oe_inline"/>
+                        <field name="balance" class="oe_inline"/>
+                    </group>
+                </group>
             </sheet>
           </form>
         </field>

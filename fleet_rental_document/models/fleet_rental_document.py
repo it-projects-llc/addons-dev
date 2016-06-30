@@ -21,6 +21,9 @@ class FleetRentalDocument(models.Model):
             ('return','Return'),
         ], readonly=True, index=True, change_default=True)
 
+    account_move_ids = fields.One2many('account.move', 'fleet_rental_document_id', string='Entries', readonly=True)
+    account_move_lines_ids = fields.One2many('account.move.line', 'fleet_rental_document_id', string='Entries lines', readonly=True)
+
     origin = fields.Char(string='Source Document',
         help="Reference of the document that produced this document.",
         readonly=True, states={'draft': [('readonly', False)]})
@@ -29,24 +32,23 @@ class FleetRentalDocument(models.Model):
 
     vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle", required=True)
 
-    allowed_kilometer_per_day = fields.Integer(string='Allowed kilometer per day', readonly=True, default=0)
-    rate_per_extra_km = fields.Float(string='Rate per extra km', readonly=True, default=0)
-    daily_rental_price = fields.Float(string='Daily Rental Price', readonly=True, default=0)
+    allowed_kilometer_per_day = fields.Integer(string='Allowed kilometer per day')
+    rate_per_extra_km = fields.Float(string='Rate per extra km')
+    daily_rental_price = fields.Float(string='Daily Rental Price')
     odometer_before = fields.Float(string='Odometer', readonly=True, default=0)
 
     extra_driver_charge_per_day = fields.Float(string='Extra Driver Charge per day', digits_compute=dp.get_precision('Product Price'), default=0)
     other_extra_charges = fields.Float(string='Other Extra Charges', digits_compute=dp.get_precision('Product Price'), default=0)
 
     exit_datetime = fields.Datetime(string='Exit Date and Time')
-
     return_datetime = fields.Datetime(string='Return Date and Time')
 
-    total_rental_period = fields.Integer(string='Total Rental Period', compute="_compute_total_rental_period", store=True, readonly=True)
+    total_rental_period = fields.Integer(string='Total Rental Period')
+    total_rent_price = fields.Float(string='Total Rent Price', digits_compute=dp.get_precision('Product Price'))
 
-    period_rent_price = fields.Float(string='Period Rent Price', compute="_compute_period_rent_price", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
-    extra_driver_charge = fields.Float(string='Extra Driver Charge', compute="_compute_extra_driver_charge", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
-    total_rent_price = fields.Float(string='Total Rent Price', compute="_compute_total_rent_price", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
-    advanced_deposit = fields.Float(string='Advanced Deposit', compute="_compute_advanced_deposit", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
+    period_rent_price = fields.Float(string='Period Rent Price', digits_compute=dp.get_precision('Product Price'))
+    extra_driver_charge = fields.Float(string='Extra Driver Charge', digits_compute=dp.get_precision('Product Price'))
+    advanced_deposit = fields.Float(string='Advanced Deposit', store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
     balance = fields.Float(string='Balance', compute="_compute_balance", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
 
     check_line_ids = fields.One2many('fleet_rental.check_line', 'document_id', string='Vehicle rental check lines')
@@ -61,8 +63,23 @@ class FleetRentalDocument(models.Model):
     png_file = fields.Text('PNG', compute='_compute_png', store=False)
 
     @api.onchange('vehicle_id')
-    def on_change_vehicle_id(self):
-        self._compute_png()
+    def onchange_vehicle_id(self):
+        for record in self:
+            record.allowed_kilometer_per_day = record.vehicle_id.allowed_kilometer_per_day
+            record.rate_per_extra_km = record.vehicle_id.rate_per_extra_km
+            record.daily_rental_price = record.vehicle_id.daily_rental_price
+            record.odometer_before = record.vehicle_id.odometer
+
+    @api.onchange('daily_rental_price', 'vehicle_id', 'exit_datetime', 'return_datetime', 'return_datetime', 'extra_driver_charge_per_day', 'other_extra_charges')
+    def all_calculations(self):
+        for record in self:
+            if record.exit_datetime and record.return_datetime:
+                start = datetime.strptime(record.exit_datetime, DTF)
+                end = datetime.strptime(record.return_datetime, DTF)
+                record.total_rental_period = (end - start).days
+            record.period_rent_price = record.total_rental_period * record.daily_rental_price
+            record.total_rent_price = record.period_rent_price + record.extra_driver_charge + record.other_extra_charges
+            record.extra_driver_charge = record.total_rental_period * record.extra_driver_charge_per_day
 
     @api.multi
     def _compute_png(self):
@@ -127,63 +144,80 @@ class FleetRentalDocument(models.Model):
 
         result['check_line_ids'] = [(5, 0, 0)] + [(0, 0, {'item_id': item.id,'exit_check_yes': False, 'exit_check_no': False,'exit_check_yes': False, 'exit_check_no': False,}) for item in items]
         result['part_line_ids'] = [(5, 0, 0)] + [(0, 0, {'part_id': part.id}) for part in parts]
-
+        result['exit_datetime'] = fields.Datetime.now()
+        result['return_datetime'] = fields.Datetime.to_string(datetime.utcnow() + timedelta(days=1))
         return result
 
-    @api.depends('exit_datetime', 'return_datetime')
-    def _compute_total_rental_period(self):
-        for record in self:
-            if record.exit_datetime and record.return_datetime:
-                start = datetime.strptime(record.exit_datetime, DTF)
-                end = datetime.strptime(record.return_datetime, DTF)
-                record.total_rental_period = (end - start).days
+    # @api.multi
+    # @api.depends('partner_id.rental_deposit_analytic_account_id.line_ids.amount')
+    # def _compute_advanced_deposit(self):
+    #     # TODO: invokes three times on invoice validation. Think about minimize excessive calls
+    #     for record in self:
+    #         account_analytic = record.partner_id.rental_deposit_analytic_account_id
+    #         if account_analytic:
+    #             account_analytic._compute_debit_credit_balance()
+    #         record.advanced_deposit = account_analytic and account_analytic.balance or 0.0
 
-    @api.depends('total_rental_period')
-    def _compute_period_rent_price(self):
-        for record in self:
-            if record.total_rental_period:
-                record.period_rent_price = record.total_rental_period * record.daily_rental_price
-
-    @api.depends('total_rental_period', 'extra_driver_charge_per_day')
-    def _compute_extra_driver_charge(self):
-        for record in self:
-            if record.total_rental_period:
-                record.extra_driver_charge = record.total_rental_period * record.extra_driver_charge_per_day
-
-    @api.depends('period_rent_price', 'extra_driver_charge', 'other_extra_charges')
-    def _compute_total_rent_price(self):
-        for record in self:
-            record.total_rent_price = record.period_rent_price + record.extra_driver_charge + record.other_extra_charges
-
-    @api.multi
-    @api.depends('partner_id.rental_deposit_analytic_account_id.line_ids.amount')
-    def _compute_advanced_deposit(self):
-        # TODO: invokes three times on invoice validation. Think about minimize excessive calls
-        for record in self:
-            account_analytic = record.partner_id.rental_deposit_analytic_account_id
-            if account_analytic:
-                account_analytic._compute_debit_credit_balance()
-            record.advanced_deposit = account_analytic and account_analytic.balance or 0.0
-
-    @api.depends('total_rent_price', 'advanced_deposit')
+    @api.depends('total_rent_price', 'account_move_lines_ids')
     def _compute_balance(self):
         for record in self:
-            record.balance = record.total_rent_price - record.advanced_deposit
+            account_receivable = record.partner_id.property_account_receivable_id.id
+            if record.account_move_lines_ids:
+                record.account_move_lines_ids[0].move_id.fleet_rental_document_id = [(4, self.id)]
+            mutuals_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', self.id), ('account_id', '=', account_receivable)])
+            total_duty = 0
+            total_paid = 0
+            for r in mutuals_recs:
+                total_duty += r.debit
+                total_paid += r.credit
+            record.balance = total_paid - total_duty
+            record.advanced_deposit = total_paid
 
-    @api.model
-    def create(self, vals):
-        vehicle_obj = self.env['fleet.vehicle']
-        vehicle = vehicle_obj.browse(vals.get('vehicle_id', []))
-        if len(vehicle) == 1:
-            vals.update({'allowed_kilometer_per_day': vehicle.allowed_kilometer_per_day,
-                         'rate_per_extra_km': vehicle.rate_per_extra_km,
-                         'daily_rental_price': vehicle.daily_rental_price,
-                         'odometer_before': vehicle.odometer,
-                         })
-        return super(FleetRentalDocument, self).create(vals)
+
+class AccountMove(models.Model):
+    _inherit = 'account.move'
+    fleet_rental_document_id = fields.Many2one('fleet_rental.document', readonly=True, copy=False)
+
+
+class AccountMoveLine(models.Model):
+    _inherit = 'account.move.line'
+    fleet_rental_document_id = fields.Many2one('fleet_rental.document', readonly=True, copy=False)
+
+
+class AccountInvoice(models.Model):
+    _inherit = 'account.invoice'
+
+    fleet_rental_document_id = fields.Many2one('fleet_rental.document', readonly=True, copy=False)
+
+    @api.multi
+    def finalize_invoice_move_lines(self, move_lines):
+        res = super(AccountInvoice, self).finalize_invoice_move_lines(move_lines)
+        fleet_rental_document_id = False
+        for r in self.invoice_line_ids:
+            if r.fleet_rental_document_id:
+                fleet_rental_document_id = r.fleet_rental_document_id
+                break
+        if not fleet_rental_document_id:
+            return res
+        for move_line in move_lines:
+            move_line[2]['fleet_rental_document_id'] = fleet_rental_document_id.id
+        return move_lines
+
+    @api.multi
+    def register_payment(self, payment_line, writeoff_acc_id=False, writeoff_journal_id=False):
+        payment_line.fleet_rental_document_id = self.fleet_rental_document_id
+        res = super(AccountInvoice, self).register_payment(payment_line, writeoff_acc_id, writeoff_journal_id)
 
 
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
     fleet_rental_document_id = fields.Many2one('fleet_rental.document', readonly=True, copy=False)
 
+
+class AccountPayment(models.Model):
+    _inherit = 'account.payment'
+
+    def _get_shared_move_line_vals(self, debit, credit, amount_currency, move_id, invoice_id=False):
+        res = super(AccountPayment, self)._get_shared_move_line_vals(debit, credit, amount_currency, move_id, invoice_id)
+        res['fleet_rental_document_id'] = self.invoice_ids[0].fleet_rental_document_id.id
+        return res
