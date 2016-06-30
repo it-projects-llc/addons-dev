@@ -68,7 +68,7 @@ class FleetRentalDocument(models.Model):
     def _compute_png(self):
         for rec in self:
             f = open('/'.join([os.path.dirname(os.path.realpath(__file__)),
-                               'static/src/img/car-cutout.svg']), 'r')
+                               '../static/src/img/car-cutout.svg']), 'r')
             svg_file = f.read()
             dom = etree.fromstring(svg_file)
             for line in rec.part_line_ids:
