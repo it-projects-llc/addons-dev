@@ -17,9 +17,6 @@
             </xpath>
             <xpath expr="//field[@name='doors']" position="after">
                     <field name='model_year'/>
-                    <field name='daily_rate'/>
-                    <field name='extra_rate'/>
-                    <field name='allowed_per_day'/>
                     <field name='paid'/>
                     <field name='remain'/>
                     <field name='reg_expiry'/>
@@ -96,7 +93,6 @@
     <field name="view_type">form</field>
     <field name="domain">[('vehicle_id', '=', active_id)]</field>
     <field name="view_mode">tree,form</field>
-</record>
 <record model="ir.ui.view" id="fleet_vehicle_form_inherit_documents">
     <field name="name">fleet.vehicle.form.inherit.documents</field>
     <field name="model">fleet.vehicle</field>

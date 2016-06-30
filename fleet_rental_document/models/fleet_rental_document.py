@@ -59,28 +59,6 @@ class FleetRentalDocument(models.Model):
 
     invoice_line_ids = fields.One2many('account.invoice.line', 'fleet_rental_document_id', string='Invoice Lines', copy=False)
 
-    part_ids = fields.One2many(related='vehicle_id.part_ids')
-    png_file = fields.Text('PNG', compute='_compute_png', store=False)
-
-    @api.onchange('vehicle_id')
-    def on_change_vehicle_id(self):
-        self._compute_png()
-
-    @api.multi
-    def _compute_png(self):
-        for rec in self:
-            f = open('/'.join([os.path.dirname(os.path.realpath(__file__+ '//..//..')),  # TODO needs better decision
-                               'fleet_vehicle_svg/static/src/img/car-cutout.svg']), 'r')
-            svg_file = f.read()
-            dom = etree.fromstring(svg_file)
-            for part in rec.part_ids:
-                if part.state == 'broken':
-                    for el in dom.xpath('//*[@id="%s"]' % part.part_id):
-                        el.attrib['fill'] = 'red'
-            f.close()
-            with Image(blob=etree.tostring(dom), format='svg') as img:
-                rec.png_file = base64.b64encode(img.make_blob('png'))
-
     @api.multi
     def action_view_invoice(self):
         invoice_ids = self.mapped('invoice_ids')
