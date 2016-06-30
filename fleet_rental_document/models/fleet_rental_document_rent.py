@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import openerp
 from openerp import models, fields, api
+from datetime import datetime, date, timedelta
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 
 
 class FleetRentalDocumentRent(models.Model):
@@ -30,13 +32,32 @@ class FleetRentalDocumentRent(models.Model):
     document_extend_ids = fields.One2many('fleet_rental.document_extend', 'document_rent_id')
     extends_count = fields.Integer(string='# of Extends', compute='_get_extends', readonly=True)
 
+    @api.onchange('vehicle_id')
+    def onchange_vehicle_id(self):
+        for record in self:
+            record.allowed_kilometer_per_day = record.vehicle_id.allowed_kilometer_per_day
+            record.rate_per_extra_km = record.vehicle_id.rate_per_extra_km
+            record.daily_rental_price = record.vehicle_id.daily_rental_price
+            record.odometer_before = record.vehicle_id.odometer
+
+    @api.onchange('daily_rental_price', 'vehicle_id', 'exit_datetime', 'return_datetime', 'return_datetime', 'extra_driver_charge_per_day')
+    def all_calculations(self):
+        for record in self:
+            if record.exit_datetime and record.return_datetime:
+                start = datetime.strptime(record.exit_datetime, DTF)
+                end = datetime.strptime(record.return_datetime, DTF)
+                record.total_rental_period = (end - start).days
+            record.period_rent_price = record.total_rental_period * record.daily_rental_price
+            record.extra_driver_charge = record.total_rental_period * record.extra_driver_charge_per_day
+            record.total_rent_price = record.period_rent_price + record.extra_driver_charge + record.other_extra_charges
+
+
     @api.depends('document_extend_ids')
     def _get_extends(self):
         for document in self:
             document.update({
                 'extends_count': len(document.document_extend_ids),
             })
-
 
     @api.multi
     def action_view_invoice(self):
