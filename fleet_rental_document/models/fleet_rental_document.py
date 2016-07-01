@@ -38,14 +38,13 @@ class FleetRentalDocument(models.Model):
     other_extra_charges = fields.Float(string='Other Extra Charges', digits_compute=dp.get_precision('Product Price'), default=0)
 
     exit_datetime = fields.Datetime(string='Exit Date and Time')
-
     return_datetime = fields.Datetime(string='Return Date and Time')
 
-    total_rental_period = fields.Integer(string='Total Rental Period', compute="_compute_total_rental_period", store=True, readonly=True)
+    total_rental_period = fields.Integer(string='Total Rental Period')
+    total_rent_price = fields.Float(string='Total Rent Price', digits_compute=dp.get_precision('Product Price'))
 
-    period_rent_price = fields.Float(string='Period Rent Price', store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
-    extra_driver_charge = fields.Float(string='Extra Driver Charge', digits_compute=dp.get_precision('Product Price'), readonly=True)
-    total_rent_price = fields.Float(string='Total Rent Price', digits_compute=dp.get_precision('Product Price'), readonly=True)
+    period_rent_price = fields.Float(string='Period Rent Price', digits_compute=dp.get_precision('Product Price'))
+    extra_driver_charge = fields.Float(string='Extra Driver Charge', digits_compute=dp.get_precision('Product Price'))
     advanced_deposit = fields.Float(string='Advanced Deposit', compute="_compute_advanced_deposit", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
     balance = fields.Float(string='Balance', compute="_compute_balance", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
 
@@ -68,7 +67,7 @@ class FleetRentalDocument(models.Model):
             record.daily_rental_price = record.vehicle_id.daily_rental_price
             record.odometer_before = record.vehicle_id.odometer
 
-    @api.onchange('daily_rental_price', 'vehicle_id', 'exit_datetime', 'return_datetime', 'return_datetime', 'extra_driver_charge_per_day')
+    @api.onchange('daily_rental_price', 'vehicle_id', 'exit_datetime', 'return_datetime', 'return_datetime', 'extra_driver_charge_per_day', 'other_extra_charges')
     def all_calculations(self):
         for record in self:
             if record.exit_datetime and record.return_datetime:

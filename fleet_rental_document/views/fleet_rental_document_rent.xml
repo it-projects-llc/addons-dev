@@ -105,7 +105,6 @@
               <button name="action_confirm" string="Confirm Rental" type="object"
                       attrs="{'invisible': ['|', ('state', '!=', 'booked'), ('advanced_deposit', '&lt;=', 0)]}"/>
               <button name="action_create_return" states="confirmed" string="Create Return Document" type="object"/>
-              <button name="action_create_extend" states="confirmed" string="Create Extend Document" type="object"/>
               <field name="state" widget="statusbar" statusbar_visible="draft,booked,confirmed,extended,returned"/>
             </header>
             <sheet>
@@ -150,11 +149,11 @@
                   <field name="exit_datetime" class="oe_inline"/>
                   <field name="return_datetime" class="oe_inline"/>
                   <field name="extra_driver_charge_per_day" class="oe_inline"/>
+                  <field name="other_extra_charges" class="oe_inline"/>
                 </group>
                 <group col="2" string="Payment Details">
                   <field name="period_rent_price" class="oe_inline"/>
                   <field name="extra_driver_charge" class="oe_inline"/>
-                  <field name="other_extra_charges" class="oe_inline"/>
                   <field name="total_rent_price" class="oe_inline"/>
                   <field name="total_rental_period" class="oe_inline"/>
                   <field name="advanced_deposit" class="oe_inline"/>
