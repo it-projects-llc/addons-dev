@@ -14,7 +14,7 @@ To use this module, you need to:
 
 * Go to Warehouse > Operations > All Operations;
 
-* Click barcode icon in the appropriate card;
+* Go to Inventory > Dashboard;
 
 * Open page with product table;
 
