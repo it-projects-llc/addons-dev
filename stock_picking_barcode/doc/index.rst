@@ -12,9 +12,9 @@ Usage
 
 To use this module, you need to:
 
-* Go to Warehouse > Operations > All Operations;
-
 * Go to Inventory > Dashboard;
+
+* Click barcode icon in the appropriate card;
 
 * Open page with product table;
 
