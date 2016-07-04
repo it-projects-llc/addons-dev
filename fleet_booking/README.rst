@@ -34,7 +34,7 @@ Adds partner age restriction (must be 21 or elder) if he is customer (is custome
  Vehicle Rental
 ----------------
 
-See ``fleet_rental_document`` module.
+See ``fleet_rental_document`` module documentation.
 
 Further information
 -------------------
