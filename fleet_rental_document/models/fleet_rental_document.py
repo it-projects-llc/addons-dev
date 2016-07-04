@@ -164,19 +164,12 @@ class FleetRentalDocument(models.Model):
             account_receivable = record.partner_id.property_account_receivable_id.id
             if record.account_move_lines_ids:
                 record.account_move_lines_ids[0].move_id.fleet_rental_document_id = [(4, self.id)]
-            duty_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', self.id), ('account_id', '=', account_receivable)])
+            mutuals_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', self.id), ('account_id', '=', account_receivable)])
             total_duty = 0
-            for r in duty_recs:
-                total_duty += r.balance
-
-            bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', self.env.user.id)])[0]
-            cash_journal = self.env['account.journal'].search([('type', '=', 'cash'), ('company_id', '=', self.env.user.id)])[0]
-            bank_account = bank_journal.default_debit_account_id
-            cash_account = cash_journal.default_debit_account_id
-            paid_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', self.id), ('account_id', 'in', [bank_account.id, cash_account.id])])
             total_paid = 0
-            for r in paid_recs:
-                total_paid += r.balance
+            for r in mutuals_recs:
+                total_duty += r.debit
+                total_paid += r.credit
             record.balance = total_paid - total_duty
             record.advanced_deposit = total_paid
 
