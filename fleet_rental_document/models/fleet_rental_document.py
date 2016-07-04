@@ -198,8 +198,3 @@ class FleetRentalDocument(models.Model):
             if account_analytic:
                 account_analytic._compute_debit_credit_balance()
             record.advanced_deposit = account_analytic and account_analytic.balance or 0.0
-
-class AccountInvoiceLine(models.Model):
-    _inherit = 'account.invoice.line'
-    fleet_rental_document_id = fields.Many2one('fleet_rental.document', readonly=True, copy=False)
-

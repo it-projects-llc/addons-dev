@@ -37,16 +37,23 @@ class FleetRentalDocumentRent(models.Model):
     balance = fields.Float(string='Balance', compute="_compute_balance", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
     advanced_deposit = fields.Float(string='Advanced Deposit', compute="_compute_deposit", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
     diff_datetime = fields.Datetime(string='Previous rent document return date and time')
+    invoice_ids = fields.Many2many("account.invoice", string='Invoices', compute="_get_invoiced", readonly=True, copy=False)
+    invoice_count = fields.Integer(string='# of Invoices', compute='_get_invoiced', readonly=True)
+    invoice_line_ids = fields.One2many('account.invoice.line', 'fleet_rental_document_id', string='Invoice Lines', copy=False)
 
     @api.depends('total_rent_price', 'account_move_lines_ids', 'document_extend_ids')
     def _compute_balance(self):
-        if self.env.context.get('active_model') != 'fleet_rental.document_rent':
+        if self._model._name not in ['fleet_rental.document_rent', 'fleet_rental.document_extend']:
             return
         for record in self:
+            if self._model._name == 'fleet_rental.document_rent':
+                id_to_manage = record.id
+            elif self._model._name == 'fleet_rental.document_extend':
+                id_to_manage = record.document_rent_id.id
             account_receivable = record.partner_id.property_account_receivable_id.id
             if record.account_move_lines_ids:
-                record.account_move_lines_ids[0].move_id.fleet_rental_document_id = [(4, record.id)]
-            mutuals_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', record.id), ('account_id', '=', account_receivable)])
+                record.account_move_lines_ids[0].move_id.fleet_rental_document_id = [(4, id_to_manage)]
+            mutuals_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', id_to_manage), ('account_id', '=', account_receivable)])
             total_duty = 0
             total_paid = 0
             for r in mutuals_recs:
@@ -56,13 +63,17 @@ class FleetRentalDocumentRent(models.Model):
 
     @api.depends('total_rent_price', 'account_move_lines_ids', 'document_extend_ids')
     def _compute_deposit(self):
-        if self.env.context.get('active_model') != 'fleet_rental.document_rent':
+        if self._model._name not in ['fleet_rental.document_rent', 'fleet_rental.document_extend']:
             return
         for record in self:
+            if self._model._name == 'fleet_rental.document_rent':
+                id_to_manage = record.id
+            elif self._model._name == 'fleet_rental.document_extend':
+                id_to_manage = record.document_rent_id.id
             account_receivable = record.partner_id.property_account_receivable_id.id
             if record.account_move_lines_ids:
-                record.account_move_lines_ids[0].move_id.fleet_rental_document_id = [(4, record.id)]
-            mutuals_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', record.id), ('account_id', '=', account_receivable)])
+                record.account_move_lines_ids[0].move_id.fleet_rental_document_id = [(4, id_to_manage)]
+            mutuals_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', id_to_manage), ('account_id', '=', account_receivable)])
             total_duty = 0
             total_paid = 0
             for r in mutuals_recs:
@@ -118,7 +129,43 @@ class FleetRentalDocumentRent(models.Model):
 
     @api.multi
     def action_view_invoice(self):
-        return self.mapped('document_id').action_view_invoice()
+        invoice_ids = self.mapped('invoice_ids')
+        action = self.env.ref('account.action_invoice_tree1')
+        list_view_id = self.env.ref('account.invoice_tree').id
+        form_view_id = self.env.ref('account.invoice_form').id
+
+        result = {
+            'name': action.name,
+            'help': action.help,
+            'type': action.type,
+            'views': [[list_view_id, 'tree'], [form_view_id, 'form'], [False, 'graph'], [False, 'kanban'],
+                      [False, 'calendar'], [False, 'pivot']],
+            'target': action.target,
+            'context': action.context,
+            'res_model': action.res_model,
+        }
+        if len(invoice_ids) > 1:
+            result['domain'] = "[('id','in',%s)]" % invoice_ids.ids
+        elif len(invoice_ids) == 1:
+            result['views'] = [(form_view_id, 'form')]
+            result['res_id'] = invoice_ids.ids[0]
+        else:
+            result = {'type': 'ir.actions.act_window_close'}
+        return result
+
+    @api.depends('invoice_line_ids')
+    def _get_invoiced(self):
+        for document in self:
+            invoice_ids = document.invoice_line_ids.mapped('invoice_id')
+            # Search for refunds as well
+            refund_ids = self.env['account.invoice'].browse()
+            if invoice_ids:
+                refund_ids = refund_ids.search([('type', '=', 'out_refund'), ('origin', 'in', invoice_ids.mapped('number')), ('origin', '!=', False)])
+
+            document.update({
+                'invoice_count': len(set(invoice_ids.ids + refund_ids.ids)),
+                'invoice_ids': invoice_ids.ids + refund_ids.ids,
+            })
 
     @api.multi
     def action_book(self):
@@ -219,6 +266,8 @@ class FleetRentalDocumentExtend(models.Model):
         ], string='Status', readonly=True, copy=False, index=True, default='draft')
 
     document_rent_id = fields.Many2one('fleet_rental.document_rent')
+    balance = fields.Float(related='document_rent_id.balance', readonly=True)
+    advanced_deposit = fields.Float(related='document_rent_id.advanced_deposit', readonly=True)
 
     @api.model
     def default_get(self, fields_list):
