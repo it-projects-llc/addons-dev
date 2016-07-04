@@ -40,7 +40,7 @@ class FleetRentalDocumentReturn(models.Model):
         for record in self:
             record.total_rent_price = record.period_rent_price + record.extra_driver_charge + record.other_extra_charges
 
-    @api.onchange('period_rent_price', 'extra_driver_charge', 'other_extra_charges', 'extra_hours_charge', 'extra_kilos_charge', 'Penalties')
+    @api.onchange('period_rent_price', 'extra_driver_charge', 'other_extra_charges', 'extra_hours_charge', 'extra_kilos_charge', 'penalties')
     def _onchange_total_price_fields(self):
         self.total_rent_price = self.period_rent_price + self.extra_driver_charge + self.other_extra_charges + \
                                 self.extra_hours_charge + self.extra_kilos_charge + self.penalties
