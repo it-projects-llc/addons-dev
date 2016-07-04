@@ -63,7 +63,7 @@ class FleetRentalCreateInvoiceWizard(models.TransientModel):
 
     @api.multi
     def create_invoices(self):
-        documents = self.env[self._context.get('active_model', [])].browse(self._context.get('active_ids', [])).mapped('document_id')
+        documents = self.env['fleet_rental.document_rent'].browse(self._context.get('active_ids', []))
 
         # Create deposit product if necessary
         if not self.product_id:

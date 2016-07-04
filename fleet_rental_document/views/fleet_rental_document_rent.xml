@@ -225,12 +225,6 @@
             </header>
             <sheet>
               <div class="oe_button_box" name="button_box">
-                <button name="action_view_invoice"
-                        type="object"
-                        class="oe_stat_button"
-                        icon="fa-pencil-square-o">
-                  <field name="invoice_count" widget="statinfo" string="Invoices"/>
-                </button>
               </div>
               <div class="oe_title">
                 <h1>

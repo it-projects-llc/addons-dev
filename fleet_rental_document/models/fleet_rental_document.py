@@ -21,9 +21,6 @@ class FleetRentalDocument(models.Model):
             ('return','Return'),
         ], readonly=True, index=True, change_default=True)
 
-    account_move_ids = fields.One2many('account.move', 'fleet_rental_document_id', string='Entries', readonly=True)
-    account_move_lines_ids = fields.One2many('account.move.line', 'fleet_rental_document_id', string='Entries lines', readonly=True)
-
     origin = fields.Char(string='Source Document',
         help="Reference of the document that produced this document.",
         readonly=True, states={'draft': [('readonly', False)]})
@@ -31,7 +28,8 @@ class FleetRentalDocument(models.Model):
     partner_id = fields.Many2one('res.partner', string="Customer", domain=[('customer', '=', True)], required=True)
 
     vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle", required=True)
-
+    account_move_ids = fields.One2many('account.move', 'fleet_rental_document_id', string='Entries', readonly=True)
+    account_move_lines_ids = fields.One2many('account.move.line', 'fleet_rental_document_id', string='Entrie lines', readonly=True)
     allowed_kilometer_per_day = fields.Integer(string='Allowed kilometer per day')
     rate_per_extra_km = fields.Float(string='Rate per extra km')
     daily_rental_price = fields.Float(string='Daily Rental Price')
@@ -55,12 +53,26 @@ class FleetRentalDocument(models.Model):
     part_line_ids = fields.One2many('fleet_rental.svg_vehicle_part_line', 'document_id', string='Vehicle part')
 
     invoice_ids = fields.Many2many("account.invoice", string='Invoices', compute="_get_invoiced", readonly=True, copy=False)
-
     invoice_count = fields.Integer(string='# of Invoices', compute='_get_invoiced', readonly=True)
-
     invoice_line_ids = fields.One2many('account.invoice.line', 'fleet_rental_document_id', string='Invoice Lines', copy=False)
 
     png_file = fields.Text('PNG', compute='_compute_png', store=False)
+
+    @api.depends('total_rent_price', 'account_move_lines_ids')
+    def _compute_balance(self):
+        return
+        for record in self:
+            account_receivable = record.partner_id.property_account_receivable_id.id
+            if record.account_move_lines_ids:
+                record.account_move_lines_ids[0].move_id.fleet_rental_document_id = [(4, self.id)]
+            mutuals_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', self.id), ('account_id', '=', account_receivable)])
+            total_duty = 0
+            total_paid = 0
+            for r in mutuals_recs:
+                total_duty += r.debit
+                total_paid += r.credit
+            record.balance = total_paid - total_duty
+            record.advanced_deposit = total_paid
 
     @api.onchange('vehicle_id')
     def onchange_vehicle_id(self):
@@ -148,76 +160,3 @@ class FleetRentalDocument(models.Model):
         result['return_datetime'] = fields.Datetime.to_string(datetime.utcnow() + timedelta(days=1))
         return result
 
-    # @api.multi
-    # @api.depends('partner_id.rental_deposit_analytic_account_id.line_ids.amount')
-    # def _compute_advanced_deposit(self):
-    #     # TODO: invokes three times on invoice validation. Think about minimize excessive calls
-    #     for record in self:
-    #         account_analytic = record.partner_id.rental_deposit_analytic_account_id
-    #         if account_analytic:
-    #             account_analytic._compute_debit_credit_balance()
-    #         record.advanced_deposit = account_analytic and account_analytic.balance or 0.0
-
-    @api.depends('total_rent_price', 'account_move_lines_ids')
-    def _compute_balance(self):
-        for record in self:
-            account_receivable = record.partner_id.property_account_receivable_id.id
-            if record.account_move_lines_ids:
-                record.account_move_lines_ids[0].move_id.fleet_rental_document_id = [(4, self.id)]
-            mutuals_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', self.id), ('account_id', '=', account_receivable)])
-            total_duty = 0
-            total_paid = 0
-            for r in mutuals_recs:
-                total_duty += r.debit
-                total_paid += r.credit
-            record.balance = total_paid - total_duty
-            record.advanced_deposit = total_paid
-
-
-class AccountMove(models.Model):
-    _inherit = 'account.move'
-    fleet_rental_document_id = fields.Many2one('fleet_rental.document', readonly=True, copy=False)
-
-
-class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
-    fleet_rental_document_id = fields.Many2one('fleet_rental.document', readonly=True, copy=False)
-
-
-class AccountInvoice(models.Model):
-    _inherit = 'account.invoice'
-
-    fleet_rental_document_id = fields.Many2one('fleet_rental.document', readonly=True, copy=False)
-
-    @api.multi
-    def finalize_invoice_move_lines(self, move_lines):
-        res = super(AccountInvoice, self).finalize_invoice_move_lines(move_lines)
-        fleet_rental_document_id = False
-        for r in self.invoice_line_ids:
-            if r.fleet_rental_document_id:
-                fleet_rental_document_id = r.fleet_rental_document_id
-                break
-        if not fleet_rental_document_id:
-            return res
-        for move_line in move_lines:
-            move_line[2]['fleet_rental_document_id'] = fleet_rental_document_id.id
-        return move_lines
-
-    @api.multi
-    def register_payment(self, payment_line, writeoff_acc_id=False, writeoff_journal_id=False):
-        payment_line.fleet_rental_document_id = self.fleet_rental_document_id
-        res = super(AccountInvoice, self).register_payment(payment_line, writeoff_acc_id, writeoff_journal_id)
-
-
-class AccountInvoiceLine(models.Model):
-    _inherit = 'account.invoice.line'
-    fleet_rental_document_id = fields.Many2one('fleet_rental.document', readonly=True, copy=False)
-
-
-class AccountPayment(models.Model):
-    _inherit = 'account.payment'
-
-    def _get_shared_move_line_vals(self, debit, credit, amount_currency, move_id, invoice_id=False):
-        res = super(AccountPayment, self)._get_shared_move_line_vals(debit, credit, amount_currency, move_id, invoice_id)
-        res['fleet_rental_document_id'] = self.invoice_ids[0].fleet_rental_document_id.id
-        return res
