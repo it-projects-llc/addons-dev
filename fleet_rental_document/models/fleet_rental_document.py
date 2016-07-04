@@ -29,9 +29,9 @@ class FleetRentalDocument(models.Model):
 
     vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle", required=True)
 
-    allowed_kilometer_per_day = fields.Integer(string='Allowed kilometer per day', readonly=True, default=0)
-    rate_per_extra_km = fields.Float(string='Rate per extra km', readonly=True, default=0)
-    daily_rental_price = fields.Float(string='Daily Rental Price', readonly=True, default=0)
+    allowed_kilometer_per_day = fields.Integer(string='Allowed kilometer per day', compute="_compute_vehicle_rental", store=True, readonly=True)
+    rate_per_extra_km = fields.Float(string='Rate per extra km', compute="_compute_vehicle_rental", store=True, readonly=True)
+    daily_rental_price = fields.Float(string='Daily Rental Price', compute="_compute_vehicle_rental", store=True, readonly=True)
     odometer_before = fields.Float(string='Odometer', readonly=True, default=0)
 
     extra_driver_charge_per_day = fields.Float(string='Extra Driver Charge per day', digits_compute=dp.get_precision('Product Price'), default=0)
@@ -60,9 +60,19 @@ class FleetRentalDocument(models.Model):
 
     png_file = fields.Text('PNG', compute='_compute_png', store=False)
 
+    @api.depends('vehicle_id')
+    def _compute_vehicle_rental(self):
+        for record in self:
+            record.allowed_kilometer_per_day = record.vehicle_id.allowed_kilometer_per_day
+            record.rate_per_extra_km = record.vehicle_id.rate_per_extra_km
+            record.daily_rental_price = record.vehicle_id.daily_rental_price
+
     @api.onchange('vehicle_id')
     def on_change_vehicle_id(self):
         self._compute_png()
+        self.allowed_kilometer_per_day = self.vehicle_id.allowed_kilometer_per_day
+        self.rate_per_extra_km = self.vehicle_id.rate_per_extra_km
+        self.daily_rental_price = self.vehicle_id.daily_rental_price
 
     @api.multi
     def _compute_png(self):
@@ -138,7 +148,16 @@ class FleetRentalDocument(models.Model):
                 end = datetime.strptime(record.return_datetime, DTF)
                 record.total_rental_period = (end - start).days
 
-    @api.depends('total_rental_period')
+    @api.onchange('exit_datetime', 'return_datetime')
+    def _onchange_dates(self):
+        if self.exit_datetime and self.return_datetime:
+            start = datetime.strptime(self.exit_datetime, DTF)
+            end = datetime.strptime(self.return_datetime, DTF)
+            self.total_rental_period = (end - start).days
+            self.period_rent_price = self.total_rental_period * self.daily_rental_price
+
+    @api.multi
+    @api.depends('vehicle_id', 'total_rental_period')
     def _compute_period_rent_price(self):
         for record in self:
             if record.total_rental_period:
@@ -169,18 +188,6 @@ class FleetRentalDocument(models.Model):
     def _compute_balance(self):
         for record in self:
             record.balance = record.total_rent_price - record.advanced_deposit
-
-    @api.model
-    def create(self, vals):
-        vehicle_obj = self.env['fleet.vehicle']
-        vehicle = vehicle_obj.browse(vals.get('vehicle_id', []))
-        if len(vehicle) == 1:
-            vals.update({'allowed_kilometer_per_day': vehicle.allowed_kilometer_per_day,
-                         'rate_per_extra_km': vehicle.rate_per_extra_km,
-                         'daily_rental_price': vehicle.daily_rental_price,
-                         'odometer_before': vehicle.odometer,
-                         })
-        return super(FleetRentalDocument, self).create(vals)
 
 
 class AccountInvoiceLine(models.Model):
