@@ -170,8 +170,10 @@ class FleetRentalDocumentExtend(models.Model):
         rent = self.env['fleet_rental.document_rent'].browse(active_id)
         defaults.setdefault('vehicle_id', rent.vehicle_id.id)
         defaults.setdefault('partner_id', rent.partner_id.id)
-        defaults['exit_datetime'] = rent.return_datetime
-        defaults['return_datetime'] = fields.Datetime.to_string(fields.Datetime.from_string(rent.return_datetime) + timedelta(days=1))
+        defaults['exit_datetime'] = self.env['fleet_rental.document_extend'].search(
+                                            [('document_rent_id', '=', rent.id)], limit=1,
+                                            order='return_datetime desc').return_datetime or rent.return_datetime
+        defaults['return_datetime'] = fields.Datetime.to_string(fields.Datetime.from_string(defaults['exit_datetime']) + timedelta(days=1))
         defaults.setdefault('rate_per_extra_km', rent.rate_per_extra_km)
         defaults.setdefault('extra_driver_charge_per_day', rent.extra_driver_charge_per_day)
         defaults.setdefault('odometer_before', rent.odometer_before)

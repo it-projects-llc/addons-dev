@@ -158,10 +158,9 @@ class FleetRentalDocument(models.Model):
     @api.depends('total_rent_price', 'advanced_deposit')
     def _compute_balance(self):
         for record in self:
-            record.balance = record.total_rent_price - record.advanced_deposit
+            record.balance = record.partner_id.rental_deposit_analytic_account_id.debit - record.advanced_deposit
 
 
 class AccountInvoiceLine(models.Model):
-    _inherit = 'account.invoice.line'
+    _inherit = 'account.move'
     fleet_rental_document_id = fields.Many2one('fleet_rental.document', readonly=True, copy=False)
-
