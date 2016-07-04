@@ -74,30 +74,25 @@ class FleetRentalDocument(models.Model):
         #     record.balance = total_paid - total_duty
         #     record.advanced_deposit = total_paid
 
-    @api.onchange('vehicle_id')
-    def onchange_vehicle_id(self):
+    @api.depends('vehicle_id')
+    def _compute_vehicle_rental(self):
         for record in self:
             record.allowed_kilometer_per_day = record.vehicle_id.allowed_kilometer_per_day
             record.rate_per_extra_km = record.vehicle_id.rate_per_extra_km
             record.daily_rental_price = record.vehicle_id.daily_rental_price
-            record.odometer_before = record.vehicle_id.odometer
 
-    @api.onchange('daily_rental_price', 'vehicle_id', 'exit_datetime', 'return_datetime', 'return_datetime', 'extra_driver_charge_per_day', 'other_extra_charges')
-    def all_calculations(self):
-        for record in self:
-            if record.exit_datetime and record.return_datetime:
-                start = datetime.strptime(record.exit_datetime, DTF)
-                end = datetime.strptime(record.return_datetime, DTF)
-                record.total_rental_period = (end - start).days
-            record.period_rent_price = record.total_rental_period * record.daily_rental_price
-            record.total_rent_price = record.period_rent_price + record.extra_driver_charge + record.other_extra_charges
-            record.extra_driver_charge = record.total_rental_period * record.extra_driver_charge_per_day
+    @api.onchange('vehicle_id')
+    def on_change_vehicle_id(self):
+        self._compute_png()
+        self.allowed_kilometer_per_day = self.vehicle_id.allowed_kilometer_per_day
+        self.rate_per_extra_km = self.vehicle_id.rate_per_extra_km
+        self.daily_rental_price = self.vehicle_id.daily_rental_price
 
     @api.multi
     def _compute_png(self):
         for rec in self:
             f = open('/'.join([os.path.dirname(os.path.realpath(__file__)),
-                               'static/src/img/car-cutout.svg']), 'r')
+                               '../static/src/img/car-cutout.svg']), 'r')
             svg_file = f.read()
             dom = etree.fromstring(svg_file)
             for line in rec.part_line_ids:
@@ -159,4 +154,52 @@ class FleetRentalDocument(models.Model):
         result['exit_datetime'] = fields.Datetime.now()
         result['return_datetime'] = fields.Datetime.to_string(datetime.utcnow() + timedelta(days=1))
         return result
+
+    @api.depends('exit_datetime', 'return_datetime')
+    def _compute_total_rental_period(self):
+        for record in self:
+            if record.exit_datetime and record.return_datetime:
+                start = datetime.strptime(record.exit_datetime, DTF)
+                end = datetime.strptime(record.return_datetime, DTF)
+                record.total_rental_period = (end - start).days
+
+    @api.onchange('exit_datetime', 'return_datetime')
+    def _onchange_dates(self):
+        if self.exit_datetime and self.return_datetime:
+            start = datetime.strptime(self.exit_datetime, DTF)
+            end = datetime.strptime(self.return_datetime, DTF)
+            self.total_rental_period = (end - start).days
+            self.period_rent_price = self.total_rental_period * self.daily_rental_price
+
+    @api.multi
+    @api.depends('vehicle_id', 'total_rental_period')
+    def _compute_period_rent_price(self):
+        for record in self:
+            if record.total_rental_period:
+                record.period_rent_price = record.total_rental_period * record.daily_rental_price
+
+    @api.depends('total_rental_period', 'extra_driver_charge_per_day')
+    def _compute_extra_driver_charge(self):
+        for record in self:
+            if record.total_rental_period:
+                record.extra_driver_charge = record.total_rental_period * record.extra_driver_charge_per_day
+
+    @api.depends('period_rent_price', 'extra_driver_charge', 'other_extra_charges')
+    def _compute_total_rent_price(self):
+        for record in self:
+            record.total_rent_price = record.period_rent_price + record.extra_driver_charge + record.other_extra_charges
+
+    @api.multi
+    @api.depends('partner_id.rental_deposit_analytic_account_id.line_ids.amount')
+    def _compute_advanced_deposit(self):
+        # TODO: invokes three times on invoice validation. Think about minimize excessive calls
+        for record in self:
+            account_analytic = record.partner_id.rental_deposit_analytic_account_id
+            if account_analytic:
+                account_analytic._compute_debit_credit_balance()
+            record.advanced_deposit = account_analytic and account_analytic.balance or 0.0
+
+class AccountInvoiceLine(models.Model):
+    _inherit = 'account.invoice.line'
+    fleet_rental_document_id = fields.Many2one('fleet_rental.document', readonly=True, copy=False)
 
