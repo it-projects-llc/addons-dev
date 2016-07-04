@@ -61,18 +61,18 @@ class FleetRentalDocument(models.Model):
     @api.depends('total_rent_price', 'account_move_lines_ids')
     def _compute_balance(self):
         return
-        for record in self:
-            account_receivable = record.partner_id.property_account_receivable_id.id
-            if record.account_move_lines_ids:
-                record.account_move_lines_ids[0].move_id.fleet_rental_document_id = [(4, self.id)]
-            mutuals_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', self.id), ('account_id', '=', account_receivable)])
-            total_duty = 0
-            total_paid = 0
-            for r in mutuals_recs:
-                total_duty += r.debit
-                total_paid += r.credit
-            record.balance = total_paid - total_duty
-            record.advanced_deposit = total_paid
+        # for record in self:
+        #     account_receivable = record.partner_id.property_account_receivable_id.id
+        #     if record.account_move_lines_ids:
+        #         record.account_move_lines_ids[0].move_id.fleet_rental_document_id = [(4, record.id)]
+        #     mutuals_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', record.id), ('account_id', '=', account_receivable)])
+        #     total_duty = 0
+        #     total_paid = 0
+        #     for r in mutuals_recs:
+        #         total_duty += r.debit
+        #         total_paid += r.credit
+        #     record.balance = total_paid - total_duty
+        #     record.advanced_deposit = total_paid
 
     @api.onchange('vehicle_id')
     def onchange_vehicle_id(self):

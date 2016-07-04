@@ -36,14 +36,17 @@ class FleetRentalDocumentRent(models.Model):
     document_extend_ids = fields.One2many('fleet_rental.document_extend', 'document_rent_id')
     balance = fields.Float(string='Balance', compute="_compute_balance", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
     advanced_deposit = fields.Float(string='Advanced Deposit', compute="_compute_deposit", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
+    diff_datetime = fields.Datetime(string='Previous rent document return date and time')
 
     @api.depends('total_rent_price', 'account_move_lines_ids', 'document_extend_ids')
     def _compute_balance(self):
+        if self.env.context.get('active_model') != 'fleet_rental.document_rent':
+            return
         for record in self:
             account_receivable = record.partner_id.property_account_receivable_id.id
             if record.account_move_lines_ids:
-                record.account_move_lines_ids[0].move_id.fleet_rental_document_id = [(4, self.id)]
-            mutuals_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', self.id), ('account_id', '=', account_receivable)])
+                record.account_move_lines_ids[0].move_id.fleet_rental_document_id = [(4, record.id)]
+            mutuals_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', record.id), ('account_id', '=', account_receivable)])
             total_duty = 0
             total_paid = 0
             for r in mutuals_recs:
@@ -53,11 +56,13 @@ class FleetRentalDocumentRent(models.Model):
 
     @api.depends('total_rent_price', 'account_move_lines_ids', 'document_extend_ids')
     def _compute_deposit(self):
+        if self.env.context.get('active_model') != 'fleet_rental.document_rent':
+            return
         for record in self:
             account_receivable = record.partner_id.property_account_receivable_id.id
             if record.account_move_lines_ids:
-                record.account_move_lines_ids[0].move_id.fleet_rental_document_id = [(4, self.id)]
-            mutuals_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', self.id), ('account_id', '=', account_receivable)])
+                record.account_move_lines_ids[0].move_id.fleet_rental_document_id = [(4, record.id)]
+            mutuals_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', record.id), ('account_id', '=', account_receivable)])
             total_duty = 0
             total_paid = 0
             for r in mutuals_recs:
@@ -73,12 +78,12 @@ class FleetRentalDocumentRent(models.Model):
             record.daily_rental_price = record.vehicle_id.daily_rental_price
             record.odometer_before = record.vehicle_id.odometer
 
-    @api.onchange('daily_rental_price', 'vehicle_id', 'exit_datetime', 'return_datetime', 'return_datetime', 'extra_driver_charge_per_day', 'other_extra_charges')
+    @api.onchange('daily_rental_price', 'vehicle_id', 'diff_datetime', 'return_datetime', 'return_datetime', 'extra_driver_charge_per_day', 'other_extra_charges')
     def all_calculations(self):
         for record in self:
             if record.exit_datetime and record.return_datetime:
                 start = datetime.strptime(record.exit_datetime, DTF)
-                end = datetime.strptime(record.return_datetime, DTF)
+                end = datetime.strptime(record.diff_datetime or record.return_datetime, DTF)
                 record.total_rental_period = (end - start).days
             record.period_rent_price = record.total_rental_period * record.daily_rental_price
             record.extra_driver_charge = record.total_rental_period * record.extra_driver_charge_per_day
@@ -203,10 +208,11 @@ class FleetRentalDocumentExtend(models.Model):
         rent = self.env['fleet_rental.document_rent'].browse(active_id)
         defaults.setdefault('vehicle_id', rent.vehicle_id.id)
         defaults.setdefault('partner_id', rent.partner_id.id)
-        defaults['exit_datetime'] = self.env['fleet_rental.document_extend'].search(
+        defaults['exit_datetime'] = rent.exit_datetime
+        defaults['diff_datetime'] = self.env['fleet_rental.document_extend'].search(
                                             [('document_rent_id', '=', rent.id)], limit=1,
                                             order='return_datetime desc').return_datetime or rent.return_datetime
-        defaults['return_datetime'] = fields.Datetime.to_string(fields.Datetime.from_string(defaults['exit_datetime']) + timedelta(days=1))
+        defaults['return_datetime'] = fields.Datetime.to_string(fields.Datetime.from_string(defaults['diff_datetime']) + timedelta(days=1))
         defaults.setdefault('rate_per_extra_km', rent.rate_per_extra_km)
         defaults.setdefault('extra_driver_charge_per_day', rent.extra_driver_charge_per_day)
         defaults.setdefault('odometer_before', rent.odometer_before)
