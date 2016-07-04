@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import openerp
 from openerp import models, fields, api
+from datetime import datetime, date, timedelta
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 
 
 class FleetRentalDocumentRent(models.Model):
@@ -26,6 +28,26 @@ class FleetRentalDocumentRent(models.Model):
     user_branch_id = fields.Many2one('fleet_branch.branch', default=lambda self: self.env.user.branch_id.id)
 
     document_return_id = fields.Many2one('fleet_rental.document_return')
+
+    @api.onchange('vehicle_id')
+    def on_change_vehicle_id(self):
+        self.mapped('document_id')._compute_png()
+        self.allowed_kilometer_per_day = self.vehicle_id.allowed_kilometer_per_day
+        self.rate_per_extra_km = self.vehicle_id.rate_per_extra_km
+        self.daily_rental_price = self.vehicle_id.daily_rental_price
+        self.period_rent_price = self.total_rental_period * self.daily_rental_price
+
+    @api.onchange('exit_datetime', 'return_datetime')
+    def _onchange_dates(self):
+        if self.exit_datetime and self.return_datetime:
+            start = datetime.strptime(self.exit_datetime, DTF)
+            end = datetime.strptime(self.return_datetime, DTF)
+            self.total_rental_period = (end - start).days
+            self.period_rent_price = self.total_rental_period * self.daily_rental_price
+
+    @api.onchange('period_rent_price', 'extra_driver_charge', 'other_extra_charges')
+    def _onchange_charges(self):
+        self.total_rent_price = self.period_rent_price + self.extra_driver_charge + self.other_extra_charges
 
     @api.multi
     def action_view_invoice(self):

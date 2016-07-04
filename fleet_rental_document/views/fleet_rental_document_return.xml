@@ -128,6 +128,8 @@
                 <field name="extra_driver_charge" class="oe_inline"/>
                 <field name="other_extra_charges" class="oe_inline"/>
                 <field name="penalties" class="oe_inline"/>
+                <field name="extra_hours_charge" class="oe_inline"/>
+                <field name="extra_kilos_charge" class="oe_inline"/>
                 <field name="total_rent_price" class="oe_inline"/>
                 <field name="discount" class="oe_inline"/>
                 <field name="price_after_discount" class="oe_inline"/>
