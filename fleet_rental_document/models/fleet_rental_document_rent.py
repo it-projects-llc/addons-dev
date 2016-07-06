@@ -40,6 +40,7 @@ class FleetRentalDocumentRent(models.Model):
     invoice_ids = fields.Many2many("account.invoice", string='Invoices', compute="_get_invoiced", readonly=True, copy=False)
     invoice_count = fields.Integer(string='# of Invoices', compute='_get_invoiced', readonly=True)
     invoice_line_ids = fields.One2many('account.invoice.line', 'fleet_rental_document_id', string='Invoice Lines', copy=False)
+    odometer_before = fields.Float(string='Odometer', compute='_compute_odometer', store=True, readonly=True)
 
     @api.depends('total_rent_price', 'account_move_lines_ids', 'document_extend_ids')
     def _compute_balance(self):
@@ -87,6 +88,10 @@ class FleetRentalDocumentRent(models.Model):
             record.allowed_kilometer_per_day = record.vehicle_id.allowed_kilometer_per_day
             record.rate_per_extra_km = record.vehicle_id.rate_per_extra_km
             record.daily_rental_price = record.vehicle_id.daily_rental_price
+
+    @api.depends('vehicle_id')
+    def _compute_odometer(self):
+        for record in self:
             record.odometer_before = record.vehicle_id.odometer
 
     @api.onchange('daily_rental_price', 'vehicle_id', 'diff_datetime', 'return_datetime', 'return_datetime', 'extra_driver_charge_per_day', 'other_extra_charges')
