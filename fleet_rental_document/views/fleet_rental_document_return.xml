@@ -99,6 +99,7 @@
               <group>
                 <group col="2" string="Vehicle Information">
                   <field name="vehicle_id" readonly="1"/>
+                  <field name="rent_return_datetime" invisible="1"/>
                   <field name="allowed_kilometer_per_day"/>
                   <field name="rate_per_extra_km"/>
                   <field name="daily_rental_price"/>

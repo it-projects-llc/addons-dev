@@ -200,6 +200,8 @@ class FleetRentalDocumentRent(models.Model):
                'type': 'return',
                'return_datetime': fields.Datetime.now(),
                'odometer_before': rent.odometer_before,
+               'rent_return_datetime': rent.return_datetime,
+               'document_rent_id': rent.id,
                })
             rent.write({'document_return_id': document_return.id})
             for r in rent.check_line_ids:

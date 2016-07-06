@@ -40,6 +40,7 @@ class FleetRentalDocument(models.Model):
 
     exit_datetime = fields.Datetime(string='Exit Date and Time')
     return_datetime = fields.Datetime(string='Return Date and Time')
+    rent_return_datetime = fields.Datetime(string='Rent Return Date and Time')
 
     total_rental_period = fields.Integer(string='Total Rental Period')
     total_rent_price = fields.Float(string='Total Rent Price', digits_compute=dp.get_precision('Product Price'))
