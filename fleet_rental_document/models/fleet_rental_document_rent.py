@@ -112,14 +112,6 @@ class FleetRentalDocumentRent(models.Model):
                 'extends_count': len(document.document_extend_ids),
             })
 
-    @api.onchange('vehicle_id')
-    def on_change_vehicle_id(self):
-        self.mapped('document_id')._compute_png()
-        self.allowed_kilometer_per_day = self.vehicle_id.allowed_kilometer_per_day
-        self.rate_per_extra_km = self.vehicle_id.rate_per_extra_km
-        self.daily_rental_price = self.vehicle_id.daily_rental_price
-        self.period_rent_price = self.total_rental_period * self.daily_rental_price
-
     @api.onchange('exit_datetime', 'return_datetime')
     def _onchange_dates(self):
         if self.exit_datetime and self.return_datetime:
