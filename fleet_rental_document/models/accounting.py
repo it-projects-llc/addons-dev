@@ -41,6 +41,12 @@ class AccountInvoice(models.Model):
         self.partner_id.points += self.amount_untaxed
         res = super(AccountInvoice, self).register_payment(payment_line, writeoff_acc_id, writeoff_journal_id)
 
+    @api.model
+    def create(self, vals):
+        invoice = super(AccountInvoice, self).create(vals)
+        invoice.fleet_rental_document_id = vals['invoice_line_ids'][0][2]['fleet_rental_document_id']  # This needs for refunds.
+        return invoice
+
 
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'

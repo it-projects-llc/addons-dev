@@ -61,6 +61,23 @@ class FleetRentalDocumentReturn(models.Model):
             rent.state = 'open'
 
     @api.multi
+    def action_create_refund(self):
+        for rent in self:
+            new_context = self._context.copy()
+            last_rent_invoice = rent.document_rent_id.invoice_ids[-1]
+            new_context['active_ids'] = [last_rent_invoice.id]
+
+            result = {
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'target': 'new',
+                'context': new_context,
+                'res_model': 'account.invoice.refund',
+            }
+            return result
+
+    @api.multi
     @api.depends('exit_datetime', 'return_datetime')
     def _compute_extra_hours(self):
         for record in self:

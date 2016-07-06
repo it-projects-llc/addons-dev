@@ -51,7 +51,18 @@ class FleetRentalDocumentRent(models.Model):
                 id_to_manage = record.id
             elif self._model._name == 'fleet_rental.document_extend':
                 id_to_manage = record.document_rent_id.id
+            bank_journal = self.env['account.journal'].search([('type', '=', 'bank')], limit=1)
+            cash_journal = self.env['account.journal'].search([('type', '=', 'cash')], limit=1)
+            bank_account = bank_journal.default_debit_account_id
+            cash_account = bank_journal.default_debit_account_id
+            customer_deposit_account = self.env['account.account.template'].ref('24600_customer_deposit')
+            # TODO ПРОТЕСТИТЬ БАЛАНС. ИЗМЕНИТЬ ЭТОТ КОД В ДРУГИХ МЕСТАХ.
             account_receivable = record.partner_id.property_account_receivable_id.id
+            """ Его долг это все дебеты account_receivable
+                Его оплата это все дебеты по кассе и банку
+                Наш долг (refund invoice) это кредиты  Customer Deposits Received
+                Наша оплата (refund payment) это кредиты по кассе и банку
+            """
             if record.account_move_lines_ids:
                 record.account_move_lines_ids[0].move_id.fleet_rental_document_id = [(4, id_to_manage)]
             mutuals_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', id_to_manage), ('account_id', '=', account_receivable)])
