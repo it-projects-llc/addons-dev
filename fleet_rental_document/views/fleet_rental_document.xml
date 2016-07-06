@@ -44,7 +44,7 @@
       </record>
 
       <record id='fleet_rental_document_act' model='ir.actions.act_window'>
-        <field name="name">Documents</field>
+        <field name="name">All Documents</field>
         <field name="res_model">fleet_rental.document</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>

@@ -20,8 +20,8 @@ class FleetRentalDocumentReturn(models.Model):
                  }
 
     document_id = fields.Many2one('fleet_rental.document', required=True,
-            string='Related Document', ondelete='restrict',
-            help='common part of all three types of the documents', auto_join=True)
+                                  string='Related Document', ondelete='restrict',
+                                  help='common part of all three types of the documents', auto_join=True)
 
     odometer_after = fields.Float(string='Odometer after Rent', related='vehicle_id.odometer')
 

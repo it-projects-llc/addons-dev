@@ -60,7 +60,9 @@ class FleetRentalDocumentRent(models.Model):
             for r in mutuals_recs:
                 total_duty += r.debit
                 total_paid += r.credit
-            record.balance = total_paid - total_duty
+            record.balance = total_duty - total_paid
+            # If “Balance” is negative (means we have to return amount to customer)
+            # If “Balance” is positive (means customer has to pay)
 
     @api.depends('total_rent_price', 'account_move_lines_ids', 'document_extend_ids')
     def _compute_deposit(self):
@@ -249,100 +251,3 @@ class FleetRentalDocumentRent(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('fleet_rental.document_rent') or 'New'
         result = super(FleetRentalDocumentRent, self).create(vals)
         return result
-
-
-class FleetRentalDocumentExtend(models.Model):
-    _name = 'fleet_rental.document_extend'
-    _inherit = 'fleet_rental.document_rent'
-
-    state = fields.Selection([
-        ('draft', 'Draft'),
-        ('booked', 'Booked'),
-        ('confirmed', 'Confirmed'),
-        ('cancel', 'Cancelled'),
-        ], string='Status', readonly=True, copy=False, index=True, default='draft')
-
-    document_rent_id = fields.Many2one('fleet_rental.document_rent')
-    balance = fields.Float(related='document_rent_id.balance', readonly=True)
-    advanced_deposit = fields.Float(related='document_rent_id.advanced_deposit', readonly=True)
-
-    @api.model
-    def default_get(self, fields_list):
-        defaults = super(FleetRentalDocumentExtend, self).default_get(fields_list)
-        context = dict(self._context or {})
-        active_id = context.get('active_id')
-        rent = self.env['fleet_rental.document_rent'].browse(active_id)
-        defaults.setdefault('vehicle_id', rent.vehicle_id.id)
-        defaults.setdefault('partner_id', rent.partner_id.id)
-        defaults['exit_datetime'] = rent.exit_datetime
-        defaults['diff_datetime'] = self.env['fleet_rental.document_extend'].search(
-                                            [('document_rent_id', '=', rent.id)], limit=1,
-                                            order='return_datetime desc').return_datetime or rent.return_datetime
-        defaults['return_datetime'] = fields.Datetime.to_string(fields.Datetime.from_string(defaults['diff_datetime']) + timedelta(days=1))
-        defaults.setdefault('rate_per_extra_km', rent.rate_per_extra_km)
-        defaults.setdefault('extra_driver_charge_per_day', rent.extra_driver_charge_per_day)
-        defaults.setdefault('odometer_before', rent.odometer_before)
-        defaults.setdefault('daily_rental_price', rent.daily_rental_price)
-        defaults.setdefault('allowed_kilometer_per_day', rent.allowed_kilometer_per_day)
-        defaults.setdefault('partner_id', rent.partner_id)
-        return defaults
-
-    @api.multi
-    def action_submit(self):
-        for rent in self:
-            rent.state = 'booked'
-            self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_booked')
-
-    @api.multi
-    def action_view_invoice(self):
-        return self.mapped('document_id').action_view_invoice()
-
-
-class AccountMove(models.Model):
-    _inherit = 'account.move'
-    fleet_rental_document_id = fields.Many2one('fleet_rental.document_rent', readonly=True, copy=False)
-
-
-class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
-    fleet_rental_document_id = fields.Many2one('fleet_rental.document_rent', readonly=True, copy=False)
-
-
-class AccountInvoice(models.Model):
-    _inherit = 'account.invoice'
-
-    fleet_rental_document_id = fields.Many2one('fleet_rental.document_rent', readonly=True, copy=False)
-
-    @api.multi
-    def finalize_invoice_move_lines(self, move_lines):
-        res = super(AccountInvoice, self).finalize_invoice_move_lines(move_lines)
-        fleet_rental_document_id = False
-        for r in self.invoice_line_ids:
-            if r.fleet_rental_document_id:
-                fleet_rental_document_id = r.fleet_rental_document_id
-                break
-        if not fleet_rental_document_id:
-            return res
-        for move_line in move_lines:
-            move_line[2]['fleet_rental_document_id'] = fleet_rental_document_id.id
-        return move_lines
-
-    @api.multi
-    def register_payment(self, payment_line, writeoff_acc_id=False, writeoff_journal_id=False):
-        payment_line.fleet_rental_document_id = self.fleet_rental_document_id
-        self.partner_id.points += self.amount_untaxed
-        res = super(AccountInvoice, self).register_payment(payment_line, writeoff_acc_id, writeoff_journal_id)
-
-
-class AccountInvoiceLine(models.Model):
-    _inherit = 'account.invoice.line'
-    fleet_rental_document_id = fields.Many2one('fleet_rental.document_rent', readonly=True, copy=False)
-
-
-class AccountPayment(models.Model):
-    _inherit = 'account.payment'
-
-    def _get_shared_move_line_vals(self, debit, credit, amount_currency, move_id, invoice_id=False):
-        res = super(AccountPayment, self)._get_shared_move_line_vals(debit, credit, amount_currency, move_id, invoice_id)
-        res['fleet_rental_document_id'] = self.invoice_ids[0].fleet_rental_document_id.id
-        return res
