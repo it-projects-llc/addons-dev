@@ -195,7 +195,7 @@
       </record>
 
       <record id='fleet_rental_document_extend_act' model='ir.actions.act_window'>
-        <field name="name">Rent Extend</field>
+        <field name="name">Rent Extends</field>
         <field name="res_model">fleet_rental.document_extend</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="view_fleet_rental_document_extend_tree"/>
