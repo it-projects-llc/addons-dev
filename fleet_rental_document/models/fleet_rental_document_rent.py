@@ -51,11 +51,13 @@ class FleetRentalDocumentRent(models.Model):
                 id_to_manage = record.id
             elif self._model._name == 'fleet_rental.document_extend':
                 id_to_manage = record.document_rent_id.id
+            else:
+                return
             bank_journal = self.env['account.journal'].search([('type', '=', 'bank')], limit=1)
             cash_journal = self.env['account.journal'].search([('type', '=', 'cash')], limit=1)
             bank_account = bank_journal.default_debit_account_id
-            cash_account = bank_journal.default_debit_account_id
-            customer_deposit_account = self.env['account.account.template'].ref('24600_customer_deposit')
+            cash_account = cash_journal.default_debit_account_id
+            customer_deposit_account = self.env['account.account'].search([('code', '=', '246000')], limit=1)
             # TODO ПРОТЕСТИТЬ БАЛАНС. ИЗМЕНИТЬ ЭТОТ КОД В ДРУГИХ МЕСТАХ.
             account_receivable = record.partner_id.property_account_receivable_id.id
             """ Его долг это все дебеты account_receivable
@@ -65,13 +67,23 @@ class FleetRentalDocumentRent(models.Model):
             """
             if record.account_move_lines_ids:
                 record.account_move_lines_ids[0].move_id.fleet_rental_document_id = [(4, id_to_manage)]
-            mutuals_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', id_to_manage), ('account_id', '=', account_receivable)])
-            total_duty = 0
-            total_paid = 0
-            for r in mutuals_recs:
-                total_duty += r.debit
-                total_paid += r.credit
-            record.balance = total_duty - total_paid
+            customer_duty_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', id_to_manage), ('account_id', '=', account_receivable)])
+            payment_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', id_to_manage), ('account_id', 'in', [bank_account, cash_account])])
+            company_duty_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', id_to_manage), ('account_id', '=', customer_deposit_account)])
+
+            customer_total_duty = 0
+            customer_total_paid = 0
+            company_total_duty = 0
+            company_total_paid = 0
+            for r in customer_duty_recs:
+                customer_total_duty += r.debit
+            for r in company_duty_recs:
+                company_total_duty += r.credit
+            for r in payment_recs:
+                customer_total_paid += r.debit
+                company_total_paid += r.credit
+
+            record.balance = 0
             # If “Balance” is negative (means we have to return amount to customer)
             # If “Balance” is positive (means customer has to pay)
 
