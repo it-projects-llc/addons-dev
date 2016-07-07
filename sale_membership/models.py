@@ -30,12 +30,13 @@ class Person(models.Model):
     blocked = fields.Boolean(default=False, string='Blocked', readonly=True)
 
     @api.one
-    @api.depends('points')
+    @api.depends('points', 'customer')
     def set_membership(self):
-        smt = self.env['sale_membership.type'].search([('name', '!=', '')])
+        if not self.customer:
+            return
+        smt = self.env['sale_membership.type'].search([])
         smt_last_index = len(smt) - 1
-        if smt_last_index < 0:
-            self.type_id = None
+        if not len(smt):
             return
         if self.points >= smt[smt_last_index].points:
             self.type_id = smt[smt_last_index].id
