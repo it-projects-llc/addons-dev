@@ -19,6 +19,7 @@
         "l10n_sa",
         "fleet_branch",
         "web_form_svg",
+        "fleet_vehicle_color",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
@@ -31,6 +32,7 @@
         "views/fleet.xml",
         "views/ir_sequence.xml",
         "data/svg_vehicle_part.xml",
+        "data/items_to_check.xml",
     ],
     "qweb": [
     ],

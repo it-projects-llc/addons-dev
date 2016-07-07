@@ -44,9 +44,6 @@ class Vehicle(models.Model):
     _inherit = 'fleet.vehicle'
 
     model_year = fields.Integer('Model Year')
-    daily_rate = fields.Float('Daily Rate')
-    extra_rate = fields.Float('Rate per extra km')
-    allowed_per_day = fields.Float('Allowed km per day')
     paid = fields.Float('Paid amount')
     remain = fields.Float('Remaining amount')
     reg_expiry = fields.Date('Registration expiry')

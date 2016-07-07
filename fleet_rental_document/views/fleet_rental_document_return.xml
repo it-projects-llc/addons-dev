@@ -32,7 +32,7 @@
         </field>
       </record>
 
-      <menuitem action="fleet_rental_return_document_draft_act" parent="fleet_rental_document.fleet_rental_sale" id="return_draft_menu" sequence="5"/>
+      <menuitem action="fleet_rental_return_document_draft_act" parent="fleet_rental_document.fleet_rental_sale" id="return_draft_menu" sequence="7"/>
 
       <record id='fleet_rental_return_document_open_act' model='ir.actions.act_window'>
         <field name="name">Return Open</field>
@@ -48,7 +48,7 @@
         </field>
       </record>
 
-      <menuitem action="fleet_rental_return_document_open_act" parent="fleet_rental_document.fleet_rental_sale" id="return_open_menu" sequence="6"/>
+      <menuitem action="fleet_rental_return_document_open_act" parent="fleet_rental_document.fleet_rental_sale" id="return_open_menu" sequence="8"/>
 
       <record id='fleet_rental_return_documnet_closed_act' model='ir.actions.act_window'>
         <field name="name">Return Closed</field>
@@ -64,7 +64,7 @@
         </field>
       </record>
 
-      <menuitem action="fleet_rental_return_documnet_closed_act" parent="fleet_rental_document.fleet_rental_sale" id="return_closed_menu" sequence="7"/>
+      <menuitem action="fleet_rental_return_documnet_closed_act" parent="fleet_rental_document.fleet_rental_sale" id="return_closed_menu" sequence="9"/>
 
       <record id='fleet_rental_return_document_form' model='ir.ui.view'>
         <field name="name">fleet.rental.document.return.form</field>
@@ -72,11 +72,17 @@
         <field name="arch" type="xml">
           <form string="Vehicle Return">
             <header>
-              <button name="%(action_view_make_invoice_wizard)d" string="Create Invoice"
-                      type="action" class="btn-primary"
-                      states="open" />
-              <button name="action_open" states="draft" string="Return Car and keep contract open" type="object"/>
-              <field name="state" widget="statusbar" statusbar_visible="draft,open,closed"/>
+                <button name="%(action_view_make_invoice_wizard)d" string="Create Invoice"
+                        type="action" class="btn-primary"
+                        states="open"/>
+                <button name="action_open" states="draft" string="Return Car and keep contract open" type="object"/>
+                <button name="action_create_refund"
+                        type='object'
+                        string='Create Refund'
+                        class="btn-primary"
+                        groups="base.group_user"
+                        states="open"/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,open,closed"/>
             </header>
             <sheet>
               <div class="oe_button_box" name="button_box">
@@ -96,19 +102,36 @@
               <group>
                 <field name="partner_id" readonly="1"/>
               </group>
-              <group col="2" string="Vehicle Information">
-                <field name="vehicle_id" readonly="1"/>
-                <field name="allowed_kilometer_per_day"/>
-                <field name="rate_per_extra_km"/>
-                <field name="daily_rental_price"/>
-                <field name="extra_driver_charge_per_day" class="oe_inline"/>
-                <field name="odometer_before" string="Odometer before Rent"/>
-                <field name="odometer_after"/>
-                <field name="exit_datetime" class="oe_inline" readonly="1"/>
-                <field name="return_datetime" class="oe_inline"/>
-                <field name="total_rental_period" class="oe_inline"/>
-                <field name="extra_hours" class="oe_inline" attrs="{'invisible': [('extra_hours', '=', 0)]}"/>
-                <field name="extra_kilometers" class="oe_inline"/>
+              <group>
+                <group col="2" string="Vehicle Information">
+                  <field name="vehicle_id" readonly="1"/>
+                  <field name="rent_return_datetime" invisible="1"/>
+                  <field name="allowed_kilometer_per_day"/>
+                  <field name="rate_per_extra_km"/>
+                  <field name="daily_rental_price"/>
+                  <field name="extra_driver_charge_per_day" class="oe_inline"/>
+                  <field name="odometer_before" string="Odometer before Rent"/>
+                  <field name="odometer_after"/>
+                  <field name="exit_datetime" class="oe_inline" readonly="1"/>
+                  <field name="return_datetime" class="oe_inline"/>
+                  <field name="total_rental_period" class="oe_inline"/>
+                  <field name="extra_hours" class="oe_inline"
+                         attrs="{'invisible': [('extra_hours', '=', 0)]}"/>
+                  <field name="extra_kilometers" class="oe_inline"/>
+                </group>
+                <group col="2" string="Payment Details">
+                  <field name="period_rent_price" class="oe_inline"/>
+                  <field name="extra_driver_charge" class="oe_inline"/>
+                  <field name="other_extra_charges" class="oe_inline"/>
+                  <field name="penalties" class="oe_inline"/>
+                  <field name="extra_hours_charge" class="oe_inline"/>
+                  <field name="extra_kilos_charge" class="oe_inline"/>
+                  <field name="total_rent_price" class="oe_inline"/>
+                  <field name="discount" class="oe_inline"/>
+                  <field name="price_after_discount" class="oe_inline"/>
+                  <field name="advanced_deposit" class="oe_inline"/>
+                  <field name="balance" class="oe_inline"/>
+                </group>
               </group>
               <notebook>
                 <page string="Vehicle Checklist">
@@ -123,20 +146,6 @@
                   </field>
                 </page>
               </notebook>
-              <group string="Payment Details">
-                <field name="period_rent_price" class="oe_inline"/>
-                <field name="extra_driver_charge" class="oe_inline"/>
-                <field name="other_extra_charges" class="oe_inline"/>
-                <field name="penalties" class="oe_inline"/>
-                <field name="extra_hours_charge" class="oe_inline"/>
-                <field name="extra_kilos_charge" class="oe_inline"/>
-                <field name="total_rent_price" class="oe_inline"/>
-                <field name="discount" class="oe_inline"/>
-                <field name="price_after_discount" class="oe_inline"/>
-                <field name="advanced_deposit" class="oe_inline"/>
-                <field name="balance" class="oe_inline"/>
-              </group>
-
             </sheet>
           </form>
         </field>

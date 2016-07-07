@@ -14,6 +14,9 @@ class Branch(models.Model):
     phone = fields.Char(string='Phone')
     branch_target = fields.Char(string='Branch Target')
     users_ids = fields.One2many('res.users', 'branch_id')
+    state = fields.Selection([('new', 'New'),
+                              ('active', 'Active')],
+                             string='State', default='new')
 
 
 class User(models.Model):
