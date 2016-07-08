@@ -18,7 +18,7 @@ Vehicle Rental Information
 * Open ``Fleet / Vehicles`` menu
 * Under ``Rental Properties`` group for each vehicle define the following information:
 
- * Dayly rental price
+ * Daily rental price
  * Rate per extra km
  * Allowed kilometer per day
 
