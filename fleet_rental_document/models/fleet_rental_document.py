@@ -160,3 +160,57 @@ class FleetRentalDocument(models.Model):
         result['return_datetime'] = fields.Datetime.to_string(datetime.utcnow() + timedelta(days=1))
         return result
 
+    @api.depends('exit_datetime', 'return_datetime')
+    def _compute_total_rental_period(self):
+        for record in self:
+            if record.exit_datetime and record.return_datetime:
+                start = datetime.strptime(record.exit_datetime, DTF)
+                end = datetime.strptime(record.return_datetime, DTF)
+                record.total_rental_period = (end - start).days
+
+    @api.onchange('exit_datetime', 'return_datetime')
+    def _onchange_dates(self):
+        if self.exit_datetime and self.return_datetime:
+            start = datetime.strptime(self.exit_datetime, DTF)
+            end = datetime.strptime(self.return_datetime, DTF)
+            self.total_rental_period = (end - start).days
+            self.period_rent_price = self.total_rental_period * self.daily_rental_price
+
+    @api.multi
+    @api.depends('vehicle_id', 'total_rental_period')
+    def _compute_period_rent_price(self):
+        for record in self:
+            if record.total_rental_period:
+                record.period_rent_price = record.total_rental_period * record.daily_rental_price
+
+    @api.depends('total_rental_period', 'extra_driver_charge_per_day')
+    def _compute_extra_driver_charge(self):
+        for record in self:
+            if record.total_rental_period:
+                record.extra_driver_charge = record.total_rental_period * record.extra_driver_charge_per_day
+
+    @api.depends('period_rent_price', 'extra_driver_charge', 'other_extra_charges')
+    def _compute_total_rent_price(self):
+        for record in self:
+            record.total_rent_price = record.period_rent_price + record.extra_driver_charge + record.other_extra_charges
+
+    @api.multi
+    @api.depends('partner_id.rental_deposit_analytic_account_id.line_ids.amount')
+    def _compute_advanced_deposit(self):
+        # TODO: invokes three times on invoice validation. Think about minimize excessive calls
+        for record in self:
+            account_analytic = record.partner_id.rental_deposit_analytic_account_id
+            if account_analytic:
+                account_analytic._compute_debit_credit_balance()
+            record.advanced_deposit = account_analytic and account_analytic.balance or 0.0
+
+    @api.depends('total_rent_price', 'advanced_deposit')
+    def _compute_balance(self):
+        for record in self:
+            record.balance = record.total_rent_price - record.advanced_deposit
+
+
+class AccountInvoiceLine(models.Model):
+    _inherit = 'account.invoice.line'
+    fleet_rental_document_id = fields.Many2one('fleet_rental.document', readonly=True, copy=False)
+
