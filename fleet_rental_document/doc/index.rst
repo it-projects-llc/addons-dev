@@ -61,8 +61,6 @@ vehicle is returned.
  * ``Return Closed``
 
 * Open ``Sales / Rental / Return Draft`` to see Return documents that are waiting for your action
-* Open ``Sales / Rental / Return Open`` to see Retrun documents where rent isn't fully paid
+* Open ``Sales / Rental / Return Open`` to see Return documents where rent isn't fully paid
 * Open ``Sales / Rental / Return Closed`` to see Return documents where rent is fully paid or where
 excess amount of deposit should be returned to a customer
-
-
