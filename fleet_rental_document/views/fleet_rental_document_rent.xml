@@ -232,7 +232,7 @@
         <field name="name">fleet.rental.document.extend.tree</field>
         <field name="model">fleet_rental.document_extend</field>
         <field name="arch" type="xml">
-          <tree string="Vehicle Rent Extend" decoration-muted="state=='cancel'">
+          <tree string="Vehicle Rent Extend" decoration-muted="state=='cancel'"  create="false" delete="false">
             <field name="state" invisible="1"/>
             <field name="name"/>
             <field name="partner_id"/>
@@ -248,7 +248,7 @@
         <field name="name">fleet.rental.document.extend.form</field>
         <field name="model">fleet_rental.document_extend</field>
         <field name="arch" type="xml">
-          <form string="Vehicle Rent Extend">
+          <form string="Vehicle Rent Extend" create="false" delete="false">
             <header>
               <button name="action_submit" string="Submit"
                       type="object" class="btn-primary"
