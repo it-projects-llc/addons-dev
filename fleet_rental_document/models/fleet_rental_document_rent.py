@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
-import openerp
+
 from openerp import models, fields, api
 from datetime import datetime, date, timedelta
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 import openerp.addons.decimal_precision as dp
+import base64
+from lxml import etree
+import os
+from wand.image import Image
 
 
 class FleetRentalDocumentRent(models.Model):
@@ -35,13 +39,14 @@ class FleetRentalDocumentRent(models.Model):
     account_move_ids = fields.One2many('account.move', 'fleet_rental_document_id', string='Entries', readonly=True)
     account_move_lines_ids = fields.One2many('account.move.line', 'fleet_rental_document_id', string='Entrie lines', readonly=True)
     document_extend_ids = fields.One2many('fleet_rental.document_extend', 'document_rent_id')
-    balance = fields.Float(string='Balance', compute="_compute_balance", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
+    balance = fields.Float(string='Balance', compute="_compute_balance", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True, help='Customer duty')
     advanced_deposit = fields.Float(string='Advanced Deposit', compute="_compute_deposit", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
     diff_datetime = fields.Datetime(string='Previous rent document return date and time')
     invoice_ids = fields.Many2many("account.invoice", string='Invoices', compute="_get_invoiced", readonly=True, copy=False)
     invoice_count = fields.Integer(string='# of Invoices', compute='_get_invoiced', readonly=True)
     invoice_line_ids = fields.One2many('account.invoice.line', 'fleet_rental_document_id', string='Invoice Lines', copy=False)
     odometer_before = fields.Float(string='Odometer', compute='_compute_odometer', store=True, readonly=True)
+
 
     @api.depends('total_rent_price', 'account_move_lines_ids', 'document_extend_ids')
     def _compute_balance(self):
@@ -52,16 +57,41 @@ class FleetRentalDocumentRent(models.Model):
                 id_to_manage = record.id
             elif self._model._name == 'fleet_rental.document_extend':
                 id_to_manage = record.document_rent_id.id
-            account_receivable = record.partner_id.property_account_receivable_id.id
+            else:
+                return
+            bank_journal = self.env['account.journal'].search([('type', '=', 'bank')], limit=1)
+            cash_journal = self.env['account.journal'].search([('type', '=', 'cash')], limit=1)
+            bank_account = bank_journal.default_debit_account_id  # 66
+            cash_account = cash_journal.default_debit_account_id  # 65
+            customer_deposit_account = self.env['account.account'].search([('code', '=', '246000')], limit=1)  # 64
+            # TODO ПРОТЕСТИТЬ БАЛАНС. ИЗМЕНИТЬ ЭТОТ КОД В ДРУГИХ МЕСТАХ.
+            account_receivable = record.partner_id.property_account_receivable_id  # 2
+            """ Его долг это все дебеты account_receivable
+                Его оплата это все дебеты по кассе и банку
+                Наш долг (refund invoice) это кредиты  Customer Deposits Received
+                Наша оплата (refund payment) это кредиты по кассе и банку
+            """
             if record.account_move_lines_ids:
                 record.account_move_lines_ids[0].move_id.fleet_rental_document_id = [(4, id_to_manage)]
-            mutuals_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', id_to_manage), ('account_id', '=', account_receivable)])
-            total_duty = 0
-            total_paid = 0
-            for r in mutuals_recs:
-                total_duty += r.debit
-                total_paid += r.credit
-            record.balance = total_paid - total_duty
+            customer_duty_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', id_to_manage), ('account_id', '=', account_receivable.id)])
+            payment_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', id_to_manage), ('account_id', 'in', [bank_account.id, cash_account.id])])
+            company_duty_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', id_to_manage), ('account_id', '=', customer_deposit_account.id)])
+
+            customer_total_duty = 0
+            customer_total_paid = 0
+            company_total_duty = 0
+            company_total_paid = 0
+            for r in customer_duty_recs:
+                customer_total_duty += r.debit
+            for r in company_duty_recs:
+                company_total_duty += r.debit
+            for r in payment_recs:
+                customer_total_paid += r.debit
+                company_total_paid += r.credit
+
+            record.balance = customer_total_duty - customer_total_paid - company_total_duty + company_total_paid
+            # If “Balance” is negative (means we have to return amount to customer)
+            # If “Balance” is positive (means customer has to pay)
 
     @api.depends('total_rent_price', 'account_move_lines_ids', 'document_extend_ids')
     def _compute_deposit(self):
@@ -72,16 +102,46 @@ class FleetRentalDocumentRent(models.Model):
                 id_to_manage = record.id
             elif self._model._name == 'fleet_rental.document_extend':
                 id_to_manage = record.document_rent_id.id
-            account_receivable = record.partner_id.property_account_receivable_id.id
+            else:
+                return
+            bank_journal = self.env['account.journal'].search([('type', '=', 'bank')], limit=1)
+            cash_journal = self.env['account.journal'].search([('type', '=', 'cash')], limit=1)
+            bank_account = bank_journal.default_debit_account_id  # 66
+            cash_account = cash_journal.default_debit_account_id  # 65
+            customer_deposit_account = self.env['account.account'].search([('code', '=', '246000')],
+                                                                          limit=1)  # 64
+            # TODO ПРОТЕСТИТЬ БАЛАНС. ИЗМЕНИТЬ ЭТОТ КОД В ДРУГИХ МЕСТАХ.
+            account_receivable = record.partner_id.property_account_receivable_id  # 2
+            """ Его долг это все дебеты account_receivable
+                Его оплата это все дебеты по кассе и банку
+                Наш долг (refund invoice) это кредиты  Customer Deposits Received
+                Наша оплата (refund payment) это кредиты по кассе и банку
+            """
             if record.account_move_lines_ids:
                 record.account_move_lines_ids[0].move_id.fleet_rental_document_id = [(4, id_to_manage)]
-            mutuals_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', id_to_manage), ('account_id', '=', account_receivable)])
-            total_duty = 0
-            total_paid = 0
-            for r in mutuals_recs:
-                total_duty += r.debit
-                total_paid += r.credit
-            record.advanced_deposit = total_paid
+            customer_duty_recs = self.env['account.move.line'].search(
+                [('fleet_rental_document_id', '=', id_to_manage),
+                 ('account_id', '=', account_receivable.id)])
+            payment_recs = self.env['account.move.line'].search(
+                [('fleet_rental_document_id', '=', id_to_manage),
+                 ('account_id', 'in', [bank_account.id, cash_account.id])])
+            company_duty_recs = self.env['account.move.line'].search(
+                [('fleet_rental_document_id', '=', id_to_manage),
+                 ('account_id', '=', customer_deposit_account.id)])
+
+            customer_total_duty = 0
+            customer_total_paid = 0
+            company_total_duty = 0
+            company_total_paid = 0
+            for r in customer_duty_recs:
+                customer_total_duty += r.debit
+            for r in company_duty_recs:
+                company_total_duty += r.debit
+            for r in payment_recs:
+                customer_total_paid += r.debit
+                company_total_paid += r.credit
+
+            record.advanced_deposit = customer_total_paid
 
     @api.onchange('vehicle_id')
     def onchange_vehicle_id(self):
@@ -112,6 +172,26 @@ class FleetRentalDocumentRent(models.Model):
             document.update({
                 'extends_count': len(document.document_extend_ids),
             })
+
+    @api.onchange('vehicle_id')
+    def on_change_vehicle_id(self):
+        self.mapped('document_id')._compute_png()
+        self.allowed_kilometer_per_day = self.vehicle_id.allowed_kilometer_per_day
+        self.rate_per_extra_km = self.vehicle_id.rate_per_extra_km
+        self.daily_rental_price = self.vehicle_id.daily_rental_price
+        self.period_rent_price = self.total_rental_period * self.daily_rental_price
+
+    @api.onchange('exit_datetime', 'return_datetime')
+    def _onchange_dates(self):
+        if self.exit_datetime and self.return_datetime:
+            start = datetime.strptime(self.exit_datetime, DTF)
+            end = datetime.strptime(self.return_datetime, DTF)
+            self.total_rental_period = (end - start).days
+            self.period_rent_price = self.total_rental_period * self.daily_rental_price
+
+    @api.onchange('period_rent_price', 'extra_driver_charge', 'other_extra_charges')
+    def _onchange_charges(self):
+        self.total_rent_price = self.period_rent_price + self.extra_driver_charge + self.other_extra_charges
 
     @api.multi
     def action_view_invoice(self):
@@ -187,6 +267,8 @@ class FleetRentalDocumentRent(models.Model):
                'type': 'return',
                'return_datetime': fields.Datetime.now(),
                'odometer_before': rent.odometer_before,
+               'rent_return_datetime': rent.return_datetime,
+               'document_rent_id': rent.id,
                })
             rent.write({'document_return_id': document_return.id})
             for r in rent.check_line_ids:
@@ -238,99 +320,3 @@ class FleetRentalDocumentRent(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('fleet_rental.document_rent') or 'New'
         result = super(FleetRentalDocumentRent, self).create(vals)
         return result
-
-
-class FleetRentalDocumentExtend(models.Model):
-    _name = 'fleet_rental.document_extend'
-    _inherit = 'fleet_rental.document_rent'
-
-    state = fields.Selection([
-        ('draft', 'Draft'),
-        ('booked', 'Booked'),
-        ('confirmed', 'Confirmed'),
-        ('cancel', 'Cancelled'),
-        ], string='Status', readonly=True, copy=False, index=True, default='draft')
-
-    document_rent_id = fields.Many2one('fleet_rental.document_rent')
-    balance = fields.Float(related='document_rent_id.balance', readonly=True)
-    advanced_deposit = fields.Float(related='document_rent_id.advanced_deposit', readonly=True)
-
-    @api.model
-    def default_get(self, fields_list):
-        defaults = super(FleetRentalDocumentExtend, self).default_get(fields_list)
-        context = dict(self._context or {})
-        active_id = context.get('active_id')
-        rent = self.env['fleet_rental.document_rent'].browse(active_id)
-        defaults.setdefault('vehicle_id', rent.vehicle_id.id)
-        defaults.setdefault('partner_id', rent.partner_id.id)
-        defaults['exit_datetime'] = rent.exit_datetime
-        defaults['diff_datetime'] = self.env['fleet_rental.document_extend'].search(
-                                            [('document_rent_id', '=', rent.id)], limit=1,
-                                            order='return_datetime desc').return_datetime or rent.return_datetime
-        defaults['return_datetime'] = fields.Datetime.to_string(fields.Datetime.from_string(defaults['diff_datetime']) + timedelta(days=1))
-        defaults.setdefault('rate_per_extra_km', rent.rate_per_extra_km)
-        defaults.setdefault('extra_driver_charge_per_day', rent.extra_driver_charge_per_day)
-        defaults.setdefault('odometer_before', rent.odometer_before)
-        defaults.setdefault('daily_rental_price', rent.daily_rental_price)
-        defaults.setdefault('allowed_kilometer_per_day', rent.allowed_kilometer_per_day)
-        defaults.setdefault('partner_id', rent.partner_id)
-        return defaults
-
-    @api.multi
-    def action_submit(self):
-        for rent in self:
-            rent.state = 'booked'
-            self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_booked')
-
-    @api.multi
-    def action_view_invoice(self):
-        return self.mapped('document_id').action_view_invoice()
-
-
-class AccountMove(models.Model):
-    _inherit = 'account.move'
-    fleet_rental_document_id = fields.Many2one('fleet_rental.document_rent', readonly=True, copy=False)
-
-
-class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
-    fleet_rental_document_id = fields.Many2one('fleet_rental.document_rent', readonly=True, copy=False)
-
-
-class AccountInvoice(models.Model):
-    _inherit = 'account.invoice'
-
-    fleet_rental_document_id = fields.Many2one('fleet_rental.document_rent', readonly=True, copy=False)
-
-    @api.multi
-    def finalize_invoice_move_lines(self, move_lines):
-        res = super(AccountInvoice, self).finalize_invoice_move_lines(move_lines)
-        fleet_rental_document_id = False
-        for r in self.invoice_line_ids:
-            if r.fleet_rental_document_id:
-                fleet_rental_document_id = r.fleet_rental_document_id
-                break
-        if not fleet_rental_document_id:
-            return res
-        for move_line in move_lines:
-            move_line[2]['fleet_rental_document_id'] = fleet_rental_document_id.id
-        return move_lines
-
-    @api.multi
-    def register_payment(self, payment_line, writeoff_acc_id=False, writeoff_journal_id=False):
-        payment_line.fleet_rental_document_id = self.fleet_rental_document_id
-        res = super(AccountInvoice, self).register_payment(payment_line, writeoff_acc_id, writeoff_journal_id)
-
-
-class AccountInvoiceLine(models.Model):
-    _inherit = 'account.invoice.line'
-    fleet_rental_document_id = fields.Many2one('fleet_rental.document_rent', readonly=True, copy=False)
-
-
-class AccountPayment(models.Model):
-    _inherit = 'account.payment'
-
-    def _get_shared_move_line_vals(self, debit, credit, amount_currency, move_id, invoice_id=False):
-        res = super(AccountPayment, self)._get_shared_move_line_vals(debit, credit, amount_currency, move_id, invoice_id)
-        res['fleet_rental_document_id'] = self.invoice_ids[0].fleet_rental_document_id.id
-        return res

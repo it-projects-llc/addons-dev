@@ -68,6 +68,11 @@ class FleetRentalCreateInvoiceWizard(models.TransientModel):
             documents = documents_extend.mapped('document_rent_id')
         elif self._context.get('active_model') == 'fleet_rental.document_rent':
             documents = self.env['fleet_rental.document_rent'].browse(self._context.get('active_ids', []))
+        elif self._context.get('active_model') == 'fleet_rental.document_return':
+            documents_return = self.env['fleet_rental.document_return'].browse(self._context.get('active_ids', []))
+            documents = documents_return.mapped('document_rent_id')
+        else:
+            return
 
         # Create deposit product if necessary
         if not self.product_id:
@@ -79,6 +84,7 @@ class FleetRentalCreateInvoiceWizard(models.TransientModel):
             if self.advance_payment_method == 'percentage':
                 amount = document.period_rent_price * self.amount / 100
             else:
+
                 amount = self.amount
             if self.product_id.type != 'service':
                 raise UserError(_("The product used to invoice a down payment should be of type 'Service'. Please use another product or update this product."))

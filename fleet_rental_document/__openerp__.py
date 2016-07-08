@@ -19,6 +19,7 @@
         "l10n_sa",
         "fleet_branch",
         "web_form_svg",
+        "fleet_vehicle_color",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [

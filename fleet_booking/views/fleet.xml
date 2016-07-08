@@ -8,10 +8,11 @@
     <field name="arch" type="xml">
         <data>
             <!-- NEW FIELDS -->
-            <xpath expr="//field[@name='company_id']" position="after">
-                <field name='branch_id'/>
-            </xpath>
             <xpath expr="//label[@for='tag_ids']" position="before">
+                <label for="branch_id" class="oe_edit_only"/>
+                <h2>
+                    <field name="branch_id"/>
+                </h2>
                 <label for="asset_id" class="oe_edit_only"/>
                 <field name='asset_id'/>
             </xpath>

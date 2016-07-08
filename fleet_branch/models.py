@@ -6,7 +6,6 @@ from openerp import api, fields, models
 # INHERITED MODELS
 
 class Branch(models.Model):
-
     _name = "fleet_branch.branch"
     _inherit = 'hr.department'
 
@@ -26,7 +25,6 @@ class User(models.Model):
 
 
 class Vehicle(models.Model):
-
     _inherit = 'fleet.vehicle'
 
     branch_id = fields.Many2one('fleet_branch.branch', string='Current branch')

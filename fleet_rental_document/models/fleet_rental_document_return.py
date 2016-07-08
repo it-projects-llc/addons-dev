@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
-import openerp
+
 from openerp import models, fields, api
 from datetime import datetime, date, timedelta
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 import openerp.addons.decimal_precision as dp
+import base64
+from lxml import etree
+import os
+from wand.image import Image
 
 
 class FleetRentalDocumentReturn(models.Model):
@@ -20,11 +24,11 @@ class FleetRentalDocumentReturn(models.Model):
                  }
 
     document_id = fields.Many2one('fleet_rental.document', required=True,
-            string='Related Document', ondelete='restrict',
-            help='common part of all three types of the documents', auto_join=True)
+                                  string='Related Document', ondelete='restrict',
+                                  help='common part of all three types of the documents', auto_join=True)
 
     odometer_after = fields.Float(string='Odometer after Rent', related='vehicle_id.odometer')
-
+    rent_return_datetime = fields.Datetime(string='Rent Return Date and Time')
     extra_hours = fields.Integer(string='Extra Hours', compute="_compute_extra_hours", store=True, readonly=True, default=0)
     extra_kilometers = fields.Float(string='Extra Kilometers', compute="_compute_extra_kilometers", store=True, readonly=True, default=0)
 
@@ -33,6 +37,24 @@ class FleetRentalDocumentReturn(models.Model):
     extra_hours_charge = fields.Float(string='Extra Hours Charge', digits_compute=dp.get_precision('Product Price'), compute="_compute_extra_hours", store=True, readonly=True, default=0)
     extra_kilos_charge = fields.Float(string='Extra Kilos Charge', digits_compute=dp.get_precision('Product Price'), compute="_compute_extra_kilometers", store=True, readonly=True, default=0)
     price_after_discount = fields.Float(string='Price After Discount', compute="_compute_price_after_discount", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
+    document_rent_id = fields.Many2one('fleet_rental.document_rent')
+    part_line_ids = fields.One2many('fleet_rental.svg_vehicle_part_line', 'document_id', string='Vehicle part')
+    png_file = fields.Text('PNG', compute='_compute_png', store=False)
+
+    @api.multi
+    def _compute_png(self):
+        for rec in self:
+            f = open('/'.join([os.path.dirname(os.path.realpath(__file__)),
+                               '../static/src/img/car-cutout.svg']), 'r')
+            svg_file = f.read()
+            dom = etree.fromstring(svg_file)
+            for line in rec.part_line_ids:
+                if line.state == 'broken':
+                    for el in dom.xpath('//*[@id="%s"]' % line.part_id.path_ID):
+                        el.attrib['fill'] = 'red'
+            f.close()
+            with Image(blob=etree.tostring(dom), format='svg') as img:
+                rec.png_file = base64.b64encode(img.make_blob('png'))
 
     @api.multi
     @api.depends('period_rent_price', 'extra_driver_charge', 'other_extra_charges')
@@ -58,15 +80,35 @@ class FleetRentalDocumentReturn(models.Model):
             rent.state = 'open'
 
     @api.multi
+    def action_create_refund(self):
+        for rent in self:
+            new_context = self._context.copy()
+            last_rent_invoice = rent.document_rent_id.invoice_ids[-1]
+            new_context['active_ids'] = [last_rent_invoice.id]
+
+            result = {
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'target': 'new',
+                'context': new_context,
+                'res_model': 'account.invoice.refund',
+            }
+            return result
+
+    @api.multi
     @api.depends('exit_datetime', 'return_datetime')
     def _compute_extra_hours(self):
         for record in self:
-            if record.exit_datetime and record.return_datetime:
-                start = datetime.strptime(record.exit_datetime, DTF)
+            if record.exit_datetime and record.return_datetime and record.rent_return_datetime and (record.rent_return_datetime < record.return_datetime):
+                start = datetime.strptime(record.rent_return_datetime, DTF)
                 end = datetime.strptime(record.return_datetime, DTF)
-                extra_hours = (end - start).seconds // 3600
-                record.extra_hours = (end - start).seconds // 3600
+                extra_hours = (end - start).days * 24 + (end - start).seconds/3600
+                record.extra_hours = extra_hours
                 record.extra_hours_charge = (record.daily_rental_price / 24) * extra_hours
+            else:
+                record.extra_hours = 0
+                record.extra_hours_charge = 0
 
     @api.multi
     @api.depends('vehicle_id.odometer', 'document_id.total_rental_period', 'odometer_after')
@@ -77,18 +119,15 @@ class FleetRentalDocumentReturn(models.Model):
                 extra_kilometers = kilometers_diff if kilometers_diff > 0 else 0
                 record.extra_kilometers = extra_kilometers
                 record.extra_kilos_charge = extra_kilometers * record.rate_per_extra_km
+            else:
+                record.extra_kilometers = 0
+                record.extra_kilos_charge = 0
 
     @api.multi
     @api.depends('total_rent_price', 'discount')
     def _compute_price_after_discount(self):
         for record in self:
             record.price_after_discount = record.total_rent_price - record.discount
-
-    @api.multi
-    @api.depends('price_after_discount', 'advanced_deposit')
-    def _compute_balance(self):
-        for record in self:
-            record.balance = record.price_after_discount - record.advanced_deposit
 
     @api.onchange('price_after_discount')
     def _onchange_price_after_discount(self):

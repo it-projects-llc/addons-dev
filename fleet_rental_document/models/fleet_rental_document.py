@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 import openerp
 from openerp import models, fields, api
 from datetime import datetime, date, timedelta
@@ -40,6 +41,7 @@ class FleetRentalDocument(models.Model):
 
     exit_datetime = fields.Datetime(string='Exit Date and Time')
     return_datetime = fields.Datetime(string='Return Date and Time')
+    rent_return_datetime = fields.Datetime(string='Rent Return Date and Time')
 
     total_rental_period = fields.Integer(string='Total Rental Period')
     total_rent_price = fields.Float(string='Total Rent Price', digits_compute=dp.get_precision('Product Price'))
@@ -57,6 +59,21 @@ class FleetRentalDocument(models.Model):
     invoice_line_ids = fields.One2many('account.invoice.line', 'fleet_rental_document_id', string='Invoice Lines', copy=False)
 
     png_file = fields.Text('PNG', compute='_compute_png', store=False)
+
+    @api.multi
+    def _compute_png(self):
+        for rec in self:
+            f = open('/'.join([os.path.dirname(os.path.realpath(__file__)),
+                               '../static/src/img/car-cutout.svg']), 'r')
+            svg_file = f.read()
+            dom = etree.fromstring(svg_file)
+            for line in rec.part_line_ids:
+                if line.state == 'broken':
+                    for el in dom.xpath('//*[@id="%s"]' % line.part_id.path_ID):
+                        el.attrib['fill'] = 'red'
+            f.close()
+            with Image(blob=etree.tostring(dom), format='svg') as img:
+                rec.png_file = base64.b64encode(img.make_blob('png'))
 
     @api.depends('total_rent_price', 'account_move_lines_ids')
     def _compute_balance(self):
@@ -92,21 +109,6 @@ class FleetRentalDocument(models.Model):
             record.period_rent_price = record.total_rental_period * record.daily_rental_price
             record.total_rent_price = record.period_rent_price + record.extra_driver_charge + record.other_extra_charges
             record.extra_driver_charge = record.total_rental_period * record.extra_driver_charge_per_day
-
-    @api.multi
-    def _compute_png(self):
-        for rec in self:
-            f = open('/'.join([os.path.dirname(os.path.realpath(__file__)),
-                               '../static/src/img/car-cutout.svg']), 'r')
-            svg_file = f.read()
-            dom = etree.fromstring(svg_file)
-            for line in rec.part_line_ids:
-                if line.state == 'broken':
-                    for el in dom.xpath('//*[@id="%s"]' % line.part_id.path_ID):
-                        el.attrib['fill'] = 'red'
-            f.close()
-            with Image(blob=etree.tostring(dom), format='svg') as img:
-                rec.png_file = base64.b64encode(img.make_blob('png'))
 
     @api.multi
     def action_view_invoice(self):
