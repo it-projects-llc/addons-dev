@@ -98,6 +98,22 @@
 
       <menuitem action="fleet_rental_document_returned_act" parent="fleet_rental_document.fleet_rental_sale" id="rent_returned_menu" sequence="5"/>
 
+      <record id='fleet_rental_document_canceled_act' model='ir.actions.act_window'>
+        <field name="name">Rent Canceled</field>
+        <field name="res_model">fleet_rental.document_rent</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="view_fleet_rental_document_rent_tree"/>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','cancel')]</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a new rental document.
+          </p>
+        </field>
+      </record>
+
+      <menuitem action="fleet_rental_document_canceled_act" parent="fleet_rental_document.fleet_rental_sale" id="rent_canceled_menu" sequence="6"/>
+
       <!---->
       <record id="view_extends_filter" model="ir.ui.view">
             <field name="name">fleet_rental.document_extend.filter</field>
@@ -296,7 +312,7 @@
         </field>
       </record>
 
-      <menuitem action="fleet_rental_document_extend_act" parent="fleet_rental_document.fleet_rental_sale" id="rent_extend_menu" sequence="6"/>
+      <menuitem action="fleet_rental_document_extend_act" parent="fleet_rental_document.fleet_rental_sale_extends" id="rent_extend_menu" sequence="7"/>
 
     </data>
 </openerp>
