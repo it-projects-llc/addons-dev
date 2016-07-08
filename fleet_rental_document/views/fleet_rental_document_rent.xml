@@ -218,7 +218,6 @@
                       <field name="exit_check_no"/>
                     </tree>
                   </field>
-                  <field name="part_line_ids" widget="svg" svg_file="/fleet_vehicle_svg/static/src/img/car-cutout.svg" svg_colors='red:broken;original:operative' svg_id_field="path_ID" svg_color_field="state"/>
                 </page>
               </notebook>
               <group>

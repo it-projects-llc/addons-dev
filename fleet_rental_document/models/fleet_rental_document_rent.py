@@ -38,7 +38,6 @@ class FleetRentalDocumentRent(models.Model):
     extends_count = fields.Integer(string='# of Extends', compute='_get_extends', readonly=True)
     account_move_ids = fields.One2many('account.move', 'fleet_rental_document_id', string='Entries', readonly=True)
     account_move_lines_ids = fields.One2many('account.move.line', 'fleet_rental_document_id', string='Entrie lines', readonly=True)
-    document_extend_ids = fields.One2many('fleet_rental.document_extend', 'document_rent_id')
     balance = fields.Float(string='Balance', compute="_compute_balance", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True, help='Customer duty')
     advanced_deposit = fields.Float(string='Advanced Deposit', compute="_compute_deposit", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
     diff_datetime = fields.Datetime(string='Previous rent document return date and time')
@@ -46,7 +45,22 @@ class FleetRentalDocumentRent(models.Model):
     invoice_count = fields.Integer(string='# of Invoices', compute='_get_invoiced', readonly=True)
     invoice_line_ids = fields.One2many('account.invoice.line', 'fleet_rental_document_id', string='Invoice Lines', copy=False)
     odometer_before = fields.Float(string='Odometer', compute='_compute_odometer', store=True, readonly=True)
+    png_file = fields.Text('PNG', compute='_compute_png', store=False)
 
+    @api.multi
+    def _compute_png(self):
+        for rec in self:
+            f = open('/'.join([os.path.dirname(os.path.realpath(__file__)),
+                               '../static/src/img/car-cutout.svg']), 'r')
+            svg_file = f.read()
+            dom = etree.fromstring(svg_file)
+            for line in rec.part_line_ids:
+                if line.state == 'broken':
+                    for el in dom.xpath('//*[@id="%s"]' % line.part_id.path_ID):
+                        el.attrib['fill'] = 'red'
+            f.close()
+            with Image(blob=etree.tostring(dom), format='svg') as img:
+                rec.png_file = base64.b64encode(img.make_blob('png'))
 
     @api.depends('total_rent_price', 'account_move_lines_ids', 'document_extend_ids')
     def _compute_balance(self):
@@ -233,10 +247,6 @@ class FleetRentalDocumentRent(models.Model):
                 'invoice_count': len(set(invoice_ids.ids + refund_ids.ids)),
                 'invoice_ids': invoice_ids.ids + refund_ids.ids,
             })
-
-    @api.multi
-    def _compute_png(self):
-        return self.mapped('document_id')._compute_png()
 
     @api.multi
     def action_book(self):
