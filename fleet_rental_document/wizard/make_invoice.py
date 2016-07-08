@@ -18,7 +18,6 @@ class FleetRentalCreateInvoiceWizard(models.TransientModel):
         ('fixed', 'Down payment (fixed amount)')
         ], string='What do you want to invoice?', default='fixed', required=True)
 
-
     @api.multi
     def _create_invoice(self, document, amount):
         inv_obj = self.env['account.invoice']
@@ -40,12 +39,10 @@ class FleetRentalCreateInvoiceWizard(models.TransientModel):
             amount = self.amount
             name = _('Down Payment')
 
-        if not document.partner_id.rental_deposit_analytic_account_id:
-            document.partner_id.rental_deposit_analytic_account_id = self.env['account.analytic.account'].create({'name': 'fleet rental deposit', 'partner_id': document.partner_id.id}).id
-
         invoice = inv_obj.create({
             'name': document.name,
             'origin': document.name,
+            'fleet_rental_document_id': document.id,
             'type': 'out_invoice',
             'reference': False,
             'account_id': document.partner_id.property_account_receivable_id.id,
@@ -60,14 +57,22 @@ class FleetRentalCreateInvoiceWizard(models.TransientModel):
                 'uom_id': self.product_id.uom_id.id,
                 'product_id': self.product_id.id,
                 'fleet_rental_document_id': document.id,
-                'account_analytic_id': document.partner_id.rental_deposit_analytic_account_id.id,
             })],
         })
         return invoice
 
     @api.multi
     def create_invoices(self):
-        documents = self.env[self._context.get('active_model', [])].browse(self._context.get('active_ids', [])).mapped('document_id')
+        if self._context.get('active_model') == 'fleet_rental.document_extend':
+            documents_extend = self.env['fleet_rental.document_extend'].browse(self._context.get('active_ids', []))
+            documents = documents_extend.mapped('document_rent_id')
+        elif self._context.get('active_model') == 'fleet_rental.document_rent':
+            documents = self.env['fleet_rental.document_rent'].browse(self._context.get('active_ids', []))
+        elif self._context.get('active_model') == 'fleet_rental.document_return':
+            documents_return = self.env['fleet_rental.document_return'].browse(self._context.get('active_ids', []))
+            documents = documents_return.mapped('document_rent_id')
+        else:
+            return
 
         # Create deposit product if necessary
         if not self.product_id:
@@ -79,6 +84,7 @@ class FleetRentalCreateInvoiceWizard(models.TransientModel):
             if self.advance_payment_method == 'percentage':
                 amount = document.period_rent_price * self.amount / 100
             else:
+
                 amount = self.amount
             if self.product_id.type != 'service':
                 raise UserError(_("The product used to invoice a down payment should be of type 'Service'. Please use another product or update this product."))

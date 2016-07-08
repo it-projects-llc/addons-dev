@@ -24,7 +24,7 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="view_fleet_rental_document_rent_tree"/>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[('state','in',('draft',))]</field>
+        <field name="domain">[('state','=','draft')]</field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to create a new rental document.
@@ -40,7 +40,7 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="view_fleet_rental_document_rent_tree"/>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[('state','in',('booked',))]</field>
+        <field name="domain">[('state','=','booked')]</field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to create a new rental document.
@@ -56,7 +56,7 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="view_fleet_rental_document_rent_tree"/>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[('state','in',('confirmed', 'extended', 'returned', 'cancel'))]</field>
+        <field name="domain">[('state','=','confirmed')]</field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to create a new rental document.
@@ -65,6 +65,57 @@
       </record>
 
       <menuitem action="fleet_rental_document_confirmed_act" parent="fleet_rental_document.fleet_rental_sale" id="rent_confirmed_menu" sequence="3"/>
+
+      <record id='fleet_rental_document_extended_act' model='ir.actions.act_window'>
+        <field name="name">Rent Extended</field>
+        <field name="res_model">fleet_rental.document_rent</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="view_fleet_rental_document_rent_tree"/>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','extended')]</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a new rental document.
+          </p>
+        </field>
+      </record>
+
+      <menuitem action="fleet_rental_document_extended_act" parent="fleet_rental_document.fleet_rental_sale" id="rent_extended_menu" sequence="4"/>
+
+      <record id='fleet_rental_document_returned_act' model='ir.actions.act_window'>
+        <field name="name">Rent Returned</field>
+        <field name="res_model">fleet_rental.document_rent</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="view_fleet_rental_document_rent_tree"/>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','returned')]</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a new rental document.
+          </p>
+        </field>
+      </record>
+
+      <menuitem action="fleet_rental_document_returned_act" parent="fleet_rental_document.fleet_rental_sale" id="rent_returned_menu" sequence="5"/>
+
+      <!---->
+      <record id="view_extends_filter" model="ir.ui.view">
+            <field name="name">fleet_rental.document_extend.filter</field>
+            <field name="model">fleet_rental.document_extend</field>
+            <field name="arch" type="xml">
+              <search string="Active">
+                  <field name="document_rent_id"/>
+              </search>
+            </field>
+      </record>
+
+      <record model='ir.actions.act_window' id='extends_act'>
+          <field name="name">Extend documents</field>
+          <field name="res_model">fleet_rental.document_extend</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="search_view_id" ref="view_extends_filter"/>
+      </record>
 
       <record id='fleet_rental_document_rent_form' model='ir.ui.view'>
         <field name="name">fleet.rental.document.rent.form</field>
@@ -87,18 +138,30 @@
               <button name="action_confirm" string="Confirm Rental" type="object"
                       attrs="{'invisible': ['|', ('state', '!=', 'booked'), ('advanced_deposit', '&lt;=', 0)]}"/>
               <button name="action_create_return" states="confirmed" string="Create Return Document" type="object"/>
-              <button name="action_create_extend" states="confirmed" string="Create Extend Document" type="object"/>
               <field name="state" widget="statusbar" statusbar_visible="draft,booked,confirmed,extended,returned"/>
             </header>
             <sheet>
-              <div class="oe_button_box" name="button_box">
-                <button name="action_view_invoice"
-                        type="object"
-                        class="oe_stat_button"
-                        icon="fa-pencil-square-o">
-                  <field name="invoice_count" widget="statinfo" string="Invoices"/>
-                </button>
-              </div>
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_view_invoice"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-pencil-square-o">
+                        <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                    </button>
+                    <button type="action"
+                            class="oe_stat_button"
+                            id="extends_button"
+                            icon="fa-book"
+                            context="{'search_default_document_rent_id': active_id, 'default_model': 'fleet_rental.document_extend', 'default_res_id': active_id}"
+                            name="%(extends_act)d">
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="extends_count"/>
+                            </span>
+                            <span class="o_stat_text">Extends</span>
+                        </div>
+                    </button>
+                </div>
               <div class="oe_title">
                 <h1>
                   <field name="name" readonly="1"/>
@@ -107,18 +170,28 @@
 
               <group>
                 <field name="partner_id"/>
-              </group>
-              <group col="2" string="Vehicle Information">
-                <field name="user_branch_id" invisible="True"/>
                 <field name="vehicle_id" domain="[('state_id.name','=','Active'),('branch_id','=', user_branch_id)]"/>
-                <field name="allowed_kilometer_per_day"/>
-                <field name="rate_per_extra_km"/>
-                <field name="daily_rental_price"/>
-                <field name="odometer_before"/>
-                <field name="exit_datetime" class="oe_inline"/>
-                <field name="return_datetime" class="oe_inline"/>
-                <field name="total_rental_period" class="oe_inline"/>
-                <field name="extra_driver_charge_per_day" class="oe_inline"/>
+              </group>
+              <group>
+                <group col="2" string="Vehicle Information">
+                  <field name="user_branch_id" invisible="True"/>
+                  <field name="daily_rental_price"/>
+                  <field name="rate_per_extra_km"/>
+                  <field name="allowed_kilometer_per_day"/>
+                  <field name="odometer_before"/>
+                  <field name="exit_datetime" class="oe_inline"/>
+                  <field name="return_datetime" class="oe_inline"/>
+                  <field name="extra_driver_charge_per_day" class="oe_inline"/>
+                  <field name="other_extra_charges" class="oe_inline"/>
+                </group>
+                <group col="2" string="Payment Details">
+                  <field name="period_rent_price" class="oe_inline"/>
+                  <field name="extra_driver_charge" class="oe_inline"/>
+                  <field name="total_rent_price" class="oe_inline"/>
+                  <field name="total_rental_period" class="oe_inline"/>
+                  <field name="advanced_deposit" class="oe_inline"/>
+                  <field name="balance" class="oe_inline"/>
+                </group>
               </group>
               <notebook>
                 <page string="Vehicle Checklist">
@@ -129,16 +202,10 @@
                       <field name="exit_check_no"/>
                     </tree>
                   </field>
+                  <field name="part_line_ids" widget="svg" svg_file="/fleet_vehicle_svg/static/src/img/car-cutout.svg" svg_colors='red:broken;original:operative' svg_id_field="path_ID" svg_color_field="state"/>
                 </page>
               </notebook>
-              <group string="Payment Details">
-                <field name="period_rent_price" class="oe_inline"/>
-                <field name="extra_driver_charge" class="oe_inline"/>
-                <field name="other_extra_charges" class="oe_inline"/>
-                <field name="total_rent_price" class="oe_inline"/>
-                <field name="advanced_deposit" class="oe_inline"/>
-                <field name="balance" class="oe_inline"/>
-              </group>
+
             </sheet>
           </form>
         </field>
@@ -162,7 +229,7 @@
       </record>
 
       <record id='fleet_rental_document_extend_act' model='ir.actions.act_window'>
-        <field name="name">Rent Extend</field>
+        <field name="name">Rent Extends</field>
         <field name="res_model">fleet_rental.document_extend</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="view_fleet_rental_document_extend_tree"/>
@@ -192,47 +259,44 @@
             </header>
             <sheet>
               <div class="oe_button_box" name="button_box">
-                <button name="action_view_invoice"
-                        type="object"
-                        class="oe_stat_button"
-                        icon="fa-pencil-square-o">
-                  <field name="invoice_count" widget="statinfo" string="Invoices"/>
-                </button>
               </div>
               <div class="oe_title">
                 <h1>
                   <field name="name" readonly="1"/>
                 </h1>
               </div>
-              <group>
-                <field name="partner_id"/>
-              </group>
-              <group col="2" string="Vehicle Information">
-                <field name="user_branch_id" invisible="True"/>
-                <field name="vehicle_id" domain="[('state_id.name','=','Active'),('branch_id','=', user_branch_id)]"/>
-                <field name="allowed_kilometer_per_day"/>
-                <field name="rate_per_extra_km"/>
-                <field name="daily_rental_price"/>
-                <field name="odometer_before"/>
-                <field name="exit_datetime" class="oe_inline"/>
-                <field name="return_datetime" class="oe_inline"/>
-                <field name="total_rental_period" class="oe_inline"/>
-                <field name="extra_driver_charge_per_day" class="oe_inline"/>
-              </group>
-              <group string="Payment Details">
-                <field name="period_rent_price" class="oe_inline"/>
-                <field name="extra_driver_charge" class="oe_inline"/>
-                <field name="other_extra_charges" class="oe_inline"/>
-                <field name="total_rent_price" class="oe_inline"/>
-                <field name="advanced_deposit" class="oe_inline"/>
-                <field name="balance" class="oe_inline"/>
-              </group>
+                <group>
+                    <field name="partner_id" readonly="1"/>
+                    <field name="vehicle_id" domain="[('state_id.name','=','Active'),('branch_id','=', user_branch_id)]" readonly="1"/>
+                </group>
+                <group>
+                    <group col="2" string="Vehicle Information">
+                        <field name="user_branch_id" invisible="True"/>
+                        <field name="daily_rental_price"/>
+                        <field name="rate_per_extra_km"/>
+                        <field name="allowed_kilometer_per_day"/>
+                        <field name="odometer_before"/>
+                        <field name="exit_datetime" class="oe_inline"/>
+                        <field name="return_datetime" class="oe_inline"/>
+                        <field name="extra_driver_charge_per_day" class="oe_inline"/>
+                        <field name="other_extra_charges" class="oe_inline"/>
+                    </group>
+                    <group col="2" string="Payment Details">
+                        <field name="period_rent_price" class="oe_inline"/>
+                        <field name="extra_driver_charge" class="oe_inline"/>
+                        <field name="total_rent_price" class="oe_inline"/>
+                        <field name="total_rental_period" class="oe_inline"/>
+                        <field name="advanced_deposit" class="oe_inline"/>
+                        <field name="balance" class="oe_inline"/>
+                    </group>
+                </group>
+                <field name="part_line_ids" widget="svg" svg_file="/fleet_rental_document/static/src/img/car-cutout.svg" svg_colors='red:broken;original:operative' svg_id_field="path_ID" svg_color_field="state"/>
             </sheet>
           </form>
         </field>
       </record>
 
-      <menuitem action="fleet_rental_document_extend_act" parent="fleet_rental_document.fleet_rental_sale" id="rent_extend_menu" sequence="4"/>
+      <menuitem action="fleet_rental_document_extend_act" parent="fleet_rental_document.fleet_rental_sale" id="rent_extend_menu" sequence="6"/>
 
     </data>
 </openerp>

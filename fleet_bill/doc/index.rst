@@ -14,7 +14,7 @@ Preparation
 * Select according product for every service type you need.
 
 
-Bills creating
+Bills creation
 --------------
 
 * Go to ``Fleet / Vehicles`` and open some vehicle.

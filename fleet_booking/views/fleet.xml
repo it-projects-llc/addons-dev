@@ -8,18 +8,16 @@
     <field name="arch" type="xml">
         <data>
             <!-- NEW FIELDS -->
-            <xpath expr="//field[@name='company_id']" position="after">
-                <field name='branch_id'/>
-            </xpath>
             <xpath expr="//label[@for='tag_ids']" position="before">
+                <label for="branch_id" class="oe_edit_only"/>
+                <h2>
+                    <field name="branch_id"/>
+                </h2>
                 <label for="asset_id" class="oe_edit_only"/>
                 <field name='asset_id'/>
             </xpath>
             <xpath expr="//field[@name='doors']" position="after">
                     <field name='model_year'/>
-                    <field name='daily_rate'/>
-                    <field name='extra_rate'/>
-                    <field name='allowed_per_day'/>
                     <field name='paid'/>
                     <field name='remain'/>
                     <field name='reg_expiry'/>
@@ -27,20 +25,20 @@
                     <field name='next_maintain'/>
             </xpath>
             <xpath expr="//sheet" position="inside">
-                    <notebook colspan="4" groups="fleet_booking.group_accountant">
-                        <page string="Depreciation">
-                            <field name="deprecation_ids" nolabel="1" widget="one2many_list" mode="tree" context="{'vehicle_id': id}">
-                                <tree string="Depreciation Lines" decoration-info="(move_check == False)" create="false">
+                <notebook colspan="4" groups="fleet_booking.group_accountant">
+                    <page string="Depreciation">
+                        <field name="deprecation_ids" nolabel="1" widget="one2many_list" mode="tree" context="{'vehicle_id': id}">
+                            <tree string="Depreciation Lines" decoration-info="(move_check == False)" create="false">
                                     <field name="depreciation_date"/>
                                     <field name="depreciated_value" readonly="1"/>
                                     <field name="amount" widget="monetary" string="Depreciation"/>
                                     <field name="remaining_value" readonly="1" widget="monetary" string="Residual"/>
                                     <field name="move_check" invisible="1"/>
                                     <field name="parent_state" invisible="1"/>
-                                </tree>
-                            </field>
-                        </page>
-                    </notebook>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
             </xpath>
         </data>
     </field>
