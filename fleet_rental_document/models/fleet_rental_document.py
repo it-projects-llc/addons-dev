@@ -26,7 +26,7 @@ class FleetRentalDocument(models.Model):
         help="Reference of the document that produced this document.",
         readonly=True, states={'draft': [('readonly', False)]})
 
-    partner_id = fields.Many2one('res.partner', string="Customer", domain=[('customer', '=', True)], required=True)
+    partner_id = fields.Many2one('res.partner', string="Customer", domain=[('customer', '=', True), ('blocked', '=', False)], required=True)
 
     vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle", required=True)
     account_move_ids = fields.One2many('account.move', 'fleet_rental_document_id', string='Entries', readonly=True)
@@ -91,8 +91,8 @@ class FleetRentalDocument(models.Model):
         #     record.balance = total_paid - total_duty
         #     record.advanced_deposit = total_paid
 
-    @api.onchange('vehicle_id')
-    def onchange_vehicle_id(self):
+    @api.depends('vehicle_id')
+    def _compute_vehicle_rental(self):
         for record in self:
             record.allowed_kilometer_per_day = record.vehicle_id.allowed_kilometer_per_day
             record.rate_per_extra_km = record.vehicle_id.rate_per_extra_km

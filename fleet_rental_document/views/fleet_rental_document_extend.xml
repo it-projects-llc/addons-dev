@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+      <!--RENT EXTEND-->
+      <record id='view_fleet_rental_document_extend_tree' model='ir.ui.view'>
+        <field name="name">fleet.rental.document.extend.tree</field>
+        <field name="model">fleet_rental.document_extend</field>
+        <field name="arch" type="xml">
+          <tree string="Vehicle Rent Extend" decoration-muted="state=='cancel'">
+            <field name="state" invisible="1"/>
+            <field name="name"/>
+            <field name="partner_id"/>
+            <field name="vehicle_id"/>
+            <field name="exit_datetime"/>
+            <field name="return_datetime"/>
+            <field name="total_rental_period"/>
+          </tree>
+        </field>
+      </record>
+
+      <record id='view_fleet_rental_document_extend_tree_mod' model='ir.ui.view'>
+        <field name="name">fleet.rental.document.extend.tree.mod</field>
+        <field name="model">fleet_rental.document_extend</field>
+        <field name="arch" type="xml">
+          <tree string="Vehicle Rent Extend" decoration-muted="state=='cancel'" create="false" delete="false">
+            <field name="state" invisible="1"/>
+            <field name="name"/>
+            <field name="partner_id"/>
+            <field name="vehicle_id"/>
+            <field name="exit_datetime"/>
+            <field name="return_datetime"/>
+            <field name="total_rental_period"/>
+          </tree>
+        </field>
+      </record>
+
+      <record id='fleet_rental_document_extend_form' model='ir.ui.view'>
+        <field name="name">fleet.rental.document.extend.form</field>
+        <field name="model">fleet_rental.document_extend</field>
+        <field name="arch" type="xml">
+          <form string="Vehicle Rent Extend" create="false" delete="false">
+            <header>
+              <button name="action_submit" string="Submit"
+                      type="object" class="btn-primary"
+                      states="draft" />
+              <button name="%(action_view_make_invoice_wizard)d" string="Create Invoice"
+                      type="action" class="btn-primary"
+                      states="booked" />
+              <button name="action_confirm" string="Confirm Rental" type="object"
+                      attrs="{'invisible': ['|',('advanced_deposit', '&lt;=', 0),('state','!=','booked')]}"/>
+              <field name="state" widget="statusbar" statusbar_visible="draft,booked,confirmed"/>
+            </header>
+            <sheet>
+              <div class="oe_button_box" name="button_box">
+              </div>
+              <div class="oe_title">
+                <h1>
+                  <field name="name" readonly="1"/>
+                </h1>
+              </div>
+                <group>
+                    <field name="partner_id" readonly="1"/>
+                    <field name="vehicle_id" domain="[('state_id.name','=','Active'),('branch_id','=', user_branch_id)]" readonly="1"/>
+                </group>
+                <group>
+                    <group col="2" string="Vehicle Information">
+                        <field name="user_branch_id" invisible="True"/>
+                        <field name="daily_rental_price"/>
+                        <field name="rate_per_extra_km"/>
+                        <field name="allowed_kilometer_per_day"/>
+                        <field name="odometer_before"/>
+                        <field name="exit_datetime" class="oe_inline"/>
+                        <field name="return_datetime" class="oe_inline"/>
+                        <field name="extra_driver_charge_per_day" class="oe_inline"/>
+                        <field name="other_extra_charges" class="oe_inline"/>
+                    </group>
+                    <group col="2" string="Payment Details">
+                        <field name="period_rent_price" class="oe_inline"/>
+                        <field name="extra_driver_charge" class="oe_inline"/>
+                        <field name="total_rent_price" class="oe_inline"/>
+                        <field name="total_rental_period" class="oe_inline"/>
+                        <field name="advanced_deposit" class="oe_inline"/>
+                        <field name="balance" class="oe_inline"/>
+                    </group>
+                </group>
+                <field name="part_line_ids" widget="svg" svg_file="/fleet_rental_document/static/src/img/car-cutout.svg" svg_colors='red:broken;original:operative' svg_id_field="path_ID" svg_color_field="state"/>
+            </sheet>
+          </form>
+        </field>
+      </record>
+
+      <!--MENU AND ACTIONS-->
+      <record id='fleet_rental_document_extend_draft_act' model='ir.actions.act_window'>
+        <field name="name">Draft</field>
+        <field name="res_model">fleet_rental.document_extend</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="view_fleet_rental_document_extend_tree_mod"/>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','draft')]</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a new rental extend document.
+          </p>
+        </field>
+      </record>
+
+      <menuitem action="fleet_rental_document_extend_draft_act" parent="fleet_rental_document.fleet_rental_sale_extends" id="rent__draft_extend_menu" sequence="1"/>
+
+      <record id='fleet_rental_document_extend_booked_act' model='ir.actions.act_window'>
+        <field name="name">Booked</field>
+        <field name="res_model">fleet_rental.document_extend</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="view_fleet_rental_document_extend_tree_mod"/>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','booked')]</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a new rental extend document.
+          </p>
+        </field>
+      </record>
+
+      <menuitem action="fleet_rental_document_extend_booked_act" parent="fleet_rental_document.fleet_rental_sale_extends" id="rent_booked_extend_menu" sequence="2"/>
+
+      <record id='fleet_rental_document_extend_confirmed_act' model='ir.actions.act_window'>
+        <field name="name">Confirmed</field>
+        <field name="res_model">fleet_rental.document_extend</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="view_fleet_rental_document_extend_tree_mod"/>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','confirmed')]</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a new rental extend document.
+          </p>
+        </field>
+      </record>
+
+      <menuitem action="fleet_rental_document_extend_confirmed_act" parent="fleet_rental_document.fleet_rental_sale_extends" id="rent_confirmed_extend_menu" sequence="3"/>
+
+      <record id='fleet_rental_document_extend_cancel_act' model='ir.actions.act_window'>
+        <field name="name">Canceled</field>
+        <field name="res_model">fleet_rental.document_extend</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="view_fleet_rental_document_extend_tree_mod"/>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','cancel')]</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a new rental extend document.
+          </p>
+        </field>
+      </record>
+
+      <menuitem action="fleet_rental_document_extend_cancel_act" parent="fleet_rental_document.fleet_rental_sale_extends" id="rent_cancel_extend_menu" sequence="4"/>
+
+    </data>
+</openerp>

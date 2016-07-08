@@ -2,7 +2,10 @@
 <openerp>
     <data>
 
-      <menuitem name="Rental" parent="base.menu_base_partner" id="fleet_rental_sale" sequence="2"/>
+      <menuitem name="Rental documents" parent="base.menu_base_partner" id="fleet_sale" sequence="2"/>
+      <menuitem name="Rents" parent="fleet_sale" id="fleet_rental_sale" sequence="1"/>
+      <menuitem name="Extends" parent="fleet_sale" id="fleet_rental_sale_extends" sequence="2"/>
+      <menuitem name="Returns" parent="fleet_sale" id="fleet_rental_sale_returns" sequence="3"/>
 
       <record id='fleet_rental_document_form' model='ir.ui.view'>
         <field name="name">fleet.rental.document.form</field>
@@ -55,7 +58,7 @@
         </field>
       </record>
 
-      <menuitem action='fleet_rental_document_act' parent="fleet_rental_sale" id="fleet_rental_documents" sequence="10"/>
+      <menuitem action='fleet_rental_document_act' parent="fleet_sale" id="fleet_rental_documents" sequence="10"/>
 
     </data>
 </openerp>
