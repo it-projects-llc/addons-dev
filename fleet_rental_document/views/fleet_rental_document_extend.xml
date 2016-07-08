@@ -6,7 +6,23 @@
         <field name="name">fleet.rental.document.extend.tree</field>
         <field name="model">fleet_rental.document_extend</field>
         <field name="arch" type="xml">
-          <tree string="Vehicle Rent Extend" decoration-muted="state=='cancel'"  create="false" delete="false">
+          <tree string="Vehicle Rent Extend" decoration-muted="state=='cancel'">
+            <field name="state" invisible="1"/>
+            <field name="name"/>
+            <field name="partner_id"/>
+            <field name="vehicle_id"/>
+            <field name="exit_datetime"/>
+            <field name="return_datetime"/>
+            <field name="total_rental_period"/>
+          </tree>
+        </field>
+      </record>
+
+      <record id='view_fleet_rental_document_extend_tree_mod' model='ir.ui.view'>
+        <field name="name">fleet.rental.document.extend.tree.mod</field>
+        <field name="model">fleet_rental.document_extend</field>
+        <field name="arch" type="xml">
+          <tree string="Vehicle Rent Extend" decoration-muted="state=='cancel'" create="false" delete="false">
             <field name="state" invisible="1"/>
             <field name="name"/>
             <field name="partner_id"/>
@@ -78,7 +94,7 @@
         <field name="name">Draft</field>
         <field name="res_model">fleet_rental.document_extend</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="view_fleet_rental_document_extend_tree"/>
+        <field name="view_id" ref="view_fleet_rental_document_extend_tree_mod"/>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('state','=','draft')]</field>
         <field name="help" type="html">
@@ -94,7 +110,7 @@
         <field name="name">Booked</field>
         <field name="res_model">fleet_rental.document_extend</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="view_fleet_rental_document_extend_tree"/>
+        <field name="view_id" ref="view_fleet_rental_document_extend_tree_mod"/>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('state','=','booked')]</field>
         <field name="help" type="html">
@@ -110,7 +126,7 @@
         <field name="name">Confirmed</field>
         <field name="res_model">fleet_rental.document_extend</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="view_fleet_rental_document_extend_tree"/>
+        <field name="view_id" ref="view_fleet_rental_document_extend_tree_mod"/>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('state','=','confirmed')]</field>
         <field name="help" type="html">
@@ -126,7 +142,7 @@
         <field name="name">Canceled</field>
         <field name="res_model">fleet_rental.document_extend</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="view_fleet_rental_document_extend_tree"/>
+        <field name="view_id" ref="view_fleet_rental_document_extend_tree_mod"/>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('state','=','cancel')]</field>
         <field name="help" type="html">
