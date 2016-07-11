@@ -11,6 +11,8 @@ bo4,bo4,model_fleet_booking_transfer,group_branch_officer,1,1,0,1
 bo5,bo5,fleet_branch.model_fleet_branch_branch,group_branch_officer,1,0,0,0
 acc1,acc1,model_fleet_vehicle_log_services,group_accountant,1,0,0,1
 acc2,acc2,model_account_invoice,group_accountant,1,1,1,1
+acc3,acc3,sale_membership.model_sale_membership_type,group_accountant,1,1,1,1
+acc4,acc4,fleet_rental_document.model_fleet_rental_document_rent,fleet_booking.group_accountant,1,0,0,0
 afu1,afu1,fleet.model_fleet_vehicle,group_fleet_adv_user,1,1,0,0
 afu2,afu2,fleet.model_fleet_vehicle_log_services,group_fleet_adv_user,1,1,1,1
 afu3,afu3,fleet.model_fleet_vehicle_log_contract,group_fleet_adv_user,1,1,1,1
