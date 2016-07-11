@@ -66,6 +66,7 @@ class FleetRentalDocumentReturn(models.Model):
     def _onchange_total_price_fields(self):
         self.total_rent_price = self.period_rent_price + self.extra_driver_charge + self.other_extra_charges + \
                                 self.extra_hours_charge + self.extra_kilos_charge + self.penalties
+        self.extra_driver_charge = self.total_rental_period * self.extra_driver_charge_per_day
 
     @api.model
     def create(self, vals):

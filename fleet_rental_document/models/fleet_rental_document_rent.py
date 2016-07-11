@@ -21,7 +21,7 @@ class FleetRentalDocumentRent(models.Model):
         ('returned', 'Returned'),
         ('cancel', 'Cancelled'),
         ], string='Status', readonly=True, copy=False, index=True, default='draft')
-
+    previous_state = fields.Char(default='confirmed')
     _inherits = {
                  'fleet_rental.document': 'document_id',
                  }
@@ -251,24 +251,28 @@ class FleetRentalDocumentRent(models.Model):
     @api.multi
     def action_book(self):
         for rent in self:
+            rent.previous_state = rent.state
             rent.state = 'booked'
             self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_booked')
 
     @api.multi
     def action_cancel_booking(self):
         for rent in self:
+            rent.previous_state = rent.state
             rent.state = 'cancel'
             self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_active')
 
     @api.multi
     def action_confirm(self):
         for rent in self:
+            rent.previous_state = rent.state
             rent.state = 'confirmed'
 
     @api.multi
     def action_create_return(self):
         document_return_obj = self.env['fleet_rental.document_return']
         for rent in self:
+            rent.previous_state = rent.state
             rent.state = 'returned'
             self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_active')
             document_return = document_return_obj.create({
@@ -283,6 +287,8 @@ class FleetRentalDocumentRent(models.Model):
                'return_datetime': fields.Datetime.now(),
                'odometer_before': rent.odometer_before,
                'rent_return_datetime': rent.return_datetime,
+               'extra_driver_charge_per_day': rent.extra_driver_charge_per_day,
+               'extra_driver_charge': rent.extra_driver_charge,
                'document_rent_id': rent.id,
                })
             rent.write({'document_return_id': document_return.id})
@@ -294,6 +300,12 @@ class FleetRentalDocumentRent(models.Model):
                         break
 
         return self.action_view_document_return(document_return.id)
+
+    @api.multi
+    def action_cancel_return(self):
+        for rent in self:
+            rent.previous_state, rent.state = rent.state, rent.previous_state  # swap values
+            self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_booked')
 
     @api.multi
     def action_view_document_return(self, document_return_id):

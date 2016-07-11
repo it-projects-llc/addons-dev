@@ -154,6 +154,7 @@
               <button name="action_confirm" string="Confirm Rental" type="object"
                       attrs="{'invisible': ['|', ('state', '!=', 'booked'), ('advanced_deposit', '&lt;=', 0)]}"/>
               <button name="action_create_return" states="confirmed" string="Create Return Document" type="object"/>
+              <button name="action_cancel_return" states="returned" string="Cancel Return" type="object"/>
               <field name="state" widget="statusbar" statusbar_visible="draft,booked,confirmed,extended,returned"/>
             </header>
             <sheet>
