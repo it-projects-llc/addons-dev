@@ -3,11 +3,16 @@
 ==================
 
 
+Membership types designed for customer loyalty program realisation.
+The bottom line is that the client, while he purchases goods or services, received scores (membership points).
+Each range of points corresponds to a certain customer status (for example like bronze, silver, gold).
+Depending on the status of client he can receive discounts or any other commercial benefits according to marketing strategy.
+
 Create new membership types
 ----------------------------
 
 * Open ``Sales`` in main menu.
-* Go to ``Settings / Membership``.
+* Go to ``Configuration / Membership types``.
     * Create new membership types.
 
 Edit partner membership
