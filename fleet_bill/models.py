@@ -79,6 +79,15 @@ class Contract(models.Model):
                 print '# contract:', contract
         return True
 
+    def on_change_indic_cost(self, cr, uid, ids, cost_ids, context=None):
+        res = super(Contract, self).on_change_indic_cost(cr, uid, ids, cost_ids, context)
+        cost_generated = 0
+        for val in res['value']:
+            if 'sum_cost' == val:
+                res['value'].update({'cost_generated': res['value'][val], })
+                break
+        return res
+
 
 class Invoice(models.Model):
     _inherit = 'account.invoice'

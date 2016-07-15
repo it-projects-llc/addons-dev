@@ -2,47 +2,46 @@
  Custom system for car renting
 ===============================
 
-
-Current module overview
-=======================
-
-This module installing next build-in modules:hr, fleet, account.
-
-* hr needed for branches inheritance and for basic hr stuff like payroll and so on.
-* fleet in functional basis that going to be significantly extended and modified.
-* account is for accounting purposes.
-* partner_person is for partner(customer) fields extension.
-
 ==============
 Specifications
 ==============
 
-Ready functions
-===============
 
 Roles (access groups)
 ---------------------
 
-Its made using build-in access groups odoo functionality.
+It is made using build-in access groups odoo functionality.
 
 * Open database as admin in debug mode (.../web?debug).
-* Go to ``Settings / Users / Groups``. Here you will see new access groups with Fleet booking prefix.
-* Go to ``Settings / Users / Users``. Here is new users, one for every group.
+* Go to ``Settings / Users / Groups``. Here you will see new access groups with *Fleet booking* prefix.
+Every role has specific use with appropriated to it restrictions and access permissions.
+
+Main roles is:
+    * General Manager
+    * Branch Officer
+    * Vehicles Support Officer
+    * Branch Employee
+    * Accountant
+    * Payroll Officer
+
+These roles will be often referred further in this documentation.
+
+* Go to ``Settings / Users / Users``. Here you will see demo users, one for every group, but only if you created database with *load demonstration data*.
 * You can login with any of that users to see database representation for each of them.
 
 Branches
 --------
-Built with *hr.departments* inheritance.
 
 * Login in system as General Manager (gm/gm) or Admin (admin/admin). *login/password*
 * Go to fleet in main menu and next ``Configuration / Branches``. Create and edit branches here.
+* Go to ``Settings / Users / Users``. Set corresponding branch to every user you need. It will cause branch limitations for some data in system for that user.
+* Also you may set according branch for vehicles.
 
 Customer features
 -----------------
 
-Create or edit customer:
+Create or edit customer (as Branch Officer):
 
-* User with Branch Officer role enters in database.
 * Open ``Contacts``.
 * Open some contact.
 * You will see customer form.
@@ -79,44 +78,33 @@ Depreciation and enrollment
 
 For depreciation purposes used build-in module ``Assets management``.
 
+All actions, regarding assets and depreciation, supposed in duty of Accountant.
+
 Firstly you need to enroll asset (vehicle):
 
 * Go to ``Accounting / Purchases / Vendor bills``.
 * Create new ``Vendor bill``.
 * Select vendor (partner).
-* Add product representing vehicle. Create it if  needed.
+* Add product representing vehicle. Create it if needed.
 * Select ``Asset Category``. Edit it or create new category if needed.
     * Pay special attention to ``Journal Entries``. Make sure correct journal and accounts selected.
     * Configure ``Depreciation Method`` and ``Periodicity``.
 * Fill other fields.
 * Then press ``[Validate]`` and ``[Register payment]``.
-* This document makes asset enrollment and money write-off accounting entries.
+* This document creates asset record and makes asset enrollment and money write-off accounting entries (on payment register).
 * Save and close document.
 
-Secondly create asset model record:
+Secondly manage created asset:
 
 * Go to ``Accounting / Adviser / Assets``.
-* Create new asset.
-    * Select ``Category``. Depreciation information will be auto-filled.
+* Here you will see automatically created asset for product (vehicle) you just enrolled. Open it.
     * Select vehicle. Create it if needed. Just fill necessary fields.
-    * Select invoice. Put here vendor bill you created earlier.
-    * Enter ``Gross Value``. It is an amount to be depreciated.
-    * Fill other fields.
     * Press ``[Confirm]`` and ``[Save]``.
-    * Now you will see depreciation lines.
-    * Press red circle on line you need to create accounting depreciation entries and press ``[Save]`` (it will become green).
+    * Press red circle on depreciation line you need (in ``Residual`` column) to create accounting depreciation entries and press ``[Save]`` (it will become green).
     * In upper right corner ``Items`` count will increase. Press it to look up accounting entries.
     * Press ``[Modify Depreciation]`` to make some changes those like period extension or to select another strategy.
 
 So vehicle is represented by three records: Product, Vehicle, Asset. Product and asset is needed only for accounting aims. Vehicle is main object you going to work with.
-
-Register payments
------------------
-
-* Open vehicle.
-* Go to ``Payments`` tab.
-* Press ``[Add new item]``.
-* Fill invoice with according data.
 
 Remove Vehicle
 --------------
@@ -127,80 +115,73 @@ Remove Vehicle
 * Press ``[Action]``.
 * Press ``[Delete]``.
 
+
 Maintenance
 ===========
 
-Used build-in fleet.vehicle.log.services model.
+Document ``Vehicles Services Logs`` used to manage vehicles maintenance.
 
 Maintenance state stages: Draft -> Request -> Done -> Paid.
-
-Configure record filter (to see what records needs your attention)
-------------------------------------------------------------------
-
-* Open menu.
-* Depending on your role choose filter:
-    * For vehicle support officer (show records with State = Request AND Service Type != In branch.)
-    * For accountant (show records with State = Done)
 
 First maintenance scheme (in branch)
 ------------------------------------
 
 * Branch officer actions:
-    * Opens vehicle to be maintenanced.
-    * Push ``[Services]`` button. Opens ``Vehicles Services Logs`` menu.
+    * Open vehicle to be maintenanced.
+    * Push ``[Services]`` button. Open ``Vehicles Services Logs`` menu.
     * Create new vehicle service document.
     * Select ``Service Type`` as ``In branch``. "B" section now is visible.
-    * Enters odometer.
-    * Puts ``Included Services`` lines.
+    * Enter odometer.
+    * Put ``Included Services`` lines.
     * Press ``[Submit]`` to submit order and to set status from ``Draft`` to ``Request``. Vehicle state becomes ``In shop``. It cant be rented now.
-    * If for some reason rollback is required press ``[Cancel submit]``.
-    * When all jobs finished press ``[Confirm]``. It automatically changes ``State`` from ``Request`` to ``Done``. Vehicle state becomes ``Active``.
+    * If for some reason rollback is required then press ``[Cancel submit]``.
+    * Press ``[Confirm]`` when all jobs is finished. It automatically changes document state from ``Request`` to ``Done``. Vehicle state becomes ``Active``.
 
 * Vehicle support officer actions:
     * No actions required.
 
 * Accountant actions:
-    * Opens service document.
-    * Creates invoices (``[New invoice]`` button). All created invoices visible in table.
-    * When costs invoices paid press ``[Approve]``. It automatically changes ``State`` from ``Done`` to ``Paid``.
-    * If for some reason rollback is required press ``[Cancel approve]``.
+    * Open service document.
+    * Create invoices (``[New invoice]`` button). All created invoices visible in ``Invoices`` table.
+    * Press ``[Approve]`` when costs invoices paid. It automatically changes ``State`` from ``Done`` to ``Paid``.
+    * You can ``[Cancel approve]`` if you need.
 
 Second maintenance scheme (not in branch)
 -----------------------------------------
 
 * Branch officer actions:
-    * Opens vehicle to be maintenanced.
-    * Push ``[Services]`` button. Opens ``Vehicles Services Logs`` menu.
+    * Open vehicle to be maintenanced.
+    * Push ``[Services]`` button. Open ``Vehicles Services Logs`` menu.
     * Create new vehicle service document.
-    * Select ``Service Type`` that is not ``In branch``. "B" section now is hidden.
-    * Press ``[Submit]`` to submit order and to set status from ``Draft`` to ``Request``.  Vehicle state becomes ``In shop``. It cant be rented now.
-    * If for some reason rollback is required press ``[Cancel submit]``.
+    * Select ``Service Type`` that is not ``In branch``. That causes "B" section becomes hidden.
+    * Press ``[Submit]`` to submit order and to set document status from ``Draft`` to ``Request``.  Vehicle state changes to ``In shop``. It cant be rented now.
+    * You can ``[Cancel submit]`` if you need.
 
 * Vehicle support officer actions:
-    * Opens service document.
-    * Enters new odometer.
-    * Puts ``Included Services`` lines.
-    * When jobs finished press ``[Confirm]``. It automatically changes ``State`` from ``Request`` to ``Done``. Vehicle state becomes ``Active``.
-    * If for some reason rollback is required press ``[Cancel confirm]``.
+    * Open service document.
+    * Enter new odometer.
+    * Put ``Included Services`` lines.
+    * Press ``[Confirm]`` when all jobs is finished. That automatically changes document state from ``Request`` to ``Done``. Vehicle state becomes ``Active``.
+    * You can ``[Cancel confirm]`` if you need.
 
 * Accountant actions:
-    * Opens service document.
-    * Creates invoices (``[New invoice]`` button). All created invoices visible in table.
-    * When costs invoices paid press ``[Approve]``. It automatically changes ``State`` from ``Done`` to ``Paid``.
-    * If for some reason rollback is required press ``[Cancel approve]``.
+    * Open service document.
+    * Create invoices (``[New invoice]`` button). All created invoices visible in ``Invoices`` table.
+    * Press ``[Approve]`` when costs invoices paid. It automatically changes document state from ``Done`` to ``Paid``.
+    * You can ``[Cancel approve]`` if you need.
 
 
 Vehicle Transfer
 ================
 
-New model fleet_booking.transfer.
+Document ``Transfer`` used to manage locations (branches) of vehicles.
 
 Menu items:
 
 * Open ``Fleet`` in main menu.
-* Go to ``Transfers``. Here is ``Incoming`` and ``Outgoing`` menu sections.
-* In ``Incoming`` user see only transfers were destination is his branch.
-* In ``Outgoing`` user see only transfers were source is his branch.
+* Go to ``Transfers``. Here is ``Incoming``, ``Outgoing`` and ``All transfers`` menu sections.
+* In ``Incoming`` user see only those transfers, where destination coincides with his branch.
+* In ``Outgoing`` user see only those transfers, where source coincides with his branch.
 
 Workflow is like that:
 
@@ -209,13 +190,13 @@ Workflow is like that:
     * Select source branch.
     * Select destination branch.
     * Enter current odometer.
-    * ``Delivery Status`` auto-sets to ``Not delivered``. Vehicles Support Officer cant edit it.
-    * ``Receiving Status`` auto-sets to ``Not received``. Vehicles Support Officer cant edit it.
-    * Presses ``[Submit]`` and ``[Save]`` buttons.
-    * Vehicle branch auto-sets to ``In transfer``. Vehicle status auto-sets to ``In transfer``. Vehicle branch auto-sets to ``undefined``.
+    * Document ``Delivery Status`` auto-sets to ``Not delivered``. Vehicles Support Officer cant edit it.
+    * Document ``Receiving Status`` auto-sets to ``Not received``. Vehicles Support Officer cant edit it.
+    * Press ``[Submit]`` and ``[Save]`` buttons.
+    * Document state auto-sets to ``Transfer``. Vehicle status auto-sets to ``In transfer``. Vehicle branch auto-sets to ``undefined``.
 
 * When car is delivered
     * Vehicles Support Officer enters new odometer.
-    * Source Branch Officer presses ``Confirm delivery``. Vehicle ``Delivery state`` changes to ``Delivered``.
-    * Destination Branch Officer presses ``Confirm receiving``. Vehicle ``Receiving state`` changes to ``Received``.
-        * Vehicle branch auto-sets equal to destination branch. Vehicle status auto-sets to ``Active``.
+    * Source Branch Officer presses ``Confirm delivery``. Document ``Delivery state`` changes to ``Delivered``.
+    * Destination Branch Officer presses ``Confirm receiving``. Document ``Receiving state`` changes to ``Received``.
+        * Vehicle branch auto-sets equal to document destination branch. Vehicle status auto-sets to ``Active``.

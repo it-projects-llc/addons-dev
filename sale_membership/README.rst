@@ -5,6 +5,9 @@
 
 Module adds membership types model in which creates customer loyalty membership type those like bronze, silver, gold and according to them obtaining points.
 Another one model allow to store membership history.
+To get some automation you have to add partner membership points management code in appropriate documents methods.
+For example you can increase/decrease membership points on payment registration according to move lines accounts.
+Or you can manage partner membership manually.
 
 Further information
 -------------------
