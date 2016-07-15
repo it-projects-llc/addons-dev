@@ -21,7 +21,7 @@ Bills creation
 * Press ``[Contracts]``.
 * Create new contract.
     * Fill all required fields. Especially pay attention to:
-        * ``Recurring Cost Amount`` - amount, to be periodically billed.
+        * ``Recurring Cost Amount`` - amount, to be periodically billed. It is calculated from `Included Services`` lines total.
         * ``Vendor`` - used in bill.
         * ``Included Services`` - service lines, that have product specified, to be placed in bills.
         * Save document.
