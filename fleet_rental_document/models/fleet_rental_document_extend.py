@@ -47,6 +47,7 @@ class FleetRentalDocumentExtend(models.Model):
         for rent in self:
             rent.state = 'booked'
             self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_booked')
+            self.document_rent_id.state = 'extended'
 
     @api.multi
     def action_view_invoice(self):
