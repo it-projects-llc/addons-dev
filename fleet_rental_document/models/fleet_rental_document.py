@@ -41,6 +41,7 @@ class FleetRentalDocument(models.Model):
 
     exit_datetime = fields.Datetime(string='Exit Date and Time')
     return_datetime = fields.Datetime(string='Return Date and Time')
+    extend_return_datetime = fields.Datetime(string='Last extend return time', help='Last extend document return Date and Time', default=False, readonly=True)
     rent_return_datetime = fields.Datetime(string='Rent Return Date and Time')
 
     total_rental_period = fields.Integer(string='Total Rental Period')
@@ -49,7 +50,8 @@ class FleetRentalDocument(models.Model):
     period_rent_price = fields.Float(string='Period Rent Price', digits_compute=dp.get_precision('Product Price'))
     extra_driver_charge = fields.Float(string='Extra Driver Charge', digits_compute=dp.get_precision('Product Price'))
     advanced_deposit = fields.Float(string='Advanced Deposit', store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
-    balance = fields.Float(string='Balance', compute="_compute_balance", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
+    balance = fields.Float(string='Balance', compute="_compute_balance", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True,
+                           help='If balance is negative means we have to return amount to customer. If balance is positive means customer should to pay')
 
     check_line_ids = fields.One2many('fleet_rental.check_line', 'document_id', string='Vehicle rental check lines')
     part_line_ids = fields.One2many('fleet_rental.svg_vehicle_part_line', 'document_id', string='Vehicle part')
