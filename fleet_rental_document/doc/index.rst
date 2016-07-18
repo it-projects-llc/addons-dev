@@ -95,3 +95,34 @@ Rent
 Extend
 ------
 
+* Open rent document to be extended.
+* Press ``[Extends]`` button (smart button with book picture in upper right part of document).
+* Press ``[Create]`` to create new extend document.
+* Some fields is filled automatically and cant be changed.
+* Enter new ``Return Date and Time``. Consider that ``Exit Date and Time`` is taken from main rent document.
+    Thereby ``Total Rental Period`` in this document equal to total days, starting from main rent document ``Exit Date and Time`` to that extend's ``Return Date and Time``.
+    It is concerns all other ``Payment Details`` fields.
+* Enter other necessary fields.
+* Press ``[Submit]``.
+* Create and validate invoice.
+* Register payment.
+* Press ``[Confirm rental]`` to confirm extend document.
+* In main rental document you will see ``Extended return time`` field changed and equal to ``Return Date and Time`` of **last** extend document.
+    Also ``Advanced Deposit`` and ``Balance`` fields always displays total sum per all subordinated documents payments.
+
+Return
+------
+
+* Open rental document for which you need create return.
+* Press ``[Create Return Document]``. You'll be able to see this button only if state of rent document is ``Confirmed`` or ``Extended``.
+* Return document form will be opened.
+* Set ``Odometer after Rent``. If there is some mileage excess then ``Extra Kilos Charge`` will be accordingly counted.
+* Set ``Return Date and Time``. If there is some time excess takes place then ``Extra Hours Charge`` will be accordingly counted.
+* Fill up ``Vehicle Checklist`` using ``on return`` columns.
+* Press ``[Return car and keep contract open]``.
+* If mutual installments and vehicle condition is ok, then just press ``[Save]`` and vehicle rent lifecycle is finished there.
+* If there is some divergency in mutual installment then create invoice/refund according to what you need by pressing ``[Create invoice]`` or ``[Create refund]``.
+    * Validate payment for created document,
+
+
+
