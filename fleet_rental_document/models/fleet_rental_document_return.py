@@ -103,7 +103,7 @@ class FleetRentalDocumentReturn(models.Model):
         for record in self:
             if record.exit_datetime and record.return_datetime and record.rent_return_datetime and (record.rent_return_datetime < record.return_datetime):
                 start = datetime.strptime(record.rent_return_datetime, DTF)
-                end = datetime.strptime(record.return_datetime, DTF)
+                end = datetime.strptime(record.extend_return_datetime or record.return_datetime, DTF)
                 extra_hours = (end - start).days * 24 + (end - start).seconds/3600
                 record.extra_hours = extra_hours
                 record.extra_hours_charge = (record.daily_rental_price / 24) * extra_hours
