@@ -24,6 +24,7 @@
     "external_dependencies": {"python": [], "bin": []},
     "data": [
         'security/ir.model.access.csv',
+        'security/fleet_rental_document_security.xml',
         'wizard/make_invoice.xml',
         "views/fleet_rental_document.xml",
         "views/fleet_rental_document_rent.xml",

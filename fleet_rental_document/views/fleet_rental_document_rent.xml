@@ -186,34 +186,35 @@
               </div>
 
               <group>
-                <field name="partner_id"/>
-                <field name="vehicle_id" domain="[('state_id.name','=','Active'),('branch_id','=', user_branch_id)]"/>
+                <field name="partner_id" attrs="{'readonly': [('state', 'in', ('confirmed','cancel'))]}"/>
+                <field name="vehicle_id" domain="[('state_id.name','=','Active'),('branch_id','=', user_branch_id)]"
+                       attrs="{'readonly': [('state', 'in', ('confirmed','cancel'))]}"/>
               </group>
               <group>
                 <group col="2" string="Vehicle Information">
                   <field name="user_branch_id" invisible="True"/>
-                  <field name="daily_rental_price"/>
-                  <field name="rate_per_extra_km"/>
-                  <field name="allowed_kilometer_per_day"/>
+                  <field name="daily_rental_price" attrs="{'readonly': [('state', 'in', ('confirmed','cancel'))]}"/>
+                  <field name="rate_per_extra_km" attrs="{'readonly': [('state', 'in', ('confirmed','cancel'))]}"/>
+                  <field name="allowed_kilometer_per_day" attrs="{'readonly': [('state', 'in', ('confirmed','cancel'))]}"/>
                   <field name="odometer_before"/>
-                  <field name="exit_datetime" class="oe_inline"/>
-                  <field name="return_datetime" class="oe_inline" string="Original return time"/>
+                  <field name="exit_datetime" class="oe_inline" attrs="{'readonly': [('state', 'in', ('confirmed','cancel'))]}"/>
+                  <field name="return_datetime" class="oe_inline" string="Original return time" attrs="{'readonly': [('state', 'in', ('confirmed','cancel'))]}"/>
                   <field name="extend_return_datetime" class="oe_inline" string="Extended return time"/>
-                  <field name="extra_driver_charge_per_day" class="oe_inline"/>
-                  <field name="other_extra_charges" class="oe_inline"/>
+                  <field name="extra_driver_charge_per_day" class="oe_inline" attrs="{'readonly': [('state', 'in', ('confirmed','cancel'))]}"/>
+                  <field name="other_extra_charges" class="oe_inline" attrs="{'readonly': [('state', 'in', ('confirmed','cancel'))]}"/>
                 </group>
                 <group col="2" string="Payment Details">
-                  <field name="period_rent_price" class="oe_inline"/>
-                  <field name="extra_driver_charge" class="oe_inline"/>
-                  <field name="total_rent_price" class="oe_inline"/>
-                  <field name="total_rental_period" class="oe_inline"/>
+                  <field name="period_rent_price" class="oe_inline" attrs="{'readonly': [('state', 'in', ('confirmed','cancel'))]}"/>
+                  <field name="extra_driver_charge" class="oe_inline" attrs="{'readonly': [('state', 'in', ('confirmed','cancel'))]}"/>
+                  <field name="total_rent_price" class="oe_inline" attrs="{'readonly': [('state', 'in', ('confirmed','cancel'))]}"/>
+                  <field name="total_rental_period" class="oe_inline" attrs="{'readonly': [('state', 'in', ('confirmed','cancel'))]}"/>
                   <field name="advanced_deposit" class="oe_inline"/>
                   <field name="balance" class="oe_inline"/>
                 </group>
               </group>
               <notebook>
                 <page string="Vehicle Checklist">
-                  <field name="check_line_ids" widget="one2many_list" colspan="4" nolabel="1" mode="tree">
+                  <field name="check_line_ids" widget="one2many_list" colspan="4" nolabel="1" mode="tree" attrs="{'readonly': [('state', 'in', ('confirmed','cancel'))]}">
                     <tree string="Vehicle checklist" editable="bottom" create="0" delete="false" decoration-danger="exit_check_yes and exit_check_no" decoration-success="exit_check_yes and not exit_check_no" decoration-warning="(not exit_check_yes) and exit_check_no">
                       <field name="item_id" options='{"no_open": true}'/>
                       <field name="exit_check_yes"/>
@@ -223,7 +224,7 @@
                 </page>
               </notebook>
               <group>
-                <field name="part_line_ids" widget="svg" svg_file="/fleet_rental_document/static/src/img/car-cutout.svg" svg_colors='red:broken;original:operative' svg_id_field="path_ID" svg_color_field="state" nolabel = '1'/>
+                <field name="part_line_ids" widget="svg" svg_file="/fleet_rental_document/static/src/img/car-cutout.svg" svg_colors='red:broken;original:operative' svg_id_field="path_ID" svg_color_field="state" nolabel = '1' attrs="{'readonly': [('state', 'in', ('confirmed','cancel'))]}"/>
               </group>
             </sheet>
           </form>

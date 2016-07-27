@@ -8,7 +8,14 @@ from openerp.exceptions import UserError
 class FleetRentalCreateInvoiceWizard(models.TransientModel):
     _name = "fleet_rental.create_invoice_wizard"
 
-    amount = fields.Float('Down Payment Amount', digits=dp.get_precision('Account'), help="The amount to be invoiced in advance.")
+    @api.model
+    def _default_amount(self):
+        document = self.env[self._context.get('active_model')].browse(self._context.get('active_id'))
+        return document.document_id.total_rent_price
+
+    amount = fields.Float('Down Payment Amount', digits=dp.get_precision('Account'),
+                          help="The amount to be invoiced in advance.",
+                          default=_default_amount)
     deposit_account_id = fields.Many2one("account.account", string="Income Account", domain=[('deprecated', '=', False)],\
         help="Account used for deposits")
     product_id = fields.Many2one('product.product', string='Down Payment Product', domain=[('type', '=', 'service')],\

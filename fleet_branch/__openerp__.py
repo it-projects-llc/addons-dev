@@ -19,6 +19,7 @@
     "external_dependencies": {"python": [], "bin": []},
     "data": [
         "views.xml",
+        "security/fleet_branch.xml",
     ],
     "qweb": [
     ],

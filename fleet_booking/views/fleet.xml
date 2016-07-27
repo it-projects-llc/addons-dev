@@ -40,6 +40,9 @@
                     </page>
                 </notebook>
             </xpath>
+            <xpath expr="//field[@name='state_id']" position="attributes">
+                <attribute name="clickable"></attribute>
+            </xpath>
         </data>
     </field>
 </record>

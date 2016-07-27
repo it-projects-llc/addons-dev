@@ -9,6 +9,7 @@ import base64
 from lxml import etree
 import os
 from wand.image import Image
+from openerp.exceptions import AccessError, UserError
 
 
 class FleetRentalDocument(models.Model):
@@ -26,7 +27,7 @@ class FleetRentalDocument(models.Model):
         help="Reference of the document that produced this document.",
         readonly=True, states={'draft': [('readonly', False)]})
 
-    partner_id = fields.Many2one('res.partner', string="Customer", domain=[('customer', '=', True), ('blocked', '=', False)], required=True)
+    partner_id = fields.Many2one('res.partner', string="Customer", domain=[('customer', '=', True)], required=True)
 
     vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle", required=True)
     account_move_ids = fields.One2many('account.move', 'fleet_rental_document_id', string='Entries', readonly=True)
@@ -61,6 +62,22 @@ class FleetRentalDocument(models.Model):
     invoice_line_ids = fields.One2many('account.invoice.line', 'fleet_rental_document_id', string='Invoice Lines', copy=False)
 
     png_file = fields.Text('PNG', compute='_compute_png', store=False)
+
+    @api.one
+    @api.constrains('total_rental_period')
+    def _check_return_date(self):
+        if self.total_rental_period < 1:
+            raise UserError('Return date cannot be set before or the same as Exit Date.')
+
+    @api.one
+    @api.constrains('partner_id')
+    def _check_partner(self):
+        if self.partner_id.blocked == True:
+            reason = self.env['sale_membership.log'].search([('partner_id', '=', self.partner_id.id),
+                                                            ('blocked', '=', True)],
+                                                           order='create_date desc',
+                                                           limit=1).reason
+            raise UserError('The customer %s is blocked for this reason: %s.' % (self.partner_id.name, reason))
 
     @api.multi
     def _compute_png(self):
@@ -107,7 +124,8 @@ class FleetRentalDocument(models.Model):
             if record.exit_datetime and record.return_datetime:
                 start = datetime.strptime(record.exit_datetime, DTF)
                 end = datetime.strptime(record.return_datetime, DTF)
-                record.total_rental_period = (end - start).days
+                delta = (end - start).days
+                record.total_rental_period = end.day - start.day if delta == 0 else delta
             record.period_rent_price = record.total_rental_period * record.daily_rental_price
             record.total_rent_price = record.period_rent_price + record.extra_driver_charge + record.other_extra_charges
             record.extra_driver_charge = record.total_rental_period * record.extra_driver_charge_per_day

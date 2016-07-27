@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<openerp>
+  <data noupdate="0">
+
+    <record id="fleet_rental_document_deletion" model="ir.rule">
+      <field name="name">Only draft rent documents can be deleted</field>
+      <field name="model_id" ref="model_fleet_rental_document_rent"/>
+      <field name="perm_read" eval="False"/>
+      <field name="perm_write" eval="False"/>
+      <field name="perm_create" eval="False"/>
+      <field name="perm_unlink" eval="True"/>
+      <field name="domain_force">[('state', '=', 'draft')]</field>
+    </record>
+
+  </data>
+</openerp>

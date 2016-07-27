@@ -17,6 +17,7 @@ class Person(models.Model):
          (u'Passport', u'Passport')],
         string='ID Type',
         )
+
     issuer = fields.Char(string='Issuer string')
     issuer_date = fields.Date(string='Date of Issue')
     license_type = fields.Selection([(u'Private', u'Private'),
@@ -28,6 +29,11 @@ class Person(models.Model):
     third_name = fields.Char(string='Third Name')
     family_name = fields.Char(string='Family Name')
 
+    emergency_contact_name = fields.Char(string='Name')
+    emergency_contact_relation = fields.Char(string='Relation')
+    emergency_contact_phone = fields.Char(string='Phone number')
+    emergency_contact_mobile = fields.Char(string='Mobile number')
+
     def check_age(self, cr, uid, ids, context=None, parent=None):
         for r in self.browse(cr, uid, ids, context=context):
             if r.customer and r.birthdate_date and r.age < 21:
@@ -35,7 +41,7 @@ class Person(models.Model):
         return True
 
     _constraints = [
-        (check_age, 'Age restriction. Person must be elder than 20.', ['birthdate_date']),
+        (check_age, 'Age restriction. Person must be elder than 21.', ['birthdate_date']),
     ]
 
 
@@ -55,6 +61,7 @@ class Vehicle(models.Model):
     asset_id = fields.Many2one('account.asset.asset', compute='compute_asset', inverse='asset_inverse', string='Asset')
     asset_ids = fields.One2many('account.asset.asset', 'vehicle_id')
     # TODO Rename deprecation to depreciation
+    state_id = fields.Many2one('fleet.vehicle.state', readonly=True, ondelete="restrict")
 
     @api.one
     @api.depends('asset_ids')
