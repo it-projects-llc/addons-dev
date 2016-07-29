@@ -61,6 +61,8 @@ class FleetRentalDocument(models.Model):
     invoice_count = fields.Integer(string='# of Invoices', compute='_get_invoiced', readonly=True)
     invoice_line_ids = fields.One2many('account.invoice.line', 'fleet_rental_document_id', string='Invoice Lines', copy=False)
 
+    user_id = fields.Many2one('res.users', string='Salesperson', default=lambda self: self.env.user)
+
     png_file = fields.Text('PNG', compute='_compute_png', store=False)
 
     @api.one

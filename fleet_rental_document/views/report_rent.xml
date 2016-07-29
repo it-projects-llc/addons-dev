@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <template id="report_rent_document">
+        <t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})" />
+        <div class="page">
+          <div class="oe_structure"/>
+          <div class="row">
+            <h3 class="text-center">Rental Agreement</h3>
+            <p>
+              Agreement number: <span t-field="doc.name"/>
+            </p>
+          </div>
+          <div class="row">
+            <h4>Customer Information</h4>
+            <div class="col-xs-4">
+              <p>Customer name: <span t-field="doc.partner_id.name"/></p>
+              <p>Nationality: <span t-field="doc.partner_id.nationality_id"/></p>
+            </div>
+            <div class="col-xs-4">
+              <p>Customer membership number: <span t-field="doc.partner_id.id"/></p>
+            </div>
+            <div class="col-xs-4">
+              <p>Membership Type: <span t-field="doc.partner_id.type_id.name"/></p>
+            </div>
+          </div>
+          <div class="row">
+            <h4>Vehicle Information</h4>
+            <div class="col-xs-3">
+              <p>Vehicle Brand: <span t-field="doc.vehicle_id.model_id.brand_id"/></p>
+            </div>
+            <div class="col-xs-3">
+              <p>Vehicle Model: <span
+              t-field="doc.vehicle_id.model_id.name"/></p>
+            </div>
+            <div class="col-xs-3">
+              <p>Color: <span t-field="doc.vehicle_id.color_id"/></p>
+            </div>
+            <div class="col-xs-3">
+              <p>Car Plate: <span t-field="doc.vehicle_id.license_plate"/></p>
+            </div>
+          </div>
+          <div class="row">
+            <h4>Rental Details</h4>
+            <div class="col-xs-4">
+              <p>Daily rental price: <span t-field="doc.daily_rental_price"/></p>
+            </div>
+            <div class="col-xs-4">
+              <p>Allowed kilometer per day: <span t-field="doc.allowed_kilometer_per_day"/></p>
+            </div>
+            <div class="col-xs-4">
+              <p>Rate per extra km: <span t-field="doc.rate_per_extra_km"/></p>
+            </div>
+          </div>
+          <div class="row">
+             <div class="col-xs-12">
+              <p>Odometer before Rent: <span t-field="doc.odometer_before"/></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-4">
+              <p>Start Date (Exit Date): <span t-debug="pdb" t-field="doc.exit_datetime" t-field-options='{"widget":"date","format":"short"}'/></p>
+            </div>
+            <div class="col-xs-4">
+              <p>Exit Time: <span t-field="doc.exit_datetime" t-field-options='{"format":"HH:mm"}'/></p>
+            </div>
+            <div class="col-xs-4">
+              <p>End Date: <span t-field="doc.return_datetime" t-field-options='{"widget":"date","format":"short"}'/></p>
+            </div>
+          </div>
+          <div class="row">
+             <div class="col-xs-12">
+              <p>Total Rental Period: <span t-field="doc.total_rental_period"/></p>
+            </div>
+          </div>
+          <div class="row">
+            <h4>Vehicle status</h4>
+            <p class="text-center"><img t-att-src="'data:image/png;base64,%s' % doc.png_file" style="width:50%;heght:auto;"/></p>
+          </div>
+          <div class="row">
+            <table class="table table-condensed">
+              <thead>
+                <tr>
+                  <th></th>
+                  <t t-foreach="doc.check_line_ids" t-as="check_line">
+                    <th><span t-field="check_line.item_id.name"/></th>
+                  </t>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <p>Exit</p>
+                  </td>
+                  <t t-foreach="doc.check_line_ids" t-as="check_line">
+                    <td><span t-att-class="check_line.exit_check_yes and 'glyphicon glyphicon-ok' or check_line.exit_check_no and 'glyphicon glyphicon-remove' or None"/></td>
+                  </t>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="row">
+            <h4>Payment Details</h4>
+            <div class="col-xs-12">
+              <p>Period Rent Price: <span t-field="doc.period_rent_price"/></p>
+              <p>Extra Driver Charge: <span t-field="doc.extra_driver_charge_per_day"/></p>
+              <p>Other Extra Charges: <span t-field="doc.other_extra_charges"/></p>
+              <p>Total Rent Price: <span t-field="doc.total_rent_price"/></p>
+              <p>Advanced Deposit: <span t-field="doc.advanced_deposit"/></p>
+              <p>Balance: <span t-field="doc.balance"/></p>
+            </div>
+          </div>
+          <div class="row">
+            <h4>I hereby sign that I have read all conditions.</h4>
+            <div class="col-xs-6">
+              <p>Customer name: <span t-field="doc.partner_id.name"/></p>
+              <p>Signature:</p>
+            </div>
+            <div class="col-xs-6">
+              <p>Employee name: <span t-field="doc.user_id"/></p>
+              <p>Signature:</p>
+            </div>
+          </div>
+
+          <div class="oe_structure"/>
+        </div>
+    </template>
+
+    <template id="report_rent">
+      <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="doc">
+          <t t-call="fleet_rental_document.report_rent_document" t-lang="doc.partner_id.lang"/>
+        </t>
+      </t>
+    </template>
+
+  </data>
+</openerp>
+

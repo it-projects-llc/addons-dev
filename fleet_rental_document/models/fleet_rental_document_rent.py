@@ -348,3 +348,7 @@ class FleetRentalDocumentRent(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('fleet_rental.document_rent') or 'New'
         result = super(FleetRentalDocumentRent, self).create(vals)
         return result
+
+    @api.multi
+    def print_rent(self):
+        return self.env['report'].get_action(self, 'fleet_rental_document.report_rent')

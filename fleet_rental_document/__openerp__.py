@@ -20,8 +20,9 @@
         "fleet_branch",
         "web_form_svg",
         "fleet_vehicle_color",
+        "report",
     ],
-    "external_dependencies": {"python": [], "bin": []},
+    "external_dependencies": {"python": ['wand'], "bin": []},
     "data": [
         'security/ir.model.access.csv',
         'security/fleet_rental_document_security.xml',
@@ -35,6 +36,8 @@
         "views/ir_sequence.xml",
         "data/svg_vehicle_part.xml",
         "data/items_to_check.xml",
+        'rent_report.xml',
+        'views/report_rent.xml',
     ],
     "qweb": [
     ],

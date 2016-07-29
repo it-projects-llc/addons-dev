@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <report
+        id="report_document_rent"
+        string="Rent"
+        model="fleet_rental.document_rent"
+        report_type="qweb-pdf"
+        file="fleet_rental_document.report_rent"
+        name="fleet_rental_document.report_rent"
+        />
+
+  </data>
+</openerp>
