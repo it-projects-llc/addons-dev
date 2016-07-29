@@ -11,18 +11,39 @@
                 <attribute name="string">ID Number</attribute>
             </xpath>
             <xpath expr="//page[@name='personal_information']//field[@name='passport']" position="before">
-                <field name='id_type'/>
+                <field name='id_type' attrs="{'required': [('customer','=', True)]}"/>
             </xpath>
             <xpath expr="//page[@name='personal_information']//field[@name='sex']" position="attributes">
                 <attribute name="invisible">True</attribute>
             </xpath>
+            <xpath expr="//field[@name='birthdate_date']" position="attributes">
+                <attribute name="attrs">{'required': [('customer','=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='nationality_id']" position="attributes">
+                <attribute name="attrs">{'required': [('customer','=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='passport']" position="attributes">
+                <attribute name="attrs">{'required': [('customer','=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='mobile']" position="attributes">
+                <attribute name="attrs">{'required': [('customer','=', True)]}</attribute>
+            </xpath>
             <xpath expr="//page[@name='personal_information']//field[@name='sex']" position="before">
-                <field name='license_type'/>
-                <field name='license_number'/>
-                <field name='license_expiry_date'/>
+                <field name='license_type' attrs="{'required': [('customer','=', True)]}"/>
+                <field name='license_number' attrs="{'required': [('customer','=', True)]}"/>
+                <field name='license_expiry_date' attrs="{'required': [('customer','=', True)]}"/>
                 <field name='issuer'/>
                 <field name='issuer_date'/>
             </xpath>
+            <xpath expr="//page[@name='personal_information']" position="inside">
+              <group name="customer_emergency_contact" string="Contact in emergency cases">
+                <field name='emergency_contact_name'/>
+                <field name='emergency_contact_relation'/>
+                <field name='emergency_contact_phone'/>
+                <field name='emergency_contact_mobile' attrs="{'required': [('customer','=', True)]}"/>
+              </group>
+            </xpath>
+
             <xpath expr="//group/field[@name='fax']" position="attributes">
                 <attribute name="string">Work phone</attribute>
             </xpath>
@@ -30,10 +51,10 @@
                 <attribute name="string">Second Name</attribute>
             </xpath>
             <xpath expr="//div/field[@name='lastname']" position="after">
-                <field name='third_name' placeholder="Third Name"/>
+                <field name='third_name' placeholder="Third Name" attrs="{'required': [('customer','=', True)]}"/>
             </xpath>
             <xpath expr="//div/field[@name='third_name']" position="after">
-                <field name='family_name' placeholder="Family Name"/>
+                <field name='family_name' placeholder="Family Name" attrs="{'required': [('customer','=', True)]}"/>
             </xpath>
         </data>
     </field>

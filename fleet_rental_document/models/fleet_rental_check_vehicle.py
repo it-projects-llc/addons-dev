@@ -19,18 +19,25 @@ class FleetRentalCheckLine(models.Model):
     return_check_yes = fields.Boolean(string='OK (on return)', default=False)
     return_check_no = fields.Boolean(string='NOT ok (on return)', default=False)
 
-    @api.multi
-    def write(self, vals):
-        # there should be 'yes' or 'no'
-        if vals.get('exit_check_yes'):
-            vals.update({'exit_check_no': False})
-        if vals.get('exit_check_no'):
-            vals.update({'exit_check_yes': False})
-        if vals.get('return_check_yes'):
-            vals.update({'return_check_no': False})
-        if vals.get('return_check_no'):
-            vals.update({'return_check_yes': False})
-        return super(FleetRentalCheckLine, self).write(vals)
+    @api.onchange('exit_check_yes')
+    def _onchange_exit_check_yes(self):
+        if self.exit_check_yes:
+            self.exit_check_no = False
+
+    @api.onchange('exit_check_no')
+    def _onchange_exit_check_no(self):
+        if self.exit_check_no:
+            self.exit_check_yes = False
+
+    @api.onchange('return_check_yes')
+    def _onchange_return_check_yes(self):
+        if self.return_check_yes:
+            self.return_check_no = False
+
+    @api.onchange('return_check_no')
+    def _onchange_return_check_no(self):
+        if self.return_check_no:
+            self.return_check_yes = False
 
 
 class FleetRentalSVGVehiclePart(models.Model):

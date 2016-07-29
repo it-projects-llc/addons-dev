@@ -175,7 +175,8 @@ class FleetRentalDocumentRent(models.Model):
             if record.exit_datetime and record.return_datetime:
                 start = datetime.strptime(record.exit_datetime, DTF)
                 end = datetime.strptime(record.diff_datetime or record.return_datetime, DTF)
-                record.total_rental_period = (end - start).days
+                delta = (end - start).days
+                record.total_rental_period = end.day - start.day if delta == 0 else delta
             record.period_rent_price = record.total_rental_period * record.daily_rental_price
             record.extra_driver_charge = record.total_rental_period * record.extra_driver_charge_per_day
             record.total_rent_price = record.period_rent_price + record.extra_driver_charge + record.other_extra_charges
@@ -347,3 +348,7 @@ class FleetRentalDocumentRent(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('fleet_rental.document_rent') or 'New'
         result = super(FleetRentalDocumentRent, self).create(vals)
         return result
+
+    @api.multi
+    def print_rent(self):
+        return self.env['report'].get_action(self, 'fleet_rental_document.report_rent')
