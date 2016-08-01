@@ -2,3 +2,4 @@
 
 import fleet_booking
 import transfer
+import personal

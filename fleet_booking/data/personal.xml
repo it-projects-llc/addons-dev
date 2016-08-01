@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record id="national_identification" model="personal.identification_type">
+        <field name="name">National Id</field>
+    </record>
+    <record id="iqama_identification" model="personal.identification_type">
+        <field name="name">Iqama</field>
+        <field name="regexp_force">\d{10,20}</field>
+        <field name="error_message">Iqama identification should contain at least 10 digits</field>
+    </record>
+    <record id="passport_identification" model="personal.identification_type">
+        <field name="name">Passport</field>
+    </record>
+
+    <record id="private_drive_license" model="personal.drive_license_type">
+        <field name="name">Private</field>
+    </record>
+    <record id="general_drive_license" model="personal.drive_license_type">
+        <field name="name">General</field>
+    </record>
+    <record id="international_drive_license" model="personal.drive_license_type">
+        <field name="name">International</field>
+    </record>
+
+  </data>
+</openerp>
