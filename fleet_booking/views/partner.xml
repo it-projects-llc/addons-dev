@@ -1,63 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data>
-<record id="view_partner_person_form_inherit" model="ir.ui.view">
-    <field name="name">partner.person.form.inherit</field>
-    <field name="model">res.partner</field>
-    <field name="inherit_id" ref="partner_person.view_partner_person_form"/>
-    <field name="arch" type="xml">
-        <data>
-            <xpath expr="//page[@name='personal_information']//field[@name='passport']" position="attributes">
-                <attribute name="string">ID Number</attribute>
-            </xpath>
-            <xpath expr="//page[@name='personal_information']//field[@name='passport']" position="before">
-                <field name='id_type' attrs="{'required': [('customer','=', True)]}"/>
-            </xpath>
-            <xpath expr="//page[@name='personal_information']//field[@name='sex']" position="attributes">
-                <attribute name="invisible">True</attribute>
-            </xpath>
-            <xpath expr="//field[@name='birthdate_date']" position="attributes">
-                <attribute name="attrs">{'required': [('customer','=', True)]}</attribute>
-            </xpath>
-            <xpath expr="//field[@name='nationality_id']" position="attributes">
-                <attribute name="attrs">{'required': [('customer','=', True)]}</attribute>
-            </xpath>
-            <xpath expr="//field[@name='passport']" position="attributes">
-                <attribute name="attrs">{'required': [('customer','=', True)]}</attribute>
-            </xpath>
-            <xpath expr="//field[@name='mobile']" position="attributes">
-                <attribute name="attrs">{'required': [('customer','=', True)]}</attribute>
-            </xpath>
-            <xpath expr="//page[@name='personal_information']//field[@name='sex']" position="before">
-                <field name='license_type' attrs="{'required': [('customer','=', True)]}"/>
-                <field name='license_number' attrs="{'required': [('customer','=', True)]}"/>
-                <field name='license_expiry_date' attrs="{'required': [('customer','=', True)]}"/>
-                <field name='issuer'/>
-                <field name='issuer_date'/>
-            </xpath>
-            <xpath expr="//page[@name='personal_information']" position="inside">
-              <group name="customer_emergency_contact" string="Contact in emergency cases">
-                <field name='emergency_contact_name'/>
-                <field name='emergency_contact_relation'/>
-                <field name='emergency_contact_phone'/>
-                <field name='emergency_contact_mobile' attrs="{'required': [('customer','=', True)]}"/>
-              </group>
-            </xpath>
+  <data>
 
-            <xpath expr="//group/field[@name='fax']" position="attributes">
-                <attribute name="string">Work phone</attribute>
-            </xpath>
-            <xpath expr="//div/field[@name='lastname']" position="attributes">
-                <attribute name="string">Second Name</attribute>
-            </xpath>
-            <xpath expr="//div/field[@name='lastname']" position="after">
-                <field name='third_name' placeholder="Third Name" attrs="{'required': [('customer','=', True)]}"/>
-            </xpath>
-            <xpath expr="//div/field[@name='third_name']" position="after">
-                <field name='family_name' placeholder="Family Name" attrs="{'required': [('customer','=', True)]}"/>
-            </xpath>
-        </data>
-    </field>
-</record>
-</data>
+    <record id="view_partner_form_inherit" model="ir.ui.view">
+      <field name="name">partner.form.inherit</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="base.view_partner_form"/>
+      <field name="arch" type="xml">
+        <field name="name" position="attributes">
+          <attribute name="attrs">{'invisible':[('is_company','=',False)]}</attribute>
+        </field>
+
+        <xpath expr="//field[@name='name']" position="after">
+          <div attrs="{'invisible':[('is_company','=',True)]}">
+            <field name="firstname" default_focus="1" placeholder="First Name" attrs="{'required':[('is_company','=',False),('customer','=', True)]}"/>
+            <field name="secondname" placeholder="Second Name" attrs="{'required':[('is_company','=',False),('customer','=', True)]}"/>
+            <field name='thirdname' placeholder="Third Name" attrs="{'required': [('customer','=', True)]}"/>
+            <field name='familyname' placeholder="Family Name" attrs="{'required': [('customer','=', True)]}"/>
+          </div>
+        </xpath>
+
+        <xpath expr="//page[@name='internal_notes']" position="before">
+          <page string="Personal Information" name="personal_information" attrs="{'invisible':[('is_company','=',True)]}">
+            <group col="2">
+              <field name="nationality_id" attrs="{'required': [('customer','=', True)]}"/>
+              <label for="birthdate_date"/>
+              <div class="oe_inline">
+                <field name="birthdate_date" class="oe_inline" attrs="{'required': [('customer','=', True)]}"/>
+                <div attrs="{'invisible':[('age','=',0)]}">
+                  (<field name="age" class="oe_inline"/> Years)
+                </div>
+              </div>
+              <field name='identification_type_id' attrs="{'required': [('customer','=', True)]}"/>
+              <field name='identification_number' attrs="{'required': [('customer','=', True)]}"/>
+              <field name='issuer' attrs="{'required': [('customer','=', True)]}"/>
+              <field name='issuer_date' attrs="{'required': [('customer','=', True)]}"/>
+
+
+              <field name='license_type_id' attrs="{'required': [('customer','=', True)]}"/>
+              <field name='license_number' attrs="{'required': [('customer','=', True)]}"/>
+              <field name='license_expiry_date' attrs="{'required': [('customer','=', True)]}"/>
+            </group>
+
+            <group col="1" string='Contacts in emergency cases'>
+              <field name="emergency_contact_ids" mode="tree" nolabel="1">
+                <tree string="Contacts in emergency cases" editable="bottom">
+                  <field name="partner_id" invisible="1"/>
+                  <field name="name"/>
+                  <field name="relation"/>
+                  <field name="phone"/>
+                  <field name="mobile"/>
+                </tree>
+              </field>
+            </group>
+
+          </page>
+        </xpath>
+
+        <xpath expr="//field[@name='mobile']" position="attributes">
+          <attribute name="attrs">{'required': [('customer','=', True)]}</attribute>
+        </xpath>
+
+        <xpath expr="//field[@name='fax']" position="after">
+          <field name="work_phone"/>
+        </xpath>
+
+      </field>
+    </record>
+
+  </data>
 </openerp>

@@ -17,7 +17,6 @@
         "fleet",
         "account",
         "account_asset",
-        "partner_person",
         "sale_membership",
         "fleet_rental_document",
         "fleet_vehicle_color",
@@ -33,6 +32,7 @@
         "views/asset.xml",
         "views/transfer.xml",
         "views/user.xml",
+        "data/personal.xml",
     ],
     "qweb": [
     ],

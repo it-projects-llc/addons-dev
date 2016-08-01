@@ -19,3 +19,7 @@ acc7,acc7,product.model_product_price_history,fleet_booking.group_accountant,1,1
 afu1,afu1,fleet.model_fleet_vehicle,group_fleet_adv_user,1,1,0,0
 afu2,afu2,fleet.model_fleet_vehicle_log_services,group_fleet_adv_user,1,1,1,1
 afu3,afu3,fleet.model_fleet_vehicle_log_contract,group_fleet_adv_user,1,1,1,1
+access_personal_id_type_read,access_personal_id_type_read,model_personal_identification_type,,1,0,0,0
+access_personal_id_type_all,access_personal_id_type_all,model_personal_identification_type,base.group_system,1,1,1,1
+access_personal_license_type_read,access_personal_license_type_read,model_personal_drive_license_type,,1,0,0,0
+access_personal_license_type_all,access_personal_license_type_all,model_personal_drive_license_type,base.group_system,1,1,1,1
