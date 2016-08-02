@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data noupdate="1">
+
+    <record id="seq_res_partner" model="ir.sequence">
+      <field name="name">res partner</field>
+      <field name="code">res.partner</field>
+      <field name="padding">4</field>
+    </record>
+
+  </data>
+</openerp>

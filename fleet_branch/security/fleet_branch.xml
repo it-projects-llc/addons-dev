@@ -2,11 +2,11 @@
 <openerp>
   <data noupdate="0">
 
-    <record id="fleet_vehicle_modification" model="ir.rule">
-      <field name="name">Fleet User may edit only vehicles in his branch</field>
+    <record id="fleet_vehicle_rw" model="ir.rule">
+      <field name="name">Fleet User may see and edit only vehicles in his branch</field>
       <field name="model_id" ref="model_fleet_vehicle"/>
       <field name="groups" eval="[(4, ref('fleet.group_fleet_user'))]"/>
-      <field name="perm_read" eval="False"/>
+      <field name="perm_read" eval="True"/>
       <field name="perm_write" eval="True"/>
       <field name="perm_create" eval="False"/>
       <field name="perm_unlink" eval="False"/>

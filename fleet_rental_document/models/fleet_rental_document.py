@@ -4,6 +4,7 @@ import openerp
 from openerp import models, fields, api
 from datetime import datetime, date, timedelta
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 import openerp.addons.decimal_precision as dp
 import base64
 from lxml import etree
@@ -27,11 +28,12 @@ class FleetRentalDocument(models.Model):
         help="Reference of the document that produced this document.",
         readonly=True, states={'draft': [('readonly', False)]})
 
+    rental_account_id = fields.Many2one('account.analytic.account', string='analytic account for rental', readonly=True)
     partner_id = fields.Many2one('res.partner', string="Customer", domain=[('customer', '=', True)], required=True)
-
+    membership_type_id = fields.Many2one('sale_membership.type', related='partner_id.type_id', string='Membership')
     vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle", required=True)
-    account_move_ids = fields.One2many('account.move', 'fleet_rental_document_id', string='Entries', readonly=True)
-    account_move_lines_ids = fields.One2many('account.move.line', 'fleet_rental_document_id', string='Entrie lines', readonly=True)
+    vehicle_color_id = fields.Many2one('fleet.vehicle_color', related='vehicle_id.color_id', readonly=True)
+    license_plate = fields.Char('License Plate', related='vehicle_id.license_plate')
     allowed_kilometer_per_day = fields.Integer(string='Allowed kilometer per day')
     rate_per_extra_km = fields.Float(string='Rate per extra km')
     daily_rental_price = fields.Float(string='Daily Rental Price')
@@ -45,17 +47,16 @@ class FleetRentalDocument(models.Model):
     extend_return_datetime = fields.Datetime(string='Last extend return time', help='Last extend document return Date and Time', default=False, readonly=True)
     rent_return_datetime = fields.Datetime(string='Rent Return Date and Time')
 
-    total_rental_period = fields.Integer(string='Total Rental Period')
-    total_rent_price = fields.Float(string='Total Rent Price', digits_compute=dp.get_precision('Product Price'))
+    total_rental_period = fields.Integer(string='Total Rental Period', compute="_compute_total_rental_period", store=True, readonly=True)
+    total_rent_price = fields.Float(string='Total Rent Price', compute="_compute_total_rent_price", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
 
-    period_rent_price = fields.Float(string='Period Rent Price', digits_compute=dp.get_precision('Product Price'))
-    extra_driver_charge = fields.Float(string='Extra Driver Charge', digits_compute=dp.get_precision('Product Price'))
-    advanced_deposit = fields.Float(string='Advanced Deposit', store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
-    balance = fields.Float(string='Balance', compute="_compute_balance", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True,
-                           help='If balance is negative means we have to return amount to customer. If balance is positive means customer should to pay')
+    period_rent_price = fields.Float(string='Period Rent Price', compute="_compute_period_rent_price", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
+    extra_driver_charge = fields.Float(string='Extra Driver Charge', compute="_compute_extra_driver_charge", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
+    advanced_deposit = fields.Float(string='Advanced Deposit', compute="_compute_advanced_deposit", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
+    balance = fields.Float(string='Balance', compute="_compute_balance", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
 
-    check_line_ids = fields.One2many('fleet_rental.check_line', 'document_id', string='Vehicle rental check lines')
-    part_line_ids = fields.One2many('fleet_rental.svg_vehicle_part_line', 'document_id', string='Vehicle part')
+    check_line_ids = fields.Many2many('fleet_rental.check_line', string='Vehicle rental check lines')
+    part_line_ids = fields.Many2many('fleet_rental.svg_vehicle_part_line', string='Vehicle part')
 
     invoice_ids = fields.Many2many("account.invoice", string='Invoices', compute="_get_invoiced", readonly=True, copy=False)
     invoice_count = fields.Integer(string='# of Invoices', compute='_get_invoiced', readonly=True)
@@ -95,42 +96,6 @@ class FleetRentalDocument(models.Model):
             f.close()
             with Image(blob=etree.tostring(dom), format='svg') as img:
                 rec.png_file = base64.b64encode(img.make_blob('png'))
-
-    @api.depends('total_rent_price', 'account_move_lines_ids')
-    def _compute_balance(self):
-        return
-        # for record in self:
-        #     account_receivable = record.partner_id.property_account_receivable_id.id
-        #     if record.account_move_lines_ids:
-        #         record.account_move_lines_ids[0].move_id.fleet_rental_document_id = [(4, record.id)]
-        #     mutuals_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', record.id), ('account_id', '=', account_receivable)])
-        #     total_duty = 0
-        #     total_paid = 0
-        #     for r in mutuals_recs:
-        #         total_duty += r.debit
-        #         total_paid += r.credit
-        #     record.balance = total_paid - total_duty
-        #     record.advanced_deposit = total_paid
-
-    @api.depends('vehicle_id')
-    def _compute_vehicle_rental(self):
-        for record in self:
-            record.allowed_kilometer_per_day = record.vehicle_id.allowed_kilometer_per_day
-            record.rate_per_extra_km = record.vehicle_id.rate_per_extra_km
-            record.daily_rental_price = record.vehicle_id.daily_rental_price
-            record.odometer_before = record.vehicle_id.odometer
-
-    @api.onchange('daily_rental_price', 'vehicle_id', 'exit_datetime', 'return_datetime', 'return_datetime', 'extra_driver_charge_per_day', 'other_extra_charges')
-    def all_calculations(self):
-        for record in self:
-            if record.exit_datetime and record.return_datetime:
-                start = datetime.strptime(record.exit_datetime, DTF)
-                end = datetime.strptime(record.return_datetime, DTF)
-                delta = (end - start).days
-                record.total_rental_period = end.day - start.day if delta == 0 else delta
-            record.period_rent_price = record.total_rental_period * record.daily_rental_price
-            record.total_rent_price = record.period_rent_price + record.extra_driver_charge + record.other_extra_charges
-            record.extra_driver_charge = record.total_rental_period * record.extra_driver_charge_per_day
 
     @api.multi
     def action_view_invoice(self):
@@ -172,40 +137,20 @@ class FleetRentalDocument(models.Model):
                 'invoice_ids': invoice_ids.ids + refund_ids.ids,
             })
 
-    @api.model
-    def default_get(self, fields_list):
-        result = super(FleetRentalDocument, self).default_get(fields_list)
-        items = self.env['fleet_rental.item_to_check'].search([])
-        parts = self.env['fleet_rental.svg_vehicle_part'].search([])
-
-        result['check_line_ids'] = [(5, 0, 0)] + [(0, 0, {'item_id': item.id,'exit_check_yes': False, 'exit_check_no': False,'exit_check_yes': False, 'exit_check_no': False,}) for item in items]
-        result['part_line_ids'] = [(5, 0, 0)] + [(0, 0, {'part_id': part.id, 'path_ID': part.path_ID}) for part in parts]
-        result['exit_datetime'] = fields.Datetime.now()
-        result['return_datetime'] = fields.Datetime.to_string(datetime.utcnow() + timedelta(days=1))
-        return result
-
+    @api.multi
     @api.depends('exit_datetime', 'return_datetime')
     def _compute_total_rental_period(self):
         for record in self:
             if record.exit_datetime and record.return_datetime:
-                start = datetime.strptime(record.exit_datetime, DTF)
-                end = datetime.strptime(record.return_datetime, DTF)
+                start = datetime.strptime(record.exit_datetime.split()[0], DEFAULT_SERVER_DATE_FORMAT)
+                end = datetime.strptime(record.return_datetime.split()[0], DEFAULT_SERVER_DATE_FORMAT)
                 record.total_rental_period = (end - start).days
 
-    @api.onchange('exit_datetime', 'return_datetime')
-    def _onchange_dates(self):
-        if self.exit_datetime and self.return_datetime:
-            start = datetime.strptime(self.exit_datetime, DTF)
-            end = datetime.strptime(self.return_datetime, DTF)
-            self.total_rental_period = (end - start).days
-            self.period_rent_price = self.total_rental_period * self.daily_rental_price
-
     @api.multi
-    @api.depends('vehicle_id', 'total_rental_period')
+    @api.depends('daily_rental_price', 'total_rental_period')
     def _compute_period_rent_price(self):
         for record in self:
-            if record.total_rental_period:
-                record.period_rent_price = record.total_rental_period * record.daily_rental_price
+            record.period_rent_price = record.total_rental_period * record.daily_rental_price
 
     @api.depends('total_rental_period', 'extra_driver_charge_per_day')
     def _compute_extra_driver_charge(self):
@@ -219,14 +164,12 @@ class FleetRentalDocument(models.Model):
             record.total_rent_price = record.period_rent_price + record.extra_driver_charge + record.other_extra_charges
 
     @api.multi
-    @api.depends('partner_id.rental_deposit_analytic_account_id.line_ids.amount')
+    @api.depends('rental_account_id.line_ids.move_id.balance_cash_basis')
     def _compute_advanced_deposit(self):
-        # TODO: invokes three times on invoice validation. Think about minimize excessive calls
         for record in self:
-            account_analytic = record.partner_id.rental_deposit_analytic_account_id
-            if account_analytic:
-                account_analytic._compute_debit_credit_balance()
-            record.advanced_deposit = account_analytic and account_analytic.balance or 0.0
+            record.advanced_deposit = 0
+            for line in record.rental_account_id.mapped('line_ids').mapped('move_id'):
+                record.advanced_deposit+= abs(line.balance_cash_basis)
 
     @api.depends('total_rent_price', 'advanced_deposit')
     def _compute_balance(self):

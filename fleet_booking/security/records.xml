@@ -65,15 +65,6 @@
                                              ]"/>
         </record>
         <!--ACCESS RULES-->
-        <record id="fleet_adv_user_vehicle_visibility" model="ir.rule">
-            <field name="name">Advanced user can see all vehicles</field>
-            <field name="model_id" ref="fleet.model_fleet_vehicle"/>
-            <field name="groups" eval="[(4, ref('group_fleet_adv_user'))]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
         <record id="fleet_adv_user_contract_visibility" model="ir.rule">
             <field name="name">Advanced user have full access on contracts</field>
             <field name="model_id" ref="fleet.model_fleet_vehicle_log_contract"/>

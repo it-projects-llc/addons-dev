@@ -2,12 +2,12 @@
 <openerp>
   <data>
 
-    <template id="report_rent_document">
+    <template id="report_return_document">
         <t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})" />
         <div class="page">
           <div class="oe_structure"/>
           <div class="row">
-            <h3 class="text-center">Rental Agreement</h3>
+            <h3 class="text-center">Return Vehicle Agreement</h3>
             <p>
               Agreement number: <span t-field="doc.name"/>
             </p>
@@ -77,14 +77,17 @@
             </div>
             <div class="col-xs-4">
               <p>Exit Time: <span t-field="doc.exit_datetime" t-field-options='{"format":"HH:mm"}'/></p>
+              <p>Return Time: <span t-field="doc.return_datetime" t-field-options='{"format":"HH:mm"}'/></p>
             </div>
             <div class="col-xs-4">
-              <p>End Date: <span t-field="doc.return_datetime" t-field-options='{"widget":"date","format":"short"}'/></p>
+              <p>Return Date: <span t-field="doc.return_datetime" t-field-options='{"widget":"date","format":"short"}'/></p>
             </div>
           </div>
           <div class="row">
              <div class="col-xs-12">
               <p>Total Rental Period: <span t-field="doc.total_rental_period"/></p>
+              <p>Extra Hours: <span t-field="doc.extra_hours"/></p>
+              <p>Extra Kilometers: <span t-field="doc.extra_kilometers"/></p>
             </div>
           </div>
           <div class="row">
@@ -110,41 +113,14 @@
                     <td><span t-att-class="check_line.exit_check_yes and 'glyphicon glyphicon-ok' or check_line.exit_check_no and 'glyphicon glyphicon-remove' or None"/></td>
                   </t>
                 </tr>
-              </tbody>
-            </table>
-          </div>
-          <div t-if="doc.additional_driver_ids" class="row">
-            <h4>Additional Drivers</h4>
-            <table class="table table-condensed">
-              <thead>
                 <tr>
-                  <th>Driver Name</th>
-                  <th>License Type</th>
-                  <th>License Number</th>
-                  <th>Issuer</th>
-                  <th>License Expiry Date</th>
+                  <td>
+                    <p>Return</p>
+                  </td>
+                  <t t-foreach="doc.check_line_ids" t-as="check_line">
+                    <td><span t-att-class="check_line.return_check_yes and 'glyphicon glyphicon-ok' or check_line.return_check_no and 'glyphicon glyphicon-remove' or None"/></td>
+                  </t>
                 </tr>
-              </thead>
-              <tbody>
-                <t t-foreach="doc.additional_driver_ids" t-as="driver">
-                  <tr>
-                    <td>
-                      <span t-field="driver.name"/>
-                    </td>
-                    <td>
-                      <span t-field="driver.license_type_id"/>
-                    </td>
-                    <td>
-                      <span t-field="driver.license_number"/>
-                    </td>
-                    <td>
-                      <span t-field="driver.issuer"/>
-                    </td>
-                    <td>
-                      <span t-field="driver.license_expiry_date"/>
-                    </td>
-                  </tr>
-                </t>
               </tbody>
             </table>
           </div>
@@ -154,9 +130,17 @@
               <p>Period Rent Price: <span t-field="doc.period_rent_price"/></p>
               <p>Extra Driver Charge: <span t-field="doc.extra_driver_charge_per_day"/></p>
               <p>Other Extra Charges: <span t-field="doc.other_extra_charges"/></p>
+              <p>Penalties: <span t-field="doc.penalties"/></p>
+              <p>Extra Hours Charge: <span t-field="doc.extra_hours_charge"/></p>
+              <p>Extra Kilos Charge: <span t-field="doc.extra_kilos_charge"/></p>
               <p>Total Rent Price: <span t-field="doc.total_rent_price"/></p>
+              <p>Discount: <span t-field="doc.discount"/></p>
+              <p>Price After Discount: <span t-field="doc.price_after_discount"/></p>
               <p>Advanced Deposit: <span t-field="doc.advanced_deposit"/></p>
               <p>Balance: <span t-field="doc.balance"/></p>
+              <p>Customer Shall Pay: <span t-field="doc.customer_shall_pay"/></p>
+              <p>Returned Amount: <span t-field="doc.returned_amount"/></p>
+              <p>Paid Amount: <span t-field="doc.paid_amount"/></p>
             </div>
           </div>
           <div class="row">
@@ -175,14 +159,22 @@
         </div>
     </template>
 
-    <template id="report_rent">
+    <template id="report_return">
       <t t-call="report.html_container">
         <t t-foreach="docs" t-as="doc">
-          <t t-call="fleet_rental_document.report_rent_document" t-lang="doc.partner_id.lang"/>
+          <t t-call="fleet_rental_document.report_return_document" t-lang="doc.partner_id.lang"/>
         </t>
       </t>
     </template>
 
+    <report
+        id="report_document_return"
+        string="Return"
+        model="fleet_rental.document_return"
+        report_type="qweb-pdf"
+        file="fleet_rental_document.report_return"
+        name="fleet_rental_document.report_return"
+        />
+
   </data>
 </openerp>
-

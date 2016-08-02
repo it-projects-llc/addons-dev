@@ -26,7 +26,7 @@ class Person(models.Model):
     _inherit = 'res.partner'
 
     points = fields.Float(string='Current membership Points', default=0)
-    type_id = fields.Many2one('sale_membership.type', compute='set_membership', string='Current Membership type', store=True)
+    type_id = fields.Many2one('sale_membership.type', compute='set_membership', string='Current Membership type', store=True, readonly=True)
     blocked = fields.Boolean(default=False, string='Blocked', readonly=True)
 
     @api.one

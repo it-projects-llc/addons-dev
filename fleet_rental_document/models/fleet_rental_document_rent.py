@@ -3,6 +3,7 @@
 from openerp import models, fields, api
 from datetime import datetime, date, timedelta
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 import openerp.addons.decimal_precision as dp
 import base64
 from lxml import etree
@@ -21,7 +22,6 @@ class FleetRentalDocumentRent(models.Model):
         ('returned', 'Returned'),
         ('cancel', 'Cancelled'),
         ], string='Status', readonly=True, copy=False, index=True, default='draft')
-    previous_state = fields.Char(default='confirmed')
     _inherits = {
                  'fleet_rental.document': 'document_id',
                  }
@@ -30,132 +30,57 @@ class FleetRentalDocumentRent(models.Model):
             string='Related Document', ondelete='restrict',
             help='common part of all three types of the documents', auto_join=True)
 
+    additional_driver_ids = fields.Many2many('fleet_rental.additional_driver')
     user_branch_id = fields.Many2one('fleet_branch.branch', default=lambda self: self.env.user.branch_id.id)
 
     document_return_id = fields.Many2one('fleet_rental.document_return')
 
     document_extend_ids = fields.One2many('fleet_rental.document_extend', 'document_rent_id')
     extends_count = fields.Integer(string='# of Extends', compute='_get_extends', readonly=True)
-    account_move_ids = fields.One2many('account.move', 'fleet_rental_document_id', string='Entries', readonly=True)
-    account_move_lines_ids = fields.One2many('account.move.line', 'fleet_rental_document_id', string='Entrie lines', readonly=True)
-    balance = fields.Float(string='Balance', compute="_compute_balance", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True, help='Customer duty')
-    advanced_deposit = fields.Float(string='Advanced Deposit', compute="_compute_deposit", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
     diff_datetime = fields.Datetime(string='Previous rent document return date and time')
-    invoice_ids = fields.Many2many("account.invoice", string='Invoices', compute="_get_invoiced", readonly=True, copy=False)
-    invoice_count = fields.Integer(string='# of Invoices', compute='_get_invoiced', readonly=True)
-    invoice_line_ids = fields.One2many('account.invoice.line', 'fleet_rental_document_id', string='Invoice Lines', copy=False)
+
     odometer_before = fields.Float(string='Odometer', compute='_compute_odometer', store=True, readonly=True)
-    png_file = fields.Text('PNG', compute='_compute_png', store=False)
 
-    @api.multi
-    def _compute_png(self):
-        for rec in self:
-            f = open('/'.join([os.path.dirname(os.path.realpath(__file__)),
-                               '../static/src/img/car-cutout.svg']), 'r')
-            svg_file = f.read()
-            dom = etree.fromstring(svg_file)
-            for line in rec.part_line_ids:
-                if line.state == 'broken':
-                    for el in dom.xpath('//*[@id="%s"]' % line.part_id.path_ID):
-                        el.attrib['fill'] = 'red'
-            f.close()
-            with Image(blob=etree.tostring(dom), format='svg') as img:
-                rec.png_file = base64.b64encode(img.make_blob('png'))
+    @api.model
+    def default_get(self, fields_list):
+        result = super(FleetRentalDocumentRent, self).default_get(fields_list)
+        items = self.env['fleet_rental.item_to_check'].search([])
+        parts = self.env['fleet_rental.svg_vehicle_part'].search([])
 
-    @api.depends('total_rent_price', 'account_move_lines_ids', 'document_extend_ids')
+        result['check_line_ids'] = [(5, 0, 0)] + [(0, 0, {'item_id': item.id,'exit_check_yes': False, 'exit_check_no': False,'exit_check_yes': False, 'exit_check_no': False,}) for item in items]
+        result['part_line_ids'] = [(5, 0, 0)] + [(0, 0, {'part_id': part.id, 'path_ID': part.path_ID}) for part in parts]
+        result['exit_datetime'] = fields.Datetime.now()
+        result['return_datetime'] = fields.Datetime.to_string(datetime.utcnow() + timedelta(days=1))
+        return result
+
+    @api.onchange('total_rent_price', 'advanced_deposit')
     def _compute_balance(self):
-        if self._model._name not in ['fleet_rental.document_rent', 'fleet_rental.document_extend']:
-            return
         for record in self:
-            if self._model._name == 'fleet_rental.document_rent':
-                id_to_manage = record.id
-            elif self._model._name == 'fleet_rental.document_extend':
-                id_to_manage = record.document_rent_id.id
-            else:
-                return
-            bank_journal = self.env['account.journal'].search([('type', '=', 'bank')], limit=1)
-            cash_journal = self.env['account.journal'].search([('type', '=', 'cash')], limit=1)
-            bank_account = bank_journal.default_debit_account_id  # 66
-            cash_account = cash_journal.default_debit_account_id  # 65
-            customer_deposit_account = self.env['account.account'].search([('code', '=', '246000')], limit=1)  # 64
-            # TODO ПРОТЕСТИТЬ БАЛАНС. ИЗМЕНИТЬ ЭТОТ КОД В ДРУГИХ МЕСТАХ.
-            account_receivable = record.partner_id.property_account_receivable_id  # 2
-            """ Его долг это все дебеты account_receivable
-                Его оплата это все дебеты по кассе и банку
-                Наш долг (refund invoice) это кредиты  Customer Deposits Received
-                Наша оплата (refund payment) это кредиты по кассе и банку
-            """
-            if record.account_move_lines_ids:
-                record.account_move_lines_ids[0].move_id.fleet_rental_document_id = [(4, id_to_manage)]
-            customer_duty_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', id_to_manage), ('account_id', '=', account_receivable.id)])
-            payment_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', id_to_manage), ('account_id', 'in', [bank_account.id, cash_account.id])])
-            company_duty_recs = self.env['account.move.line'].search([('fleet_rental_document_id', '=', id_to_manage), ('account_id', '=', customer_deposit_account.id)])
+            record.balance = record.total_rent_price - record.advanced_deposit
 
-            customer_total_duty = 0
-            customer_total_paid = 0
-            company_total_duty = 0
-            company_total_paid = 0
-            for r in customer_duty_recs:
-                customer_total_duty += r.debit
-            for r in company_duty_recs:
-                company_total_duty += r.debit
-            for r in payment_recs:
-                customer_total_paid += r.debit
-                company_total_paid += r.credit
-
-            record.balance = customer_total_duty - customer_total_paid - company_total_duty + company_total_paid
-            # If “Balance” is negative (means we have to return amount to customer)
-            # If “Balance” is positive (means customer has to pay)
-
-    @api.depends('total_rent_price', 'account_move_lines_ids', 'document_extend_ids')
-    def _compute_deposit(self):
-        if self._model._name not in ['fleet_rental.document_rent', 'fleet_rental.document_extend']:
-            return
+    @api.onchange('exit_datetime', 'return_datetime')
+    def _compute_total_rental_period(self):
         for record in self:
-            if self._model._name == 'fleet_rental.document_rent':
-                id_to_manage = record.id
-            elif self._model._name == 'fleet_rental.document_extend':
-                id_to_manage = record.document_rent_id.id
-            else:
-                return
-            bank_journal = self.env['account.journal'].search([('type', '=', 'bank')], limit=1)
-            cash_journal = self.env['account.journal'].search([('type', '=', 'cash')], limit=1)
-            bank_account = bank_journal.default_debit_account_id  # 66
-            cash_account = cash_journal.default_debit_account_id  # 65
-            customer_deposit_account = self.env['account.account'].search([('code', '=', '246000')],
-                                                                          limit=1)  # 64
-            # TODO ПРОТЕСТИТЬ БАЛАНС. ИЗМЕНИТЬ ЭТОТ КОД В ДРУГИХ МЕСТАХ.
-            account_receivable = record.partner_id.property_account_receivable_id  # 2
-            """ Его долг это все дебеты account_receivable
-                Его оплата это все дебеты по кассе и банку
-                Наш долг (refund invoice) это кредиты  Customer Deposits Received
-                Наша оплата (refund payment) это кредиты по кассе и банку
-            """
-            if record.account_move_lines_ids:
-                record.account_move_lines_ids[0].move_id.fleet_rental_document_id = [(4, id_to_manage)]
-            customer_duty_recs = self.env['account.move.line'].search(
-                [('fleet_rental_document_id', '=', id_to_manage),
-                 ('account_id', '=', account_receivable.id)])
-            payment_recs = self.env['account.move.line'].search(
-                [('fleet_rental_document_id', '=', id_to_manage),
-                 ('account_id', 'in', [bank_account.id, cash_account.id])])
-            company_duty_recs = self.env['account.move.line'].search(
-                [('fleet_rental_document_id', '=', id_to_manage),
-                 ('account_id', '=', customer_deposit_account.id)])
+            if record.exit_datetime and record.return_datetime:
+                start = datetime.strptime(record.exit_datetime.split()[0], DEFAULT_SERVER_DATE_FORMAT)
+                end = datetime.strptime(record.return_datetime.split()[0], DEFAULT_SERVER_DATE_FORMAT)
+                record.total_rental_period = (end - start).days
 
-            customer_total_duty = 0
-            customer_total_paid = 0
-            company_total_duty = 0
-            company_total_paid = 0
-            for r in customer_duty_recs:
-                customer_total_duty += r.debit
-            for r in company_duty_recs:
-                company_total_duty += r.debit
-            for r in payment_recs:
-                customer_total_paid += r.debit
-                company_total_paid += r.credit
+    @api.onchange('daily_rental_price', 'total_rental_period')
+    def _compute_period_rent_price(self):
+        for record in self:
+            record.period_rent_price = record.total_rental_period * record.daily_rental_price
 
-            record.advanced_deposit = customer_total_paid
+    @api.onchange('total_rental_period', 'extra_driver_charge_per_day')
+    def _compute_extra_driver_charge(self):
+        for record in self:
+            if record.total_rental_period:
+                record.extra_driver_charge = record.total_rental_period * record.extra_driver_charge_per_day
+
+    @api.onchange('period_rent_price', 'extra_driver_charge', 'other_extra_charges')
+    def _compute_total_rent_price(self):
+        for record in self:
+            record.total_rent_price = record.period_rent_price + record.extra_driver_charge + record.other_extra_charges
 
     @api.onchange('vehicle_id')
     def onchange_vehicle_id(self):
@@ -169,18 +94,6 @@ class FleetRentalDocumentRent(models.Model):
         for record in self:
             record.odometer_before = record.vehicle_id.odometer
 
-    @api.onchange('daily_rental_price', 'vehicle_id', 'diff_datetime', 'return_datetime', 'return_datetime', 'extra_driver_charge_per_day', 'other_extra_charges')
-    def all_calculations(self):
-        for record in self:
-            if record.exit_datetime and record.return_datetime:
-                start = datetime.strptime(record.exit_datetime, DTF)
-                end = datetime.strptime(record.diff_datetime or record.return_datetime, DTF)
-                delta = (end - start).days
-                record.total_rental_period = end.day - start.day if delta == 0 else delta
-            record.period_rent_price = record.total_rental_period * record.daily_rental_price
-            record.extra_driver_charge = record.total_rental_period * record.extra_driver_charge_per_day
-            record.total_rent_price = record.period_rent_price + record.extra_driver_charge + record.other_extra_charges
-
     @api.depends('document_extend_ids')
     def _get_extends(self):
         for document in self:
@@ -188,52 +101,9 @@ class FleetRentalDocumentRent(models.Model):
                 'extends_count': len(document.document_extend_ids),
             })
 
-    @api.onchange('vehicle_id')
-    def on_change_vehicle_id(self):
-        self._compute_png()
-        self.mapped('document_id')._compute_png()
-        self.allowed_kilometer_per_day = self.vehicle_id.allowed_kilometer_per_day
-        self.rate_per_extra_km = self.vehicle_id.rate_per_extra_km
-        self.daily_rental_price = self.vehicle_id.daily_rental_price
-        self.period_rent_price = self.total_rental_period * self.daily_rental_price
-
-    @api.onchange('exit_datetime', 'return_datetime')
-    def _onchange_dates(self):
-        if self.exit_datetime and self.return_datetime:
-            start = datetime.strptime(self.exit_datetime, DTF)
-            end = datetime.strptime(self.return_datetime, DTF)
-            self.total_rental_period = (end - start).days
-            self.period_rent_price = self.total_rental_period * self.daily_rental_price
-
-    @api.onchange('period_rent_price', 'extra_driver_charge', 'other_extra_charges')
-    def _onchange_charges(self):
-        self.total_rent_price = self.period_rent_price + self.extra_driver_charge + self.other_extra_charges
-
     @api.multi
     def action_view_invoice(self):
-        invoice_ids = self.mapped('invoice_ids')
-        action = self.env.ref('account.action_invoice_tree1')
-        list_view_id = self.env.ref('account.invoice_tree').id
-        form_view_id = self.env.ref('account.invoice_form').id
-
-        result = {
-            'name': action.name,
-            'help': action.help,
-            'type': action.type,
-            'views': [[list_view_id, 'tree'], [form_view_id, 'form'], [False, 'graph'], [False, 'kanban'],
-                      [False, 'calendar'], [False, 'pivot']],
-            'target': action.target,
-            'context': action.context,
-            'res_model': action.res_model,
-        }
-        if len(invoice_ids) > 1:
-            result['domain'] = "[('id','in',%s)]" % invoice_ids.ids
-        elif len(invoice_ids) == 1:
-            result['views'] = [(form_view_id, 'form')]
-            result['res_id'] = invoice_ids.ids[0]
-        else:
-            result = {'type': 'ir.actions.act_window_close'}
-        return result
+        return self.mapped('document_id').action_view_invoice()
 
     @api.depends('invoice_line_ids')
     def _get_invoiced(self):
@@ -252,61 +122,47 @@ class FleetRentalDocumentRent(models.Model):
     @api.multi
     def action_book(self):
         for rent in self:
-            rent.previous_state = rent.state
             rent.state = 'booked'
             self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_booked')
 
     @api.multi
     def action_cancel_booking(self):
         for rent in self:
-            rent.previous_state = rent.state
             rent.state = 'cancel'
             self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_active')
 
     @api.multi
     def action_confirm(self):
         for rent in self:
-            rent.previous_state = rent.state
             rent.state = 'confirmed'
 
     @api.multi
     def action_create_return(self):
         document_return_obj = self.env['fleet_rental.document_return']
         for rent in self:
-            rent.previous_state = rent.state
-            rent.state = 'returned'
-            self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_active')
             document_return = document_return_obj.create({
-               'partner_id': rent.partner_id.id,
-               'vehicle_id': rent.vehicle_id.id,
-               'allowed_kilometer_per_day': rent.allowed_kilometer_per_day,
-               'rate_per_extra_km': rent.rate_per_extra_km,
-               'daily_rental_price': rent.daily_rental_price,
-               'origin': rent.name,
-               'exit_datetime': rent.exit_datetime,
-               'type': 'return',
-               'return_datetime': fields.Datetime.now(),
-               'odometer_before': rent.odometer_before,
-               'rent_return_datetime': rent.return_datetime,
-               'extra_driver_charge_per_day': rent.extra_driver_charge_per_day,
-               'extra_driver_charge': rent.extra_driver_charge,
-               'document_rent_id': rent.id,
+                'partner_id': rent.partner_id.id,
+                'vehicle_id': rent.vehicle_id.id,
+                'allowed_kilometer_per_day': rent.allowed_kilometer_per_day,
+                'rate_per_extra_km': rent.rate_per_extra_km,
+                'daily_rental_price': rent.daily_rental_price,
+                'origin': rent.name,
+                'exit_datetime': rent.exit_datetime,
+                'type': 'return',
+                'return_datetime': fields.Datetime.now(),
+                'odometer_before': rent.odometer_before,
+                'rent_return_datetime': rent.return_datetime,
+                'extra_driver_charge_per_day': rent.extra_driver_charge_per_day,
+                'extra_driver_charge': rent.extra_driver_charge,
+                'document_rent_id': rent.id,
+                'other_extra_charges': rent.other_extra_charges,
+                'check_line_ids': [(6, 0, rent.check_line_ids.ids)],
+                'part_line_ids': [(6, 0, rent.part_line_ids.ids)],
+                'advanced_deposit': rent.advanced_deposit,
                })
-            rent.write({'document_return_id': document_return.id})
-            for r in rent.check_line_ids:
-                for w in document_return.check_line_ids:
-                    if r.item_id == w.item_id:
-                        w.exit_check_yes = r.exit_check_yes
-                        w.exit_check_no = r.exit_check_no
-                        break
+            rent.sudo().write({'document_return_id': document_return.id})
 
         return self.action_view_document_return(document_return.id)
-
-    @api.multi
-    def action_cancel_return(self):
-        for rent in self:
-            rent.previous_state, rent.state = rent.state, rent.previous_state  # swap values
-            self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_booked')
 
     @api.multi
     def action_view_document_return(self, document_return_id):

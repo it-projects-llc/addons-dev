@@ -75,13 +75,17 @@
                 <button name="%(action_view_make_invoice_wizard)d" string="Create Invoice"
                         type="action" class="btn-primary"
                         states="open"/>
-                <button name="action_open" states="draft" string="Return Car and keep contract open" type="object"/>
+                <button name="action_return_car" states="draft" string="Return Car and keep contract open" type="object"/>
                 <button name="action_create_refund"
                         type='object'
                         string='Create Refund'
                         class="btn-primary"
                         groups="base.group_user"
                         states="open"/>
+                <button name="action_confirm" string="Confirm Return" type="object"
+                      attrs="{'invisible': [('balance', '&gt;', 0), ('paid_amount', '!=', 'customer_shall_pay')]}"/>
+                <button name="print_return" string="Print" type="object"
+                      attrs="{'invisible': [('state', 'in', ['draft', 'open'])]}"/>
                 <field name="state" widget="statusbar" statusbar_visible="draft,open,closed"/>
             </header>
             <sheet>
@@ -89,8 +93,7 @@
                 <button name="action_view_invoice"
                         type="object"
                         class="oe_stat_button"
-                        icon="fa-pencil-square-o"
-                        attrs="{'invisible': [('invoice_count', '=', 0)]}">
+                        icon="fa-pencil-square-o">
                   <field name="invoice_count" widget="statinfo" string="Invoices"/>
                 </button>
               </div>
@@ -99,12 +102,16 @@
                   <field name="name" readonly="1"/>
                 </h1>
               </div>
-              <group>
-                <field name="partner_id" readonly="1"/>
+              <group string="Customer Information">
+                <field name="partner_id" readonly="1" string="Name / Membership ID / ID Number"/>
+                <field name="membership_type_id" options='{"no_open": True}'/>
+              </group>
+              <group string="Vehicle Information">
+                <field name="vehicle_id" readonly="1" string="Brand / Model / Plate Number"/>
+                <field name="vehicle_color_id" options='{"no_open": True}'/>
               </group>
               <group>
-                <group col="2" string="Vehicle Information">
-                  <field name="vehicle_id" readonly="1"/>
+                <group col="2" string="Rental Details">
                   <field name="rent_return_datetime" invisible="1"/>
                   <field name="allowed_kilometer_per_day" readonly="1"/>
                   <field name="rate_per_extra_km" readonly="1"/>
@@ -131,6 +138,9 @@
                   <field name="price_after_discount" class="oe_inline"/>
                   <field name="advanced_deposit" class="oe_inline"/>
                   <field name="balance" class="oe_inline"/>
+                  <field name="customer_shall_pay" class="oe_inline"/>
+                  <field name="returned_amount" class="oe_inline"/>
+                  <field name="paid_amount" class="oe_inline"/>
                 </group>
               </group>
               <notebook>
@@ -144,7 +154,6 @@
                       <field name="return_check_no"/>
                     </tree>
                   </field>
-                  <field name="part_line_ids" widget="svg" svg_file="/fleet_rental_document/static/src/img/car-cutout.svg" svg_colors='red:broken;original:operative' svg_id_field="path_ID" svg_color_field="state" nolabel = '1'/>
                 </page>
               </notebook>
               <group>
