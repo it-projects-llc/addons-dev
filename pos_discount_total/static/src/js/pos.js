@@ -1,5 +1,9 @@
-function pos_discount_widgets(instance, module){
-    module.OrderWidget.include({
+odoo.define('pos_discount_total.OrderWidget', function(require) {
+    "use strict";
+
+    var screens = require('point_of_sale.screens');
+
+    screens.OrderWidget.include({
         init: function(parent, options) {
             var self = this;
             this._super(parent,options);
@@ -9,16 +13,16 @@ function pos_discount_widgets(instance, module){
             this.line_click_handler = function(event){
                 self.deselect_summary();
                 line_click_handler.call(this, event)
-            }
+            };
         },
         select_summary:function(){
             if (this.summary_selected)
                 return;
             this.deselect_summary();
             this.summary_selected = true;
-            $('.order .summary').addClass('selected')
-            this.pos_widget.numpad.state.reset();
-            this.pos_widget.numpad.state.changeMode('discount');
+            $('.order .summary').addClass('selected');
+            this.numpad_state.reset();
+            this.numpad_state.changeMode('discount');
         },
         deselect_summary:function(){
             this.summary_selected = false;
@@ -29,8 +33,8 @@ function pos_discount_widgets(instance, module){
                 return this._super(val);
             var mode = this.numpad_state.get('mode');
             if (mode=='discount'){
-                var order = this.pos.get('selectedOrder');
-                $.each(order.get('orderLines').models, function (k, line){
+                var order = this.pos.get_order();
+                $.each(order.orderlines.models, function (k, line){
                     line.set_discount(val)
                 })
             }
@@ -38,28 +42,14 @@ function pos_discount_widgets(instance, module){
         renderElement:function(scrollbottom){
             var self = this;
             this._super(scrollbottom);
-
-            $('.order .summary').click(function(event){
-                if(!self.editable){
-                    return;
+            $(this.el).click(function(event){
+                if (event.target.classList.contains('summary')){
+                    self.pos.get_order().deselect_orderline(this.orderline);
+                    self.numpad_state.reset();
+                    self.select_summary();
                 }
-                self.pos.get('selectedOrder').deselectLine(this.orderline);
-                self.pos_widget.numpad.state.reset();
-
-                self.select_summary()
-            })
+            });
         }
-    })
-}
+    });
 
-(function(){
-    var _super = window.openerp.point_of_sale;
-    window.openerp.point_of_sale = function(instance){
-        _super(instance);
-        var module = instance.point_of_sale;
-
-        pos_discount_widgets(instance, module);
-
-        $('<link rel="stylesheet" href="/pos_discount_total/static/src/css/pos.css"/>').appendTo($("head"))
-    }
-})()
+});
