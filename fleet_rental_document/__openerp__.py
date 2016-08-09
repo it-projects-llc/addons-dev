@@ -42,6 +42,7 @@
         "data/personal.xml",
         'rent_report.xml',
         'views/report_rent.xml',
+        'views/report_return.xml',
     ],
     "qweb": [
     ],

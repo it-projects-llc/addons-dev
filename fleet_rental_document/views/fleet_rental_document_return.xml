@@ -83,7 +83,7 @@
                         groups="base.group_user"
                         states="open"/>
                 <button name="action_confirm" string="Confirm Return" type="object"
-                      attrs="{'invisible': [('balance', '&gt;', 0), ('paid_amount', '!=', 'customer_shall_pay')]}"/>
+                      attrs="{'invisible': [('balance', '&gt;', 0), ('diff_pa_csp', '!=', 0)]}"/>
                 <button name="print_return" string="Print" type="object"
                       attrs="{'invisible': [('state', 'in', ['draft', 'open'])]}"/>
                 <field name="state" widget="statusbar" statusbar_visible="draft,open,closed"/>
@@ -141,6 +141,7 @@
                   <field name="customer_shall_pay" class="oe_inline"/>
                   <field name="returned_amount" class="oe_inline"/>
                   <field name="paid_amount" class="oe_inline"/>
+                  <field name="diff_pa_csp" invisible="1"/>
                 </group>
               </group>
               <notebook>

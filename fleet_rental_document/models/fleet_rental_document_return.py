@@ -34,6 +34,7 @@ class FleetRentalDocumentReturn(models.Model):
     customer_shall_pay = fields.Float(string='Customer Shall Pay', compute="_compute_customer_shall_pay", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
     returned_amount = fields.Float(string='Returned Amount', compute="_compute_returned_amount", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
     paid_amount = fields.Float(string='Paid Amount', compute="_compute_paid_amount", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
+    diff_pa_csp = fields.Float(compute="_compute_diff_pa_csp")
     odometer_after = fields.Float(string='Odometer after Rent', related='vehicle_id.odometer')
     rent_return_datetime = fields.Datetime(string='Rent Return Date and Time')
     extra_hours = fields.Integer(string='Extra Hours', compute="_compute_extra_hours", store=True, readonly=True, default=0)
@@ -45,6 +46,11 @@ class FleetRentalDocumentReturn(models.Model):
     extra_kilos_charge = fields.Float(string='Extra Kilos Charge', digits_compute=dp.get_precision('Product Price'), compute="_compute_extra_kilometers", store=True, readonly=True, default=0)
     price_after_discount = fields.Float(string='Price After Discount', compute="_compute_price_after_discount", store=True, digits_compute=dp.get_precision('Product Price'), readonly=True)
     document_rent_id = fields.Many2one('fleet_rental.document_rent')
+
+    @api.depends('paid_amount', 'customer_shall_pay')
+    def _compute_diff_pa_csp(self):
+        for record in self:
+            record.diff_pa_csp = record.customer_shall_pay - record.paid_amount
 
     @api.multi
     def action_confirm(self):
