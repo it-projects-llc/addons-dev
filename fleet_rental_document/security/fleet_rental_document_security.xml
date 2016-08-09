@@ -11,6 +11,36 @@
       <field name="perm_unlink" eval="True"/>
       <field name="domain_force">[('state', '=', 'draft')]</field>
     </record>
+    <record id="fleet_rental_document_rent_edit" model="ir.rule">
+      <field name="name">Only draft and booked rent documents can be edited</field>
+      <field name="model_id" ref="model_fleet_rental_document_rent"/>
+      <field name="perm_read" eval="False"/>
+      <field name="perm_write" eval="True"/>
+      <field name="perm_create" eval="False"/>
+      <field name="perm_unlink" eval="False"/>
+      <field name="domain_force">[('state', 'in', ('draft','booked'))]</field>
+    </record>
+
+    <record id="fleet_rental_document_return_delete" model="ir.rule">
+      <field name="name">Only draft return documents can be deleted</field>
+      <field name="model_id" ref="model_fleet_rental_document_return"/>
+      <field name="perm_read" eval="False"/>
+      <field name="perm_write" eval="False"/>
+      <field name="perm_create" eval="False"/>
+      <field name="perm_unlink" eval="True"/>
+      <field name="domain_force">[('state', '=', 'draft')]</field>
+    </record>
+
+    <record id="fleet_rental_document_r" model="ir.rule">
+      <field name="name">Fleet User may see and edit only documents with his branch vehicles</field>
+      <field name="model_id" ref="model_fleet_rental_document"/>
+      <field name="groups" eval="[(4, ref('fleet.group_fleet_user'))]"/>
+      <field name="perm_read" eval="True"/>
+      <field name="perm_write" eval="False"/>
+      <field name="perm_create" eval="False"/>
+      <field name="perm_unlink" eval="False"/>
+      <field name="domain_force">[('vehicle_id.branch_id', '=', user.branch_id.id)]</field>
+    </record>
 
   </data>
 </openerp>

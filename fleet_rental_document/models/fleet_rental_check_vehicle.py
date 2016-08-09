@@ -13,7 +13,6 @@ class FleetRentalCheckLine(models.Model):
     _name = 'fleet_rental.check_line'
 
     item_id = fields.Many2one('fleet_rental.item_to_check', string='Item', ondelete='restrict', required=True, readonly=True)
-    document_id = fields.Many2one('fleet_rental.document', string='Document', ondelete='cascade', required=True)
     exit_check_yes = fields.Boolean(string='OK (on out)', default=False)
     exit_check_no = fields.Boolean(string='NOT ok (on out)', default=False)
     return_check_yes = fields.Boolean(string='OK (on return)', default=False)
@@ -52,7 +51,6 @@ class FleetRentalSVGVehiclePartLine(models.Model):
 
     part_id = fields.Many2one('fleet_rental.svg_vehicle_part', string='Part', ondelete='restrict', required=True, readonly=True)
     path_ID = fields.Char(related="part_id.path_ID")
-    document_id = fields.Many2one('fleet_rental.document', string='Document', ondelete='cascade', required=True)
     state = fields.Selection([('operative', 'Operative'),
                               ('broken', 'Broken')],
                              string='State',

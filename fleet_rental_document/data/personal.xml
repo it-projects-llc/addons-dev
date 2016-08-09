@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record id="private_drive_license" model="personal.drive_license_type">
+        <field name="name">Private</field>
+    </record>
+    <record id="general_drive_license" model="personal.drive_license_type">
+        <field name="name">General</field>
+    </record>
+    <record id="international_drive_license" model="personal.drive_license_type">
+        <field name="name">International</field>
+    </record>
+
+  </data>
+</openerp>

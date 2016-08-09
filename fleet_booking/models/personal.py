@@ -14,27 +14,19 @@ class PersonalIdentificationType(models.Model):
     error_message = fields.Char(string='Error message')
 
 
-class PersonalDriveLicenseType(models.Model):
-    _name = 'personal.drive_license_type'
-
-    name = fields.Char(string='License Type', required=True)
-
-    regexp_force = fields.Char(string='Regexp Force', default='.*')
-    error_message = fields.Char(string='Error message')
-
-
 class PersonalEmergencyContact(models.Model):
     _name = 'personal.emergency_contact'
 
     name = fields.Char(string='Name')
     relation = fields.Char(string='Relation')
     phone = fields.Char(string='Phone number')
-    mobile = fields.Char(string='Mobile number')
+    mobile = fields.Char(string='Mobile number', required=True)
     partner_id = fields.Many2one('res.partner')
 
 
-class Person(models.Model):
-    _inherit = 'res.partner'
+class ResPartner(models.Model):
+    _inherit = ['res.partner', 'personal.drive_license']
+    _name = "res.partner"
 
     nationality_id = fields.Many2one('res.country', string='Nationality')
     birthdate_date = fields.Date(string='Birthdate')
@@ -42,12 +34,8 @@ class Person(models.Model):
 
     identification_type_id = fields.Many2one('personal.identification_type', string='Identification Type')
     identification_number = fields.Char('Identification Number')
-    issuer = fields.Char(string='Issuer string')
+    issuer = fields.Char(string='Issuer')
     issuer_date = fields.Date(string='Date of Issue')
-
-    license_type_id = fields.Many2one('personal.drive_license_type', string='Drive License Type')
-    license_number = fields.Char(string='Drive License Number')
-    license_expiry_date = fields.Date(string='Drive License Expiry Date')
 
     firstname = fields.Char(string='First Name')
     secondname = fields.Char(string='Second Name')
@@ -58,12 +46,24 @@ class Person(models.Model):
 
     emergency_contact_ids = fields.One2many('personal.emergency_contact', 'partner_id')
 
+    @api.model
+    def _get_default_reference(self):
+        return self.env['ir.sequence'].next_by_code('res.partner')
+
+    ref = fields.Char(default=_get_default_reference)
+
     @api.one
     @api.onchange('firstname', 'secondname')
     @api.constrains('firstname', 'secondname')
     def build_name(self):
         if self.secondname and self.firstname:
             self.name = '%s %s' % (self.secondname or '', self.firstname or '')
+
+    @api.one
+    @api.constrains('emergency_contact_ids')
+    def _check_emergency_contact(self):
+        if self.customer and not len(self.emergency_contact_ids):
+            raise UserError('Should be at least one emergency contact')
 
     @api.one
     @api.onchange('identification_number', 'license_type_id')

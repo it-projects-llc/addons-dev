@@ -23,5 +23,5 @@ class ResPartner(models.Model):
         records = self.browse(cr, uid, result.keys(), context)
         for r in records:
             if r.id:
-                result[r.id] = result[r.id] + ' (' + str(r.id) + ')'
+                result[r.id] = result[r.id] + ' / ' + str(r.ref) + ' / ' + str(r.identification_number)
         return result.items()

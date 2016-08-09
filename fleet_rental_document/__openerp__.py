@@ -21,6 +21,9 @@
         "web_form_svg",
         "fleet_vehicle_color",
         "report",
+        "sale_membership",
+        "fleet_vehicle_color",
+        "fleet_branch",
     ],
     "external_dependencies": {"python": ['wand'], "bin": []},
     "data": [
@@ -36,6 +39,7 @@
         "views/ir_sequence.xml",
         "data/svg_vehicle_part.xml",
         "data/items_to_check.xml",
+        "data/personal.xml",
         'rent_report.xml',
         'views/report_rent.xml',
     ],
