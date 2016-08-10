@@ -1,0 +1,3 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+access_fleet_branch,fleet_branch,model_fleet_branch_branch,,1,0,0,0
+access_fleet_branch_manager,fleet_branch_manager,model_fleet_branch_branch,base.group_sale_manager,1,1,1,1

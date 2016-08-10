@@ -81,7 +81,7 @@
         <field name="res_model">fleet_booking.transfer</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[('dest_branch.users_ids','=', uid)]</field>
+        <field name="domain">[('dest_branch.branch_officer_ids','=', uid)]</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Click to create a new transfer.
@@ -93,7 +93,7 @@
         <field name="res_model">fleet_booking.transfer</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[('source_branch.users_ids','=', uid)]</field>
+        <field name="domain">[('source_branch.branch_officer_ids','=', uid)]</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Click to create a new transfer.

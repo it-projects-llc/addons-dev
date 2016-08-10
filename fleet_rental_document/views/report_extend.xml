@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <template id="report_extend_document" inherit_id="report_rent_document">
+      <xpath expr="//div[@id='vehicle_parts']" position="attributes">
+        <attribute name="style">display:none</attribute>
+      </xpath>
+      <xpath expr="//div[@id='checklist']" position="attributes">
+        <attribute name="style">display:none</attribute>
+      </xpath>
+      <xpath expr="//p/span[@t-field='doc.return_date']" position="after">
+        <p>New Return Date: <span t-field="doc.new_return_date" t-field-options='{"widget":"date","format":"short"}'/></p>
+      </xpath>
+    </template>
+
+    <template id="report_extend">
+      <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="doc">
+          <t t-call="fleet_rental_document.report_extend_document" t-lang="doc.partner_id.lang"/>
+        </t>
+      </t>
+    </template>
+
+    <report
+        id="report_document_extend"
+        string="Extend"
+        model="fleet_rental.document_extend"
+        report_type="qweb-pdf"
+        file="fleet_rental_document.report_extend"
+        name="fleet_rental_document.report_extend"
+        />
+
+  </data>
+</openerp>
+

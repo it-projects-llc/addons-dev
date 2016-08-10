@@ -22,7 +22,8 @@ class Vehicle(models.Model):
     asset_id = fields.Many2one('account.asset.asset', compute='compute_asset', inverse='asset_inverse', string='Asset')
     asset_ids = fields.One2many('account.asset.asset', 'vehicle_id')
     # TODO Rename deprecation to depreciation
-    state_id = fields.Many2one('fleet.vehicle.state', readonly=True, ondelete="restrict")
+    state_id = fields.Many2one('fleet.vehicle.state', readonly=True, ondelete="restrict",
+                               default = lambda self: self.env.ref('fleet_rental_document.vehicle_state_active').id)
 
     @api.one
     @api.depends('asset_ids')
@@ -42,9 +43,10 @@ class Vehicle(models.Model):
 
     @api.multi
     def _count_total_documents(self):
-        for rec in self:
-            docs_ids = self.env['fleet_rental.document'].search([('vehicle_id.id', '=', rec.id)])
-            rec.total_documents = len(docs_ids)
+        pass
+        # for rec in self:
+        #     docs_ids = self.env['fleet_rental.document'].search([('vehicle_id.id', '=', rec.id)])
+        #     rec.total_documents = len(docs_ids)
 
 
 class Service(models.Model):
@@ -64,17 +66,17 @@ class Service(models.Model):
 
     @api.multi
     def submit(self):
-        self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_inshop')
+        self.vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_inshop')
         self.write({'state': 'request'})
 
     @api.multi
     def un_submit(self):
-        self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_active')
+        self.vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_active')
         self.write({'state': 'draft'})
 
     @api.multi
     def confirm(self):
-        self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_active')
+        self.vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_active')
         self.write({'state': 'done'})
 
     @api.multi
