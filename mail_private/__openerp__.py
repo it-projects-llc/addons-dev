@@ -2,14 +2,14 @@
 {
     "name": """Internal Messaging""",
     "summary": """Allows you to send private messages to specified recipients only no matter who are in followers list.""",
-    "category": "Social Network",
+    "category": "Discuss",
     "images": [],
     "version": "1.0.0",
     "application": False,
 
     "author": "IT-Projects LLC, Pavel Romanchenko",
     "website": "https://it-projects.info",
-    "license": "GPL-3",
+    "license": "LGPL-3",
     #"price": 9.00,
     #"currency": "EUR",
 
