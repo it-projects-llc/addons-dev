@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template
+                id="assets"
+                name="mail_private_assets"
+                inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script
+                        type="text/javascript"
+                        src="/mail_private/static/src/js/mail_private.js"></script>
+                <script
+                        type="text/javascript"
+                        src="/mail_private/static/src/js/chatter_composer.js"></script>
+            </xpath>
+        </template>
+    </data>
+</openerp>

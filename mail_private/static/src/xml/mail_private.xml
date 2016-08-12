@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+    <t t-extend="mail.Chatter">
+        <t t-jquery="button[title='Send a message']" t-operation="after">
+            <button type="button" class="btn btn-sm btn-primary o_chatter_button_new_internal_message" title="Send internal message">
+                New internal message
+            </button>
+        </t>
+    </t>
+</template>
