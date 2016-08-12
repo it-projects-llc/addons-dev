@@ -15,6 +15,7 @@
 
     "depends": [
         "mail",
+        "mail_base",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [

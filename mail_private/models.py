@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from openerp import api
-from openerp.osv import osv, fields
-from openerp import SUPERUSER_ID
+from openerp import fields, models
 
 
-class mail_compose_message(osv.TransientModel):
+class mail_compose_message(models.TransientModel):
     _inherit = 'mail.compose.message'
 
-    _columns = {
-        'private': fields.boolean('Send Internal Message'),
-    }
+    is_internal = fields.Boolean('Send Internal Message')

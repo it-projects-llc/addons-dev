@@ -2,13 +2,16 @@
 <openerp>
     <data>
         <template
-                id="assets_backend"
-                name="mail_private_assets_backend"
+                id="assets"
+                name="mail_private_assets"
                 inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <script
                         type="text/javascript"
                         src="/mail_private/static/src/js/mail_private.js"></script>
+                <script
+                        type="text/javascript"
+                        src="/mail_private/static/src/js/chatter_composer.js"></script>
             </xpath>
         </template>
     </data>
