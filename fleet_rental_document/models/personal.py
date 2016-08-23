@@ -26,4 +26,3 @@ class PersonalDriveLicense(models.AbstractModel):
     def _check_license_number(self):
         if not re.match(self.license_type_id.regexp_force, self.license_number):
             raise UserError(self.license_type_id.error_message)
-

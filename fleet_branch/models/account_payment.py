@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from openerp import api, fields, models
+from openerp import api
+from openerp import models
 
 
 class AccountPayment(models.Model):
@@ -12,5 +13,3 @@ class AccountPayment(models.Model):
                                             'in', (self.env.user.branch_id.cash_journal_id.id,
                                                    self.env.user.branch_id.bank_journal_id.id)))
         return res
-
-

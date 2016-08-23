@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from openerp import api, fields, models
+from openerp import fields
+from openerp import models
 
 
 class User(models.Model):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import openerp
-from openerp import models, fields, api
+from openerp import fields
+from openerp import models
 
 
 class FleetVehicleColor(models.Model):

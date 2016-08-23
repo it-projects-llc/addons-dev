@@ -11,9 +11,9 @@ class MembershipWizard(models.TransientModel):
     new_membership_type_id = fields.Many2one('sale_membership.type', string='Choose new membership')
 
     action_type = fields.Selection([
-            ('block','Block'),
-            ('demote','Demote'),
-        ])
+        ('block', 'Block'),
+        ('demote', 'Demote'),
+    ])
 
     demoting_reason = fields.Text(string='Demoting reason')
     blocking_reason = fields.Text(string='Blocking reason')
@@ -44,6 +44,3 @@ class MembershipWizard(models.TransientModel):
                                                     'blocked': True,
                                                     'reason': self.blocking_reason,
                                                     })
-
-
-

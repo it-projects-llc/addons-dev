@@ -16,6 +16,7 @@ class FleetRentalDocument(models.Model):
 
     paid_amount = fields.Float(string='Paid Amount', compute="_compute_paid_amount", store=True,
                                digits_compute=dp.get_precision('Product Price'), readonly=True)
+
     @api.multi
     def action_view_invoice(self):
         invoice_ids = self.mapped('invoice_ids')

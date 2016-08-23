@@ -23,7 +23,7 @@ class Vehicle(models.Model):
     asset_ids = fields.One2many('account.asset.asset', 'vehicle_id')
     # TODO Rename deprecation to depreciation
     state_id = fields.Many2one('fleet.vehicle.state', readonly=True, ondelete="restrict",
-                               default = lambda self: self.env.ref('fleet_rental_document.vehicle_state_active').id)
+                               default=lambda self: self.env.ref('fleet_rental_document.vehicle_state_active').id)
 
     @api.one
     @api.depends('asset_ids')
@@ -60,8 +60,8 @@ class Service(models.Model):
     account_invoice_ids = fields.One2many('account.invoice', 'fleet_vehicle_log_services_ids', string='Invoices', copy=False)
     cost_subtype_in_branch = fields.Boolean(related='cost_subtype_id.in_branch')
     attachment_ids = fields.One2many('ir.attachment', 'res_id',
-                                domain=[('res_model', '=', 'fleet.vehicle.log.services')],
-                                string='Attachments')
+                                     domain=[('res_model', '=', 'fleet.vehicle.log.services')],
+                                     string='Attachments')
     attachment_number = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
 
     @api.multi

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime, timedelta
+from datetime import datetime
 from openerp import models, fields, api
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
@@ -9,7 +9,7 @@ import openerp.addons.decimal_precision as dp
 class FleetRentalDocumentReturn(models.Model):
     _name = 'fleet_rental.document_return'
     _inherits = {'fleet_rental.document': 'document_id',
-                 'fleet_rental.document_rent': 'document_rent_id',}
+                 'fleet_rental.document_rent': 'document_rent_id', }
 
     document_id = fields.Many2one('fleet_rental.document', required=True,
                                   ondelete='restrict', auto_join=True)
@@ -21,12 +21,12 @@ class FleetRentalDocumentReturn(models.Model):
         ('draft', 'Draft'),
         ('open', 'Open'),
         ('closed', 'Closed'),
-        ], string='Status', readonly=True, copy=False, index=True, default='draft')
+    ], string='Status', readonly=True, copy=False, index=True, default='draft')
     type = fields.Selection([
         ('rent', 'Rent'),
         ('extend', 'Extend'),
         ('return', 'Return'),
-        ], readonly=True, index=True, change_default=True)
+    ], readonly=True, index=True, change_default=True)
     origin = fields.Char(string='Source Document',
                          help="Reference of the document that produced this document.",
                          readonly=True, states={'draft': [('readonly', False)]})
@@ -87,7 +87,6 @@ class FleetRentalDocumentReturn(models.Model):
                                         digits_compute=dp.get_precision('Product Price'),
                                         readonly=True)
 
-
     @api.one
     @api.depends('return_datetime')
     def _compute_extra_hours(self):
@@ -97,15 +96,15 @@ class FleetRentalDocumentReturn(models.Model):
             days = (end - start).days
             if self.document_rent_id.extend_return_date:
                 return_date = datetime.strptime(self.document_rent_id.extend_return_date,
-                                                       DEFAULT_SERVER_DATE_FORMAT)
+                                                DEFAULT_SERVER_DATE_FORMAT)
             else:
                 return_date = datetime.strptime(self.document_rent_id.return_date,
-                                                       DEFAULT_SERVER_DATE_FORMAT)
+                                                DEFAULT_SERVER_DATE_FORMAT)
 
             exit_date = datetime.strptime(self.exit_datetime.split()[0],
-                                             DEFAULT_SERVER_DATE_FORMAT)
+                                          DEFAULT_SERVER_DATE_FORMAT)
             days = days - (return_date - exit_date).days
-            extra_hours = days * 24 + (end - start).seconds/3600
+            extra_hours = days * 24 + (end - start).seconds / 3600
             if extra_hours > 0:
                 self.extra_hours = extra_hours
                 self.extra_hours_charge = (self.daily_rental_price / 24) * extra_hours
@@ -157,8 +156,8 @@ class FleetRentalDocumentReturn(models.Model):
     def _compute_total_rent_price(self):
         for record in self:
             record.total_rent_price = record.period_rent_price + record.extra_driver_charge + \
-                                      record.other_extra_charges + record.extra_hours_charge + \
-                                      record.extra_kilos_charge + record.penalties
+                record.other_extra_charges + record.extra_hours_charge + \
+                record.extra_kilos_charge + record.penalties
 
     @api.depends('return_datetime')
     def _compute_total_rental_period(self):
@@ -180,7 +179,7 @@ class FleetRentalDocumentReturn(models.Model):
         for record in self:
             if record.total_rental_period:
                 record.extra_driver_charge = record.total_rental_period * \
-                                             record.extra_driver_charge_per_day
+                    record.extra_driver_charge_per_day
 
     @api.multi
     def action_confirm(self):
@@ -202,7 +201,7 @@ class FleetRentalDocumentReturn(models.Model):
         for ret in self:
             ret.state = 'open'
             ret.document_rent_id.sudo().state = 'returned'
-            ret.vehicle_id.state_id= self.env.ref('fleet_rental_document.vehicle_state_active')
+            ret.vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_active')
 
     @api.multi
     def print_return(self):

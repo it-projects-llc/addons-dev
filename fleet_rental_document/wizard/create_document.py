@@ -10,12 +10,11 @@ class FleetRentalCreateDocumentWizard(models.TransientModel):
         return self._context.get('default_model')
 
     document_rent = fields.Many2one('fleet_rental.document_rent', string='Agreement Number',
-                                       domain = lambda self: [('vehicle_id.branch_id', '=', self.env.user.branch_id.id), ('state', 'in', ['confirmed', 'extended'])])
+                                    domain=lambda self: [('vehicle_id.branch_id', '=', self.env.user.branch_id.id), ('state', 'in', ['confirmed', 'extended'])])
     vehicle = fields.Many2one('fleet.vehicle', string='Car Plate',
-                                domain = lambda self: [('branch_id', '=', self.env.user.branch_id.id), ('state_id', '=', self.env.ref('fleet_rental_document.vehicle_state_booked').id)])
+                              domain=lambda self: [('branch_id', '=', self.env.user.branch_id.id), ('state_id', '=', self.env.ref('fleet_rental_document.vehicle_state_booked').id)])
 
     document_model = fields.Char(default=_default_document_model)
-
 
     @api.onchange('document_rent')
     def _onchange_document_rent(self):

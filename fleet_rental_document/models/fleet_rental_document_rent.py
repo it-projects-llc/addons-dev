@@ -28,12 +28,12 @@ class FleetRentalDocumentRent(models.Model):
         ('extended', 'Extended'),
         ('returned', 'Returned'),
         ('cancel', 'Cancelled'),
-        ], string='Status', readonly=True, copy=False, index=True, default='draft')
+    ], string='Status', readonly=True, copy=False, index=True, default='draft')
     type = fields.Selection([
         ('rent', 'Rent'),
         ('extend', 'Extend'),
         ('return', 'Return'),
-        ], readonly=True, index=True, change_default=True)
+    ], readonly=True, index=True, change_default=True)
     origin = fields.Char(string='Source Document',
                          help="Reference of the document that produced this document.",
                          readonly=True, states={'draft': [('readonly', False)]})
@@ -55,10 +55,10 @@ class FleetRentalDocumentRent(models.Model):
     exit_datetime = fields.Datetime(string='Exit Date and Time', required=True,
                                     default=fields.Datetime.now)
     return_date = fields.Date(string='Return Date', required=True,
-                                  default=fields.Datetime.to_string(datetime.utcnow() + timedelta(days=1)))
+                              default=fields.Datetime.to_string(datetime.utcnow() + timedelta(days=1)))
     extend_return_date = fields.Date(string='Last extend return date',
-                                             help='Last extend document return Date',
-                                             default=False, readonly=True)
+                                     help='Last extend document return Date',
+                                     default=False, readonly=True)
     total_rental_period = fields.Integer(string='Total Rental Period',
                                          compute="_compute_total_rental_period",
                                          store=True, readonly=True)
@@ -131,7 +131,7 @@ class FleetRentalDocumentRent(models.Model):
         items = self.env['fleet_rental.item_to_check'].search([])
         parts = self.env['fleet_rental.svg_vehicle_part'].search([])
 
-        result['check_line_ids'] = [(5, 0, 0)] + [(0, 0, {'item_id': item.id, 'exit_check_yes': False, 'exit_check_no': False, 'exit_check_yes': False, 'exit_check_no': False,}) for item in items]
+        result['check_line_ids'] = [(5, 0, 0)] + [(0, 0, {'item_id': item.id, 'exit_check_yes': False, 'exit_check_no': False, 'exit_check_yes': False, 'exit_check_no': False, }) for item in items]
         result['part_line_ids'] = [(5, 0, 0)] + [(0, 0, {'part_id': part.id, 'path_ID': part.path_ID}) for part in parts]
         return result
 
@@ -157,13 +157,13 @@ class FleetRentalDocumentRent(models.Model):
         for record in self:
             if record.total_rental_period:
                 record.extra_driver_charge = record.total_rental_period * \
-                                             record.extra_driver_charge_per_day
+                    record.extra_driver_charge_per_day
 
     @api.depends('period_rent_price', 'extra_driver_charge', 'other_extra_charges')
     def _compute_total_rent_price(self):
         for record in self:
             record.total_rent_price = record.period_rent_price + \
-                                      record.extra_driver_charge + record.other_extra_charges
+                record.extra_driver_charge + record.other_extra_charges
 
     @api.depends('total_rent_price', 'advanced_deposit')
     def _compute_balance(self):
@@ -243,10 +243,10 @@ class FleetRentalDocumentRent(models.Model):
                 ('state', '=', 'confirmed')],
                 order='new_return_date desc', limit=1)
             document_return = document_return_obj.create({'document_rent_id': rent.id,
-                                                          'advanced_deposit': last_extend and \
-                                                          last_extend.advanced_deposit or \
+                                                          'advanced_deposit': last_extend and
+                                                          last_extend.advanced_deposit or
                                                           rent.advanced_deposit,
-                                                      })
+                                                          })
         return self.action_view_document_return(document_return.id)
 
     @api.multi

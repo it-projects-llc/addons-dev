@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 
-import models
-import membership_wizard
+from . import models
+from . import membership_wizard

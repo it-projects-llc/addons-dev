@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-import openerp
 from openerp import models, fields, api
-from datetime import datetime, date, timedelta
+from datetime import datetime
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 import openerp.addons.decimal_precision as dp
 
@@ -21,12 +20,12 @@ class FleetRentalDocumentExtend(models.Model):
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
-        ], string='Status', readonly=True, copy=False, index=True, default='draft')
+    ], string='Status', readonly=True, copy=False, index=True, default='draft')
     type = fields.Selection([
         ('rent', 'Rent'),
         ('extend', 'Extend'),
         ('return', 'Return'),
-        ], readonly=True, index=True, change_default=True)
+    ], readonly=True, index=True, change_default=True)
     origin = fields.Char(string='Source Document',
                          help="Reference of the document that produced this document.",
                          readonly=True, states={'draft': [('readonly', False)]})
@@ -84,7 +83,7 @@ class FleetRentalDocumentExtend(models.Model):
     def _compute_total_rent_price(self):
         for record in self:
             record.total_rent_price = record.period_rent_price + \
-                                      record.extra_driver_charge + record.other_extra_charges
+                record.extra_driver_charge + record.other_extra_charges
 
     @api.depends('daily_rental_price', 'total_rental_period')
     def _compute_period_rent_price(self):
@@ -106,7 +105,7 @@ class FleetRentalDocumentExtend(models.Model):
         for record in self:
             if record.total_rental_period:
                 record.extra_driver_charge = record.total_rental_period * \
-                                             record.extra_driver_charge_per_day
+                    record.extra_driver_charge_per_day
 
     @api.model
     def create(self, vals):

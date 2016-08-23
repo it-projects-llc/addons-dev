@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import fleet_branch
-import fleet
-import res_users
-import account_payment
+from . import fleet_branch
+from . import fleet
+from . import res_users
+from . import account_payment
