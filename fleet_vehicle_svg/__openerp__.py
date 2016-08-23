@@ -13,8 +13,8 @@
     'version': '0.1',
 
     'depends': ['base', 'report', 'fleet', 'web_form_svg'],
-    'external_dependencies' : {
-        'python' : ['wand'],
+    'external_dependencies': {
+        'python': ['wand'],
     },
     'data': [
         'security/ir.model.access.csv',

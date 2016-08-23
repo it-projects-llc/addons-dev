@@ -6,7 +6,7 @@ from wand.image import Image
 from openerp import models, fields, api
 
 
-class fleet_vehicle(models.Model):
+class FleetVehicle(models.Model):
     _inherit = 'fleet.vehicle'
 
     part_ids = fields.One2many('fleet.vehicle.part', 'vehicle_id', 'Parts')
@@ -28,13 +28,13 @@ class fleet_vehicle(models.Model):
                 vehicle.png_file = base64.b64encode(img.make_blob('png'))
 
 
-class fleet_vehicle_part(models.Model):
+class FleetVehiclePart(models.Model):
     _name = 'fleet.vehicle.part'
 
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle')
     part_id = fields.Char('Part ID')
     name = fields.Char('Name')
     state = fields.Selection([('operative', 'Operative'),
-                              ('broken', 'Broken')], 
+                              ('broken', 'Broken')],
                              string='State',
                              default='operative')

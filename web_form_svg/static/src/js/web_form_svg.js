@@ -97,7 +97,7 @@ var FieldSVG = relational.AbstractManyField.extend({
                     return;
                 var indexed = {};
                 _.each(data, function(el) {
-                    indexed[el['id']] = el;
+                    indexed[el.id] = el;
                 });
                 data = _.map(values, function(el) { return indexed[el]; });
                 self.color_element(data);
