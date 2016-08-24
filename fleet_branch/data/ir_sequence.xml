@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data noupdate="0">
+
+    <record id="seq_account_journal_cash_codes" model="ir.sequence">
+      <field name="name">Cash journal codes</field>
+      <field name="code">account.journal_cash</field>
+      <field name="prefix">CSH</field>
+      <field name="padding">2</field>
+      <field name="number_next">2</field>
+      <field name="company_id" eval="False"/>
+    </record>
+    <record id="seq_account_journal_bank_codes" model="ir.sequence">
+      <field name="name">Bank journal codes</field>
+      <field name="code">account.journal_bank</field>
+      <field name="prefix">BNK</field>
+      <field name="padding">2</field>
+      <field name="number_next">2</field>
+      <field name="company_id" eval="False"/>
+    </record>
+
+  </data>
+</openerp>

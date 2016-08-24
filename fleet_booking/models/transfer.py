@@ -29,37 +29,37 @@ class VehicleTransfer(models.Model):
 
     @api.multi
     def un_submit(self):
-        self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_active')
+        self.vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_active')
         self.vehicle_id.branch_id = self.old_branch
         self.write({'state': 'draft'})
 
     @api.multi
     def confirm_delivery(self):
         self.write({'delivery_state': 'delivered'})
-        self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_in_transfer')
+        self.vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_in_transfer')
         if self.receiving_state == 'received':
             self.write({'state': 'done'})
-            self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_active')
+            self.vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_active')
             self.vehicle_id.branch_id = self.dest_branch
 
     @api.multi
     def un_confirm_delivery(self):
-        self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_in_transfer')
+        self.vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_in_transfer')
         self.vehicle_id.branch_id = False
         self.write({'state': 'transfer', 'delivery_state': 'not_delivered'})
 
     @api.multi
     def confirm_receiving(self):
         self.write({'receiving_state': 'received'})
-        self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_in_transfer')
+        self.vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_in_transfer')
         if self.delivery_state == 'delivered':
             self.write({'state': 'done'})
-            self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_active')
+            self.vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_active')
             self.vehicle_id.branch_id = self.dest_branch
 
     @api.multi
     def un_confirm_receiving(self):
-        self.vehicle_id.state_id = self.env.ref('fleet.vehicle_state_in_transfer')
+        self.vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_in_transfer')
         self.vehicle_id.branch_id = False
         self.write({'state': 'transfer', 'receiving_state': 'not_received'})
 

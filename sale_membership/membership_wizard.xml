@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record id="membership_wizard_view_form" model="ir.ui.view">
+      <field name="name">Membership Wizard</field>
+      <field name="model">sale_membership.membership_wizard</field>
+      <field name="arch" type="xml">
+        <form string="Manage membership">
+          <sheet>
+            <group>
+              <field name="partner_id" options="{'no_create' : True}"/>
+              <field name="membership_type_id"/>
+              <field name="action_type"/>
+              <field name="new_membership_type_id" attrs="{'invisible': [('action_type', '!=', 'demote')]}"/>
+              <field name="demoting_reason" attrs="{'invisible': [('action_type', '!=', 'demote')]}"/>
+              <field name="blocking_reason" attrs="{'invisible': [('action_type', '!=', 'block')]}"/>
+            </group>
+          </sheet>
+          <footer>
+            <button name="apply_membership" string="Apply" type="object" class="oe_highlight"/>
+            or
+            <button string="Close" class="oe_link" special="cancel"/>
+          </footer>
+        </form>
+      </field>
+    </record>
+
+    <record id="action_view_manage_membership_wizard" model="ir.actions.act_window">
+      <field name="name">Manage Membership</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">sale_membership.membership_wizard</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
+    </record>
+
+    <menuitem action="action_view_manage_membership_wizard" parent="base.menu_sales" id="sale_manage_membership_menu" sequence="2"/>
+
+  </data>
+</openerp>

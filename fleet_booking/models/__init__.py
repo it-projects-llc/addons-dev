@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import fleet_booking
-import transfer
-import personal
+from . import fleet_booking
+from . import transfer
+from . import personal

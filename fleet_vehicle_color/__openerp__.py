@@ -9,13 +9,13 @@
     "author": "IT-Projects LLC, Ildar Nasyrov",
     "website": "https://it-projects.info",
     "license": "LGPL-3",
-    #"price": 9.00,
-    #"currency": "EUR",
+    # "price": 9.00,
+    # "currency": "EUR",
 
     "depends": [
         "fleet",
-#        "web_widget_color",
-# TODO: port web_widget_color on 9.0
+        #        "web_widget_color",
+        # TODO: port web_widget_color on 9.0
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [

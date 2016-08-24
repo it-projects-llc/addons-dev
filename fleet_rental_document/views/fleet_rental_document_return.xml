@@ -83,7 +83,7 @@
                         groups="base.group_user"
                         states="open"/>
                 <button name="action_confirm" string="Confirm Return" type="object"
-                      attrs="{'invisible': [('balance', '&gt;', 0), ('diff_pa_csp', '!=', 0)]}"/>
+                      attrs="{'invisible': ['|', ('state', 'in', ['closed']), '&amp;', ('balance', '&gt;', 0), ('diff_pa_csp', '!=', 0)]}"/>
                 <button name="print_return" string="Print" type="object"
                       attrs="{'invisible': [('state', 'in', ['draft', 'open'])]}"/>
                 <field name="state" widget="statusbar" statusbar_visible="draft,open,closed"/>
@@ -112,7 +112,7 @@
               </group>
               <group>
                 <group col="2" string="Rental Details">
-                  <field name="rent_return_datetime" invisible="1"/>
+                  <field name="document_rent_id" invisible="1"/>
                   <field name="allowed_kilometer_per_day" readonly="1"/>
                   <field name="rate_per_extra_km" readonly="1"/>
                   <field name="daily_rental_price" readonly="1"/>
@@ -162,6 +162,17 @@
               </group>
             </sheet>
           </form>
+        </field>
+      </record>
+
+      <record id="view_document_return_filter" model="ir.ui.view">
+        <field name="name">fleet_rental.document_return.select</field>
+        <field name="model">fleet_rental.document_return</field>
+        <field name="arch" type="xml">
+          <search string="Search Document">
+            <field name="name"/>
+            <field name="license_plate"/>
+          </search>
         </field>
       </record>
 

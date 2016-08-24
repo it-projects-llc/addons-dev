@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record id="create_document_wizard_view_form" model="ir.ui.view">
+      <field name="name">Received Vehicle</field>
+      <field name="model">fleet_rental.create_document_wizard</field>
+      <field name="arch" type="xml">
+        <form string="Received Vehicle">
+          <sheet>
+            <div>
+              <p class="oe_view_nocontent_create">
+                Please Enter Agreement Number or Car Plate to load the relevant contract
+              </p>
+            </div>
+            <group>
+              <field name="document_rent" options="{'no_create' : True, 'no_open': True}"/>
+              <field name="vehicle" options="{'no_create': True, 'no_open': True}"/>
+            </group>
+          </sheet>
+          <footer>
+            <button name="action_create" string="Apply" type="object"
+                    attrs="{'invisible': ['|',('document_rent', '=', False),('vehicle', '=', False)]}"/>
+          </footer>
+        </form>
+      </field>
+    </record>
+
+    <record id="action_view_create_return_document_wizard" model="ir.actions.act_window">
+      <field name="name">Received Vehicle</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">fleet_rental.create_document_wizard</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="context">{'default_model': 'fleet_rental.document_return'}</field>
+      <field name="target">new</field>
+      <field name="help" type="html">
+        <p class="oe_view_nocontent_create">
+          Please Enter Agreement Number or Car Plate to load the relevant contract
+        </p>
+      </field>
+    </record>
+
+    <record id="action_view_create_extend_document_wizard" model="ir.actions.act_window">
+      <field name="name">Extend</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">fleet_rental.create_document_wizard</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="context">{'default_model': 'fleet_rental.document_extend'}</field>
+      <field name="target">new</field>
+      <field name="help" type="html">
+        <p class="oe_view_nocontent_create">
+          Please Enter Agreement Number or Car Plate to load the relevant contract
+        </p>
+      </field>
+    </record>
+
+  </data>
+</openerp>

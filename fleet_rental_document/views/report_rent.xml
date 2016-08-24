@@ -79,7 +79,7 @@
               <p>Exit Time: <span t-field="doc.exit_datetime" t-field-options='{"format":"HH:mm"}'/></p>
             </div>
             <div class="col-xs-4">
-              <p>End Date: <span t-field="doc.return_datetime" t-field-options='{"widget":"date","format":"short"}'/></p>
+              <p>End Date: <span t-field="doc.return_date" t-field-options='{"widget":"date","format":"short"}'/></p>
             </div>
           </div>
           <div class="row">
@@ -87,11 +87,11 @@
               <p>Total Rental Period: <span t-field="doc.total_rental_period"/></p>
             </div>
           </div>
-          <div class="row">
+          <div class="row" id="vehicle_parts">
             <h4>Vehicle status</h4>
             <p class="text-center"><img t-att-src="'data:image/png;base64,%s' % doc.png_file" style="width:50%;heght:auto;"/></p>
           </div>
-          <div class="row">
+          <div class="row" id="checklist">
             <table class="table table-condensed">
               <thead>
                 <tr>

@@ -1,2 +1,3 @@
 # -*- coding: utf-8 -*-
-import make_invoice
+from . import make_invoice
+from . import create_document

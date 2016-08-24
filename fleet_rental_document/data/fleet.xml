@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <record id="fleet_rental_document.vehicle_state_active" model="fleet.vehicle.state">
+      <field name="name">Available</field>
+      <field name="sequence">2</field>
+    </record>
+    <record id="fleet_rental_document.vehicle_state_inactive" model="fleet.vehicle.state">
+      <field name="name">Unavailable</field>
+      <field name="sequence">3</field>
+    </record>
+    <record id="fleet_rental_document.vehicle_state_in_transfer" model="fleet.vehicle.state">
+      <field name="name">In transfer</field>
+      <field name="sequence">5</field>
+    </record>
+    <record id="fleet_rental_document.vehicle_state_booked" model="fleet.vehicle.state">
+      <field name="name">Booked</field>
+      <field name="sequence">6</field>
+    </record>
+  </data>
+</openerp>

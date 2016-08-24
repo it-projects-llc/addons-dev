@@ -2,6 +2,13 @@
 <openerp>
     <data>
 
+      <menuitem name="Rental documents" parent="base.menu_base_partner" id="fleet_sale" sequence="2"/>
+      <menuitem name="Rents" parent="fleet_sale" id="fleet_rental_sale" sequence="1"/>
+      <menuitem name="Extends" parent="fleet_sale" id="fleet_rental_sale_extends" sequence="2" groups="group_fleet_rental_extra_menus"/>
+      <menuitem name="Returns" parent="fleet_sale" id="fleet_rental_sale_returns" sequence="3" groups="group_fleet_rental_extra_menus"/>
+      <menuitem action="action_view_create_return_document_wizard" parent="fleet_sale" id="fleet_rental_create_return" sequence="4"/>
+      <menuitem action="action_view_create_extend_document_wizard" parent="fleet_sale" id="fleet_rental_create_extend" sequence="4"/>
+
       <record id='view_fleet_rental_document_rent_tree' model='ir.ui.view'>
         <field name="name">fleet.rental.document.rent.tree</field>
         <field name="model">fleet_rental.document_rent</field>
@@ -12,7 +19,7 @@
             <field name="partner_id"/>
             <field name="vehicle_id"/>
             <field name="exit_datetime"/>
-            <field name="return_datetime"/>
+            <field name="return_date"/>
             <field name="total_rental_period"/>
           </tree>
         </field>
@@ -145,7 +152,7 @@
               <button name="action_book" string="Book Only"
                       attrs="{'invisible': ['|', '|', '|', '|',
                              ('exit_datetime', '=', False),
-                             ('return_datetime', '=', False),
+                             ('return_date', '=', False),
                              ('partner_id', '=', False),
                              ('vehicle_id', '=', False),
                              ('state', '!=', 'draft')]}"
@@ -155,6 +162,7 @@
                       attrs="{'invisible': ['|', ('state', '!=', 'booked'), ('advanced_deposit', '&lt;=', 0)]}"/>
               <button name="print_rent" string="Print" type="object"
                       attrs="{'invisible': [('state', 'in', ['draft', 'booked'])]}"/>
+              <button name="action_extend" states="confirmed,extended" string="Extend" type="object"/>
               <button name="action_create_return" states="confirmed,extended" string="Create Return Document" type="object"/>
               <field name="state" widget="statusbar" statusbar_visible="draft,booked,confirmed,extended,returned"/>
             </header>
@@ -191,7 +199,7 @@
                 <field name="membership_type_id" options='{"no_open": True}'/>
               </group>
               <group string="Vehicle Information">
-                <field name="vehicle_id" domain="[('state_id.name','=','Active'),('branch_id','=', user_branch_id)]"
+                <field name="vehicle_id" domain="[('state_id.name','=','Available'),('branch_id','=', user_branch_id)]"
                        attrs="{'readonly': [('state', 'not in', ('draft'))]}" string="Brand / Model / Plate Number"/>
                 <field name="vehicle_color_id" options='{"no_open": True}'/>
               </group>
@@ -203,8 +211,8 @@
                   <field name="allowed_kilometer_per_day" attrs="{'readonly': [('state', 'not in', ('draft','booked'))]}"/>
                   <field name="odometer_before"/>
                   <field name="exit_datetime" class="oe_inline" attrs="{'readonly': [('state', 'not in', ('draft','booked'))]}"/>
-                  <field name="return_datetime" class="oe_inline" string="Original return time" attrs="{'readonly': [('state', 'not in', ('draft','booked'))]}"/>
-                  <field name="extend_return_datetime" class="oe_inline" string="Extended return time"/>
+                  <field name="return_date" class="oe_inline" string="Original return date" attrs="{'readonly': [('state', 'not in', ('draft','booked'))]}"/>
+                  <field name="extend_return_date" class="oe_inline" string="Extended return date"/>
                   <field name="total_rental_period" class="oe_inline"/>
                   <field name="extra_driver_charge_per_day" class="oe_inline" attrs="{'readonly': [('state', 'not in', ('draft','booked'))]}"/>
                   <field name="other_extra_charges" class="oe_inline" attrs="{'readonly': [('state', 'not in', ('draft','booked'))]}"/>

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 {
     'name': "SVG Widget",
     'summary': """SVG Widget""",
@@ -16,9 +17,9 @@
         'views.xml',
         # 'js.xml',
         # 'pre_install.yml',
-        ],
+    ],
     'qweb': [
-         "static/src/xml/*.xml",
+        "static/src/xml/*.xml",
     ],
     'auto_install': False,
     'installable': True
