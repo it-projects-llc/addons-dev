@@ -1,152 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data>
-<record id="view_fleet_form_inherit" model="ir.ui.view">
-    <field name="name">fleet.vehicle.form.inherit</field>
-    <field name="model">fleet.vehicle</field>
-    <field name="inherit_id" ref="fleet.fleet_vehicle_form"/>
-    <field name="arch" type="xml">
+  <data>
+
+    <record id="view_fleet_form_inherit" model="ir.ui.view">
+      <field name="name">fleet.vehicle.form.inherit</field>
+      <field name="model">fleet.vehicle</field>
+      <field name="inherit_id" ref="fleet_rental_document.fleet_vehicle_rental_form"/>
+      <field name="arch" type="xml">
         <data>
-            <!-- NEW FIELDS -->
-            <xpath expr="//label[@for='tag_ids']" position="before">
-                <label for="branch_id" class="oe_edit_only"/>
-                <h2>
-                    <field name="branch_id"/>
-                </h2>
-                <label for="asset_id" class="oe_edit_only"/>
-                <field name='asset_id'/>
-            </xpath>
-            <xpath expr="//field[@name='doors']" position="after">
-                    <field name='model_year'/>
-                    <field name='paid'/>
-                    <field name='remain'/>
-                    <field name='reg_expiry'/>
-                    <field name='ins_expiry'/>
-                    <field name='next_maintain'/>
-            </xpath>
-            <xpath expr="//sheet" position="inside">
-                <notebook colspan="4" groups="fleet_booking.group_accountant">
-                    <page string="Depreciation">
-                        <field name="deprecation_ids" nolabel="1" widget="one2many_list" mode="tree" context="{'vehicle_id': id}">
-                            <tree string="Depreciation Lines" decoration-info="(move_check == False)" create="false">
-                                    <field name="depreciation_date"/>
-                                    <field name="depreciated_value" readonly="1"/>
-                                    <field name="amount" widget="monetary" string="Depreciation"/>
-                                    <field name="remaining_value" readonly="1" widget="monetary" string="Residual"/>
-                                    <field name="move_check" invisible="1"/>
-                                    <field name="parent_state" invisible="1"/>
-                            </tree>
-                        </field>
-                    </page>
-                </notebook>
-            </xpath>
-            <xpath expr="//field[@name='state_id']" position="attributes">
-                <attribute name="clickable"></attribute>
-            </xpath>
+          <!-- NEW FIELDS -->
+          <xpath expr="//label[@for='tag_ids']" position="before">
+            <label for="branch_id" class="oe_edit_only"/>
+            <h2>
+              <field name="branch_id"/>
+            </h2>
+            <label for="asset_id" class="oe_edit_only"/>
+            <field name='asset_id'/>
+          </xpath>
+          <xpath expr="//sheet/group[3]/group" position="after">
+            <group>
+              <field name='paid'/>
+              <field name='remain'/>
+              <field name='reg_expiry'/>
+              <field name='ins_expiry'/>
+              <field name='next_maintain'/>
+            </group>
+          </xpath>
+          <xpath expr="//sheet/group[1]/group[1]" position="inside">
+            <field name='model_year'/>
+          </xpath>
+          <xpath expr="//sheet" position="inside">
+            <notebook groups="fleet_booking.group_accountant,fleet_booking.group_vehicles_support_officer">
+              <page string="Depreciation">
+                <field name="depreciation_ids" nolabel="1" widget="one2many_list" mode="tree" context="{'vehicle_id': id}">
+                  <tree string="Depreciation Lines" decoration-info="(move_check == False)" create="false">
+                    <field name="depreciation_date"/>
+                    <field name="depreciated_value" readonly="1"/>
+                    <field name="amount" widget="monetary" string="Depreciation"/>
+                    <field name="remaining_value" readonly="1" widget="monetary" string="Residual"/>
+                    <field name="move_check" invisible="1"/>
+                    <field name="parent_state" invisible="1"/>
+                  </tree>
+                </field>
+              </page>
+              <page string="Lease Installments dates">
+                <field name="lease_installment_date_ids" widget='one2many' nolabel="1" mode="tree">
+                  <tree string="Lease Installments dates" editable="bottom">
+                    <field name="installment_date"/>
+                    <field name="amount"/>
+                  </tree>
+                </field>
+              </page>
+              <page string="Insurance Installments dates">
+                <field name="insurance_installment_date_ids" widget='one2many' nolabel="1" mode="tree">
+                  <tree string="Insurance Installments dates" editable="bottom">
+                    <field name="installment_date"/>
+                    <field name="amount"/>
+                  </tree>
+                </field>
+              </page>
+            </notebook>
+          </xpath>
+          <xpath expr="//field[@name='state_id']" position="attributes">
+            <attribute name="clickable"></attribute>
+          </xpath>
         </data>
-    </field>
-</record>
-<record id="fleet_vehicle_log_services_form_inherit" model="ir.ui.view">
-    <field name="name">fleet.vehicle.log.services.form.inherit</field>
-    <field name="model">fleet.vehicle.log.services</field>
-    <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_form"/>
-    <field name="arch" type="xml">
+      </field>
+    </record>
+
+    <record id="fleet_vehicle_log_services_form_inherit" model="ir.ui.view">
+      <field name="name">fleet.vehicle.log.services.form.inherit</field>
+      <field name="model">fleet.vehicle.log.services</field>
+      <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_form"/>
+      <field name="arch" type="xml">
         <data>
-            <xpath expr="//field[@name='cost_subtype_id']" position="after">
-                <field name="cost_subtype_in_branch" invisible="True"/>
-            </xpath>
-            <xpath expr="//field[@name='cost_ids']/.." position="after">
-                <group string="Invoices" groups="fleet_booking.group_accountant">
-                    <field name="account_invoice_ids" nolabel="1"/>
-                </group>
-            </xpath>
+          <xpath expr="//field[@name='cost_subtype_id']" position="after">
+            <field name="cost_subtype_in_branch" invisible="True"/>
+          </xpath>
+          <xpath expr="//field[@name='cost_ids']/.." position="after">
+            <group string="Invoices" groups="fleet_booking.group_accountant">
+              <field name="account_invoice_ids" nolabel="1"/>
+            </group>
+          </xpath>
         </data>
-    </field>
-</record>
-<record model="ir.ui.view" id="fleet_vehicle_log_services_form_inherit_buttons">
-    <field name="name">fleet.vehicle.log.services.form.inherit.buttons</field>
-    <field name="model">fleet.vehicle.log.services</field>
-    <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_form"/>
-    <field name="arch" type="xml">
-            <xpath expr="//sheet" position="before">
-                <header>
-                    <button name="submit" states="draft" string="Submit" type="object" class="oe_highlight" groups="fleet_booking.group_branch_officer"/>
-                    <button name="un_submit" states="request" string="Cancel submit" type="object" groups="fleet_booking.group_branch_officer"/>
-                    <button name="confirm" attrs="{'invisible': [('state', '!=', 'request')]}"  string="Confirm" type="object" class="oe_highlight" groups="fleet_booking.group_branch_officer,fleet_booking.group_vehicles_support_officer"/>
-                    <button name="submit" attrs="{'invisible': [('state', '!=', 'done')]}"  string="Cancel confirm" type="object" groups="fleet_booking.group_branch_officer,fleet_booking.group_vehicles_support_officer"/>
-                    <button name="approve" states="done" string="Approve" type="object" class="oe_highlight" groups="fleet_booking.group_accountant"/>
-                    <button name="confirm" states="paid" string="Cancel approve" type="object" groups="fleet_booking.group_accountant"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,request,done,paid"/>
-                </header>
-            </xpath>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="fleet_vehicle_log_services_form_inherit_buttons">
+      <field name="name">fleet.vehicle.log.services.form.inherit.buttons</field>
+      <field name="model">fleet.vehicle.log.services</field>
+      <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//sheet" position="before">
+          <header>
+            <button name="submit" states="draft" string="Submit" type="object" class="oe_highlight" groups="fleet_booking.group_branch_officer"/>
+            <button name="un_submit" states="request" string="Cancel submit" type="object" groups="fleet_booking.group_branch_officer"/>
+            <button name="confirm" attrs="{'invisible': [('state', '!=', 'request')]}"  string="Confirm" type="object" class="oe_highlight" groups="fleet_booking.group_branch_officer,fleet_booking.group_vehicles_support_officer"/>
+            <button name="submit" attrs="{'invisible': [('state', '!=', 'done')]}"  string="Cancel confirm" type="object" groups="fleet_booking.group_branch_officer,fleet_booking.group_vehicles_support_officer"/>
+            <button name="approve" states="done" string="Approve" type="object" class="oe_highlight" groups="fleet_booking.group_accountant"/>
+            <button name="confirm" states="paid" string="Cancel approve" type="object" groups="fleet_booking.group_accountant"/>
+            <field name="state" widget="statusbar" statusbar_visible="draft,request,done,paid"/>
+          </header>
+        </xpath>
         <xpath expr="//label[@for='odometer']/../.." position="before">
-            <div class="oe_button_box" name="button_box">
-                <button name="action_get_attachment_tree_view"
-                        class="oe_stat_button"
-                        icon="fa-book"
-                        type="object">
-                    <field name="attachment_number" widget="statinfo" string="Attachments"/>
-                </button>
-            </div>
-        </xpath>
-    </field>
-</record>
-<record model='ir.actions.act_window' id='vehicle_documents_act'>
-    <field name="name">Vehicle documents</field>
-    <field name="res_model">fleet_rental.document</field>
-    <field name="view_type">form</field>
-    <field name="domain">[('vehicle_id', '=', active_id)]</field>
-    <field name="view_mode">tree,form</field>
-</record>
-<record model="ir.ui.view" id="fleet_vehicle_form_inherit_documents">
-    <field name="name">fleet.vehicle.form.inherit.documents</field>
-    <field name="model">fleet.vehicle</field>
-    <field name="inherit_id" ref="fleet.fleet_vehicle_form"/>
-    <field name="arch" type="xml">
-        <xpath expr="//div[@name='button_box']" position="inside">
-            <button type="action"
+          <div class="oe_button_box" name="button_box">
+            <button name="action_get_attachment_tree_view"
                     class="oe_stat_button"
-                    id="invoice_button"
-                    icon="fa-pencil-square-o"
-                    name="%(vehicle_documents_act)d">
-                <div class="o_form_field o_stat_info">
-                    <span class="o_stat_value">
-                        <field name="total_documents"/>
-                    </span>
-                    <span class="o_stat_text">Documents</span>
-                </div>
+                    icon="fa-book"
+                    type="object">
+              <field name="attachment_number" widget="statinfo" string="Attachments"/>
             </button>
+          </div>
         </xpath>
-    </field>
-</record>
-<!--BRANCH OFFICER FORM BEHAVIOR CUSTOMISATION-->
-<!--HIDE Included Services-->
-<record id="fleet_vehicle_log_services_form_inherit_bo" model="ir.ui.view">
-    <field name="name">fleet.vehicle.log.services.form.inherit.bo</field>
-    <field name="model">fleet.vehicle.log.services</field>
-    <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_form"/>
-    <field name="groups_id" eval="[(4, ref('fleet_booking.group_branch_officer'), 0)]"/>
-    <field name="arch" type="xml">
+      </field>
+    </record>
+
+    <record model='ir.actions.act_window' id='vehicle_documents_act'>
+      <field name="name">Vehicle documents</field>
+      <field name="res_model">fleet_rental.document</field>
+      <field name="view_type">form</field>
+      <field name="domain">[('vehicle_id', '=', active_id)]</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.ui.view" id="fleet_vehicle_form_inherit_documents">
+      <field name="name">fleet.vehicle.form.inherit.documents</field>
+      <field name="model">fleet.vehicle</field>
+      <field name="inherit_id" ref="fleet.fleet_vehicle_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//div[@name='button_box']" position="inside">
+          <button type="action"
+                  class="oe_stat_button"
+                  id="invoice_button"
+                  icon="fa-pencil-square-o"
+                  name="%(vehicle_documents_act)d">
+            <div class="o_form_field o_stat_info">
+              <span class="o_stat_value">
+                <field name="total_documents"/>
+              </span>
+              <span class="o_stat_text">Documents</span>
+            </div>
+          </button>
+        </xpath>
+      </field>
+    </record>
+    <!--BRANCH OFFICER FORM BEHAVIOR CUSTOMISATION-->
+    <!--HIDE Included Services-->
+    <record id="fleet_vehicle_log_services_form_inherit_bo" model="ir.ui.view">
+      <field name="name">fleet.vehicle.log.services.form.inherit.bo</field>
+      <field name="model">fleet.vehicle.log.services</field>
+      <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_form"/>
+      <field name="groups_id" eval="[(4, ref('fleet_booking.group_branch_officer'), 0)]"/>
+      <field name="arch" type="xml">
         <data>
-            <xpath expr="//field[@name='cost_ids']/.." position="attributes">
-                <attribute name='attrs'>{'invisible': [('cost_subtype_in_branch', '=', False)]}</attribute>
-            </xpath>
+          <xpath expr="//field[@name='cost_ids']/.." position="attributes">
+            <attribute name='attrs'>{'invisible': [('cost_subtype_in_branch', '=', False)]}</attribute>
+          </xpath>
         </data>
-    </field>
-</record>
-<record id="fleet_vehicle_log_services_form_inherit_bos" model="ir.ui.view">
-    <field name="name">fleet.vehicle.log.services.form.inherit.bos</field>
-    <field name="model">fleet.vehicle.log.services</field>
-    <field name="inherit_id" ref="fleet_vehicle_log_services_form_inherit_buttons"/>
-    <field name="groups_id" eval="[(4, ref('fleet_booking.group_branch_officer'), 0)]"/>
-    <field name="arch" type="xml">
+      </field>
+    </record>
+
+    <record id="fleet_vehicle_log_services_form_inherit_bos" model="ir.ui.view">
+      <field name="name">fleet.vehicle.log.services.form.inherit.bos</field>
+      <field name="model">fleet.vehicle.log.services</field>
+      <field name="inherit_id" ref="fleet_vehicle_log_services_form_inherit_buttons"/>
+      <field name="groups_id" eval="[(4, ref('fleet_booking.group_branch_officer'), 0)]"/>
+      <field name="arch" type="xml">
         <data>
-            <xpath expr="//button[@name='confirm']" position="attributes">
-                <attribute name='attrs'>{'invisible': ['|', ('state', '!=', 'request'),
-                                                      '&amp;',('state', '=', 'request') , ('cost_subtype_in_branch', '=', False)]}</attribute>
-            </xpath>
+          <xpath expr="//button[@name='confirm']" position="attributes">
+            <attribute name='attrs'>{'invisible': ['|', ('state', '!=', 'request'),
+            '&amp;',('state', '=', 'request') , ('cost_subtype_in_branch', '=', False)]}</attribute>
+          </xpath>
         </data>
-    </field>
-</record>
-</data>
+      </field>
+    </record>
+
+  </data>
 </openerp>
