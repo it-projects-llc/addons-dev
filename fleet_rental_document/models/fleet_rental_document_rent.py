@@ -131,7 +131,7 @@ class FleetRentalDocumentRent(models.Model):
         items = self.env['fleet_rental.item_to_check'].search([])
         parts = self.env['fleet_rental.svg_vehicle_part'].search([])
 
-        result['check_line_ids'] = [(5, 0, 0)] + [(0, 0, {'item_id': item.id, 'exit_check_yes': False, 'exit_check_no': False, 'exit_check_yes': False, 'exit_check_no': False, }) for item in items]
+        result['check_line_ids'] = [(5, 0, 0)] + [(0, 0, {'item_id': item.id, 'exit_check_yes': False, 'exit_check_no': False, 'return_check_yes': False, 'return_check_no': False, }) for item in items]
         result['part_line_ids'] = [(5, 0, 0)] + [(0, 0, {'part_id': part.id, 'path_ID': part.path_ID}) for part in parts]
         return result
 
