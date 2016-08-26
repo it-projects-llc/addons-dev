@@ -152,7 +152,7 @@
             <h4>Payment Details</h4>
             <div class="col-xs-12">
               <p>Period Rent Price: <span t-field="doc.period_rent_price"/></p>
-              <p>Extra Driver Charge: <span t-field="doc.extra_driver_charge_per_day"/></p>
+              <p>Extra Driver Charge: <span t-field="doc.extra_driver_charge"/></p>
               <p>Other Extra Charges: <span t-field="doc.other_extra_charges"/></p>
               <p>Total Rent Price: <span t-field="doc.total_rent_price"/></p>
               <p>Advanced Deposit: <span t-field="doc.advanced_deposit"/></p>
