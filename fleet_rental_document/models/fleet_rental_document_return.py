@@ -32,9 +32,9 @@ class FleetRentalDocumentReturn(models.Model):
                          readonly=True, states={'draft': [('readonly', False)]})
     invoice_count = fields.Integer(string='# of Invoices', related='document_id.invoice_count',
                                    readonly=True)
-    rental_account_id = fields.Many2one('account.analytic.account',
+    analytic_account_id = fields.Many2one('account.analytic.account',
                                         string='analytic account for rental', readonly=True,
-                                        related='document_id.rental_account_id')
+                                        related='document_id.analytic_account_id')
     advanced_deposit = fields.Float(string='Advanced Deposit',
                                     digits_compute=dp.get_precision('Product Price'), readonly=True)
     balance = fields.Float(string='Balance', compute="_compute_balance", store=True,

@@ -31,6 +31,10 @@
         name="fleet_rental_document.report_extend"
         />
 
+    <record id='report_extend_document' model='ir.ui.view'>
+      <field name="mode">primary</field>
+    </record>
+
   </data>
 </openerp>
 
