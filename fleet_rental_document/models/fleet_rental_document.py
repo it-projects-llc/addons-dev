@@ -8,14 +8,20 @@ class FleetRentalDocument(models.Model):
 
     invoice_line_ids = fields.One2many('account.invoice.line', 'fleet_rental_document_id',
                                        string='Invoice Lines', copy=False)
-    rental_account_id = fields.Many2one('account.analytic.account',
-                                        string='analytic account for rental', readonly=True)
+    analytic_account_id = fields.Many2one('account.analytic.account',
+                                          string='analytic account for document', readonly=True)
     invoice_ids = fields.Many2many("account.invoice", string='Invoices',
                                    compute="_get_invoiced", readonly=True, copy=False)
     invoice_count = fields.Integer(string='# of Invoices', compute='_get_invoiced', readonly=True)
 
     paid_amount = fields.Float(string='Paid Amount', compute="_compute_paid_amount", store=True,
                                digits_compute=dp.get_precision('Product Price'), readonly=True)
+    type = fields.Selection([
+        ('rent', 'Rent'),
+        ('extend', 'Extend'),
+        ('return', 'Return'),
+        ('vehicle', 'Vehicle'),
+    ], readonly=True, index=True, change_default=True)
 
     @api.multi
     def action_view_invoice(self):
@@ -61,10 +67,10 @@ class FleetRentalDocument(models.Model):
             })
 
     @api.multi
-    @api.depends('rental_account_id.line_ids.move_id.balance_cash_basis')
+    @api.depends('analytic_account_id.line_ids.move_id.balance_cash_basis')
     def _compute_paid_amount(self):
         for record in self:
-            for line in record.rental_account_id.mapped('line_ids').mapped('move_id'):
+            for line in record.analytic_account_id.mapped('line_ids').mapped('move_id'):
                 record.paid_amount += abs(line.balance_cash_basis)
 
     @api.multi

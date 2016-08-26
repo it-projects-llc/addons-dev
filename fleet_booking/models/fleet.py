@@ -5,6 +5,13 @@ from openerp import api, fields, models
 class Vehicle(models.Model):
     _inherit = 'fleet.vehicle'
 
+    _inherits = {'fleet_rental.document': 'document_id'}
+    document_id = fields.Many2one('fleet_rental.document',
+                                  required=True, ondelete='restrict', auto_join=True)
+    asset_id = fields.Many2one('account.asset.asset', ondelete='restrict', readonly=True)
+    product_id = fields.Many2one('product.product', 'Vehicle Product', readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Vendor',
+                                 default=lambda self: self.env.ref('fleet_booking.res_partner_vehicle_vendor').id)
     model_year = fields.Date('Model Year')
     paid = fields.Float('Paid amount')
     remain = fields.Float('Remaining amount')
@@ -14,30 +21,16 @@ class Vehicle(models.Model):
     payments_ids = fields.One2many('account.invoice', 'fleet_vehicle_id', string='Payments')
     total_documents = fields.Integer(compute='_count_total_documents', string="Total documents", default=0)
     depreciation_ids = fields.One2many(related='asset_id.depreciation_line_ids')
-    asset_id = fields.Many2one('account.asset.asset', compute='compute_asset', inverse='asset_inverse', string='Asset')
-    asset_ids = fields.One2many('account.asset.asset', 'vehicle_id')
     state_id = fields.Many2one('fleet.vehicle.state', readonly=True, ondelete="restrict",
                                default=lambda self: self.env.ref('fleet_rental_document.vehicle_state_active').id)
     lease_installment_date_ids = fields.Many2many('fleet_booking.installment_date',
                                                   'fleet_booking_lease_dates_rel')
     insurance_installment_date_ids = fields.Many2many('fleet_booking.installment_date',
                                                       'fleet_booking_insurance_dates_rel')
-
-    @api.one
-    @api.depends('asset_ids')
-    def compute_asset(self):
-        if len(self.asset_ids) > 0:
-            self.asset_id = self.asset_ids[0]
-
-    @api.one
-    def asset_inverse(self):
-        if not self.asset_id.id:
-            return
-        new_asset = self.env['account.asset.asset'].browse(self.asset_id.id)
-        if len(self.asset_ids) > 0:
-            asset = self.env['account.asset.asset'].browse(self.asset_ids[0].id)
-            asset.vehicle_id = False
-        new_asset.vehicle_id = self
+    account_asset_id = fields.Many2one('account.account', string='Accumulated Depreciation Account',
+                                       domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
+    account_depreciation_id = fields.Many2one('account.account', string='Depreciation Expense Account',
+                                              domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
 
     @api.multi
     def _count_total_documents(self):
@@ -45,6 +38,10 @@ class Vehicle(models.Model):
         # for rec in self:
         #     docs_ids = self.env['fleet_rental.document'].search([('vehicle_id.id', '=', rec.id)])
         #     rec.total_documents = len(docs_ids)
+
+    @api.multi
+    def action_view_invoice(self):
+        return self.mapped('document_id').action_view_invoice()
 
 
 class Service(models.Model):

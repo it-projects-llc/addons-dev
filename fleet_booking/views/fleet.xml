@@ -8,7 +8,18 @@
       <field name="inherit_id" ref="fleet_rental_document.fleet_vehicle_rental_form"/>
       <field name="arch" type="xml">
         <data>
-          <!-- NEW FIELDS -->
+          <xpath expr="//header/field[@name='state_id']" position="before">
+            <button name="%(fleet_booking.action_view_make_bill_wizard)d" string="Create Vendor Bill"
+                    type="action" class="btn-primary" />
+          </xpath>
+          <xpath expr="//sheet/div/button[last()]" position="after">
+            <button name="action_view_invoice"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-pencil-square-o">
+              <field name="invoice_count" widget="statinfo" string="Vendor Bills"/>
+            </button>
+          </xpath>
           <xpath expr="//label[@for='tag_ids']" position="before">
             <label for="branch_id" class="oe_edit_only"/>
             <h2>
@@ -16,14 +27,30 @@
             </h2>
             <label for="asset_id" class="oe_edit_only"/>
             <field name='asset_id'/>
+            <label for="partner_id" class="oe_edit_only"/>
+            <field name='partner_id'/>
           </xpath>
           <xpath expr="//sheet/group[3]/group" position="after">
-            <group>
+            <group string="Billing">
               <field name='paid'/>
               <field name='remain'/>
-              <field name='reg_expiry'/>
-              <field name='ins_expiry'/>
-              <field name='next_maintain'/>
+            </group>
+          </xpath>
+          <xpath expr="//sheet/group[3]" position="after">
+            <group>
+              <group string="Registration/Insurance Dates">
+                <field name='reg_expiry'/>
+                <field name='ins_expiry'/>
+              </group>
+              <group string="Maintenance">
+                <field name='next_maintain'/>
+              </group>
+            </group>
+            <group>
+              <group string="Accounts">
+                <field name='account_asset_id'/>
+                <field name='account_depreciation_id'/>
+              </group>
             </group>
           </xpath>
           <xpath expr="//sheet/group[1]/group[1]" position="inside">

@@ -5,4 +5,3 @@ from . import transfer
 from . import personal
 from . import fleet
 from . import account_invoice
-from . import account_asset

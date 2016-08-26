@@ -31,9 +31,9 @@ class FleetRentalDocumentExtend(models.Model):
                          readonly=True, states={'draft': [('readonly', False)]})
     invoice_count = fields.Integer(string='# of Invoices', related='document_id.invoice_count',
                                    readonly=True)
-    rental_account_id = fields.Many2one('account.analytic.account',
+    analytic_account_id = fields.Many2one('account.analytic.account',
                                         string='analytic account for rental', readonly=True,
-                                        related='document_id.rental_account_id')
+                                        related='document_id.analytic_account_id')
     extra_driver_charge_per_day = fields.Float(string='Extra Driver Charge per day',
                                                digits_compute=dp.get_precision('Product Price'),
                                                default=0)
