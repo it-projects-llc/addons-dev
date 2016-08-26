@@ -10,8 +10,7 @@ class Vehicle(models.Model):
                                   required=True, ondelete='restrict', auto_join=True)
     asset_id = fields.Many2one('account.asset.asset', ondelete='restrict', readonly=True)
     product_id = fields.Many2one('product.product', 'Vehicle Product', readonly=True)
-    partner_id = fields.Many2one('res.partner', string='Vendor',
-                                 default=lambda self: self.env.ref('fleet_booking.res_partner_vehicle_vendor').id)
+    partner_id = fields.Many2one('res.partner', string='Vendor')
     model_year = fields.Date('Model Year')
     paid = fields.Float('Paid amount')
     remain = fields.Float('Remaining amount')
