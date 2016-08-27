@@ -31,6 +31,7 @@
         "data/items_to_check.xml",
         "data/personal.xml",
         "data/fleet.xml",
+        "data/res_partner_sequence.xml",
         'security/ir.model.access.csv',
         'security/fleet_rental_document_security.xml',
         'wizard/make_invoice.xml',
