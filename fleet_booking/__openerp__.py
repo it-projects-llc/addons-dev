@@ -33,7 +33,6 @@
         "views/transfer.xml",
         "views/user.xml",
         "data/personal.xml",
-        "data/res_partner_sequence.xml",
     ],
     "qweb": [
     ],
