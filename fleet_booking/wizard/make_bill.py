@@ -34,6 +34,9 @@ class FleetBookingCreateBillWizard(models.TransientModel):
 
         amount = self.amount
 
+        if not document.analytic_account_id:
+            document.document_id.analytic_account_id = self.env['account.analytic.account'].sudo().create({'name': document.name + '_' + document.create_date, 'partner_id': document.partner_id.id}).id
+
         invoice = inv_obj.create({
             'type': 'in_invoice',
             'reference': False,
@@ -49,8 +52,11 @@ class FleetBookingCreateBillWizard(models.TransientModel):
                 'uom_id': document.product_id.uom_id.id,
                 'product_id': document.product_id.id,
                 'fleet_rental_document_id': document.document_id.id,
+                'account_analytic_id': document.document_id.analytic_account_id.id,
             })],
         })
+        if document.asset_id:
+            document.asset_id.invoice_id = invoice
         return invoice
 
     @api.multi
@@ -65,6 +71,10 @@ class FleetBookingCreateBillWizard(models.TransientModel):
         # Create asset if necessary
         if not document.asset_id and document.account_asset_id and document.account_depreciation_id:
             document.asset_id = self._create_asset(document)
+
+        # Create vendor if necessary
+        if not document.partner_id:
+            document.partner_id = self._create_partner(document)
 
         for document in documents:
             amount = self.amount
@@ -83,5 +93,29 @@ class FleetBookingCreateBillWizard(models.TransientModel):
         product = self.env['product.product'].create(vals)
         return product
 
+    def _create_partner(self, document):
+        vals = {
+            'name': document.name + ' Vehicle Vendor',
+            'supplier': True,
+            'customer': False,
+            'type': 'contact',
+        }
+        partner = self.env['res.partner'].create(vals)
+        return partner
+
     def _create_asset(self, document):
-        return
+        vals = {
+            'name': 'Asset category for ' + document.name,
+            'account_asset_id': document.account_asset_id.id,
+            'account_depreciation_id': document.account_depreciation_id.id,
+            'journal_id': self.env['account.journal'].search([('code', '=', 'MISC')])[0].id,
+            'type': 'purchase',
+        }
+        asset_category = self.env['account.asset.category'].create(vals)
+        vals = {
+            'name': 'Asset ' + document.name,
+            'value': document.car_value,
+            'category_id': asset_category.id,
+        }
+        asset = self.env['account.asset.asset'].create(vals)
+        return asset

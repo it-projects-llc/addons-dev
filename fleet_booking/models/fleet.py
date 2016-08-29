@@ -8,17 +8,17 @@ class Vehicle(models.Model):
     _inherits = {'fleet_rental.document': 'document_id'}
     document_id = fields.Many2one('fleet_rental.document',
                                   required=True, ondelete='restrict', auto_join=True)
-    asset_id = fields.Many2one('account.asset.asset', ondelete='restrict', readonly=True)
+    asset_id = fields.Many2one('account.asset.asset', ondelete='restrict', readonly=True, copy=False)
     product_id = fields.Many2one('product.product', 'Vehicle Product', readonly=True)
-    partner_id = fields.Many2one('res.partner', string='Vendor')
+    partner_id = fields.Many2one('res.partner', string='Vendor', copy=False)
     model_year = fields.Date('Model Year')
-    paid = fields.Float('Paid amount')
-    remain = fields.Float('Remaining amount')
+    paid = fields.Float(string='Paid amount', related="document_id.paid_amount", store=True, readonly=True)
+    remain = fields.Float(string='Remaining amount', compute="_compute_remaining_amount",
+                          store=True, readonly=True)
     reg_expiry = fields.Date('Registration expiry')
     ins_expiry = fields.Date('Insurance expiry')
     next_maintain = fields.Date('Next maintenance')
     payments_ids = fields.One2many('account.invoice', 'fleet_vehicle_id', string='Payments')
-    total_documents = fields.Integer(compute='_count_total_documents', string="Total documents", default=0)
     depreciation_ids = fields.One2many(related='asset_id.depreciation_line_ids')
     state_id = fields.Many2one('fleet.vehicle.state', readonly=True, ondelete="restrict",
                                default=lambda self: self.env.ref('fleet_rental_document.vehicle_state_active').id)
@@ -31,12 +31,10 @@ class Vehicle(models.Model):
     account_depreciation_id = fields.Many2one('account.account', string='Depreciation Expense Account',
                                               domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
 
-    @api.multi
-    def _count_total_documents(self):
-        pass
-        # for rec in self:
-        #     docs_ids = self.env['fleet_rental.document'].search([('vehicle_id.id', '=', rec.id)])
-        #     rec.total_documents = len(docs_ids)
+    @api.depends('car_value', 'paid')
+    def _compute_remaining_amount(self):
+        for record in self:
+            record.remain = record.car_value - record.paid
 
     @api.multi
     def action_view_invoice(self):

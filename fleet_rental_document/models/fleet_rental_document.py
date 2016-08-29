@@ -9,7 +9,7 @@ class FleetRentalDocument(models.Model):
     invoice_line_ids = fields.One2many('account.invoice.line', 'fleet_rental_document_id',
                                        string='Invoice Lines', copy=False)
     analytic_account_id = fields.Many2one('account.analytic.account',
-                                          string='analytic account for document', readonly=True)
+                                          string='analytic account for document', readonly=True, copy=False)
     invoice_ids = fields.Many2many("account.invoice", string='Invoices',
                                    compute="_get_invoiced", readonly=True, copy=False)
     invoice_count = fields.Integer(string='# of Invoices', compute='_get_invoiced', readonly=True)
@@ -26,9 +26,13 @@ class FleetRentalDocument(models.Model):
     @api.multi
     def action_view_invoice(self):
         invoice_ids = self.mapped('invoice_ids')
-        action = self.env.ref('account.action_invoice_tree1')
-        list_view_id = self.env.ref('account.invoice_tree').id
-        form_view_id = self.env.ref('account.invoice_form').id
+        action = self.env.ref('account.action_invoice_tree')
+        if self._context.get('view_type', False) == 'supplier':
+            list_view_id = self.env.ref('account.invoice_supplier_tree').id
+            form_view_id = self.env.ref('account.invoice_supplier_form').id
+        else:
+            list_view_id = self.env.ref('account.invoice_tree').id
+            form_view_id = self.env.ref('account.invoice_form').id
 
         result = {
             'name': action.name,
