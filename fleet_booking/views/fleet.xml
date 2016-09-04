@@ -181,6 +181,33 @@
     <record id='fleet.fleet_vehicle_model_brand_act' model='ir.actions.act_window'>
       <field name="name">Brand of Vehicle</field>
     </record>
+    <!-- Rename 'Vehicles Services Logs' to 'Vehicle Maintenance' -->
+    <record id='fleet.fleet_vehicle_log_services_act' model='ir.actions.act_window'>
+      <field name="name">Vehicle Maintenance</field>
+    </record>
+    <record id="fleet.fleet_vehicle_log_services_menu" model="ir.ui.menu">
+      <field name="name">Vehicle Maintenance</field>
+    </record>
+    <!-- Rename 'Service Type' to 'Maintenance Type' -->
+    <record id='fleet.fleet_vehicle_service_types_act' model='ir.actions.act_window'>
+      <field name="name">Maintenance Type</field>
+    </record>
+    <record id="fleet.fleet_vehicle_service_types_menu" model="ir.ui.menu">
+      <field name="name">Maintenance Type</field>
+    </record>
+    <record model='ir.ui.view' id='fleet_vehicle_log_services_form'>
+      <field name="name">fleet.vehicle.log.services.form</field>
+      <field name="model">fleet.vehicle.log.services</field>
+      <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='cost_subtype_id']" position="attributes">
+          <attribute name='string'>Maintenance Type</attribute>
+        </xpath>
+        <xpath expr="//sheet/group[last()]" position="attributes">
+          <attribute name='string'>Description of required maintenance</attribute>
+        </xpath>
+      </field>
+    </record>
 
     <record id='fleet_vehicle_model_form' model='ir.ui.view'>
       <field name="name">fleet.vehicle.model.form</field>
