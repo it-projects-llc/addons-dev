@@ -16,7 +16,8 @@
             <button name="action_view_invoice"
                     type="object"
                     class="oe_stat_button"
-                    icon="fa-pencil-square-o">
+                    icon="fa-pencil-square-o"
+                    context="{'view_type': 'supplier'}">
               <field name="invoice_count" widget="statinfo" string="Vendor Bills"/>
             </button>
           </xpath>
@@ -67,6 +68,7 @@
                     <field name="remaining_value" readonly="1" widget="monetary" string="Residual"/>
                     <field name="move_check" invisible="1"/>
                     <field name="parent_state" invisible="1"/>
+                    <button name="create_move" type="object" widget="widgetonbutton"/>
                   </tree>
                 </field>
               </page>
@@ -142,35 +144,6 @@
       </field>
     </record>
 
-    <record model='ir.actions.act_window' id='vehicle_documents_act'>
-      <field name="name">Vehicle documents</field>
-      <field name="res_model">fleet_rental.document</field>
-      <field name="view_type">form</field>
-      <field name="domain">[('vehicle_id', '=', active_id)]</field>
-      <field name="view_mode">tree,form</field>
-    </record>
-
-    <record model="ir.ui.view" id="fleet_vehicle_form_inherit_documents">
-      <field name="name">fleet.vehicle.form.inherit.documents</field>
-      <field name="model">fleet.vehicle</field>
-      <field name="inherit_id" ref="fleet.fleet_vehicle_form"/>
-      <field name="arch" type="xml">
-        <xpath expr="//div[@name='button_box']" position="inside">
-          <button type="action"
-                  class="oe_stat_button"
-                  id="invoice_button"
-                  icon="fa-pencil-square-o"
-                  name="%(vehicle_documents_act)d">
-            <div class="o_form_field o_stat_info">
-              <span class="o_stat_value">
-                <field name="total_documents"/>
-              </span>
-              <span class="o_stat_text">Documents</span>
-            </div>
-          </button>
-        </xpath>
-      </field>
-    </record>
     <!--BRANCH OFFICER FORM BEHAVIOR CUSTOMISATION-->
     <!--HIDE Included Services-->
     <record id="fleet_vehicle_log_services_form_inherit_bo" model="ir.ui.view">
@@ -199,6 +172,27 @@
             '&amp;',('state', '=', 'request') , ('cost_subtype_in_branch', '=', False)]}</attribute>
           </xpath>
         </data>
+      </field>
+    </record>
+    <!-- Customer request: rename 'Make' to 'Brand'. 'Model make of Vehicle' - 'Brand of Vehicle'  -->
+    <record id="fleet.fleet_vehicle_model_brand_menu" model="ir.ui.menu">
+      <field name="name">Brand of Vehicle</field>
+    </record>
+    <record id='fleet.fleet_vehicle_model_brand_act' model='ir.actions.act_window'>
+      <field name="name">Brand of Vehicle</field>
+    </record>
+
+    <record id='fleet_vehicle_model_form' model='ir.ui.view'>
+      <field name="name">fleet.vehicle.model.form</field>
+      <field name="model">fleet.vehicle.model</field>
+      <field name="inherit_id" ref="fleet.fleet_vehicle_model_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='brand_id']" position="attributes">
+          <attribute name='string'>Brand</attribute>
+        </xpath>
+        <xpath expr="//label[@for='brand_id']" position="attributes">
+          <attribute name='string'>Brand</attribute>
+        </xpath>
       </field>
     </record>
 

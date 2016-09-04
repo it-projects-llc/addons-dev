@@ -21,6 +21,7 @@
     "data": [
         "views/fleet_branch.xml",
         "data/ir_sequence.xml",
+        "data/mail_message_subtype.xml",
         "security/fleet_branch.xml",
         'security/ir.model.access.csv',
     ],
