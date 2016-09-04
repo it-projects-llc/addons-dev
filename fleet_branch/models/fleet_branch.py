@@ -36,14 +36,14 @@ class FleetBranch(models.Model):
                                       domain=[('type', 'in', ('cash'))])
     bank_journal_id = fields.Many2one('account.journal',
                                       domain=[('type', 'in', ('bank'))])
-    vehicle_ids = fields.One2many('fleet.vehicle', 'branch_id')
+    vehicle_ids = fields.One2many('fleet.vehicle', 'branch_id', track_visibility='onchange')
 
 
     @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
-        if 'bank_account_id' in init_values:
-            return 'fleet_branch.mt_test_branch'
+        if 'vehicle_ids' in init_values:
+            return 'fleet_branch.mt_fleet_branch'
         return super(FleetBranch, self)._track_subtype(init_values)
 
     @api.model
