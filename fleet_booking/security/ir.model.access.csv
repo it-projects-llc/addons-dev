@@ -20,3 +20,7 @@ afu1,afu1,fleet.model_fleet_vehicle,group_fleet_adv_user,1,1,0,0
 afu2,afu2,fleet.model_fleet_vehicle_log_services,group_fleet_adv_user,1,1,1,1
 afu3,afu3,fleet.model_fleet_vehicle_log_contract,group_fleet_adv_user,1,1,1,1
 access_installment_date,access_installment_date,model_fleet_booking_installment_date,group_vehicles_support_officer,1,1,1,1
+access_fleet_rental_document_vso,fleet_rental_document_vso,fleet_rental_document.model_fleet_rental_document,group_vehicles_support_officer,1,1,1,1
+access_product_template_vso,product.template vso,product.model_product_template,group_vehicles_support_officer,1,0,1,0
+access_product_product_vso,product.product vso,product.model_product_product,group_vehicles_support_officer,1,0,1,0
+access_product_price_history_vso,prices.history vso,product.model_product_price_history,group_vehicles_support_officer,1,0,1,0
