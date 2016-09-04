@@ -43,7 +43,7 @@ class FleetBranch(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'vehicle_ids' in init_values:
-            return 'fleet_branch.mt_fleet_branch'
+            return 'fleet_branch.mt_vehicle_branch'
         return super(FleetBranch, self)._track_subtype(init_values)
 
     @api.model
