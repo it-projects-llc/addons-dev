@@ -118,6 +118,19 @@
     <menuitem action="fleet_transfers_out" parent="fleet_transfers" id="fleet_transfers_out_menu" groups="fleet.group_fleet_user"/>
     <menuitem action="fleet_transfers_act" parent="fleet_transfers" id="fleet_transfers_all_menu" groups="fleet.group_fleet_user"/>
 
+    <record id="fleet_transfers" model="ir.ui.menu">
+      <field name="groups_id" eval="[(4, [ref('group_branch_officer')], 0)]"/>
+    </record>
+    <record id="fleet_transfers_in_menu" model="ir.ui.menu">
+      <field name="groups_id" eval="[(4, [ref('group_branch_officer')], 0)]"/>
+    </record>
+    <record id="fleet_transfers_out_menu" model="ir.ui.menu">
+      <field name="groups_id" eval="[(4, [ref('group_branch_officer')], 0)]"/>
+    </record>
+    <record id="fleet_transfers_all_menu" model="ir.ui.menu">
+      <field name="groups_id" eval="[(4, [ref('group_branch_officer')], 0)]"/>
+    </record>
+
     <!--ACCESS RIGHTS-->
     <!--VEHICLE SUPPORT OFFICER EXTRA RIGHTS-->
     <record id="fleet_booking_transfer_form_vso" model="ir.ui.view">

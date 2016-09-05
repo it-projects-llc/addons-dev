@@ -187,6 +187,7 @@
     </record>
     <record id="fleet.fleet_vehicle_log_services_menu" model="ir.ui.menu">
       <field name="name">Vehicle Maintenance</field>
+      <field name="groups_id" eval="[(4, [ref('group_branch_officer')], 0)]"/>
     </record>
     <!-- Rename 'Service Type' to 'Maintenance Type' -->
     <record id='fleet.fleet_vehicle_service_types_act' model='ir.actions.act_window'>
@@ -242,6 +243,16 @@
           <attribute name='string'>Brand</attribute>
         </xpath>
       </field>
+    </record>
+
+    <record id="fleet.menu_root" model="ir.ui.menu">
+      <field name="groups_id" eval="[(4, [ref('group_branch_officer')], 0)]"/>
+    </record>
+    <record id="fleet.fleet_vehicles" model="ir.ui.menu">
+      <field name="groups_id" eval="[(4, [ref('group_branch_officer')], 0)]"/>
+    </record>
+    <record id="fleet.fleet_vehicle_menu" model="ir.ui.menu">
+      <field name="groups_id" eval="[(4, [ref('group_branch_officer')], 0)]"/>
     </record>
 
   </data>
