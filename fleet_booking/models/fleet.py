@@ -49,12 +49,19 @@ class Service(models.Model):
                               ('done', 'Done'),
                               ('paid', 'Paid')],
                              string='State', default='draft')
-    account_invoice_ids = fields.One2many('account.invoice', 'fleet_vehicle_log_services_ids', string='Invoices', copy=False)
+    maintenance_type = fields.Selection([('accident', 'Accident'),
+                                         ('emergency', 'Emergency'),
+                                         ('periodic', 'Periodic'),
+                                         ('in-branch', 'In-Branch')],
+                                        string='Maintenance Type', default='in-branch', required=True)
+    account_invoice_ids = fields.One2many('account.invoice', 'fleet_vehicle_log_services_ids',
+                                          string='Invoices', copy=False)
     cost_subtype_in_branch = fields.Boolean(related='cost_subtype_id.in_branch')
     attachment_ids = fields.One2many('ir.attachment', 'res_id',
                                      domain=[('res_model', '=', 'fleet.vehicle.log.services')],
                                      string='Attachments')
     attachment_number = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
+    service_line_ids = fields.One2many('fleet.vehicle.service.line', 'service_log_id')
 
     @api.multi
     def submit(self):
@@ -101,3 +108,11 @@ class ServiceType(models.Model):
     in_branch = fields.Boolean(default=False, readonly=True, invisible=True)
 
 
+class FleetVehicleServiceLine(models.Model):
+    _name = 'fleet.vehicle.service.line'
+
+    item = fields.Char(string='Item', required=True)
+    cost = fields.Float(string='Cost')
+    debit_account = fields.Many2one('account.account', string='Debit Account')
+    credit_account = fields.Many2one('account.account', string='Credit Account')
+    service_log_id = fields.Many2one('fleet.vehicle.log.services')

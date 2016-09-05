@@ -203,8 +203,29 @@
         <xpath expr="//field[@name='cost_subtype_id']" position="attributes">
           <attribute name='string'>Maintenance Type</attribute>
         </xpath>
+        <xpath expr="//field[@name='cost_subtype_id']" position="after">
+          <field name="maintenance_type"/>
+        </xpath>
         <xpath expr="//sheet/group[last()]" position="attributes">
           <attribute name='string'>Description of required maintenance</attribute>
+        </xpath>
+        <xpath expr="//sheet/group[2]" position="attributes">
+          <attribute name='invisible'>True</attribute>
+        </xpath>
+        <xpath expr="//field[@name='cost_ids']" position="attributes">
+          <attribute name='string'>Maintenance Type</attribute>
+        </xpath>
+        <xpath expr="//field[@name='cost_ids']/.." position="after">
+          <group string="Service Description">
+            <field name="service_line_ids" nolabel="1">
+              <tree string="Service Description" editable="bottom">
+                <field name="item"/>
+                <field name="cost"/>
+                <field name="debit_account"/>
+                <field name="credit_account"/>
+              </tree>
+            </field>
+          </group>
         </xpath>
       </field>
     </record>
