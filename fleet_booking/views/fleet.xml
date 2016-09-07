@@ -10,7 +10,7 @@
         <data>
           <xpath expr="//header/field[@name='state_id']" position="before">
             <button name="%(fleet_booking.action_view_make_bill_wizard)d" string="Create Vendor Bill"
-                    type="action" class="btn-primary" />
+                    type="action" class="btn-primary" groups="fleet_booking.group_vehicles_support_officer"/>
           </xpath>
           <xpath expr="//sheet/div/button[last()]" position="after">
             <button name="action_view_invoice"
@@ -107,7 +107,7 @@
             <field name="cost_subtype_in_branch" invisible="True"/>
           </xpath>
           <xpath expr="//field[@name='cost_ids']/.." position="after">
-            <group string="Invoices" groups="fleet_booking.group_accountant">
+            <group string="Invoices" groups="fleet_booking.group_accountant" invisible="True">
               <field name="account_invoice_ids" nolabel="1"/>
             </group>
           </xpath>
@@ -187,22 +187,26 @@
     </record>
     <record id="fleet.fleet_vehicle_log_services_menu" model="ir.ui.menu">
       <field name="name">Vehicle Maintenance</field>
-      <field name="groups_id" eval="[(4, [ref('group_branch_officer')], 0)]"/>
+      <field name="groups_id" eval="[(4, [ref('group_branch_officer')], 0), (4, [ref('group_accountant')], 0)]"/>
     </record>
+
     <!-- Rename 'Service Type' to 'Maintenance Type' -->
     <record id='fleet.fleet_vehicle_service_types_act' model='ir.actions.act_window'>
       <field name="name">Maintenance Type</field>
     </record>
+
     <record id="fleet.fleet_vehicle_service_types_menu" model="ir.ui.menu">
       <field name="name">Maintenance Type</field>
     </record>
-    <record model='ir.ui.view' id='fleet_vehicle_log_services_form'>
+
+    <record id='fleet_vehicle_log_services_form' model='ir.ui.view'>
       <field name="name">fleet.vehicle.log.services.form</field>
       <field name="model">fleet.vehicle.log.services</field>
       <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_form"/>
       <field name="arch" type="xml">
         <xpath expr="//field[@name='cost_subtype_id']" position="attributes">
           <attribute name='string'>Maintenance Type</attribute>
+          <attribute name='invisible'>True</attribute>
         </xpath>
         <xpath expr="//field[@name='cost_subtype_id']" position="after">
           <field name="maintenance_type"/>
@@ -216,17 +220,38 @@
         <xpath expr="//field[@name='cost_ids']" position="attributes">
           <attribute name='string'>Maintenance Type</attribute>
         </xpath>
+	      <xpath expr="//field[@name='cost_ids']/.." position="attributes">
+          <attribute name='invisible'>True</attribute>
+        </xpath>
         <xpath expr="//field[@name='cost_ids']/.." position="after">
           <group string="Service Description">
             <field name="service_line_ids" nolabel="1">
               <tree string="Service Description" editable="bottom">
                 <field name="item"/>
                 <field name="cost"/>
-                <field name="debit_account"/>
-                <field name="credit_account"/>
+                <field name="debit_account" groups="account.group_account_manager"/>
+                <field name="credit_account" groups="account.group_account_manager"/>
               </tree>
             </field>
           </group>
+        </xpath>
+        <xpath expr="//field[@name='amount']" position="attributes">
+          <attribute name='invisible'>True</attribute>
+        </xpath>
+        <xpath expr="//field[@name='vehicle_id']" position="attributes">
+          <attribute name='domain'>[('state_id.name','=','Available')]</attribute>
+        </xpath>
+      </field>
+    </record>
+
+    <record id='fleet_vehicle_log_services_form_bo' model='ir.ui.view'>
+      <field name="name">fleet.vehicle.log.services.form.bo</field>
+      <field name="model">fleet.vehicle.log.services</field>
+      <field name="inherit_id" ref="fleet_vehicle_log_services_form"/>
+      <field name="groups_id" eval="[(4, ref('fleet_booking.group_branch_officer'), 0)]"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='service_line_ids']/.." position="attributes">
+          <attribute name='attrs'>{'invisible':[('maintenance_type', '!=', 'in-branch')]}</attribute>
         </xpath>
       </field>
     </record>
@@ -246,13 +271,52 @@
     </record>
 
     <record id="fleet.menu_root" model="ir.ui.menu">
-      <field name="groups_id" eval="[(4, [ref('group_branch_officer')], 0)]"/>
+      <field name="groups_id" eval="[(4, [ref('group_branch_officer')], 0), (4, [ref('group_accountant')], 0)]"/>
     </record>
     <record id="fleet.fleet_vehicles" model="ir.ui.menu">
-      <field name="groups_id" eval="[(4, [ref('group_branch_officer')], 0)]"/>
+      <field name="groups_id" eval="[(4, [ref('group_branch_officer')], 0), (4, [ref('group_accountant')], 0)]"/>
     </record>
     <record id="fleet.fleet_vehicle_menu" model="ir.ui.menu">
-      <field name="groups_id" eval="[(4, [ref('group_branch_officer')], 0)]"/>
+      <field name="groups_id" eval="[(4, [ref('group_branch_officer')], 0), (4, [ref('group_accountant')], 0)]"/>
+    </record>
+
+    <record id='fleet_vehicle_log_services_search_vso' model='ir.ui.view'>
+      <field name="name">fleet.vehicle.log.services.search.vso</field>
+      <field name="model">fleet.vehicle.log.services</field>
+      <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_search"/>
+      <field name="arch" type="xml">
+        <search string="Services Logs">
+          <filter string="Requests" name="request" domain="[('state', '=', 'request')]" />
+          <filter string="Done" name="done" domain="[('state', '=', 'done')]" />
+        </search>
+      </field>
+    </record>
+
+    <record id='fleet_vehicle_log_services_form_for_acc' model='ir.ui.view'>
+      <field name="name">fleet.vehicle.log.services.form.for_acc</field>
+      <field name="model">fleet.vehicle.log.services</field>
+      <field name="inherit_id" ref="fleet_vehicle_log_services_form"/>
+      <field name="groups_id" eval="[(4, ref('fleet_booking.group_accountant'), 0)]"/>
+      <field name="arch" type="xml">
+        <xpath expr="//tree/field[@name='item']" position="attributes">
+          <attribute name="readonly">1</attribute>
+        </xpath>
+        <xpath expr="//tree/field[@name='cost']" position="attributes">
+          <attribute name="readonly">1</attribute>
+        </xpath>
+        <xpath expr="//field[@name='maintenance_type']" position="attributes">
+          <attribute name="readonly">1</attribute>
+        </xpath>
+        <xpath expr="//field[@name='vehicle_id']" position="attributes">
+          <attribute name="readonly">1</attribute>
+        </xpath>
+        <xpath expr="//field[@name='odometer']" position="attributes">
+          <attribute name="readonly">1</attribute>
+        </xpath>
+        <xpath expr="//field[@name='notes']" position="attributes">
+          <attribute name="readonly">1</attribute>
+        </xpath>
+      </field>
     </record>
 
   </data>

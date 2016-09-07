@@ -56,7 +56,7 @@ class FleetBookingCreateBillWizard(models.TransientModel):
             })],
         })
         if document.asset_id:
-            document.asset_id.invoice_id = invoice
+            document.asset_id.sudo().invoice_id = invoice
         return invoice
 
     @api.multi
@@ -111,11 +111,11 @@ class FleetBookingCreateBillWizard(models.TransientModel):
             'journal_id': self.env['account.journal'].search([('code', '=', 'MISC')])[0].id,
             'type': 'purchase',
         }
-        asset_category = self.env['account.asset.category'].create(vals)
+        asset_category = self.env['account.asset.category'].sudo().create(vals)
         vals = {
             'name': 'Asset ' + document.name,
             'value': document.car_value,
             'category_id': asset_category.id,
         }
-        asset = self.env['account.asset.asset'].create(vals)
+        asset = self.env['account.asset.asset'].sudo().create(vals)
         return asset

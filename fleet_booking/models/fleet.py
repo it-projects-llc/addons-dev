@@ -21,7 +21,8 @@ class Vehicle(models.Model):
     payments_ids = fields.One2many('account.invoice', 'fleet_vehicle_id', string='Payments')
     depreciation_ids = fields.One2many(related='asset_id.depreciation_line_ids')
     state_id = fields.Many2one('fleet.vehicle.state', readonly=True, ondelete="restrict",
-                               default=lambda self: self.env.ref('fleet_rental_document.vehicle_state_active').id)
+                               default=lambda self: self.env.ref('fleet_rental_document.vehicle_state_active').id,
+                               copy=False)
     lease_installment_date_ids = fields.Many2many('fleet_booking.installment_date',
                                                   'fleet_booking_lease_dates_rel')
     insurance_installment_date_ids = fields.Many2many('fleet_booking.installment_date',
@@ -47,7 +48,7 @@ class Service(models.Model):
     state = fields.Selection([('draft', 'Draft'),
                               ('request', 'Request'),
                               ('done', 'Done'),
-                              ('paid', 'Paid')],
+                              ('paid', 'Closed')],
                              string='State', default='draft')
     maintenance_type = fields.Selection([('accident', 'Accident'),
                                          ('emergency', 'Emergency'),
@@ -65,8 +66,12 @@ class Service(models.Model):
 
     @api.multi
     def submit(self):
-        self.vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_inshop')
-        self.write({'state': 'request'})
+        if self.maintenance_type != 'in-branch':
+            self.vehicle_id.sudo().state_id = self.env.ref('fleet_rental_document.vehicle_state_inactive')
+            self.write({'state': 'request'})
+        else:
+            self.vehicle_id.sudo().state_id = self.env.ref('fleet_rental_document.vehicle_state_active')
+            self.write({'state': 'done'})
 
     @api.multi
     def un_submit(self):
