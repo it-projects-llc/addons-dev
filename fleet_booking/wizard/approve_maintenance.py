@@ -15,4 +15,10 @@ class FleetBookingApproveMaintenanceWizard(models.TransientModel):
 
     @api.multi
     def create_entries(self):
-        pass
+        service = self.env['fleet.vehicle.log.services'].browse(self._context.get('active_id'))
+        service.service_line_ids.filtered(
+            lambda r: not r.move_check and r.debit_account and r.credit_account
+        ).create_move(self.journal_id.id)
+        if self.env['fleet.vehicle.service.line'].search_count([('move_check', '=', False),
+                                                                ('service_log_id', '=', service.id)]) == 0:
+            service.write({'state': 'paid'})

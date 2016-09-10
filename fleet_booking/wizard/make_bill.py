@@ -11,7 +11,6 @@ class FleetBookingCreateBillWizard(models.TransientModel):
     def _default_amount(self):
         return self.env['fleet.vehicle'].browse(self._context.get('active_id')).car_value
 
-
     amount = fields.Float('Payment Amount', digits=dp.get_precision('Account'),
                           help="The amount to be invoiced.",
                           default=_default_amount)
@@ -53,6 +52,11 @@ class FleetBookingCreateBillWizard(models.TransientModel):
                 'product_id': document.product_id.id,
                 'fleet_rental_document_id': document.document_id.id,
                 'account_analytic_id': document.document_id.analytic_account_id.id,
+                # 'asset_category_id': document.asset_id.category_id.id,
+                # if asset_category_id is in vendor bill odoo tries to create an asset
+                # for each line in bill on validation.
+                # We don't need such behavior, as we create
+                # one asset per vehicle i.e. not per product in vendor bill
             })],
         })
         if document.asset_id:
@@ -108,6 +112,7 @@ class FleetBookingCreateBillWizard(models.TransientModel):
             'name': 'Asset category for ' + document.name,
             'account_asset_id': document.account_asset_id.id,
             'account_depreciation_id': document.account_depreciation_id.id,
+            # TODO: allow to choose the journal somehow
             'journal_id': self.env['account.journal'].search([('code', '=', 'MISC')])[0].id,
             'type': 'purchase',
         }

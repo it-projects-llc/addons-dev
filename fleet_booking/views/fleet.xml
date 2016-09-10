@@ -123,11 +123,9 @@
         <xpath expr="//sheet" position="before">
           <header>
             <button name="submit" states="draft" string="Submit" type="object" class="oe_highlight" groups="fleet_booking.group_branch_officer"/>
-            <button name="un_submit" states="request" string="Cancel submit" type="object" groups="fleet_booking.group_branch_officer"/>
             <button name="confirm" attrs="{'invisible': [('state', '!=', 'request')]}"  string="Confirm" type="object" class="oe_highlight" groups="fleet_booking.group_branch_officer,fleet_booking.group_vehicles_support_officer"/>
-            <button name="submit" attrs="{'invisible': [('state', '!=', 'done')]}"  string="Cancel confirm" type="object" groups="fleet_booking.group_branch_officer,fleet_booking.group_vehicles_support_officer"/>
-            <button name="approve" states="done" string="Approve" type="object" class="oe_highlight" groups="fleet_booking.group_accountant"/>
-            <button name="confirm" states="paid" string="Cancel approve" type="object" groups="fleet_booking.group_accountant"/>
+            <button name="%(fleet_booking.action_view_approve_maintenance_wizard)d" states="done" string="Approve"
+                    type="action" class="btn-primary" groups="fleet_booking.group_accountant"/>
             <field name="state" widget="statusbar" statusbar_visible="draft,request,done,paid"/>
           </header>
         </xpath>
@@ -226,7 +224,8 @@
         <xpath expr="//field[@name='cost_ids']/.." position="after">
           <group string="Service Description">
             <field name="service_line_ids" nolabel="1">
-              <tree string="Service Description" editable="bottom">
+              <tree string="Service Description" editable="bottom" decoration-success="move_check">
+                <field name="move_check" invisible="1"/>
                 <field name="item"/>
                 <field name="cost"/>
                 <field name="debit_account" groups="account.group_account_manager"/>
