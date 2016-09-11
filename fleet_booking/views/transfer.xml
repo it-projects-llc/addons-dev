@@ -17,14 +17,14 @@
                             attrs="{'invisible':['|','|',('state','in',('draft')),('can_change_delivery_state', '!=', True),('delivery_state','!=','not_delivered')]}"
                             groups="fleet_booking.group_branch_officer"/>
                     <button name="un_confirm_delivery" string="Cancel confirm delivery" type="object"
-                            attrs="{'invisible':['|',('can_change_delivery_state', '!=', True),('delivery_state','!=','delivered')]}"
-                            groups="fleet_booking.group_branch_officer"/>
+                            attrs="{'invisible':[('delivery_state','!=','delivered')]}"
+                            groups="fleet_booking.group_vehicles_support_officer"/>
                     <button name="confirm_receiving" string="Confirm receiving" type="object" class="oe_highlight"
                             attrs="{'invisible':['|','|','|',('state','in',('draft')),('can_change_receiving_state', '!=', True),('receiving_state','!=','not_received'),('delivery_state','!=','delivered')]}"
                             groups="fleet_booking.group_branch_officer"/>
                     <button name="un_confirm_receiving" string="Cancel confirm receiving" type="object"
-                            attrs="{'invisible':['|',('can_change_receiving_state', '!=', True),('receiving_state','!=','received')]}"
-                            groups="fleet_booking.group_branch_officer"/>
+                            attrs="{'invisible':[('receiving_state','!=','received')]}"
+                            groups="fleet_booking.group_vehicles_support_officer"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,transfer,done"/>
                 </header>
                 <sheet>
