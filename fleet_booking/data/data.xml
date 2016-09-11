@@ -21,11 +21,5 @@
         <field name="in_branch">True</field>
     </record>
 
-    <record id="res_partner_vehicle_vendor" model="res.partner">
-        <field name="name">Vehicle Vendor</field>
-        <field name="supplier">1</field>
-        <field name="customer">0</field>
-    </record>
-
 </data>
 </openerp>
