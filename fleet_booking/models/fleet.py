@@ -70,6 +70,15 @@ class Service(models.Model):
                                      string='Attachments')
     attachment_number = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
     service_line_ids = fields.One2many('fleet.vehicle.service.line', 'service_log_id')
+    total_cost = fields.Float(string='Total Cost',
+                              digits_compute=dp.get_precision('Product Price'),
+                              compute="_compute_total_cost", store=True, readonly=True)
+
+    @api.multi
+    @api.depends('service_line_ids.cost')
+    def _compute_total_cost(self):
+        for record in self:
+            record.total_cost = sum(record.service_line_ids.mapped('cost'))
 
     @api.multi
     def submit(self):

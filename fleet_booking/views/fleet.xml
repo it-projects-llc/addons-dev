@@ -224,8 +224,8 @@
           <attribute name='invisible'>True</attribute>
         </xpath>
         <xpath expr="//field[@name='cost_ids']/.." position="after">
-          <group string="Service Description">
-            <field name="service_line_ids" nolabel="1">
+          <group col='4' string="Service Description">
+            <field colspan='4' name="service_line_ids" nolabel="1">
               <tree string="Service Description" editable="bottom" decoration-success="move_check">
                 <field name="move_check" invisible="1"/>
                 <field name="item"/>
@@ -234,6 +234,7 @@
                 <field name="credit_account" groups="account.group_account_manager"/>
               </tree>
             </field>
+            <field colspan='4' name="total_cost"/>
           </group>
         </xpath>
         <xpath expr="//field[@name='amount']" position="attributes">
@@ -252,6 +253,20 @@
       <field name="groups_id" eval="[(4, ref('fleet_booking.group_branch_officer'), 0)]"/>
       <field name="arch" type="xml">
         <xpath expr="//field[@name='service_line_ids']/.." position="attributes">
+          <attribute name='attrs'>{'invisible':[('maintenance_type', '!=', 'in-branch')]}</attribute>
+        </xpath>
+        <xpath expr="//field[@name='odometer']/../.." position="attributes">
+          <attribute name='attrs'>{'invisible':[('maintenance_type', '!=', 'in-branch')]}</attribute>
+        </xpath>
+      </field>
+    </record>
+
+    <record id="fleet_vehicle_log_services_form_inherit_buttons_bo" model="ir.ui.view">
+      <field name="name">fleet.vehicle.log.services.form.inherit.buttons.bo</field>
+      <field name="model">fleet.vehicle.log.services</field>
+      <field name="inherit_id" ref="fleet_vehicle_log_services_form_inherit_buttons"/>
+      <field name="arch" type="xml">
+        <xpath expr="//button[@name='action_get_attachment_tree_view']/.." position="attributes">
           <attribute name='attrs'>{'invisible':[('maintenance_type', '!=', 'in-branch')]}</attribute>
         </xpath>
       </field>
