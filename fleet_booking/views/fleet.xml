@@ -2,6 +2,8 @@
 <openerp>
   <data>
 
+    <menuitem action="action_view_remove_vehicle_wizard" parent="fleet.fleet_vehicles" id="fleet_remove_vehicle_menu" groups="fleet.group_fleet_user"/>
+
     <record id="view_fleet_form_inherit" model="ir.ui.view">
       <field name="name">fleet.vehicle.form.inherit</field>
       <field name="model">fleet.vehicle</field>

@@ -29,6 +29,7 @@
         "security/ir.model.access.csv",
         'wizard/make_bill.xml',
         'wizard/approve_maintenance.xml',
+        'wizard/remove_vehicle.xml',
         "views/partner.xml",
         "views/fleet.xml",
         "views/transfer.xml",

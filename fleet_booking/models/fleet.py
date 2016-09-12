@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from openerp import api, fields, models
+import openerp.addons.decimal_precision as dp
 
 
 class Vehicle(models.Model):
@@ -31,6 +32,12 @@ class Vehicle(models.Model):
                                        domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
     account_depreciation_id = fields.Many2one('account.account', string='Depreciation Expense Account',
                                               domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
+    removal_reason = fields.Selection([('damage', 'Damage'),
+                                       ('sold', 'Sold'),
+                                       ('end-of-life', 'End-of-Life')],
+                                      string='Removal reason', required=True)
+    selling_price = fields.Float(string='Selling price')
+    active = fields.Boolean(default=True)
 
     @api.depends('car_value', 'paid')
     def _compute_remaining_amount(self):
@@ -108,7 +115,7 @@ class FleetVehicleServiceLine(models.Model):
     _name = 'fleet.vehicle.service.line'
 
     item = fields.Char(string='Item', required=True)
-    cost = fields.Float(string='Cost')
+    cost = fields.Float(string='Cost', digits_compute=dp.get_precision('Product Price'))
     debit_account = fields.Many2one('account.account', string='Debit Account')
     credit_account = fields.Many2one('account.account', string='Credit Account')
     service_log_id = fields.Many2one('fleet.vehicle.log.services')

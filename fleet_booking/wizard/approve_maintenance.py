@@ -10,7 +10,7 @@ class FleetBookingApproveMaintenanceWizard(models.TransientModel):
         return self.env['account.journal'].search([('type', '=', 'purchase')], limit=1)
 
     journal_id = fields.Many2one('account.journal', string='Journal',
-                                 required=True, readonly=True,
+                                 required=True,
                                  default=_default_journal)
 
     @api.multi
