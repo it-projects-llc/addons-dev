@@ -2,7 +2,42 @@
 <openerp>
   <data>
 
+    <record id="fleet_vehicle_search" model="ir.ui.view">
+      <field name="name">fleet.vehicle.search</field>
+      <field name="model">fleet.vehicle</field>
+      <field name="inherit_id" ref="fleet.fleet_vehicle_search"/>
+      <field name="arch" type="xml">
+          <xpath expr="//group" position="after">
+            <filter name="removed_vehicles" domain="[('active', '=' , False)]" string="Removed"/>
+          </xpath>
+      </field>
+    </record>
+
+    <record id="removed_vehicle_log_view_tree" model="ir.ui.view">
+      <field name="name">fleet.vehicle.removed.tree</field>
+      <field name="model">fleet.vehicle</field>
+      <field name="priority">20</field>
+      <field name="arch" type="xml">
+        <tree string="Removed Vehicle">
+          <field name="license_plate" />
+          <field name="model_id" />
+          <field name="removal_reason" />
+        </tree>
+      </field>
+    </record>
+
+    <record id="action_view_removed_vehicle_log" model="ir.actions.act_window">
+      <field name="name">Removed Vehicle Log</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">fleet.vehicle</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree</field>
+      <field name="context">{"search_default_removed_vehicles" : True,}</field>
+      <field name="view_id" ref="removed_vehicle_log_view_tree"/>
+    </record>
+
     <menuitem action="action_view_remove_vehicle_wizard" parent="fleet.fleet_vehicles" id="fleet_remove_vehicle_menu" groups="fleet.group_fleet_user"/>
+    <menuitem action="action_view_removed_vehicle_log" parent="fleet.fleet_vehicles" id="fleet_removed_vehicle_log_menu" groups="fleet.group_fleet_user"/>
 
     <record id="view_fleet_form_inherit" model="ir.ui.view">
       <field name="name">fleet.vehicle.form.inherit</field>

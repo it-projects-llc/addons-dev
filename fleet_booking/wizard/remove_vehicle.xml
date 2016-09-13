@@ -12,9 +12,9 @@
               <field name="vehicle_id" options="{'no_create': True, 'no_open': True}"/>
               <field name="removal_reason"/>
               <field name="selling_price" attrs="{'invisible': [('removal_reason', '!=', 'sold')]}"/>
-              <field name="journal_id"/>
+              <field name="journal_id" attrs="{'invisible': [('removal_reason', '!=', 'sold')]}"/>
             </group>
-            <group>
+            <group attrs="{'invisible': [('removal_reason', '!=', 'sold')]}">
               <field name="move_line_ids" nolabel="1">
                 <tree string="Journal Entries" editable="bottom">
                   <field name="account_id"/>
