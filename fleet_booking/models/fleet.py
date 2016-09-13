@@ -35,7 +35,7 @@ class Vehicle(models.Model):
     removal_reason = fields.Selection([('damage', 'Damage'),
                                        ('sold', 'Sold'),
                                        ('end-of-life', 'End-of-Life')],
-                                      string='Removal reason', required=True)
+                                      string='Removal reason')
     selling_price = fields.Float(string='Selling price')
     active = fields.Boolean(default=True)
 

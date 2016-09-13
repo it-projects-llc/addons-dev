@@ -23,6 +23,7 @@ acc6,acc6,product.model_product_template,fleet_booking.group_accountant,1,1,1,1
 acc7,acc7,product.model_product_price_history,fleet_booking.group_accountant,1,1,1,1
 acc8,acc8,model_fleet_vehicle_service_line,group_accountant,1,1,0,0
 acc9,acc8,fleet.model_fleet_vehicle_cost,group_accountant,1,1,0,0
+acc10,acc10,fleet.model_fleet_vehicle_odometer,group_accountant,1,0,0,0
 afu1,afu1,fleet.model_fleet_vehicle,group_fleet_adv_user,1,1,0,0
 access_installment_date,access_installment_date,model_fleet_booking_installment_date,group_vehicles_support_officer,1,1,1,1
 access_fleet_rental_document_vso,fleet_rental_document_vso,fleet_rental_document.model_fleet_rental_document,group_vehicles_support_officer,1,1,1,1
