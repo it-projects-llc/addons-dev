@@ -265,6 +265,7 @@
       <field name="name">fleet.vehicle.log.services.form.inherit.buttons.bo</field>
       <field name="model">fleet.vehicle.log.services</field>
       <field name="inherit_id" ref="fleet_vehicle_log_services_form_inherit_buttons"/>
+      <field name="groups_id" eval="[(4, ref('fleet_booking.group_branch_officer'), 0)]"/>
       <field name="arch" type="xml">
         <xpath expr="//button[@name='action_get_attachment_tree_view']/.." position="attributes">
           <attribute name='attrs'>{'invisible':[('maintenance_type', '!=', 'in-branch')]}</attribute>
@@ -331,6 +332,36 @@
         </xpath>
         <xpath expr="//field[@name='notes']" position="attributes">
           <attribute name="readonly">1</attribute>
+        </xpath>
+      </field>
+    </record>
+
+    <record id='fleet_vehicle_log_services_tree' model='ir.ui.view'>
+      <field name="name">fleet.vehicle.log.services.tree</field>
+      <field name="model">fleet.vehicle.log.services</field>
+      <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_tree"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='vehicle_id']" position="after">
+          <field name="maintenance_type"/>
+          <field name="total_cost" sum="Total"/>
+        </xpath>
+        <xpath expr="//field[@name='cost_subtype_id']" position="attributes">
+          <attribute name='invisible'>True</attribute>
+        </xpath>
+        <xpath expr="//field[@name='purchaser_id']" position="attributes">
+          <attribute name='invisible'>True</attribute>
+        </xpath>
+        <xpath expr="//field[@name='vendor_id']" position="attributes">
+          <attribute name='invisible'>True</attribute>
+        </xpath>
+        <xpath expr="//field[@name='inv_ref']" position="attributes">
+          <attribute name='invisible'>True</attribute>
+        </xpath>
+        <xpath expr="//field[@name='amount']" position="attributes">
+          <attribute name='invisible'>True</attribute>
+        </xpath>
+        <xpath expr="//field[@name='notes']" position="attributes">
+          <attribute name='invisible'>True</attribute>
         </xpath>
       </field>
     </record>
