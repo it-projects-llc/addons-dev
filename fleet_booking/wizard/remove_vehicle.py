@@ -49,6 +49,7 @@ class FleetRemoveVehicleWizard(models.TransientModel):
 
         move = self.env['account.move'].create(move_vals)
         self.vehicle_id.active = False
+        self.vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_removed')
         self.vehicle_id.removal_reason= self.removal_reason
         self.vehicle_id.selling_price = self.selling_price
 
