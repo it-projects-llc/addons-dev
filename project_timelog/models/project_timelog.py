@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import datetime
+import logging
 from openerp import models, fields, api
+
+_logger = logging.getLogger(__name__)
 
 
 class ProjectTimeLog(models.Model):
@@ -80,7 +83,6 @@ class task(models.Model):
             message = {"status": "stopline", "time": time}
             notifications.append([(cr.dbname, "project.timelog", user_rec.id), message])
             self.pool["bus.bus"].sendmany(cr, uid, notifications)
-            # не отправляется сообщение через bus, перепроверить
             return True
 
 
@@ -108,16 +110,39 @@ class project_work(models.Model):
     status = fields.Char(string="Status", default="active")
     # task_stage = fields.Many2one(related='task_id.stage_id')
     task_allow_logs = fields.Boolean(related='task_id.stage_id.allow_log_time', store=True, default=True)
+    time_correction = fields.Float(default=0.00)
 
     def create(self, cr, uid, vals, context=None):
         task = self.pool.get('project.task').browse(cr, uid, vals.get('task_id'), context=context)
         vals['stage_id'] = task.stage_id.id
+        vals['user_id'] = uid
+        vals['hours'] = 0.00
         if 'hours' in vals and (not vals['hours']):
             vals['hours'] = 0.00
         if 'task_id' in vals:
             cr.execute('update project_task set remaining_hours=remaining_hours - %s where id=%s', (vals.get('hours', 0.0), vals['task_id']))
             self.pool.get('project.task').invalidate_cache(cr, uid, ['remaining_hours'], [vals['task_id']], context=context)
         return super(project_work, self).create(cr, uid, vals, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if 'time_correction' in vals:
+            if not self.pool['res.users'].has_group(cr, uid, 'project.group_project_manager') and vals['time_correction'] > 0.00:
+                return False
+            if vals['time_correction'] is not 0.00:
+                timelogs = self.pool.get('project.timelog').search(cr, uid, [("work_id", "=", ids)])
+                sum_timelog = 0.00
+                for id in timelogs:
+                    # full recalculation time
+                    sum_timelog = sum_timelog + self.pool.get('project.timelog').browse(cr, uid, id, context=context).duration
+                vals['hours'] = vals['time_correction'] + sum_timelog
+        if 'hours' in vals and (not vals['hours']):
+            vals['hours'] = 0.00
+        if 'hours' in vals:
+            task_obj = self.pool.get('project.task')
+            for work in self.browse(cr, uid, ids, context=context):
+                cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (vals.get('hours', 0.0), work.hours, work.task_id.id))
+                task_obj.invalidate_cache(cr, uid, ['remaining_hours'], [work.task_id.id], context=context)
+        return super(project_work,self).write(cr, uid, ids, vals, context)
 
     @api.multi
     def play_timer(self):
@@ -292,8 +317,8 @@ class project_work(models.Model):
 
         self.env["res.users"].search([("id", "=", self.user_id.id)]).write({"timer_status": False})
 
-        sum_timelog = 0.0
-        for e in timelog:
+        sum_timelog = self.hours
+        for e in timelog[-1]:
             sum_timelog = sum_timelog + e.duration
 
         if len(timelog) == 1:

@@ -106,21 +106,6 @@ class Controller(openerp.addons.bus.bus.Controller):
 
         timerstopline = False
         time_subtasks = int(round(float(config.get_param("project_timelog.time_subtasks"))*convert_sec, 0))
-        # if stopline.datetime_stopline is not False:
-        #     date_object = datetime.datetime.strptime(stopline.datetime_stopline, "%Y-%m-%d %H:%M:%S")
-        #     timerstopline = int(round((date_object-datetime.datetime.now()).total_seconds(), 0))
-        #     if timerstopline>0:
-        #         time_subtasks = timerstopline
-        #         timerstopline = False
-        #     else:
-        #         timerstopline = str(date_object)
-
-        # ошибка так как задает общее время работы а не до какого времени работать, например если разность получилось 60 то он и будет 60 секунд работать
-        # хоть с перерывами хоть и без
-        # возможно нужно делать через крон, после того как считали это поле и оно оказалась не пусто делаем вызов крон функции которая по достижению
-        # этого времени отправит в js по средством bus сообщение о том что нужно остановить таймер, так же за 20 минут до завершения отправит сообщение
-        # warning subtask вызывать раз в 5 минут. Как вызывать функцию крон по времени, со значения модели другого поля?
-        # например известен стоплайн
 
         resultat = {
             'timer_status': play_status,
