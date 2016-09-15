@@ -354,10 +354,7 @@
       <field name="groups_id" eval="[(4, [ref('group_branch_officer')], 0), (4, [ref('group_accountant')], 0)]"/>
     </record>
     <record id="fleet.fleet_vehicle_menu" model="ir.ui.menu">
-      <field name="groups_id" eval="[(4, [ref('group_branch_officer')], 0), (4, [ref('group_accountant')], 0)]"/>
-    </record>
-    <record id="fleet.fleet_vehicle_log_contract_menu" model="ir.ui.menu">
-      <field name="groups_id" eval="[(4, [ref('group_accountant')], 0)]"/>
+      <field name="groups_id" eval="[(4, [ref('group_branch_officer')], 0)]"/>
     </record>
 
     <record id='fleet_vehicle_log_services_search_vso' model='ir.ui.view'>
