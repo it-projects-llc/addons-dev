@@ -17,14 +17,14 @@
                             attrs="{'invisible':['|','|',('state','in',('draft')),('can_change_delivery_state', '!=', True),('delivery_state','!=','not_delivered')]}"
                             groups="fleet_booking.group_branch_officer"/>
                     <button name="un_confirm_delivery" string="Cancel confirm delivery" type="object"
-                            attrs="{'invisible':['|',('can_change_delivery_state', '!=', True),('delivery_state','!=','delivered')]}"
-                            groups="fleet_booking.group_branch_officer"/>
+                            attrs="{'invisible':[('delivery_state','!=','delivered')]}"
+                            groups="fleet_booking.group_vehicles_support_officer"/>
                     <button name="confirm_receiving" string="Confirm receiving" type="object" class="oe_highlight"
                             attrs="{'invisible':['|','|','|',('state','in',('draft')),('can_change_receiving_state', '!=', True),('receiving_state','!=','not_received'),('delivery_state','!=','delivered')]}"
                             groups="fleet_booking.group_branch_officer"/>
                     <button name="un_confirm_receiving" string="Cancel confirm receiving" type="object"
-                            attrs="{'invisible':['|',('can_change_receiving_state', '!=', True),('receiving_state','!=','received')]}"
-                            groups="fleet_booking.group_branch_officer"/>
+                            attrs="{'invisible':[('receiving_state','!=','received')]}"
+                            groups="fleet_booking.group_vehicles_support_officer"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,transfer,done"/>
                 </header>
                 <sheet>
@@ -117,6 +117,19 @@
     <menuitem action="fleet_transfers_in" parent="fleet_transfers" id="fleet_transfers_in_menu" groups="fleet.group_fleet_user"/>
     <menuitem action="fleet_transfers_out" parent="fleet_transfers" id="fleet_transfers_out_menu" groups="fleet.group_fleet_user"/>
     <menuitem action="fleet_transfers_act" parent="fleet_transfers" id="fleet_transfers_all_menu" groups="fleet.group_fleet_user"/>
+
+    <record id="fleet_transfers" model="ir.ui.menu">
+      <field name="groups_id" eval="[(4, [ref('group_branch_officer')], 0)]"/>
+    </record>
+    <record id="fleet_transfers_in_menu" model="ir.ui.menu">
+      <field name="groups_id" eval="[(4, [ref('group_branch_officer')], 0)]"/>
+    </record>
+    <record id="fleet_transfers_out_menu" model="ir.ui.menu">
+      <field name="groups_id" eval="[(4, [ref('group_branch_officer')], 0)]"/>
+    </record>
+    <record id="fleet_transfers_all_menu" model="ir.ui.menu">
+      <field name="groups_id" eval="[(4, [ref('group_branch_officer')], 0)]"/>
+    </record>
 
     <!--ACCESS RIGHTS-->
     <!--VEHICLE SUPPORT OFFICER EXTRA RIGHTS-->

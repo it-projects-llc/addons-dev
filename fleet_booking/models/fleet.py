@@ -1,15 +1,24 @@
 # -*- coding: utf-8 -*-
-from openerp import api, fields, models
+from datetime import date, datetime
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
+from openerp.exceptions import UserError
+from openerp import api, fields, models, _
+import openerp.addons.decimal_precision as dp
 
 
 class Vehicle(models.Model):
     _inherit = 'fleet.vehicle'
 
     _inherits = {'fleet_rental.document': 'document_id'}
+
     document_id = fields.Many2one('fleet_rental.document',
                                   required=True, ondelete='restrict', auto_join=True)
     asset_id = fields.Many2one('account.asset.asset', ondelete='restrict', readonly=True, copy=False)
-    product_id = fields.Many2one('product.product', 'Vehicle Product', readonly=True)
+    vehicle_product_id = fields.Many2one('product.product', 'Vehicle Product', readonly=True)
+    lease_installment_date_ids = fields.One2many('fleet_booking.installment_date', 'vehicle_id',
+                                                 domain=lambda self: [('type_id.name', '=', 'Lease')])
+    insurance_installment_date_ids = fields.One2many('fleet_booking.installment_date', 'vehicle_id',
+                                                     domain=lambda self: [('type_id.name', '=', 'Insurance')])
     partner_id = fields.Many2one('res.partner', string='Vendor', copy=False)
     model_year = fields.Date('Model Year')
     paid = fields.Float(string='Paid amount', related="document_id.paid_amount", store=True, readonly=True)
@@ -21,15 +30,27 @@ class Vehicle(models.Model):
     payments_ids = fields.One2many('account.invoice', 'fleet_vehicle_id', string='Payments')
     depreciation_ids = fields.One2many(related='asset_id.depreciation_line_ids')
     state_id = fields.Many2one('fleet.vehicle.state', readonly=True, ondelete="restrict",
-                               default=lambda self: self.env.ref('fleet_rental_document.vehicle_state_active').id)
-    lease_installment_date_ids = fields.Many2many('fleet_booking.installment_date',
-                                                  'fleet_booking_lease_dates_rel')
-    insurance_installment_date_ids = fields.Many2many('fleet_booking.installment_date',
-                                                      'fleet_booking_insurance_dates_rel')
+                               default=lambda self: self.env.ref('fleet_rental_document.vehicle_state_active').id,
+                               copy=False)
     account_asset_id = fields.Many2one('account.account', string='Accumulated Depreciation Account',
                                        domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
     account_depreciation_id = fields.Many2one('account.account', string='Depreciation Expense Account',
                                               domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
+    removal_reason = fields.Selection([('damage', 'Damage'),
+                                       ('sold', 'Sold'),
+                                       ('end-of-life', 'End-of-Life')],
+                                      string='Removal reason')
+    selling_price = fields.Float(string='Selling price')
+    active = fields.Boolean(default=True)
+
+    @api.model
+    def run_installment_scheduler(self):
+        vehicles = self.search([])
+        for vehicle in vehicles:
+            installments = self.env['fleet_booking.installment_date'].search([('vehicle_id', '=', vehicle.id),
+                                                                              ('bill_check', '=', False),
+                                                                              ('installment_date', '<', fields.Date.today())])
+            installments._make_bill()
 
     @api.depends('car_value', 'paid')
     def _compute_remaining_amount(self):
@@ -47,33 +68,44 @@ class Service(models.Model):
     state = fields.Selection([('draft', 'Draft'),
                               ('request', 'Request'),
                               ('done', 'Done'),
-                              ('paid', 'Paid')],
+                              ('paid', 'Closed')],
                              string='State', default='draft')
-    account_invoice_ids = fields.One2many('account.invoice', 'fleet_vehicle_log_services_ids', string='Invoices', copy=False)
+    maintenance_type = fields.Selection([('accident', 'Accident'),
+                                         ('emergency', 'Emergency'),
+                                         ('periodic', 'Periodic'),
+                                         ('in-branch', 'In-Branch')],
+                                        string='Maintenance Type', default='in-branch', required=True)
+    account_invoice_ids = fields.One2many('account.invoice', 'fleet_vehicle_log_services_ids',
+                                          string='Invoices', copy=False)
     cost_subtype_in_branch = fields.Boolean(related='cost_subtype_id.in_branch')
     attachment_ids = fields.One2many('ir.attachment', 'res_id',
                                      domain=[('res_model', '=', 'fleet.vehicle.log.services')],
                                      string='Attachments')
     attachment_number = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
+    service_line_ids = fields.One2many('fleet.vehicle.service.line', 'service_log_id')
+    total_cost = fields.Float(string='Total Cost',
+                              digits_compute=dp.get_precision('Product Price'),
+                              compute="_compute_total_cost", store=True, readonly=True)
+
+    @api.multi
+    @api.depends('service_line_ids.cost')
+    def _compute_total_cost(self):
+        for record in self:
+            record.total_cost = sum(record.service_line_ids.mapped('cost'))
 
     @api.multi
     def submit(self):
-        self.vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_inshop')
-        self.write({'state': 'request'})
-
-    @api.multi
-    def un_submit(self):
-        self.vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_active')
-        self.write({'state': 'draft'})
+        if self.maintenance_type != 'in-branch':
+            self.vehicle_id.sudo().state_id = self.env.ref('fleet_rental_document.vehicle_state_inactive')
+            self.write({'state': 'request'})
+        else:
+            self.vehicle_id.sudo().state_id = self.env.ref('fleet_rental_document.vehicle_state_active')
+            self.write({'state': 'done'})
 
     @api.multi
     def confirm(self):
         self.vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_active')
         self.write({'state': 'done'})
-
-    @api.multi
-    def approve(self):
-        self.write({'state': 'paid'})
 
     @api.multi
     def action_get_attachment_tree_view(self):
@@ -101,3 +133,57 @@ class ServiceType(models.Model):
     in_branch = fields.Boolean(default=False, readonly=True, invisible=True)
 
 
+class FleetVehicleServiceLine(models.Model):
+    _name = 'fleet.vehicle.service.line'
+
+    item = fields.Char(string='Item', required=True)
+    cost = fields.Float(string='Cost', digits_compute=dp.get_precision('Product Price'))
+    debit_account = fields.Many2one('account.account', string='Debit Account')
+    credit_account = fields.Many2one('account.account', string='Credit Account')
+    service_log_id = fields.Many2one('fleet.vehicle.log.services')
+    move_id = fields.Many2one('account.move', string='Maintenance Entry')
+    move_check = fields.Boolean(compute='_get_move_check', string='Posted', store=True)
+
+    @api.one
+    @api.depends('move_id')
+    def _get_move_check(self):
+        self.move_check = bool(self.move_id)
+
+    @api.multi
+    def create_move(self, journal_id, post_move=True):
+        created_moves = self.env['account.move']
+        for line in self:
+            move_date = fields.Date.context_today(self)
+            amount = line.cost
+            journal_id = journal_id
+            partner_id = line.service_log_id.sudo().vehicle_id.partner_id.id
+            move_line_1 = {
+                'name': line.item,
+                'account_id': line.credit_account.id,
+                'debit': 0.0,
+                'credit': amount,
+                'journal_id': journal_id,
+                'partner_id': partner_id,
+                'date': move_date,
+            }
+            move_line_2 = {
+                'name': line.item,
+                'account_id': line.debit_account.id,
+                'credit': 0.0,
+                'debit': amount,
+                'journal_id': journal_id,
+                'partner_id': partner_id,
+                'date': move_date,
+            }
+            move_vals = {
+                'date': move_date,
+                'journal_id': journal_id,
+                'line_ids': [(0, 0, move_line_1), (0, 0, move_line_2)],
+                }
+            move = self.env['account.move'].create(move_vals)
+            line.write({'move_id': move.id, 'move_check': True})
+            created_moves |= move
+
+        if post_move and created_moves:
+            created_moves.post()
+        return created_moves.ids

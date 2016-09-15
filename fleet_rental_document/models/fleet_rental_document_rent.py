@@ -193,7 +193,7 @@ class FleetRentalDocumentRent(models.Model):
     def action_book(self):
         for rent in self:
             rent.state = 'booked'
-            rent.vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_booked')
+            rent.sudo().vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_booked')
 
     @api.multi
     def action_cancel_booking(self):

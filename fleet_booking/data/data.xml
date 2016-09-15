@@ -1,31 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data>
+  <data>
     <!--RECORDS-->
     <record id="fb_bronze" model="sale_membership.type">
-        <field name="name">Bronze</field>
-        <field name="points">0</field>
+      <field name="name">Bronze</field>
+      <field name="points">0</field>
     </record>
     <record id="fb_silver" model="sale_membership.type">
-        <field name="name">Silver</field>
-        <field name="points">2000</field>
+      <field name="name">Silver</field>
+      <field name="points">2000</field>
     </record>
     <record id="fb_gold" model="sale_membership.type">
-        <field name="name">Gold</field>
-        <field name="points">5000</field>
+      <field name="name">Gold</field>
+      <field name="points">5000</field>
     </record>
     <!--FLEET-->
-    <record model="fleet.service.type" id="in_branch">
-        <field name="name">In branch</field>
-        <field name="category">service</field>
-        <field name="in_branch">True</field>
+    <record  id="in_branch" model="fleet.service.type">
+      <field name="name">In branch</field>
+      <field name="category">service</field>
+      <field name="in_branch">True</field>
     </record>
 
-    <record id="res_partner_vehicle_vendor" model="res.partner">
-        <field name="name">Vehicle Vendor</field>
-        <field name="supplier">1</field>
-        <field name="customer">0</field>
+    <record forcecreate="True" id="ir_cron_installment_bill_generator" model="ir.cron">
+      <field name="name">Generation of bills based on the installment scheduler</field>
+      <field eval="True" name="active" />
+      <field name="user_id" ref="base.user_root" />
+      <field name="interval_number">1</field>
+      <field name="interval_type">days</field>
+      <field name="numbercall">-1</field>
+      <field eval="False" name="doall" />
+      <field eval="'fleet.vehicle'" name="model" />
+      <field eval="'run_installment_scheduler'" name="function" />
+      <field eval="'()'" name="args" />
     </record>
 
-</data>
+  </data>
 </openerp>

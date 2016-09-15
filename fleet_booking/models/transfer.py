@@ -21,6 +21,11 @@ class VehicleTransfer(models.Model):
     can_change_delivery_state = fields.Boolean(compute='get_can_change_delivery_state', default=False)
     can_change_receiving_state = fields.Boolean(compute='get_can_change_receiving_state', default=False)
 
+    @api.onchange('source_branch')
+    def _onchange_source_branch(self):
+        if self.source_branch:
+            return {'domain': {'dest_branch': [('id', '!=', self.source_branch.id)]}}
+
     @api.multi
     def submit(self):
         self.old_branch = self.vehicle_id.branch_id
@@ -36,11 +41,11 @@ class VehicleTransfer(models.Model):
     @api.multi
     def confirm_delivery(self):
         self.write({'delivery_state': 'delivered'})
-        self.vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_in_transfer')
+        self.vehicle_id.sudo().state_id = self.env.ref('fleet_rental_document.vehicle_state_in_transfer')
         if self.receiving_state == 'received':
             self.write({'state': 'done'})
-            self.vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_active')
-            self.vehicle_id.branch_id = self.dest_branch
+            self.vehicle_id.sudo().state_id = self.env.ref('fleet_rental_document.vehicle_state_active')
+            self.vehicle_id.sudo().branch_id = self.dest_branch
 
     @api.multi
     def un_confirm_delivery(self):
@@ -51,11 +56,11 @@ class VehicleTransfer(models.Model):
     @api.multi
     def confirm_receiving(self):
         self.write({'receiving_state': 'received'})
-        self.vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_in_transfer')
+        self.vehicle_id.sudo().state_id = self.env.ref('fleet_rental_document.vehicle_state_in_transfer')
         if self.delivery_state == 'delivered':
             self.write({'state': 'done'})
-            self.vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_active')
-            self.vehicle_id.branch_id = self.dest_branch
+            self.vehicle_id.sudo().state_id = self.env.ref('fleet_rental_document.vehicle_state_active')
+            self.vehicle_id.sudo().branch_id = self.dest_branch
 
     @api.multi
     def un_confirm_receiving(self):

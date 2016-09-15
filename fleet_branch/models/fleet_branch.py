@@ -31,20 +31,12 @@ class FleetBranch(models.Model):
                                       required=True)
     bank_account_id = fields.Many2one("account.account", string="Bank Account",
                                       domain=[('deprecated', '=', False)],
-                                      required=True, track_visibility='onchange')
+                                      required=True)
     cash_journal_id = fields.Many2one('account.journal',
                                       domain=[('type', 'in', ('cash'))])
     bank_journal_id = fields.Many2one('account.journal',
                                       domain=[('type', 'in', ('bank'))])
     vehicle_ids = fields.One2many('fleet.vehicle', 'branch_id')
-
-
-    @api.multi
-    def _track_subtype(self, init_values):
-        self.ensure_one()
-        if 'bank_account_id' in init_values:
-            return 'fleet_branch.mt_test_branch'
-        return super(FleetBranch, self)._track_subtype(init_values)
 
     @api.model
     def create(self, vals):

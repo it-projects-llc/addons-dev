@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record id="view_approve_maintenance_wizard" model="ir.ui.view">
+      <field name="name">Approve Maintenance</field>
+      <field name="model">fleet_booking.approve_maintenance_wizard</field>
+      <field name="arch" type="xml">
+        <form string="Approve Maintenance">
+          <p class="oe_grey">
+            Entries will be created in selected journal
+          </p>
+          <group>
+            <field name="journal_id" class="oe_inline"/>
+          </group>
+          <footer>
+            <button name="create_entries" string="Create entries" type="object"
+                    class="btn-primary"/>
+            <button string="Cancel" class="btn-default" special="cancel"/>
+          </footer>
+        </form>
+      </field>
+    </record>
+
+    <record id="action_view_approve_maintenance_wizard" model="ir.actions.act_window">
+      <field name="name">Approve Maintenance</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">fleet_booking.approve_maintenance_wizard</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
+      <field name="groups_id" eval="[(4,ref('fleet_booking.group_accountant'))]"/>
+    </record>
+
+  </data>
+</openerp>

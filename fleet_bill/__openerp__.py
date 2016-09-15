@@ -14,6 +14,7 @@
 
     "depends": [
         "fleet",
+        "product",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [

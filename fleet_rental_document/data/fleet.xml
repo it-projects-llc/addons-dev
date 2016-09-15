@@ -17,5 +17,9 @@
       <field name="name">Booked</field>
       <field name="sequence">6</field>
     </record>
+    <record id="fleet_rental_document.vehicle_state_removed" model="fleet.vehicle.state">
+      <field name="name">Removed</field>
+      <field name="sequence">7</field>
+    </record>
   </data>
 </openerp>

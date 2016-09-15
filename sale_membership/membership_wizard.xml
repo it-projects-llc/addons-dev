@@ -12,7 +12,9 @@
               <field name="partner_id" options="{'no_create' : True}"/>
               <field name="membership_type_id"/>
               <field name="action_type"/>
-              <field name="new_membership_type_id" attrs="{'invisible': [('action_type', '!=', 'demote')]}"/>
+              <field name="new_membership_type_id"
+                     options="{'no_create' : True}"
+                     attrs="{'invisible': [('action_type', '!=', 'demote')]}"/>
               <field name="demoting_reason" attrs="{'invisible': [('action_type', '!=', 'demote')]}"/>
               <field name="blocking_reason" attrs="{'invisible': [('action_type', '!=', 'block')]}"/>
             </group>

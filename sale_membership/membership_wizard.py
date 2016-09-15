@@ -18,6 +18,11 @@ class MembershipWizard(models.TransientModel):
     demoting_reason = fields.Text(string='Demoting reason')
     blocking_reason = fields.Text(string='Blocking reason')
 
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        if self.partner_id:
+            return {'domain': {'new_membership_type_id': [('points', '<', self.partner_id.type_id.points)]}}
+
     @api.one
     @api.constrains('new_membership_type_id')
     def _check_new_membership_type(self):

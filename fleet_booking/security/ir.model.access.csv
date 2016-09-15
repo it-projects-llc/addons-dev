@@ -5,22 +5,37 @@ vso2,vso2,model_fleet_vehicle_log_services,group_vehicles_support_officer,1,1,1,
 vso3,vso3,model_account_invoice,group_vehicles_support_officer,1,0,0,0
 vso4,vso4,model_fleet_booking_transfer,group_vehicles_support_officer,1,1,1,1
 vso5,vso5,fleet_branch.model_fleet_branch_branch,group_vehicles_support_officer,1,0,0,0
+vso6,vso6,account_asset.model_account_asset_category,group_vehicles_support_officer,1,1,0,0
+vso7,vso7,account_asset.model_account_asset_asset,group_vehicles_support_officer,1,1,0,0
+vso8,vso8,account_asset.model_account_asset_depreciation_line,group_vehicles_support_officer,1,1,1,1
 bo1,bo1,model_fleet_vehicle_log_services,group_branch_officer,1,1,1,1
-bo2,bo2,model_fleet_vehicle,group_branch_officer,1,1,0,0
-bo4,bo4,model_fleet_booking_transfer,group_branch_officer,1,1,0,1
+bo2,bo2,model_fleet_vehicle,group_branch_officer,1,0,0,0
+bo4,bo4,model_fleet_booking_transfer,group_branch_officer,1,1,0,0
 bo5,bo5,fleet_branch.model_fleet_branch_branch,group_branch_officer,1,0,0,0
-acc1,acc1,model_fleet_vehicle_log_services,group_accountant,1,0,0,1
+bo6,bo6,fleet.model_fleet_vehicle_log_contract,group_branch_officer,1,0,0,0
+bo7,bo7,fleet.model_fleet_vehicle_log_fuel,group_branch_officer,1,0,0,0
+bo8,bo8,fleet.model_fleet_vehicle_cost,group_branch_officer,1,1,1,0
+bo9,bo9,fleet.model_fleet_vehicle_state,group_branch_officer,1,0,0,0
+bo10,bo10,model_fleet_vehicle_service_line,group_branch_officer,1,1,1,1
+acc1,acc1,model_fleet_vehicle_log_services,group_accountant,1,1,0,0
 acc2,acc2,model_account_invoice,group_accountant,1,1,1,1
 acc3,acc3,sale_membership.model_sale_membership_type,group_accountant,1,1,1,1
 acc4,acc4,fleet_rental_document.model_fleet_rental_document_rent,fleet_booking.group_accountant,1,0,0,0
 acc5,acc5,product.model_product_product,fleet_booking.group_accountant,1,1,1,1
 acc6,acc6,product.model_product_template,fleet_booking.group_accountant,1,1,1,1
 acc7,acc7,product.model_product_price_history,fleet_booking.group_accountant,1,1,1,1
+acc8,acc8,model_fleet_vehicle_service_line,group_accountant,1,1,0,0
+acc9,acc8,fleet.model_fleet_vehicle_cost,group_accountant,1,1,0,0
+acc10,acc10,fleet.model_fleet_vehicle_odometer,group_accountant,1,0,0,0
+acc11,acc11,model_fleet_vehicle,group_accountant,1,0,0,0
+acc12,acc12,fleet.model_fleet_vehicle_log_contract,group_accountant,1,0,0,0
+acc13,acc13,fleet.model_fleet_service_type,group_accountant,1,0,0,0
 afu1,afu1,fleet.model_fleet_vehicle,group_fleet_adv_user,1,1,0,0
-afu2,afu2,fleet.model_fleet_vehicle_log_services,group_fleet_adv_user,1,1,1,1
-afu3,afu3,fleet.model_fleet_vehicle_log_contract,group_fleet_adv_user,1,1,1,1
 access_installment_date,access_installment_date,model_fleet_booking_installment_date,group_vehicles_support_officer,1,1,1,1
+access_installment_type,access_installment_type,model_fleet_booking_installment_type,group_vehicles_support_officer,1,1,1,1
 access_fleet_rental_document_vso,fleet_rental_document_vso,fleet_rental_document.model_fleet_rental_document,group_vehicles_support_officer,1,1,1,1
 access_product_template_vso,product.template vso,product.model_product_template,group_vehicles_support_officer,1,0,1,0
 access_product_product_vso,product.product vso,product.model_product_product,group_vehicles_support_officer,1,0,1,0
 access_product_price_history_vso,prices.history vso,product.model_product_price_history,group_vehicles_support_officer,1,0,1,0
+fleet_vehicle_service_line_access_right,fleet_vehicle_service_line_access_right,model_fleet_vehicle_service_line,fleet.group_fleet_user,1,1,1,1
+fleet_vehicle_odometer_access_right,fleet_vehicle_odometer_access_right,fleet.model_fleet_vehicle_odometer,base.group_sale_manager,1,1,1,0

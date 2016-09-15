@@ -186,7 +186,7 @@ class FleetRentalDocumentReturn(models.Model):
         for ret in self:
             ret.state = 'closed'
             ret.document_rent_id.sudo().state = 'returned'
-            ret.vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_active')
+            ret.sudo().vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_active')
             ret.partner_id.points += ret.price_after_discount
 
     @api.model
@@ -201,7 +201,7 @@ class FleetRentalDocumentReturn(models.Model):
         for ret in self:
             ret.state = 'open'
             ret.document_rent_id.sudo().state = 'returned'
-            ret.vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_active')
+            ret.sudo().vehicle_id.state_id = self.env.ref('fleet_rental_document.vehicle_state_active')
 
     @api.multi
     def print_return(self):

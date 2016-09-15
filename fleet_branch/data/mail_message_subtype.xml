@@ -2,16 +2,16 @@
 <odoo>
   <data noupdate="0">
 
-    <record id="mt_test_branch" model="mail.message.subtype">
-      <field name="name">test branch mt</field>
-      <field name="res_model">fleet_branch.branch</field>
-      <field name="description">test branch mt</field>
+    <record id="mt_vehicle_fleet" model="mail.message.subtype">
+      <field name="name">Vehicle updated</field>
+      <field name="res_model">fleet.vehicle</field>
+      <field name="description">vehicle updated</field>
     </record>
 
-    <record id="mt_test_fleet" model="mail.message.subtype">
-      <field name="name">test branch mt</field>
-      <field name="res_model">fleet.vehicle</field>
-      <field name="parent_id" eval="ref('mt_test_branch')"/>
+    <record id="mt_vehicle_branch" model="mail.message.subtype">
+      <field name="name">Vehicle updated</field>
+      <field name="res_model">fleet_branch.branch</field>
+      <field name="parent_id" eval="ref('mt_vehicle_fleet')"/>
       <field name="relation_field">branch_id</field>
     </record>
 
