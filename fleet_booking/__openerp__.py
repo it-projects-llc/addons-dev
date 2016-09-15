@@ -20,11 +20,11 @@
         "sale_membership",
         "fleet_rental_document",
         "fleet_vehicle_color",
-        "fleet_bill",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
         "data/data.xml",
+        "data/fleet_booking.xml",
         "security/records.xml",
         "security/ir.model.access.csv",
         'wizard/make_bill.xml',

@@ -21,12 +21,12 @@ class FleetBookingCreateBillWizard(models.TransientModel):
         inv_obj = self.env['account.invoice']
 
         account_id = False
-        if document.product_id.id:
-            account_id = document.product_id.property_account_expense_id.id
+        if document.vehicle_product_id.id:
+            account_id = document.vehicle_product_id.property_account_expense_id.id
         if not account_id:
             raise UserError(
                 _('There is no income account defined for this product: "%s". You may have to install a chart of account from Accounting app, settings menu.') %
-                (document.product_id.name,))
+                (document.vehicle_product_id.name,))
 
         if self.amount <= 0.00:
             raise UserError(_('The value of the payment amount must be positive.'))
@@ -42,14 +42,14 @@ class FleetBookingCreateBillWizard(models.TransientModel):
             'account_id': document.partner_id.property_account_payable_id.id,
             'partner_id': document.partner_id.id,
             'invoice_line_ids': [(0, 0, {
-                'name': document.product_id.name,
+                'name': document.vehicle_product_id.name,
                 'origin': document.name,
                 'account_id': account_id,
                 'price_unit': amount,
                 'quantity': 1.0,
                 'discount': 0.0,
-                'uom_id': document.product_id.uom_id.id,
-                'product_id': document.product_id.id,
+                'uom_id': document.vehicle_product_id.uom_id.id,
+                'product_id': document.vehicle_product_id.id,
                 'fleet_rental_document_id': document.document_id.id,
                 'account_analytic_id': document.document_id.analytic_account_id.id,
                 # 'asset_category_id': document.asset_id.category_id.id,
@@ -69,8 +69,8 @@ class FleetBookingCreateBillWizard(models.TransientModel):
         document = self.env[self._context.get('active_model')].browse(self._context.get('active_id', []))
 
         # Create product if necessary
-        if not document.product_id:
-            document.product_id = self._create_product(document)
+        if not document.vehicle_product_id:
+            document.vehicle_product_id = self._create_product(document)
 
         # Create asset if necessary
         if not document.asset_id and document.account_asset_id and document.account_depreciation_id:
