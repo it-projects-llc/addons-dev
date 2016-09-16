@@ -2,6 +2,28 @@
 <openerp>
   <data>
 
+    <template id="report_rent_footer">
+      <t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})" />
+      <div class="row">
+        <h4>I hereby sign that I have read all conditions.</h4>
+        <div class="col-xs-6">
+          <p>Customer name: <span t-field="doc.partner_id.name"/></p>
+          <p>Signature:</p>
+        </div>
+        <div class="col-xs-6">
+          <p>Employee name: <span t-field="doc.user_id"/></p>
+          <p>Signature:</p>
+        </div>
+      </div>
+    </template>
+
+    <template id="report_terms_and_conditions">
+        <div class="page">
+          <h4>Terms &amp; Conditions</h4>
+          <t t-call="fleet_rental_document.report_rent_footer"/>
+        </div>
+    </template>
+
     <template id="report_rent_document">
         <t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})" />
         <div class="page">
@@ -159,18 +181,7 @@
               <p>Balance: <span t-field="doc.balance"/></p>
             </div>
           </div>
-          <div class="row">
-            <h4>I hereby sign that I have read all conditions.</h4>
-            <div class="col-xs-6">
-              <p>Customer name: <span t-field="doc.partner_id.name"/></p>
-              <p>Signature:</p>
-            </div>
-            <div class="col-xs-6">
-              <p>Employee name: <span t-field="doc.user_id"/></p>
-              <p>Signature:</p>
-            </div>
-          </div>
-
+          <t t-call="fleet_rental_document.report_rent_footer"/>
           <div class="oe_structure"/>
         </div>
     </template>
@@ -179,10 +190,10 @@
       <t t-call="report.html_container">
         <t t-foreach="docs" t-as="doc">
           <t t-call="fleet_rental_document.report_rent_document" t-lang="doc.partner_id.lang"/>
+          <t t-call="fleet_rental_document.report_terms_and_conditions" t-lang="doc.partner_id.lang"/>
         </t>
       </t>
     </template>
 
   </data>
 </openerp>
-

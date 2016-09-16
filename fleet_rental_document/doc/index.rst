@@ -3,6 +3,20 @@
 ==============
 
 
+Installation
+============
+
+Requirements
+------------
+
+Wand python package is required to show vehicle image on pdf report. Install it:
+
+::
+
+ apt-get install libmagickwand-dev
+ pip install wand
+
+
 Preparation
 ===========
 

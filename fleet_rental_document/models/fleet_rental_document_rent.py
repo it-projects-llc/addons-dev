@@ -2,12 +2,20 @@
 import os
 import base64
 from lxml import etree
-from wand.image import Image
 from datetime import datetime, timedelta
 from openerp import models, fields, api
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import UserError
+
+import logging
+_logger = logging.getLogger(__name__)
+
+try:
+    from wand.image import Image
+except:
+    _logger.debug('Wand package is required which is not \
+    found on your installation')
 
 
 class FleetRentalDocumentRent(models.Model):
@@ -122,8 +130,12 @@ class FleetRentalDocumentRent(models.Model):
                     for el in dom.xpath('//*[@id="%s"]' % line.part_id.path_ID):
                         el.attrib['fill'] = 'red'
             f.close()
-            with Image(blob=etree.tostring(dom), format='svg') as img:
-                rec.png_file = base64.b64encode(img.make_blob('png'))
+            try:
+                with Image(blob=etree.tostring(dom), format='svg') as img:
+                    rec.png_file = base64.b64encode(img.make_blob('png'))
+            except Exception as e:
+                _logger.exception('An error with vehicle image convertion happened during report creation: ' + str(e))
+
 
     @api.model
     def default_get(self, fields_list):
