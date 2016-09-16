@@ -21,6 +21,9 @@ class Vehicle(models.Model):
                                                      domain=lambda self: [('type_id.name', '=', 'Insurance')])
     partner_id = fields.Many2one('res.partner', string='Vendor', copy=False)
     lease_partner_id = fields.Many2one('res.partner', string='Lease partner')
+    # TODO: make model for installment or use modified fleet.vehicle.log.contract. put date_ids and partner_id there,
+    # Make two Many2one fields for lease and insurance installments and related
+    # dates sub-tables
     insurance_partner_id = fields.Many2one('res.partner', string='Insurance partner')
     model_year = fields.Date('Model Year')
     paid = fields.Float(string='Paid amount', related="document_id.paid_amount", store=True, readonly=True)
