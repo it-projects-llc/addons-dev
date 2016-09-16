@@ -17,6 +17,7 @@ bo7,bo7,fleet.model_fleet_vehicle_log_fuel,group_branch_officer,1,0,0,0
 bo8,bo8,fleet.model_fleet_vehicle_cost,group_branch_officer,1,1,1,0
 bo9,bo9,fleet.model_fleet_vehicle_state,group_branch_officer,1,0,0,0
 bo10,bo10,model_fleet_vehicle_service_line,group_branch_officer,1,1,1,1
+bo11,bo11,model_fleet_vehicle_model,group_branch_officer,1,0,0,0
 acc1,acc1,model_fleet_vehicle_log_services,group_accountant,1,1,0,0
 acc2,acc2,model_account_invoice,group_accountant,1,1,1,1
 acc3,acc3,sale_membership.model_sale_membership_type,group_accountant,1,1,1,1
