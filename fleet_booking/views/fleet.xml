@@ -147,6 +147,7 @@
                   <tree string="Insurance Installments dates" editable="bottom">
                     <field name="installment_date"/>
                     <field name="amount"/>
+                    <field name="type_id" invisible="1"/>
                   </tree>
                 </field>
               </page>
