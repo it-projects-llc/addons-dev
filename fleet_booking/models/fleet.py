@@ -20,6 +20,8 @@ class Vehicle(models.Model):
     insurance_installment_date_ids = fields.One2many('fleet_booking.installment_date', 'vehicle_id',
                                                      domain=lambda self: [('type_id.name', '=', 'Insurance')])
     partner_id = fields.Many2one('res.partner', string='Vendor', copy=False)
+    lease_partner_id = fields.Many2one('res.partner', string='Lease partner')
+    insurance_partner_id = fields.Many2one('res.partner', string='Insurance partner')
     model_year = fields.Date('Model Year')
     paid = fields.Float(string='Paid amount', related="document_id.paid_amount", store=True, readonly=True)
     remain = fields.Float(string='Remaining amount', compute="_compute_remaining_amount",

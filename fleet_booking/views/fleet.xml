@@ -132,22 +132,26 @@
                 </field>
               </page>
               <page string="Lease Installments dates">
+                <field colspan="4" name='lease_partner_id'/>
                 <field name="lease_installment_date_ids" widget='one2many' nolabel="1" mode="tree"
                        context="{'default_type_ref': 'fleet_booking.installment_type_lease'}">
                   <tree string="Lease Installments dates" editable="bottom">
                     <field name="installment_date"/>
                     <field name="amount"/>
                     <field name="type_id" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
                   </tree>
                 </field>
               </page>
               <page string="Insurance Installments dates">
+                <field colspan="4" name='insurance_partner_id'/>
                 <field name="insurance_installment_date_ids" widget='one2many' nolabel="1" mode="tree"
                        context="{'default_type_ref': 'fleet_booking.installment_type_insurance'}">
                   <tree string="Insurance Installments dates" editable="bottom">
                     <field name="installment_date"/>
                     <field name="amount"/>
                     <field name="type_id" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
                   </tree>
                 </field>
               </page>
