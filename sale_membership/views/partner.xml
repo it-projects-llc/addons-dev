@@ -10,6 +10,7 @@
         <data>
           <xpath expr="//page[@name='sales_purchases']/group/group[@name='sale']" position="inside">
             <field name='type_id' string="Membership"/>
+            <field name='current_points'/>
             <field name='blocked' string="Blocked"/>
           </xpath>
         </data>
@@ -39,5 +40,18 @@
 
     <menuitem action="action_partner_blacklist_form" parent="base.menu_sale_config" id="sale_blacklist_menu" sequence="11"/>
 
+    <record id="view_partner_tree" model="ir.ui.view">
+      <field name="name">res.partner.tree</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="base.view_partner_tree"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='email']" position="after">
+          <field name="customer" invisible="1"/>
+          <field name='type_id' string="Membership" attrs="{'invisible': [('customer', '!=', True)]}"/>
+          <field name='current_points' attrs="{'invisible': [('customer', '!=', True)]}"/>
+        </xpath>
+      </field>
+    </record>
+    
   </data>
 </openerp>
