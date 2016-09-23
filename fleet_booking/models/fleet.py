@@ -68,13 +68,14 @@ class Vehicle(models.Model):
 
 
 class Service(models.Model):
-    _inherit = 'fleet.vehicle.log.services'
+    _name = 'fleet.vehicle.log.services'
+    _inherit = ['fleet.vehicle.log.services', 'mail.thread']
 
     state = fields.Selection([('draft', 'Draft'),
                               ('request', 'Request'),
                               ('done', 'Done'),
                               ('paid', 'Closed')],
-                             string='State', default='draft')
+                             string='State', default='draft', track_visibility='onchane')
     maintenance_type = fields.Selection([('accident', 'Accident'),
                                          ('emergency', 'Emergency'),
                                          ('periodic', 'Periodic'),
@@ -91,6 +92,13 @@ class Service(models.Model):
     total_cost = fields.Float(string='Total Cost',
                               digits_compute=dp.get_precision('Product Price'),
                               compute="_compute_total_cost", store=True, readonly=True)
+
+    @api.multi
+    def _track_subtype(self, init_values):
+        self.ensure_one()
+        if 'state' in init_values and self.state == 'request':
+            return 'fleet_booking.mt_vehicle_service_log'
+        return super(Service, self)._track_subtype(init_values)
 
     @api.multi
     @api.depends('service_line_ids.cost')
