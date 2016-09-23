@@ -174,6 +174,7 @@
         report_type="qweb-pdf"
         file="fleet_rental_document.report_return"
         name="fleet_rental_document.report_return"
+        menu="False"
         />
 
   </data>

@@ -144,7 +144,7 @@
         <field name="name">fleet.rental.document.rent.form</field>
         <field name="model">fleet_rental.document_rent</field>
         <field name="arch" type="xml">
-          <form string="Vehicle Rent">
+          <form string="Vehicle Rent" delete="false">
             <header>
               <button name="%(action_view_make_invoice_wizard)d" string="Create Invoice"
                       type="action" class="btn-primary"

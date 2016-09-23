@@ -9,6 +9,7 @@
         report_type="qweb-pdf"
         file="fleet_rental_document.report_rent"
         name="fleet_rental_document.report_rent"
+        menu="False"
         />
 
   </data>

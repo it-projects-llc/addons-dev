@@ -29,6 +29,7 @@
         report_type="qweb-pdf"
         file="fleet_rental_document.report_extend"
         name="fleet_rental_document.report_extend"
+        menu="False"
         />
 
     <record id='report_extend_document' model='ir.ui.view'>
