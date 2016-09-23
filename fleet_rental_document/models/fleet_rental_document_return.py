@@ -52,7 +52,8 @@ class FleetRentalDocumentReturn(models.Model):
     paid_amount = fields.Float(string='Paid Amount', related="document_id.paid_amount",
                                digits_compute=dp.get_precision('Product Price'), readonly=True)
     diff_pa_csp = fields.Float(compute="_compute_diff_pa_csp")
-    odometer_after = fields.Float(string='Odometer after Rent', related='vehicle_id.odometer')
+    odometer_after = fields.Float(string='Odometer after Rent', compute='_compute_odometer',
+                                  inverse='_inverse_odometer', store=True)
     return_datetime = fields.Datetime(string='Return Date and Time', required=True,
                                       default=fields.Datetime.now)
     total_rental_period = fields.Integer(string='Total Rental Period',
@@ -86,6 +87,19 @@ class FleetRentalDocumentReturn(models.Model):
                                         compute="_compute_price_after_discount", store=True,
                                         digits_compute=dp.get_precision('Product Price'),
                                         readonly=True)
+
+    def _compute_odometer(self):
+        for record in self:
+            ids = self.env['fleet.vehicle.odometer'].search([('vehicle_id', '=', record.vehicle_id.id)], limit=1, order='value desc')
+            if len(ids) > 0:
+                record.odometer_after = ids[0].value
+
+    def _inverse_odometer(self):
+        date = fields.Date.today()
+        odometer_obj = self.env['fleet.vehicle.odometer']
+        for record in self:
+            data = {'value': record.odometer_after, 'date': date, 'vehicle_id': record.vehicle_id.id}
+            odometer_obj.create(data)
 
     @api.one
     @api.depends('return_datetime')
