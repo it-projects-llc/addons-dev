@@ -23,7 +23,8 @@ class FleetRentalCreateDocumentWizard(models.TransientModel):
     @api.onchange('vehicle')
     def _onchange_vehicle(self):
         if self.vehicle:
-            self.document_rent = self.env['fleet_rental.document_rent'].search([('vehicle_id', '=', self.vehicle.id)], limit=1)
+            self.document_rent = self.env['fleet_rental.document_rent'].search([('vehicle_id', '=', self.vehicle.id),
+                                                                            ('state', 'in', ['confirmed', 'extended'])], limit=1)
 
     @api.multi
     def action_create(self):

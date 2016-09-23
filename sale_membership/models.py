@@ -27,12 +27,19 @@ class Person(models.Model):
 
     _inherit = 'res.partner'
 
-    points = fields.Float(string='Current membership Points', default=0, readonly=True)
-    demoting_offset = fields.Integer(help='demoting points', default=0, readonly=True)
+    points = fields.Float(string='membership Points', default=0, readonly=True)
+    demoting_offset = fields.Float(help='demoting points', default=0, readonly=True)
+    current_points = fields.Float(string='Current membership points', compute="_compute_current_points",
+                                  store=True, readonly=True)
     type_id = fields.Many2one('sale_membership.type', compute='set_membership',
                               string='Current Membership type', store=True, readonly=True,
                               ondelete="restrict")
     blocked = fields.Boolean(default=False, string='Blocked', readonly=True)
+
+    @api.depends('points', 'demoting_offset')
+    def _compute_current_points(self):
+        for record in self:
+            record.current_points = record.points - record.demoting_offset
 
     @api.one
     @api.depends('points', 'demoting_offset', 'customer')

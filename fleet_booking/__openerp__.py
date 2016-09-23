@@ -25,6 +25,7 @@
     "data": [
         "data/data.xml",
         "data/fleet_booking.xml",
+        "data/mail_message_subtype.xml",
         "security/records.xml",
         "security/ir.model.access.csv",
         'wizard/make_bill.xml',

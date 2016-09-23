@@ -70,7 +70,7 @@
         <field name="name">fleet.rental.document.return.form</field>
         <field name="model">fleet_rental.document_return</field>
         <field name="arch" type="xml">
-          <form string="Vehicle Return">
+          <form string="Vehicle Return" delete="false">
             <header>
                 <button name="%(action_view_make_invoice_wizard)d" string="Create Invoice"
                         type="action" class="btn-primary"

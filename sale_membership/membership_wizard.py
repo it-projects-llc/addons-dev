@@ -13,6 +13,7 @@ class MembershipWizard(models.TransientModel):
     action_type = fields.Selection([
         ('block', 'Block'),
         ('demote', 'Demote'),
+        ('unblock', 'Unblock'),
     ])
 
     demoting_reason = fields.Text(string='Demoting reason')
@@ -44,8 +45,19 @@ class MembershipWizard(models.TransientModel):
                                                     'reason': self.demoting_reason,
                                                     })
         elif self.action_type == 'block':
+            if self.partner_id.blocked:
+                raise UserError('You cannot perform this action because the customer is already blocked')
             self.partner_id.write({'blocked': True})
             self.env['sale_membership.log'].create({'partner_id': self.partner_id.id,
                                                     'blocked': True,
+                                                    'reason': self.blocking_reason,
+                                                    })
+
+        elif self.action_type == 'unblock':
+            if not self.partner_id.blocked:
+                raise UserError('You cannot perform this action because the customer is not blocked')
+            self.partner_id.write({'blocked': False})
+            self.env['sale_membership.log'].create({'partner_id': self.partner_id.id,
+                                                    'blocked': False,
                                                     'reason': self.blocking_reason,
                                                     })

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="0">
+
+    <record id="mt_vehicle_service_log" model="mail.message.subtype">
+      <field name="name">Vehicle maintenance record</field>
+      <field name="res_model">fleet.vehicle.log.services</field>
+      <field name="description">maintenance record updated</field>
+    </record>
+
+    <record id="mt_vehicle_vehicle" model="mail.message.subtype">
+      <field name="name">Vehicle maintenance record</field>
+      <field name="res_model">fleet.vehicle</field>
+      <field name="parent_id" eval="ref('mt_vehicle_service_log')"/>
+      <field name="relation_field">vehicle_id</field>
+    </record>
+
+  </data>
+</odoo>
