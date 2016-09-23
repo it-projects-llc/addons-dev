@@ -5,12 +5,10 @@
     <record forcecreate="True" id="product_product_lease" model="product.product">
       <field name="name">Vehicle Lease</field>
       <field name="type">service</field>
-      <field name="invoice_policy">order</field>
     </record>
     <record forcecreate="True" id="product_product_insurance" model="product.product">
       <field name="name">Vehicle Insurance</field>
       <field name="type">service</field>
-      <field name="invoice_policy">order</field>
     </record>
 
     <record forcecreate="True" id="installment_type_lease" model="fleet_booking.installment_type">
