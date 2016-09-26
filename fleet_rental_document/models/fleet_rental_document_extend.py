@@ -41,9 +41,9 @@ class FleetRentalDocumentExtend(models.Model):
                                        compute="_compute_extra_driver_charge", store=True,
                                        digits_compute=dp.get_precision('Product Price'),
                                        readonly=True)
+    return_date = fields.Date(string='Return Date', readonly=True)
     new_return_date = fields.Date(string='New Return Date', required=True,
                                   default=fields.Date.context_today)
-
     total_rental_period = fields.Integer(string='Total Rental Period',
                                          compute="_compute_total_rental_period",
                                          store=True, readonly=True)
@@ -57,7 +57,7 @@ class FleetRentalDocumentExtend(models.Model):
                                     store=True, digits_compute=dp.get_precision('Product Price'),
                                     readonly=True)
     previous_deposit = fields.Float(string='Previous Deposit',
-                                    related="document_rent_id.advanced_deposit",
+                                    compute="_compute_previous_deposit",
                                     store=True, digits_compute=dp.get_precision('Product Price'),
                                     readonly=True)
     new_deposit = fields.Float(string='New Deposit', related="document_id.paid_amount",
@@ -68,6 +68,15 @@ class FleetRentalDocumentExtend(models.Model):
                                     readonly=True)
     balance = fields.Float(string='Balance', compute="_compute_balance", store=True,
                            digits_compute=dp.get_precision('Product Price'), readonly=True)
+
+    @api.depends('total_rent_price')
+    def _compute_previous_deposit(self):
+        for record in self:
+            last_extend = self.search([
+                ('document_rent_id', '=', record.document_rent_id.id),
+                ('state', '=', 'confirmed')], order='new_return_date desc', limit=1)
+            record.previous_deposit = last_extend and last_extend.advanced_deposit or \
+                                      record.document_rent_id.advanced_deposit
 
     @api.depends('total_rent_price', 'advanced_deposit')
     def _compute_balance(self):

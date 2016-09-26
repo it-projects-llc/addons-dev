@@ -7,37 +7,10 @@ from openerp.exceptions import UserError
 class FleetRentalCreateInvoiceWizard(models.TransientModel):
     _name = "fleet_rental.create_invoice_wizard"
 
-    @api.model
-    def _default_product(self):
-        model = self._context.get('active_model')
-        if model in ['fleet_rental.document_rent', 'fleet_rental.document_extend']:
-            res = self.env.user.branch_id.deposit_product_id.id
-        elif model == 'fleet_rental.document_return':
-            res = self.env.user.branch_id.rental_product_id.id
-        return res
-
-    @api.model
-    def _default_amount(self):
-        model = self._context.get('active_model')
-        document = self.env[model].browse(self._context.get('active_id'))
-        retval = 0
-        if model == 'fleet_rental.document_rent':
-            retval = document.total_rent_price
-        elif model == 'fleet_rental.document_return':
-            retval = document.customer_shall_pay
-        elif model == 'fleet_rental.document_extend':
-            last_extend = self.env['fleet_rental.document_extend'].search([
-                ('document_rent_id', '=', document.document_rent_id.id),
-                ('state', '=', 'confirmed')], order='new_return_date desc', limit=1)
-            retval = last_extend and document.total_rent_price - last_extend.total_rent_price or \
-                document.total_rent_price - document.document_rent_id.total_rent_price
-        return retval
-
     amount = fields.Float('Payment Amount', digits=dp.get_precision('Account'),
-                          help="The amount to be invoiced.",
-                          default=_default_amount)
+                          help="The amount to be invoiced.")
     product_id = fields.Many2one('product.product', string='Payment Product',
-                                 default=_default_product)
+                                 readonly=True)
 
     @api.multi
     def _create_invoice(self, document, amount):

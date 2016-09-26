@@ -27,6 +27,7 @@ class FleetRentalDocumentReturn(models.Model):
         ('extend', 'Extend'),
         ('return', 'Return'),
     ], readonly=True, index=True, change_default=True)
+    product_id = fields.Many2one('product.product', related='vehicle_id.branch_id.rental_product_id')
     origin = fields.Char(string='Source Document',
                          help="Reference of the document that produced this document.",
                          readonly=True, states={'draft': [('readonly', False)]})
