@@ -59,7 +59,7 @@
           </xpath>
           <xpath expr="//button[@name='%(action_view_make_invoice_wizard)d']" position="replace">
             <button name="%(action_view_make_invoice_wizard)d" string="Create Invoice"
-                    type="action" class="btn-primary" />
+                    type="action" class="btn-primary" context="{'default_amount': balance, 'default_product_id': product_id}"/>
           </xpath>
           <xpath expr="//button[@name='print_rent']" position="replace">
               <button name="print_extend" string="Print" type="object"

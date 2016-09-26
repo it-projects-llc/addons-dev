@@ -74,14 +74,11 @@
             <header>
                 <button name="%(action_view_make_invoice_wizard)d" string="Create Invoice"
                         type="action" class="btn-primary"
-                        states="open"/>
+                        states="open" context="{'default_amount': customer_shall_pay, 'default_product_id': product_id}"/>
                 <button name="action_return_car" states="draft" string="Return Car and keep contract open" type="object"/>
-                <button name="action_create_refund"
-                        type='object'
-                        string='Create Refund'
-                        class="btn-primary"
-                        groups="base.group_user"
-                        states="open"/>
+                <button name="%(action_view_make_invoice_wizard)d" string="Create Refund"
+                        type="action" class="btn-primary"
+                        states="closed" context="{'default_amount': returned_amount, 'default_product_id': product_id, 'default_type': 'out_refund'}"/>
                 <button name="action_confirm" string="Confirm Return" type="object"
                       attrs="{'invisible': ['|', ('state', 'in', ['closed']), '&amp;', ('balance', '&gt;', 0), ('diff_pa_csp', '!=', 0)]}"/>
                 <button name="print_return" string="Print" type="object"
@@ -127,6 +124,7 @@
                   <field name="extra_kilometers" class="oe_inline"/>
                 </group>
                 <group col="2" string="Payment Details">
+                  <field name="product_id" invisible="True"/>
                   <field name="period_rent_price" class="oe_inline"/>
                   <field name="extra_driver_charge" class="oe_inline"/>
                   <field name="other_extra_charges" class="oe_inline"/>

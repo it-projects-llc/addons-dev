@@ -74,8 +74,11 @@ class FleetRentalDocument(models.Model):
     @api.depends('analytic_account_id.line_ids.move_id.balance_cash_basis')
     def _compute_paid_amount(self):
         for record in self:
-            for line in record.analytic_account_id.mapped('line_ids').mapped('move_id'):
-                record.paid_amount += abs(line.balance_cash_basis)
+            for line in record.analytic_account_id.line_ids:
+                if line.amount > 0:
+                    record.paid_amount += abs(line.move_id.balance_cash_basis)
+                else:
+                    record.paid_amount -= line.move_id.balance_cash_basis
 
     @api.multi
     def action_create_refund(self):

@@ -46,6 +46,7 @@ class FleetRentalDocumentRent(models.Model):
                          help="Reference of the document that produced this document.",
                          readonly=True, states={'draft': [('readonly', False)]})
 
+    product_id = fields.Many2one('product.product', related='vehicle_id.branch_id.deposit_product_id')
     membership_type_id = fields.Many2one('sale_membership.type',
                                          related='partner_id.type_id', string='Membership')
     vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle", required=True)
@@ -225,6 +226,7 @@ class FleetRentalDocumentRent(models.Model):
             document_extend = document_extend_obj.create({'document_rent_id': rent.id,
                                                           'extra_driver_charge_per_day': rent.extra_driver_charge_per_day,
                                                           'other_extra_charges': rent.other_extra_charges,
+                                                          'return_date': rent.extend_return_date or rent.return_date,
                                                           })
         return self.action_view_document_extend(document_extend.id)
 
