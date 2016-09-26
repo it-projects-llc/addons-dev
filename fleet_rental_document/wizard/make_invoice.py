@@ -11,6 +11,13 @@ class FleetRentalCreateInvoiceWizard(models.TransientModel):
                           help="The amount to be invoiced.")
     product_id = fields.Many2one('product.product', string='Payment Product',
                                  readonly=True)
+    type = fields.Selection([
+        ('out_invoice', 'Customer Invoice'),
+        ('in_invoice', 'Vendor Bill'),
+        ('out_refund', 'Customer Refund'),
+        ('in_refund', 'Vendor Refund'),
+        ], readonly=True, index=True,
+        default=lambda self: self._context.get('type', 'out_invoice'))
 
     @api.multi
     def _create_invoice(self, document, amount):
@@ -36,7 +43,7 @@ class FleetRentalCreateInvoiceWizard(models.TransientModel):
         invoice = inv_obj.create({
             'name': document.name,
             'origin': document.name,
-            'type': 'out_invoice',
+            'type': self.type,
             'reference': False,
             'account_id': document.partner_id.property_account_receivable_id.id,
             'partner_id': document.partner_id.id,

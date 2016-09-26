@@ -50,7 +50,7 @@ class FleetRentalDocumentReturn(models.Model):
     returned_amount = fields.Float(string='Returned Amount', compute="_compute_returned_amount",
                                    store=True, digits_compute=dp.get_precision('Product Price'),
                                    readonly=True)
-    paid_amount = fields.Float(string='Paid Amount', related="document_id.paid_amount",
+    paid_amount = fields.Float(string='Paid Amount', compute="_compute_paid_amount",
                                digits_compute=dp.get_precision('Product Price'), readonly=True)
     diff_pa_csp = fields.Float(compute="_compute_diff_pa_csp")
     odometer_after = fields.Float(string='Odometer after Rent', compute='_compute_odometer',
@@ -88,6 +88,10 @@ class FleetRentalDocumentReturn(models.Model):
                                         compute="_compute_price_after_discount", store=True,
                                         digits_compute=dp.get_precision('Product Price'),
                                         readonly=True)
+
+    def _compute_paid_amount(self):
+        for record in self:
+            record.paid_amount = record.document_id.paid_amount + record.advanced_deposit
 
     def _compute_odometer(self):
         for record in self:
