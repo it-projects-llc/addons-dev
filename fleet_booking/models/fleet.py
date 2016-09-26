@@ -75,7 +75,7 @@ class Service(models.Model):
                               ('request', 'Request'),
                               ('done', 'Done'),
                               ('paid', 'Closed')],
-                             string='State', default='draft', track_visibility='onchane')
+                             string='State', default='draft', track_visibility='onchange')
     maintenance_type = fields.Selection([('accident', 'Accident'),
                                          ('emergency', 'Emergency'),
                                          ('periodic', 'Periodic'),
