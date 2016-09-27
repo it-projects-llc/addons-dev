@@ -17,10 +17,10 @@ class FleetBranch(models.Model):
                              string='State', default='new')
 
     deposit_account_id = fields.Many2one("account.account", string="Advanced Deposit Account",
-                                         domain=[('deprecated', '=', False)],
+                                         domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)],
                                          help="Account used for deposits", required=True)
     rental_account_id = fields.Many2one("account.account", string="Sales Account",
-                                        domain=[('deprecated', '=', False)],
+                                        domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)],
                                         help="Account used for rental sales", required=True)
     deposit_product_id = fields.Many2one('product.product', 'Deposit Product',
                                          domain="[('type', '=', 'service')]")
