@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="res_company_form_l10n_syscoa_payroll" model="ir.ui.view">
+            <field name="name">res.company.form.l10n.syscoa.payroll</field>
+            <field name="model">res.company</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="base.view_company_form" />
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//group[@name='account_grp']" position="after">
+                        <group string="Paie">
+                            <field name="governmental_org" />
+                            <newline />
+                            <field name="waste_collection_company" />
+                            <newline />
+                            <field name="conv_coll_national" />
+                            <newline />
+                            <field name="css_percentage" />
+<!--
+                            <newline />
+                            <field name="mutual_insurance_employee" />
+                            <newline />
+                            <field name="mutual_insurance_company" />
+-->
+                        </group>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="hr_employee_form_l10n_syscoa_payroll" model="ir.ui.view">
+            <field name="name">hr.employee.form.l10n.syscoa.payroll</field>
+            <field name="model">hr.employee</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="hr.view_employee_form" />
+            <field name="arch" type="xml">
+                <data>
+
+                    <label for="remaining_leaves" position="before">
+                        <label for="max_leaves" />
+                        <div>
+                            <field name="max_leaves" string="Acquis" class="oe_inline" />
+                            days
+                        </div>
+                        <label for="leaves_taken" />
+                        <div>
+                            <field name="leaves_taken" string="Pris" class="oe_inline" />
+                            days
+                        </div>
+                    </label>
+
+
+                    <field name="marital" position="after">
+                        <field name="status_spouse" attrs="{'invisible': [('marital','!=','married')]}" />
+                    </field>
+
+                    <xpath expr="//group[@name='active_group']" position="after">
+                        <group string="Paie">
+                            <field name="social_parts" />
+                            <field name="coef" />
+                        </group>
+                        <group string="Contributions Sociales">
+                            <field name="ipres_id" />
+                            <field name="css_id" />
+                        </group>
+                    </xpath>
+
+                    <field name="active" position="after">
+                        <field name="matricule" />
+                    </field>
+
+                </data>
+            </field>
+        </record>
+
+<!-- Bass: die nächsten Abschnitte waren, dafür gedacht, das Setzen des Salarialstruktur zu automatisieren, aber das funktioniert nicht -->
+<!--
+        <record id="erg_hr_contract_type_view_form" model="ir.ui.view">
+            <field name="name">erg.hr.contract.type.view.form</field>
+            <field name="model">hr.contract.type</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_type_view_form" />
+            <field name="arch" type="xml">
+                <field name="name" position="replace">
+                    <field name="name" />
+                    <field name="struct_id" />
+                </field>
+            </field>
+        </record>
+        <record id="erg_hr_contract_type_view_tree" model="ir.ui.view">
+            <field name="name">erg.hr.contract.type.view.tree</field>
+            <field name="model">hr.contract.type</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_type_view_tree" />
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field colspan="1" name="struct_id" />
+                </field>
+            </field>
+        </record>
+-->
+
+
+        <record id="hr_contract_view_tree_l10n_syscoa_payroll" model="ir.ui.view">
+            <field name="name">hr.contract.view.tree.l10n.syscoa.payroll</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_tree" />
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='type_id']" position="after">
+                    <field name="struct_id" />
+                </xpath>
+
+                <xpath expr="//field[@name='working_hours']" position="replace" />
+
+            </field>
+        </record>
+
+        <record id="hr_contract_view_form_l10n_syscoa_payroll" model="ir.ui.view">
+            <field name="name">hr.contract.view.form.l10n.syscoa.payroll</field>
+            <field name="model">hr.contract</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit" />
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='type_id']" position="after">
+                    <field name="governmental_org" invisible="1" />
+                    <field name="functionary" attrs="{'invisible': [('governmental_org','=',False)]}" />
+                </xpath>
+
+                <group name="salary_and_advantages" position="replace" />
+                <field name="schedule_pay" position="replace" />
+
+                <xpath expr="//group[@name='duration_group']" position="replace">
+                    <group name="duration_group" string="Duration">
+                        <label for="date_start" string="Durée du contrat" />
+                        <div>
+                            <field name="date_start" class="oe_inline" />
+                            -
+                            <field name="date_end" class="oe_inline" />
+                        </div>
+                        <label for="trial_date_start" string="Trial Period Duration" />
+                        <div>
+                            <field name="trial_date_start" class="oe_inline" />
+                            -
+                            <field name="trial_date_end" class="oe_inline" />
+                        </div>
+                        <field name="time_mod" />
+                        <field name="time_fixed" attrs="{'invisible': [('time_mod','=','variable')]}"/>
+                        <field name="working_hours" string="Heures de travail prévues" />
+                    </group>
+                </xpath>
+
+                <group name="duration_group" position="before">
+                    <group string="Classification">
+                        <field name="category" />
+                        <field name="qualif" />
+                        <field name="niveau" />
+                        <field name="coef" />
+                        <field name="indice" />
+                    </group>
+                </group>
+
+                <group name="duration_group" position="after">
+                    <group string="Congés">
+                        <field name="yearly_max_leaves" />
+                        <field name="attribute_leave_days" invisible="1" />
+                        <label for="leave_days" />
+                        <div>
+                            <field name="leave_days_manual" class="oe_inline" />
+                            <field name="leave_days_manual_input" class="oe_inline" attrs="{'invisible': [('leave_days_manual','=',False)]}" />
+                            <field name="leave_days" class="oe_inline" attrs="{'invisible': [('leave_days_manual','=',True)]}" />
+                        </div>
+                    </group>
+                    <group string="Paiement">
+                        <field name="schedule_pay" />
+                        <field name="pay_mod" />
+                    </group>
+                </group>
+
+                <data>
+                    <xpath expr="//page[@name='information']" position="after">
+                        <page string="Salaire et Avantages " name="primes">
+
+                            <group colspan="4">
+                                <group string="Salaire de base">
+                                    <field name="struct_id" />
+                                    <field name="wage" string="Salaire" />
+                                    <field name="additional_salary" />
+                                </group>
+                                <group string="Ancienneté">
+                                    <label for="seniority_date" />
+                                    <div>
+                                        <field name="seniority_date_manual" class="oe_inline" />
+                                        <field name="seniority_date_manual_input" class="oe_inline" attrs="{'invisible': [('seniority_date_manual','=',False)]}" />
+                                        <field name="seniority_date" class="oe_inline" attrs="{'invisible': [('seniority_date_manual','=',True)]}" />
+                                    </div>
+                                    <field name="seniority" />
+                                    <label for="seniority_allowance" />
+                                    <div>
+                                        <field name="seniority_allowance_manual" class="oe_inline" />
+                                        <field name="seniority_allowance_manual_input" class="oe_inline" attrs="{'invisible': [('seniority_allowance_manual','=',False)]}" />
+                                        <field name="seniority_allowance" class="oe_inline" attrs="{'invisible': [('seniority_allowance_manual','=',True)]}" />
+                                    </div>
+                                </group>
+                            </group>
+
+                            <group colspan="4">
+                                <group string="Primes et Indemnités">
+                                    <field name="responsability_bonus" />
+                                    <field name="performance_bonus" />
+                                    <field name="subjection_allowance" invisible="1" />
+                                    <field name="home_bonus" />
+                                    <field name="risk_bonus" />
+                                    <field name="cashpoint_bonus" />
+                                    <field name="expatriation_bonus" />
+                                    <field name="dirtiness_allowance" />
+                                    <field name="gratification" />
+                                </group>
+                                <group string="Avantages en nature">
+                                    <field name="company_car_advantage" colspan="2" />
+                                    <field name="company_phone_advantage" />
+                                    <field name="food_advantage" />
+                                    <field name="family_advantage" />
+                                    <field name="domesticity_bonus" />
+                                    <field name="water_electricity_advantage" />
+                                </group>
+                                <group string="Indemnités non imposables">
+                                    <field name="kilometer_refund" />
+                                    <label for="transport_refund" />
+                                    <div>
+                                        <field name="transport_refund" class="oe_inline" on_change="onchange_transport_refund(transport_refund, transport_refund_frequence)" />
+                                        /
+                                        <field name="transport_refund_frequence" class="oe_inline" on_change="onchange_transport_refund(transport_refund, transport_refund_frequence)" />
+                                    </div>
+                                    <label for="meal_voucher" />
+                                    <div>
+                                        <field name="meal_voucher" class="oe_inline" />
+                                        /
+                                        <field name="meal_voucher_frequence" class="oe_inline" />
+                                    </div>
+                                    <field name="basket_bonus" />
+                                </group>
+
+                                <group string="Mutuelle d'assurance">
+                                    <label for="mutual_insurance_empl" />
+                                    <div>
+                                        <field name="mutual_insurance_empl_manual" class="oe_inline" />
+                                        <field name="mutual_insurance_empl_manual_input" class="oe_inline" attrs="{'invisible': [('mutual_insurance_empl_manual','=',False)]}" />
+                                        <field name="mutual_insurance_empl" class="oe_inline" attrs="{'invisible': [('mutual_insurance_empl_manual','=',True)]}" />
+                                    </div>
+                                    <label for="mutual_insurance_comp" />
+                                    <div>
+                                        <field name="mutual_insurance_comp_manual" class="oe_inline" />
+                                        <field name="mutual_insurance_comp_manual_input" class="oe_inline" attrs="{'invisible': [('mutual_insurance_comp_manual','=',False)]}" />
+                                        <field name="mutual_insurance_comp" class="oe_inline" attrs="{'invisible': [('mutual_insurance_comp_manual','=',True)]}" />
+                                    </div>
+                                </group>
+
+                                <group string="Retenus du Net">
+                                    <field name="union_fee"/>
+                                </group>
+                            </group>
+
+                            <group string="Autres Informations" colspan="4">
+                                <field name="advantages" nolabel="1" placeholder="Informations supplémentaires..." colspan="2" />
+                            </group>
+
+                        </page>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="view_hr_payslip_tree" model="ir.ui.view">
+            <field name="name">hr.payslip.tree</field>
+            <field name="model">hr.payslip</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_payslip_tree" />
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//tree[@string='Payslips']/field[@name='employee_id']" position="after">
+                        <field name="type" />
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="hr_payslip_form_l10n_syscoa_payroll" model="ir.ui.view">
+            <field name="name">hr.payslip.form.l10n.syscoa.payroll</field>
+            <field name="model">hr.payslip</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form" />
+            <field name="arch" type="xml">
+                <data>
+
+                    <xpath expr="//field[@name='credit_note']" position="replace" />
+                    <xpath expr="//div[@class='oe_title']" position="after">
+                        <group col="4">
+                            <field name="type" />
+                            <field name="credit_note" />
+                        </group>
+                    </xpath>
+
+                    <xpath expr="//field[@name='worked_days_line_ids']" position="replace" />
+                    <xpath expr="//separator[@string='Worked Days']" position="replace">
+
+                        <group  col="4">
+
+                            <group  string="Temps de travail" col="2" >
+                                <field name="worked_days_line_ids" nolabel="1">
+                                    <tree string="Worked Days" create="false" delete="false" editable="bottom">
+                                        <field name="name" readonly="1" />
+                                        <field name="code" readonly="1" />
+                                        <field name="number_of_days" sum="Total Working Days" string="Jours"/>
+                                        <field name="number_of_hours"  string="Heures"/>
+                                        <field name="contract_id" invisible="True"/>
+                                        <field name="sequence" invisible="True"/>
+                                    </tree>
+                                    <form string="Worked Day">
+                                        <group col="4">
+                                            <field name="name"/>
+                                            <field name="code" readonly="1" />
+                                            <field name="payslip_id"/>
+                                            <field name="sequence"/>
+                                            <field name="number_of_days"/>
+                                            <field name="number_of_hours"/>
+                                            <field name="contract_id"/>
+                                        </group>
+                                    </form>
+                                </field>
+                            </group>
+
+                            <group  col="2" >
+                                <group string="Jours de congés N" >
+                                    <br /><br />
+                                    <field name="max_leaves"/>
+                                    <field name="leaves_taken"/>
+                                    <field name="remaining_leaves"/>
+                                    <field name="leave_days_won" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                                </group>
+                                <newline />
+                                <group string="Indemnité de Congés"  attrs="{'invisible': [('type','not in',['leaves', 'mix'])]}">
+                                    <label for="holiday_allowance"/>
+                                    <div>
+                                        <field name="holiday_allowance_manual" class="oe_inline"/>
+                                        <field name="holiday_allowance_manual_input" class="oe_inline" attrs="{'invisible': [('holiday_allowance_manual','=',False)]}"/>
+                                        <field name="holiday_allowance" class="oe_inline" attrs="{'invisible': [('holiday_allowance_manual','=',True)]}"/>
+                                    </div>
+                                </group>
+                            </group>
+
+                        </group>
+                    </xpath>
+
+                    <xpath expr="//tree[@string='Input Data']/field[@name='name']" position="attributes" >
+                        <attribute name="attrs">{'readonly': True}</attribute>
+                    </xpath>
+                    <xpath expr="//tree[@string='Input Data']/field[@name='code']" position="attributes" >
+                        <attribute name="attrs">{'readonly': True}</attribute>
+                    </xpath>
+                    <xpath expr="//tree[@string='Input Data']/field[@name='contract_id']" position="attributes" >
+                        <attribute name="attrs">{'readonly': True}</attribute>
+                    </xpath>
+                    <xpath expr="//tree[@string='Input Data']" position="attributes" >
+                        <attribute name="create">false</attribute>
+                        <attribute name="delete">false</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='line_ids']" position="attributes" >
+                        <attribute name="readonly">True</attribute>
+                    </xpath>
+
+                    <xpath expr="//page[@string='Details By Salary Rule Category']" position="attributes">
+                        <attribute name="invisible">True</attribute>
+                    </xpath>
+
+                    <page string="Worked Days &amp; Inputs" position="after">
+                        <page name="leaves" string="Congés des années précédentes">
+
+                            <group colspan="4" col="4">
+                                <group string="Jours de Congés N-1" colspan="2" col="2">
+                                    <field name="max_leaves_n1" />
+                                    <field name="leaves_taken_n1" />
+                                    <field name="remaining_leaves_n1" />
+                                </group>
+                                <group string="Jours de Congés N-2" colspan="2" col="2">
+                                    <field name="max_leaves_n2" />
+                                    <field name="leaves_taken_n2" />
+                                    <field name="remaining_leaves_n2" />
+                                </group>
+                            </group>
+
+                        </page>
+                    </page>
+
+                    <xpath expr="//field[@name='paid']" position="after">
+                        <field name="pay_date" />
+                        <field name="pay_mod" />
+                    </xpath>
+                    <xpath expr="//field[@name='payslip_run_id']" position="after">
+                        <field name="is_waste_collector" invisible="1" />
+                        <field name="amount_invoiced" string="Montant facturé" attrs="{'invisible': [('is_waste_collector','=',False)]}" />
+                        <field name="quantity_delivred" string="Quantité livrée" attrs="{'invisible': [('is_waste_collector','=',False)]}" />
+                    </xpath>
+
+                </data>
+            </field>
+        </record>
+
+    </data>
+</openerp>
+

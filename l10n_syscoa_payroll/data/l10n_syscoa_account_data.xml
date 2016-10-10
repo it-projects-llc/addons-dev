@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- Account Journal For Salary -->
+<!--        <record model="account.journal" id="ergo_account_journal_salary">
+            <field name="name">Journal des Salaires</field>
+            <field name="code">PAY</field>
+            <field name="type">general</field>
+            <field name="journal_user" eval="False" />
+            <field name="default_debit_account_id" search="[('code','like','9910')]"/>
+            <field name="default_credit_account_id" search="[('code','like','9910')]"/>
+        </record>
+-->
+    </data>
+</openerp>

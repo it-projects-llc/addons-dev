@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+
+        <!-- delete the odoo's default contract types   -->
+<!--
+        <delete id="hr_contract.hr_contract_type_emp" model="hr.contract.type" />
+        <delete id="hr_contract.hr_contract_type_wrkr" model="hr.contract.type" />
+        <delete id="hr_contract.hr_contract_type_sub" model="hr.contract.type" />
+-->
+        <!-- Contract Types -->
+        <record id="erg_hr_contract_type_cdd" model="hr.contract.type">
+            <field name="name">Employé (CDD)</field>
+        </record>
+
+        <record id="erg_hr_contract_type_cdi" model="hr.contract.type">
+            <field name="name">Employé (CDI)</field>
+        </record>
+
+        <record id="erg_hr_contract_type_stag" model="hr.contract.type">
+            <field name="name">Stagiaire</field>
+        </record>
+
+        <record id="erg_hr_contract_type_jour" model="hr.contract.type">
+            <field name="name">Journalier</field>
+        </record>
+
+        <record id="erg_hr_contract_type_pres" model="hr.contract.type">
+            <field name="name">Prestataire</field>
+        </record>
+
+
+    </data>
+</openerp>
