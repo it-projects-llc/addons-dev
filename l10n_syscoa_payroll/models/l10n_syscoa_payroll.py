@@ -28,10 +28,10 @@ from dateutil import relativedelta
 
 from itertools import groupby
 
-from openerp import fields, models
+from odoo import fields, models, api, _
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
-
+from odoo.exceptions import UserError
 
 
 class ResCompany(models.Model):
@@ -50,12 +50,10 @@ class ResCompany(models.Model):
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
-    def _calculate_social_parts(self, cr, uid, ids, name, args, context):
-        if not ids:
-            return {}
-        res = {}
+    @api.multi
+    def _calculate_social_parts(self):
         parts = 1.00
-        for line in self.browse(cr, uid, ids, context=context):
+        for line in self:
             if line.marital == 'married':
                 if line.status_spouse == 'non_salaried':
                     parts += 1.00
@@ -65,61 +63,24 @@ class HrEmployee(models.Model):
                 parts += float(line.children) / 2
             if parts > 5.00:
                 parts = 5.00
-            res[line.id] = parts
-        return res
+            line.parts = parts
 
-    def _calculate_coefficient(self, cr, uid, ids, name, args, context):
-        if not ids:
-            return {}
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    def _calculate_coefficient(self):
+        for line in self:
             if line.marital == 'married':
                 coef = 2 if line.status_spouse == 'non_salaried' else 1
             else:
                 coef = 1
-            res[line.id] = coef
-        return res
+            line.coef= coef
 
-    def get_days(self, cr, uid, ids, employee_id, context=None):
-        result = dict((id, dict(max_leaves=0, leaves_taken=0, remaining_leaves=0,
-                                virtual_remaining_leaves=0)) for id in ids)
-        holiday_ids = self.pool['hr.holidays'].search(cr, uid, [('employee_id', '=', employee_id),
-                                                                ('state', 'in', ['confirm', 'validate1', 'validate']),
-                                                                ('holiday_status_id', 'in', ids)
-                                                                ], context=context)
-        for holiday in self.pool['hr.holidays'].browse(cr, uid, holiday_ids, context=context):
-            status_dict = result[holiday.holiday_status_id.id]
-            if holiday.type == 'add':
-                status_dict['virtual_remaining_leaves'] += holiday.number_of_days_temp
-                if holiday.state == 'validate':
-                    status_dict['max_leaves'] += holiday.number_of_days_temp
-                    status_dict['remaining_leaves'] += holiday.number_of_days_temp
-            elif holiday.type == 'remove':  # number of days is negative
-                status_dict['virtual_remaining_leaves'] -= holiday.number_of_days_temp
-                if holiday.state == 'validate':
-                    status_dict['leaves_taken'] += holiday.number_of_days_temp
-                    status_dict['remaining_leaves'] -= holiday.number_of_days_temp
-        return result
-
-    def _user_left_days(self, cr, uid, ids, name, args, context=None):
-        for record in self.browse(cr, uid, ids, context=context):
-            employee_id = record.id
-            if employee_id:
-                res = self.get_days(cr, uid, ids, employee_id, context=context)
-            else:
-                res = dict((res_id, {'leaves_taken': 0, 'remaining_leaves': 0, 'max_leaves': 0}) for res_id in ids)
-        return res
-
-    def _get_leave_days(self, cr, uid, ids, name, args, context=None):
-        for record in self.browse(cr, uid, ids, context=context):
-            legal_leave = self.company_id.legal_holidays_status_id
-            if not legal_leave:
-                raise UserError(_('Legal/annual leave type is not defined for '
-                                  'your company.'))
-
-            self.max_leaves = legal_leave.get_days(
-                self.id)[legal_leave.id]['max_leaves']
-
+    @api.multi
+    def _user_left_days(self):
+        legal_leave = self.company_id.legal_holidays_status_id
+        for employee in self:
+            values = legal_leave.get_days(employee.id)
+            employee.leaves_taken = values.get('leaves_taken')
+            employee.max_leaves = values.get('max_leaves')
 
     social_parts = fields.Float(compute="_calculate_social_parts", method=True, string="Nombre de parts sociales", store=False)
     ipres_id = fields.Char('N° IPRES')
@@ -135,88 +96,71 @@ class HrEmployee(models.Model):
 class HrContract(models.Model):
     _inherit = 'hr.contract'
 
-    def _get_type(self, cr, uid, context=None):
-        type_ids = self.pool.get('hr.contract.type').search(cr, uid, [('name', '=', 'CDD')])
-        return type_ids and type_ids[0] or False
+    @api.model
+    def _default_governmental_org(self):
+        return self.env.user.company_id.governmental_org or False
 
-    def _default_governmental_org(self, cr, uid, context=None):
-        return self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.governmental_org or False
-
-    def _get_default_journal(self, cr, uid, ids, context=None):
+    @api.model
+    def _get_default_journal(self):
         comp_id = 0
-        for contract in self.browse(cr, uid, context=context):
+        for contract in self:
             comp_id = (contract.company_id and contract.company_id.id)
         if comp_id:
-            jrnl = self.pool.get('account.journal').search(cr, uid, [('code', '=', 'PAY'), ('company_id', '=', comp_id)])
+            jrnl = self.env['account.journal'].search([('code', '=', 'PAY'), ('company_id', '=', comp_id)])
         else:
-            jrnl = self.pool.get('account.journal').search(cr, uid, [('code', '=', 'PAY')])
+            jrnl = self.env['account.journal'].search([('code', '=', 'PAY')])
         return jrnl and jrnl[0]
 
-    def _read_governmental_org(self, cr, uid, ids, names, args, context):
-        if not ids:
-            return {}
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = self._default_governmental_org(cr, uid, context)
-        return res
+    @api.multi
+    def _read_governmental_org(self):
+        for line in self:
+            line.governmental_org = self._default_governmental_org()
 
-    def onchange_transport_refund(self, cr, uid, ids, transport_refund=False, transport_refund_frequence=False, context=None):
-        res = {}
-        if transport_refund:
-            for line in self.browse(cr, uid, ids, context=context):
-                if transport_refund_frequence == 'month':
-                    if transport_refund > float(20800.00):
-                        res['transport_refund'] = float(20800.00)
-                if transport_refund_frequence == 'day':
-                    if transport_refund > float(950.00):
-                        res['transport_refund'] = float(950.00)
-        return {'value': res}
+    @api.onchange('transport_refund', 'transport_refund_frequence')
+    def onchange_transport_refund(self):
+        self.ensure_one()
+        if self.transport_refund:
+            if self.transport_refund_frequence == 'month':
+                if self.transport_refund > float(20800.00):
+                    self.transport_refund = float(20800.00)
+            elif self.transport_refund_frequence == 'day':
+                if self.transport_refund > float(950.00):
+                    self.transport_refund = float(950.00)
 
-    def _read_social_parts(self, cr, uid, ids, names, args, context):
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            social_parts = self.pool.get('hr.employee').browse(cr, uid, line.employee_id.id, context=context).social_parts or False
-            res[line.id] = "{:.1f}".format(social_parts)
-        return res
+    @api.multi
+    def _read_social_parts(self):
+        for line in self:
+            social_parts = line.employee_id.social_parts or False
+            line.niveau = "{:.1f}".format(social_parts)
 
-    def _read_coefficient(self, cr, uid, ids, names, args, context):
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            coef = self.pool.get('hr.employee').browse(cr, uid, line.employee_id.id, context=context).coef or False
-            res[line.id] = coef
-        return res
+    @api.multi
+    def _read_coefficient(self):
+        for line in self:
+            line.coef = line.employee_id.coef or False
 
-    def _get_seniority_date(self, cr, uid, ids, names, args, context):
-        if not ids:
-            return {}
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    def _get_seniority_date(self):
+        for line in self:
             if line.seniority_date_manual:
-                res[line.id] = line.seniority_date_manual_input
+                line.seniority_date = line.seniority_date_manual_input
             else:
-                res[line.id] = line.date_start
-        return res
+                line.seniority_date = line.date_start
 
-    def _get_seniority(self, cr, uid, ids, names, args, context):
-        if not ids:
-            return {}
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    def _get_seniority(self):
+        for line in self:
             date_1 = datetime.strptime(str(line.seniority_date), '%Y-%m-%d')
             date_2 = datetime.strptime(str(date.today()), '%Y-%m-%d')
             number_of_year = relativedelta.relativedelta(date_2, date_1).years
             number_of_month = relativedelta.relativedelta(date_2, date_1).months
             year_text = "an" if (number_of_year <= 1) else "ans"
-            res[line.id] = str(number_of_year) + ' ' + year_text + ' et ' + str(number_of_month) + ' mois'
-        return res
+            line.seniority = str(number_of_year) + ' ' + year_text + ' et ' + str(number_of_month) + ' mois'
 
-    def _calculate_seniority_allowance(self, cr, uid, ids, names, args, context):
-        if not ids:
-            return {}
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    def _calculate_seniority_allowance(self):
+        for line in self:
             if line.seniority_allowance_manual:
-                res[line.id] = float(line.seniority_allowance_manual_input)
+                line.seniority_allowance = float(line.seniority_allowance_manual_input)
             else:
                 # Read seniority in years
                 date_1 = datetime.strptime(str(line.seniority_date), '%Y-%m-%d')
@@ -225,64 +169,57 @@ class HrContract(models.Model):
                 if seniority > 25:  # max 25 years
                     seniority = 25
                 if seniority >= 2:
-                    res[line.id] = float(float(line.wage) * seniority / 100)
-        return res
+                    line.seniority_allowance = float(float(line.wage) * seniority / 100)
 
-    def _get_mutual_insurance_empl(self, cr, uid, ids, names, args, context):
-        if not ids:
-            return {}
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    def _get_mutual_insurance_empl(self):
+        for line in self:
             if line.mutual_insurance_empl_manual:
-                res[line.id] = float(line.mutual_insurance_empl_manual_input)
+                line.mutual_insurance_employee = float(line.mutual_insurance_empl_manual_input)
             else:
                 # Read default mutual_insurance for employee from company data
                 # B                res[line.id] = float(self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.mutual_insurance_employee or False)
-                res[line.id] = 0.0
-        return res
+                line.mutual_insurance_employee = 0.0
 
-    def _get_mutual_insurance_comp(self, cr, uid, ids, names, args, context):
+    @api.multi
+    def _get_mutual_insurance_comp(self):
         if not ids:
             return {}
         res = {}
-        for line in self.browse(cr, uid, ids, context=context):
+        for line in self:
             if line.mutual_insurance_comp_manual:
-                res[line.id] = float(line.mutual_insurance_comp_manual_input)
+                line.mutual_insurance_comp = float(line.mutual_insurance_comp_manual_input)
             else:
                 # Read default mutual_insurance for company from company data
-                # B                res[line.id] = float(self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.mutual_insurance_company or False)
-                res[line.id] = 0.0
-        return res
+                # B                line. = float(self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.mutual_insurance_company or False)
+                line.mutual_insurance_comp = 0.0
 
-    def _get_gross_invoice(self, cr, uid, ids, names, args, context):
-        if not ids:
-            return {}
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    def _get_gross_invoice(self):
+        for line in self:
             if line.gross_invoice_manual:
-                res[line.id] = float(line.wage)
+                line.gross_invoice = float(line.wage)
             else:
-                res[line.id] = float(line.wage)
-        return res
+                line.gross_invoice = float(line.wage)
 
-    def _get_leave_days(self, cr, uid, ids, names, args, context):
-        if not ids:
-            return {}
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = 0.00
+    @api.multi
+    def _get_leave_days(self):
+        for line in self:
+            line.leave_days = 0.00
             if line.attribute_leave_days:
                 if line.leave_days_manual:
-                    res[line.id] = float(line.leave_days_manual_input)
+                    line.leave_days = float(line.leave_days_manual_input)
                 else:
-                    res[line.id] = 2.0
-        return res
+                    line.leave_days = 2.0
 
 
     type_id = fields.Many2one('hr.contract.type', "Type de contrat", required=True)
-    struct_id = fields.Many2one('hr.payroll.structure', 'Structure salariale', required=True)
+    struct_id = fields.Many2one('hr.payroll.structure', 'Structure salariale')
     governmental_org = fields.Boolean(compute="_read_governmental_org", method=True, string="Organisme gouvernemental")
-    functionary = fields.Boolean("Fonctionnaire de l'état", help="Les fonctionnaires ont droit à une remise de 10% sur l'impôt sur le revenu. Si vous êtes une entreprise publique, alors vous pouvez configurer cette remise pour tous les employés dans les paramètres de la société")
+    functionary = fields.Boolean(
+        "Fonctionnaire de l'état",
+        default=_default_governmental_org,
+        help="Les fonctionnaires ont droit à une remise de 10% sur l'impôt sur le revenu. Si vous êtes une entreprise publique, alors vous pouvez configurer cette remise pour tous les employés dans les paramètres de la société")
 
     time_mod = fields.Selection((('fixed', 'Heures de travail fixes'), ('variable', 'Heures de travail variables')), string="Mode de gestion du temps", required=True, default="fixed")
     time_fixed = fields.Float(string="Nombre d'heures fixe prévues", default=173.33, required=True)
@@ -348,7 +285,7 @@ class HrContract(models.Model):
     mutual_insurance_comp = fields.Float(compute="_get_mutual_insurance_comp", method=True, string="Cotisation patronale", digits_compute=dp.get_precision('Account'), help="La cotisation à la mutuelle d'assurance est normalement calculée automatiquement. Mais vous pouvez la saisir manuellement en activant le bouton à côté.")
 
     dirtiness_allowance = fields.Float('Prime de salissure', digits_compute=dp.get_precision('Payroll'))
-
+    journal_id = fields.Many2one(default=_get_default_journal)
 
 
     _defaults = {
@@ -357,7 +294,6 @@ class HrContract(models.Model):
         #        'basket_bonus': 33500.0,
         'meal_voucher_frequence': 'month',
         #        'meal_voucher': 33500.0,
-        #        'type_id': _get_type,
         'functionary': _default_governmental_org,
         'journal_id': _get_default_journal
     }
@@ -370,22 +306,23 @@ class HrPayslip(models.Model):
     _inherit = 'hr.payslip'
     _order = 'id desc'
 
-    def onchange_contract_id(self, cr, uid, ids, date_from, date_to, employee_id=False, contract_id=False, context=None):
-        res = super(HrPayslip, self).onchange_contract_id(cr, uid, ids, date_from, date_to, employee_id=employee_id, contract_id=contract_id, context=context)
-        contract_obj = self.pool.get('hr.contract')
-        pay_mod = contract_id and contract_obj.browse(cr, uid, contract_id, context=context).pay_mod or False
-        leave_days = contract_id and contract_obj.browse(cr, uid, contract_id, context=context).leave_days or 0
-        res['value'].update({'pay_mod': pay_mod, 'leave_days_won': leave_days})
-        return res
+    @api.onchange('contract_id')
+    def onchange_contract(self):
+        super(HrPayslip, self).onchange_contract()
+        contract_obj = self.env['hr.contract']
+        pay_mod = self.contract_id and self.contract_id.pay_mod or False
+        leave_days = self.contract_id and self.contract_id.leave_days or 0
+        self.pay_mod = pay_mod
+        self.leave_days_won = leave_days
 
-    def hr_verify_sheet(self, cr, uid, ids, context=None):
-        for payslip in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    def action_payslip_done(self):
+        for payslip in self:
             if not payslip.employee_id.address_home_id:
-                raise models.except_orm(
-                    _('Warning'), _("L'employé '%s' n'a pas d'adresse personnelle. \nVeuillez renseigner son adresse personnelle dans la fiche de l'employé, \nonglet 'Information personnelle'") % (payroll.employee_id.name,))
-        res = super(HrPayslip, self).hr_verify_sheet(cr, uid, ids)
+                raise UserError(_("L'employé '%s' n'a pas d'adresse personnelle. \nVeuillez renseigner son adresse personnelle dans la fiche de l'employé, \nonglet 'Information personnelle'") % (payslip.employee_id.name,))
+        res = super(HrPayslip, self).action_payslip_done()
         # Set additional leaves
-        for payslip in self.browse(cr, uid, ids, context=context):
+        for payslip in self:
             if payslip.leave_days_won > 0:
                 if payslip.state == 'verify':
                     if payslip.credit_note:
@@ -394,18 +331,12 @@ class HrPayslip(models.Model):
                         # raise Warning("Veuillez vérifier le congé.")
                     else:
                         payslip.employee_id.remaining_leaves = payslip.remaining_leaves + payslip.leave_days_won
-        return res
 
-    def process_sheet(self, cr, uid, ids, context=None):
-        res = super(HrPayslip, self).process_sheet(cr, uid, ids, context=context)
-        self.write(cr, uid, ids, {'pay_date': date.today()}, context=context)
-        return res
+        self.write({'pay_date': date.today()})
 
-    def _calculate_rendement(self, cr, uid, ids, names, args, context):
-        if not ids:
-            return {}
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    def _calculate_rendement(self):
+        for line in self:
             if line.is_waste_collector:
                 date_1 = datetime.strptime(str(line.date_from), '%Y-%m-%d')
                 date_1 = datetime.strptime(str(str(date_1.year) + '-' + str(date_1.month) + '-' + str(26)), '%Y-%m-%d') + relativedelta.relativedelta(months=-1)
@@ -416,34 +347,31 @@ class HrPayslip(models.Model):
                 analytic_account = self.pool.get('account.analytic.account').search(cr, uid,
                                                                                     [('code', '=', line.employee_id.matricule)])
                 if analytic_account == []:
-                    res[line.id] = {'quantity_delivred': 0.00, 'amount_invoiced': 0.00}
+                    line.update({'quantity_delivred': 0.00, 'amount_invoiced': 0.00})
                 else:
                     cr.execute("""SELECT COALESCE(SUM(amount), 0.0) as amount, COALESCE(SUM(unit_amount), 0.0) as unit_amount \
                         FROM account_analytic_line \
                         WHERE account_id = %s AND date >= %s AND date <= %s""",
                                [analytic_account[0], date_1, date_2])
                     result = dict(cr.dictfetchone())
-                    res[line.id] = {'quantity_delivred': result['unit_amount'], 'amount_invoiced': result['amount']}
-                    # res[line.id] = result['unit_amount']
+                    line.update({'quantity_delivred': result['unit_amount'], 'amount_invoiced': result['amount']})
+                    # line. = result['unit_amount']
             else:
-                res[line.id] = {'quantity_delivred': 0.00, 'amount_invoiced': 0.00}
-        return res
+                line.update({'quantity_delivred': 0.00, 'amount_invoiced': 0.00})
 
-    def _get_waste_collector(self, cr, uid, ids, names, args, context):
+    @api.multi
+    def _get_waste_collector(self):
         res = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = line.company_id.waste_collection_company
-        return res
+        for line in self:
+            line.is_waste_collector = line.company_id.waste_collection_company
 
-    def _get_holiday_allowance(self, cr, uid, ids, names, args, context):
-        if not ids:
-            return {}
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = 0.0
+    @api.multi
+    def _get_holiday_allowance(self):
+        for line in self:
+            line.holiday_allowance = 0.0
             if line.type in ['leaves', 'mix']:
                 if line.holiday_allowance_manual:
-                    res[line.id] = float(line.holiday_allowance_manual_input)
+                    line.holiday_allowance = float(line.holiday_allowance_manual_input)
                 else:
                     # calculate the current month from contract
                     if line.contract_id:
@@ -474,15 +402,12 @@ class HrPayslip(models.Model):
 ##                    payslip_ids = self.pool.get('hr.payslip').search(cr, uid, [('date_from', '>=',  date_from), ('date_from', '<=',  date_to)])
 
                     gross_of_previous_month = 0.0
-                    res[line.id] = float(gross_of_current_month + gross_of_previous_month)
-        return res
+                    line.holiday_allowance = float(gross_of_current_month + gross_of_previous_month)
 
-    def _compute_leave_days(self, cr, uid, ids, name, args, context=None):
-        if not ids:
-            return {}
-        res = {}
+    @api.multi
+    def _compute_leave_days(self):
 
-        for record in self.browse(cr, uid, ids, context=context):
+        for record in self:
             employee_id = record.employee_id
             hr_holidays_status_pooler = self.pool.get('hr.holidays.status')
             if employee_id:
@@ -492,7 +417,7 @@ class HrPayslip(models.Model):
                                                                                      employee_id.company_id.legal_holidays_status_id_n1.id,
                                                                                      employee_id.company_id.legal_holidays_status_id_n2.id])], context=context)
                 leave_days = hr_holidays_status_pooler.get_days(cr, uid, hr_holidays_status, employee_id.id, context=context)
-                res[record.id] = {
+                record.update({
                     'leaves_taken': leave_days[employee_id.company_id.legal_holidays_status_id.id]['leaves_taken'] if employee_id.company_id.legal_holidays_status_id else 0.0,
                     'remaining_leaves': leave_days[employee_id.company_id.legal_holidays_status_id.id]['remaining_leaves'] if employee_id.company_id.legal_holidays_status_id else 0.0,
                     'max_leaves': leave_days[employee_id.company_id.legal_holidays_status_id.id]['max_leaves'] if employee_id.company_id.legal_holidays_status_id else 0.0,
@@ -502,10 +427,10 @@ class HrPayslip(models.Model):
                     'leaves_taken_n2': leave_days[employee_id.company_id.legal_holidays_status_id_n2.id]['leaves_taken'] if employee_id.company_id.legal_holidays_status_id_n2 else 0.0,
                     'remaining_leaves_n2': leave_days[employee_id.company_id.legal_holidays_status_id_n2.id]['remaining_leaves'] if employee_id.company_id.legal_holidays_status_id_n2 else 0.0,
                     'max_leaves_n2': leave_days[employee_id.company_id.legal_holidays_status_id_n2.id]['max_leaves'] if employee_id.company_id.legal_holidays_status_id_n2 else 0.0,
-                }
+                })
             else:
                 #                res[record.id] = {'leaves_taken': 0, 'remaining_leaves': 0, 'max_leaves': 0}
-                res[record.id] = {
+                record.update({
                     'leaves_taken': 0,
                     'remaining_leaves': 0,
                     'max_leaves': 0,
@@ -515,12 +440,10 @@ class HrPayslip(models.Model):
                     'leaves_taken_n2': 0,
                     'remaining_leaves_n2': 0,
                     'max_leaves_n2': 0
-                }
-        return res
-
+                })
 
     type = fields.Selection((('salary', 'Salaire'), ('leaves', 'Congé'), ('mix', 'Salaire et Congé')), readonly=True, states={'draft': [('readonly', False)]}, required=True, default="salary", string="Type de bulletin")
-    pay_date = fields.Date('Date de Paiement')
+    pay_date = fields.Date('Date de Paiement', default=lambda *a: time.strftime("%Y-%m-%d"))
     pay_mod = fields.Selection((('Virement', 'Virement'), ('Cheque', 'Chèque'), ('Espece', 'Espèce')), 'Mode de Paiement')
     is_waste_collector = fields.Boolean(compute="_get_waste_collector", method=True, store=False)
     quantity_delivred = fields.Float(compute="_calculate_rendement", method=True, digits_compute=dp.get_precision('Product UoS'), store=True,)
@@ -539,61 +462,58 @@ class HrPayslip(models.Model):
     holiday_allowance_manual_input = fields.Float("Montant brut de l'indemnité", readonly=True, states={'draft': [('readonly', False)]}, digits_compute=dp.get_precision('Payroll'), help="Le montant du droit de congé est normalement calculé automatiquement. Mais vous pouvez le saisir manuellement en activant le bouton à côté.")
     holiday_allowance = fields.Float(compute="_get_holiday_allowance", method=True, string="Montant brut de l'indemnité", store=True, digits_compute=dp.get_precision('Payroll'), help="Le montant du droit de congé est normalement calculé automatiquement. Mais vous pouvez le saisir manuellement en activant le bouton à côté.")
 
-
-    _defaults = {
-        'pay_date': lambda *a: time.strftime("%Y-%m-%d"),
-        #        'leave_days_won': _get_monthly_leave_days_won,
-    }
-
-    def get_worked_hours(self, cr, uid, ids, code, context=None):
+    @api.multi
+    def get_worked_hours(self, code):
         """
         @return: the workday hours in the payslip by worked_days_line code.
         Mainly called from payslip report
         """
         result = 0.00
-        for payslip in self.browse(cr, uid, ids, context=context):
+        for payslip in self:
             for wdline in payslip.worked_days_line_ids:
                 if wdline.code == code:
                     result += wdline.number_of_hours
         return result
 
-    def get_worked_day_lines(self, cr, uid, contract_ids, date_from, date_to, context=None):
+    @api.model
+    def get_worked_day_lines(self, contract_ids, date_from, date_to):
         """
         @param contract_ids: list of contract id
         @return: returns a list of dict containing the input that should be applied for the given contract between date_from and date_to
         """
-        def was_on_leave(employee_id, datetime_day, context=None):
-            res = False
-            day = datetime_day.strftime("%Y-%m-%d")
-            holiday_ids = self.pool.get('hr.holidays').search(cr, uid, [('state', '=', 'validate'), ('employee_id', '=', employee_id), ('type', '=', 'remove'), ('date_from', '<=', day), ('date_to', '>=', day)])
-            if holiday_ids:
-                res = self.pool.get('hr.holidays').browse(cr, uid, holiday_ids, context=context)[0].holiday_status_id.name
-            return res
+        def was_on_leave(employee_id, datetime_day):
+            day = fields.Date.to_string(datetime_day)
+            return self.env['hr.holidays'].search([
+                ('state', '=', 'validate'),
+                ('employee_id', '=', employee_id),
+                ('type', '=', 'remove'),
+                ('date_from', '<=', day),
+                ('date_to', '>=', day)
+            ], limit=1).holiday_status_id.name
 
         res = []
-        for contract in self.pool.get('hr.contract').browse(cr, uid, contract_ids, context=context):
-            # B            if not contract.working_hours:
-                # fill only if the contract as a working schedule linked
-            # B                continue
+        #fill only if the contract as a working schedule linked
+        for contract in self.env['hr.contract'].browse(contract_ids): #.filtered(lambda contract: contract.working_hours):
             attendances = {
-                'name': _("Temps de travail contractuel"),
-                'sequence': 1,
-                'code': 'WORK100',
-                'number_of_days': 0.0,
-                'number_of_hours': 0.0,
-                'contract_id': contract.id,
+                 'name': _("Temps de travail contractuel"),
+                 # 'name': _("Normal Working Days paid at 100%"),
+                 'sequence': 1,
+                 'code': 'WORK100',
+                 'number_of_days': 0.0,
+                 'number_of_hours': 0.0,
+                 'contract_id': contract.id,
             }
             leaves = {}
-            day_from = datetime.strptime(date_from, "%Y-%m-%d")
-            day_to = datetime.strptime(date_to, "%Y-%m-%d")
+            day_from = fields.Datetime.from_string(date_from)
+            day_to = fields.Datetime.from_string(date_to)
             nb_of_days = (day_to - day_from).days + 1
             for day in range(0, nb_of_days):
-                working_hours_on_day = self.pool.get('resource.calendar').working_hours_on_day(cr, uid, contract.working_hours, day_from + timedelta(days=day), context)
+                working_hours_on_day = contract.working_hours.working_hours_on_day(day_from + timedelta(days=day))
                 if working_hours_on_day:
-                    # the employee had to work
-                    leave_type = was_on_leave(contract.employee_id.id, day_from + timedelta(days=day), context=context)
+                    #the employee had to work
+                    leave_type = was_on_leave(contract.employee_id.id, day_from + timedelta(days=day))
                     if leave_type:
-                        # if he was on leave, fill the leaves dict
+                        #if he was on leave, fill the leaves dict
                         if leave_type in leaves:
                             leaves[leave_type]['number_of_days'] += 1.0
                             leaves[leave_type]['number_of_hours'] += working_hours_on_day
@@ -602,20 +522,22 @@ class HrPayslip(models.Model):
                                 'name': leave_type,
                                 'sequence': 5,
                                 'code': leave_type,
-                                'number_of_days': 0.0,  # B: 1.0
+                                'number_of_days': 1.0,
                                 'number_of_hours': working_hours_on_day,
                                 'contract_id': contract.id,
                             }
                     else:
-                        # add the input vals to tmp (increment if existing)
+                        #add the input vals to tmp (increment if existing)
                         attendances['number_of_days'] += 1.0
-# B                        attendances['number_of_hours'] += working_hours_on_day        # B replaced by the next 4 lines
+                        # attendances['number_of_hours'] += working_hours_on_day  # B replaced by the next 4 lines
                         if contract.time_mod == 'fixed':
                             attendances['number_of_hours'] = contract.time_fixed
                         else:
                             attendances['number_of_hours'] += working_hours_on_day
+
             if attendances['number_of_hours'] == 0.0:
                 attendances['number_of_hours'] = contract.time_fixed
+
             leaves = [value for key, value in leaves.items()]
 
 # B          add a placeholder for actually worked days/hours (to be entered by user if needed)
@@ -639,26 +561,17 @@ class HrPayslipLine(models.Model):
     _name = 'hr.payslip.line'
     _inherit = 'hr.payslip.line'
 
-    def _calculate_total2(self, cr, uid, ids, name, args, context):
-        if not ids:
-            return {}
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = float(line.quantity2) * line.amount2 * line.rate2 / 100
-        return res
+    @api.multi
+    def _calculate_total2(self):
+        for line in self:
+            line.total2 = float(line.quantity2) * line.amount2 * line.rate2 / 100
 
 
 
-    rate2 = fields.Float('Rate2 (%)', digits_compute=dp.get_precision('Payroll Rate'))
+    rate2 = fields.Float('Rate2 (%)', digits_compute=dp.get_precision('Payroll Rate'), default=100.0)
     amount2 = fields.Float('Amount2', digits_compute=dp.get_precision('Payroll'))
-    quantity2 = fields.Float('Quantity2', digits_compute=dp.get_precision('Payroll'))
+    quantity2 = fields.Float('Quantity2', digits_compute=dp.get_precision('Payroll'), default=1.0)
     total2 = fields.Float(compute="_calculate_total2", method=True, string='Total2', digits_compute=dp.get_precision('Payroll'), store=True)
-
-
-    _defaults = {
-        'quantity2': 1.0,
-        'rate2': 100.0,
-    }
 
 
 class HrPayslipRun(models.Model):

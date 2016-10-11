@@ -248,7 +248,7 @@
                                             <span t-if="" t-esc="get_amount_base(p)" />
                                         </t>
                                     -->
-                                        <span t-if="" t-esc="get_amount_base(p)" />
+                                        <span t-esc="get_amount_base(p)" />
                                     </td>                                            <!-- Base -->
                                     <td class="text-right body-row">
                                         <span t-esc="get_rate_salarial(p)" />

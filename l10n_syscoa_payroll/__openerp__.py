@@ -24,19 +24,6 @@
     'name': 'Payroll - SN',
     'version': '1.0',
     'category': 'Localization',
-    'description': """
-Generic Payroll Management Senegal
-==================================
-
-    * Configuration of hr_payroll for Senegal localization
-    * All main contributions rules of Senegal payslip for 'cadre', 'non-cadre' and other salary groups
-    * Allow to configure Basic/Gross/Net Salary
-    * Allowances/Deductions
-    * Employee Payslip Report
-    * Monthly Contribution Register
-    * Integrated with Holiday Management
-    * Integrated with Accounting
-    """,
 
     'author': 'ERGOBIT Consulting',
     'website': 'http://www.ergobit.org',
@@ -47,6 +34,7 @@ Generic Payroll Management Senegal
         'images/hr_employee_payslip.jpeg'
     ],
     'depends': [
+        'account',
         'hr_payroll',
         'hr_holidays_legal_leave',
         'hr_holidays_compute_days',

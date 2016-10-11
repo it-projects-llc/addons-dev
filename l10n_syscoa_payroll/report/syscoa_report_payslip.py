@@ -27,6 +27,7 @@ from dateutil import relativedelta
 from openerp import models
 from openerp.report import report_sxw
 from datetime import date
+import odoo
 
 import locale
 
@@ -120,10 +121,11 @@ class ErgobitPayslipReport(report_sxw.rml_parse):
                 - Column totals
                 - yearly totals
         """
-        category_ids = self.pool.get('hr.salary.rule.category').search(self.cr, self.uid,
-                                                                       [('code', 'not in', [self.C_COMP, self.C_COMPP, self.C_NET, self.C_TOTA, self.C_TOTM])])
+        env = odoo.api.Environment(self.cr, self.uid, {})
+        category_ids = env['hr.salary.rule.category'].search(
+            [('code', 'not in', [self.C_COMP, self.C_COMPP, self.C_NET, self.C_TOTA, self.C_TOTM])])
 
-        payslip_line = self.pool.get('hr.payslip.line')
+        payslip_line = env['hr.payslip.line']
         res = []
         ids = []
 
@@ -131,7 +133,7 @@ class ErgobitPayslipReport(report_sxw.rml_parse):
             if (lines_ids[idx].appears_on_payslip is True) and (int(lines_ids[idx].category_id) in category_ids):
                 ids.append(lines_ids[idx].id)
         if ids:
-            res = payslip_line.browse(self.cr, self.uid, ids)
+            res = payslip_line.browse(ids)
         return res
 
     def get_quantity(self, psline):
@@ -141,14 +143,16 @@ class ErgobitPayslipReport(report_sxw.rml_parse):
         return formatl(psline.quantity, 2)
 
     def get_amount_base(self, psline):
+        env = odoo.api.Environment(self.cr, self.uid, {})
+
         if round(float(psline.amount), 2) == 0.00:  # '{0:.}'.format(amount)
             return ''
         # no base for I/R, TRIMF
         if psline.code in [self.C_R500, self.C_R550]:
             return ''
         # Only basic, ded and alwn
-        category_ids = self.pool.get('hr.salary.rule.category').search(self.cr, self.uid,
-                                                                       [('code', 'in', [self.C_BASIC, self.C_DED, self.C_TAX, self.C_TAXX, self.C_ALWN, self.C_ALW])])
+        category_ids = env['hr.salary.rule.category'].search(
+            [('code', 'in', [self.C_BASIC, self.C_DED, self.C_TAX, self.C_TAXX, self.C_ALWN, self.C_ALW])])
         if int(psline.category_id) in category_ids:
             if psline.category_id.code in [self.C_ALW, self.C_BASIC]:
                 if psline.code in ['100', '210', '220', '230', '240']:
@@ -170,9 +174,10 @@ class ErgobitPayslipReport(report_sxw.rml_parse):
         return formatl(slip.get_worked_hours(code), 2)
 
     def get_gain_salarial(self, psline):
+        env = odoo.api.Environment(self.cr, self.uid, {})
         if round(float(psline.total), 2) == 0.00:
             return ''
-        category_ids = self.pool.get('hr.salary.rule.category').search(self.cr, self.uid, [('code', 'in', [self.C_RED, self.C_DED, self.C_TAX, self.C_PAYB, self.C_SYN, self.C_RETN])])
+        category_ids = env['hr.salary.rule.category'].search([('code', 'in', [self.C_RED, self.C_DED, self.C_TAX, self.C_PAYB, self.C_SYN, self.C_RETN])])
         if int(psline.category_id) in category_ids:
             return ''
         if psline.code == '100':
@@ -186,21 +191,23 @@ class ErgobitPayslipReport(report_sxw.rml_parse):
         return formatl(psline.total)
 
     def get_deduction_salarial(self, psline):
+        env = odoo.api.Environment(self.cr, self.uid, {})
         if round(float(psline.total), 2) == 0.00:
-            tax_cat_ids = self.pool.get('hr.salary.rule.category').search(self.cr, self.uid, [('code', 'in', [self.C_TAX])])
+            tax_cat_ids = env['hr.salary.rule.category'].search([('code', 'in', [self.C_TAX])])
             if int(psline.category_id) in tax_cat_ids:  # for tax return 0 instead of ''
                 return 0
             return ''
-        category_ids = self.pool.get('hr.salary.rule.category').search(self.cr, self.uid, [('code', 'in', [self.C_RED, self.C_DED, self.C_TAX, self.C_PAYB, self.C_SYN, self.C_RETN])])
+        category_ids = env['hr.salary.rule.category'].search([('code', 'in', [self.C_RED, self.C_DED, self.C_TAX, self.C_PAYB, self.C_SYN, self.C_RETN])])
         if int(psline.category_id) in category_ids:
             return formatl(psline.total)
         return ''
 
     def get_rate_patronal(self, psline):
+        env = odoo.api.Environment(self.cr, self.uid, {})
         psline_code_comp = psline.code + '_C'
-        pooler = self.pool.get('hr.payslip.line')
-        payslip_line_comp_id = pooler.search(self.cr, self.uid, [('slip_id', '=', psline.slip_id.id), ('code', '=', psline_code_comp)])
-        payslip_line_comp = pooler.browse(self.cr, self.uid, payslip_line_comp_id)
+        pooler = env['hr.payslip.line']
+        payslip_line_comp_id = pooler.search([('slip_id', '=', psline.slip_id.id), ('code', '=', psline_code_comp)])
+        payslip_line_comp = pooler.browse(payslip_line_comp_id)
         if payslip_line_comp:
             rate = payslip_line_comp[0].rate
             if round(float(rate), 2) == 100.00:
@@ -209,10 +216,11 @@ class ErgobitPayslipReport(report_sxw.rml_parse):
         return ''
 
     def get_contribution_patronal_plus(self, psline):
+        env = odoo.api.Environment(self.cr, self.uid, {})
         psline_code_compp = psline.code + '_CP'
-        pooler = self.pool.get('hr.payslip.line')
-        payslip_line_compp_id = pooler.search(self.cr, self.uid, [('slip_id', '=', psline.slip_id.id), ('code', '=', psline_code_compp)])
-        payslip_line_compp = pooler.browse(self.cr, self.uid, payslip_line_compp_id)
+        pooler = env['hr.payslip.line']
+        payslip_line_compp_id = pooler.search([('slip_id', '=', psline.slip_id.id), ('code', '=', psline_code_compp)])
+        payslip_line_compp = pooler.browse(payslip_line_compp_id)
         if payslip_line_compp:
             total = payslip_line_compp[0].total
             if round(float(total), 2) == 0.00:
@@ -221,10 +229,11 @@ class ErgobitPayslipReport(report_sxw.rml_parse):
         return ''
 
     def get_contribution_patronal(self, psline):
+        env = odoo.api.Environment(self.cr, self.uid, {})
         psline_code_comp = psline.code + '_C'
-        pooler = self.pool.get('hr.payslip.line')
-        payslip_line_comp_id = pooler.search(self.cr, self.uid, [('slip_id', '=', psline.slip_id.id), ('code', '=', psline_code_comp)])
-        payslip_line_comp = pooler.browse(self.cr, self.uid, payslip_line_comp_id)
+        pooler = env['hr.payslip.line']
+        payslip_line_comp_id = pooler.search([('slip_id', '=', psline.slip_id.id), ('code', '=', psline_code_comp)])
+        payslip_line_comp = pooler.browse(payslip_line_comp_id)
         if payslip_line_comp:
             total = payslip_line_comp[0].total
             if round(float(total), 2) == 0.00:
@@ -238,22 +247,22 @@ class ErgobitPayslipReport(report_sxw.rml_parse):
              save them in a dict object according to timeref MONTH or YEAR
         Returns a pseudo dict object {(PSEUDO, '')}
         """
-
-        payslip_line = self.pool.get('hr.payslip.line')
+        env = odoo.api.Environment(self.cr, self.uid, {})
+        payslip_line = env['hr.payslip.line']
 
         if timeref == 'MONTH':
             res = dict.fromkeys(['1100', '1200', '1300', '1400', '1500', 'B100', '1600', '1700', '1000', '1020'], 0.00)
-            category_ids = self.pool.get('hr.salary.rule.category').search(self.cr, self.uid, [('code', 'in', [self.C_TOTM, self.C_NET])])
+            category_ids = env['hr.salary.rule.category'].search([('code', 'in', [self.C_TOTM, self.C_NET])])
         else:
             res = dict.fromkeys(['2100', '2200', '2300', '2400', '2500', '2600', '2700', '2000', '2020'], 0.00)
-            category_ids = self.pool.get('hr.salary.rule.category').search(self.cr, self.uid, [('code', '=', self.C_TOTA)])
+            category_ids = env['hr.salary.rule.category'].search([('code', '=', self.C_TOTA)])
 
         ids = []
         for idx in range(len(lines_ids)):
             if (lines_ids[idx].appears_on_payslip is True) and (int(lines_ids[idx].category_id) in category_ids):
                 ids.append(lines_ids[idx].id)
         if ids:
-            payslip_line_total = payslip_line.browse(self.cr, self.uid, ids)
+            payslip_line_total = payslip_line.browse(ids)
             if payslip_line_total:
                 for linx in range(len(payslip_line_total)):
                     if payslip_line_total[linx].code in res.keys():

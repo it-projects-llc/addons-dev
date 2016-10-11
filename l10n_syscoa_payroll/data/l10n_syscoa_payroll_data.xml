@@ -1622,7 +1622,7 @@ result = trimf * employee.coef
             <field name="amount_select">percentage</field>
             <field name="amount_percentage_base"></field>
             <field name="quantity"></field>
-            <field name="amount_percentage"></field>
+            <!--<field name="amount_percentage"></field>-->
             <field name="register_id" ref="erg_hr_contrib_register_cfce" />
         </record>
 
@@ -1666,7 +1666,7 @@ result = trimf * employee.coef
             <field name="amount_select">percentage</field>
             <field name="amount_percentage_base"></field>
             <field name="quantity"></field>
-            <field name="amount_percentage"></field>
+            <!--<field name="amount_percentage"></field>-->
             <field name="register_id" ref="erg_hr_contrib_register_ipres_rg_comp" />
         </record>
 
@@ -1709,7 +1709,7 @@ result = trimf * employee.coef
             <field name="amount_select">percentage</field>
             <field name="amount_percentage_base"></field>
             <field name="quantity"></field>
-            <field name="amount_percentage"></field>
+            <!--<field name="amount_percentage"></field>-->
             <field name="register_id" ref="erg_hr_contrib_register_ipres_rc_comp" />
         </record>
 
@@ -1784,7 +1784,7 @@ result = trimf * employee.coef
             <field name="amount_select">percentage</field>
             <field name="amount_percentage_base"></field>
             <field name="quantity"></field>
-            <field name="amount_percentage"></field>
+            <!--<field name="amount_percentage"></field>-->
             <field name="register_id" ref="erg_hr_contrib_register_css_at_comp" />
         </record>
 
@@ -1829,7 +1829,7 @@ result = trimf * employee.coef
             <field name="amount_select">percentage</field>
             <field name="amount_percentage_base"></field>
             <field name="quantity"></field>
-            <field name="amount_percentage"></field>
+            <!--<field name="amount_percentage"></field>-->
             <field name="register_id" ref="erg_hr_contrib_register_css_af_comp" />
         </record>
 
@@ -1872,7 +1872,7 @@ result = trimf * employee.coef
             <field name="amount_select">percentage</field>
             <field name="amount_percentage_base"></field>
             <field name="quantity"></field>
-            <field name="amount_percentage"></field>
+            <!--<field name="amount_percentage"></field>-->
             <field name="register_id" ref="erg_hr_contrib_register_ipm_comp" />
         </record>
 
