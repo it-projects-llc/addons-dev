@@ -9,5 +9,5 @@
     "data": [
         'report_invoice.xml',
     ],
-    "installable": True
+    "installable": False,
 }
