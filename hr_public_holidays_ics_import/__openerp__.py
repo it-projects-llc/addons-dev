@@ -2,9 +2,9 @@
 {
     "name": """hr public holidays ics import""",
     "summary": """
-    import holidays from ics file""",
+    Import holidays from ics file""",
     "category": "Human Resources",
-    "images": [],
+    "images": ['images/ics_import.png'],
     "version": "1.0.0",
 
     "author": "IT-Projects LLC, Ildar Nasyrov",
