@@ -76,8 +76,8 @@ class HrEmployee(models.Model):
 
     @api.multi
     def _user_left_days(self):
-        legal_leave = self.company_id.legal_holidays_status_id
         for employee in self:
+            legal_leave = employee.company_id.legal_holidays_status_id
             values = legal_leave.get_days(employee.id)
             employee.leaves_taken = values.get('leaves_taken')
             employee.max_leaves = values.get('max_leaves')
