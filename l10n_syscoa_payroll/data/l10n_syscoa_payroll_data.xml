@@ -1,0 +1,2451 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+
+        <!-- Contribution Registers -->
+
+        <!-- delete the odoo's default contribution register -->
+        <delete id="hr_payroll.contrib_register_employees" model="hr.contribution.register" />
+
+        <record id="erg_hr_contrib_register_ir" model="hr.contribution.register">
+            <field name="name">Part salariale / IR</field>
+            <field name="partner_id" eval="False" />
+        </record>
+
+        <record id="erg_hr_contrib_register_brs" model="hr.contribution.register">
+            <field name="name">Retenu BRS</field>
+            <field name="partner_id" eval="False" />
+        </record>
+
+        <record id="erg_hr_contrib_register_trimf" model="hr.contribution.register">
+            <field name="name">Part salariale / TRIMF</field>
+            <field name="partner_id" eval="False" />
+        </record>
+
+        <record id="erg_hr_contrib_register_cfce" model="hr.contribution.register">
+            <field name="name">Part patronale / CFCE </field>
+            <field name="partner_id" eval="False" />
+        </record>
+
+        <record id="erg_hr_contrib_register_ipres_rg" model="hr.contribution.register">
+            <field name="name">Part salariale / IPRES - RG</field>
+            <field name="partner_id" eval="False" />
+        </record>
+
+        <record id="erg_hr_contrib_register_ipres_rg_comp" model="hr.contribution.register">
+            <field name="name">Part patronale / IPRES - RG</field>
+            <field name="partner_id" eval="False" />
+        </record>
+
+        <record id="erg_hr_contrib_register_ipres_rc" model="hr.contribution.register">
+            <field name="name">Part salariale / IPRES - RC</field>
+            <field name="partner_id" eval="False" />
+        </record>
+
+        <record id="erg_hr_contrib_register_ipres_rc_comp" model="hr.contribution.register">
+            <field name="name">Part patronale / IPRES - RC</field>
+            <field name="partner_id" eval="False" />
+        </record>
+
+        <record id="erg_hr_contrib_register_css_af_comp" model="hr.contribution.register">
+            <field name="name">Part patronale / CSS - AF</field>
+            <field name="partner_id" eval="False" />
+        </record>
+
+        <record id="erg_hr_contrib_register_css_at_comp" model="hr.contribution.register">
+            <field name="name">Part patronale / CSS - AT</field>
+            <field name="partner_id" eval="False" />
+        </record>
+
+        <record id="erg_hr_contrib_register_ipm" model="hr.contribution.register">
+            <field name="name">Part salariale / IPM</field>
+            <field name="partner_id" eval="False" />
+        </record>
+
+        <record id="erg_hr_contrib_register_ipm_comp" model="hr.contribution.register">
+            <field name="name">Part patronale / IPM </field>
+            <field name="partner_id" eval="False" />
+        </record>
+
+        <record id="erg_hr_contrib_register_mut" model="hr.contribution.register">
+            <field name="name">Part salariale / Mutuelle</field>
+            <field name="partner_id" eval="False" />
+        </record>
+
+        <record id="erg_hr_contrib_register_mut_comp" model="hr.contribution.register">
+            <field name="name">Part patronale / Mutuelle</field>
+            <field name="partner_id" eval="False" />
+        </record>
+
+        <record id="erg_hr_contrib_register_gross" model="hr.contribution.register">
+            <field name="name">Salaires bruts</field>
+            <field name="partner_id" eval="False" />
+        </record>
+
+        <record id="erg_hr_contrib_register_net" model="hr.contribution.register">
+            <field name="name">Salaires nets à payer</field>
+            <field name="partner_id" eval="False" />
+        </record>
+
+        <record id="erg_hr_contrib_register_union_fee" model="hr.contribution.register">
+            <field name="name">Cotisations syndicales</field>
+            <field name="partner_id" eval="False" />
+        </record>
+
+        <!--
+        Categories of salary rules Odoo already has the following categories:
+            - hr_payroll.BASIC
+            - hr_payroll.ALW
+            - hr_payroll.GROSS
+            - hr_payroll.DED
+            - hr_payroll.NET
+            - hr_payroll.COMP
+        -->
+
+        <!--
+        <delete id="hr_payroll.BASIC" model="hr.salary.rule.category" />
+        <record id="hr_payroll.BASIC" model="hr.salary.rule.category">
+            <field name="name">Base</field>
+            <field name="code">BASIC</field>
+
+        </record> <delete id="hr_payroll.ALW" model="hr.salary.rule.category" />
+        <record id="hr_payroll.BASIC" model="hr.salary.rule.category">
+            <field name="name">Indemnité imposable</field>
+            <field name="code">ALW</field>
+        </record>
+
+        <delete id="hr_payroll.GROSS" model="hr.salary.rule.category" />
+        <record id="hr_payroll.GROSS" model="hr.salary.rule.category">
+            <field name="name">Salaire brut</field>
+            <field name="code">GROSS</field>
+        </record>
+
+        <delete id="hr_payroll.DED" model="hr.salary.rule.category" />
+        <record id="hr_payroll.DED" model="hr.salary.rule.category">
+            <field name="name">Retenue à la source</field>
+            <field name="code">DED</field>
+        </record>
+
+        <delete id="hr_payroll.NET" model="hr.salary.rule.category" />
+        <record id="hr_payroll.NET" model="hr.salary.rule.category">
+            <field name="name">Net</field>
+            <field name="code">NET</field>
+        </record>
+
+        <delete id="hr_payroll.COMP" model="hr.salary.rule.category" />
+        <record id="hr_payroll.COMP" model="hr.salary.rule.category">
+            <field name="name">Contribution patronale (-)</field>
+            <field name="code">NET</field>
+        </record>
+        -->
+
+        <record id="ALW_C" model="hr.salary.rule.category">
+            <field name="name">Indemnité de congé</field>
+            <field name="code">ALW_C</field>
+        </record>
+
+        <record id="NATU" model="hr.salary.rule.category">
+            <field name="name">Avantage en nature</field>
+            <field name="code">NATU</field>
+        </record>
+
+        <record id="RED" model="hr.salary.rule.category">
+            <field name="name">Réduction du brut</field>
+            <field name="code">RED</field>
+        </record>
+
+        <record id="TAX" model="hr.salary.rule.category">
+            <field name="name">Impôts</field>
+            <field name="code">TAX</field>
+        </record>
+
+        <record id="TAXX" model="hr.salary.rule.category">
+            <field name="name">Calcul Impôts</field>
+            <field name="code">TAXX</field>
+        </record>
+
+        <record id="TAXXP" model="hr.salary.rule.category">
+            <field name="name">Calcul Impôts - Parts</field>
+            <field name="code">TAXXP</field>
+        </record>
+
+
+        <record id="TAX_P" model="hr.salary.rule.category">
+            <field name="name">Impôts de la période</field>
+            <field name="code">TAX_P</field>
+        </record>
+
+        <record id="TAXX_P" model="hr.salary.rule.category">
+            <field name="name">Calcul Impôts de la période</field>
+            <field name="code">TAXX_P</field>
+        </record>
+
+        <record id="TAXXP_P" model="hr.salary.rule.category">
+            <field name="name">Calcul Impôts de la période - Parts</field>
+            <field name="code">TAXXP_P</field>
+        </record>
+
+        <record id="TAX_C" model="hr.salary.rule.category">
+            <field name="name">Impôts du congé</field>
+            <field name="code">TAX_C</field>
+        </record>
+
+        <record id="TAXX_C" model="hr.salary.rule.category">
+            <field name="name">Calcul Impôts du congé</field>
+            <field name="code">TAXX_C</field>
+        </record>
+
+        <record id="TAXXP_C" model="hr.salary.rule.category">
+            <field name="name">Calcul Impôts du congé - Parts</field>
+            <field name="code">TAXXP_C</field>
+        </record>
+
+        <record id="TRIMF" model="hr.salary.rule.category">
+            <field name="name">TRIMF</field>
+            <field name="code">TRIMF</field>
+        </record>
+
+        <record id="COMPP" model="hr.salary.rule.category">
+            <field name="name">Contribution patronale (+)</field>
+            <field name="code">COMPP</field>
+        </record>
+
+        <record id="ALWN" model="hr.salary.rule.category">
+            <field name="name">Indemnité non imposable</field>
+            <field name="code">ALWN</field>
+        </record>
+
+        <record id="AVCE" model="hr.salary.rule.category">
+            <field name="name">Paiement d'avance</field>
+            <field name="code">AVCE</field>
+        </record>
+
+        <record id="PAYB" model="hr.salary.rule.category">
+            <field name="name">Remboursement d'avance/IPM</field>
+            <field name="code">PAYB</field>
+        </record>
+
+        <record id="RETN" model="hr.salary.rule.category">
+            <field name="name">Autres retenus sur le net</field>
+            <field name="code">RETN</field>
+        </record>
+
+        <record id="TOTM" model="hr.salary.rule.category">
+            <field name="name">Cumul mensuel</field>
+            <field name="code">TOTM</field>
+        </record>
+
+        <record id="TOTA" model="hr.salary.rule.category">
+            <field name="name">Cumul annuel</field>
+            <field name="code">TOTA</field>
+        </record>
+
+
+
+
+        <!-- Salary rules -->
+
+        <!-- Delete Odoo's default salary rules. New ones will be created below  -->
+        <delete id="hr_payroll.hr_rule_basic" model="hr.salary.rule" />            <!-- replaced by rule 100 -->
+        <delete id="hr_payroll.hr_rule_taxable" model="hr.salary.rule" />        <!-- replaced by rule 400 -->
+        <delete id="hr_payroll.hr_rule_net" model="hr.salary.rule" />            <!-- replaced by rule 1000 -->
+
+        <!-- Basic Salary -->
+        <record id="hr_rule_basic_hourly" model="hr.salary.rule">
+            <field name="name">Salaire de base par heure</field>
+            <field name="sequence" eval="2" />
+            <field name="code">B100</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TOTM" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = (contract.wage / worked_days.WORK100.number_of_hours if worked_days.WORK100 else 1.0)</field>
+        </record>
+
+        <record id="hr_rule_basic" model="hr.salary.rule">
+            <field name="name">Salaire de base</field>
+            <field name="sequence" eval="3" />
+            <field name="code">100</field>
+            <field name="category_id" ref="hr_payroll.BASIC" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves')</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">B100</field>
+            <field name="quantity">worked_days.WORKED.number_of_hours</field>
+            <field name="amount_percentage">100</field>
+        </record>
+<!-- backup
+        <record id="hr_rule_basic" model="hr.salary.rule">
+            <field name="name">Salaire de base</field>
+            <field name="sequence" eval="3" />
+            <field name="code">100</field>
+            <field name="category_id" ref="hr_payroll.BASIC" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves')</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.wage if payslip.type != 'leaves' else 0</field>
+            <field name="quantity">B100</field>
+        </record>
+-->
+        <record id="erg_hr_pay_rule_basic_prestation" model="hr.salary.rule">
+            <field name="name">Honoraires </field>
+            <field name="sequence" eval="4" />
+            <field name="code">150</field>
+            <field name="category_id" ref="hr_payroll.BASIC" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.wage</field>
+        </record>
+
+        <!-- Allowances -->
+        <record id="erg_hr_pay_rule_additional_salary" model="hr.salary.rule">
+            <field name="name">Sursalaire</field>
+            <field name="sequence" eval="5" />
+            <field name="code">110</field>
+            <field name="category_id" ref="hr_payroll.ALW" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and (contract.additional_salary &gt; 0)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.additional_salary</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_seniority_allowance" model="hr.salary.rule">
+            <field name="name">Indemnité d'ancienneté</field>
+            <field name="sequence" eval="7" />
+            <field name="code">120</field>
+            <field name="category_id" ref="hr_payroll.ALW" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and (contract.seniority_allowance &gt; 0)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.seniority_allowance</field>
+        </record>
+
+        <!-- Overtime -->
+<!--
+        <delete id="erg_hr_pay_rule_overtime_premium_15" model="hr.rule.input" />
+        <delete id="erg_hr_pay_rule_overtime_premium_40" model="hr.rule.input" />
+        <delete id="erg_hr_pay_rule_overtime_premium_60" model="hr.rule.input" />
+        <delete id="erg_hr_pay_rule_overtime_premium_100" model="hr.rule.input" />
+
+        <record id="erg_hr_pay_rule_overtime_premium" model="hr.salary.rule">
+            <field name="name">Heures supplémentaires</field>
+            <field name="active" eval="False" />
+            <field name="sequence" eval="14" />
+            <field name="code">200</field>
+            <field name="category_id" ref="hr_payroll.ALW" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and inputs.HSUP15.amount * B100 * 1.15  +  inputs.HSUP40.amount * B100 * 1.40 + inputs.HSUP60.amount * B100 * 1.60 + inputs.HSUP100.amount * B100 * 2 + (inputs.HSUPFF.amount if inputs.HSUPFF else 0) &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.HSUP15.amount * B100 * 1.15  +  inputs.HSUP40.amount * B100 * 1.40 + inputs.HSUP60.amount * B100 * 1.60 + inputs.HSUP100.amount * B100 * 2 + (inputs.HSUPFF.amount if inputs.HSUPFF else 0)</field>
+        </record>
+-->
+        <record id="erg_hr_pay_rule_overtime_premium" model="hr.salary.rule">
+            <field name="name">Heures supplémentaires</field>
+            <field name="active" eval="False" />
+            <field name="sequence" eval="14" />
+            <field name="code">200</field>
+            <field name="category_id" ref="hr_payroll.ALW" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = 0</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_overtime_premium_flat_" model="hr.salary.rule">
+            <field name="name">Heures supplémentaires</field>
+            <field name="sequence" eval="10" />
+            <field name="code">200</field>
+            <field name="category_id" ref="hr_payroll.ALW" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and (inputs.HSUPFF.amount &gt; 0)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.HSUPFF.amount</field>
+        </record>
+        <record id="erg_hr_pay_rule_overtime_premium_flat_entry" model="hr.rule.input">
+            <field name="name">Montant forfaitaire pour les heures supplémentaires</field>
+            <field name="code">HSUPFF</field>
+            <field name="input_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_overtime_premium_flat_" />
+        </record>
+
+        <record id="erg_hr_pay_rule_overtime_premium_15" model="hr.salary.rule">
+            <field name="name">Heures supplémentaires majorées à 15%</field>
+            <field name="sequence" eval="11" />
+            <field name="code">210</field>
+            <field name="category_id" ref="hr_payroll.ALW" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and (inputs.HSUP15.amount &gt; 0)</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">B100</field>
+            <field name="quantity">inputs.HSUP15.amount</field>
+            <field name="amount_percentage">115.00</field>
+        </record>
+        <record id="erg_hr_pay_rule_overtime_premium_15_entry" model="hr.rule.input">
+            <field name="name">Heures supplémentaires majorées à 15%</field>
+            <field name="code">HSUP15</field>
+            <field name="input_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_overtime_premium_15" />
+        </record>
+
+        <record id="erg_hr_pay_rule_overtime_premium_40" model="hr.salary.rule">
+            <field name="name">Heures supplémentaires majorées à 40%</field>
+            <field name="sequence" eval="12" />
+            <field name="code">220</field>
+            <field name="category_id" ref="hr_payroll.ALW" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and (inputs.HSUP40.amount &gt; 0)</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">B100</field>
+            <field name="quantity">inputs.HSUP40.amount</field>
+            <field name="amount_percentage">140.00</field>
+        </record>
+        <record id="erg_hr_pay_rule_overtime_premium_40_entry" model="hr.rule.input">
+            <field name="name">Heures supplémentaires majorées à 40%</field>
+            <field name="code">HSUP40</field>
+            <field name="input_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_overtime_premium_40" />
+        </record>
+
+        <record id="erg_hr_pay_rule_overtime_premium_60" model="hr.salary.rule">
+            <field name="name">Heures supplémentaires majorées à 60%</field>
+            <field name="sequence" eval="13" />
+            <field name="code">230</field>
+            <field name="category_id" ref="hr_payroll.ALW" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and (inputs.HSUP60.amount &gt; 0)</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">B100</field>
+            <field name="quantity">inputs.HSUP60.amount</field>
+            <field name="amount_percentage">160.00</field>
+        </record>
+        <record id="erg_hr_pay_rule_overtime_premium_60_entry" model="hr.rule.input">
+            <field name="name">Heures supplémentaires majorées à 60%</field>
+            <field name="code">HSUP60</field>
+            <field name="input_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_overtime_premium_60" />
+        </record>
+
+        <record id="erg_hr_pay_rule_overtime_premium_100_" model="hr.salary.rule">
+            <field name="name">Heures supplémentaires majorées à 100%</field>
+            <field name="sequence" eval="14" />
+            <field name="code">240</field>
+            <field name="category_id" ref="hr_payroll.ALW" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and (inputs.HSUP100.amount &gt; 0)</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">B100</field>
+            <field name="quantity">inputs.HSUP100.amount</field>
+            <field name="amount_percentage">200.00</field>
+        </record>
+        <record id="erg_hr_pay_rule_overtime_premium_100_entry" model="hr.rule.input">
+            <field name="name">Heures supplémentaires majorées à 100%</field>
+            <field name="code">HSUP100</field>
+            <field name="input_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_overtime_premium_100_" />
+        </record>
+
+
+        <record id="erg_hr_pay_rule_performance_bonus" model="hr.salary.rule">
+            <field name="name">Prime de rendement</field>
+            <field name="sequence" eval="15" />
+            <field name="code">300</field>
+            <field name="category_id" ref="hr_payroll.ALW" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">res = (payslip.type != 'leaves') and ((payslip.amount_invoiced - (6500 * worked_days.WORKED.number_of_days * 9.240)) * 0.1) if payslip.amount_invoiced else 0
+res_calculated = res if (res > 0) else 0
+res_contracted = contract.performance_bonus
+result = (res_calculated + res_contracted) &gt; 0
+            </field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">res = ((payslip.amount_invoiced - (6500 * worked_days.WORKED.number_of_days * 9.240)) * 0.1) if payslip.amount_invoiced else 0
+res_calculated = res if (res > 0) else 0
+res_contracted = contract.performance_bonus
+result = res_calculated + res_contracted
+            </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_gratification" model="hr.salary.rule">
+            <field name="name">Gratification</field>
+            <field name="sequence" eval="20" />
+            <field name="code">310</field>
+            <field name="category_id" ref="hr_payroll.ALW" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and contract.gratification &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.gratification</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_subjection_allowance" model="hr.salary.rule">
+            <field name="name">Indemnité de sujétion</field>
+            <field name="sequence" eval="25" />
+            <field name="code">315</field>
+            <field name="category_id" ref="hr_payroll.ALW" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and contract.subjection_allowance &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.subjection_allowance</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_responsability_bonus" model="hr.salary.rule">
+            <field name="name">Prime de responsabilité</field>
+            <field name="sequence" eval="30" />
+            <field name="code">320</field>
+            <field name="category_id" ref="hr_payroll.ALW" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and contract.responsability_bonus &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.responsability_bonus</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_risk_bonus" model="hr.salary.rule">
+            <field name="name">Prime de risque</field>
+            <field name="sequence" eval="35" />
+            <field name="code">325</field>
+            <field name="category_id" ref="hr_payroll.ALW" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and contract.risk_bonus &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.risk_bonus</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_cashpoint_bonus" model="hr.salary.rule">
+            <field name="name">Prime de caisse</field>
+            <field name="sequence" eval="40" />
+            <field name="code">330</field>
+            <field name="category_id" ref="hr_payroll.ALW" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and contract.cashpoint_bonus &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.cashpoint_bonus</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_dirtiness_allowance" model="hr.salary.rule">
+            <field name="name">Prime de salissure</field>
+            <field name="sequence" eval="45" />
+            <field name="code">335</field>
+            <field name="category_id" ref="hr_payroll.ALW" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and contract.dirtiness_allowance &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.dirtiness_allowance</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_expatriation_bonus" model="hr.salary.rule">
+            <field name="name">Prime d'expatriation</field>
+            <field name="sequence" eval="50" />
+            <field name="code">340</field>
+            <field name="category_id" ref="hr_payroll.ALW" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and contract.expatriation_bonus &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.expatriation_bonus</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_home_bonus" model="hr.salary.rule">
+            <field name="name">Prime de logement</field>
+            <field name="sequence" eval="55" />
+            <field name="code">345</field>
+            <field name="category_id" ref="hr_payroll.ALW" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and contract.home_bonus &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.home_bonus</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_birth_allowance" model="hr.salary.rule">
+            <field name="name">Prime de naissance</field>
+            <field name="sequence" eval="60" />
+            <field name="code">350</field>
+            <field name="category_id" ref="hr_payroll.ALW" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and inputs.PRNAIS.amount &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.PRNAIS.amount</field>
+        </record>
+        <record id="erg_hr_pay_rule_input_birth_allowance" model="hr.rule.input">
+            <field name="name">Prime de naissance</field>
+            <field name="code">PRNAIS</field>
+            <field name="input_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_birth_allowance" />
+        </record>
+
+        <record id="erg_hr_pay_rule_marriage_allowance" model="hr.salary.rule">
+            <field name="name">Prime de mariage</field>
+            <field name="sequence" eval="65" />
+            <field name="code">355</field>
+            <field name="category_id" ref="hr_payroll.ALW" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and inputs.PRMARI.amount &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.PRMARI.amount</field>
+        </record>
+        <record id="erg_hr_pay_rule_input_marriage_allowance" model="hr.rule.input">
+            <field name="name">Prime de mariage</field>
+            <field name="code">PRMARI</field>
+            <field name="input_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_marriage_allowance" />
+        </record>
+
+
+        <record id="erg_hr_pay_rule_natural_advantage" model="hr.salary.rule">
+            <field name="name">Avantages en nature</field>
+            <field name="sequence" eval="80" />
+            <field name="code">370</field>
+            <field name="category_id" ref="hr_payroll.ALW" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and (categories.NATU &gt; 0)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.NATU</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_domesticity_bonus" model="hr.salary.rule">
+            <field name="name">Avantage pour logement et domesticité</field>
+            <field name="sequence" eval="71" />
+            <field name="code">NAT1</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.NATU" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_natural_advantage" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.domesticity_bonus &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.domesticity_bonus</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_company_car_advantage" model="hr.salary.rule">
+            <field name="name">Avantage pour voiture de fonction</field>
+            <field name="sequence" eval="72" />
+            <field name="code">NAT2</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.NATU" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_natural_advantage" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.company_car_advantage &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.company_car_advantage</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_company_phone_advantage" model="hr.salary.rule">
+            <field name="name">Avantage pour le téléphone</field>
+            <field name="sequence" eval="73" />
+            <field name="code">NAT3</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.NATU" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_natural_advantage" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.company_phone_advantage &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.company_phone_advantage</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_water_electricity_advantage" model="hr.salary.rule">
+            <field name="name">Avantage pour eau et électricité</field>
+            <field name="sequence" eval="74" />
+            <field name="code">NAT4</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.NATU" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_natural_advantage" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.water_electricity_advantage &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.water_electricity_advantage</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_food_advantage" model="hr.salary.rule">
+            <field name="name">Avantage pour nourriture</field>
+            <field name="sequence" eval="75" />
+            <field name="code">NAT5</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.NATU" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_natural_advantage" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.food_advantage &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.food_advantage</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_family_advantage" model="hr.salary.rule">
+            <field name="name">Avantages familiaux</field>
+            <field name="sequence" eval="76" />
+            <field name="code">NAT6</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.NATU" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_natural_advantage" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.family_advantage &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.family_advantage</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_holiday_allowance" model="hr.salary.rule">
+            <field name="name">Indemnité de congé</field>
+            <field name="sequence" eval="90" />
+            <field name="code">390</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.ALW_C" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type in ['leaves', 'mix']) and (payslip.holiday_allowance &gt; 0)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip.holiday_allowance</field>
+        </record>
+
+
+        <!-- Gross Salary -->
+        <record id="hr_rule_taxable" model="hr.salary.rule">           <!-- TO-DO: name convention -->
+            <field name="name">Salaire brut</field>
+            <field name="sequence" eval="100" />
+            <field name="code">400</field>
+            <field name="category_id" ref="hr_payroll.GROSS" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="register_id" ref="erg_hr_contrib_register_gross" />
+            <field name="amount_python_compute">result = categories.BASIC + categories.ALW + categories.ALW_C + categories.RED </field>  <!-- les montants RED doivent avoir un signe négatif -->
+        </record>
+
+
+        <!-- Impôt/Revenu de la période-->
+
+        <record id="erg_hr_pay_rule_ir" model="hr.salary.rule">
+            <field name="name">Impôt/Revenu</field>
+            <field name="sequence" eval="200" />
+            <field name="code">500</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAX" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.TAX_P + categories.TAX_C</field>
+            <field name="register_id" ref="erg_hr_contrib_register_ir" />
+        </record>
+
+
+        <record id="erg_hr_pay_rule_ir_prd" model="hr.salary.rule">
+            <field name="name">Impôt/Revenu de la période</field>
+            <field name="sequence" eval="195" />
+            <field name="code">500PRD</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAX_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_ir" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = X95 / 12</field>
+    <!--        <field name="register_id" ref="erg_hr_contrib_register_ir" />   -->
+        </record>
+
+<!-- backup
+        <record id="erg_hr_pay_rule_ir" model="hr.salary.rule">
+            <field name="name">Impôt/Revenu</field>
+            <field name="sequence" eval="200" />
+            <field name="code">500</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAX" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = X95 / 12</field>
+            <field name="register_id" ref="erg_hr_contrib_register_ir" />
+        </record>
+
+-->
+
+        <record id="erg_hr_pay_rule_taxable_annual" model="hr.salary.rule">
+            <field name="name">Salaire brut annuel</field>
+            <field name="sequence" eval="150" />
+            <field name="code">X50</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_ir_prd" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = 12 * (categories.GROSS - categories.ALW_C) </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_discount_percentage_annual" model="hr.salary.rule">
+            <field name="name">Abattement spécial et Abattement forfaitaire</field>
+            <field name="sequence" eval="155" />
+            <field name="code">X55</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_ir_prd" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <!-- <field name="amount_python_compute">result = 900000 if ((X50 * 0.3) > 900000) else (X50 * 0.3)</field> -->
+            <field name="amount_python_compute"># Abattement Spécial
+special_exemption = (X50 * 0.1) if (contract.functionary == True) else (0.00)
+# Abattement Forfaitaire 30% (max. 900 000 Frs)
+flat_exemption = 900000 if ((X50 * 0.3) > 900000) else (X50 * 0.3)
+result = special_exemption + flat_exemption
+            </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_taxable_discounted_annual" model="hr.salary.rule">
+            <field name="name">Salaire annuel net imposable </field>
+            <field name="sequence" eval="160" />
+            <field name="code">X60</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_ir_prd" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = int((X50 - X55) / 1000) * 1000</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_tax_annual" model="hr.salary.rule">
+            <field name="name">Impôt annuel liquidé </field>
+            <field name="sequence" eval="170" />
+            <field name="code">X70</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_ir_prd" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = X701 + X702 + X703 + X704 + X705 + X706</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_tax_1_annual" model="hr.salary.rule">
+            <field name="name">Impôt annuel selon droit progressif (Intervalle 1)</field>
+            <field name="sequence" eval="162" />
+            <field name="code">X701</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_tax_annual" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">fix</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_fix">0</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_tax_2_annual" model="hr.salary.rule">
+            <field name="name">Impôt annuel selon droit progressif (Intervalle 2)</field>
+            <field name="sequence" eval="163" />
+            <field name="code">X702</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_tax_annual" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">bool(X60 > 630000) * ((1500000 - 630000) if (X60 > 1500000) else (X60 - 630000))</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_percentage">20</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_tax_3_annual" model="hr.salary.rule">
+            <field name="name">Impôt annuel selon droit progressif (Intervalle 3)</field>
+            <field name="sequence" eval="164" />
+            <field name="code">X703</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_tax_annual" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">bool(X60 > 1500000) * ((4000000 - 1500000) if (X60 > 4000000) else (X60 - 1500000))</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_percentage">30</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_tax_4_annual" model="hr.salary.rule">
+            <field name="name">Impôt annuel selon droit progressif (Intervalle 4)</field>
+            <field name="sequence" eval="165" />
+            <field name="code">X704</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_tax_annual" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">bool(X60 > 4000000) * ((8000000 - 4000000) if (X60 > 8000000) else (X60 - 4000000))</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_percentage">35</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_tax_5_annual" model="hr.salary.rule">
+            <field name="name">Impôt annuel selon droit progressif (Intervalle 5)</field>
+            <field name="sequence" eval="166" />
+            <field name="code">X705</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_tax_annual" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">bool(X60 > 8000000) * ((13500000 - 8000000) if (X60 > 13500000) else (X60 - 8000000))</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_percentage">37</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_tax_6_annual" model="hr.salary.rule">
+            <field name="name">Impôt annuel selon droit progressif (Intervalle 6)</field>
+            <field name="sequence" eval="167" />
+            <field name="code">X706</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_tax_annual" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">bool(X60 > 13500000) * ((X60 - 13500000) if (X60 > 13500000) else 0)</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_percentage">40</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_social_parts" model="hr.salary.rule">
+            <field name="name">Nombre de parts sociales</field>
+            <field name="sequence" eval="175" />
+            <field name="code">X75</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_ir_prd" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = employee.social_parts</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_part_social_discount_percentage" model="hr.salary.rule">
+            <field name="name">Pourcentage de l'abattement selon parts sociales</field>
+            <field name="sequence" eval="180" />
+            <field name="code">X80</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_ir_prd" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">parts = 0.00
+parts = 5.00 if round(float(X75), 2) > 5.00 else round(float(X75), 2)
+if parts &lt;= 1.00:
+    percentage = 0.00
+else:
+    percentage = (10 * parts) - 5
+result = percentage
+            </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_part_social_discount" model="hr.salary.rule">
+            <field name="name">Abattement annuel selon parts sociales</field>
+            <field name="sequence" eval="190" />
+            <field name="code">X85</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_ir_prd" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.TAXXP_P</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_part_social_discount_10" model="hr.salary.rule">
+            <field name="name">Abattement selon Parts: 1.0</field>
+            <field name="sequence" eval="181" />
+            <field name="code">XP10</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXXP_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_part_social_discount" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (X75 == 1.0)</field>
+            <field name="amount_select">fix</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_fix">0</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_part_social_discount_15" model="hr.salary.rule">
+            <field name="name">Abattement selon Parts: 1.5</field>
+            <field name="sequence" eval="182" />
+            <field name="code">XP15</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXXP_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_part_social_discount" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (X75 == 1.5)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">perc = X80 / 100
+min = 100000
+max = 300000
+result = (min if ((X70 * perc) &lt; min) else (max if ((X70 * perc) &gt; max) else (X70 * perc)))
+            </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_part_social_discount_20" model="hr.salary.rule">
+            <field name="name">Abattement selon Parts: 2.0</field>
+            <field name="sequence" eval="183" />
+            <field name="code">XP20</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXXP_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_part_social_discount" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (X75 == 2.0)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">perc = X80 / 100
+min = 200000
+max = 650000
+result = (min if ((X70 * perc) &lt; min) else (max if ((X70 * perc) &gt; max) else (X70 * perc)))
+            </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_part_social_discount_25" model="hr.salary.rule">
+            <field name="name">Abattement selon Parts: 2.5</field>
+            <field name="sequence" eval="184" />
+            <field name="code">XP25</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXXP_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_part_social_discount" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (X75 == 2.5)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">perc = X80 / 100
+min = 300000
+max = 1100000
+result = (min if ((X70 * perc) &lt; min) else (max if ((X70 * perc) &gt; max) else (X70 * perc)))
+            </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_part_social_discount_30" model="hr.salary.rule">
+            <field name="name">Abattement selon Parts: 3.0</field>
+            <field name="sequence" eval="185" />
+            <field name="code">XP30</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXXP_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_part_social_discount" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (X75 == 3.0)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">perc = X80 / 100
+min = 400000
+max = 1650000
+result = (min if ((X70 * perc) &lt; min) else (max if ((X70 * perc) &gt; max) else (X70 * perc)))
+            </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_part_social_discount_35" model="hr.salary.rule">
+            <field name="name">Abattement selon Parts: 3.5</field>
+            <field name="sequence" eval="186" />
+            <field name="code">XP35</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXXP_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_part_social_discount" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (X75 == 3.5)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">perc = X80 / 100
+min = 500000
+max = 2030000
+result = (min if ((X70 * perc) &lt; min) else (max if ((X70 * perc) &gt; max) else (X70 * perc)))
+            </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_part_social_discount_40" model="hr.salary.rule">
+            <field name="name">Abattement selon Parts: 4.0</field>
+            <field name="sequence" eval="187" />
+            <field name="code">XP40</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXXP_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_part_social_discount" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (X75 == 4.0)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">perc = X80 / 100
+min = 600000
+max = 2490000
+result = (min if ((X70 * perc) &lt; min) else (max if ((X70 * perc) &gt; max) else (X70 * perc)))
+            </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_part_social_discount_45" model="hr.salary.rule">
+            <field name="name">Abattement selon Parts: 4.5</field>
+            <field name="sequence" eval="188" />
+            <field name="code">XP45</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXXP_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_part_social_discount" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (X75 == 4.5)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">perc = X80 / 100
+min = 700000
+max = 2755000
+result = (min if ((X70 * perc) &lt; min) else (max if ((X70 * perc) &gt; max) else (X70 * perc)))
+            </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_part_social_discount_50" model="hr.salary.rule">
+            <field name="name">Abattement selon Parts: 5.0</field>
+            <field name="sequence" eval="189" />
+            <field name="code">XP50</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXXP_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_part_social_discount" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (X75 == 5.0)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">perc = X80 / 100
+min = 800000
+max = 3180000
+result = (min if ((X70 * perc) &lt; min) else (max if ((X70 * perc) &gt; max) else (X70 * perc)))
+            </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_part_governmt_discount" model="hr.salary.rule">
+            <field name="name">Abattement pour fonctionaire du gouvernement (10%)</field>
+            <field name="sequence" eval="190" />
+            <field name="code">X90</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_ir_prd" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = 0.00
+#Cette règle n'est plus utilisée. L'abattement spécial est intégré dans la régle X55
+#result = (X70 * 0.1) if (contract.functionary == True) else (0.00)</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_ir_annual" model="hr.salary.rule">
+            <field name="name">Impôt sur le revenu annuel</field>
+            <field name="sequence" eval="193" />
+            <field name="code">X95</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_P" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_ir_prd" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = (X70 - X85 - X90) if (X70 - X85 - X90) > 0.0 else 0.0</field>
+        </record>
+
+
+        <!-- Impôt/Revenu du congé -->
+
+        <record id="erg_hr_pay_rule_ir_cng" model="hr.salary.rule">
+            <field name="name">Impôt/Revenu du congé</field>
+            <field name="sequence" eval="197" />
+            <field name="code">500CNG</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAX_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_ir" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = CX95 / 12</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_taxable_annual_cng" model="hr.salary.rule">
+            <field name="name">Salaire brut annuel</field>
+            <field name="sequence" eval="150" />
+            <field name="code">CX50</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_ir_cng" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = 12 * categories.ALW_C</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_discount_percentage_annual_cng" model="hr.salary.rule">
+            <field name="name">Abattement spécial et Abattement forfaitaire</field>
+            <field name="sequence" eval="155" />
+            <field name="code">CX55</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_ir_cng" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <!-- <field name="amount_python_compute">result = 900000 if ((X50 * 0.3) > 900000) else (X50 * 0.3)</field> -->
+            <field name="amount_python_compute"># Abattement Spécial
+special_exemption = (CX50 * 0.1) if (contract.functionary == True) else (0.00)
+# Abattement Forfaitaire 30% (max. 900 000 Frs)
+flat_exemption = 900000 if ((CX50 * 0.3) > 900000) else (CX50 * 0.3)
+result = special_exemption + flat_exemption
+            </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_taxable_discounted_annual_cng" model="hr.salary.rule">
+            <field name="name">Salaire annuel net imposable </field>
+            <field name="sequence" eval="160" />
+            <field name="code">CX60</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_ir_cng" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = int((CX50 - CX55) / 1000) * 1000</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_tax_annual_cng" model="hr.salary.rule">
+            <field name="name">Impôt annuel liquidé </field>
+            <field name="sequence" eval="170" />
+            <field name="code">CX70</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_ir_cng" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = CX701 + CX702 + CX703 + CX704 + CX705 + CX706</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_tax_1_annual_cng" model="hr.salary.rule">
+            <field name="name">Impôt annuel selon droit progressif (Intervalle 1)</field>
+            <field name="sequence" eval="162" />
+            <field name="code">CX701</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_tax_annual_cng" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">fix</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_fix">0</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_tax_2_annual_cng" model="hr.salary.rule">
+            <field name="name">Impôt annuel selon droit progressif (Intervalle 2)</field>
+            <field name="sequence" eval="163" />
+            <field name="code">CX702</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_tax_annual_cng" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">bool(CX60 > 630000) * ((1500000 - 630000) if (CX60 > 1500000) else (CX60 - 630000))</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_percentage">20</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_tax_3_annual_cng" model="hr.salary.rule">
+            <field name="name">Impôt annuel selon droit progressif (Intervalle 3)</field>
+            <field name="sequence" eval="164" />
+            <field name="code">CX703</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_tax_annual_cng" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">bool(CX60 > 1500000) * ((4000000 - 1500000) if (CX60 > 4000000) else (CX60 - 1500000))</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_percentage">30</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_tax_4_annual_cng" model="hr.salary.rule">
+            <field name="name">Impôt annuel selon droit progressif (Intervalle 4)</field>
+            <field name="sequence" eval="165" />
+            <field name="code">CX704</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_tax_annual_cng" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">bool(CX60 > 4000000) * ((8000000 - 4000000) if (CX60 > 8000000) else (CX60 - 4000000))</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_percentage">35</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_tax_5_annual_cng" model="hr.salary.rule">
+            <field name="name">Impôt annuel selon droit progressif (Intervalle 5)</field>
+            <field name="sequence" eval="166" />
+            <field name="code">CX705</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_tax_annual_cng" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">bool(CX60 > 8000000) * ((13500000 - 8000000) if (CX60 > 13500000) else (CX60 - 8000000))</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_percentage">37</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_tax_6_annual_cng" model="hr.salary.rule">
+            <field name="name">Impôt annuel selon droit progressif (Intervalle 6)</field>
+            <field name="sequence" eval="167" />
+            <field name="code">CX706</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_tax_annual_cng" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">bool(CX60 > 13500000) * ((CX60 - 13500000) if (CX60 > 13500000) else 0)</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_percentage">40</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_social_parts_cng" model="hr.salary.rule">
+            <field name="name">Nombre de parts sociales</field>
+            <field name="sequence" eval="175" />
+            <field name="code">CX75</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_ir_cng" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = employee.social_parts</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_part_social_discount_percentage_cng" model="hr.salary.rule">
+            <field name="name">Pourcentage de l'abattement selon parts sociales</field>
+            <field name="sequence" eval="180" />
+            <field name="code">CX80</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_ir_cng" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">parts = 0.00
+parts = 5.00 if round(float(CX75), 2) > 5.00 else round(float(CX75), 2)
+if parts &lt;= 1.00:
+    percentage = 0.00
+else:
+    percentage = (10 * parts) - 5
+result = percentage
+            </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_part_social_discount_cng" model="hr.salary.rule">
+            <field name="name">Abattement annuel selon parts sociales</field>
+            <field name="sequence" eval="190" />
+            <field name="code">CX85</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_ir_cng" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.TAXXP_C</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_part_social_discount_10_cng" model="hr.salary.rule">
+            <field name="name">Abattement selon Parts: 1.0</field>
+            <field name="sequence" eval="181" />
+            <field name="code">CXP10</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXXP_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_part_social_discount" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (CX75 == 1.0)</field>
+            <field name="amount_select">fix</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_fix">0</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_part_social_discount_15_cng" model="hr.salary.rule">
+            <field name="name">Abattement selon Parts: 1.5</field>
+            <field name="sequence" eval="182" />
+            <field name="code">CXP15</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXXP_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_part_social_discount" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (CX75 == 1.5)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">perc = CX80 / 100
+min = 100000
+max = 300000
+result = (min if ((CX70 * perc) &lt; min) else (max if ((CX70 * perc) &gt; max) else (CX70 * perc)))
+            </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_part_social_discount_20_cng" model="hr.salary.rule">
+            <field name="name">Abattement selon Parts: 2.0</field>
+            <field name="sequence" eval="183" />
+            <field name="code">CXP20</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXXP_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_part_social_discount" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (CX75 == 2.0)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">perc = CX80 / 100
+min = 200000
+max = 650000
+result = (min if ((CX70 * perc) &lt; min) else (max if ((CX70 * perc) &gt; max) else (CX70 * perc)))
+            </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_part_social_discount_25_cng" model="hr.salary.rule">
+            <field name="name">Abattement selon Parts: 2.5</field>
+            <field name="sequence" eval="184" />
+            <field name="code">CXP25</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXXP_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_part_social_discount" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (CX75 == 2.5)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">perc = CX80 / 100
+min = 300000
+max = 1100000
+result = (min if ((CX70 * perc) &lt; min) else (max if ((CX70 * perc) &gt; max) else (CX70 * perc)))
+            </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_part_social_discount_30_cng" model="hr.salary.rule">
+            <field name="name">Abattement selon Parts: 3.0</field>
+            <field name="sequence" eval="185" />
+            <field name="code">CXP30</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXXP_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_part_social_discount" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (CX75 == 3.0)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">perc = CX80 / 100
+min = 400000
+max = 1650000
+result = (min if ((CX70 * perc) &lt; min) else (max if ((CX70 * perc) &gt; max) else (CX70 * perc)))
+            </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_part_social_discount_35_cng" model="hr.salary.rule">
+            <field name="name">Abattement selon Parts: 3.5</field>
+            <field name="sequence" eval="186" />
+            <field name="code">CXP35</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXXP_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_part_social_discount" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (CX75 == 3.5)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">perc = CX80 / 100
+min = 500000
+max = 2030000
+result = (min if ((CX70 * perc) &lt; min) else (max if ((CX70 * perc) &gt; max) else (CX70 * perc)))
+            </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_part_social_discount_40_cng" model="hr.salary.rule">
+            <field name="name">Abattement selon Parts: 4.0</field>
+            <field name="sequence" eval="187" />
+            <field name="code">CXP40</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXXP_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_part_social_discount" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (CX75 == 4.0)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">perc = CX80 / 100
+min = 600000
+max = 2490000
+result = (min if ((CX70 * perc) &lt; min) else (max if ((CX70 * perc) &gt; max) else (CX70 * perc)))
+            </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_part_social_discount_45_cng" model="hr.salary.rule">
+            <field name="name">Abattement selon Parts: 4.5</field>
+            <field name="sequence" eval="188" />
+            <field name="code">CXP45</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXXP_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_part_social_discount" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (CX75 == 4.5)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">perc = CX80 / 100
+min = 700000
+max = 2755000
+result = (min if ((CX70 * perc) &lt; min) else (max if ((CX70 * perc) &gt; max) else (CX70 * perc)))
+            </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_part_social_discount_50_cng" model="hr.salary.rule">
+            <field name="name">Abattement selon Parts: 5.0</field>
+            <field name="sequence" eval="189" />
+            <field name="code">CXP50</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXXP_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_part_social_discount" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (CX75 == 5.0)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">perc = CX80 / 100
+min = 800000
+max = 3180000
+result = (min if ((CX70 * perc) &lt; min) else (max if ((CX70 * perc) &gt; max) else (CX70 * perc)))
+            </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_part_governmt_discount_cng" model="hr.salary.rule">
+            <field name="name">Abattement pour fonctionaire du gouvernement (10%)</field>
+            <field name="sequence" eval="190" />
+            <field name="code">CX90</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_ir_cng" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = 0.00
+#Cette règle n'est plus utilisée. L'abattement spécial est intégré dans la régle CX55
+#result = (CX70 * 0.1) if (contract.functionary == True) else (0.00)</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_ir_annual_cng" model="hr.salary.rule">
+            <field name="name">Impôt sur le revenu annuel</field>
+            <field name="sequence" eval="193" />
+            <field name="code">CX95</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX_C" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_ir_cng" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = (CX70 - CX85 - CX90) if (CX70 - CX85 - CX90) > 0.0 else 0.0</field>
+        </record>
+
+
+
+
+
+
+        <!--  BRS  pour les prestataires -->
+        <record id="erg_hr_pay_rule_ir_prestation" model="hr.salary.rule">
+            <field name="name">Impôts/contributions</field>
+            <field name="sequence" eval="205" />
+            <field name="code">530</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAX" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">categories.GROSS</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_percentage">5.00</field>
+            <field name="register_id" ref="erg_hr_contrib_register_brs" />
+        </record>
+
+
+        <!-- TRIMF -->
+        <record id="erg_hr_pay_rule_trimf" model="hr.salary.rule">
+            <field name="name">TRIMF</field>
+            <field name="sequence" eval="210" />
+            <field name="code">550</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAX" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.TRIMF</field>
+            <field name="register_id" ref="erg_hr_contrib_register_trimf" />
+        </record>
+
+        <record id="erg_hr_pay_rule_trimf_prd" model="hr.salary.rule">
+            <field name="name">TRIMF de la période</field>
+            <field name="sequence" eval="208" />
+            <field name="code">550PRD</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TRIMF" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_trimf" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">trimf = 0.0
+base = X50
+if base &gt; 0.0 and  base &lt; 600000:
+    trimf = 900/12
+elif base &gt;= 600000 and  base &lt; 1000000:
+    trimf = 3600/12
+elif base &gt;= 1000000 and  base &lt; 2000000:
+    trimf = 4800/12
+elif base &gt;= 2000000 and  base &lt; 7000000:
+    trimf = 12000/12
+elif base &gt;= 7000000 and  base &lt; 12000000:
+    trimf = 18000/12
+elif base &gt;= 12000000:
+    trimf = 36000/12
+result = trimf * employee.coef
+            </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_trimf_cng" model="hr.salary.rule">
+            <field name="name">TRIMF du congé</field>
+            <field name="sequence" eval="209" />
+            <field name="code">550CNG</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TRIMF" />
+            <field name="parent_rule_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_trimf" />
+            <field name="appears_on_payslip" eval="False" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">trimf = 0.0
+base = CX50
+if base &gt; 0.0 and  base &lt; 600000:
+    trimf = 900/12
+elif base &gt;= 600000 and  base &lt; 1000000:
+    trimf = 3600/12
+elif base &gt;= 1000000 and  base &lt; 2000000:
+    trimf = 4800/12
+elif base &gt;= 2000000 and  base &lt; 7000000:
+    trimf = 12000/12
+elif base &gt;= 7000000 and  base &lt; 12000000:
+    trimf = 18000/12
+elif base &gt;= 12000000:
+    trimf = 36000/12
+result = trimf * employee.coef
+            </field>
+        </record>
+
+        <!-- Pas de TRIMF part patronal -->
+<!-- backup alte trimf
+trimf = 0.0
+if categories.GROSS &gt;= 30000 and  categories.GROSS &lt; 50000:
+    trimf = 75.0
+elif categories.GROSS &gt;= 50000 and  categories.GROSS &lt; 84000:
+    trimf = 300.0
+elif categories.GROSS &gt;= 84000 and  categories.GROSS &lt; 167000:
+    trimf = 400.0
+elif categories.GROSS &gt;= 167000 and  categories.GROSS &lt; 1000000:
+    trimf = 500.0
+elif categories.GROSS &gt;= 1000000:
+    trimf = 1500.0
+result = trimf * employee.coef
+-->
+
+        <!-- CFCE -->
+        <record id="erg_hr_pay_rule_cfce" model="hr.salary.rule">
+            <field name="name">CFCE</field>
+            <field name="sequence" eval="220" />
+            <field name="code">570</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TAXX" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">categories.GROSS</field>       <!-- pseudo rule -->
+            <field name="quantity">0.00</field>
+            <field name="amount_percentage">0.00</field>
+            <field name="note">Règle fictive: ne pas effacer (raisons techniques!)</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_cfce_comp" model="hr.salary.rule">
+            <field name="name">CFCE (Patr.)</field>
+            <field name="sequence" eval="230" />
+            <field name="code">570_C</field>
+            <field name="category_id" ref="hr_payroll.COMP" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (bool(employee.country_id) == False) or (bool(employee.country_id) and employee.country_id.code == "SN")</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">categories.GROSS</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_percentage">3.00</field>
+            <field name="register_id" ref="erg_hr_contrib_register_cfce" />
+        </record>
+
+        <record id="erg_hr_pay_rule_cfce_comp2" model="hr.salary.rule">
+            <field name="name">CFCE (Patr.)</field>
+            <field name="sequence" eval="231" />
+            <field name="code">570_C</field>
+            <field name="category_id" ref="hr_payroll.COMP" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = ((bool(employee.country_id) == False) or (bool(employee.country_id) and employee.country_id.code == "SN")) == False</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">categories.GROSS</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_percentage">6.00</field>
+            <field name="register_id" ref="erg_hr_contrib_register_cfce" />
+        </record>
+
+        <record id="erg_hr_pay_rule_cfce_compp" model="hr.salary.rule">
+            <field name="name">CFCE (Patr.) (+)</field>
+            <field name="sequence" eval="235" />
+            <field name="code">570_CP</field>
+            <field name="category_id" ref="hr_payroll.COMP" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base"></field>
+            <field name="quantity"></field>
+            <!--<field name="amount_percentage"></field>-->
+            <field name="register_id" ref="erg_hr_contrib_register_cfce" />
+        </record>
+
+
+        <!-- IPRES RG -->
+        <record id="erg_hr_pay_rule_ipres_rg" model="hr.salary.rule">
+            <field name="name">IPRES RG</field>
+            <field name="sequence" eval="240" />
+            <field name="code">600</field>
+            <field name="category_id" ref="hr_payroll.DED" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">0 if payslip.type == 'leaves' and categories.GROSS &gt; 300000 else (300000 - categories.GROSS if payslip.type == 'leaves' and categories.GROSS &lt;= 300000 else (300000 if payslip.type != 'leaves' and categories.GROSS &gt; 300000 else categories.GROSS))</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_percentage">5.60</field>
+            <field name="register_id" ref="erg_hr_contrib_register_ipres_rg" />
+        </record>
+
+        <record id="erg_hr_pay_rule_ipres_rg_comp" model="hr.salary.rule">
+            <field name="name">IPRES RG (Patr.)</field>
+            <field name="sequence" eval="245" />
+            <field name="code">600_C</field>
+            <field name="category_id" ref="hr_payroll.COMP" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">0 if payslip.type == 'leaves' and categories.GROSS &gt; 300000 else (300000 - categories.GROSS if payslip.type == 'leaves' and categories.GROSS &lt;= 300000 else (300000 if payslip.type != 'leaves' and categories.GROSS &gt; 300000 else categories.GROSS))</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_percentage">8.40</field>
+            <field name="register_id" ref="erg_hr_contrib_register_ipres_rg_comp" />
+        </record>
+
+        <record id="erg_hr_pay_rule_ipres_rg_compp" model="hr.salary.rule">
+            <field name="name">IPRES RG (Patr.) (+)</field>
+            <field name="sequence" eval="247" />
+            <field name="code">600_CP</field>
+            <field name="category_id" ref="hr_payroll.COMP" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base"></field>
+            <field name="quantity"></field>
+            <!--<field name="amount_percentage"></field>-->
+            <field name="register_id" ref="erg_hr_contrib_register_ipres_rg_comp" />
+        </record>
+
+        <!-- IPRES RC -->
+        <record id="erg_hr_pay_rule_ipres_rc" model="hr.salary.rule">
+            <field name="name">IPRES RC</field>
+            <field name="sequence" eval="250" />
+            <field name="code">650</field>
+            <field name="category_id" ref="hr_payroll.DED" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">(900000 if categories.GROSS > 900000 else categories.GROSS)</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_percentage">2.40</field>
+            <field name="register_id" ref="erg_hr_contrib_register_ipres_rc" />
+        </record>
+
+        <record id="erg_hr_pay_rule_ipres_rc_comp" model="hr.salary.rule">
+            <field name="name">IPRES RC (Patr.)</field>
+            <field name="sequence" eval="255" />
+            <field name="code">650_C</field>
+            <field name="category_id" ref="hr_payroll.COMP" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">(900000 if categories.GROSS > 900000 else categories.GROSS)</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_percentage">3.60</field>
+            <field name="register_id" ref="erg_hr_contrib_register_ipres_rc_comp" />
+        </record>
+
+        <record id="erg_hr_pay_rule_ipres_rc_compp" model="hr.salary.rule">
+            <field name="name">IPRES RC (Patr.) (+)</field>
+            <field name="sequence" eval="257" />
+            <field name="code">650_CP</field>
+            <field name="category_id" ref="hr_payroll.COMP" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base"></field>
+            <field name="quantity"></field>
+            <!--<field name="amount_percentage"></field>-->
+            <field name="register_id" ref="erg_hr_contrib_register_ipres_rc_comp" />
+        </record>
+
+        <!-- CSS - Accident du travail -->
+        <record id="erg_hr_pay_rule_css_at" model="hr.salary.rule">
+            <field name="name">CSS - Accident de travail</field>
+            <field name="sequence" eval="260" />
+            <field name="code">700</field>
+            <field name="category_id" ref="hr_payroll.DED" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (0 if payslip.type == 'leaves' and categories.GROSS &gt; 63000 else (63000 - categories.GROSS if payslip.type == 'leaves' and categories.GROSS &lt;= 63000 else (63000 if payslip.type != 'leaves' and categories.GROSS &gt; 63000 else categories.GROSS))) &gt; 0</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">0 if payslip.type == 'leaves' and categories.GROSS &gt; 63000 else (63000 - categories.GROSS if payslip.type == 'leaves' and categories.GROSS &lt;= 63000 else (63000 if payslip.type != 'leaves' and categories.GROSS &gt; 63000 else categories.GROSS))</field>     <!-- pseudo rule -->
+            <field name="quantity">0.00</field>
+            <field name="amount_percentage">0.00</field>
+            <field name="note">Règle fictive: ne pas effacer (raisons techniques!)</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_css_at_comp" model="hr.salary.rule">
+            <field name="name">CSS - Accident de travail (Patr.)</field>
+            <field name="sequence" eval="265" />
+            <field name="code">700_C</field>
+            <field name="category_id" ref="hr_payroll.COMP" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.company_id.css_percentage == 'one') and (0 if payslip.type == 'leaves' and categories.GROSS &gt; 63000 else (63000 - categories.GROSS if payslip.type == 'leaves' and categories.GROSS &lt;= 63000 else (63000 if payslip.type != 'leaves' and categories.GROSS &gt; 63000 else categories.GROSS))) &gt; 0</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">0 if payslip.type == 'leaves' and categories.GROSS &gt; 63000 else (63000 - categories.GROSS if payslip.type == 'leaves' and categories.GROSS &lt;= 63000 else (63000 if payslip.type != 'leaves' and categories.GROSS &gt; 63000 else categories.GROSS))</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_percentage">1.00</field>
+            <field name="register_id" ref="erg_hr_contrib_register_css_at_comp" />
+        </record>
+
+        <record id="erg_hr_pay_rule_css_at_comp_three" model="hr.salary.rule">
+            <field name="name">CSS - Accident de travail (Patr.)</field>
+            <field name="sequence" eval="265" />
+            <field name="code">700_C</field>
+            <field name="category_id" ref="hr_payroll.COMP" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.company_id.css_percentage == 'three') and (0 if payslip.type == 'leaves' and categories.GROSS &gt; 63000 else (63000 - categories.GROSS if payslip.type == 'leaves' and categories.GROSS &lt;= 63000 else (63000 if payslip.type != 'leaves' and categories.GROSS &gt; 63000 else categories.GROSS))) &gt; 0</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">0 if payslip.type == 'leaves' and categories.GROSS &gt; 63000 else (63000 - categories.GROSS if payslip.type == 'leaves' and categories.GROSS &lt;= 63000 else (63000 if payslip.type != 'leaves' and categories.GROSS &gt; 63000 else categories.GROSS))</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_percentage">3.00</field>
+            <field name="register_id" ref="erg_hr_contrib_register_css_at_comp" />
+        </record>
+
+        <record id="erg_hr_pay_rule_css_at_comp_five" model="hr.salary.rule">
+            <field name="name">CSS - Accident de travail (Patr.)</field>
+            <field name="sequence" eval="265" />
+            <field name="code">700_C</field>
+            <field name="category_id" ref="hr_payroll.COMP" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.company_id.css_percentage == 'five') and (0 if payslip.type == 'leaves' and categories.GROSS &gt; 63000 else (63000 - categories.GROSS if payslip.type == 'leaves' and categories.GROSS &lt;= 63000 else (63000 if payslip.type != 'leaves' and categories.GROSS &gt; 63000 else categories.GROSS))) &gt; 0</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">0 if payslip.type == 'leaves' and categories.GROSS &gt; 63000 else (63000 - categories.GROSS if payslip.type == 'leaves' and categories.GROSS &lt;= 63000 else (63000 if payslip.type != 'leaves' and categories.GROSS &gt; 63000 else categories.GROSS))</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_percentage">5.00</field>
+            <field name="register_id" ref="erg_hr_contrib_register_css_at_comp" />
+        </record>
+
+        <record id="erg_hr_pay_rule_css_at_compp" model="hr.salary.rule">
+            <field name="name">CSS - Accident de travail (Patr.) (+)</field>
+            <field name="sequence" eval="267" />
+            <field name="code">700_CP</field>
+            <field name="category_id" ref="hr_payroll.COMP" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base"></field>
+            <field name="quantity"></field>
+            <!--<field name="amount_percentage"></field>-->
+            <field name="register_id" ref="erg_hr_contrib_register_css_at_comp" />
+        </record>
+
+        <!-- CSS - Allocation familiale -->
+        <record id="erg_hr_pay_rule_css_af" model="hr.salary.rule">
+            <field name="name">CSS - Allocation familiale</field>
+            <field name="sequence" eval="270" />
+            <field name="code">750</field>
+            <field name="category_id" ref="hr_payroll.DED" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (0 if payslip.type == 'leaves' and categories.GROSS &gt; 63000 else (63000 - categories.GROSS if payslip.type == 'leaves' and categories.GROSS &lt;= 63000 else (63000 if payslip.type != 'leaves' and categories.GROSS &gt; 63000 else categories.GROSS))) &gt; 0</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">0 if payslip.type == 'leaves' and categories.GROSS &gt; 63000 else (63000 - categories.GROSS if payslip.type == 'leaves' and categories.GROSS &lt;= 63000 else (63000 if payslip.type != 'leaves' and categories.GROSS &gt; 63000 else categories.GROSS))</field>     <!-- pseudo rule -->
+            <field name="quantity">0.00</field>
+            <field name="amount_percentage">0.00</field>
+            <field name="note">Règle fictive: ne pas effacer (raisons techniques!)</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_css_af_comp" model="hr.salary.rule">
+            <field name="name">CSS - Allocation familiale (Patr.)</field>
+            <field name="sequence" eval="275" />
+            <field name="code">750_C</field>
+            <field name="category_id" ref="hr_payroll.COMP" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (0 if payslip.type == 'leaves' and categories.GROSS &gt; 63000 else (63000 - categories.GROSS if payslip.type == 'leaves' and categories.GROSS &lt;= 63000 else (63000 if payslip.type != 'leaves' and categories.GROSS &gt; 63000 else categories.GROSS))) &gt; 0</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">0 if payslip.type == 'leaves' and categories.GROSS &gt; 63000 else (63000 - categories.GROSS if payslip.type == 'leaves' and categories.GROSS &lt;= 63000 else (63000 if payslip.type != 'leaves' and categories.GROSS &gt; 63000 else categories.GROSS))</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_percentage">7.00</field>
+            <field name="register_id" ref="erg_hr_contrib_register_css_af_comp" />
+        </record>
+
+        <record id="erg_hr_pay_rule_css_af_compp" model="hr.salary.rule">
+            <field name="name">CSS - Allocation familiale (Patr.) (+)</field>
+            <field name="sequence" eval="277" />
+            <field name="code">750_CP</field>
+            <field name="category_id" ref="hr_payroll.COMP" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base"></field>
+            <field name="quantity"></field>
+            <!--<field name="amount_percentage"></field>-->
+            <field name="register_id" ref="erg_hr_contrib_register_css_af_comp" />
+        </record>
+
+        <!-- IPM -->
+        <record id="erg_hr_pay_rule_ipm" model="hr.salary.rule">
+            <field name="name">IPM</field>
+            <field name="sequence" eval="280" />
+            <field name="code">800</field>
+            <field name="category_id" ref="hr_payroll.DED" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">60000</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_percentage">3.00</field>
+            <field name="register_id" ref="erg_hr_contrib_register_ipm" />
+        </record>
+
+        <record id="erg_hr_pay_rule_ipm_comp" model="hr.salary.rule">
+            <field name="name">IPM (Patr.)</field>
+            <field name="sequence" eval="295" />
+            <field name="code">800_C</field>
+            <field name="category_id" ref="hr_payroll.COMP" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">60000</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_percentage">3.00</field>
+            <field name="register_id" ref="erg_hr_contrib_register_ipm_comp" />
+        </record>
+
+        <record id="erg_hr_pay_rule_ipm_compp" model="hr.salary.rule">
+            <field name="name">IPM (Patr.) (+)</field>
+            <field name="sequence" eval="297" />
+            <field name="code">800_CP</field>
+            <field name="category_id" ref="hr_payroll.COMP" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base"></field>
+            <field name="quantity"></field>
+            <!--<field name="amount_percentage"></field>-->
+            <field name="register_id" ref="erg_hr_contrib_register_ipm_comp" />
+        </record>
+
+        <!-- Mutuelle -->
+        <record id="erg_hr_pay_rule_mut" model="hr.salary.rule">
+            <field name="name">IPM/Mutuelle de santé</field>
+            <field name="sequence" eval="300" />
+            <field name="code">850</field>
+            <field name="category_id" ref="hr_payroll.DED" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and contract.mutual_insurance_empl &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.mutual_insurance_empl</field>
+            <field name="register_id" ref="erg_hr_contrib_register_mut" />
+        </record>
+
+        <record id="erg_hr_pay_rule_mut_comp" model="hr.salary.rule">
+            <field name="name">Mutuelle (Patr.)</field>
+            <field name="sequence" eval="305" />
+            <field name="code">850_C</field>
+            <field name="category_id" ref="hr_payroll.COMP" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and contract.mutual_insurance_comp &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.mutual_insurance_comp</field>
+            <field name="register_id" ref="erg_hr_contrib_register_mut_comp" />
+        </record>
+
+        <record id="erg_hr_pay_rule_mut_compp" model="hr.salary.rule">
+            <field name="name">Mutuelle (Patr.) (+)</field>
+            <field name="sequence" eval="307" />
+            <field name="code">850_CP</field>
+            <field name="category_id" ref="hr_payroll.COMP" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">fix</field>
+            <field name="quantity">1.00</field>
+            <field name="amount_fix">0</field>                        <!-- tbd -->
+            <field name="register_id" ref="erg_hr_contrib_register_mut_comp" />
+        </record>
+
+
+        <!-- Indemnités non imposables -->
+        <record id="erg_hr_pay_rule_basket_bonus" model="hr.salary.rule">
+            <field name="name">Prime de panier</field>
+            <field name="sequence" eval="405" />
+            <field name="code">920</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.ALWN" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and contract.basket_bonus &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.basket_bonus</field>
+<!--            <field name="account_debit" search="[('code','like','6638')]"/>     -->
+        </record>
+
+        <record id="erg_hr_pay_rule_transport_refund" model="hr.salary.rule">
+            <field name="name">Indemnité de transport</field>
+            <field name="sequence" eval="400" />
+            <field name="code">900</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.ALWN" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and (contract.transport_refund + inputs.TRANSP.amount) &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">multiplicator = (worked_days.WORKED.number_of_days) if (contract.transport_refund_frequence == 'day') else 1
+result = (contract.transport_refund * multiplicator) + inputs.TRANSP.amount
+            </field>
+        </record>
+        <record id="erg_rule_input_transport_refund" model="hr.rule.input">
+            <field name="name">Indemnité de transport</field>
+            <field name="code">TRANSP</field>
+            <field name="input_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_transport_refund" />
+        </record>
+
+        <record id="erg_hr_pay_rule_kilometer_refund" model="hr.salary.rule">
+            <field name="name">Indemnité kilométrique</field>
+            <field name="sequence" eval="405" />
+            <field name="code">910</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.ALWN" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and (contract.kilometer_refund + (inputs.KILOM.amount if inputs.KILOM else 0)) &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.kilometer_refund + (inputs.KILOM.amount if inputs.KILOM else 0)
+            </field>
+        </record>
+        <record id="erg_rule_input_kilometer_refund" model="hr.rule.input">
+            <field name="name">Indemnité kilométrique</field>
+            <field name="code">KILOM</field>
+            <field name="input_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_kilometer_refund" />
+        </record>
+
+        <record id="erg_hr_pay_rule_meal_voucher" model="hr.salary.rule">
+            <field name="name">Bon de repas</field>
+            <field name="sequence" eval="410" />
+            <field name="code">950</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.ALWN" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and (contract.meal_voucher + inputs.BONREP.amount) &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">multiplicator = (worked_days.WORK100.number_of_days) if (contract.meal_voucher_frequence == "day") else 1
+result = (contract.meal_voucher * multiplicator) + inputs.BONREP.amount
+            </field>
+        </record>
+        <record id="erg_rule_input_meal_voucher" model="hr.rule.input">
+            <field name="name">Bon de repas</field>
+            <field name="code">BONREP</field>
+            <field name="input_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_meal_voucher" />
+        </record>
+
+        <!--syndicat  -->
+        <record id="erg_hr_pay_rule_union_fee" model="hr.salary.rule">
+            <field name="name">Cotisation syndicale</field>
+            <field name="sequence" eval="420" />
+            <field name="code">960</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.RETN" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (payslip.type != 'leaves') and (contract.union_fee &gt; 0)</field>
+            <field name="amount_select">code</field>
+            <field name="register_id" ref="erg_hr_contrib_register_union_fee" />
+            <field name="amount_python_compute">result = contract.union_fee
+            </field>
+        </record>
+
+
+        <!-- Avance et Remboursement -->
+        <record id="erg_hr_pay_rule_advance" model="hr.salary.rule">
+            <field name="name">Paiement d'avance</field>
+            <field name="sequence" eval="450" />
+            <field name="code">980</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.AVCE" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.AVCEPAY.amount &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.AVCEPAY.amount</field>
+        </record>
+        <record id="erg_hr_pay_rule_input_advance" model="hr.rule.input">
+            <field name="name">Paiement d'avance</field>
+            <field name="code">AVCEPAY</field>
+            <field name="input_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_advance" />
+        </record>
+
+        <record id="erg_hr_pay_rule_payback" model="hr.salary.rule">
+            <field name="name">Remboursement d'avance</field>
+            <field name="sequence" eval="455" />
+            <field name="code">985</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.PAYB" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.AVCEREM.amount &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.AVCEREM.amount</field>
+        </record>
+        <record id="erg_hr_pay_rule_input_payback" model="hr.rule.input">
+            <field name="name">Rembousement d'avance</field>
+            <field name="code">AVCEREM</field>
+            <field name="input_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_payback" />
+        </record>
+
+        <record id="erg_hr_pay_rule_payback_ipm_mut" model="hr.salary.rule">
+            <field name="name">Remboursement IPM/Mutuelle</field>
+            <field name="sequence" eval="460" />
+            <field name="code">990</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.PAYB" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = (inputs.REMIPM.amount if inputs.REMIPM else 0) &gt; 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = (inputs.REMIPM.amount if inputs.REMIPM else 0)</field>
+        </record>
+        <record id="erg_hr_pay_rule_input_payback_ipm_mut" model="hr.rule.input">
+            <field name="name">Remboursement IPM/Mutuelle</field>
+            <field name="code">REMIPM</field>
+            <field name="input_id" ref="l10n_syscoa_payroll.erg_hr_pay_rule_payback_ipm_mut" />
+        </record>
+
+        <!-- Net à payer -->
+        <record id="hr_rule_net" model="hr.salary.rule">
+            <field name="name">Net à payer</field>
+            <field name="sequence" eval="500" />
+            <field name="code">1000</field>
+            <field name="category_id" ref="hr_payroll.NET" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="register_id" ref="erg_hr_contrib_register_net" />
+            <field name="amount_python_compute">result = categories.GROSS - categories.DED - categories.TAX + categories.ALWN - categories.NATU + categories.AVCE - categories.PAYB - categories.RETN</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_net_prestation" model="hr.salary.rule">
+            <field name="name">Net à payer (Prestataire)</field>
+            <field name="sequence" eval="500" />
+            <field name="code">1020</field>
+            <field name="category_id" ref="hr_payroll.NET" />
+            <field name="appears_on_payslip" eval="True" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.GROSS - categories.DED - categories.TAX + categories.ALWN - categories.NATU + categories.AVCE - categories.PAYB</field>
+        </record>
+
+
+        <!-- Cumuls mensuels et annuels -->
+        <record id="erg_hr_pay_rule_net_anno" model="hr.salary.rule">
+            <field name="name">Salaire net - Année</field>
+            <field name="sequence" eval="550" />
+            <field name="code">2000</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TOTA" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip.sum('1000', payslip.date_to[:4]+'-01-01', payslip.date_to) + categories.NET</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_net_prestation_anno" model="hr.salary.rule">
+            <field name="name">Salaire net (prestataire) - Année</field>
+            <field name="sequence" eval="560" />
+            <field name="code">2020</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TOTA" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip.sum('1020', payslip.date_to[:4]+'-01-01', payslip.date_to) + categories.NET</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_gross_month" model="hr.salary.rule">
+            <field name="name">Salaire brut - Periode</field>
+            <field name="sequence" eval="600" />
+            <field name="code">1100</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TOTM" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.GROSS</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_gross_anno" model="hr.salary.rule">
+            <field name="name">Salaire brut - Année</field>
+            <field name="sequence" eval="605" />
+            <field name="code">2100</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TOTA" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip.sum('1100', payslip.date_to[:4]+'-01-01', payslip.date_to) + categories.GROSS</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_net_taxable_month" model="hr.salary.rule">
+            <field name="name">Brut imposable - Période</field>
+            <field name="sequence" eval="610" />
+            <field name="code">1200</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TOTM" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">res_external = categories.GROSS if (payslip.struct_id.code == "PRES") else 0
+res_internal = ((X60 / 12) + (CX60 / 12)) if (payslip.struct_id.code &lt;&gt; "PRES") else 0
+result = res_external + res_internal
+            </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_net_taxable_anno" model="hr.salary.rule">
+            <field name="name">Brut imposable - Année</field>
+            <field name="sequence" eval="615" />
+            <field name="code">2200</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TOTA" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">res_external = categories.GROSS if (payslip.struct_id.code == "PRES") else 0
+res_internal = ((X60 / 12) + (CX60 / 12)) if (payslip.struct_id.code &lt;&gt; "PRES") else 0
+res = res_external + res_internal
+result = payslip.sum('1200', payslip.date_to[:4]+'-01-01', payslip.date_to) + (res)
+            </field>
+        </record>
+
+        <record id="erg_hr_pay_rule_ch_salarial_month" model="hr.salary.rule">
+            <field name="name">Charges salariales - Periode</field>
+            <field name="sequence" eval="620" />
+            <field name="code">1300</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TOTM" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.DED + categories.TAX</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_ch_salarial_anno" model="hr.salary.rule">
+            <field name="name">Charges salariales - Année</field>
+            <field name="sequence" eval="625" />
+            <field name="code">2300</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TOTA" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip.sum('1300', payslip.date_to[:4]+'-01-01', payslip.date_to) + categories.DED + categories.TAX</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_ch_patronal_month" model="hr.salary.rule">
+            <field name="name">Charges patronales - Periode</field>
+            <field name="sequence" eval="630" />
+            <field name="code">1400</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TOTM" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.COMP</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_ch_patronal_anno" model="hr.salary.rule">
+            <field name="name">Charges patronales - Année</field>
+            <field name="sequence" eval="635" />
+            <field name="code">2400</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TOTA" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip.sum('1400', payslip.date_to[:4]+'-01-01', payslip.date_to) + categories.COMP</field>
+        </record>
+<!--
+        <record id="erg_hr_pay_rule_work_hour_month_contract" model="hr.salary.rule">
+            <field name="name">Heures prévues - Periode</field>
+            <field name="sequence" eval="1" />
+            <field name="code">B110</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TOTM" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = payslip.struct_id.code &lt;&gt; "PRES"</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = worked_days.WORK100.number_of_hours if worked_days.WORK100 else 0.0</field>
+        </record>
+-->
+        <record id="erg_hr_pay_rule_work_hour_month" model="hr.salary.rule">
+            <field name="name">Heures travaillées - Periode</field>
+            <field name="sequence" eval="640" />
+            <field name="code">1500</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TOTM" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = payslip.struct_id.code &lt;&gt; "PRES"</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = worked_days.WORKED.number_of_hours if worked_days.WORKED.number_of_hours &gt; 0.0 else worked_days.WORK100.number_of_hours</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_work_hour_anno" model="hr.salary.rule">
+            <field name="name">Heures travaillées - Année</field>
+            <field name="sequence" eval="645" />
+            <field name="code">2500</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TOTA" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = payslip.struct_id.code &lt;&gt; "PRES"</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip.sum('1500', payslip.date_to[:4]+'-01-01', payslip.date_to) + (worked_days.WORKED.number_of_hours if worked_days.WORKED.number_of_hours &gt; 0.0 else worked_days.WORK100.number_of_hours)</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_suppl_hour_month" model="hr.salary.rule">
+            <field name="name">Heures supplémentaires - Periode</field>
+            <field name="sequence" eval="650" />
+            <field name="code">1600</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TOTM" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = payslip.struct_id.code &lt;&gt; "PRES"</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.HSUP15.amount  + inputs.HSUP40.amount  + inputs.HSUP60.amount  + inputs.HSUP100.amount</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_suppl_hour_anno" model="hr.salary.rule">
+            <field name="name">Heures supplémentaires - Année</field>
+            <field name="sequence" eval="655" />
+            <field name="code">2600</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TOTA" />
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = payslip.struct_id.code &lt;&gt; "PRES"</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip.sum('1600', payslip.date_to[:4]+'-01-01', payslip.date_to) + (inputs.HSUP15.amount  + inputs.HSUP40.amount  + inputs.HSUP60.amount  + inputs.HSUP100.amount)</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_advantage_month" model="hr.salary.rule">
+            <field name="name">Avantages en nature - Periode</field>
+            <field name="sequence" eval="660" />
+            <field name="code">1700</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TOTM" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.NATU</field>
+        </record>
+
+        <record id="erg_hr_pay_rule_advantage_anno" model="hr.salary.rule">
+            <field name="name">Avantages en nature - Année</field>
+            <field name="sequence" eval="665" />
+            <field name="code">2700</field>
+            <field name="category_id" ref="l10n_syscoa_payroll.TOTA" />
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip.sum('1700', payslip.date_to[:4]+'-01-01', payslip.date_to) + categories.NATU</field>
+        </record>
+
+
+
+        <!-- Salary Structure -->
+
+        <!-- Delete Odoo's default salary structure and create new ones  -->
+        <delete id="hr_payroll.structure_base" model="hr.payroll.structure" />
+
+
+        <record id="erg_hr_pay_structure_non_cadre" model="hr.payroll.structure">
+            <field name="code">NOCA</field>
+            <field name="name">Non cadre</field>
+            <field name="rule_ids" eval="[(6, 0,
+                [ref('hr_rule_basic'),
+                ref('hr_rule_basic_hourly'),
+                ref('hr_rule_taxable'),
+                ref('hr_rule_net'),
+                ref('erg_hr_pay_rule_net_anno'),
+                ref('erg_hr_pay_rule_gross_month'),
+                ref('erg_hr_pay_rule_gross_anno'),
+                ref('erg_hr_pay_rule_net_taxable_month'),
+                ref('erg_hr_pay_rule_net_taxable_anno'),
+                ref('erg_hr_pay_rule_ch_salarial_month'),
+                ref('erg_hr_pay_rule_ch_salarial_anno'),
+                ref('erg_hr_pay_rule_ch_patronal_month'),
+                ref('erg_hr_pay_rule_ch_patronal_anno'),
+                ref('erg_hr_pay_rule_work_hour_month'),
+                ref('erg_hr_pay_rule_work_hour_anno'),
+                ref('erg_hr_pay_rule_suppl_hour_month'),
+                ref('erg_hr_pay_rule_suppl_hour_anno'),
+                ref('erg_hr_pay_rule_advantage_month'),
+                ref('erg_hr_pay_rule_advantage_anno'),
+                ref('erg_hr_pay_rule_additional_salary'),
+                ref('erg_hr_pay_rule_holiday_allowance'),
+                ref('erg_hr_pay_rule_overtime_premium_flat_'),
+                ref('erg_hr_pay_rule_overtime_premium_15'),
+                ref('erg_hr_pay_rule_overtime_premium_40'),
+                ref('erg_hr_pay_rule_overtime_premium_60'),
+                ref('erg_hr_pay_rule_overtime_premium_100_'),
+                ref('erg_hr_pay_rule_seniority_allowance'),
+                ref('erg_hr_pay_rule_responsability_bonus'),
+                ref('erg_hr_pay_rule_subjection_allowance'),
+                ref('erg_hr_pay_rule_performance_bonus'),
+                ref('erg_hr_pay_rule_risk_bonus'),
+                ref('erg_hr_pay_rule_home_bonus'),
+                ref('erg_hr_pay_rule_cashpoint_bonus'),
+                ref('erg_hr_pay_rule_dirtiness_allowance'),
+                ref('erg_hr_pay_rule_basket_bonus'),
+                ref('erg_hr_pay_rule_expatriation_bonus'),
+                ref('erg_hr_pay_rule_gratification'),
+                ref('erg_hr_pay_rule_marriage_allowance'),
+                ref('erg_hr_pay_rule_birth_allowance'),
+                ref('erg_hr_pay_rule_natural_advantage'),
+                ref('erg_hr_pay_rule_ir'),
+                ref('erg_hr_pay_rule_ipres_rg'),
+                ref('erg_hr_pay_rule_ipres_rg_comp'),
+                ref('erg_hr_pay_rule_trimf'),
+                ref('erg_hr_pay_rule_css_at'),
+                ref('erg_hr_pay_rule_css_at_comp'),
+                ref('erg_hr_pay_rule_css_at_comp_three'),
+                ref('erg_hr_pay_rule_css_at_comp_five'),
+                ref('erg_hr_pay_rule_css_af'),
+                ref('erg_hr_pay_rule_css_af_comp'),
+                ref('erg_hr_pay_rule_mut'),
+                ref('erg_hr_pay_rule_cfce'),
+                ref('erg_hr_pay_rule_mut_comp'),
+                ref('erg_hr_pay_rule_cfce_comp'),
+                ref('erg_hr_pay_rule_cfce_comp2'),
+                ref('erg_hr_pay_rule_union_fee'),
+                ref('erg_hr_pay_rule_transport_refund'),
+                ref('erg_hr_pay_rule_kilometer_refund'),
+                ref('erg_hr_pay_rule_meal_voucher'),
+                ref('erg_hr_pay_rule_advance'),
+                ref('erg_hr_pay_rule_payback'),
+                ref('erg_hr_pay_rule_payback_ipm_mut'),
+                ])]" />
+        </record>
+
+        <record id="erg_hr_pay_structure_cadre" model="hr.payroll.structure">
+            <field name="code">CADR</field>
+            <field name="name">Cadre</field>
+            <field name="rule_ids" eval="[(6, 0,
+                [ref('erg_hr_pay_rule_ipres_rc'),
+                ref('erg_hr_pay_rule_ipres_rc_comp')])]" />
+            <field name="parent_id" ref="erg_hr_pay_structure_non_cadre" />
+        </record>
+
+        <record id="erg_hr_pay_structure_trainee" model="hr.payroll.structure">
+            <field name="code">STAG</field>
+            <field name="name">Stagiaire</field>
+             <field name="rule_ids" eval="[(6, 0,
+                [ref('hr_rule_basic'),
+                ref('hr_rule_basic_hourly'),
+                ref('hr_rule_taxable'),
+                ref('hr_rule_net'),
+                ref('erg_hr_pay_rule_net_anno'),
+                ref('erg_hr_pay_rule_gross_month'),
+                ref('erg_hr_pay_rule_gross_anno'),
+                ref('erg_hr_pay_rule_net_taxable_month'),
+                ref('erg_hr_pay_rule_net_taxable_anno'),
+                ref('erg_hr_pay_rule_ch_salarial_month'),
+                ref('erg_hr_pay_rule_ch_salarial_anno'),
+                ref('erg_hr_pay_rule_ch_patronal_month'),
+                ref('erg_hr_pay_rule_ch_patronal_anno'),
+                ref('erg_hr_pay_rule_work_hour_month'),
+                ref('erg_hr_pay_rule_work_hour_anno'),
+                ref('erg_hr_pay_rule_suppl_hour_month'),
+                ref('erg_hr_pay_rule_suppl_hour_anno'),
+                ref('erg_hr_pay_rule_advantage_month'),
+                ref('erg_hr_pay_rule_advantage_anno'),
+                ref('erg_hr_pay_rule_overtime_premium_flat_'),
+                ref('erg_hr_pay_rule_overtime_premium_15'),
+                ref('erg_hr_pay_rule_overtime_premium_40'),
+                ref('erg_hr_pay_rule_overtime_premium_60'),
+                ref('erg_hr_pay_rule_overtime_premium_100_'),
+                ref('erg_hr_pay_rule_performance_bonus'),
+                ref('erg_hr_pay_rule_risk_bonus'),
+                ref('erg_hr_pay_rule_dirtiness_allowance'),
+                ref('erg_hr_pay_rule_ir'),
+                ref('erg_hr_pay_rule_transport_refund'),
+                ref('erg_hr_pay_rule_basket_bonus'),
+                ref('erg_hr_pay_rule_meal_voucher'),
+                ref('erg_hr_pay_rule_advance'),
+                ref('erg_hr_pay_rule_payback'),
+                ])]" />
+        </record>
+
+        <record id="erg_hr_pay_structure_dayworker" model="hr.payroll.structure">
+            <field name="code">JOUR</field>
+            <field name="name">Journalier</field>
+            <field name="parent_id" ref="erg_hr_pay_structure_non_cadre" />
+        </record>
+
+        <record id="erg_hr_pay_structure_subcontractor" model="hr.payroll.structure">
+            <field name="code">PRES</field>
+            <field name="name">Prestataire</field>
+            <field name="rule_ids" eval="[(6, 0,
+                [ref('erg_hr_pay_rule_basic_prestation'),
+                ref('hr_rule_basic_hourly'),
+                ref('hr_rule_taxable'),
+                ref('erg_hr_pay_rule_ir_prestation'),
+                ref('erg_hr_pay_rule_net_prestation'),
+                ref('erg_hr_pay_rule_net_prestation_anno'),
+                ref('erg_hr_pay_rule_gross_month'),
+                ref('erg_hr_pay_rule_gross_anno'),
+                ref('erg_hr_pay_rule_net_taxable_month'),
+                ref('erg_hr_pay_rule_net_taxable_anno'),
+                ref('erg_hr_pay_rule_ch_salarial_month'),
+                ref('erg_hr_pay_rule_ch_salarial_anno'),
+                ref('erg_hr_pay_rule_ch_patronal_month'),
+                ref('erg_hr_pay_rule_ch_patronal_anno'),
+                ref('erg_hr_pay_rule_work_hour_month'),
+                ref('erg_hr_pay_rule_work_hour_anno'),
+                ref('erg_hr_pay_rule_suppl_hour_month'),
+                ref('erg_hr_pay_rule_suppl_hour_anno'),
+                ref('erg_hr_pay_rule_advantage_month'),
+                ref('erg_hr_pay_rule_advantage_anno'),
+                ref('erg_hr_pay_rule_advance'),
+                ref('erg_hr_pay_rule_payback'),
+                ref('erg_hr_pay_rule_payback_ipm_mut'),
+                ])]" />
+        </record>
+
+        <record id="erg_hr_pay_structure_none" model="hr.payroll.structure">
+            <field name="code">NONE</field>
+            <field name="name">&lt; Néant &gt;</field>
+        </record>
+
+        <!-- Decimal Precision -->
+        <record forcecreate="True" id="decimal_payroll_syscoa" model="decimal.precision">
+            <field name="name">ErgoBIT Payroll</field>
+            <field name="digits">0</field>
+        </record>
+        <record forcecreate="True" id="decimal_payroll_rate_syscoa" model="decimal.precision">
+            <field name="name">ErgoBIT Payroll Rate</field>
+            <field name="digits">2</field>
+        </record>
+
+
+        <!-- Paper Format -->
+        <record id="erg_hr_pay_paper_format" model="report.paperformat">
+            <field name="name">ErgoBIT Payroll</field>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top" eval="15" />
+            <field name="margin_bottom" eval="5" />
+            <field name="margin_left" eval="11" />
+            <field name="margin_right" eval="11" />
+            <field name="header_line" eval="False" />
+            <field name="header_spacing" eval="15" />
+            <field name="dpi" eval="90" />
+            <field name="report_ids" eval="[(6, 0,
+                [ref('l10n_syscoa_payroll.action_syscoa_report_payslip')])]" />
+        </record>
+
+
+    </data>
+</openerp>

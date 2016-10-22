@@ -52,6 +52,6 @@ This module is the localization of OpenERP for Russian Federation.
         'data/account_chart_template_post.xml',
         'data/account_chart_template.yml',
     ],
-    'installable': True,
+    'installable': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
