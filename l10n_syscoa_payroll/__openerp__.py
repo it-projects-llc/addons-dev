@@ -22,10 +22,11 @@
 
 {
     'name': 'Payroll - SN',
+    'summary': 'Senegal localization for Payroll application',
     'version': '1.0',
     'category': 'Localization',
 
-    'author': 'ERGOBIT Consulting',
+    'author': 'ERGOBIT Consulting, IT-Projects LLC',
     'website': 'http://www.ergobit.org',
     'images': [
         'images/hr_company_contributions.jpeg',
