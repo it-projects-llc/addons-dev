@@ -262,9 +262,9 @@ class HrContract(models.Model):
 
     kilometer_refund = fields.Float('Indemnité kilométrique', digits_compute=dp.get_precision('Payroll'))
     transport_refund = fields.Float('Indemnité de transport', digits_compute=dp.get_precision('Payroll'))
-    transport_refund_frequence = fields.Selection((('day', 'Jour'), ('month', 'Mois')), 'Frequence des indemnités de transport', required=True)
+    transport_refund_frequence = fields.Selection((('day', 'Jour'), ('month', 'Mois')), 'Frequence des indemnités de transport', required=True, default='month')
     meal_voucher = fields.Float('Bons de repas', digits_compute=dp.get_precision('Payroll'))
-    meal_voucher_frequence = fields.Selection((('day', 'Jour'), ('month', 'Mois')), 'Frequence des bons de repas', required=True)
+    meal_voucher_frequence = fields.Selection((('day', 'Jour'), ('month', 'Mois')), 'Frequence des bons de repas', required=True, default='month')
 
     mutual_insurance_empl_manual = fields.Boolean("Cotisation salariale", help="La cotisation à la mutuelle d'assurance est normalement calculée automatiquement. Mais vous pouvez la saisir manuellement en activant ce bouton.")
     mutual_insurance_empl_manual_input = fields.Float("Cotisation salariale", digits_compute=dp.get_precision('Payroll'), help="La cotisation à la mutuelle d'assurance est normalement calculée automatiquement. Mais vous pouvez la saisir manuellement en activant le bouton à côté.")
