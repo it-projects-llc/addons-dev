@@ -1,5 +1,5 @@
-#-*- coding:utf-8 -*-
-##############################################################################
+# -*- coding:utf-8 -*-
+# #############################################################################
 #
 #    ErgoBIT Payroll Senegal
 #    Copyright (C) 2013-TODAY ErgoBIT Consulting (<http://ergobit.org>).
@@ -18,7 +18,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-##############################################################################
+# #############################################################################
 
 import time
 from datetime import date
@@ -26,25 +26,20 @@ from datetime import datetime
 from datetime import timedelta
 from dateutil import relativedelta
 
-from itertools import groupby
-
 from odoo import fields, models, api, _
 import openerp.addons.decimal_precision as dp
-from openerp.tools.translate import _
 from odoo.exceptions import UserError
 
 
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-
     governmental_org = fields.Boolean('Organisme gouvernemental')
     conv_coll_national = fields.Char('Convention Collective Nationale')
     css_percentage = fields.Selection((('one', '1,0%'), ('three', '3,0%'), ('five', '5,0%')), required=True, default="three", string="CSS - Accident de travail")
     waste_collection_company = fields.Boolean("Entrep. de collecte d'ordure")
-        # B    mutual_insurance_employee = fields.Float("Mutuelle - cotisation salariale", digits_compute=dp.get_precision('Account'), help=u"Cotisation salariale à la mutuelle d'assurance par employé.")
-        # B    mutual_insurance_company = fields.Float("Mutuelle - cotisation patronale", digits_compute=dp.get_precision('Account'), help="Cotisation patronale à la mutuelle d'assurance par employé.")
-
+    # B    mutual_insurance_employee = fields.Float("Mutuelle - cotisation salariale", digits_compute=dp.get_precision('Account'), help=u"Cotisation salariale à la mutuelle d'assurance par employé.")
+    # B    mutual_insurance_company = fields.Float("Mutuelle - cotisation patronale", digits_compute=dp.get_precision('Account'), help="Cotisation patronale à la mutuelle d'assurance par employé.")
 
 
 class HrEmployee(models.Model):
@@ -72,7 +67,7 @@ class HrEmployee(models.Model):
                 coef = 2 if line.status_spouse == 'non_salaried' else 1
             else:
                 coef = 1
-            line.coef= coef
+            line.coef = coef
 
     @api.multi
     def _user_left_days(self):
@@ -90,7 +85,6 @@ class HrEmployee(models.Model):
     matricule = fields.Char('Matricule', size=64)
     max_leaves = fields.Float(compute="_user_left_days", string='Acquis', help='This value is given by the sum of all holidays requests with a positive value.',)
     leaves_taken = fields.Float(compute="_user_left_days", string='Pris', help='This value is given by the sum of all holidays requests with a negative value.',)
-
 
 
 class HrContract(models.Model):
@@ -183,9 +177,6 @@ class HrContract(models.Model):
 
     @api.multi
     def _get_mutual_insurance_comp(self):
-        if not ids:
-            return {}
-        res = {}
         for line in self:
             if line.mutual_insurance_comp_manual:
                 line.mutual_insurance_comp = float(line.mutual_insurance_comp_manual_input)
@@ -211,7 +202,6 @@ class HrContract(models.Model):
                     line.leave_days = float(line.leave_days_manual_input)
                 else:
                     line.leave_days = 2.0
-
 
     type_id = fields.Many2one('hr.contract.type', "Type de contrat", required=True)
     struct_id = fields.Many2one('hr.payroll.structure', 'Structure salariale')
@@ -287,7 +277,6 @@ class HrContract(models.Model):
     dirtiness_allowance = fields.Float('Prime de salissure', digits_compute=dp.get_precision('Payroll'))
     journal_id = fields.Many2one(default=_get_default_journal)
 
-
     _defaults = {
         'transport_refund_frequence': 'month',
         'transport_refund': 20800.0,
@@ -309,7 +298,6 @@ class HrPayslip(models.Model):
     @api.onchange('contract_id')
     def onchange_contract(self):
         super(HrPayslip, self).onchange_contract()
-        contract_obj = self.env['hr.contract']
         pay_mod = self.contract_id and self.contract_id.pay_mod or False
         leave_days = self.contract_id and self.contract_id.leave_days or 0
         self.pay_mod = pay_mod
@@ -333,6 +321,7 @@ class HrPayslip(models.Model):
                         payslip.employee_id.remaining_leaves = payslip.remaining_leaves + payslip.leave_days_won
 
         self.write({'pay_date': date.today()})
+        return res
 
     @api.multi
     def _calculate_rendement(self):
@@ -344,11 +333,11 @@ class HrPayslip(models.Model):
                 date_2 = datetime.strptime(str(line.date_to), '%Y-%m-%d')
                 date_2 = datetime.strptime(str(str(date_2.year) + '-' + str(date_2.month) + '-' + str(25)), '%Y-%m-%d')
                 date_2 = date_2.strftime('%Y-%m-%d')
-                analytic_account = self.pool.get('account.analytic.account').search(cr, uid,
-                                                                                    [('code', '=', line.employee_id.matricule)])
+                analytic_account = self.env['account.analytic.account'].search([('code', '=', line.employee_id.matricule)])
                 if analytic_account == []:
                     line.update({'quantity_delivred': 0.00, 'amount_invoiced': 0.00})
                 else:
+                    cr = self.env.cr
                     cr.execute("""SELECT COALESCE(SUM(amount), 0.0) as amount, COALESCE(SUM(unit_amount), 0.0) as unit_amount \
                         FROM account_analytic_line \
                         WHERE account_id = %s AND date >= %s AND date <= %s""",
@@ -361,7 +350,6 @@ class HrPayslip(models.Model):
 
     @api.multi
     def _get_waste_collector(self):
-        res = {}
         for line in self:
             line.is_waste_collector = line.company_id.waste_collection_company
 
@@ -375,9 +363,9 @@ class HrPayslip(models.Model):
                 else:
                     # calculate the current month from contract
                     if line.contract_id:
-                        gross_of_current_month = self.pool.get('hr.contract').browse(cr, uid, line.contract_id.id, context=context).wage + \
-                            self.pool.get('hr.contract').browse(cr, uid, line.contract_id.id, context=context).additional_salary
-                        amount_of_current_month = float(gross_of_current_month / 12)
+                        gross_of_current_month = line.contract_id.wage \
+                            + line.contract_id.additional_salary
+                        # amount_of_current_month = float(gross_of_current_month / 12)
 #                    # calculate the previous months validated payslips
 #                    date_to = line.date_from
 #                    date_from = date_to-367
@@ -385,21 +373,21 @@ class HrPayslip(models.Model):
 #                                    [('employee_id', '=', line.employee_id), ('state', '=', 'done'), \
 #                                     ('date_from', '>',  date_from), ('date_to', '<',  date_to)])
 #                    for idx in range(len(lines_ids)):
-##                    date_from = datetime.strptime(str(line.date_from), '%Y-%m-%d')
-##                    date_from = datetime.strptime(str(str(date_to.year-1) + '-' + str(date_to.month+1) + '-' + str(01)), '%Y-%m-%d')
-##                    date_from = date_to.strftime('%Y-%m-%d')
-##                    mt = line.date_from-1
+# #                    date_from = datetime.strptime(str(line.date_from), '%Y-%m-%d')
+# #                    date_from = datetime.strptime(str(str(date_to.year-1) + '-' + str(date_to.month+1) + '-' + str(01)), '%Y-%m-%d')
+# #                    date_from = date_to.strftime('%Y-%m-%d')
+# #                    mt = line.date_from-1
 # if mt in [1, 3, 5, 7, 8, 10, 12]:
-##                        last_day_of_month = 31
+# #                        last_day_of_month = 31
 # else:
 # if mt == 2:
-##                            last_day_of_month = 28
+# #                            last_day_of_month = 28
 # else:
-##                            last_day_of_month = 30
-##                    date_to = datetime.strptime(str(line.date_from), '%Y-%m-%d')
-##                    date_to = datetime.strptime(str(str(date_to.year) + '-' + str(date_to.month-1) + '-' + str(28)), '%Y-%m-%d')
-##                    date_to = date_to.strftime('%Y-%m-%d')
-##                    payslip_ids = self.pool.get('hr.payslip').search(cr, uid, [('date_from', '>=',  date_from), ('date_from', '<=',  date_to)])
+# #                            last_day_of_month = 30
+# #                    date_to = datetime.strptime(str(line.date_from), '%Y-%m-%d')
+# #                    date_to = datetime.strptime(str(str(date_to.year) + '-' + str(date_to.month-1) + '-' + str(28)), '%Y-%m-%d')
+# #                    date_to = date_to.strftime('%Y-%m-%d')
+# #                    payslip_ids = self.pool.get('hr.payslip').search(cr, uid, [('date_from', '>=',  date_from), ('date_from', '<=',  date_to)])
 
                     gross_of_previous_month = 0.0
                     line.holiday_allowance = float(gross_of_current_month + gross_of_previous_month)
@@ -409,14 +397,13 @@ class HrPayslip(models.Model):
 
         for record in self:
             employee_id = record.employee_id
-            hr_holidays_status_pooler = self.pool.get('hr.holidays.status')
+            hr_holidays_status_pooler = self.env['hr.holidays.status']
             if employee_id:
                 #                res[record.id] = {'leaves_taken': employee_id.leaves_taken, 'remaining_leaves': employee_id.remaining_leaves, 'max_leaves': employee_id.max_leaves}
-                hr_holidays_status = hr_holidays_status_pooler.search(cr, uid,
-                                                                      [('id', 'in', [employee_id.company_id.legal_holidays_status_id.id,
+                hr_holidays_status = hr_holidays_status_pooler.search([('id', 'in', [employee_id.company_id.legal_holidays_status_id.id,
                                                                                      employee_id.company_id.legal_holidays_status_id_n1.id,
-                                                                                     employee_id.company_id.legal_holidays_status_id_n2.id])], context=context)
-                leave_days = hr_holidays_status_pooler.get_days(cr, uid, hr_holidays_status, employee_id.id, context=context)
+                                                                                     employee_id.company_id.legal_holidays_status_id_n2.id])])
+                leave_days = hr_holidays_status_pooler.get_days(hr_holidays_status, employee_id.id)
                 record.update({
                     'leaves_taken': leave_days[employee_id.company_id.legal_holidays_status_id.id]['leaves_taken'] if employee_id.company_id.legal_holidays_status_id else 0.0,
                     'remaining_leaves': leave_days[employee_id.company_id.legal_holidays_status_id.id]['remaining_leaves'] if employee_id.company_id.legal_holidays_status_id else 0.0,
@@ -492,16 +479,16 @@ class HrPayslip(models.Model):
             ], limit=1).holiday_status_id.name
 
         res = []
-        #fill only if the contract as a working schedule linked
-        for contract in self.env['hr.contract'].browse(contract_ids): #.filtered(lambda contract: contract.working_hours):
+        # fill only if the contract as a working schedule linked
+        for contract in self.env['hr.contract'].browse(contract_ids):  # .filtered(lambda contract: contract.working_hours):
             attendances = {
-                 'name': _("Temps de travail contractuel"),
-                 # 'name': _("Normal Working Days paid at 100%"),
-                 'sequence': 1,
-                 'code': 'WORK100',
-                 'number_of_days': 0.0,
-                 'number_of_hours': 0.0,
-                 'contract_id': contract.id,
+                'name': _("Temps de travail contractuel"),
+                # 'name': _("Normal Working Days paid at 100%"),
+                'sequence': 1,
+                'code': 'WORK100',
+                'number_of_days': 0.0,
+                'number_of_hours': 0.0,
+                'contract_id': contract.id,
             }
             leaves = {}
             day_from = fields.Datetime.from_string(date_from)
@@ -510,10 +497,10 @@ class HrPayslip(models.Model):
             for day in range(0, nb_of_days):
                 working_hours_on_day = contract.working_hours.working_hours_on_day(day_from + timedelta(days=day))
                 if working_hours_on_day:
-                    #the employee had to work
+                    # the employee had to work
                     leave_type = was_on_leave(contract.employee_id.id, day_from + timedelta(days=day))
                     if leave_type:
-                        #if he was on leave, fill the leaves dict
+                        # if he was on leave, fill the leaves dict
                         if leave_type in leaves:
                             leaves[leave_type]['number_of_days'] += 1.0
                             leaves[leave_type]['number_of_hours'] += working_hours_on_day
@@ -527,7 +514,7 @@ class HrPayslip(models.Model):
                                 'contract_id': contract.id,
                             }
                     else:
-                        #add the input vals to tmp (increment if existing)
+                        # add the input vals to tmp (increment if existing)
                         attendances['number_of_days'] += 1.0
                         # attendances['number_of_hours'] += working_hours_on_day  # B replaced by the next 4 lines
                         if contract.time_mod == 'fixed':
@@ -565,8 +552,6 @@ class HrPayslipLine(models.Model):
     def _calculate_total2(self):
         for line in self:
             line.total2 = float(line.quantity2) * line.amount2 * line.rate2 / 100
-
-
 
     rate2 = fields.Float('Rate2 (%)', digits_compute=dp.get_precision('Payroll Rate'), default=100.0)
     amount2 = fields.Float('Amount2', digits_compute=dp.get_precision('Payroll'))
