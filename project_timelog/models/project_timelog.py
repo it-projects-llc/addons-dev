@@ -118,6 +118,9 @@ class Task(models.Model):
                 # stop current timer
                 w.sudo(w.user_id).stop_timer()
 
+                if not r.stage_id.allow_log_time:
+                    continue
+
                 existing_work = works.search([("task_id", "=", r.id), ("name", "=", w.name), ("stage_id", "=", r.stage_id.id)])
                 current_date = datetime.datetime.now()
                 subtask_name = ''
@@ -201,6 +204,8 @@ class ProjectWork(models.Model):
     def create(self, vals):
         task = self.env['project.task'].browse(vals.get('task_id'))
         vals['stage_id'] = task.stage_id.id
+        if not task.stage_id.allow_log_time:
+            raise UserError(_('Create a new subtask in the current state is forbidden.'))
         if 'user_id' in vals and (not vals['user_id']):
             vals['user_id'] = self.env.user.id
         if 'user_id' not in vals:
