@@ -60,6 +60,30 @@
             </field>
         </record>
 
+        <record id="task_type_edit" model="ir.ui.view">
+            <field name="name">project.task.type.form</field>
+            <field name="model">project.task.type</field>
+            <field name="inherit_id" ref="project.task_type_edit"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group" position="inside">
+                    <group>
+                        <field name="allow_log_time"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="task_type_tree" model="ir.ui.view">
+            <field name="name">project.task.type.tree</field>
+            <field name="model">project.task.type</field>
+            <field name="inherit_id" ref="project.task_type_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="inside">
+                    <field name="allow_log_time"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_my_timelog_form" model="ir.ui.view">
             <field name="name">timelog</field>
             <field name="model">project.timelog</field>

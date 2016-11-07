@@ -170,7 +170,7 @@ class ProjectWork(models.Model):
     hours = fields.Float(string='Time Spent', compute="_compute_hours", default=0)
     timelog_ids = fields.One2many("project.timelog", "work_id", "Timelog")
     status = fields.Char(string="Status", default="active")
-    task_allow_logs = fields.Boolean(related='task_id.stage_id.allow_log_time', store=True, default=True)
+    task_allow_logs = fields.Boolean(related='task_id.stage_id.allow_log_time', readonly=True)
     user_current = fields.Boolean(compute="_compute_user_current", default=True)
 
     @api.multi
