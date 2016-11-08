@@ -205,7 +205,7 @@ class ProjectWork(models.Model):
         task = self.env['project.task'].browse(vals.get('task_id'))
         vals['stage_id'] = task.stage_id.id
         if not task.stage_id.allow_log_time:
-            raise UserError(_('Create a new subtask in the current state is forbidden.'))
+            raise UserError(_('Creating new subtask in state "%s" is forbidden.') % task.stage_id.name)
         if 'user_id' in vals and (not vals['user_id']):
             vals['user_id'] = self.env.user.id
         if 'user_id' not in vals:
