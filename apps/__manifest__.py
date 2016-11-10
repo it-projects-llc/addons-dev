@@ -11,6 +11,7 @@
     ],
     'data': [
         'views/apps_view.xml',
+        'security.xml',
     ],
     'installable': True
 }
