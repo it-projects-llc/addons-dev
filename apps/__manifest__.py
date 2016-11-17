@@ -6,7 +6,7 @@
     'version': '1.0.0',
     'application': False,
     'author': 'IT-Projects LLC, Dinar Gabbasov',
-    'website': "https://it-projects.info",
+    'website': 'https://twitter.com/gabbasov_dinar',
     'category': 'Access',
     'license': 'GPL-3',
 
