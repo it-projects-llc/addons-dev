@@ -4,6 +4,7 @@
         <record model="ir.ui.view" id="crm_case_form_view_oppor">
             <field name="model">crm.lead</field>
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+            <field name="priority" eval="100"/>
             <field name="arch" type="xml">
                 <xpath expr="//label[@string='-']" position="replace">
                 </xpath>
