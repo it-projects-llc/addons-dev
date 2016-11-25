@@ -1,0 +1,35 @@
+.color_theme {
+    height: 50px !important;
+    float: left;
+    margin: 5px;
+    border: 1px solid #ccc;
+}
+#hue-box {
+    width: 50px !important;
+    margin-left: 20px;
+    margin-top: -15px;
+    background-color: #ffffff;
+}
+.bordered {
+    border-top: 1px solid #ccc;
+}
+#hex-box {
+    width: 50px !important;
+    margin-left: 20px;
+    margin-top: -15px;
+    background-color: #fff;
+    position: relative;
+}
+.set-hex {
+    margin-left: 10px!important;
+}
+.color_scheme_line {
+    border-top: 1px solid #ccc;
+}
+.oe_inline.oe_edit_only.ui-slider.ui-slider-horizontal.ui-widget.ui-widget-content.ui-corner-all {
+    z-index: 1;
+}
+
+.oe_form_group.top_panel_hue span {
+    margin-top: -15px;
+}

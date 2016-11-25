@@ -14,5 +14,14 @@
         </template>
         <template id="theme_kit.dummy">
         </template>
+        <template id="assets_backend" name="color generator assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/theme_kit/static/lib/js/color-scheme.js"></script>
+                <script type="text/javascript" src="/theme_kit/static/src/js/color-generator.js"></script>
+            </xpath>
+            <xpath expr="//link[last()]" position="after">
+                <link rel='stylesheet' href='/theme_kit/static/src/css/generator-style.css'/>
+            </xpath>
+        </template>
     </data>
 </odoo>

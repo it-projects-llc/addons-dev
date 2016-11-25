@@ -76,6 +76,16 @@ class ThemeTopPanel(models.Model):
 
     less = fields.Text('less', help='technical computed field', compute='_compute_less')
 
+    top_panel_hue = fields.Float(string='Hue')
+    top_panel_hex = fields.Char(string='Hex', default='ffffff')
+    top_panel_scheme = fields.Selection([('monochromatic', 'Monochromatic'), ('contrast', 'Contrast'), ('triade', 'Triade'), ('tetrade', 'Tetrade'), ('analogic', 'Analogic')],
+                                        string='Scheme', default='monochromatic')
+    top_panel_complement = fields.Boolean(string='Add Complement', default=False)
+    top_panel_distance = fields.Char(string='Distance')
+    top_panel_variation = fields.Selection([('default', 'Default'), ('pastel', 'Pastel'), ('soft', 'Soft'), ('light', 'Light'), ('hard', 'Hard'), ('pale', 'Pale')],
+                                        string='Variation', default='default')
+    top_panel_web_safe = fields.Boolean(string='Web Safe', default=False)
+
     @api.multi
     def _compute_less(self):
         for r in self:
@@ -128,6 +138,11 @@ class ThemeTopPanel(models.Model):
                 theme=r,
             )
             self.less = code
+
+
+    @api.multi
+    def set_hex_top_panel(self):
+        pass
 
 
 class ThemeLeftPanel(models.Model):

@@ -59,42 +59,109 @@
                         <group>
                             <group string="Top panel">
                                 <div>
-                                    <label for="top_panel_bg" />
+                                    <label for="top_panel_bg_active" />
                                     <field name="top_panel_bg_active" nolabel="1" class="oe_inline"/>
                                     <field name="top_panel_bg" widget="color" attrs="{'readonly':[('top_panel_bg_active','=',False)]}" class="oe_inline"/>
                                 </div>
                                 <div>
-                                    <label for="top_panel_border" />
+                                    <label for="top_panel_border_active" />
                                     <field name="top_panel_border_active" nolabel="1" class="oe_inline"/>
                                     <field name="top_panel_border" class="oe_inline" attrs="{'readonly':[('top_panel_border_active','=',False)]}" widget="color"/>
                                 </div>
                                 <div>
-                                    <label for="top_panel_font" />
+                                    <label for="top_panel_font_active" />
                                     <field name="top_panel_font_active" nolabel="1" class="oe_inline"/>
                                     <field name="top_panel_font" widget="color" attrs="{'readonly':[('top_panel_font_active','=',False)]}" class="oe_inline"/>
                                 </div>
                                 <div>
-                                    <label for="top_panel_active_item_font" />
+                                    <label for="top_panel_active_item_font_active" />
                                     <field name="top_panel_active_item_font_active" nolabel="1" class="oe_inline"/>
                                     <field name="top_panel_active_item_font" widget="color" attrs="{'readonly':[('top_panel_active_item_font_active','=',False)]}" class="oe_inline"/>
                                 </div>
                                 <div>
-                                    <label for="top_panel_active_item_bg" />
+                                    <label for="top_panel_active_item_bg_active" />
                                     <field name="top_panel_active_item_bg_active" nolabel="1" class="oe_inline"/>
                                     <field name="top_panel_active_item_bg" widget="color" attrs="{'readonly':[('top_panel_active_item_bg_active','=',False)]}" class="oe_inline"/>
                                 </div>
                                 <div>
-                                    <label for="top_panel_hover_item_font" />
+                                    <label for="top_panel_hover_item_font_active" />
                                     <field name="top_panel_hover_item_font_active" nolabel="1" class="oe_inline"/>
                                     <field name="top_panel_hover_item_font" widget="color" attrs="{'readonly':[('top_panel_hover_item_font_active','=',False)]}" class="oe_inline"/>
                                 </div>
                                 <div>
-                                    <label for="top_panel_hover_item_bg" />
+                                    <label for="top_panel_hover_item_bg_active" />
                                     <field name="top_panel_hover_item_bg_active" nolabel="1" class="oe_inline"/>
                                     <field name="top_panel_hover_item_bg" widget="color" attrs="{'readonly':[('top_panel_hover_item_bg_active','=',False)]}" class="oe_inline"/>
                                 </div>
                             </group>
                         </group>
+                        <group>
+                            <div class="color_scheme_line"></div>
+                        </group>
+                        <group string="Color Generator">
+                        </group>
+                        <group>
+                            <div class="offset1">
+                            <group>
+                                <group>
+                                    <div>
+                                        <strong class="pull-left oe_inline">Hue</strong>
+                                        <div id="hue-box" class="color_theme middle" ></div>
+                                    </div>
+                                    <group class="top_panel_hue hue">
+                                        <field type="text" name="top_panel_hue" nolabel="1" class="oe_inline"/>
+                                    </group>
+                                </group>
+                                <div id="hue-slider" class="oe_inline oe_edit_only"></div>
+                            </group>
+                            <group>
+                                <div class="oe_clear"/>
+                            </group>
+                            <group>
+                                <div>
+                                    <strong class="span1 pull-left">Hex</strong>
+                                    <div id="hex-box" class="color_theme middle oe_inline"></div>
+                                </div>
+                                <div class="input-append oe_inline hex">
+                                    <field type="text" id="hex" name="top_panel_hex" maxlength="6" class="oe_inline"/>
+                                    <button name='set_hex_top_panel' type="button" id="set-hex" class="set-hex btn btn-default oe_edit_only" help="This functions a bit differently from setting the hue above; it will create a custom variation 'preset' that differs from any of the below options" string="Set" />
+                                </div>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="top_panel_scheme" class="oe_inline"/>
+                                </group>
+                                <group>
+                                    <field name="top_panel_complement" class="oe_inline" attrs="{'invisible':[('top_panel_scheme','!=','analogic')]}"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group class="scheme_distance">
+                                    <field name="top_panel_distance" class="oe_inline" help="Won't affect mono or contrast"/>
+                                </group>
+                                <group>
+                                    <div id="distance-slider"></div>
+                                </group>
+                            </group>
+                            <group string="Variation">
+                                <group col="10">
+                                    <div>
+                                        <label string="Monochromatic"/>
+                                        <input type="radio" checked="True" name="top_panel_scheme" id="monochromatic_top_panel_scheme"/>
+                                    </div>
+                                </group>
+                            </group>
+                            <group string="Web Safe">
+                                <group col="10">
+                                    <div>
+                                        <label string="Monochromatic"/>
+                                        <input type="radio" checked="True" name="top_panel_scheme" id="monochromatic_top_panel_scheme"/>
+                                    </div>
+                                </group>
+                            </group>
+                        </div>
+                        </group>
+
                     </sheet>
                 </form>
             </field>
