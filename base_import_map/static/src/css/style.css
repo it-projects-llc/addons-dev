@@ -1,0 +1,4 @@
+input[class='oe_import_settings_name'] {
+    display: none;
+    width: 200px !important;
+}
