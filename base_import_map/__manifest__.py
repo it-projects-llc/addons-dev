@@ -10,6 +10,7 @@
     "depends" : ["base_import"],
     "data": [
         "views/base_import_map_templates.xml",
+        "views/base_import_map_view.xml",
     ],
     "demo": [
     ],
