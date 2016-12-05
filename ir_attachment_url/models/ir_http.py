@@ -78,7 +78,6 @@ class IrHttp(models.AbstractModel):
         else:
             # begin redefined part of original binary_content of odoo/base/addons/ir/ir_http
             is_attachment = env[model]._fields[field].attachment
-            att = None
             if is_attachment:
                 domain = [
                     ('res_model', '=', model),
@@ -90,7 +89,7 @@ class IrHttp(models.AbstractModel):
                 if att:
                     content = att.url
                     status = 301
-            if not is_attachment or not att:
+            if not content:
                 content = obj[field] or ''
             # end redefined part of original binary_content
 
