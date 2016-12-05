@@ -34,10 +34,10 @@ odoo.define('base_import_map.map', function (require) {
                 var suggestions = [];
                 if (res) {
                     res.forEach(function (item) {
-                        suggestions.push({id: item[0], text: _t(item[1])})
-                    })
+                        suggestions.push({id: item[0], text: _t(item[1])});
+                    });
                 } else {
-                    suggestions.push({id: "None", text: _t("None")})
+                    suggestions.push({id: "None", text: _t("None")});
                 }
                 self.$('input.oe_import_settings').select2({
                     width: '160px',
