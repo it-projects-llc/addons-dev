@@ -126,5 +126,4 @@ class IrHttp(models.AbstractModel):
         # content-disposition default name
         if download:
             headers.append(('Content-Disposition', cls.content_disposition(filename)))
-        print '\n\n\n\n\n', 'headers HEADERS ', headers, '\n\n\n\n'
         return (status, headers, content)
