@@ -16,7 +16,8 @@ odoo.define('base_import_map.map', function (require) {
             {name: 'separator', label: _lt("Separator:"), value: ','},
             {name: 'quoting', label: _lt("Text Delimiter:"), value: '"'},
             {name: 'settings', label: _lt("Settings:"), value: ''},
-            {name: 'save_settings', label: _lt("Save settings:"), value: ''}
+            {name: 'save_settings', label: _lt("Save settings:"), value: ''},
+            {name: 'file_read_hook', label: _lt("File read hook:"), value: ''}
         ],
         start: function() {
             var self = this;

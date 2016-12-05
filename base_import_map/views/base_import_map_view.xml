@@ -10,7 +10,7 @@
                     <sheet>
                         <group>
                             <field name="name" string="Name"/>
-                            <field name="external_id_generator" string="External id"/>
+                            <field name="file_read_hook" />
                             <field name="model_id" string="Model"/>
                             <field name="line_ids" string="Lines">
                                 <tree>
