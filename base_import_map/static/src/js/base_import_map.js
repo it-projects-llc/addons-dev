@@ -11,38 +11,29 @@ odoo.define('base_import_map.map', function (require) {
     var _t = core._t;
 
     BaseImport.DataImport.include({
-        init: function (parent, action) {
-            var self = this;
-            this._super(parent, action);
-            this.settings_checked = false;
-            this.opts.push({name: 'settings', label: _lt("Settings:"), value: '666'});
-            this.events['click .oe_import_set_settings'] = function (e) {
-                self.display_setting_name(e);
-            };
-        },
+        opts: [
+            {name: 'encoding', label: _lt("Encoding:"), value: 'utf-8'},
+            {name: 'separator', label: _lt("Separator:"), value: ','},
+            {name: 'quoting', label: _lt("Text Delimiter:"), value: '"'},
+            {name: 'settings', label: _lt("Settings:"), value: ''},
+            {name: 'save_settings', label: _lt("Save settings:"), value: ''}
+        ],
         start: function() {
             var self = this;
             this.setup_settings_picker();
             this._super();
         },
-        display_setting_name: function(e){
-            var self = this;
-            if (this.settings_checked) {
-                $("input[class='oe_import_settings_name']").hide();
-                self.settings_checked = false;
-            } else {
-                $("input[class='oe_import_settings_name']").show();
-                self.settings_checked = true;
-            }
-        },
         setup_settings_picker: function(){
             var self = this;
+            var domain = [['model', '=', this.res_model]];
             var model = new Model("base_import_map.map");
-            model.call('name_search', [[]]).then(function(res){
+            model.call('name_search', {
+                args: domain || false,
+            }).then(function(res){
                 var suggestions = [];
                 if (res) {
                     res.forEach(function (item) {
-                        suggestions.push({id: item.id, text: _t(item.name)})
+                        suggestions.push({id: item[0], text: _t(item[1])})
                     })
                 } else {
                     suggestions.push({id: "None", text: _t("None")})
@@ -60,30 +51,6 @@ odoo.define('base_import_map.map', function (require) {
                     },
                 });
             });
-        },
-        render_buttons: function(){
-            this._super();
-            var self = this;
-            this.$buttons.filter('.o_import_import').on('click', function(){
-                self.import.bind(this);
-                self.do_save_settings();
-            });
-        },
-        do_save_settings: function() {
-            var self = this;
-            this.setting_name = $(".oe_import_settings_name").val();
-            // if (this.settings_checked && this.setting_name) {
-            //     var model = new Model("base_import_map.map");
-            //     var value = {
-            //         name: self.setting_name,
-            //         external_id_generator: self.external_id_generator,
-            //         model_id: self.model_id,
-            //         line_ids: self.line_ids,
-            //     };
-            //     model.call('create', [[]]).then(function(res){
-            //     //    save value
-            //     })
-            // }
         },
     });
 });

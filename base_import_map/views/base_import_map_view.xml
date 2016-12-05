@@ -10,9 +10,14 @@
                     <sheet>
                         <group>
                             <field name="name" string="Name"/>
-                            <field name="external_id_generator" string="External id generator"/>
+                            <field name="external_id_generator" string="External id"/>
                             <field name="model_id" string="Model"/>
-                            <field name="line_ids" string="Lines"/>
+                            <field name="line_ids" string="Lines">
+                                <tree>
+                                    <field name="field_name"/>
+                                    <field name="column_number"/>
+                                </tree>
+                            </field>
                         </group>
                     </sheet>
                 </form>

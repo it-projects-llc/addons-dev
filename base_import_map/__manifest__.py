@@ -14,7 +14,6 @@
     ],
     "demo": [
     ],
-    'qweb': ['static/src/xml/base_import_map.xml'],
     "installable": True,
     "auto_install": False,
 }
