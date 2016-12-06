@@ -28,5 +28,5 @@ Usage
 
 Upload Binary fields for some model (e.g. ``product.template``) as usual (by editing product template from ``Sales >> Product`` menu).
 By doing this you have uploaded image on your s3 storage.
-In some cases you (e.g. gor ``product.template``) should also use ``ir_attachment_url`` module to be able to see products' images in odoo backend.
+In some cases you (e.g. for ``product.template``) should also use ``ir_attachment_url`` module to be able to see products' images in odoo backend.
 
