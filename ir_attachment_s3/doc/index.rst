@@ -15,8 +15,12 @@ Configuration
 Instruction how to configure the module.
 
 * `Enable technical features <https://odoo-development.readthedocs.io/en/latest/odoo/usage/technical-features.html>`__
-* Open menu ...
-* Click ...
+* Open menu ``Settings >> Parameters >> System Parameters`` and edit the following parameters there
+
+ * ``s3.bucket``: the name of your bucket (e.g. ``mybucket``)
+ * ``s3.condition``: only the attachments that meet the condition will be sent to s3 (e.g. ``attachment.res_model == 'product.template'``)
+ * ``s3.access_key_id``
+ * ``s3.secret_key``
 
 Usage
 =====
