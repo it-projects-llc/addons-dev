@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import hashlib
-import urlparse
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -10,8 +9,8 @@ except:
     _logger.debug('boto3 package is required which is not \
     found on your installation')
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
+from odoo import api, models, _
+from odoo.exceptions import ValidationError
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -48,10 +47,10 @@ class IrAttachment(models.Model):
             raise ValidationError(_('AmazonS3 access_key_id and secret_access_key must be defined in the [Settiings > Parameters > System Parameters]'))
 
         s3 = boto3.resource(
-                's3',
-                aws_access_key_id=access_key_id,
-                aws_secret_access_key=secret_key,
-                )
+            's3',
+            aws_access_key_id=access_key_id,
+            aws_secret_access_key=secret_key,
+            )
         bucket_name = self._get_bucket_name()
         bucket = s3.Bucket(bucket_name)
         if not bucket:
@@ -73,11 +72,11 @@ class IrAttachment(models.Model):
             s3 = self._get_s3_resource()
             bucket_name = self._get_bucket_name()
             s3.Bucket(bucket_name).put_object(
-                    Key=fname,
-                    Body=bin_data,
-                    ACL='public-read',
-                    ContentType=attach.mimetype,
-                    )
+                Key=fname,
+                Body=bin_data,
+                ACL='public-read',
+                ContentType=attach.mimetype,
+                )
 
             vals = {
                 'file_size': len(bin_data),

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import requests
 import base64
-from odoo import api, fields, models
+from odoo import api, models
 
 
 class IrAttachment(models.Model):

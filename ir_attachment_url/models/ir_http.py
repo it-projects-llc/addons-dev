@@ -2,11 +2,14 @@
 import mimetypes
 import base64
 import hashlib
+import re
+import os
 
-from openerp import fields
-from openerp import models
+from odoo import models
+from odoo.exceptions import AccessError
 from odoo.tools.mimetypes import guess_mimetype
-from odoo.http import request, STATIC_CACHE, content_disposition
+from odoo.http import request, STATIC_CACHE
+from odoo.modules.module import get_resource_path, get_module_path
 
 
 class IrHttp(models.AbstractModel):
