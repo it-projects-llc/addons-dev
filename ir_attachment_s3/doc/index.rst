@@ -28,5 +28,5 @@ Usage
 Depending on what you have in the ``s3.condition`` setting some or all attachments will be uploaded on your s3.
 For example upload by editing product template from ``Sales >> Product`` menu some image for your product.
 By doing this you have uploaded image on your s3 storage.
-In this case you should also install ``ir_attachment_url`` module to be able to see products' images in odoo backend.
+In this case you should also install ``ir_attachment_url`` module to be able to see products' images in odoo backend. By default odoo doesn't use urls in its backend.
 
