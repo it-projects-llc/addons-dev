@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 import hashlib
 import logging
+
+from odoo import api, models, _
+from odoo.exceptions import ValidationError
+from odoo.tools.safe_eval import safe_eval
+
 _logger = logging.getLogger(__name__)
 
 try:
@@ -8,10 +13,6 @@ try:
 except:
     _logger.debug('boto3 package is required which is not \
     found on your installation')
-
-from odoo import api, models, _
-from odoo.exceptions import ValidationError
-from odoo.tools.safe_eval import safe_eval
 
 
 class IrAttachment(models.Model):
