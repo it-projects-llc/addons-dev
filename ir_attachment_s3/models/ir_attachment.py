@@ -60,7 +60,11 @@ class IrAttachment(models.Model):
 
     def _inverse_datas(self):
         condition = self._get_condition()
-        s3_records = self.filtered(lambda r: safe_eval(condition, {}, {'attachment': r}, mode="eval"))
+        # if there is no condition than store all attachments on s3
+        if condition:
+            s3_records = self.filtered(lambda r: safe_eval(condition, {}, {'attachment': r}, mode="eval"))
+        else:
+            s3_records = self
         for attach in s3_records:
             value = attach.datas
             bin_data = value and value.decode('base64') or ''
