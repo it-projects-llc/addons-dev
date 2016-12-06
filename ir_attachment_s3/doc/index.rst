@@ -18,18 +18,15 @@ Instruction how to configure the module.
 * Open menu ``Settings >> Parameters >> System Parameters`` and specify the following parameters there
 
   * ``s3.bucket``: the name of your bucket (e.g. ``mybucket``)
-  * ``s3.condition``: only the attachments that meet the condition will be sent to s3 (e.g. ``attachment.res_model == 'product.template'``) - it is actually the way of specifying the models with ``fields.Binary`` fields that should be stored on s3 instead of local file storage or db
+  * ``s3.condition``: only the attachments that meet the condition will be sent to s3 (e.g. ``attachment.res_model == 'product.template'``) - it is actually the way of specifying the models with ``fields.Binary`` fields that should be stored on s3 instead of local file storage or db. This is only for Binary fields.
+Don't specify anything if you don't want to store binary fields on s3. Only ordinary attachments will be stored on s3 in that case.
   * ``s3.access_key_id``
   * ``s3.secret_key``
 
 Usage
 =====
 
-Instruction for daily usage. It should describe how to check that module works. What shall user do and what would user get.
-* Open menu ...
-* Click ...
+Upload Binary fields for some model (e.g. ``product.template``) as usual (by editing product template from ``Sales >> Product`` menu).
+By doing this you have uploaded image on your s3 storage.
+In some cases you (e.g. gor ``product.template``) should also use ``ir_attachment_url`` module to be able to see products' images in odoo backend.
 
-Uninstallation
-==============
-
-Optional section for uninstallation notes. Delete it if you don't have notes for uninstallation.
