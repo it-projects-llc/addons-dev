@@ -16,12 +16,12 @@ class ProjectTimelog(models.Model):
     project_name = fields.Char(related='work_id.task_id.project_id.name', store=True)
     start_datetime = fields.Datetime(string="Start date", default=datetime.datetime.now())
     end_datetime = fields.Datetime(string="End date")
-    end_datetime_active = fields.Datetime(string="End date", help="End tate. Equal to now if timer is not stopped yet.", copute="_compute_end_datetime_active")
+    end_datetime_active = fields.Datetime(string="End date", help="End tate. Equal to now if timer is not stopped yet.", compute="_compute_end_datetime_active")
     duration = fields.Float(string="Duration", compute="_compute_duration", store=True)
     corrected_duration = fields.Float(string="Corrected duration", compute="_compute_corrected_duration", store=True)
     user_id = fields.Many2one("res.users", string="User name", index=True)
     stage_id = fields.Many2one("project.task.type", string="Stage")
-    time_correction = fields.Float(default=0.00)
+    time_correction = fields.Float('Time Correction', default=0.00)
 
     @api.multi
     @api.depends("end_datetime")
@@ -75,6 +75,8 @@ class ProjectTimelog(models.Model):
             if not user.has_group('project.group_project_manager'):
                 if vals['time_correction'] > 0.00:
                     raise UserError(_('Only manager can enter positive time.'))
+        if any([key in vals for key in ['start_datetime', 'end_datetime']]):
+            raise UserError(_('Dates cannot be changed. Use Time Correction field instead.'))
         return super(ProjectTimelog, self).write(vals)
 
 

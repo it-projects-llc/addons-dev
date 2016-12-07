@@ -155,7 +155,7 @@
             <field name="name">timelog.calendar</field>
             <field name="model">project.timelog</field>
             <field name="arch" type="xml">
-                <calendar color="user_id" date_start="start_datetime" date_end="end_datetime_active" string="Timelog">
+                <calendar color="user_id" date_start="start_datetime" date_stop="end_datetime_active" string="Timelog">
                     <field name="work_name"/>
                     <field name="task_name"/>
                 </calendar>
