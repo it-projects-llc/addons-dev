@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 {
     "name": """Popup Attachments""",
-    "summary": """Popup Attachments""",
+    "summary": """Open attachments in popup""",
     "category": "Extra Tools",
     "version": "1.0.0",
+    "images": ['images/popup_image.png'],
 
     "author": "IT-Projects LLC, Dinar Gabbasov",
     'website': "https://twitter.com/gabbasov_dinar",
