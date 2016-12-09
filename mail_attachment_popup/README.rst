@@ -2,7 +2,7 @@
  Popup Attachments
 ===================
 
- The module allows to open mail attachments(images) in popup. It is useful if you want to display them only without downloading.
+ The module opens attached mail images in popup.
 
 Credits
 =======
