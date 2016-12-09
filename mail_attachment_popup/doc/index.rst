@@ -11,7 +11,6 @@ Usage
 =====
 
 * Open 'Messaging' menu
-* Open any email that contains image in attachment
+* Find any message with image in attachments
 * Click on the image
-* See the result 
-
+* Browser opens image in popup instead of downloading it
