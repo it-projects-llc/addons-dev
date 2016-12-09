@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": """Popup Attachments""",
-    "summary": """Open attachments in popup""",
+    "summary": """Open attached mail images in popup""",
     "category": "Extra Tools",
     "version": "1.0.0",
     "images": ['images/popup_image.png'],
