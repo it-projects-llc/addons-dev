@@ -26,7 +26,8 @@
 .color_scheme_line {
     border-top: 1px solid #ccc;
 }
-.oe_inline.oe_edit_only.ui-slider.ui-slider-horizontal.ui-widget.ui-widget-content.ui-corner-all {
+.oe_inline.oe_edit_only.ui-slider.ui-slider-horizontal.ui-widget.ui-widget-content.ui-corner-all,
+.oe_edit_only.ui-slider.ui-slider-horizontal.ui-widget.ui-widget-content.ui-corner-all{
     z-index: 1;
 }
 

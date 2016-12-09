@@ -1,6 +1,6 @@
 (function(){
-     "use strict";
-     var Web = openerp.web;
+    "use strict";
+    var Web = openerp.web;
      Web.FormView.include({
          to_edit_mode: function() {
              var self = this;
@@ -9,8 +9,17 @@
          },
          load_color_data: function(){
              var self = this;
-             // если в бд нет цвета то грузим по умолчанию
-             // если имеется цвет то грузим его
+
+             this.default_hue = this.datarecord.top_panel_hue;
+             this.default_hex = this.datarecord.top_panel_hex;
+             this.default_scheme = this.datarecord.top_panel_scheme;
+             this.default_complement = this.datarecord.top_panel_complement;
+             this.default_distance = this.datarecord.top_panel_distance;
+             this.default_variation = this.datarecord.top_panel_variation;
+             this.default_web_safe = this.datarecord.top_panel_web_safe;
+
+
+
 
              $("#hue-slider").slider({
                  min: 0,
@@ -37,8 +46,9 @@
                  }
              });
              this.scheme = new ColorScheme;
-             console.log(this.scheme);
-             this.setHue(0);
+             this.setHue(self.default_hue);
+             this.setDistance(self.default_distance);
+             this.setHex(self.default_hex);
              this.generateColors();
              $('#add-complement').click(function(){
                  self.addComplement();
@@ -121,14 +131,3 @@
          }
      });
  })();
-
-
-
-
-
-
-
-
-
-
-

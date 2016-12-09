@@ -103,16 +103,14 @@
                         <group>
                             <div class="offset1">
                             <group>
-                                <group>
-                                    <div>
-                                        <strong class="pull-left oe_inline">Hue</strong>
-                                        <div id="hue-box" class="color_theme middle" ></div>
-                                    </div>
-                                    <group class="top_panel_hue hue">
-                                        <field type="text" name="top_panel_hue" nolabel="1" class="oe_inline"/>
-                                    </group>
-                                </group>
-                                <div id="hue-slider" class="oe_inline oe_edit_only"></div>
+                                <div>
+                                    <strong class="pull-left oe_inline">Hue</strong>
+                                    <div id="hue-box" class="color_theme middle" ></div>
+                                </div>
+                                <div>
+                                    <field type="text" name="top_panel_hue" nolabel="1" class="oe_inline" invisible="True"/>
+                                    <div id="hue-slider" class="oe_inline oe_edit_only"></div>
+                                </div>
                             </group>
                             <group>
                                 <div class="oe_clear"/>
@@ -140,23 +138,15 @@
                                     <field name="top_panel_distance" class="oe_inline" help="Won't affect mono or contrast"/>
                                 </group>
                                 <group>
-                                    <div id="distance-slider"></div>
+                                    <div id="distance-slider" class="oe_edit_only"></div>
                                 </group>
                             </group>
-                            <group string="Variation">
-                                <group col="10">
-                                    <div>
-                                        <label string="Monochromatic"/>
-                                        <input type="radio" checked="True" name="top_panel_scheme" id="monochromatic_top_panel_scheme"/>
-                                    </div>
+                            <group>
+                                <group>
+                                    <field name="top_panel_variation" class="oe_inline"/>
                                 </group>
-                            </group>
-                            <group string="Web Safe">
-                                <group col="10">
-                                    <div>
-                                        <label string="Monochromatic"/>
-                                        <input type="radio" checked="True" name="top_panel_scheme" id="monochromatic_top_panel_scheme"/>
-                                    </div>
+                                <group>
+                                    <field name="top_panel_web_safe" class="oe_inline"/>
                                 </group>
                             </group>
                         </div>
