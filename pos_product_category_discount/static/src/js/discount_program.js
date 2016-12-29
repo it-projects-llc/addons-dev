@@ -7,8 +7,38 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
     var gui = require('point_of_sale.gui');
     var Model = require('web.Model');
     var Widget = require('web.Widget');
+    var core = require('web.core');
     var PosDiscountWidget = require('pos_discount.pos_discount');
     var PosBaseWidget = require('point_of_sale.BaseWidget');
+
+    var QWeb = core.qweb;
+    var _t = core._t;
+
+    var PosModelSuper = models.PosModel;
+    models.PosModel = models.PosModel.extend({
+        get_discount_category: function(id) {
+            var self = this;
+            var model = new Model('pos.category_discount');
+            var domain = [['discount_program_id', '=', id]];
+            model.call('search_read', [domain]).then(function (resultat) {
+                resultat.forEach(function(item){
+                    self.apply_discount_category(item.category_discount_pc, item.discount_category_id[0], item.discount_program_id[1])
+                });
+            });
+        },
+        apply_discount_category: function(discount, category_id, discount_program_name) {
+            var self = this;
+            var discount_program_name = discount_program_name;
+            var order = this.get_order();
+            var lines = order.get_orderlines().filter(function (item) { return item.product.pos_categ_id[0] == category_id; });
+            lines.forEach(function (item){
+                item.discount = discount;
+                item.discountStr = discount;
+                item.discount_program_name = discount_program_name;
+                order.get_orderline(item.id).set_discount(discount);
+            });
+        },
+    });
 
     var OrderlineSuper = models.Orderline;
     models.Orderline = models.Orderline.extend({
@@ -50,7 +80,6 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
                     var order    = self.pos.get_order();
                     var lines    = order.get_orderlines();
                     var product  = self.pos.db.get_product_by_id(self.pos.config.discount_product_id[0]);
-                    console.log(self);
                     if (pc !== null) {
                         lines.forEach(function (item){
                             if (item.get_product() === product) {
@@ -58,8 +87,18 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
                             }
                         });
 
-                        // Add discount
-                        var discount = - pc / 100.0 * order.get_total_with_tax();
+                        // Product with a prohibited discount
+                        var not_discount_product = order.get_orderlines().filter(function (item) {return item.product.discount_allowed === false;});
+
+                        // Common price without discount for product with a prohibited discount
+                        var price_without_discount = 0;
+                        if (not_discount_product) {
+                            not_discount_product.forEach(function(item){
+                                price_without_discount = price_without_discount + item.price;
+                            });
+                        }
+                        // Discount
+                        var discount = - pc / 100.0 * (order.get_total_with_tax() - price_without_discount);
 
                         if( discount < 0 ){
                             order.add_product(product, { price: discount });
@@ -70,7 +109,7 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
                     self.gui.show_popup('number', {
                         'title': 'Discount Percentage',
                         'value': self.pos.config.discount_pc,
-                        'disc_program': self.pos.discount_program,
+                        'disc_program': self.pos.discount_program.slice(0,4),
                         'confirm': function (val) {
                             if (val) {
                                 val = Math.round(Math.max(0, Math.min(100, val)));
@@ -86,7 +125,7 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
                     self.gui.close_popup();
                     if( num_widget.options.confirm ){
                         if (num_widget.input_disc_program) {
-                            num_widget.get_discount_category(num_widget.discount_program_id);
+                            self.pos.get_discount_category(num_widget.discount_program_id);
                         }
                         num_widget.options.confirm.call(num_widget,num_widget.inputbuffer);
                     }
@@ -119,6 +158,21 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
         },
     });
 
+    models.load_models({
+        model:  'product.template',
+        fields: ['discount_allowed','product_variant_id'],
+        loaded: function(self,products){
+            products.forEach(function(item){
+                if (item.product_variant_id) {
+                    var product  = self.db.get_product_by_id(item.product_variant_id[0]);
+                    if (product) {
+                        product.discount_allowed = item.discount_allowed;
+                    }
+                }
+            });
+        }
+    });
+
     PopupWidget.include({
         show: function (options) {
             var self = this;
@@ -135,38 +189,113 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
                 this.$('.popup.popup-number').addClass("popup-discount");
             }
         },
+        get_discount_program_by_id: function(id) {
+            var disc_program_by_id = this.options.disc_program.filter(function (item) {
+                return item.id === Number(id);
+            });
+            return disc_program_by_id[0];
+        },
         click_discount_program: function(e) {
             var self = this;
-            if (e.currentTarget.id == 'other') {
-                console.log("click other button");
+            var id = e.currentTarget.id;
+            if (id == 'other') {
+                self.gui.show_screen('discountlist');
             } else {
-                this.discount_program_name = e.currentTarget.innerText;
+                this.current_disc_program = this.get_discount_program_by_id(id);
+                this.discount_program_name = this.current_disc_program.discount_program_name;
                 this.$('.value').text(this.discount_program_name);
                 this.input_disc_program = true;
                 this.inputbuffer = '';
-                this.discount_program_id = Number(e.currentTarget.id);
+                this.discount_program_id = this.current_disc_program.id;
             }
         },
-        get_discount_category: function(id) {
+    });
+
+    var DiscountProgramScreenWidget = screens.ScreenWidget.extend({
+        template: 'DiscountProgramScreenWidget',
+        init: function(parent, options){
+            this._super(parent, options);
+            this.discount_cache = new screens.DomCache();
+        },
+        auto_back: true,
+        show: function(){
             var self = this;
-            var model = new Model('pos.category_discount');
-            var domain = [['discount_program_id', '=', id]];
-            model.call('search_read', [domain]).then(function (resultat) {
-                resultat.forEach(function(item){
-                    self.apply_discount_category(item.category_discount_pc, item.discount_category_id[0])
-                });
+            this._super();
+
+            this.show_disc_button = false;
+
+            this.renderElement();
+
+            this.$('.back').click(function(){
+                self.gui.back();
+            });
+
+            this.$('.next').click(function(){
+                self.save_changes();
+                self.gui.back();
+            });
+
+            var discount = this.pos.discount_program;
+            this.render_list(discount);
+
+            this.$('.discount-list-contents').delegate('.discount-line','click',function(event){
+                self.line_select(event,$(this),parseInt($(this).data('id')));
             });
         },
-        apply_discount_category: function(discount, category_id) {
-            var self = this;
-            var order = this.pos.get_order();
-            var lines = order.get_orderlines().filter(function (item) { return item.product.pos_categ_id[0] == category_id; });
-            lines.forEach(function (item){
-                item.discount = discount;
-                item.discountStr = discount;
-                item.discount_program_name = self.discount_program_name;
-                order.get_orderline(item.id).set_discount(discount);
-            });
+        hide: function () {
+            this._super();
+        },
+        // Render discount list
+        render_list: function(discounts){
+            var contents = this.$el[0].querySelector('.discount-list-contents');
+            contents.innerHTML = "";
+            for(var i = 0, len = Math.min(discounts.length,1000); i < len; i++){
+                var discount    = discounts[i];
+                var discountline = this.discount_cache.get_node(discount.id);
+                if(!discountline){
+                    var discountline_html = QWeb.render('DiscountLine',{widget: this, discount:discounts[i]});
+                    var discountline = document.createElement('tbody');
+                    discountline.innerHTML = discountline_html;
+                    discountline = discountline.childNodes[1];
+                    this.discount_cache.cache_node(discount.id,discountline);
+                }
+                discountline.classList.remove('highlight');
+                contents.appendChild(discountline);
+            }
+        },
+        save_changes: function(){
+            this.pos.get_discount_category(this.old_id);
+        },
+        toggle_save_button: function(){
+            var $button = this.$('.button.next');
+            if (!this.show_disc_button) {
+                $button.addClass('oe_hidden');
+                return;
+            } else {
+                $button.removeClass('oe_hidden');
+                $button.text(_t('Apply a Discount'));
+            }
+        },
+        line_select: function(event,$line,id){
+            if (this.old_id !== id) {
+                this.show_disc_button = true;
+                this.old_id = id;
+            }
+            if ( $line.hasClass('highlight') ){
+                $line.removeClass('highlight');
+                this.show_disc_button = false;
+            }else{
+                this.$('.discount-list .highlight').removeClass('highlight');
+                $line.addClass('highlight');
+                var y = event.pageY - $line.parent().offset().top;
+                this.show_disc_button = true;
+            }
+
+            this.toggle_save_button();
+        },
+        close: function(){
+            this._super();
         },
     });
+    gui.define_screen({name:'discountlist', widget: DiscountProgramScreenWidget});
 });

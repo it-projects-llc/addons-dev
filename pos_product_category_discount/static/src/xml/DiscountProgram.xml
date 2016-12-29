@@ -59,4 +59,52 @@
             </t>
         </t>
     </t>
+
+    <t t-name="DiscountLine">
+        <tr class='discount-line' t-att-data-id='discount.id'>
+            <td><t t-esc='discount.discount_program_name' /></td>
+        </tr>
+    </t>
+
+    <t t-name="DiscountProgramScreenWidget">
+        <div class="discountlist-screen screen">
+            <div class="screen-content">
+                <section class="top-content">
+                    <span class='button back'>
+                        <i class='fa fa-angle-double-left'></i>
+                        Cancel
+                    </span>
+                    <span class='button next oe_hidden highlight'>
+                        Apply Discount
+                        <i class='fa fa-angle-double-right'></i>
+                    </span>
+                </section>
+                <section class="full-content">
+                    <div class='window'>
+                        <section class='subwindow collapsed'>
+                            <div class='subwindow-container collapsed'>
+                                <div class='subwindow-container-fix discount-details-contents'>
+                                </div>
+                            </div>
+                        </section>
+                        <section class='subwindow'>
+                            <div class='subwindow-container'>
+                                <div class='subwindow-container-fix touch-scrollable scrollable-y'>
+                                    <table class='discount-list'>
+                                        <thead>
+                                            <tr>
+                                                <th>Discount program name</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class='discount-list-contents'>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </t>
 </templates>
