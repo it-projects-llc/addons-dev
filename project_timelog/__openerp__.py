@@ -4,7 +4,7 @@
     "summary": """Track the work time and know what your team is working on""",
     "category": "Project",
     "version": "1.0.0",
-
+    "images": ['images/timelog.png'],
     "author": "IT-Projects LLC, Dinar Gabbasov",
     'website': "https://twitter.com/gabbasov_dinar",
 #    "license": "Other proprietary",
