@@ -60,7 +60,7 @@
     </record>
 
     <record id="pos_discount_program_action" model="ir.actions.act_window">
-        <field name="name">POS Discount Programs</field>
+        <field name="name">POS Discount Program</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pos.discount_program</field>
         <field name="view_type">form</field>
