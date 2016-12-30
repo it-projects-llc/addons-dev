@@ -74,7 +74,7 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
             var self = this;
             this._super(parent,options);
             if (this.gui && this.gui.screen_instances.products) {
-                var disc_widget = this.gui.screen_instances.products.action_buttons.discount;
+                var disc_widget = this.gui.screen_instances.products.action_buttons['discount'];
                 disc_widget.apply_discount = function(pc) {
                     var order    = self.pos.get_order();
                     var lines    = order.get_orderlines();
@@ -106,6 +106,7 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
                         }
                         // Discount
                         var discount = - pc / 100.0 * (order.get_total_with_tax() - price_without_discount);
+
                         if( discount < 0 ) {
                             order.add_product(product, { price: discount });
                         }
@@ -120,14 +121,14 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
                             if (val) {
                                 val = Math.round(Math.max(0, Math.min(100, val)));
                             } else val = null;
-                            self.gui.screen_instances.products.action_buttons.discount.apply_discount(val);
+                            self.gui.screen_instances.products.action_buttons['discount'].apply_discount(val);
                         },
                     });
                 };
             }
-            if (this.gui && this.gui.popup_instances.number) {
-                var num_widget = this.gui.popup_instances.number;
-                this.gui.popup_instances.number.click_confirm = function () {
+            if (this.gui && this.gui.popup_instances['number']) {
+                var num_widget = this.gui.popup_instances['number'];
+                this.gui.popup_instances['number'].click_confirm = function () {
                     self.gui.close_popup();
                     if( num_widget.options.confirm ){
                         if (num_widget.input_disc_program) {
@@ -136,7 +137,7 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
                         num_widget.options.confirm.call(num_widget,num_widget.inputbuffer);
                     }
                 };
-                this.gui.popup_instances.number.click_numpad = function(event){
+                this.gui.popup_instances['number'].click_numpad = function(event){
                     var newbuf = self.gui.numpad_input(
                         num_widget.inputbuffer,
                         $(event.target).data('action'),
@@ -263,7 +264,7 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
                 var discountline = this.discount_cache.get_node(discount.id);
                 if(!discountline){
                     var discountline_html = QWeb.render('DiscountLine',{widget: this, discount:discounts[i]});
-                    discountline = document.createElement('tbody');
+                    var discountline = document.createElement('tbody');
                     discountline.innerHTML = discountline_html;
                     discountline = discountline.childNodes[1];
                     this.discount_cache.cache_node(discount.id,discountline);
