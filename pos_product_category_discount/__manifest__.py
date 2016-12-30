@@ -20,6 +20,7 @@
     "data": [
         'views/template.xml',
         'views/view.xml',
+        'security/ir.model.access.csv',
     ],
     'qweb': [
         'static/src/xml/DiscountProgram.xml',

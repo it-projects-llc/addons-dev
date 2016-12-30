@@ -22,13 +22,12 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
             var domain = [['discount_program_id', '=', id]];
             model.call('search_read', [domain]).then(function (resultat) {
                 resultat.forEach(function(item){
-                    self.apply_discount_category(item.category_discount_pc, item.discount_category_id[0], item.discount_program_id[1])
+                    self.apply_discount_category(item.category_discount_pc, item.discount_category_id[0], item.discount_program_id[1]);
                 });
             });
         },
         apply_discount_category: function(discount, category_id, discount_program_name) {
             var self = this;
-            var discount_program_name = discount_program_name;
             var order = this.get_order();
             var lines = order.get_orderlines().filter(function (item) { return item.product.pos_categ_id[0] == category_id; });
             lines.forEach(function (item){
@@ -75,7 +74,7 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
             var self = this;
             this._super(parent,options);
             if (this.gui && this.gui.screen_instances.products) {
-                var disc_widget = this.gui.screen_instances.products.action_buttons['discount'];
+                var disc_widget = this.gui.screen_instances.products.action_buttons.discount;
                 disc_widget.apply_discount = function(pc) {
                     var order    = self.pos.get_order();
                     var lines    = order.get_orderlines();
@@ -92,15 +91,22 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
 
                         // Common price without discount for product with a prohibited discount
                         var price_without_discount = 0;
+
                         if (not_discount_product) {
                             not_discount_product.forEach(function(item){
-                                price_without_discount = price_without_discount + item.price;
+                                var price = 0;
+                                if (item.discount) {
+                                    price = (item.price*(100.0 - item.discount)) / 100.0;
+                                } else {
+                                    price = item.price;
+                                }
+                                price_without_discount = price_without_discount + price;
                             });
+
                         }
                         // Discount
                         var discount = - pc / 100.0 * (order.get_total_with_tax() - price_without_discount);
-
-                        if( discount < 0 ){
+                        if( discount < 0 ) {
                             order.add_product(product, { price: discount });
                         }
                     }
@@ -114,14 +120,14 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
                             if (val) {
                                 val = Math.round(Math.max(0, Math.min(100, val)));
                             } else val = null;
-                            self.gui.screen_instances.products.action_buttons['discount'].apply_discount(val);
+                            self.gui.screen_instances.products.action_buttons.discount.apply_discount(val);
                         },
                     });
                 };
             }
-            if (this.gui && this.gui.popup_instances['number']) {
-                var num_widget = this.gui.popup_instances['number'];
-                this.gui.popup_instances['number'].click_confirm = function () {
+            if (this.gui && this.gui.popup_instances.number) {
+                var num_widget = this.gui.popup_instances.number;
+                this.gui.popup_instances.number.click_confirm = function () {
                     self.gui.close_popup();
                     if( num_widget.options.confirm ){
                         if (num_widget.input_disc_program) {
@@ -130,7 +136,7 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
                         num_widget.options.confirm.call(num_widget,num_widget.inputbuffer);
                     }
                 };
-                this.gui.popup_instances['number'].click_numpad = function(event){
+                this.gui.popup_instances.number.click_numpad = function(event){
                     var newbuf = self.gui.numpad_input(
                         num_widget.inputbuffer,
                         $(event.target).data('action'),
@@ -150,10 +156,13 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
 
     models.load_models({
         model: 'pos.discount_program',
-        fields: ['discount_program_name','id'],
+        fields: ['discount_program_name', 'discount_program_number', 'id'],
         loaded: function(self,discount_program){
+            var sorting_discount_program = function(idOne, idTwo){
+                return idOne.discount_program_number - idTwo.discount_program_number;
+            };
             if (discount_program) {
-                self.discount_program = discount_program;
+                self.discount_program = discount_program.sort(sorting_discount_program);
             }
         },
     });
@@ -254,7 +263,7 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
                 var discountline = this.discount_cache.get_node(discount.id);
                 if(!discountline){
                     var discountline_html = QWeb.render('DiscountLine',{widget: this, discount:discounts[i]});
-                    var discountline = document.createElement('tbody');
+                    discountline = document.createElement('tbody');
                     discountline.innerHTML = discountline_html;
                     discountline = discountline.childNodes[1];
                     this.discount_cache.cache_node(discount.id,discountline);
