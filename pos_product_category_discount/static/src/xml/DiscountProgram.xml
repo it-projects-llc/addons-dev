@@ -63,7 +63,7 @@
 
     <t t-extend="OrderWidget">
         <t t-jquery='.subentry' t-operation="after">
-            <div class='discount'>Discount: <span class="value">0.00€</span></div>
+            <div class='discount'>Discounts: <span class="value">0.00€</span></div>
         </t>
     </t>
 
