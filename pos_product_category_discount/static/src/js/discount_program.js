@@ -55,6 +55,19 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
         },
     });
 
+    var OrderSuper = models.Order;
+    models.Order = models.Order.extend({
+        export_as_JSON: function(){
+            var json = OrderSuper.prototype.export_as_JSON.call(this);
+            json.product_discount = this.product_discount || false;
+            return json;
+        },
+        init_from_JSON: function(json) {
+            OrderSuper.prototype.init_from_JSON.apply(this,arguments);
+            this.product_discount = json.product_discount || false;
+        },
+    });
+
     screens.OrderWidget.include({
         set_value: function(val) {
             var self = this;
@@ -66,7 +79,25 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
                 }
             }
             this._super(val);
-        }
+        },
+        update_summary: function(){
+            this._super();
+            var order = this.pos.get_order();
+            var discount     = order ? order.get_total_discount() : 0;
+            if (this.el.querySelector('.summary .total .discount .value')) {
+                if (order.product_discount) {
+                    discount = discount - order.product_discount;
+                }
+                this.el.querySelector('.summary .total .discount .value').textContent = this.format_currency(discount);
+            }
+        },
+        remove_orderline: function(order_line){
+            this._super(order_line);
+            if (order_line.product.id == this.pos.config.discount_product_id[0]) {
+                var order = this.pos.get_order();
+                order.product_discount = false;
+            }
+        },
     });
 
     PosBaseWidget.include({
@@ -79,12 +110,16 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
                     var order    = self.pos.get_order();
                     var lines    = order.get_orderlines();
                     var product  = self.pos.db.get_product_by_id(self.pos.config.discount_product_id[0]);
+                    if (pc == 0) {
+                        order.product_discount = 0;
+                    }
                     if (pc !== null) {
                         lines.forEach(function (item){
                             if (item.get_product() === product) {
                                 order.remove_orderline(item);
                             }
                         });
+
 
                         // Product with a prohibited discount
                         var not_discount_product = order.get_orderlines().filter(function (item) {return item.product.discount_allowed === false;});
@@ -106,6 +141,7 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
                         }
                         // Discount
                         var discount = - pc / 100.0 * (order.get_total_with_tax() - price_without_discount);
+                        order.product_discount = discount;
                         if( discount < 0 ) {
                             order.add_product(product, { price: discount });
                         }

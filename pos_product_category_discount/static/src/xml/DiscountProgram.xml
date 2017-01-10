@@ -60,6 +60,13 @@
         </t>
     </t>
 
+
+    <t t-extend="OrderWidget">
+        <t t-jquery='.subentry' t-operation="after">
+            <div class='discount'>Discount: <span class="value">0.00€</span></div>
+        </t>
+    </t>
+
     <t t-name="DiscountLine">
         <tr class='discount-line' t-att-data-id='discount.id'>
             <td><t t-esc='discount.discount_program_name' /></td>

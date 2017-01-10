@@ -173,3 +173,8 @@
 .pos .discountlist-screen .searchbox input{
     width: 120px;
 }
+.pos .order .summary .line .discount{
+    font-size: 16px;
+    font-weight: normal;
+    text-align: center;
+}
