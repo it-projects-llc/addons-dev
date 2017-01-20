@@ -51,6 +51,9 @@ odoo.define('pos_cancel_order.cancel_order', function (require) {
     screens.define_action_button({
         'name': 'order_cancel',
         'widget': OrderCancelButton,
+        'condition': function() {
+            return this.pos.printers.length;
+        },
     });
 
     var _super_order = models.Order.prototype;
