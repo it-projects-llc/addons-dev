@@ -110,7 +110,7 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
                     var order    = self.pos.get_order();
                     var lines    = order.get_orderlines();
                     var product  = self.pos.db.get_product_by_id(self.pos.config.discount_product_id[0]);
-                    if (pc == 0) {
+                    if (pc === 0) {
                         order.product_discount = 0;
                     }
                     if (pc !== null) {
@@ -185,7 +185,7 @@ odoo.define('pos_product_category_discount.discount_program', function (require)
                         num_widget.$('.value').text(this.inputbuffer);
                     }
                     num_widget.input_disc_program = false;
-                }
+                };
             }
         },
     });

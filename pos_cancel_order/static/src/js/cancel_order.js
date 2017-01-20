@@ -23,7 +23,7 @@ odoo.define('pos_cancel_order.cancel_order', function (require) {
                         order.printChanges();
                         order.saveChanges();
                     }
-                }
+                };
             }
         }
     });
@@ -37,7 +37,7 @@ odoo.define('pos_cancel_order.cancel_order', function (require) {
             lines = lines.filter(function(line){
                 return line.mp_dirty === false;
             });
-            if (!lines.length > 0) {
+            if (lines.length === 0) {
                 order.сancel_button_available = false;
             }
             if (order.сancel_button_available) {
@@ -119,11 +119,11 @@ odoo.define('pos_cancel_order.cancel_order', function (require) {
             unique_categories_ids.forEach(function(id){
                 lines.forEach(function(line){
                     if (line.product.pos_categ_id[0] === id) {
-                        new_lines.push(line)
+                        new_lines.push(line);
                     }
                 });
             });
-            if (!new_lines.length > 0) {
+            if (new_lines.length === 0) {
                 this.сancel_button_available = false;
             } else {
                 this.сancel_button_available = true;
