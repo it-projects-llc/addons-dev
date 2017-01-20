@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="OrderChangeReceipt">
+        <t t-jquery='t[t-foreach="changes.cancelled"]' t-operation="after">
+            <t t-if="changes.reason">
+                <br />
+                <line>
+                    <left>REASON</left>
+                    <right>...</right>
+                </line>
+                <div><span font='b' bold='off' line-ratio='0.4' indent='1' width='30'>--- <t t-esc="changes.reason" /></span></div>
+                <line></line>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="OrderCancelButton">
+        <div class='control-button js_cancel_order'>
+            <i class='fa fa-ban' /> Cancel order
+        </div>
+    </t>
+
+    <t t-name="CancellationReason">
+        <section class='cancellation-reason-details'>
+            <div class='cancellation-reason-details clearfix'>
+                <textarea rows="5"></textarea>
+            </div>
+        </section>
+    </t>
+
+    <t t-name="OrderCancelScreenWidget">
+        <div class="productlist-screen screen">
+            <div class="screen-content">
+                <section class="top-content">
+                    <span class='button back'>
+                        <i class='fa fa-angle-double-left'></i>
+                        Cancel
+                    </span>
+                    <span class='button next oe_hidden highlight'>
+                        Apply
+                        <i class='fa fa-angle-double-right'></i>
+                    </span>
+                </section>
+                <section class="full-content">
+                    <div class='window'>
+                        <section class='subwindow collapsed'>
+                            <div class='subwindow-container collapsed'>
+                                <div class='subwindow-container-fix cancellation-reason-contents'>
+                                </div>
+                            </div>
+                        </section>
+                        <section class='subwindow'>
+                            <div class='subwindow-container'>
+                                <div class='subwindow-container-fix touch-scrollable scrollable-y'>
+                                    <table class='order-product-list'>
+                                        <thead>
+                                            <tr>
+                                                <th>Product name</th>
+                                                <th>Quantity</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class='order-product-list-contents'>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ProductLine">
+        <tr class='product-line' t-att-data-id='line.id'>
+            <td><t t-esc='line.product.display_name' /></td>
+            <td><t t-esc="line.quantityStr" /> </td>
+        </tr>
+    </t>
+
+</templates>
