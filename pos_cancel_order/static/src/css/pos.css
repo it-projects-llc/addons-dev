@@ -38,3 +38,8 @@
     resize: none;
     width: 98%;
 }
+
+.pos .cancellation-reason-details textarea:focus::-webkit-input-placeholder {color: transparent}
+.pos .cancellation-reason-details textarea:focus::-moz-placeholder {color: transparent}
+.pos .cancellation-reason-details textarea:focus:-moz-placeholder {color: transparent}
+.pos .cancellation-reason-details textarea:focus:-ms-input-placeholder {color: transparent}

@@ -24,7 +24,7 @@
     <t t-name="CancellationReason">
         <section class='cancellation-reason-details'>
             <div class='cancellation-reason-details clearfix'>
-                <textarea rows="5"></textarea>
+                <textarea rows="5" placeholder="Reason"></textarea>
             </div>
         </section>
     </t>
