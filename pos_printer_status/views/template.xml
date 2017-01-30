@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="assets_backend" name="pos_printer_status_assets" inherit_id="point_of_sale.assets">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/pos_printer_status/static/src/js/printer_status.js"></script>
+                <link rel="stylesheet" href="/pos_printer_status/static/src/css/pos.css"/>
+            </xpath>
+        </template>
+    </data>
+</openerp>

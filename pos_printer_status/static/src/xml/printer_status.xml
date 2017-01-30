@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="PrinterLine">
+        <t t-if="printer.clicked==true">
+            <tr class='printer-line highlight' t-att-data-id='printer.id'>
+                <td>
+                    <i class='fa fa-list'/> <t t-esc='printer.name'/>
+                    <t t-if="printer.info.length>0">
+                        <table class='printer-set-list'>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class='printer-set-list-contents'>
+                                <t t-foreach="printer.info" t-as="info">
+                                    <tr>
+                                        <td><t t-esc="info.name"/> </td>
+                                        <td><t t-esc="info.status"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </t>
+                </td>
+                <td><t t-esc='printer.status'/></td>
+            </tr>
+        </t>
+
+        <t t-if="!printer.clicked==true">
+            <tr class='printer-line' t-att-data-id='printer.id'>
+                <td><i class='fa fa-list'/> <t t-esc='printer.name'/></td>
+                <td><t t-esc='printer.status'/></td>
+            </tr>
+        </t>
+    </t>
+
+    <t t-name="PrinterStatusButton">
+        <div class='control-button printer_status'>
+            <i class='fa fa-list-alt' />
+        </div>
+    </t>
+
+    <t t-name="PrinterStatusScreenWidget">
+        <div class="printerlist-screen screen">
+            <div class="screen-content">
+                <section class="top-content">
+                    <span class='button back'>
+                        <i class='fa fa-angle-double-left'></i>
+                        Back
+                    </span>
+                </section>
+                <section class="full-content">
+                    <div class='window'>
+                        <section class='subwindow collapsed'>
+                            <div class='subwindow-container collapsed'>
+                                <div class='subwindow-container-fix printer-details-contents'>
+                                </div>
+                            </div>
+                        </section>
+                        <section class='subwindow'>
+                            <div class='subwindow-container'>
+                                <div class='subwindow-container-fix touch-scrollable scrollable-y'>
+                                    <table class='printer-list'>
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class='printer-list-contents'>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </t>
+</templates>

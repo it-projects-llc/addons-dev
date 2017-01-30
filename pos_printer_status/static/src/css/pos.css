@@ -1,0 +1,48 @@
+.pos .control-button.printer_status {
+    min-width: 30px !important;
+    width: 30px;
+}
+
+/*Printer list widget*/
+.pos .printerlist-screen .printer-list{
+    font-size: 16px;
+    width: 100%;
+    line-height: 40px;
+}
+
+.pos .printerlist-screen .printer-list th,
+.pos .printerlist-screen .printer-list td {
+    padding: 0px 8px;
+}
+.pos .printerlist-screen .printer-list tr{
+    transition: all 150ms linear;
+    background: rgb(230,230,230);
+}
+.pos .printerlist-screen .printer-list thead > tr,
+.pos .printerlist-screen .printer-list tr:nth-child(even) {
+    background: rgb(247,247,247);
+}
+.pos .printerlist-screen .printer-list tr.highlight{
+    transition: all 150ms linear;
+    background: rgb(110,200,155) !important;
+    color: white;
+}
+.pos .printerlist-screen .printer-list tr.lowlight{
+    transition: all 150ms linear;
+    background: rgb(216, 238, 227);
+}
+.pos .printerlist-screen .printer-list tr.lowlight:nth-child(even){
+    transition: all 150ms linear;
+    background: rgb(227, 246, 237);
+}
+.printer-set-list{
+    margin-bottom: 10px;
+}
+/*.pos .cancellation-reason-details {*/
+    /*margin: 5px;*/
+    /*text-align: center*/
+/*}*/
+/*.pos .cancellation-reason-details textarea{*/
+    /*resize: none;*/
+    /*width: 98%;*/
+/*}*/
