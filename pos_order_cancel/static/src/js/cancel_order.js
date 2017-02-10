@@ -12,6 +12,15 @@ odoo.define('pos_order_cancel', function (require) {
     var QWeb = core.qweb;
     var _t = core._t;
 
+
+    gui.Gui.include({
+        back: function() {
+            if (this.pos.get_order()){
+                this._super();
+            }
+        }
+    });
+
     models.load_models({
         model: 'pos.cancelled_reason',
         fields: ['name', 'number'],
@@ -57,8 +66,6 @@ odoo.define('pos_order_cancel', function (require) {
             var order = this.pos.get_order();
     	    var order_line = order.get_selected_orderline();
             this.numpad_state.show_popup = true;
-            console.log("line", order_line.was_printed, order_line);
-            // не сохраняет линию а именно статус was_printed после перезагрузки становится не определенным переменным
 
             if (!order_line.was_printed && type === 'product') {
                 this.numpad_state.show_popup = false;
@@ -68,7 +75,7 @@ odoo.define('pos_order_cancel', function (require) {
             if (type === 'product') {
                 title = 'POS ';
             }
-            this.CancellationReasonType = type; // type of object which is removed (product or order)
+            order.CancellationReasonType = type; // type of object which is removed (product or order)
             this.gui.show_popup('confirm-cancellation',{
                 'title': _t(title + 'Product Cancellation Reason'),
                 'reasons': self.pos.cancelled_reason.slice(0,8),
@@ -82,7 +89,6 @@ odoo.define('pos_order_cancel', function (require) {
                     } else {
                         var lines = order.get_orderlines();
                         _.each(lines, function(line) {
-                            console.log('remove line');
                             self.set_value('remove');
                         });
                         order.printChanges();
@@ -136,8 +142,6 @@ odoo.define('pos_order_cancel', function (require) {
         },
         click_confirm: function(){
             this.gui.close_popup();
-            console.log("this.options.confirm",this.options.confirm);
-            console.log(this.inputbuffer);
             if( this.options.confirm ){
                 var order = this.pos.get_order();
                 order.CancellationReason =  this.$('.popup-confirm-cancellation textarea').val();
@@ -155,7 +159,6 @@ odoo.define('pos_order_cancel', function (require) {
         },
         export_as_JSON: function() {
             var data = _super_orderline.export_as_JSON.apply(this, arguments);
-            console.log("export_as_JSON", this.was_printed);
             data.was_printed = this.was_printed;
             return data;
         },
@@ -186,8 +189,6 @@ odoo.define('pos_order_cancel', function (require) {
             lines.forEach(function(line){
                 line.was_printed = true;
             });
-
-            console.log("CancellationReason", this.CancellationReason);
         },
         get_printed_order_lines: function(mp_dirty_status) {
             var lines = this.get_orderlines();
@@ -292,26 +293,23 @@ odoo.define('pos_order_cancel', function (require) {
         save_changes: function(){
             var self = this;
             var order = this.pos.get_order();
-            var type = 'product'
+            var type = order.CancellationReasonType;
             order.CancellationReason = $('.reason-line#'+this.old_id).text();
+
             if (type === 'product') {
-                self.set_value('remove');
+                self.gui.screen_instances.products.order_widget.set_value('remove');
                 order.was_removed_product = true;
                 order.printChanges();
                 order.saveChanges();
             } else {
                 var lines = order.get_orderlines();
                 _.each(lines, function(line) {
-                    console.log('remove line');
-                    // self.set_value('remove');
+                    self.gui.screen_instances.products.order_widget.set_value('remove');
                 });
                 order.printChanges();
                 order.saveChanges();
                 self.pos.delete_current_order();
             }
-
-        //    данная функция еще не готова 
-
         },
         toggle_save_button: function(){
             var $button = this.$('.button.next');
