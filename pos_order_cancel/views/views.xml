@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<openerp>
+    <record id="pos_cancelled_reason_form_view" model="ir.ui.view">
+        <field name="name">pos.cancelled_reason.form</field>
+        <field name="model">pos.cancelled_reason</field>
+        <field name="arch" type="xml">
+            <form string="POS Product Cancellation Reason">
+                <sheet>
+                    <group>
+                        <field name="number"/>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="pos_cancelled_reason_tree_view" model="ir.ui.view">
+        <field name="name">pos.cancelled_reason.tree</field>
+        <field name="model">pos.cancelled_reason</field>
+        <field name="arch" type="xml">
+            <tree string="Pos Product Cancellation Reason">
+                <field name="number"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="pos_cancelled_reason_action" model="ir.actions.act_window">
+        <field name="name">POS Product Cancellation Reason</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pos.cancelled_reason</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" eval="False"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to define a new cancellation reason.
+            </p>
+        </field>
+    </record>
+    <menuitem id="menu_pos_cancelled_reason" action="pos_cancelled_reason_action" parent="point_of_sale.menu_point_config_product" sequence="25" />
+</openerp>
