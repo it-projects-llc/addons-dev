@@ -85,11 +85,11 @@ odoo.define('pos_cancel_order.order_note', function (require) {
                             name: "Order Note",
                             qty: 1,
                         })
+                        res.old_order_note = old_order_note;
                     }
                 }
             }
             res.order_note = current_order_note;
-            res.old_order_note = old_order_note;
             return res
         },
     });
