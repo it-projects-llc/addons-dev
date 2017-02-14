@@ -86,6 +86,7 @@ odoo.define('pos_order_cancel', function (require) {
                         order.was_removed_product = true;
                         order.printChanges();
                         order.saveChanges();
+                        order.CancellationReason = '';
                     } else {
                         var lines = order.get_orderlines();
                         _.each(lines, function(line) {
