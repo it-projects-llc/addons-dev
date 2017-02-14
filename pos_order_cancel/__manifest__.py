@@ -5,8 +5,10 @@
     "category": "Point of Sale",
     "images": [],
     "version": "1.0.0",
+    "application": False,
 
     "author": "IT-Projects LLC, Dinar Gabbasov",
+    "support": "apps@it-projects.info",
     "website": "https://twitter.com/gabbasov_dinar",
     "license": "LGPL-3",
     # "price": 0.00,
@@ -24,6 +26,11 @@
         'static/src/xml/cancel_order.xml',
     ],
     "demo": [],
-    "installable": True,
+
+    "post_load": None,
+    "pre_init_hook": None,
+    "post_init_hook": None,
+
     "auto_install": False,
+    "installable": True,
 }
