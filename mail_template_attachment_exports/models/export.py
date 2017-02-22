@@ -13,6 +13,7 @@ class Export(models.AbstractModel):
     * http.Controller replaced with models.AbstractModel
     * request replaced with self
     * @http.route are removed
+    * lint warnings are fixed
     """
     _name = 'mail_template_attachment_exports.abstract_export'
 
@@ -32,7 +33,7 @@ class Export(models.AbstractModel):
         fields = Model.fields_get()
         return fields
 
-    def get_fields(self, model, prefix='', parent_name= '',
+    def get_fields(self, model, prefix='', parent_name='',
                    import_compat=True, parent_field_type=None,
                    exclude=None):
 
@@ -46,7 +47,8 @@ class Export(models.AbstractModel):
         else:
             fields['.id'] = fields.pop('id', {'string': 'ID'})
 
-        fields_sequence = sorted(fields.iteritems(),
+        fields_sequence = sorted(
+            fields.iteritems(),
             key=lambda field: odoo.tools.ustr(field[1].get('string', '')))
 
         records = []
