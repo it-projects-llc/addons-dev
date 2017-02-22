@@ -27,8 +27,8 @@ Configure Email Template
 
 * `Enable technical features <https://odoo-development.readthedocs.io/en/latest/odoo/usage/technical-features.html>`__
 * Open menu ``Settings >> Technical >> Email >> Templates``
-* Open or create new Record
-* Pay attention on **Applies to** field. You will need it on sending. If you create new Record, set it to ``Partner``, for example.
+* Open or create new Template
+* Pay attention on **Applies to** field. You will need it on sending. If you create new Template, set it to ``Partner``, for example.
 * At ``Advanced Settings`` tab specify at ``Export data`` section:
 
   * **Model**, e.g. ``Partner``
@@ -36,7 +36,7 @@ Configure Email Template
   * **Fields** - one you created previously, e.g. ``Latest connection``
   * **Export Format** - ``CSV`` or ``Excel``
 
-* After saving\creating Record pay attention on Record id (it can be found in page url). Record id may be needed for sending email.
+* After saving\creating Template pay attention on Template ID (it can be found in page url). Template ID may be needed for sending email.
 
 Sending email
 -------------
@@ -64,9 +64,9 @@ Option 2. Periodic email sending.
 
 * On ``Technical data`` tab set
 
-  * **Object** is TODO
-  * **Method** is TODO
-  * **Arguments** is ``(ID,)``
+  * **Object** is ``mail.template``
+  * **Method** is ``send_mail_cron``
+  * **Arguments** is ``(TEMPLATE_ID,RES_ID)`` where *RES_ID* is ID of record on which Template *is applied*. Example of a value: ``(8,6)``, where 8 is Template ID, and 6 is Customer ID
 
 * Click ``[Save]``
 

@@ -3,7 +3,7 @@ import base64
 import operator
 
 from odoo import models, fields as odoo_fields, api
-from odoo.addons.web.controllers.main import CSVExport, ExcelExport, Export
+from odoo.addons.web.controllers.main import CSVExport, ExcelExport
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -19,13 +19,19 @@ class MailTemplate(models.Model):
             ('csv', 'CSV'),
             ('xls', 'Excel'),
         ], string='Format',
-        default='xsl',
+        default='xls',
         required=True,
         help='format of exporting file')
     export_import_compat = odoo_fields.Boolean(
         'Import-Compatible Export',
         default=True,
     )
+
+    @api.model
+    def send_mail_cron(self, template_id, *args):
+        """Wrapping for send_mail to call in cron,
+        because cron can call @api.model only"""
+        return self.browse(template_id).send_mail(*args)
 
     @api.multi
     def generate_email(self, res_ids, fields=None):
@@ -55,7 +61,8 @@ class MailTemplate(models.Model):
         records = Model.search(domain)
 
         # We ignore fields value in method args. Shall we change it?
-        fields = Export().namelist(model, template.export_fields_id.id)
+        fields = self.env['mail_template_attachment_exports.abstract_export']\
+                     .namelist(model, template.export_fields_id.id)
 
         field_names = map(operator.itemgetter('name'), fields)
         import_data = records.export_data(field_names, cls.raw_data).get('datas', [])
