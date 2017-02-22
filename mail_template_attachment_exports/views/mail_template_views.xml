@@ -14,7 +14,9 @@
                            invisible="1"
                            />
                     <field name="export_fields_id"
-                           attrs="{'invisible': [('export_model_id', '=', False)]}"
+                           attrs="{'invisible': [('export_model_id', '=', False)],
+                                  'required': [('export_model_id', '!=', False)]}"
+                           domain="[('resource', '=', export_model)]"
                            />
                     <field name="export_domain"
                            widget="char_domain"
@@ -22,6 +24,9 @@
                            attrs="{'invisible': [('export_model_id', '=', False)]}"
                            />
                     <field name="export_format"
+                           attrs="{'invisible': [('export_model_id', '=', False)]}"
+                           />
+                    <field name="export_import_compat"
                            attrs="{'invisible': [('export_model_id', '=', False)]}"
                            />
                 </group>
