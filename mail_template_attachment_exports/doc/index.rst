@@ -29,7 +29,7 @@ Configure Email Template
 * Open menu ``Settings >> Technical >> Email >> Templates``
 * Open or create new Record
 * Pay attention on **Applies to** field. You will need it on sending. If you create new Record, set it to ``Partner``, for example.
-* At ``Advanced Settings`` tab specify at ``Exporting Section``:
+* At ``Advanced Settings`` tab specify at ``Export data`` section:
 
   * **Model**, e.g. ``Partner``
   * **Domain**, e.g. ``Phone is Set``

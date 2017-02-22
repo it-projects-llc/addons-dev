@@ -19,6 +19,7 @@
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
+        "views/mail_template_views.xml",
     ],
     "qweb": [
     ],
