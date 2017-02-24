@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="email_template_form">
+        <field name="name">email.template.form</field>
+        <field name="model">mail.template</field>
+        <field name="inherit_id" ref="mail.email_template_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='report_name']/.." position="after">
+                <group string="Export data">
+                    <field name="export_model_id"
+                           class="oe_inline"
+                           />
+                    <field name="export_model"
+                           invisible="1"
+                           />
+                    <field name="export_fields_id"
+                           attrs="{'invisible': [('export_model_id', '=', False)],
+                                  'required': [('export_model_id', '!=', False)]}"
+                           domain="[('resource', '=', export_model)]"
+                           />
+                    <field name="export_domain"
+                           widget="char_domain"
+                           options="{'model_field': 'export_model'}"
+                           attrs="{'invisible': [('export_model_id', '=', False)]}"
+                           />
+                    <field name="export_format"
+                           attrs="{'invisible': [('export_model_id', '=', False)]}"
+                           />
+                    <field name="export_import_compat"
+                           attrs="{'invisible': [('export_model_id', '=', False)]}"
+                           />
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
