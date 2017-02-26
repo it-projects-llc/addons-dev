@@ -17,8 +17,8 @@
                 <button string="Cancel" type="object" name="cancel" class="oe_link"/>
             </header>
             <group string="Credentials">
-                <field name="login"/>
-                <field name="password" password="True"/>
+                <field name="apps_login"/>
+                <field name="apps_password" password="True"/>
             </group>
         </form>
     </field>
