@@ -14,7 +14,6 @@
                 <field name="reviewer_id"/>
                 <field name="user_id"/>
                 <field name="state"/>
-               <!-- <field name="done"/> -->
               </tree>
             </field>
           </page>
@@ -30,7 +29,6 @@
           <sheet>
             <group>
               <field name="name"/>
-              <!-- <field name="done"/> -->
               <field name="state"/>
               <div class="oe_chatter">
                 <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>

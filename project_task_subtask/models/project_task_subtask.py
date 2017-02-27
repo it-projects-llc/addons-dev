@@ -38,24 +38,6 @@ class ProjectTaskSubtask(models.Model):
                 composer.send_mail()
         return result
 
-    # @api.model
-    # def create(self, vals):
-    #     try:
-    #         result = super(ProjectTaskSubtask, self).create(vals)
-    #     except:
-    #         raise
-    #     else:
-    #         template = self.env.ref('project_task_subtask.email_template_subtask_create')
-    #         email_ctx = {
-    #             'default_model': 'project.task.subtask',
-    #             'default_res_id': result.id,
-    #             'default_use_template': bool(template),
-    #             'default_template_id': template.id,
-    #             }
-    #         composer = self.env['mail.compose.message'].with_context(email_ctx).create({})
-    #         composer.send_mail()
-    #         return result
-
 
 class Task(models.Model):
     _inherit = "project.task"
