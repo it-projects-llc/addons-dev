@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+  <data>
+    <!--                      email.template                       -->
+    <record id="email_template_subtask_changed" model="email.template">
+      <field name="name">Subtask is changed</field>
+      <field name="email_from">${object.user_id.id}</field>
+      <field name="subject">Subtask</field>
+      <field name="email_to">${object.reviewer_id.id}</field>
+      <field name="model_id" ref="project_task_subtask.model_project_task_subtask"/>
+      <field name="body_html"><![CDATA[
+      <p>
+      Subtask <strong>${object.name}</strong> state is changed to <strong>${object.state}</strong>.
+      </p>
+      ]]></field>
+    </record>
+
+    <!-- <record id="email_template_subtask_create" model="email.template"> -->
+    <!--   <field name="name">Subtask is created</field> -->
+    <!--   <field name="email_from">${object.reviewer_id.id}</field> -->
+    <!--   <field name="subject">Subtask</field> -->
+    <!--   <field name="email_to">${object.user_id.id}</field> -->
+    <!--   <field name="model_id" ref="project_task_subtask.model_project_task_subtask"/> -->
+    <!--   <field name="body_html"><![CDATA[ -->
+    <!--     <p>Subtask <strong>${object.name}</strong> is created</p> -->
+    <!--   ]]></field> -->
+    <!-- </record> -->
+    <record id="email_template_subtask_create" model="email.template">
+      <field name="name">Subtask is created</field>
+      <field name="email_from">${object.reviewer_id.id}</field>
+      <field name="subject">Subtask</field>
+      <field name="email_to">${object.user_id.id}</field>
+      <field name="model_id" ref="project_task_subtask.model_project_task"/>
+      <field name="body_html"><![CDATA[
+      <p>Subtask <strong>${ctx['subtask']}</strong> is created</p>
+      ]]></field>
+    </record>
+  </data>
+</openerp>

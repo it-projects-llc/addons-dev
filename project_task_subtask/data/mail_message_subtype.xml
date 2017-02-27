@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <record id="mt_subtask_done" model="mail.message.subtype">
+      <field name="name">Subtask done</field>
+      <field name="res_model">project.task.subtask</field>
+      <field name="default" eval="True"/>
+      <field name="description">Subtask done</field>
+    </record>
+
+    <record id="mt_task_subtask_done" model="mail.message.subtype">
+      <field name="name">Task Subtask done</field>
+      <field name="res_model">project.task</field>
+      <field name="parent_id" eval="ref('mt_subtask_done')"/>
+      <field name="relation_field">task_id</field>
+      <field name="description">Task subtask done</field>
+    </record>
+  </data>
+</openerp>
