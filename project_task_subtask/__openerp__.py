@@ -26,7 +26,6 @@
     'data': [
         'security/ir.model.access.csv',
         'views/project_task_subtask.xml',
-        'data/mail_message_subtype.xml',
         'data/email_template.xml',
         'security/project_security.xml'
     ],
