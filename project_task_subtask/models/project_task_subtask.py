@@ -10,17 +10,11 @@ class ProjectTaskSubtask(models.Model):
                               ('todo', 'Todo'),
                               ('cancelled', 'Cancelled')],
                              'Status', required=True, copy=False, default='todo')
-    done = fields.Boolean(track_visibility="onchange")
     name = fields.Char(required=True)
     reviewer_id = fields.Many2one('res.users', 'Reviewer', select=True, required=True)
     project_id = fields.Many2one("project.project", related='task_id.project_id', store=True)
     user_id = fields.Many2one('res.users', 'Assigned to', select=True, required=True)
     task_id = fields.Many2one('project.task', 'Task', ondelete='cascade', required=True, select="1")
-    _track = {
-        'done': {
-            'subtask_project.mt_subtask_done': lambda self, cr, uid, obj, ctx=None: obj.done==True,
-        }
-    }
 
     @api.multi
     def write(self, vals):
