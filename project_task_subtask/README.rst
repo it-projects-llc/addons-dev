@@ -1,8 +1,20 @@
-====================
-Project task subtask
-====================
+=============================
+Tasks implementation planning
+=============================
 
-Use subtasks to control your projects - devide laborious tasks into subtasks and control their states by email notifications
+Use subtasks to control your tasks - devide laborious tasks into subtasks and control their states by email notifications
+
+* added new tab "Subtasks" at task's form
+* when new subtask is created\changed message is sent to user that assigned to this subtask
+* delete subtask can only user who create it
+* Each subtask has button to swith state:
+ * DONE
+ * TODO
+ * CANCELED
+
+* added new menu "Subtasks"
+ * default filter: "My", "TODO"
+ * optional group by: "Project", "Task"
 
 Credits
 =======
@@ -22,9 +34,9 @@ Maintainers
 Further information
 ===================
 
-Demo: http://runbot.it-projects.info/demo/REPO-NAME/BRANCH
+Demo: http://runbot.it-projects.info/demo/misc-addons/8.0
 
-HTML Description: https://apps.odoo.com/apps/modules/VERSION/TECHNICAL_NAME/
+HTML Description: https://apps.odoo.com/apps/modules/8.0/project_task_subtask/
 
 Usage instructions: `<doc/index.rst>`_
 

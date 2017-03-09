@@ -1,35 +1,36 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Project task subtask",
+    "name": """Tasks implementation planning""",
+    "summary": """Use subtasks to control your tasks""",
+    "category": """Project Management""",
+    "images": [],
+    "version": "1.0.0",
+    "application": False,
 
-    'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+    "author": "IT-Projects LLC, Manaev Rafael",
+    "support": "apps@it-projects.info",
+    "website": "https://it-projects.info",
+    "license": "GPL-3",
+    # "price": 9.00,
+    # "currency": "EUR",
 
-    'description': """
-        Long description of module's purpose
-    """,
-
-    'author': "Your Company",
-    'website': "http://www.yourcompany.com",
-
-    # Categories can be used to filter modules in modules listing
-    # Check https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml
-    # for the full list
-    'category': 'Uncategorized',
-    'version': '0.1',
-
-    # any module necessary for this one to work correctly
-    'depends': ['base', 'project'],
-
-    # always loaded
-    'data': [
+    "depends": ['base', 'project', 'web_one2many_kanban'],
+    "external_dependencies": {"python": [], "bin": []},
+    "data": [
         'security/ir.model.access.csv',
         'views/project_task_subtask.xml',
         'data/email_template.xml',
         'security/project_security.xml'
     ],
-    # only loaded in demonstration mode
-    'demo': [
+    "qweb": [
     ],
+    "demo": [
+    ],
+
+    "post_load": None,
+    "pre_init_hook": None,
+    "post_init_hook": None,
+
+    "auto_install": False,
+    "installable": True,
 }

@@ -6,7 +6,7 @@
       <field name="model">project.task</field>
       <field name="inherit_id" ref="project.view_task_form2"/>
       <field name="arch" type="xml">
-        <xpath expr = "//page[last()]" position = "after">
+        <xpath expr = "//page[1]" position = "before">
           <page string = "Subtasks">
             <field name="subtask_ids">
               <tree string="Task Work" editable="top">
@@ -21,6 +21,38 @@
       </field>
     </record>
 
+    <record id="view_task_kanban_subtasks" model="ir.ui.view">
+      <field name="name">project.task.kanban.subtasks</field>
+      <field name="model">project.task</field>
+      <field name="inherit_id" ref="project.view_task_kanban"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name ='categ_ids']" position="after">
+          <field name="subtask_ids"/>
+          <field name="cur_user_id"/>
+        </xpath>
+        <xpath expr="//span[@title ='Remaining hours']/.." position="after">
+          <div>
+            <t t-esc= "cur_user_id"/>
+            <div><field name="cur_user_id"/></div>
+            <t t-foreach="record.subtask_ids.raw_value" t-as="subtask">
+              <t t-if="state == 'todo'">
+                <t t-if="uid == subtask.user_id.id">
+                  <p>From <t t-esc="subtask.reviewer_id"/>: <t t-esc="subtask.name"/></p>
+                </t>
+              </t>
+            </t>
+            <t t-foreach="record.subtask_ids.raw_value" t-as="subtask">
+              <t t-if="state == 'todo'">
+                <t t-if="uid == subtask.reviewer_id.id">
+                  <p>To <t t-esc="subtask.user_id"/>: <t t-esc="subtask.name"/></p>
+                </t>
+              </t>
+            </t>
+          </div>
+        </xpath>
+      </field>
+    </record>
+
     <record model="ir.ui.view" id="view_id">
       <field name="name">project.task.subtask</field>
       <field name="model">project.task.subtask</field>
@@ -30,10 +62,6 @@
             <group>
               <field name="name"/>
               <field name="state"/>
-              <div class="oe_chatter">
-                <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                <field name="message_ids" widget="mail_thread"/>
-              </div>
             </group>
           </sheet>
         </form>
