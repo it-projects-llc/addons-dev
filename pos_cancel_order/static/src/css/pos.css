@@ -1,0 +1,45 @@
+/*Product Line widget*/
+.pos .productlist-screen .order-product-list{
+    font-size: 16px;
+    width: 100%;
+    line-height: 40px;
+}
+
+.pos .productlist-screen .order-product-list th,
+.pos .productlist-screen .order-product-list td {
+    padding: 0px 8px;
+}
+.pos .productlist-screen .order-product-list tr{
+    transition: all 150ms linear;
+    background: rgb(230,230,230);
+}
+.pos .productlist-screen .order-product-list thead > tr,
+.pos .productlist-screen .order-product-list tr:nth-child(even) {
+    background: rgb(247,247,247);
+}
+.pos .productlist-screen .order-product-list tr.highlight{
+    transition: all 150ms linear;
+    background: rgb(110,200,155) !important;
+    color: white;
+}
+.pos .productlist-screen .order-product-list tr.lowlight{
+    transition: all 150ms linear;
+    background: rgb(216, 238, 227);
+}
+.pos .productlist-screen .order-product-list tr.lowlight:nth-child(even){
+    transition: all 150ms linear;
+    background: rgb(227, 246, 237);
+}
+.pos .cancellation-reason-details {
+    margin: 5px;
+    text-align: center
+}
+.pos .cancellation-reason-details textarea{
+    resize: none;
+    width: 98%;
+}
+
+.pos .cancellation-reason-details textarea:focus::-webkit-input-placeholder {color: transparent}
+.pos .cancellation-reason-details textarea:focus::-moz-placeholder {color: transparent}
+.pos .cancellation-reason-details textarea:focus:-moz-placeholder {color: transparent}
+.pos .cancellation-reason-details textarea:focus:-ms-input-placeholder {color: transparent}
