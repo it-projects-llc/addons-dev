@@ -28,7 +28,12 @@ class ProjectTaskSubtask(models.Model):
 class Task(models.Model):
     _inherit = "project.task"
     subtask_ids = fields.One2many('project.task.subtask', 'task_id', 'Subtask')
-    cur_user_id = fields.Many2one('res.users', compute=lambda r: r.env.user.name)
+    cur_user_id = fields.Many2one('res.users', compute='_compute_current_user')
+
+    @api.multi
+    def _compute_current_user(self):
+        for record in self:
+            record.cur_user_id = record.env.user
 
     @api.multi
     def send_subtask_email(self, subtask_name, subtask_state):

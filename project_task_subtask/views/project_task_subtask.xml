@@ -32,19 +32,17 @@
         </xpath>
         <xpath expr="//span[@title ='Remaining hours']/.." position="after">
           <div>
-            <t t-esc= "cur_user_id"/>
-            <div><field name="cur_user_id"/></div>
             <t t-foreach="record.subtask_ids.raw_value" t-as="subtask">
               <t t-if="state == 'todo'">
-                <t t-if="uid == subtask.user_id.id">
-                  <p>From <t t-esc="subtask.reviewer_id"/>: <t t-esc="subtask.name"/></p>
+                <t t-if="record.cur_user_id.raw_value[0] == subtask.user_id[0]">
+                  <p>From <t t-esc="subtask.reviewer_id[1]"/>: <t t-esc="subtask.name"/></p>
                 </t>
               </t>
             </t>
             <t t-foreach="record.subtask_ids.raw_value" t-as="subtask">
               <t t-if="state == 'todo'">
-                <t t-if="uid == subtask.reviewer_id.id">
-                  <p>To <t t-esc="subtask.user_id"/>: <t t-esc="subtask.name"/></p>
+                <t t-if="record.cur_user_id.raw_value[0] == subtask.reviewer_id[0]">
+                  <p>To <t t-esc="subtask.user_id[1]"/>: <t t-esc="subtask.name"/></p>
                 </t>
               </t>
             </t>
