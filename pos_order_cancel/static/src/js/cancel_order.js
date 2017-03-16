@@ -9,6 +9,7 @@ odoo.define('pos_order_cancel', function (require) {
     var multiprint = require('pos_restaurant.multiprint');
     var PopupWidget = require('point_of_sale.popups');
     var PosBaseWidget = require('point_of_sale.BaseWidget');
+    var Model = require('web.DataModel');
     var QWeb = core.qweb;
     var _t = core._t;
 
@@ -88,13 +89,7 @@ odoo.define('pos_order_cancel', function (require) {
                         order.saveChanges();
                         order.CancellationReason = '';
                     } else {
-                        var lines = order.get_orderlines();
-                        _.each(lines, function(line) {
-                            self.set_value('remove');
-                        });
-                        order.printChanges();
-                        order.saveChanges();
-                        self.pos.delete_current_order();
+                        order.save_cancellation_order_to_server();
                     }
                 },
             });
@@ -241,8 +236,25 @@ odoo.define('pos_order_cancel', function (require) {
             }
             return res;
         },
-        cancellation_order: function() {
+        save_cancellation_order_to_server: function() {
+            var self = this;
+            var order_id = this.pos.db.add_order(this.export_as_JSON());
+            var order_obj = this.pos.db.get_order(order_id);
+            order_obj.data.CancellationReason = this.CancellationReason;
+            order_obj.to_invoice = false;
 
+            order_obj.data.is_cancelled = true;
+            new Model("pos.order").call('create_from_ui', [[order_obj]]).then(function (resultat) {
+                if (resultat) {
+                    var lines = self.get_orderlines();
+                    _.each(lines, function(line) {
+                        self.pos.gui.screen_instances.products.order_widget.set_value('remove');
+                    });
+                    self.printChanges();
+                    self.saveChanges();
+                    self.pos.delete_current_order();
+                }
+            });
         },
     });
 
@@ -295,21 +307,14 @@ odoo.define('pos_order_cancel', function (require) {
             var self = this;
             var order = this.pos.get_order();
             var type = order.CancellationReasonType;
-            order.CancellationReason = $('.reason-line#'+this.old_id).text();
-
+            order.CancellationReason = $('.reason-line#'+this.old_id + ' td').text();
             if (type === 'product') {
                 self.gui.screen_instances.products.order_widget.set_value('remove');
                 order.was_removed_product = true;
                 order.printChanges();
                 order.saveChanges();
             } else {
-                var lines = order.get_orderlines();
-                _.each(lines, function(line) {
-                    self.gui.screen_instances.products.order_widget.set_value('remove');
-                });
-                order.printChanges();
-                order.saveChanges();
-                self.pos.delete_current_order();
+                order.save_cancellation_order_to_server();
             }
         },
         toggle_save_button: function(){
