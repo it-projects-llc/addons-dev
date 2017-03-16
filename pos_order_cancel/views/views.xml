@@ -56,6 +56,9 @@
             <xpath expr="//field[@name='state']" position="after">
                 <field name="computed_state" widget="statusbar" statusbar_visible="draft,paid,done"/>
             </xpath>
+            <xpath expr="//button[@name='refund']" position="replace">
+                <button name="refund" string="Return Products" type="object" attrs="{'invisible':['|',('computed_state','=','draft'),('computed_state','=','cancel')]}"/>
+            </xpath>
             <xpath expr="//field[@name='state']" position="attributes">
                 <attribute name="invisible">True</attribute>
             </xpath>
