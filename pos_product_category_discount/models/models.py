@@ -13,8 +13,9 @@ class PosDiscountProgram(models.Model):
     _name = "pos.discount_program"
     _description = "Discount Program"
     _rec_name = "discount_program_name"
-    discount_program_name = fields.Char(string="Project name")
+    discount_program_name = fields.Char(string="Project name", required=True)
     discount_program_number = fields.Integer(string="Number")
+    discount_program_active = fields.Boolean(string="Active", default=True, help="Activate or deactivate the discount program in POS")
     discount_category_ids = fields.One2many("pos.category_discount", "discount_program_id", string='Discount Category')
 
 
