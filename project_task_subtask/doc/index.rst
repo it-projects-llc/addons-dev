@@ -5,7 +5,7 @@
 Usage
 =====
 
-How to check that module works:
+Example of usage: 
 
 * Create user1 and user2: open menu ``Settings >> Users`` click ``[Create]`` in ``Technical Settings`` select "Task's Work on Tasks", in ``Application`` select "Project: user"
 * Login as user1, open ``Project >> Project >> Tasks >> Subtasks`` and create new subtask( Reviewer is user1, Assiigned to user2)
