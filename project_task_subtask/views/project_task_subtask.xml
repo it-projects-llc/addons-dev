@@ -7,7 +7,7 @@
       <field name="inherit_id" ref="project.view_task_form2"/>
       <field name="arch" type="xml">
         <xpath expr = "//page[1]" position = "before">
-          <page string = "Subtasks">
+          <page string="Checklist">
             <field name="subtask_ids">
               <tree string="Task Work" editable="top">
                 <field name="name"/>
