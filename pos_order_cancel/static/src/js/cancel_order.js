@@ -67,7 +67,9 @@ odoo.define('pos_order_cancel', function (require) {
             var order = this.pos.get_order();
     	    var order_line = order.get_selected_orderline();
             this.numpad_state.show_popup = true;
-
+            if (!order_line) {
+                return false;
+            }
             if (!order_line.was_printed && type === 'product') {
                 this.numpad_state.show_popup = false;
                 return false;
