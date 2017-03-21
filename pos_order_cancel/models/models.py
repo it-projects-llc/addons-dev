@@ -30,7 +30,7 @@ class PosOrder(models.Model):
     @api.model
     def _process_order(self, pos_order):
         order = super(PosOrder, self)._process_order(pos_order)
-        if 'is_cancelled' in pos_order and pos_order['is_cancelled'] == True:
+        if 'is_cancelled' in pos_order and pos_order['is_cancelled'] is True:
             order.cancellation_reason = str(pos_order['CancellationReason'].strip(" \t\n"))
             order.is_cancelled = True
         return order
@@ -48,7 +48,7 @@ class PosOrder(models.Model):
         have_to_group_by = session and session.config_id.group_by or False
         rounding_method = session and session.config_id.company_id.tax_calculation_rounding_method
 
-        for order in self.filtered(lambda o: (not o.account_move or order.state == 'paid') and o.is_cancelled == False):
+        for order in self.filtered(lambda o: (not o.account_move or order.state == 'paid') and o.is_cancelled is False):
             current_company = order.sale_journal.company_id
             account_def = IrProperty.get(
                 'property_account_receivable_id', 'res.partner')

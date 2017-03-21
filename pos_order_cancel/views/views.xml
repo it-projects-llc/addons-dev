@@ -45,6 +45,7 @@
         <field name="name">pos.order.form</field>
         <field name="model">pos.order</field>
         <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="priority">100</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='note']" position="replace">
                 <separator string="Notes" colspan="4"/>
