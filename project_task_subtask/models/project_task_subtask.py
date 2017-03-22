@@ -9,8 +9,7 @@ class ProjectTaskSubtask(models.Model):
                               ('todo', 'Todo'),
                               ('cancelled', 'Cancelled')],
                              'Status', required=True, copy=False, default='todo')
-    name = fields.Char(required=True)
-    string = "Description"
+    name = fields.Char(required=True, string="Description")
     reviewer_id = fields.Many2one('res.users', 'Reviewer', select=True, required=True)
     project_id = fields.Many2one("project.project", related='task_id.project_id', store=True)
     user_id = fields.Many2one('res.users', 'Assigned to', select=True, required=True)
@@ -28,12 +27,19 @@ class ProjectTaskSubtask(models.Model):
 class Task(models.Model):
     _inherit = "project.task"
     subtask_ids = fields.One2many('project.task.subtask', 'task_id', 'Subtask')
-    cur_user_id = fields.Many2one('res.users', compute='_compute_current_user')
+    kanban_subtasks = fields.Text(compute='_compute_kanban_subtasks')
 
     @api.multi
-    def _compute_current_user(self):
+    def _compute_kanban_subtasks(self):
         for record in self:
-            record.cur_user_id = record.env.user
+            result_string = ''
+            for subtask in record.subtask_ids:
+                if subtask.state == 'todo' and record.env.user == subtask.user_id:
+                    result_string += 'From ' + subtask.reviewer_id.name + ' : ' + subtask.name + '|'
+            for subtask in record.subtask_ids:
+                if subtask.state == 'todo' and record.env.user == subtask.reviewer_id:
+                    result_string += 'To ' + subtask.user_id.name + ' : ' + subtask.name + '|'
+            record.kanban_subtasks = result_string
 
     @api.multi
     def send_subtask_email(self, subtask_name, subtask_state):

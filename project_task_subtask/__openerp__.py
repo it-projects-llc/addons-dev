@@ -14,7 +14,7 @@
     # "price": 9.00,
     # "currency": "EUR",
 
-    "depends": ['base', 'project', 'web_one2many_kanban'],
+    "depends": ['base', 'project'],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
         'security/ir.model.access.csv',

@@ -28,24 +28,13 @@
       <field name="arch" type="xml">
         <xpath expr="//field[@name ='categ_ids']" position="after">
           <field name="subtask_ids"/>
-          <field name="cur_user_id"/>
+          <field name="kanban_subtasks"/>
         </xpath>
         <xpath expr="//span[@title ='Remaining hours']/.." position="after">
           <div>
-            <t t-foreach="record.subtask_ids.raw_value" t-as="subtask">
-              <t t-if="state == 'todo'">
-                <t t-if="record.cur_user_id.raw_value[0] == subtask.user_id[0]">
-                  <p>From <t t-esc="subtask.reviewer_id[1]"/>: <t t-esc="subtask.name"/></p>
-                </t>
-              </t>
-            </t>
-            <t t-foreach="record.subtask_ids.raw_value" t-as="subtask">
-              <t t-if="state == 'todo'">
-                <t t-if="record.cur_user_id.raw_value[0] == subtask.reviewer_id[0]">
-                  <p>To <t t-esc="subtask.user_id[1]"/>: <t t-esc="subtask.name"/></p>
-                </t>
-              </t>
-            </t>
+           <t t-foreach=" record.kanban_subtasks.raw_value.split('|')" t-as="subtask"> 
+             <p> <t t-esc="subtask"/></p>
+           </t>
           </div>
         </xpath>
       </field>
