@@ -32,7 +32,11 @@ To use this module, you to have a password in ``apps.odoo.com`` database.
       .then(function(o) { console.log(o); });
       });
 
-* Step 4. Go to ``Odoo App Store >> Settings``. Set login and password. Click ``[Apply]``
+* Step 4. At your odoo database:
+
+  * install this module and go to menu ``Odoo App Store >> Settings`` 
+  * set login and password
+  * click ``[Apply]``
 
 Usage
 =====
