@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 {
-    "name": """Product categories discount in POS""",
-    "summary": """Product categories discount in POS""",
+    "name": """POS Discount Programs""",
+    "summary": """Use predefined discount programs for product categories in POS""",
     "category": "Point of Sale",
-    "images": [],
+    "images": ['images/disc_prog.jpg'],
     "version": "1.0.0",
     "application": False,
 
@@ -11,8 +11,8 @@
     "support": "apps@it-projects.info",
     "website": "https://twitter.com/gabbasov_dinar",
     "license": "LGPL-3",
-    # "price": 0.00,
-    # "currency": "EUR",
+    "price": 100.00,
+    "currency": "EUR",
 
     "depends": [
         'point_of_sale',
