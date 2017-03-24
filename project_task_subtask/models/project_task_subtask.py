@@ -35,10 +35,10 @@ class Task(models.Model):
             result_string = ''
             for subtask in record.subtask_ids:
                 if subtask.state == 'todo' and record.env.user == subtask.user_id:
-                    result_string += 'From ' + subtask.reviewer_id.name + ' : ' + subtask.name + '|'
+                    result_string += 'From ' + subtask.reviewer_id.name + ' : ' + subtask.name + '/n'
             for subtask in record.subtask_ids:
                 if subtask.state == 'todo' and record.env.user == subtask.reviewer_id:
-                    result_string += 'To ' + subtask.user_id.name + ' : ' + subtask.name + '|'
+                    result_string += 'To ' + subtask.user_id.name + ' : ' + subtask.name + '/n'
             record.kanban_subtasks = result_string
 
     @api.multi

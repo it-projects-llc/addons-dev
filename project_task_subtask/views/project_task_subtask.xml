@@ -32,8 +32,8 @@
         </xpath>
         <xpath expr="//span[@title ='Remaining hours']/.." position="after">
           <div>
-           <t t-foreach=" record.kanban_subtasks.raw_value.split('|')" t-as="subtask"> 
-             <p> <t t-esc="subtask"/></p>
+           <t t-foreach=" record.kanban_subtasks.raw_value.split('/n')" t-as="subtask"> 
+             <li> <t t-esc="subtask"/></li>
            </t>
           </div>
         </xpath>
