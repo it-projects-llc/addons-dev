@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from openerp import models, fields, api
+import cgi
 
 
 class ProjectTaskSubtask(models.Model):
@@ -35,10 +36,12 @@ class Task(models.Model):
             result_string = ''
             for subtask in record.subtask_ids:
                 if subtask.state == 'todo' and record.env.user == subtask.user_id:
-                    result_string += 'From ' + subtask.reviewer_id.name + ': ' + subtask.name + '/n'
+                    tmp_string1 = 'From {0}: {1}'.format(subtask.reviewer_id.name, subtask.name)
+                    result_string += '<li>{}</li>'.format(cgi.escape(tmp_string1, quote=True))
             for subtask in record.subtask_ids:
                 if subtask.state == 'todo' and record.env.user == subtask.reviewer_id:
-                    result_string += 'To ' + subtask.user_id.name + ': ' + subtask.name + '/n'
+                    tmp_string2 = 'To {0}: {1}'.format(subtask.user_id.name, subtask.name)
+                    result_string += '<li>{}</li>'.format(cgi.escape(tmp_string2, quote=True))
             record.kanban_subtasks = result_string
 
     @api.multi
