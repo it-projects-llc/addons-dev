@@ -12,5 +12,5 @@ class Preview(models.AbstractModel):
     def _compute_type(self):
         for r in self:
             attachment = self.env["ir.attachment"]
-            self.media_type = attachment.search([('res_model', '=', self._name), ('res_field', '=', r._file),
+            r.media_type = attachment.search([('res_model', '=', self._name), ('res_field', '=', r._preview_media_file),
                                                  ('res_id', '=', r.id)]).mimetype

@@ -6,4 +6,4 @@ class ProductImage(models.Model):
     _name = 'product.image'
     _inherit = ['product.image', 'web.preview']
 
-    _file = 'image'
+    _preview_media_file = 'image'
