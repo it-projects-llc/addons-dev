@@ -14,6 +14,9 @@
                 <field name="reviewer_id"/>
                 <field name="user_id"/>
                 <field name="state"/>
+                <button name="change_state_done" type="object" icon="gtk-apply" attrs="{'invisible': [('state', 'in',['done', 'cancelled'])]}" />
+                <button name="change_state_todo" type="object" icon="gtk-new" attrs="{'invisible': [('state', '=', 'todo')]}"/>
+                <button name="change_state_cancelled" type="object" icon="gtk-cancel" attrs="{'invisible': [('state', '=', 'cancelled')]}"/>
               </tree>
             </field>
           </page>

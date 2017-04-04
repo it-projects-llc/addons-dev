@@ -4,17 +4,25 @@ from openerp import models, fields, api
 from openerp.tools import html_escape as escape
 
 
+SUBTASK_STATES = {'done': 'Done',
+                  'todo': 'Todo',
+                  'cancelled': 'Cancelled'}
+
+
 class ProjectTaskSubtask(models.Model):
     _name = "project.task.subtask"
-    state = fields.Selection([('done', 'Done'),
-                              ('todo', 'Todo'),
-                              ('cancelled', 'Cancelled')],
+    state = fields.Selection([(k, v) for k, v in SUBTASK_STATES.items()],
                              'Status', required=True, copy=False, default='todo')
     name = fields.Char(required=True, string="Description")
-    reviewer_id = fields.Many2one('res.users', 'Reviewer', select=True, required=True)
+    reviewer_id = fields.Many2one('res.users', 'Reviewer', compute="_compute_reviewer_id")
     project_id = fields.Many2one("project.project", related='task_id.project_id', store=True)
     user_id = fields.Many2one('res.users', 'Assigned to', select=True, required=True)
     task_id = fields.Many2one('project.task', 'Task', ondelete='cascade', required=True, select="1")
+
+    @api.multi
+    def _compute_reviewer_id(self):
+        for record in self:
+            record.reviewer_id = record.create_uid
 
     @api.multi
     def write(self, vals):
@@ -23,6 +31,21 @@ class ProjectTaskSubtask(models.Model):
             if vals.get('state'):
                 r.task_id.send_subtask_email(r.name, r.state)
         return result
+
+    @api.multi
+    def change_state_done(self):
+        for record in self:
+            record.state = 'done'
+
+    @api.multi
+    def change_state_todo(self):
+        for record in self:
+            record.state = 'todo'
+
+    @api.multi
+    def change_state_cancelled(self):
+        for record in self:
+            record.state = 'cancelled'
 
 
 class Task(models.Model):
@@ -54,7 +77,7 @@ class Task(models.Model):
                 'default_use_template': bool(template),
                 'default_template_id': template.id,
                 'subtask_name': subtask_name,
-                'subtask_state': subtask_state,
+                'subtask_state': SUBTASK_STATES[subtask_state],
             }
             composer = self.env['mail.compose.message'].with_context(email_ctx).create({})
             composer.send_mail()
