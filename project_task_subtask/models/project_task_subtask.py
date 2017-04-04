@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from openerp import models, fields, api
-import cgi
+from openerp.tools import html_escape as escape
 
 
 class ProjectTaskSubtask(models.Model):
@@ -33,16 +33,16 @@ class Task(models.Model):
     @api.multi
     def _compute_kanban_subtasks(self):
         for record in self:
-            result_string = ''
+            result_string = '<ul>'
             for subtask in record.subtask_ids:
                 if subtask.state == 'todo' and record.env.user == subtask.user_id:
                     tmp_string1 = 'From {0}: {1}'.format(subtask.reviewer_id.name, subtask.name)
-                    result_string += '<li>{}</li>'.format(cgi.escape(tmp_string1, quote=True))
+                    result_string += '<li>{}</li>'.format(escape(tmp_string1))
             for subtask in record.subtask_ids:
                 if subtask.state == 'todo' and record.env.user == subtask.reviewer_id:
                     tmp_string2 = 'To {0}: {1}'.format(subtask.user_id.name, subtask.name)
-                    result_string += '<li>{}</li>'.format(cgi.escape(tmp_string2, quote=True))
-            record.kanban_subtasks = result_string
+                    result_string += '<li>{}</li>'.format(escape(tmp_string2))
+            record.kanban_subtasks = result_string + '</ul>'
 
     @api.multi
     def send_subtask_email(self, subtask_name, subtask_state):
