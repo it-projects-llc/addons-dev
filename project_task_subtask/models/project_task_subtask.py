@@ -14,7 +14,7 @@ class ProjectTaskSubtask(models.Model):
     state = fields.Selection([(k, v) for k, v in SUBTASK_STATES.items()],
                              'Status', required=True, copy=False, default='todo')
     name = fields.Char(required=True, string="Description")
-    reviewer_id = fields.Many2one('res.users', 'Reviewer', compute="_compute_reviewer_id")
+    reviewer_id = fields.Many2one('res.users', 'Reviewer', readonly=True, default=lambda self: self.env.user)
     project_id = fields.Many2one("project.project", related='task_id.project_id', store=True)
     user_id = fields.Many2one('res.users', 'Assigned to', select=True, required=True)
     task_id = fields.Many2one('project.task', 'Task', ondelete='cascade', required=True, select="1")
@@ -29,7 +29,15 @@ class ProjectTaskSubtask(models.Model):
         result = super(ProjectTaskSubtask, self).write(vals)
         for r in self:
             if vals.get('state'):
-                r.task_id.send_subtask_email(r.name, r.state)
+                r.task_id.send_subtask_email(r.name, r.state, r.reviewer_id.id, r.user_id.id)
+        return result
+
+    @api.model
+    def create(self, vals):
+        result = super(ProjectTaskSubtask, self).create(vals)
+        vals = self._add_missing_default_values(vals)
+        task = self.env['project.task'].browse(vals.get('task_id'))
+        task.send_subtask_email(vals['name'], vals['state'], vals['reviewer_id'], vals['user_id'])
         return result
 
     @api.multi
@@ -68,7 +76,7 @@ class Task(models.Model):
             record.kanban_subtasks = result_string + '</ul>'
 
     @api.multi
-    def send_subtask_email(self, subtask_name, subtask_state):
+    def send_subtask_email(self, subtask_name, subtask_state, subtask_reviewer_id, subtask_user_id):
         for r in self:
             template = self.env.ref('project_task_subtask.email_template_subtask_changed')
             email_ctx = {
@@ -78,15 +86,8 @@ class Task(models.Model):
                 'default_template_id': template.id,
                 'subtask_name': subtask_name,
                 'subtask_state': SUBTASK_STATES[subtask_state],
+                'subtask_reviewer_id': self.env["res.users"].browse(subtask_reviewer_id),
+                'subtask_user_id': self.env["res.users"].browse(subtask_user_id),
             }
             composer = self.env['mail.compose.message'].with_context(email_ctx).create({})
             composer.send_mail()
-
-    @api.multi
-    def write(self, vals):
-        result = super(Task, self).write(vals)
-        for r in self:
-            subtask_val = vals.get("subtask_ids")
-            if subtask_val and subtask_val[0][0] == 0:
-                r.send_subtask_email(subtask_val[0][2]['name'], subtask_val[0][2]['state'])
-            return result
