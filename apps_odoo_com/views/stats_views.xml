@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <record id="purchase_view_form" model="ir.ui.view">
+        <field name="name">apps_odoo_com.purchase.form</field>
+        <field name="model">apps_odoo_com.purchase</field>
+        <field name="arch" type="xml">
+            <form string="Purchase">
+                <sheet>
+                    <div class="oe_title">
+                        <h1 class="o_row">
+                            <field name="date_order"/>
+                            <field name="module_id"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="price"/>
+                            <field name="price_unit"/>
+                            <field name="quantity"/>
+                            <field name="referrer_module_id"/>
+                        </group>
+                        <group>
+                            <field name="order_name"/>
+                            <field name="purchase_order_ref"/>
+                            <field name="state"/>
+                            <field name="product_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="purchase_view_tree" model="ir.ui.view">
+        <field name="name">apps_odoo_com.purchase.form</field>
+        <field name="model">apps_odoo_com.purchase</field>
+        <field name="arch" type="xml">
+            <tree string="Purchase">
+                <field name="date_order"/>
+                <field name="module_id"/>
+                <field name="user_id"/>
+                <field name="price_unit"/>
+                <field name="quantity"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="purchase_action" model="ir.actions.act_window">
+        <field name="name">Purchases</field>
+        <field name="res_model">apps_odoo_com.purchase</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="purchase_menu" model="ir.ui.menu">
+        <field name="action" ref="purchase_action"/>
+    </record>
+
+</data>
+</openerp>

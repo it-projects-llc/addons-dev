@@ -27,7 +27,9 @@
         "data/ir_config_parameter_data.xml",
         "views/menus.xml",
         "views/res_config_views.xml",
+        "views/stats_views.xml",
         "wizards/scan_repo_views.xml",
+        "wizards/update_data_views.xml",
     ],
     "demo": [
     ],
