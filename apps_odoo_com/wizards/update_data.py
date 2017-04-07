@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright 2017 IT-Projects LLC (<https://it-projects.info>)
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
-from openerp import models, fields, api
+from openerp import models, api
 from openerp.exceptions import Warning as UserError
 
 from ..xmlrpc import rpc_execute_kw, rpc_auth
@@ -33,7 +33,7 @@ class UpdateData(models.TransientModel):
             'id': 'id',
             'odoo_id': 'odoo_id',
             'purchase_order_ref': 'purchase_order_ref',
-            #'display_name': 'display_name',
+            # 'display_name': 'display_name',
             'user_id/id': 'user_id',
             'product_id': 'product_id',
             'referrer_module_id/id': 'referrer_module_id',
@@ -43,7 +43,7 @@ class UpdateData(models.TransientModel):
             'price': 'price',
             'order_name': 'order_name',
             'state': 'state',
-            #'module_maintainer_id': 'module_maintainer_id',
+            # 'module_maintainer_id': 'module_maintainer_id',
             'module_id/id': 'module_id',
             'date_order': 'date_order',
             'quantity': 'quantity',
@@ -53,7 +53,6 @@ class UpdateData(models.TransientModel):
 
         user_index = {}  # id -> data
         module_index = {}  # id -> data
-
 
         for r in search_read:
             # user
@@ -76,10 +75,10 @@ class UpdateData(models.TransientModel):
                 r[local_field] = r[remote_field]
 
         user_fields = ['id', 'odoo_id', 'name']
-        self._load('apps_odoo_com.user', user_fields, (r for id, r in  user_index.items()))
+        self._load('apps_odoo_com.user', user_fields, (r for id,r in  user_index.items()))
 
         module_fields = ['id', 'odoo_id', 'display_name']
-        self._load('apps_odoo_com.module', module_fields, (r for id, r in  module_index.items()))
+        self._load('apps_odoo_com.module', module_fields, (r for id,r in  module_index.items()))
 
         self._load('apps_odoo_com.purchase', purchase_fields, search_read)
 
@@ -140,7 +139,7 @@ class UpdateData(models.TransientModel):
 
         if any(msg['type'] == 'error' for msg in result['messages']):
             warning_msg = "\n".join(msg['message'] for msg in result['messages'])
-            raise UserError('\n'.join([m['message'] for m in result.get('messages')]))
+            raise UserError(warning_msg)
 
     @api.multi
     def get_new_data(self):

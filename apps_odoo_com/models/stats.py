@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright 2017 IT-Projects LLC (<https://it-projects.info>)
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
-from openerp import models, fields, api
+from openerp import models, fields
 
 
 class User(models.Model):
@@ -32,9 +32,7 @@ class Purchase(models.Model):
 
     odoo_id = fields.Integer(readonly=True)
 
-    #id = fields.Integer(readonly=True)
     purchase_order_ref = fields.Char(readonly=True)
-    #display_name = fields.Char(readonly=True)
     user_id = fields.Many2one('apps_odoo_com.user', string="Buyer", readonly=True, index=True)
     product_id = fields.Char(readonly=True)
     referrer_module_id = fields.Many2one('apps_odoo_com.module', string="Referrer Module", readonly=True)
@@ -44,7 +42,6 @@ class Purchase(models.Model):
     price = fields.Float(readonly=True)
     order_name = fields.Char(readonly=True)
     state = fields.Char(readonly=True)
-    #module_maintainer_id = fields.Char(readonly=True)
     module_id = fields.Many2one('apps_odoo_com.module', string="Module", readonly=True)
     module_display_name = fields.Char('Display Name', related='module_id.display_name')
     date_order = fields.Char(readonly=True)
