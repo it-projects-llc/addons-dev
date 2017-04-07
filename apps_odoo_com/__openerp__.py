@@ -32,6 +32,9 @@
         "wizards/update_data_views.xml",
     ],
     "demo": [
+        "demo/apps_odoo_com.user.csv",
+        "demo/apps_odoo_com.module.csv",
+        "demo/apps_odoo_com.purchase.csv",
     ],
     "qweb": [
     ]
