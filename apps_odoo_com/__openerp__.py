@@ -20,6 +20,7 @@
         "bin": [],
     },
     "depends": [
+        "base",
     ],
     "data": [
         "security/res_groups.xml",
