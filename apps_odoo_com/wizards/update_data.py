@@ -25,7 +25,6 @@ class UpdateData(models.TransientModel):
             'search_read',
             rpc_kwargs={
                 'domain': domain,
-                'limit': 33,  # DEBUG
             })
         # {'purchase_order_ref': False, 'create_uid': [1, 'Administrator'], ... 'date_order': '2017-04-06 15:05:09', 'module_id': [13229, 'Delete "Sent by..." footer in email'], 'price': 9.0, 'quantity': 1.0}
 
@@ -131,7 +130,6 @@ class UpdateData(models.TransientModel):
                 'odoo_id': id,
                 name_field: name,
             }
-            print 'index', index[id]
 
     def _load(self, model, fields, list_of_dict):
         data = []
