@@ -1,4 +1,4 @@
-"id","odoo_id","name","version","display_name"
+"External ID","Odoo id","Technical Name","Version","Display name"
 "__apps_odoo_com__.module_25589","25589","pos_debt_notebook_sync","10.0","Internal Credit System"
 "__apps_odoo_com__.module_23110","23110","ir_attachment_url","10.0","Attachment Url"
 "__apps_odoo_com__.module_23109","23109","ir_attachment_s3","10.0","S3 Attachment Storage"

@@ -18,9 +18,10 @@ class Module(models.Model):
     _name = 'apps_odoo_com.module'
     _order = 'odoo_id desc'
 
-    name = fields.Char(readonly=True)
+    name = fields.Char(string='Technical Name', readonly=True)
     odoo_id = fields.Integer(readonly=True)
     version = fields.Char(index=True, readonly=True)
+    display_name = fields.Char(readonly=True)
 
 
 class Purchase(models.Model):

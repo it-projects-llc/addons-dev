@@ -25,6 +25,7 @@ class UpdateData(models.TransientModel):
             'search_read',
             rpc_kwargs={
                 'domain': domain,
+                'limit': 33,  # DEBUG
             })
         # {'purchase_order_ref': False, 'create_uid': [1, 'Administrator'], ... 'date_order': '2017-04-06 15:05:09', 'module_id': [13229, 'Delete "Sent by..." footer in email'], 'price': 9.0, 'quantity': 1.0}
 
@@ -59,8 +60,8 @@ class UpdateData(models.TransientModel):
             # user
             self._process_many2one(user_index, r['user_id'], USER_ID)
             # module
-            self._process_many2one(module_index, r['module_id'], MODULE_ID)
-            self._process_many2one(module_index, r['referrer_module_id'], MODULE_ID)
+            self._process_many2one(module_index, r['module_id'], MODULE_ID, 'display_name')
+            self._process_many2one(module_index, r['referrer_module_id'], MODULE_ID, 'display_name')
 
             # update id to use it in ir.model.data
             r['odoo_id'] = r['id']
@@ -78,8 +79,8 @@ class UpdateData(models.TransientModel):
         user_fields = ['id', 'odoo_id', 'name']
         self._load('apps_odoo_com.user', user_fields, (r for id, r in  user_index.items()))
 
-        module_fields = ['id', 'odoo_id', 'name']
-        self._load('apps_odoo_com.module', user_fields, (r for id, r in  module_index.items()))
+        module_fields = ['id', 'odoo_id', 'display_name']
+        self._load('apps_odoo_com.module', module_fields, (r for id, r in  module_index.items()))
 
         self._load('apps_odoo_com.purchase', purchase_fields, search_read)
 
@@ -102,7 +103,7 @@ class UpdateData(models.TransientModel):
             'search_read',
             rpc_kwargs={
                 'domain': [('id', 'in', odoo_ids)],
-                'fields': ['version'],
+                'fields': ['version', 'name'],
             })
 
         for r in search_read:
@@ -116,10 +117,10 @@ class UpdateData(models.TransientModel):
 
             r['version'] = version
 
-        module_fields = ['id', 'version']
+        module_fields = ['id', 'name', 'version']
         self._load('apps_odoo_com.module', module_fields, search_read)
 
-    def _process_many2one(self, index, value, id_template):
+    def _process_many2one(self, index, value, id_template, name_field='name'):
         if not value:
             return
         id = value[0]
@@ -128,8 +129,9 @@ class UpdateData(models.TransientModel):
             index[id] = {
                 'id': id_template % id,
                 'odoo_id': id,
-                'name': name,
+                name_field: name,
             }
+            print 'index', index[id]
 
     def _load(self, model, fields, list_of_dict):
         data = []
