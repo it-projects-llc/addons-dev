@@ -27,6 +27,7 @@
                             <field name="purchase_order_ref"/>
                             <field name="state"/>
                             <field name="product_id"/>
+                            <field name="odoo_id"/>
                         </group>
                     </group>
                 </sheet>
