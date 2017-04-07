@@ -20,6 +20,7 @@
         "bin": [],
     },
     "depends": [
+        "base",
     ],
     "data": [
         "security/res_groups.xml",
@@ -27,9 +28,14 @@
         "data/ir_config_parameter_data.xml",
         "views/menus.xml",
         "views/res_config_views.xml",
+        "views/stats_views.xml",
         "wizards/scan_repo_views.xml",
+        "wizards/update_data_views.xml",
     ],
     "demo": [
+        "demo/apps_odoo_com.user.csv",
+        "demo/apps_odoo_com.module.csv",
+        "demo/apps_odoo_com.purchase.csv",
     ],
     "qweb": [
     ]

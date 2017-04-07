@@ -12,6 +12,32 @@
     groups="apps_odoo_com_group_user"
     sequence="450"/>
 
+<!-- Statistics -->
+<menuitem name="Statistics"
+    id="statistics_folder_menu"
+    parent="apps_odoo_com_menu"
+    sequence="5"/>
+
+<menuitem name="Purchases"
+    id="purchase_menu"
+    parent="statistics_folder_menu"
+    sequence="10"/>
+
+<menuitem name="Modules"
+    id="module_menu"
+    parent="statistics_folder_menu"
+    sequence="20"/>
+
+<menuitem name="Buyers"
+    id="user_menu"
+    parent="statistics_folder_menu"
+    sequence="30"/>
+
+<menuitem name="Update Data"
+    id="update_data_menu"
+    parent="statistics_folder_menu"
+    sequence="100"/>
+
 <!-- Tools -->
 <menuitem name="Tools"
     id="tools_folder_menu"
