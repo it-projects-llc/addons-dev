@@ -46,5 +46,6 @@ class Purchase(models.Model):
     state = fields.Char(readonly=True)
     #module_maintainer_id = fields.Char(readonly=True)
     module_id = fields.Many2one('apps_odoo_com.module', string="Module", readonly=True)
+    module_display_name = fields.Char('Display Name', related='module_id.display_name')
     date_order = fields.Char(readonly=True)
     quantity = fields.Float(readonly=True)
