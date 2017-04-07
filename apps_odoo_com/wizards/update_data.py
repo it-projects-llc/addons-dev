@@ -25,7 +25,6 @@ class UpdateData(models.TransientModel):
             'search_read',
             rpc_kwargs={
                 'domain': domain,
-                'limit': 33, ## DEBUG
             })
         # {'purchase_order_ref': False, 'create_uid': [1, 'Administrator'], ... 'date_order': '2017-04-06 15:05:09', 'module_id': [13229, 'Delete "Sent by..." footer in email'], 'price': 9.0, 'quantity': 1.0}
 
@@ -67,10 +66,10 @@ class UpdateData(models.TransientModel):
             r['odoo_id'] = r['id']
             r['id'] = PURCHASE_ID % r['id']
             # update user
-            r['user_id'] = USER_ID % r['user_id'][0]
+            r['user_id'] = r['user_id'] and USER_ID % r['user_id'][0]
             # update module
-            r['module_id'] = MODULE_ID % r['module_id'][0]
-            r['referrer_module_id'] = MODULE_ID % r['referrer_module_id'][0]
+            r['module_id'] = r['module_id'] and MODULE_ID % r['module_id'][0]
+            r['referrer_module_id'] = r['referrer_module_id'] and MODULE_ID % r['referrer_module_id'][0]
             for local_field, remote_field in PURCHASE_FIELDS.items():
                 if local_field == remote_field:
                     continue
@@ -121,6 +120,8 @@ class UpdateData(models.TransientModel):
         self._load('apps_odoo_com.module', module_fields, search_read)
 
     def _process_many2one(self, index, value, id_template):
+        if not value:
+            return
         id = value[0]
         name = value[1]
         if id not in index:
@@ -135,7 +136,7 @@ class UpdateData(models.TransientModel):
         for r in list_of_dict:
             data.append([r[f] for f in fields])
 
-        result = self.env[model].load(fields, data)
+        result = self.env[model].sudo().load(fields, data)
 
         if any(msg['type'] == 'error' for msg in result['messages']):
             warning_msg = "\n".join(msg['message'] for msg in result['messages'])

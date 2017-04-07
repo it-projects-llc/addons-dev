@@ -7,6 +7,8 @@ from openerp import models, fields, api
 class User(models.Model):
 
     _name = 'apps_odoo_com.user'
+    _order = 'odoo_id desc'
+
     name = fields.Char(readonly=True)
     odoo_id = fields.Integer(readonly=True)
 
@@ -14,6 +16,8 @@ class User(models.Model):
 class Module(models.Model):
 
     _name = 'apps_odoo_com.module'
+    _order = 'odoo_id desc'
+
     name = fields.Char(readonly=True)
     odoo_id = fields.Integer(readonly=True)
     version = fields.Char(index=True, readonly=True)
@@ -23,6 +27,7 @@ class Purchase(models.Model):
     """Copy of records loempia.module.purchase from apps.odoo.com"""
 
     _name = 'apps_odoo_com.purchase'
+    _order = 'odoo_id desc'
 
     odoo_id = fields.Integer(readonly=True)
 

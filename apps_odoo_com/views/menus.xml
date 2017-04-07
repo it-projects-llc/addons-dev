@@ -23,10 +23,20 @@
     parent="statistics_folder_menu"
     sequence="10"/>
 
+<menuitem name="Modules"
+    id="module_menu"
+    parent="statistics_folder_menu"
+    sequence="20"/>
+
+<menuitem name="Buyers"
+    id="user_menu"
+    parent="statistics_folder_menu"
+    sequence="30"/>
+
 <menuitem name="Update Data"
     id="update_data_menu"
     parent="statistics_folder_menu"
-    sequence="20"/>
+    sequence="100"/>
 
 <!-- Tools -->
 <menuitem name="Tools"
