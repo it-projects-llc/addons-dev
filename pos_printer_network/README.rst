@@ -27,3 +27,5 @@ Usage instructions: `<doc/index.rst>`__
 Changelog: `<doc/changelog.rst>`__
 
 Tested on Odoo 10.0 b7b63b3a396cc6e9d85962902e7cf13c85edc733
+
+в hw_escpos
