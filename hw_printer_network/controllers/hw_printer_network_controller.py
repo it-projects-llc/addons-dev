@@ -12,7 +12,7 @@ try:
     from odoo.addons.hw_escpos.escpos import *
     from odoo.addons.hw_escpos.controllers.main import EscposProxy
     from odoo.addons.hw_escpos.controllers.main import EscposDriver
-    from odoo.addons.hw_escpos.escpos.exceptions import *
+    from odoo.addons.hw_escpos.escpos.exceptions import NoDeviceError, HandleDeviceError, TicketNotPrinted, NoStatusError
     from odoo.addons.hw_escpos.escpos.printer import Network
     import odoo.addons.hw_escpos.controllers.main as hw_escpos_main
 except ImportError:
@@ -39,15 +39,15 @@ class UpdatedEscposDriver(EscposDriver):
                             printer.receipt(data)
                 else:
                     printer = self.get_escpos_printer()
-                if printer == None:
+                if printer is None:
                     if task != 'status':
-                        self.queue.put((timestamp,task,data))
+                        self.queue.put((timestamp, task, data))
                     error = False
                     time.sleep(5)
                     continue
                 elif task == 'receipt':
                     if timestamp >= time.time() - 1 * 60 * 60:
-                        self.print_receipt_body(printer,data)
+                        self.print_receipt_body(printer, data)
                         printer.cut()
                 elif task == 'xml_receipt':
                     if timestamp >= time.time() - 1 * 60 * 60:
@@ -72,7 +72,7 @@ class UpdatedEscposDriver(EscposDriver):
             except Exception as e:
                 self.set_status('error', str(e))
                 errmsg = str(e) + '\n' + '-'*60+'\n' + traceback.format_exc() + '-'*60 + '\n'
-                _logger.error(errmsg);
+                _logger.error(errmsg)
             finally:
                 if error:
                     self.queue.put((timestamp, task, data))
@@ -94,6 +94,7 @@ class UpdatedEscposProxy(EscposProxy):
             driver.push_task(['network_xml_receipt', proxy], receipt)
         else:
             super(UpdatedEscposProxy, self).print_xml_receipt(receipt)
+
 
 class UpdatedNetwork(Network):
     def close(self):

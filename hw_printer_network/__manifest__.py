@@ -19,8 +19,6 @@
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
-        "views/pos_printer_network_template.xml",
-        "views/pos_printer_network_view.xml",
     ],
     "qweb": [
     ],
