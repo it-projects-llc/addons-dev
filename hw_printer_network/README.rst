@@ -1,8 +1,8 @@
-=====================
- POS Network Printer
-=====================
+==========================
+ Hardware Network Printer
+==========================
 
-POS Network Printer
+Hardware Network Printer
 
 Credits
 =======
@@ -20,7 +20,7 @@ Further information
 
 Demo: http://runbot.it-projects.info/demo/pos-addons/10.0
 
-HTML Description: https://apps.odoo.com/apps/modules/10.0/pos_printer_network/
+HTML Description: https://apps.odoo.com/apps/modules/10.0/hw_printer_network/
 
 Usage instructions: `<doc/index.rst>`__
 

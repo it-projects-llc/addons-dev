@@ -7,6 +7,7 @@ odoo.define('pos_restaurant.network_printer', function (require) {
     var Session = require('web.Session');
     var gui = require('point_of_sale.gui');
     var Printer = require('pos_restaurant.base');
+    var devices = require('point_of_sale.devices');
     var QWeb = core.qweb;
     var mixins = core.mixins;
 
@@ -40,17 +41,37 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                 var send_printing_job = function(){
                     if(self.receipt_queue.length > 0){
                         var r = self.receipt_queue.shift();
-                        self.connection.rpc('/hw_proxy/print_xml_receipt',{receipt: r, proxy: network_proxy},{timeout: 10000})
+                        self.connection.rpc('/hw_proxy/print_xml_receipt',{receipt: r, proxy: network_proxy},{timeout: 5000})
                             .then(function(){
                                 send_printing_job();
                             },function(){
                                 self.receipt_queue.unshift(r);
                             });
                     }
-                }
+                };
                 send_printing_job();
             } else {
                 this._super(receipt);
+            }
+        },
+    });
+
+    devices.ProxyDevice.include({
+        message : function(name,params){
+            if (name == 'print_xml_receipt' && this.pos.config.receipt_network_printer_ip) {
+                var connection = new Session(undefined,this.pos.proxy.host, { use_cors: true});
+                var callbacks = this.notifications[name] || [];
+                for(var i = 0; i < callbacks.length; i++){
+                    callbacks[i](params);
+                }
+                params.proxy = this.pos.config.receipt_network_printer_ip;
+                if(this.get('status').status !== 'disconnected'){
+                    return connection.rpc('/hw_proxy/' + name, params || {});
+                }else{
+                    return (new $.Deferred()).reject();
+                }
+            } else {
+                return this._super(name, params);
             }
         },
     });

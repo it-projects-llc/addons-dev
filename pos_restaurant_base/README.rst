@@ -2,7 +2,9 @@
  POS restaurant base
 =====================
 
-Technical module implement instant updates in POS
+Technical module in POS.
+The standard Printer class does not allow you to override the functions of this class.
+This module copies the Printer class and sets the default printers and allows you to override the Printer class.
 
 Credits
 =======
@@ -26,4 +28,4 @@ Usage instructions: `<doc/index.rst>`__
 
 Changelog: `<doc/changelog.rst>`__
 
-Tested on Odoo 10.0 3618e769aadf7e4e0ad0b26fa4f9861e27f99c57
+Tested on Odoo 10.0 9e159ef2048574d179a9afb2226397e962aa5725

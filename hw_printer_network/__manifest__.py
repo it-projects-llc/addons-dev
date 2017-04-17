@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
-    "name": """POS Network Printer""",
-    "summary": """POS Network Printer""",
+    "name": """Hardware Network Printer""",
+    "summary": """Hardware Network Printer""",
     "category": "Point of Sale",
     "images": [],
     "version": "1.0.0",
@@ -15,7 +15,7 @@
     # "currency": "EUR",
 
     "depends": [
-        "pos_restaurant_base",
+        "hw_escpos",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
