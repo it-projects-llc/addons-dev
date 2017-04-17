@@ -18,7 +18,7 @@ odoo.define('pos_restaurant.network_printer', function (require) {
         loaded: function(self,printers){
             self.printers.forEach(function(item){
                 var printer_obj = printers.find(function(printer){
-                    return printer.id == item.config.id;
+                    return printer.id === item.config.id;
                 });
                 if (printer_obj.network_printer) {
                     item.config.network_printer = printer_obj.network_printer;
@@ -39,12 +39,15 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                     this.receipt_queue.push(receipt);
                 }
                 var send_printing_job = function(){
-                    if(self.receipt_queue.length > 0){
+                    if(self.receipt_queue.length > 0) {
                         var r = self.receipt_queue.shift();
-                        self.connection.rpc('/hw_proxy/print_xml_receipt',{receipt: r, proxy: network_proxy},{timeout: 5000})
-                            .then(function(){
+                        self.connection.rpc('/hw_proxy/print_xml_receipt', {
+                            receipt: r,
+                            proxy: network_proxy
+                        }, {timeout: 5000})
+                            .then(function () {
                                 send_printing_job();
-                            },function(){
+                            }, function () {
                                 self.receipt_queue.unshift(r);
                             });
                     }
@@ -59,7 +62,9 @@ odoo.define('pos_restaurant.network_printer', function (require) {
     devices.ProxyDevice.include({
         message : function(name,params){
             if (name == 'print_xml_receipt' && this.pos.config.receipt_network_printer_ip) {
-                var connection = new Session(undefined,this.pos.proxy.host, { use_cors: true});
+                var connection = new Session(undefined, this.pos.proxy.host, {
+                    use_cors: true
+                });
                 var callbacks = this.notifications[name] || [];
                 for(var i = 0; i < callbacks.length; i++){
                     callbacks[i](params);
@@ -67,7 +72,7 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                 params.proxy = this.pos.config.receipt_network_printer_ip;
                 if(this.get('status').status !== 'disconnected'){
                     return connection.rpc('/hw_proxy/' + name, params || {});
-                }else{
+                } else{
                     return (new $.Deferred()).reject();
                 }
             } else {

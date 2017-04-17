@@ -51,8 +51,7 @@ odoo.define('pos_restaurant.base', function (require) {
                 }
 
                 self.printers = [];
-                self.printers_categories = {}; // list of product categories that belong to
-                                               // one or more order printer
+                self.printers_categories = {}; // list of product categories that belong to one or more order printer
                 for(var i = 0; i < printers.length; i++){
                     if(active_printers[printers[i].id]){
                         var url = printers[i].proxy_ip;
