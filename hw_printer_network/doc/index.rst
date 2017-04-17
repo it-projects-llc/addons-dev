@@ -5,13 +5,5 @@
 Installation
 ============
 
-* Comment in hw_escpos/controllers/main.py 354th line (replace driver.push_task('printstatus') to # driver.push_task('printstatus')), This module is set to POS Box
-* Install the hw_printer_network module in the POS Box
-* Install the pos_printer_network module in the Odoo
-
-Usage
-=====
-
-* Open the POS
-* Add new product in order
-* Click ``[Order]``
+* In POS Box: Comment out line 354 in hw_escpos/controllers/main.py, i.e. (replace ``driver.push_task('printstatus')`` to ``# driver.push_task('printstatus')``)
+* In POS Box: add hw_printer_network module to server wide modules (``server_wide_modules`` in config file or ``--load`` parameter for run command) 
