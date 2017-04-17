@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": """POS restaurant base""",
-    "summary": """Technical module implement instant updates in POS""",
+    "summary": """Technical module in POS""",
     "category": "Point of Sale",
     "version": "1.0.0",
 
