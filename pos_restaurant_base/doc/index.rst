@@ -2,9 +2,10 @@
  Hardware Network Printer
 ==========================
 
-Technical module in POS.
-The standard Printer class does not allow you to override the functions of this class.
-This module copies the Printer class and sets the default printers and allows you to override the Printer class.
+Installation
+============
+
+* `Install <https://odoo-development.readthedocs.io/en/latest/odoo/usage/install-module.html>`__ this module in a usual way
 
 Usage
 =====

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": """Hardware Network Printer""",
-    "summary": """Hardware Network Printer""",
+    "summary": """The module adds support for a Network Printer through a POS Box""",
     "category": "Point of Sale",
     "images": [],
     "version": "1.0.0",

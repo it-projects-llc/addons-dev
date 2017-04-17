@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": """POS Network Printer""",
-    "summary": """POS Network Printer""",
+    "summary": """The module allows to send orders for printing using a network printer in the POS""",
     "category": "Point of Sale",
     "images": [],
     "version": "1.0.0",

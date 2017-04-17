@@ -27,7 +27,7 @@ Configuration
   * In Order Printers Add an item (New printer)
   * Click ``[Save]``
   * Specify the proxy server IP address of the POS Box
-  * Specify the proxy server IP address of the Network printer for receipt printer
+  * Specify the IP address of the Network printer for receipt printer
 
 Usage
 =====
