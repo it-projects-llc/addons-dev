@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 
 
 try:
-    from odoo.addons.hw_escpos.escpos import *
+    from odoo.addons.hw_escpos.escpos import escpos
     from odoo.addons.hw_escpos.controllers.main import EscposProxy
     from odoo.addons.hw_escpos.controllers.main import EscposDriver
     from odoo.addons.hw_escpos.escpos.exceptions import NoDeviceError, HandleDeviceError, TicketNotPrinted, NoStatusError
@@ -90,7 +90,7 @@ class UpdatedEscposProxy(EscposProxy):
     @http.route('/hw_proxy/print_xml_receipt', type='json', auth='none', cors='*')
     def print_xml_receipt(self, receipt, proxy=None):
         if proxy:
-            _logger.info('ESC/POS: PRINT XML RECEIPT')
+            _logger.info('ESC/POS: PRINT XML RECEIPT', proxy)
             driver.push_task(['network_xml_receipt', proxy], receipt)
         else:
             super(UpdatedEscposProxy, self).print_xml_receipt(receipt)

@@ -44,12 +44,11 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                         self.connection.rpc('/hw_proxy/print_xml_receipt', {
                             receipt: r,
                             proxy: network_proxy
-                        }, {timeout: 5000})
-                            .then(function () {
-                                send_printing_job();
-                            }, function () {
-                                self.receipt_queue.unshift(r);
-                            });
+                        }, {timeout: 5000}).then(function () {
+                            send_printing_job();
+                        }, function () {
+                            self.receipt_queue.unshift(r);
+                        });
                     }
                 };
                 send_printing_job();
@@ -72,12 +71,10 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                 params.proxy = this.pos.config.receipt_network_printer_ip;
                 if(this.get('status').status !== 'disconnected'){
                     return connection.rpc('/hw_proxy/' + name, params || {});
-                } else{
-                    return (new $.Deferred()).reject();
                 }
-            } else {
-                return this._super(name, params);
+                return (new $.Deferred()).reject();
             }
+            return this._super(name, params);
         },
     });
 });
