@@ -23,7 +23,7 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                 if (printer_obj.network_printer) {
                     item.config.network_printer = printer_obj.network_printer;
                     self.ready.then(function () {
-                        item.connection = new Session(undefined, self.proxy.host, { use_cors: true});
+                        item.connection = new Session(void 0, self.proxy.host, { use_cors: true});
                     });
                 }
             });
@@ -61,7 +61,7 @@ odoo.define('pos_restaurant.network_printer', function (require) {
     devices.ProxyDevice.include({
         message : function(name,params){
             if (name === 'print_xml_receipt' && this.pos.config.receipt_network_printer_ip) {
-                var connection = new Session(undefined, this.pos.proxy.host, {
+                var connection = new Session(void 0, this.pos.proxy.host, {
                     use_cors: true
                 });
                 var callbacks = this.notifications[name] || [];

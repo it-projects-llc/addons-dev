@@ -62,13 +62,13 @@ class UpdatedEscposDriver(EscposDriver):
                 error = False
 
             except NoDeviceError as e:
-                print "No device found %s" %str(e)
+                _logger.error("No device found %s" % str(e))
             except HandleDeviceError as e:
-                print "Impossible to handle the device due to previous error %s" % str(e)
+                _logger.error("Impossible to handle the device due to previous error %s" % str(e))
             except TicketNotPrinted as e:
-                print "The ticket does not seems to have been fully printed %s" % str(e)
+                _logger.error("The ticket does not seems to have been fully printed %s" % str(e))
             except NoStatusError as e:
-                print "Impossible to get the status of the printer %s" % str(e)
+                _logger.error("Impossible to get the status of the printer %s" % str(e))
             except Exception as e:
                 self.set_status('error', str(e))
                 errmsg = str(e) + '\n' + '-'*60+'\n' + traceback.format_exc() + '-'*60 + '\n'
