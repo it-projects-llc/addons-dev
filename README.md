@@ -68,7 +68,7 @@ Click Fork button at top right hand corner
     # push to origin
     git push origin misc-addons-9.0-some_feature
    
-    # create pull request via github interface to yelizariev/addons-dev repo
+    # create pull request via github interface to it-projects-llc/addons-dev repo
 
 # Merge PR to addons-dev
 
