@@ -2,20 +2,22 @@
 Website sale cache
 ==================
 
-This module caches product public categories from module "website_sale". 
-That allows to significantly accelerate the loading of the page with a large number of product categories.
+The module allows to cache product website categories and significantly accelerate the page loading with a large number
+of product categories.
 
-Note
-----
-When used with multiple odoo workers, the cache is updated separately for each one. So the page may be load slowly until
-the cache is updated for each worker. After the cache is updated for each worker, the page will load faster, as far as
-the advantages of caching allow.
+When multiple odoo workers are used, the cache is updated for each one separately. So the page may be loaded slowly
+before updating the cache for each worker. Once the latter is done, the page will be loading faster,
+as far as the advantages of caching allow.
+
+The speed increase will be absent at the first load, because the data has not yet been cached. Also when updating
+the list of categories (deleting a category, updating or creating a new one), the cache will be updated, which will also
+cause an absent of speed increase at the first load after making changes.
 
 Warning
 -------
-Cache updates every time on creation, editing or deletion of instance product public category model.
-That can cause problems as example when importing a large number of categories.
-It is recommended to temporarily disconnect the module in such cases.
+Cache is updated every time on creation, editing or deletion the product public category model instance.
+This can lead to issues, e. g. when importing a large number of categories.
+It is recommended to temporarily uninstall the module in this case.
 
 Credits
 =======
