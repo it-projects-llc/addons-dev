@@ -35,3 +35,8 @@ Usage
 * Open the POS
 * Add new product in order
 * Click ``[Order]``
+
+Note
+====
+
+In the POS interface the status of the printer refers only to the usb printer.

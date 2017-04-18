@@ -5,7 +5,6 @@
 The module allows to send orders for printing using a network printer in the POS.
 
 This module establishes a connection with the POS Box and sends it the ip address of the printer and the receipt.
-Note: In the POS interface the status of the printer refers only to the usb printer.
 
 Credits
 =======

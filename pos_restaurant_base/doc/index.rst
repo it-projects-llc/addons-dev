@@ -2,6 +2,8 @@
  Hardware Network Printer
 ==========================
 
+Technical module in POS.
+
 Installation
 ============
 
