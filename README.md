@@ -27,8 +27,8 @@ Click Fork button at top right hand corner
 
         cd addons-dev
 
-        git remote add upstream          git@github.com:yelizariev/addons-dev.git
-        git remote add misc-addons https://github.com/it-projects-llc/misc-addons.git
+        git remote add upstream          git@github.com:it-projects-llc/addons-dev.git
+        git remote add misc-addons       https://github.com/it-projects-llc/misc-addons.git
         git remote add pos-addons        https://github.com/it-projects-llc/pos-addons.git
         git remote add mail-addons       https://github.com/it-projects-llc/mail-addons.git
         git remote add access-addons     https://github.com/it-projects-llc/access-addons.git
