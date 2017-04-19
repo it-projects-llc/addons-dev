@@ -1,6 +1,6 @@
-================================
- Cancel product or order in POS
-================================
+==================
+ POS Order Cancel
+==================
 
 Installation
 ============
@@ -10,30 +10,28 @@ Installation
 Configuration
 =============
 
-* go to ``Point of Sale >> OPOS Product Cancellation Reason``
+* Go to ``Point of Sale >> POS Product Cancellation Reason``
 
   * Click on ``[Create]``
-  * Specify the number
-  * Specify the cancellation reason
+  * Specify a number
+  * Specify a cancellation reason
   * Click ``[Save]``
 
 Usage
 =====
 
-* Open the POS
-* Add new product in order
+* Open POS session
+* Add new products in order
 * Click ``[Order]``
 
-* Cancellation product
+* Product Cancellation Reason
 
-  * Remove product with numpad
-  * Specify cancellation reason or create new
+  * Remove product using numpad
+  * Specify cancellation reason or set new one
   * Click ``[Ok]``
 
-* Cancellation order
+* Order Cancellation Reason
 
-  * Add new product in order
-  * Click ``[Order]``
-  * Remove order
-  * Specify cancellation reason or create new
+  * Remove order by clicking on order cancel button
+  * Specify cancellation reason or set new one
   * Click ``[Ok]``
