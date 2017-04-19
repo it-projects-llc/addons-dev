@@ -73,13 +73,13 @@ odoo.define('pos_order_cancel', function (require) {
                 this.numpad_state.show_popup = false;
                 return false;
             }
-            var title = 'All ';
+            var title = 'Order ';
             if (type === 'product') {
-                title = 'POS ';
+                title = 'Product ';
             }
             order.CancellationReasonType = type; // type of object which is removed (product or order)
             this.gui.show_popup('confirm-cancellation',{
-                'title': _t(title + 'Product Cancellation Reason'),
+                'title': _t(title + 'Cancellation Reason'),
                 'reasons': self.pos.cancelled_reason.slice(0,8),
                 'value': self.pos.selected_cancelled_reason.name,
                 confirm: function(){
