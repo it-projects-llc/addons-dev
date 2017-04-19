@@ -115,7 +115,7 @@ odoo.define('pos_order_cancel', function (require) {
     var ConfirmCancellationPopupWidget = PopupWidget.extend({
         template: 'ConfirmCancellationPopupWidget',
         show: function(options){
-            options = options || {};
+            var options = options || {};
             this._super(options);
             if (options.reasons) {
                 this.events["click .cancelled-reason .button"] = "click_cancelled_reason";
