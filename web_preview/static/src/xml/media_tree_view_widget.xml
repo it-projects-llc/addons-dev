@@ -3,7 +3,7 @@
 
     <t t-extend="HiddenInputFile">
         <t t-jquery="input[name='ufile']:eq(1)" t-operation="replace">
-            <input t-if="widget.widget=='image'" type="file" class="o_form_input_file" name="ufile" accept="image/*,application/pdf"/>
+            <input t-if="widget.widget=='image'" type="file" class="o_form_input_file" name="ufile"/>
         </t>
     </t>
 
