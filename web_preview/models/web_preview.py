@@ -14,9 +14,9 @@ class Preview(models.AbstractModel):
     def _compute_type(self):
         for r in self:
             attachment = self.env["ir.attachment"]
-            att = attachment.search(
-                [('res_model', '=', self._name), ('res_field', '=', r._preview_media_file),
-                ('res_id', '=', r.id)])
+            att = attachment.search([('res_model', '=', self._name),
+                                     ('res_field', '=', r._preview_media_file),
+                                     ('res_id', '=', r.id)])
             if att.mimetype == 'application/octet-stream' and att.url and (self.youtube_url_validation(att.url) or self.vimeo_url_validation(att.url)):
                 r.media_type = 'video/url'
             else:
@@ -26,9 +26,9 @@ class Preview(models.AbstractModel):
     def _compute_video_ID(self):
         for r in self:
             attachment = self.env["ir.attachment"]
-            att = attachment.search(
-                [('res_model', '=', self._name), ('res_field', '=', r._preview_media_file),
-                ('res_id', '=', r.id)])
+            att = attachment.search([('res_model', '=', self._name),
+                                     ('res_field', '=', r._preview_media_file),
+                                     ('res_id', '=', r.id)])
             if att.mimetype == 'application/octet-stream' and att.url:
                 r.media_video_ID = self.youtube_url_validation(att.url) or self.vimeo_url_validation(att.url)
 
@@ -36,9 +36,9 @@ class Preview(models.AbstractModel):
     def _compute_video_service(self):
         for r in self:
             attachment = self.env["ir.attachment"]
-            att = attachment.search(
-                [('res_model', '=', self._name), ('res_field', '=', r._preview_media_file),
-                ('res_id', '=', r.id)])
+            att = attachment.search([('res_model', '=', self._name),
+                                     ('res_field', '=', r._preview_media_file),
+                                     ('res_id', '=', r.id)])
             if att.mimetype == 'application/octet-stream' and att.url:
                 if self.youtube_url_validation(att.url):
                     r.media_video_service = 'youtube'
@@ -47,9 +47,7 @@ class Preview(models.AbstractModel):
 
     def youtube_url_validation(self, url):
         youtube_regex = (
-            r'(https?://)?(www\.)?'
-            '(youtube|youtu|youtube-nocookie)\.(com|be)/'
-            '(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})')
+            r'(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)/(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})')
         youtube_regex_match = re.match(youtube_regex, url)
         if youtube_regex_match:
             return youtube_regex_match.group(6)
