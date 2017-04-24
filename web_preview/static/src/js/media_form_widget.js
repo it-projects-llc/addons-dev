@@ -22,7 +22,7 @@ odoo.define('media_form_widget', function(require) {
         render_value: function() {
             this.media_id = this.view.datarecord.id;
             if (this.media && (this.media_type === 'video/url' ||
-                (this.media_type && this.media_type.split("/")[0] === 'application') ||
+                this.media_type && this.media_type.split("/")[0] === 'application' ||
                 this.media_type === 'application/msword')) {
                 var url = "/web/static/src/img/mimetypes/document.png";
                 if (this.media_type === 'video/url') {
