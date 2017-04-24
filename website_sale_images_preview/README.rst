@@ -2,6 +2,8 @@
  Website sale images preview
 =============================
 
+This module allow load doc, docx, xml, xmls, PDF, Vimeo service, YouTube service instead images in the Website sales
+
 Credits
 =======
 
@@ -11,7 +13,11 @@ Contributors
 
 Sponsors
 --------
-* `IT-Projects LLC <https://it-projects.info>`_
+* `IT-Projects LLC <https://it-projects.info>`__
+
+Maintainers
+-----------
+* `IT-Projects LLC <https://it-projects.info>`__
 
 Further information
 ===================
@@ -24,4 +30,4 @@ Usage instructions: `<doc/index.rst>`_
 
 Changelog: `<doc/changelog.rst>`_
 
-Tested on Odoo 10.0 aac5ba33b3526e3c0c5204e686788e9496bac021
+Tested on Odoo 10.0 852940f1ba1219b106590efc580ec2b5fdfa1740
