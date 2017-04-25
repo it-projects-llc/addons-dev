@@ -1,8 +1,8 @@
 =============================
- Website sale images preview
+ Website Sale Images Preview
 =============================
 
-This module allow load doc, docx, xml, xmls, PDF, Vimeo service, YouTube service instead images in the Website sales
+The module allows to upload file formats like doc, docx, xml, xmls, PDF, Vimeo, YouTube service in addition to images formats
 
 Credits
 =======
