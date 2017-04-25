@@ -17,7 +17,7 @@ Odoo parameters
 Usage
 =====
 
-* Go to Sales >> Products menu
+* Go to ``Sales >> Products menu``
 * Open a product
-* Click on the image
+* Click on image
 * Browser opens image in popup
