@@ -1,5 +1,5 @@
 =============
- Web preview
+ Web Preview
 =============
 
 Installation
@@ -17,10 +17,10 @@ Odoo parameters
 Usage
 =====
 
-* Go to Sales >> Products menu
+* Go to ``Sales >> Products`` menu
 * Open a product
-* Go to the tab ``Documents``
-* Click on the image (Browser opens image in popup)
-* Click on the doc/docx or xls/xlsx file(The file will be downloaded)
-* Click on the PDF file (The file will be opened in a new window using the browser)
+* Go to the ``Documents`` tab
+* Click on image (Browser opens image in popup)
+* Click on doc/docx or xls/xlsx file(The file will be downloaded)
+* Click on the PDF file (The file will be opened in a new window using the browser built-in viewer)
 * Click on the YouTube or Vimeo file (Browser opens video in popup)
