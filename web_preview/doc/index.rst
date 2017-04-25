@@ -1,5 +1,5 @@
 =============
- Web preview
+ Web Preview
 =============
 
 Installation
@@ -17,7 +17,7 @@ Odoo parameters
 Usage
 =====
 
-* Go to ``Sales >> Products menu``
+* Go to ``Sales >> Products`` menu
 * Open a product
 * Click on image
 * Browser opens image in popup
