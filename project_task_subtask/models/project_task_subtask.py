@@ -142,5 +142,5 @@ class Task(models.Model):
                 partner_ids = [reviewer.partner_id.id]
             r.message_post(type='comment',
                            subtype=subtype,
-                           body=body,
+                           body=escape(body),
                            partner_ids=partner_ids)
