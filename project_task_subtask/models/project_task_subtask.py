@@ -132,7 +132,7 @@ class Task(models.Model):
             partner_ids = []
             subtype = 'project_task_subtask.subtasks_subtype'
             if user == self.env.user and reviewer == self.env.user:
-                body = '<p><strong>' + state + '</strong>: ' + subtask_name + '</p>'
+                body = '<p><strong>' + state + '</strong>: ' + escape(subtask_name) + '</p>'
                 subtype = False
             elif self.env.user == reviewer:
                 body = '<p>' + user.name + ', <br><strong>' + state + '</strong>: ' + escape(subtask_name) + '</p>'
