@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 {
-    "name": """Tasks implementation planning""",
-    "summary": """Use subtasks to control your tasks""",
+    "name": """Project Task Checklist""",
+    "summary": """Use checklist to be ensure that all your tasks are performed and not missed""",
     "category": """Project Management""",
-    "images": [],
+    "images": ['images/checklist_main.png'],
     "version": "1.0.0",
     "application": False,
 
     "author": "IT-Projects LLC, Manaev Rafael",
     "support": "apps@it-projects.info",
     "website": "https://it-projects.info",
-    "license": "GPL-3",
-    # "price": 9.00,
-    # "currency": "EUR",
+    "license": "OPL-1",
+    "price": 69.00,
+    "currency": "EUR",
 
     "depends": ['base', 'project'],
     "external_dependencies": {"python": [], "bin": []},
