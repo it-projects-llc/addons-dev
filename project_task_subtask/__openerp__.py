@@ -10,7 +10,7 @@
     "author": "IT-Projects LLC, Manaev Rafael",
     "support": "apps@it-projects.info",
     "website": "https://it-projects.info",
-    "license": "OPL-1",
+    "license": "GPL-3",
     "price": 69.00,
     "currency": "EUR",
 
