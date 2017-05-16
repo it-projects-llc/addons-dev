@@ -47,6 +47,7 @@
                 <field name="user_id"/>
                 <field name="price_unit"/>
                 <field name="quantity"/>
+                <field name="state"/>
             </tree>
         </field>
     </record>
