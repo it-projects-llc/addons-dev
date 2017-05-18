@@ -3,12 +3,15 @@
     "name": """Website sale cache""",
     "summary": """Cache module for Website Sales""",
     "category": "Website",
+    "images": ['images/websale_cache.png'],
     "version": "1.0.0",
 
     "author": "IT-Projects LLC, Artyom Losev",
     "support": "apps@it-projects.info",
     'website': "https://www.it-projects.info",
     "license": "LGPL-3",
+    "price": 49.00,
+    "currency": "EUR",
 
     "depends": [
         "website_sale",
