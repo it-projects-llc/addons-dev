@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
-    "name": """Website sale cache""",
-    "summary": """Cache module for Website Sales""",
+    "name": """Website Sale Cache""",
+    "summary": """Use this module to greatly accelerate the loading of a page with a large number of product categories""",
     "category": "Website",
     "images": ['images/websale_cache.png'],
     "version": "1.0.0",
