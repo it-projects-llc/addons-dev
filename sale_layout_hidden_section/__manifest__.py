@@ -6,9 +6,6 @@
     'license': 'LGPL-3',
     'category': 'Custom',
     'website': 'https://www.it-projects.info',
-    'description': """
-    	None
-    """,
     'depends': ['sale'],
     'data': [
         'views.xml'
