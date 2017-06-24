@@ -4,11 +4,29 @@
 
 Allows to set up multi-website and handles requests in a different company context. Later is especially useful for eCommerce to make orders for a different companies.
 
-The module switches  context (website and company) depending on a request host. Only one context is available per host. Manual selection of a website+company by user is not supported.
+Odoo is designed to switch website by host name, but this feature is not completed and not supported. This module fills the gap.
 
-The main idea is to create different *public* users per each company instead of single *Public User* as it's used by default.
+Implementation
+==============
 
-For authenticated users the module just changes user's company. It may lead to often database requests. See Usage Instruction how to avoid that.
+Websites
+--------
+
+To work with ``website`` model, the module adds menu ``Website Admin >> Configuration >> Websites``.
+
+Website Menus
+-------------
+
+To easy work with ``website.menu`` model, the module adds menu ``Website Admin >> Configuration >> Website Menus`` and adds form view.
+
+eCommerce
+---------
+
+The main idea is creating different *public* users per each company instead of single *Public User* as it's used by default.
+
+
+.. TODO check this note.
+.. For authenticated users the module just changes user's company. It may lead to often database requests. See Usage Instruction how to avoid that.
 
 Credits
 =======
