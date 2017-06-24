@@ -1,0 +1,35 @@
+# -*- coding: utf-8 -*-
+{
+    "name": """Real Multi Website""",
+    "summary": """Yes, you can set up multi-company, multi-website, multi-eCommerce on a single database!""",
+    "category": "eCommerce",
+    # "live_test_URL": "",
+    "images": [],
+    "version": "1.0.0",
+    "application": False,
+
+    "author": "IT-Projects LLC, Ivan Yelizariev",
+    "support": "apps@it-projects.info",
+    "website": "https://twitter.com/yelizariev",
+    "license": "LGPL-3",
+    "price": 400.00,
+    "currency": "EUR",
+
+    "depends": [
+        "website",
+    ],
+    "external_dependencies": {"python": [], "bin": []},
+    "data": [
+    ],
+    "qweb": [
+    ],
+    "demo": [
+    ],
+
+    "post_load": None,
+    "pre_init_hook": None,
+    "post_init_hook": None,
+
+    "auto_install": False,
+    "installable": True,
+}
