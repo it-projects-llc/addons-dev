@@ -18,12 +18,20 @@ Configuration
 =============
 
 * `Enable technical features <https://odoo-development.readthedocs.io/en/latest/odoo/usage/technical-features.html>`__
+* Activate ``Multi Companies`` for your user at ``Settings >> Users`` menu
 * Open menu ``Website Admin >> Configuration >> Websites``
 * Create or select a website record
 * Update fields:
 
-  * **Host Name**: host value without *www*
-  * **Company**: which company is used for this *website*
+  * **Website Domain** -- website address, e.g. *shop1.example.com*
+  * **Company** -- which company is used for this *website*
+
+Website Menus
+-------------
+
+You can edit, duplicate or create new menu at ``Website Admin >> Configuration >> Website Menus`` -- pay attention to fields **Website**, **Parent Menu**. In most cases, **Parent Menu** is a *Top Menu* (i.e. menu record without **Parent Menu** value). If a *website* doesn't have *Top Menu* you need to create one.
+
+Note. Odoo doesn't share Website Menus (E.g. Homepage, Shop, Contact us, etc.) between websites. So, you need to have copies of them.
 
 Usage
 =====
