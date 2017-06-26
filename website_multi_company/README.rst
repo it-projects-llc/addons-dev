@@ -28,6 +28,20 @@ The main idea is creating different *public* users per each company instead of s
 .. TODO check this note.
 .. For authenticated users the module just changes user's company. It may lead to often database requests. See Usage Instruction how to avoid that.
 
+Roadmap
+=======
+
+* Currently, all websites share the same theme. Possible solution to implement:
+
+  * add many2many field website_ids to ``ir.ui.view``
+  * rewrite ``get_inheriting_views_arch`` 
+
+    * filter out views with non empty  website_ids and current website is not in website_ids
+    * get website from context.
+    * take care about context -- inherit render in ir.ui.view and update context if website_enabled (see module website)
+
+  * rewrite ``theme_customize_get`` and ``theme_customize`` controllers and use both active and website_id fields to work with theme status
+
 Credits
 =======
 

@@ -30,7 +30,7 @@
         # "data/website_demo.xml",
     ],
 
-    "post_load": None,
+    "post_load": "post_load",
     "pre_init_hook": None,
     "post_init_hook": None,
 

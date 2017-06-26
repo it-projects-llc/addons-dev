@@ -57,5 +57,11 @@ Scenario for eCommerce
 ----------------------
 
 * install ``website_shop`` (eCommerce) module
+* open ``Settings >> Users >> Users`` -- select your user. Check that the companies are listed in **Allowed Companies**.
+* open ``Invoicing >> Configuration >> Payments Acquirers`` and create payments acquirers per each company
+
+  * use ``[Action] -> Duplicate`` button
+  * don't forget to click ``[Unpublished On Website]`` button to activate it
+
 * open HOST1/shop, make order, open backend -- created order belongs to COMPANY1
 * open HOST2/shop, make order, open backend -- created order belongs to COMPANY2
