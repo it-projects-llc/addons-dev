@@ -33,6 +33,8 @@ The main idea is creating different *public* users per each company instead of s
 Roadmap
 =======
 
+* Currently, all websites share the same footer
+
 * Currently, all websites share the same theme. Possible solution to implement:
 
   * add many2many field website_ids to ``ir.ui.view``

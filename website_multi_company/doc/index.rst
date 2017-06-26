@@ -63,5 +63,6 @@ Scenario for eCommerce
   * use ``[Action] -> Duplicate`` button
   * don't forget to click ``[Unpublished On Website]`` button to activate it
 
+* open ``Sales >> Products`` and create product per each company if they don't exist
 * open HOST1/shop, make order, open backend -- created order belongs to COMPANY1
 * open HOST2/shop, make order, open backend -- created order belongs to COMPANY2
