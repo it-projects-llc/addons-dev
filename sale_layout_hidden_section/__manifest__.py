@@ -8,7 +8,7 @@
     'website': 'https://www.it-projects.info',
     'depends': ['sale'],
     'data': [
-        'views.xml'
+        'views/views.xml'
     ],
     'installable': True
 }
