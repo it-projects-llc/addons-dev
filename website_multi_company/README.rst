@@ -14,6 +14,8 @@ Websites
 
 To work with ``website`` model, the module adds menu ``Website Admin >> Configuration >> Websites``.
 
+To have unique home page per each website, the module makes duplicates of ``website.homepage``, e.g. ``website.homepage2`` for company #2.
+
 Website Menus
 -------------
 
@@ -34,7 +36,7 @@ Roadmap
 * Currently, all websites share the same theme. Possible solution to implement:
 
   * add many2many field website_ids to ``ir.ui.view``
-  * rewrite ``get_inheriting_views_arch`` 
+  * rewrite ``get_inheriting_views_arch``
 
     * filter out views with non empty  website_ids and current website is not in website_ids
     * get website from context.
