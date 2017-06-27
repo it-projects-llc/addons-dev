@@ -17,7 +17,7 @@ session information. There are two ways to do it:
 * Let user select database manually (bad user experience)
 * Take database depending on host name (prefered)
 
-For later case ``dbfilter`` is used, though it's not flexible enough.
+In the latter case ``dbfilter`` is used, though it's not flexible enough.
 
 For TESTING purpose you can use following configuration:
 
