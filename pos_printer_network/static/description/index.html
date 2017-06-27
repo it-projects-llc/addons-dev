@@ -36,10 +36,10 @@
     <div class="oe_span12">
       <p class="oe_mt32">
 		<ul>
-          <li> Specify "Printer Name" <li/>
-		  <li> Specify IP address of network printer <li/>
-		  <li> Check the "Network Printer" box <li/>
-		  <li> Select product categories and click on "Save" <li/>
+          <li> Specify "Printer Name" </li>
+		  <li> Specify IP address of network printer </li>
+		  <li> Check the "Network Printer" box </li>
+		  <li> Select product categories and click on "Save" </li>
 		</ul>
 	  </p>		
     </div>
@@ -55,15 +55,15 @@
       <p class="oe_mt32">
         Go to <em>Point of Sale &rarr; Configuration &rarr; Point of Sale</em> and open POS config form.
 		<ul>
-		  <ol>
+		  <li>
 			Check the "Network Printer" box at <em>Hardware Proxy/PosBox</em> section
-		  </ol>
-		  <ol>
+		  </li>
+		  <li>
 			Optional: Specify "Network Receipt Printer IP" to be able to print POS receipts
-		  </ol>
-		  <ol>
+		  </li>
+		  <li>
 			Add network printer(s) to "Order Printers"
-		  </ol>
+		  </li>
 		</ul>
 	  </p>		
     </div>
@@ -78,7 +78,7 @@
 
 <section class="oe_container">
   <div class="oe_row oe_spaced">
-        <div class="oe_span12">
+        <div class="oe_span12 text-center">
           <p class="oe_mt32">
 			Open POS interface and add products. Click on the "Order" button to print order or make payment validation to print the receipt.
           </p>		
@@ -86,7 +86,7 @@
         <div class="oe_row_img oe_centered">
           <img class="oe_demo oe_picture oe_screenshot" src="pos_order_button.png"/>
         </div>
-		<div class="oe_span12">
+		<div class="oe_span12 text-center">
           <p class="oe_mt32">
 			As a result you can see order/receipt printed on network printer.
           </p>		
@@ -111,7 +111,7 @@
 <section class="oe_container">
   <div class="oe_row oe_spaced">
 	<h3 class="oe_slogan">PosBox Configuration</h3>
-    <div class="oe_span6">
+    <div class="oe_span12">
       <p class="oe_mt32">
 		Put the hw_printer_network module on odoo server in PosBox and add it to server wide modules (set server_wide_modules in config file or specify --load parameter in run command): e.g. ./odoo-bin --load hw_printer_network
       </p>
