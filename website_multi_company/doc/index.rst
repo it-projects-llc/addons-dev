@@ -5,14 +5,62 @@
 Installation
 ============
 
-* `Install <https://odoo-development.readthedocs.io/en/latest/odoo/usage/install-module.html>`__ this module in a usual way
+`Install <https://odoo-development.readthedocs.io/en/latest/odoo/usage/install-module.html>`__ this module in a usual way.
 
-It's recommended to redirect backend requests (e.g. via nginx) to some specific host to avoid needless switching between companies for authenticated users. For example:
+dbfilter
+--------
 
-    shop1.example.com/web -> backend.example.com/web
-    shop2.example.com/web -> backend.example.com/web
+No updates in odoo config is requered if you use only one database. But for multi-database
+instance odoo has to know which database to use when handle new request without
+session information. There are two ways to do it:
 
-Otherwise opening backend page (i.e. /web) twice via two different hosts by the same user leads to sending updating company requests to database too often.
+* Let user select database manually (bad user experience)
+* Take database depending on host name (prefered)
+
+For later case ``dbfilter`` is used, though it's not flexible enough.
+
+For TESTING purpose you can use following configuration:
+
+* dbfilter: ^%d$
+* database name: example
+
+  * host names:
+  
+    * example.shop1.local
+    * example.shop2.local
+    * example.shop3.local
+
+For PRODUCTION we recommend to use single database installation or make modification in odoo/http.py file as following::
+
+    # updated version of db_filter
+    def db_filter(dbs, httprequest=None):
+        httprequest = httprequest or request.httprequest
+        h = httprequest.environ.get('HTTP_HOST', '').split(':')[0]
+        d, _, r = h.partition('.')
+        t = r
+        if d == "www" and r:
+            d, _, t = r.partition('.')
+        r = odoo.tools.config['dbfilter'].replace('%h', h).replace('%d', d).replace('%t', t)
+        dbs = [i for i in dbs if re.match(r, i)]
+
+Then you can use following configucation
+
+* dbfilter: ^%t$
+* database name: example.com
+
+  * host names:
+  
+    * shop1.example.com
+    * shop2.example.com
+    * shop3.example.com
+
+* database name: example.org
+
+  * host names:
+  
+    * shop1.example.org
+    * shop2.example.org
+    * shop3.example.org
 
 Configuration
 =============

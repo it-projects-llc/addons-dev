@@ -24,11 +24,9 @@ To easy work with ``website.menu`` model, the module adds menu ``Website Admin >
 eCommerce
 ---------
 
-The main idea is creating different *public* users per each company instead of single *Public User* as it's used by default.
+Updates for eCommerce:
 
-
-.. TODO check this note.
-.. For authenticated users the module just changes user's company. It may lead to often database requests. See Usage Instruction how to avoid that.
+* /shop/* pages show only products for current company
 
 Roadmap
 =======
