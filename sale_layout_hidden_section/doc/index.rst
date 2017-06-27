@@ -11,6 +11,7 @@ Installation
 Configuration
 =============
 
-* Open menu ``Sales >> Settings >>``
-* Click ``[Personalize the sales orders and invoice report with categories, subtotals and page-breaks]``
+* Open menu ``Sales >> Settings``
+* Switch **Sales Reports Layout** to *Personalize the sales orders and invoice report with categories, subtotals and page-breaks*
+* Click ``[Apply]``
 
