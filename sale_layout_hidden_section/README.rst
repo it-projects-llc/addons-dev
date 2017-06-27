@@ -1,6 +1,6 @@
-===========================
+============================
  Sale Layout Hidden Section
-===========================
+============================
 
 This module allows to use layouts withnin specific Sale Order.
 
