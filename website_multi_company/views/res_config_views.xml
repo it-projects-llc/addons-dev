@@ -7,6 +7,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='website_id']" position="attributes">
                 <attribute name="invisible"></attribute>
+                <attribute name="readonly">1</attribute>
+                <attribute name="string">Default Website</attribute>
             </xpath>
         </field>
     </record>
