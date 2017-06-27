@@ -2,7 +2,7 @@
  Sale Layout Hidden Section
 ============================
 
-This module allows to use layouts withnin specific Sale Order.
+This module allows to use layouts within specific Sale Order.
 
 Once you create new sale order, you need to save it after creating new layout (Section), otherwise layout will not be displayed on other order lines.
 
