@@ -66,7 +66,7 @@ Configuration
 =============
 
 * `Enable technical features <https://odoo-development.readthedocs.io/en/latest/odoo/usage/technical-features.html>`__
-* Activate ``Multi Companies`` for your user at ``Settings >> Users`` menu
+* At ``Settings >> Users`` menu and activate **Multi Companies** and set **Allowed Companies**
 * Open menu ``Website Admin >> Configuration >> Websites``
 * Create or select a website record
 * Update fields:
@@ -90,8 +90,8 @@ For all examples below:
 * configure some WEBSITE2 for HOST2 and COMPANY2
 
 
-Scenario for Website
---------------------
+Steps for Website
+-----------------
 
 * open HOST1/
 * add Text block "text1" to Home Page
@@ -99,13 +99,12 @@ Scenario for Website
 * add Text block "text2" to Home Page
 * open HOST1/ -- you see "text1" and don't see "text2"
 
-The same works if you create new page, new menu, update anything at website footer, etc.
+The same works if you create new page, new menu
 
-Scenario for eCommerce
-----------------------
+Steps for eCommerce
+-------------------
 
 * install ``website_shop`` (eCommerce) module
-* open ``Settings >> Users >> Users`` -- select your user. Check that the companies are listed in **Allowed Companies**.
 * open ``Invoicing >> Configuration >> Payments Acquirers`` and create payments acquirers per each company
 
   * use ``[Action] -> Duplicate`` button
