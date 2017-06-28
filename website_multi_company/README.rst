@@ -26,7 +26,7 @@ eCommerce
 
 Updates for eCommerce:
 
-* /shop/* pages show only products for current company
+* ``/shop/*`` pages show only products for current company
 
 Roadmap
 =======
