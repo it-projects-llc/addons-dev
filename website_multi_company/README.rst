@@ -70,4 +70,4 @@ Usage instructions: `<doc/index.rst>`_
 
 Changelog: `<doc/changelog.rst>`_
 
-Tested on Odoo 10.0 {ODOO_COMMIT_SHA_TO_BE_UPDATED}
+Tested on Odoo 10.0 ffba5c688ff74a0630f9f70be1d7760a43a7deba

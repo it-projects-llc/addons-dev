@@ -20,7 +20,10 @@ class WebsiteExtended(Website):
     @http.route()
     def index(self, **kw):
         website = request.website
-        main_menu = request.env['website.menu'].search([('website_id','=', website.id), ('parent_id', '=', False)], limit=1)
+        main_menu = request.env['website.menu'].search([
+            ('website_id', '=', website.id),
+            ('parent_id', '=', False)
+        ], limit=1)
         if main_menu:
             first_menu = main_menu.child_id and main_menu.child_id[0]
             if first_menu:
@@ -33,7 +36,7 @@ class WebsiteExtended(Website):
         full_page = 'website.' + page
         try:
             request.website.get_template(page)
-        except ValueError, e:
+        except ValueError:
             view = request.website.get_template('homepage')
             view_copy = view.sudo().copy({
                 'website_id': website.id,
