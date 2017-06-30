@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+  <data>
+        <!-- Customize header  -->
+        <template id="all_user_header" name="Custom Header">
+              <div class="alert alert-info mt16" role="alert">
+                 <div class="centering">
+                     <h1> All users list </h1>
+                 </div>
+              </div>
+        </template>
+
+
+        <template id="user_header" name="Custom Header">
+              <div class="alert alert-info">
+                <div class="inlinning">
+                  <h1 text-align="center"><t t-esc="user.login"/> user data </h1>
+                </div>
+              </div>
+
+        </template>
+  </data>
+</openerp>
