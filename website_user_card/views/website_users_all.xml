@@ -30,9 +30,8 @@
                         <div class="services">
                             <div class="inlinning" style="position: absolute;">
                                 <div class="opt_shadow">
-                                 <!--<div class="col-xs-offset-3">-->
-                                     <span t-field="user.partner_id.image" t-field-options='{"widget": "image","class": "oe_avatar"}' />
-                                 <!--</div>-->
+                                    <img class="image" t-att-src="'data:image/png;base64,%s' % user.partner_id.image" style="border:auto;"/>
+                                    <!--<span t-field="user.partner_id.image" t-field-options='{"widget": "image"}' />-->
                                 </div>
                             </div>
                             <div class="inlinning" style="padding-left: 150px">
