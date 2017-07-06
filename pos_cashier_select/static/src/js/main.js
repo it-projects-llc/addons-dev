@@ -1,12 +1,8 @@
 odoo.define('pos_choosing_cashier', function(require){
 "use strict";
 
-    // var PosBaseWidget = require('point_of_sale.BaseWidget');
-    // var gui = require('point_of_sale.gui');
     var ActionpadWidget = require('point_of_sale.screens').ActionpadWidget;
-    // var UsernameWidget = require('point_of_sale.chrome').UsernameWidget;
     var core = require('web.core');
-    // var Chrome = require('web.core');
     var BarcodeReader = require('point_of_sale.devices').BarcodeReader;
     var PopupWidget = require('point_of_sale.popups');
     var ScreenWidget = require('point_of_sale.screens').ScreenWidget;
@@ -18,7 +14,7 @@ odoo.define('pos_choosing_cashier', function(require){
 
     BarcodeReader.include({
         init: function (attributes) {
-            this._super(attributes)
+            this._super(attributes);
             this.on_cashier_screen = false;
         }
     });
@@ -32,7 +28,7 @@ odoo.define('pos_choosing_cashier', function(require){
                 self.show_cashier_window();
             });
             this.$('.set-customer').click(function(){
-                self.gui.show_screen('clientlist')
+                self.gui.show_screen('clientlist');
                 
             });
         },
@@ -52,7 +48,7 @@ odoo.define('pos_choosing_cashier', function(require){
                         },
                     });
                 }else{
-                    self.gui.show_screen('payment')  
+                    self.gui.show_screen('payment');  
                 }
         },
 
@@ -65,9 +61,9 @@ odoo.define('pos_choosing_cashier', function(require){
                 'title':      _t('Change Cashier'),
             }).then(function(user){
                 self.pos.set_cashier(user);
-                self.gui.chrome.widget['username'].renderElement();
+                self.gui.chrome.widget.username.renderElement();
             }).then(function () {
-                self.payment()
+                self.payment();
             });
         }
     });
@@ -145,14 +141,11 @@ odoo.define('pos_choosing_cashier', function(require){
                     return self.ask_password(user.pos_security_pin).then(function(){
                         return user;
                     });
-                } else {
-                    return user;
                 }
+                return user;
             });
         },
 
     });
-
-
 
 });
