@@ -38,7 +38,9 @@ odoo.define('pos_choosing_cashier', function(require){
                 var has_valid_product_lot = _.every(order.orderlines.models, function(line){
                     return line.has_valid_product_lot();
                 });
-                if (!has_valid_product_lot) {
+                if (has_valid_product_lot) {
+                    self.gui.show_screen('payment');
+                }else{
                     self.gui.show_popup('confirm',{
                         'title': _t('Empty Serial/Lot Number'),
                         'body':  _t('One or more product(s) required serial/lot number.'),
@@ -46,8 +48,6 @@ odoo.define('pos_choosing_cashier', function(require){
                             self.gui.show_screen('payment');
                         },
                     });
-                }else{
-                    self.gui.show_screen('payment');
                 }
         },
 
