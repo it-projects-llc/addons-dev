@@ -29,7 +29,6 @@ odoo.define('pos_choosing_cashier', function(require){
             });
             this.$('.set-customer').click(function(){
                 self.gui.show_screen('clientlist');
-                
             });
         },
 
@@ -39,7 +38,7 @@ odoo.define('pos_choosing_cashier', function(require){
                 var has_valid_product_lot = _.every(order.orderlines.models, function(line){
                     return line.has_valid_product_lot();
                 });
-                if(!has_valid_product_lot){
+                if (!has_valid_product_lot) {
                     self.gui.show_popup('confirm',{
                         'title': _t('Empty Serial/Lot Number'),
                         'body':  _t('One or more product(s) required serial/lot number.'),
@@ -48,7 +47,7 @@ odoo.define('pos_choosing_cashier', function(require){
                         },
                     });
                 }else{
-                    self.gui.show_screen('payment');  
+                    self.gui.show_screen('payment');
                 }
         },
 
@@ -73,7 +72,6 @@ odoo.define('pos_choosing_cashier', function(require){
             if(this.$el){
                 this.$el.removeClass('oe_hidden');
             }
-            
             if (typeof options === 'string') {
                 this.options = {title: options};
             } else {
@@ -110,7 +108,7 @@ odoo.define('pos_choosing_cashier', function(require){
         select_user: function(options){
             options = options || {};
             var self = this;
-            var def  = new $.Deferred();
+            var def = new $.Deferred();
 
             var list = [];
             for (var i = 0; i < this.pos.users.length; i++) {
@@ -126,23 +124,23 @@ odoo.define('pos_choosing_cashier', function(require){
             this.show_popup('selection',{
                 'title': options.title || _t('Select User'),
                 list: list,
-                confirm: function(user){
+                confirm: function(_user){
                     self.pos.barcode_reader.on_cashier_screen = false;
-                    def.resolve(user);
+                    def.resolve(_user);
                 },
                 cancel:  function(){
                     self.pos.barcode_reader.on_cashier_screen = false;
-                    def.reject(); 
+                    def.reject();
                 },
             });
 
-            return def.then(function(user){
-                if (options.security && user !== options.current_user && user.pos_security_pin) {
-                    return self.ask_password(user.pos_security_pin).then(function(){
-                        return user;
+            return def.then(function(_user){
+                if (options.security && _user !== options.current_user && _user.pos_security_pin) {
+                    return self.ask_password(_user.pos_security_pin).then(function(){
+                        return _user;
                     });
                 }
-                return user;
+                return _user;
             });
         },
 
