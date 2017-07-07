@@ -1,0 +1,67 @@
+<openerp>
+    <data>
+        <template name="user list" id="team_template" page="True">
+            <t t-call="website.layout">
+
+                    <t t-set="title">Team </t>
+                    <div class="oe_structure">
+                        <div class="container">
+                            <t t-call="website_team.all_user_header"/>
+                            <div class="services">
+
+                                <t t-foreach="users" t-as="user">
+                                    <p>
+                                        <a t-attf-href="/team/{{ user.login }}/">  <t t-esc="user.login"/> </a>
+                                    </p>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+
+            </t>
+        </template>
+
+        <template name="user card" id="test_user" page="True">
+            <t t-call="website.layout">
+                <t t-set="title">  <t t-esc="user.login"/> card </t>
+                 <div class="container">
+                    <t t-call="website_team.user_header"/>
+
+                        <div class="services">
+                            <div class="inlinning" style="position: absolute;">
+                                <div class="opt_shadow">
+
+                                    <!--<t t-if="user.partner_id.image~='None'">-->
+                                        <img class="image" t-att-src="'data:image/png;base64,%s' % user.partner_id.image" style="border:auto; max-block-size:150px;"/>
+                                    <!--</t>-->
+                                    <!--<t t-if="user.partner_id.image=='None'">-->
+                                        <!--<img class="image" t-att-src="'data:image/png;base64,%s' % user.partner_id.image" style="border:auto; max-block-size:150px;"/>-->
+                                    <!--</t>-->
+
+                                    <!--<span t-field="user.partner_id.image" t-field-options='{"widget": "image"}' />-->
+                                </div>
+                            </div>
+                            <div class="inlinning" style="padding-left: 170px">
+                              <p>
+                                  Login: <t t-esc="user.login"/>
+                              </p>
+                              <p>
+                                  Email: <t t-esc="user.email"/>
+                              </p>
+                              <p>
+                                  Language:  <t t-esc="user.partner_id.lang"/>
+                              </p>
+                              <p>
+                                  Active:  <t t-esc="user.active"/>
+                              </p>
+                              <p>
+                                  Phone number:  <t t-esc="user.partner_id.phone"/>
+                              </p>
+                         </div>
+                    </div>
+                </div>
+              </t>
+        </template>
+
+    </data>
+</openerp>
