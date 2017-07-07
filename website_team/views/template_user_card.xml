@@ -14,7 +14,7 @@
         <template id="user_header" name="Custom Header">
               <div class="alert alert-info mt16">
                 <div class="inlinning">
-                  <h1 text-align="center"><t t-esc="user.login"/> user data </h1>
+                  <h1 text-align="center"><t t-esc="user.name"/> data </h1>
                 </div>
               </div>
 

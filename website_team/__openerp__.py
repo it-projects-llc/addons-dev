@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 {
-    "name": """Team""",
+    "name": """Website Team""",
     "summary": """Team""",
     "category": "website",
-    "images": [],
+    "images": [
+        "static/src/img/3.png"
+    ],
     "version": "1.0.0",
     "application": False,
 
@@ -19,6 +21,7 @@
         "views/users_page.xml",
         "views/assets.xml",
         "views/website_users_all.xml",
+        "views/web_team.xml"
 
     ],
     "qweb": [

@@ -11,7 +11,8 @@
 
                                 <t t-foreach="users" t-as="user">
                                     <p>
-                                        <a t-attf-href="/team/{{ user.login }}/">  <t t-esc="user.login"/> </a>
+                                        <!--<a t-attf-href="/team/{{ user.name }}/">  <t t-esc="user.name"/> </a> - -->
+                                        <t t-esc="user.name"/> - <a t-attf-href="/team/{{ user.username_github }}/">  <t t-esc="user.username_github"/> </a>
                                     </p>
                                 </t>
                             </div>
@@ -23,7 +24,7 @@
 
         <template name="user card" id="test_user" page="True">
             <t t-call="website.layout">
-                <t t-set="title">  <t t-esc="user.login"/> card </t>
+                <t t-set="title">  <t t-esc="user.username_github"/> card </t>
                  <div class="container">
                     <t t-call="website_team.user_header"/>
 
@@ -31,22 +32,29 @@
                             <div class="inlinning" style="position: absolute;">
                                 <div class="opt_shadow">
 
-                                    <!--<t t-if="user.partner_id.image~='None'">-->
+                                    <t t-if="user.partner_id.image is not None">
                                         <img class="image" t-att-src="'data:image/png;base64,%s' % user.partner_id.image" style="border:auto; max-block-size:150px;"/>
-                                    <!--</t>-->
-                                    <!--<t t-if="user.partner_id.image=='None'">-->
-                                        <!--<img class="image" t-att-src="'data:image/png;base64,%s' % user.partner_id.image" style="border:auto; max-block-size:150px;"/>-->
-                                    <!--</t>-->
+                                    </t>
+
+                                    <t t-if="user.partner_id.image is None">
+                                        <img class="image" src="/website_team/static/src/img/3.png" style="border:auto; max-block-size:150px;"/>
+                                    </t>
 
                                     <!--<span t-field="user.partner_id.image" t-field-options='{"widget": "image"}' />-->
                                 </div>
                             </div>
                             <div class="inlinning" style="padding-left: 170px">
-                              <p>
+                                <p>
+                                    Name: <t t-esc="user.name"/>
+                              </p>
+                                <p>
                                   Login: <t t-esc="user.login"/>
                               </p>
-                              <p>
+                                <p>
                                   Email: <t t-esc="user.email"/>
+                              </p>
+                              <p>
+                                  Work Email: <t t-esc="user.username_work_email"/>
                               </p>
                               <p>
                                   Language:  <t t-esc="user.partner_id.lang"/>
@@ -56,6 +64,15 @@
                               </p>
                               <p>
                                   Phone number:  <t t-esc="user.partner_id.phone"/>
+                              </p>
+                                <p>
+                                  GitHub:  <t t-esc="user.username_github"/>
+                              </p>
+                              <p>
+                                  Twitter:  <t t-esc="user.username_twitter"/>
+                              </p>
+                              <p>
+                                  Upwork:  <t t-esc="user.url_upwork"/>
                               </p>
                          </div>
                     </div>

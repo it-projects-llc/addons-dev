@@ -12,14 +12,18 @@ class website_team(http.Controller):
             'users': users.search([])
         })
 
-    @http.route('/team/<string:user_login>', auth='public', website=True)
-    def user(self, user_login):
+    @http.route('/team/<string:user_gh>', auth='public', website=True)
+    def user(self, user_gh):
 
         users = http.request.env['res.users'].sudo()
-        if len(user_login) == 0:
+        print "== == == == == == =="
+        print users.search([('login', '=', user_gh)]).name
+        print "== == == == == == == =="
+
+        if len(user_gh) == 0:
             location = '/team/'
             return werkzeug.utils.redirect(location)
         else:
             return http.request.render('website_team.test_user', {
-                'user': users.search([('login', '=', user_login)])
-            })
+                'user': users.search([('username_github', '=', user_gh)])
+        })
