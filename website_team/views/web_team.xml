@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <openerp>
+    <data>
+
+        <record id="view_users_form" model="ir.ui.view">
+            <field name="name">res.users.form</field>
+            <field name="model">res.users</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='signature']" position="after">
+                    <field name="username_github" string="Github"/>
+                    <field name="url_upwork" string="Upwork link"/>
+                    <field name="username_twitter" string="Twitter link"/>
+                    <field name="username_work_email" string="Email address"/>
+                    <field name="phone" string="Phone number"/>
+                </xpath>
+            </field>
+        </record>
+
+     </data>
+</openerp>
