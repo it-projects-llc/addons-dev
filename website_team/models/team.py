@@ -2,7 +2,6 @@
 
 from openerp import fields
 from openerp import models
-from openerp import http
 
 
 class Users(models.Model):
@@ -11,3 +10,4 @@ class Users(models.Model):
     url_upwork = fields.Char(default=None)
     username_twitter = fields.Char()
     username_work_email = fields.Char(default=None)
+    username_youtube_link = fields.Char()

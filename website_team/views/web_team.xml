@@ -14,6 +14,7 @@
                     <field name="username_twitter" string="Twitter link"/>
                     <field name="username_work_email" string="Email address"/>
                     <field name="phone" string="Phone number"/>
+                    <field name="username_youtube_link" string="YouTube link"/>
                 </xpath>
             </field>
         </record>
