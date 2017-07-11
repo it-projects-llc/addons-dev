@@ -4,7 +4,9 @@
 
 Team members representation pages
 
-Module adds website team members representation pages
+Module adds website team members representation pages.
+Also, this module provides new fields of user's information like github username, upwork url, twitter link, work email and
+youtube link for user representation.
 
 Credits
 =======
@@ -24,7 +26,7 @@ Maintainers
 Further information
 ===================
 
-Demo: http://runbot.it-projects.info/demo/addons-dev/website-addons-8.0-website_team_new
+Demo: http://runbot.it-projects.info/demo/misc-addons/8.0
 
 HTML Description: https://apps.odoo.com/8.0/website_team/
 
