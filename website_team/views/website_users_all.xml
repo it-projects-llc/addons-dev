@@ -19,7 +19,7 @@
                                                     </t>
 
                                                     <t t-if="user.partner_id.image is None">
-                                                        <img class="image" src="/website_team/static/src/img/3.png" style="border:auto; max-block-size:50px; box-shadow: 0 2px 5px rgba(51, 51, 51, 0.4);"/>
+                                                        <img class="image" src="/website_team/static/src/img/ava_lack.png" style="border:auto; max-block-size:50px; box-shadow: 0 2px 5px rgba(51, 51, 51, 0.4);"/>
                                                     </t>
 
                                             </div>
@@ -45,27 +45,23 @@
             <t t-call="website.layout">
                 <t t-set="title">  <t t-esc="user.username_github"/> card </t>
                  <div class="container">
-                    <!--<t t-call="website_team.user_header"/>-->
-
 
                         <div class="services container-fluid">
 
 
                             <div class="col-md-2">
-                            <!--<div class="inlinning" style="position: absolute;">-->
                                 <t t-if="user.partner_id.image is not None">
                                     <img class="image" t-att-src="'data:image/png;base64,%s' % user.partner_id.image" style="border:auto; max-block-size:150px; box-shadow: 0 2px 5px rgba(51, 51, 51, 0.4);"/>
                                 </t>
 
                                 <t t-if="user.partner_id.image is None">
-                                    <img class="image" src="/website_team/static/src/img/3.png" style="border:auto; max-block-size:150px; box-shadow: 0 2px 5px rgba(51, 51, 51, 0.4);"/>
+                                    <img class="image" src="/website_team/static/src/img/ava_lack.png" style="border:auto; max-block-size:150px; box-shadow: 0 2px 5px rgba(51, 51, 51, 0.4);"/>
                                 </t>
                                 <!--<span t-field="user.partner_id.image" t-field-options='{"widget": "image"}' />-->
                             </div>
 
 
                             <div class="col-md-4">
-                            <!--<div class="inlinning" style="padding-left: 170px">-->
                                 <p>
                                     <h4>Profile</h4>
                                 </p>
@@ -78,16 +74,6 @@
                                 <p>
                                     Language:  <t t-esc="user.partner_id.lang"/>
                                 </p>
-
-                                <!--<p>-->
-                                    <!--Email: <t t-esc="user.email"/>-->
-                                <!--</p>-->
-                                <!--<p t-if="user.username_twitter">-->
-                                    <!--Twitter: <a t-attf-href="https://twitter.com/{{ user.username_twitter }}/">  <t t-esc="user.username_twitter"/> </a>-->
-                                <!--</p>-->
-                                <!--<p>-->
-                                    <!--GitHub:  <a t-attf-href="https://github.com/{{ user.username_github }}/">  <t t-esc="user.username_github"/> </a>-->
-                                <!--</p>-->
                                 <p>
                                     <h4>Contact information</h4>
                                 </p>
@@ -118,7 +104,10 @@
 
 
                             <div class="col-md-6">
-                                <iframe t-if="user.username_youtube_link" width="530" height="300" t-attf-src="{{ user.username_youtube_link }}/"></iframe>
+                                <t t-if="user.presentation_youtube_link">
+                                    <iframe t-if="Youtube_link" width="530" height="300" t-attf-src="{{ Youtube_link }}/"></iframe>
+                                    <p t-if="Youtube_link == False" style="text-align: center"> Youtube link is incorrect </p>
+                                </t>
                             </div>
 
 

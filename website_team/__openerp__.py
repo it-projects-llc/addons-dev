@@ -4,7 +4,7 @@
     "summary": """Team""",
     "category": "website",
     "images": [
-        "static/src/img/3.png"
+        "static/src/img/ava_lack.png"
     ],
     "version": "1.0.0",
     "application": False,

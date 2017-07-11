@@ -1,6 +1,6 @@
-=======
+==============
  Website Team
-=======
+==============
 
 Team members representation pages
 
@@ -24,20 +24,12 @@ Maintainers
 Further information
 ===================
 
-Demo: http://runbot.it-projects.info/demo/??
+Demo: http://runbot.it-projects.info/demo/addons-dev/website-addons-8.0-website_team_new
 
-HTML Description: https://apps.odoo.com/??
+HTML Description: https://apps.odoo.com/8.0/website_team/
 
 Usage instructions: `<doc/index.rst>`__
 
 Changelog: `<doc/changelog.rst>`__
 
 Tested on Odoo 8.0 27a47eb3c3d4b79d8fffb6df66f107a993ddf805
-
-Need our service?
------------------
-
-Contact us by `email <mailto:it@it-projects.info>`__ or fill out `request form <https://www.it-projects.info/page/website.contactus>`__:
-
-* it@it-projects.info
-* https://www.it-projects.info/page/website.contactus
