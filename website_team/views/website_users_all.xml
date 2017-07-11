@@ -77,8 +77,8 @@
                                 <p>
                                     <h4>Contact information</h4>
                                 </p>
-                                <p>
-                                    <i class="fa fa-envelope"></i>  <span t-field="user.email"></span>
+                                <p t-if="AliasEmail">
+                                    <i class="fa fa-envelope"></i> <t t-esc="AliasEmail"/>
                                 </p>
                                 <p t-if="user.username_work_email">
                                     Work Email: <t t-esc="user.username_work_email"/>
@@ -91,10 +91,6 @@
                                 <p t-if="user.url_upwork">
                                     Upwork:  <a t-attf-href="{{ user.url_upwork }}/">  <t t-esc="user.url_upwork"/> </a>
                                 </p>
-
-                                <!--<p t-if="alias.alias_name">-->
-                                    <!--Alias:  <a t-attf-href="{{ alias.alias_name }}/">  <t t-esc="alias.alias_name"/> </a>-->
-                                <!--</p>-->
 
                                 <h2>
                                     <a t-attf-href="https://twitter.com/{{ user.username_twitter }}/" t-if="user.username_twitter"><i class="fa fa-twitter"/></a>

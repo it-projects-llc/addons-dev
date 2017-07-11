@@ -15,20 +15,10 @@ class WebsiteTeam(http.Controller):
     @http.route('/team/<string:user_gh>', auth='public', website=True)
     def user(self, user_gh):
 
-        # users = http.request.env['res.users'].sudo()
-        # alias = http.request.env['mail.alias'].sudo()
-        # users_name = users.search([('username_github', '=', user_gh)])
-        # aliasq = alias.search([('alias_user_id', '=', users_name.id)])
-        #
-        # print "++++++++++++++++++++++++++++++++++++++"
-        # print users.search([('username_github', '=', user_gh)])
-        # print aliasq #.alias_name
-        # for r in aliasq:
-        #     print r.alias_name
-        # print "++++++++++++++++++++++++++++++++++++++"
-
-        current_user = http.request.env['res.users'].sudo().search([('username_github', '=', user_gh)])
+        users = http.request.env['res.users'].sudo()
+        current_user = users.search([('username_github', '=', user_gh)])
         youtube_id = current_user.get_youtube_id(current_user.presentation_youtube_link)
+        alias_email_full = current_user.alias_name + "@" + current_user.alias_domain
 
         if len(user_gh) == 0:
             location = '/team/'
@@ -37,6 +27,5 @@ class WebsiteTeam(http.Controller):
             return http.request.render('website_team.test_user', {
                 'user': current_user,
                 'Youtube_link': youtube_id,
-                # 'alias': aliasq
+                'AliasEmail': alias_email_full
             })
-
