@@ -6,12 +6,14 @@ import re
 
 class Users(models.Model):
     _inherit = ['res.users']
-    username_github = fields.Char(default=None, help="User GitHub name")
-    url_upwork = fields.Char(default=None, help="User upwork link")
-    username_twitter = fields.Char(help="User twitter link")
-    username_work_email = fields.Char(default=None, help="User work email")
-    presentation_youtube_link = fields.Char(help="A link to the user representation video.\n"
-                                                 "Copy a link in an address bar from a youtube page contained corresponding video and paste here")
+
+    username_github = fields.Char(default=None, string="Github", help="User GitHub name")
+    url_upwork = fields.Char(default=None, string="Upwork link", help="User upwork link")
+    username_twitter = fields.Char(string="Twitter link", help="User twitter link")
+    username_work_email = fields.Char(default=None, string="Email address", help="User work email")
+    presentation_youtube_link = fields.Char(string='YouTube representation video link',
+                                            help="A link to the user representation video.\n"
+                                                    "Copy a link in an address bar from a youtube page contained corresponding video and paste here")
 
     def youtube_url_validation(self, url):
 

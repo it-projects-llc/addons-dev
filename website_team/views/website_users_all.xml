@@ -77,8 +77,8 @@
                                 <p>
                                     <h4>Contact information</h4>
                                 </p>
-                                <p t-if="AliasEmail">
-                                    <i class="fa fa-envelope"></i> <t t-esc="AliasEmail"/>
+                                <p t-if="alias_email">
+                                    <i class="fa fa-envelope"></i> <t t-esc="alias_email"/>
                                 </p>
                                 <p t-if="user.username_work_email">
                                     Work Email: <t t-esc="user.username_work_email"/>
@@ -101,8 +101,8 @@
 
                             <div class="col-md-6">
                                 <t t-if="user.presentation_youtube_link">
-                                    <iframe t-if="Youtube_link" width="530" height="300" t-attf-src="{{ Youtube_link }}/"></iframe>
-                                    <p t-if="Youtube_link == False" style="text-align: center"> Youtube link is incorrect </p>
+                                    <iframe t-if="youtube_link" width="530" height="300" t-attf-src="{{ youtube_link }}/"></iframe>
+                                    <p t-if="youtube_link == False" style="text-align: center"> Youtube link is incorrect </p>
                                 </t>
                             </div>
 

@@ -9,12 +9,12 @@
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='signature']" position="after">
-                    <field name="phone" string="Phone number"/>
-                    <field name="username_github" string="Github"/>
-                    <field name="url_upwork" string="Upwork link"/>
-                    <field name="username_twitter" string="Twitter link"/>
-                    <field name="username_work_email" string="Email address"/>
-                    <field name="presentation_youtube_link" string="YouTube representation video link"/>
+                    <field name="phone"/>
+                    <field name="username_github"/>
+                    <field name="url_upwork"/>
+                    <field name="username_twitter"/>
+                    <field name="username_work_email"/>
+                    <field name="presentation_youtube_link"/>
                 </xpath>
             </field>
         </record>
