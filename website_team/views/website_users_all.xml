@@ -41,7 +41,7 @@
             </t>
         </template>
 
-        <template name="user card" id="test_user" page="True">
+        <template name="user card" id="user_template" page="True">
             <t t-call="website.layout">
                 <t t-set="title">  <t t-esc="user.username_github"/> card </t>
                  <div class="container">

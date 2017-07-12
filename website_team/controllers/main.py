@@ -30,14 +30,14 @@ class WebsiteTeam(http.Controller):
 
         if current_user.alias_name:
             alias_email_full = current_user.alias_name + "@" + current_user.alias_domain
-            return http.request.render('website_team.test_user', {
+            return http.request.render('website_team.user_template', {
                                        'user': current_user,
-                                       'youtube_link': youtube_id,
+                                       'youtube_id': youtube_id,
                                        'alias_email': alias_email_full
                     })
 
         if not current_user.alias_name:
-            return http.request.render('website_team.test_user', {
+            return http.request.render('website_team.user_template', {
                                        'user': current_user,
                                        'youtube_id': youtube_id,
                                        'alias_email': False
