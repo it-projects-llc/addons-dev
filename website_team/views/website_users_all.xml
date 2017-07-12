@@ -101,8 +101,8 @@
 
                             <div class="col-md-6">
                                 <t t-if="user.presentation_youtube_link">
-                                    <iframe t-if="youtube_link" width="530" height="300" t-attf-src="{{ youtube_link }}/"></iframe>
-                                    <p t-if="youtube_link == False" style="text-align: center"> Youtube link is incorrect </p>
+                                    <iframe t-if="youtube_id" width="530" height="300" t-attf-src="{{ youtube_id }}/"></iframe>
+                                    <p t-if="youtube_id == False" style="text-align: center"> Youtube link is incorrect </p>
                                 </t>
                             </div>
 

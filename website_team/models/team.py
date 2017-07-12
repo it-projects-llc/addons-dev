@@ -13,7 +13,7 @@ class Users(models.Model):
     username_work_email = fields.Char(default=None, string="Email address", help="User work email")
     presentation_youtube_link = fields.Char(string='YouTube representation video link',
                                             help="A link to the user representation video.\n"
-                                                    "Copy a link in an address bar from a youtube page contained corresponding video and paste here")
+                                            "Copy a link in an address bar from a youtube page contained corresponding video and paste here")
 
     def youtube_url_validation(self, url):
 
