@@ -12,7 +12,7 @@ Configuration
 
 To have a user's page either **github username** or **alias** has to be set. 
 
-To add new information for user you should enter the website settings, open  ``Settings >> Users`` menu, choose a user you want to edit and click the corresponding line. Click ``[Edit]`` to add or edit information. You will see new fields at ``Preferences`` tab.
+To set or update user information open  ``Settings >> Users`` menu, choose a user you want to edit and click the corresponding line. Click ``[Edit]`` to add or edit information. You will see new fields at ``Preferences`` tab.
 
 Usage
 =====
