@@ -27,18 +27,10 @@ class WebsiteTeam(http.Controller):
             raise NotFound()
 
         youtube_id = current_user.get_youtube_id(current_user.presentation_youtube_link)
+        alias_email_full = current_user.get_alias_mail()
 
-        if current_user.alias_name:
-            alias_email_full = current_user.alias_name + "@" + current_user.alias_domain
-            return http.request.render('website_team.user_template', {
+        return http.request.render('website_team.user_template', {
                                        'user': current_user,
                                        'youtube_id': youtube_id,
-                                       'alias_email': alias_email_full
-                    })
-
-        if not current_user.alias_name:
-            return http.request.render('website_team.user_template', {
-                                       'user': current_user,
-                                       'youtube_id': youtube_id,
-                                       'alias_email': False
+                                       'alias_email': alias_email_full,
                     })

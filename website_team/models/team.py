@@ -14,6 +14,7 @@ class Users(models.Model):
     presentation_youtube_link = fields.Char(string='YouTube representation video link',
                                             help="A link to the user representation video.\n"
                                             "Copy a link in an address bar from a youtube page contained corresponding video and paste here")
+    user_description = fields.Html('Description for the website user', translate=True)
 
     def youtube_url_validation(self, url):
 
@@ -35,3 +36,12 @@ class Users(models.Model):
         if link_id is None:
             return False
         return "https://www.youtube.com/embed/" + link_id + "?rel=0&amp;showinfo=0"
+
+    def get_alias_mail(self):
+
+        if self.alias_name:
+            alias_email_full = self.alias_name + "@" + self.alias_domain
+            return alias_email_full
+
+        else:
+            return False

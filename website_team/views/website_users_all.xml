@@ -84,7 +84,6 @@
                                     Work Email: <t t-esc="user.username_work_email"/>
                                 </p>
                                 <p t-if="user.partner_id.phone">
-                                    <!--Phone number:  <t t-esc="user.partner_id.phone"/>-->
                                     <i class="fa fa-phone"></i> <span t-field="user.partner_id.phone"></span>
 
                                 </p>
@@ -107,7 +106,11 @@
                             </div>
 
 
-                    </div>
+
+                        </div>
+
+                        <div t-if="user.user_description" itemprop="description" t-field="user.user_description" class="oe_structure mt16" id="user_full_description"/>
+
                 </div>
               </t>
         </template>
