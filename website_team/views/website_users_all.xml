@@ -26,7 +26,11 @@
 
                                             <div class="col-md-11 align-items-center"  style="vertical-align: middle; margin-top: 15px;">
 
-                                                    <t t-esc="user.name"/> - <a t-attf-href="/team/{{ user.username_github }}/">  <t t-esc="user.username_github"/> </a>
+                                                <t t-esc="user.name"/> - <a t-if="user.username_github" t-attf-href="/team/{{ user.username_github }}/">  <t t-esc="user.username_github"/> </a>
+
+                                                <t t-if="user.username_github is False">
+                                                    <a t-if="user.alias_name" t-attf-href="/team/{{ user.alias_name }}/">  <t t-esc="user.alias_name"/> </a>
+                                                </t>
 
                                             </div>
 
@@ -104,9 +108,6 @@
                                     <p t-if="youtube_id == False" style="text-align: center"> Youtube link is incorrect </p>
                                 </t>
                             </div>
-
-
-
                         </div>
 
                         <div t-if="user.user_description" itemprop="description" t-field="user.user_description" class="oe_structure mt16" id="user_full_description"/>
