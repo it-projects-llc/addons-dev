@@ -1,0 +1,52 @@
+.team_header {
+    text-transform: uppercase;
+    color: #838391;
+    /*font-family: Open Sans;*/
+    text-align: center;
+}
+.team_header .team_sub_header {
+    color: #a24588;
+}
+.team {
+    margin: 50px;
+}
+.team_list {
+    margin: auto;
+    max-width: 800px;
+}
+.team .team_image {
+    width: 166px;
+    height: 166px;
+}
+.team_link div {
+    display: inline-block;
+    font-size: 24px;
+}
+.team_link a {
+    color: #a24588;
+}
+.team_link a:hover {
+    color: #b00081;
+}
+.team_profile {
+    width: 150px;
+    height: 300px;
+    margin: auto;
+    font-size: 14px;
+}
+.team_profile .user{
+    margin-top: 20px;
+    color: #a24588;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+.team_profile .user a{
+    color: #a24588;
+}
+.team_profile .user a:hover {
+    color: #b00081;
+    text-decoration: none;
+}
+.team_profile .job_position {
+    color: #838391;
+}

@@ -1,0 +1,116 @@
+<openerp>
+    <data>
+        <template id="website_team_assets" name="Website Team Assets" inherit_id="website.assets_frontend">
+            <xpath expr="link[last()]" position="after">
+                <link href="/website_team/static/src/css/style.css" rel="stylesheet" type="text/css"/>
+            </xpath>
+        </template>
+
+        <template name="user list" id="team_template" page="True">
+            <t t-call="website.layout">
+                <t t-set="title">Team </t>
+                <div class="oe_structure">
+                    <div class="container">
+                        <h1 class="team_header"><span class="team_sub_header"><t t-esc="res_company.name"/></span> team</h1>
+                        <div class="team">
+                            <div class="team_list">
+                                <div class="row">
+                                    <t t-foreach="users" t-as="user">
+                                        <div class="col-md-3">
+                                            <div class="team_profile">
+                                                <t t-if="user.partner_id.image is not None">
+                                                    <img class="team_image image" t-att-src="'data:image/png;base64,%s' % user.partner_id.image"/>
+                                                </t>
+                                                <t t-if="user.partner_id.image is None">
+                                                    <img class="team_image image" src="/website_team/static/src/img/ava_lack.png"/>
+                                                </t>
+                                                <div class="user">
+                                                    <a t-if="user.username_github" t-attf-href="/team/{{ user.username_github }}/"><t t-esc="user.name"/></a>
+                                                    <t t-if="user.username_github is False">
+                                                        <a t-if="user.alias_name" t-attf-href="/team/{{ user.alias_name }}/"><t t-esc="user.name"/></a>
+                                                    </t>
+                                                    <t t-if="user.username_github is False and user.alias_name is False">
+                                                        <t t-esc="user.name"/>
+                                                    </t>
+                                                </div>
+                                                <div class="job_position">
+                                                    <t t-esc="user.partner_id.function"/>
+                                                </div>
+                                                <div class="team_link">
+                                                    <div class="github">
+                                                        <a t-attf-href="https://github.com/{{ user.username_github }}/" t-if="user.username_github" target="_blank"><i class="fa fa-github"/></a>
+                                                    </div>
+                                                    <div class="twitter">
+                                                        <a t-attf-href="{{ user.username_twitter }}/" t-if="user.username_twitter" target="_blank"><i class="fa fa-twitter"/></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template name="user card" id="user_template" page="True">
+            <t t-call="website.layout">
+                <t t-set="title">  <t t-esc="user.username_github"/> card </t>
+                 <div class="container">
+                     <div class="services container-fluid">
+                         <div class="col-md-2">
+                             <t t-if="user.partner_id.image is not None">
+                                 <img class="image" t-att-src="'data:image/png;base64,%s' % user.partner_id.image" style="border:auto; max-block-size:150px; box-shadow: 0 2px 5px rgba(51, 51, 51, 0.4);"/>
+                             </t>
+                             <t t-if="user.partner_id.image is None">
+                                 <img class="image" src="/website_team/static/src/img/ava_lack.png" style="border:auto; max-block-size:150px; box-shadow: 0 2px 5px rgba(51, 51, 51, 0.4);"/>
+                             </t>
+                         </div>
+                         <div class="col-md-4">
+                             <p>
+                                 <h4>Profile</h4>
+                             </p>
+                             <p>
+                                 Name: <t t-esc="user.name"/>
+                             </p>
+                             <p>
+                                 Login: <t t-esc="user.login"/>
+                             </p>
+                             <p>
+                                 Language:  <t t-esc="user.partner_id.lang"/>
+                             </p>
+                             <p>
+                                 <h4>Contact information</h4>
+                             </p>
+                             <p t-if="alias_email">
+                                 <i class="fa fa-envelope"></i> <t t-esc="alias_email"/>
+                             </p>
+                             <p t-if="user.username_work_email">
+                                 Work Email: <t t-esc="user.username_work_email"/>
+                             </p>
+                             <p t-if="user.partner_id.phone">
+                                 <i class="fa fa-phone"></i> <span t-field="user.partner_id.phone"></span>
+                             </p>
+                             <p t-if="user.url_upwork">
+                                 Upwork:  <a t-attf-href="{{ user.url_upwork }}/">  <t t-esc="user.url_upwork"/> </a>
+                             </p>
+                             <h2>
+                                 <a t-attf-href="https://twitter.com/{{ user.username_twitter }}/" t-if="user.username_twitter"><i class="fa fa-twitter"/></a>
+                                 <a t-attf-href="https://github.com/{{ user.username_github }}/" t-if="user.username_github"><i class="fa fa-github"/></a>
+                             </h2>
+                         </div>
+                         <div class="col-md-6">
+                             <t t-if="user.presentation_youtube_link">
+                                 <iframe t-if="youtube_id" width="530" height="300" t-attf-src="{{ youtube_id }}/"></iframe>
+                                 <p t-if="youtube_id == False" style="text-align: center"> Youtube link is incorrect </p>
+                             </t>
+                         </div>
+                     </div>
+                     <div t-if="user.user_description" itemprop="description" t-field="user.user_description" class="oe_structure mt16" id="user_full_description"/>
+                 </div>
+            </t>
+        </template>
+    </data>
+</openerp>

@@ -30,7 +30,7 @@ class WebsiteTeam(http.Controller):
         alias_email_full = current_user.get_alias_mail()
 
         return http.request.render('website_team.user_template', {
-                                       'user': current_user,
-                                       'youtube_id': youtube_id,
-                                       'alias_email': alias_email_full,
-                    })
+            'user': current_user,
+            'youtube_id': youtube_id,
+            'alias_email': alias_email_full,
+        })

@@ -16,11 +16,8 @@
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
-        "views/users_page.xml",
-        "views/assets.xml",
-        "views/website_users_all.xml",
-        "views/web_team.xml"
-
+        "views/website_team_template.xml",
+        "views/website_team_view.xml",
     ],
     "qweb": [
     ],

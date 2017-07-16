@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
  <openerp>
     <data>
-
         <record id="view_users_form" model="ir.ui.view">
             <field name="name">res.users.form</field>
             <field name="model">res.users</field>
@@ -19,5 +18,11 @@
             </field>
         </record>
 
+        <record id="team_page_link" model="website.menu">
+            <field name="name">Team</field>
+            <field name="url">/team</field>
+            <field name="sequence" type="int">50</field>
+            <field name="parent_id" ref="website.main_menu" />
+        </record>
      </data>
 </openerp>
