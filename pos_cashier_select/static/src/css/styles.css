@@ -4,3 +4,7 @@
 	height: 95%;
 	text-align: center;
 }
+
+.pos .popup.popup-selection .selection {
+	max-height: 100%;
+}
