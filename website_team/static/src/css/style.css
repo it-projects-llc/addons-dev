@@ -19,11 +19,18 @@
     height: 166px;
 }
 .team_link div {
-    display: inline-block;
     font-size: 24px;
 }
 .team_link a {
     color: #a24588;
+}
+.team_link a:hover {
+    color: #b00081;
+}
+.team_profile .team_link .github {
+    float: left;
+    margin-top: -2px;
+    padding-right: 10px;
 }
 .team_link a:hover {
     color: #b00081;
@@ -49,4 +56,69 @@
 }
 .team_profile .job_position {
     color: #838391;
+}
+.team .user_profile {
+    max-width: 1000px;
+    margin: auto;
+}
+.team .user_profile .team_image {
+    max-width: 70px;
+    max-height: 70px;
+}
+.team .user_profile .user_avatar {
+    text-align: right;
+}
+.team .user_profile .user {
+    text-align: left;
+    color: #a24588;
+    font-size: 34px;
+    text-transform: uppercase;
+}
+.team .user_profile .team_link {
+    text-align: right;
+}
+.team .user_profile .job_position {
+    text-align: left;
+    font-size: 30px;
+    color: #838391;
+}
+.video {
+    height: 0;
+    position: relative;
+    padding-bottom: 56.25%;
+}
+.video iframe {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+.team .user_profile .info {
+    margin-top: 10px;
+    padding: 20px;
+}
+.team .user_profile .info .col-md-5 {
+    margin-top: -12px;
+}
+.team .user_profile .user_info {
+    float: right;
+}
+.team .user_profile .without_video {
+    text-align: center;
+    background-color: #a24588;
+    text-transform: uppercase;
+    color: white;
+    font-size: 30px;
+    padding: 50px;
+}
+.team .team_link .upwork img{
+    width: 40px;
+    margin-top: -8px;
+}
+.team .team_link .github a, .team .team_link .email a{
+    color: black;
+}
+.user_profile .team_link div {
+    display: inline-block;
 }

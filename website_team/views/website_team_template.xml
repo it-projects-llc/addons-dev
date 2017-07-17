@@ -1,5 +1,25 @@
 <openerp>
     <data>
+        <template id="website_team_twitter" name="Website Team Twitter">
+            <script>
+                window.twttr = (function(d, s, id) {
+                    var js, fjs = d.getElementsByTagName(s)[0],
+                    t = window.twttr || {};
+                    if (d.getElementById(id)) return t;
+                    js = d.createElement(s);
+                    js.id = id;
+                    js.src = "https://platform.twitter.com/widgets.js";
+                    fjs.parentNode.insertBefore(js, fjs);
+                    t._e = [];
+
+                    t.ready = function(f) {
+                        t._e.push(f);
+                    };
+                    return t;
+                }(document, "script", "twitter-wjs"));
+            </script>
+        </template>
+
         <template id="website_team_assets" name="Website Team Assets" inherit_id="website.assets_frontend">
             <xpath expr="link[last()]" position="after">
                 <link href="/website_team/static/src/css/style.css" rel="stylesheet" type="text/css"/>
@@ -8,6 +28,7 @@
 
         <template name="user list" id="team_template" page="True">
             <t t-call="website.layout">
+                <t t-call="website_team.website_team_twitter"/>
                 <t t-set="title">Team </t>
                 <div class="oe_structure">
                     <div class="container">
@@ -41,7 +62,9 @@
                                                         <a t-attf-href="https://github.com/{{ user.username_github }}/" t-if="user.username_github" target="_blank"><i class="fa fa-github"/></a>
                                                     </div>
                                                     <div class="twitter">
-                                                        <a t-attf-href="{{ user.username_twitter }}/" t-if="user.username_twitter" target="_blank"><i class="fa fa-twitter"/></a>
+                                                        <a t-if="user.username_twitter" class="twitter-follow-button" t-attf-href="{{ user.username_twitter }}"
+                                                       data-show-screen-name="false"
+                                                       data-show-count="false" data-text-color = "#ff0000"> Follow</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -57,55 +80,73 @@
 
         <template name="user card" id="user_template" page="True">
             <t t-call="website.layout">
-                <t t-set="title">  <t t-esc="user.username_github"/> card </t>
+                <t t-call="website_team.website_team_twitter"/>
+                <t t-set="title"><t t-esc="user.username_github"/></t>
                  <div class="container">
-                     <div class="services container-fluid">
-                         <div class="col-md-2">
-                             <t t-if="user.partner_id.image is not None">
-                                 <img class="image" t-att-src="'data:image/png;base64,%s' % user.partner_id.image" style="border:auto; max-block-size:150px; box-shadow: 0 2px 5px rgba(51, 51, 51, 0.4);"/>
-                             </t>
-                             <t t-if="user.partner_id.image is None">
-                                 <img class="image" src="/website_team/static/src/img/ava_lack.png" style="border:auto; max-block-size:150px; box-shadow: 0 2px 5px rgba(51, 51, 51, 0.4);"/>
-                             </t>
-                         </div>
-                         <div class="col-md-4">
-                             <p>
-                                 <h4>Profile</h4>
-                             </p>
-                             <p>
-                                 Name: <t t-esc="user.name"/>
-                             </p>
-                             <p>
-                                 Login: <t t-esc="user.login"/>
-                             </p>
-                             <p>
-                                 Language:  <t t-esc="user.partner_id.lang"/>
-                             </p>
-                             <p>
-                                 <h4>Contact information</h4>
-                             </p>
-                             <p t-if="alias_email">
-                                 <i class="fa fa-envelope"></i> <t t-esc="alias_email"/>
-                             </p>
-                             <p t-if="user.username_work_email">
-                                 Work Email: <t t-esc="user.username_work_email"/>
-                             </p>
-                             <p t-if="user.partner_id.phone">
-                                 <i class="fa fa-phone"></i> <span t-field="user.partner_id.phone"></span>
-                             </p>
-                             <p t-if="user.url_upwork">
-                                 Upwork:  <a t-attf-href="{{ user.url_upwork }}/">  <t t-esc="user.url_upwork"/> </a>
-                             </p>
-                             <h2>
-                                 <a t-attf-href="https://twitter.com/{{ user.username_twitter }}/" t-if="user.username_twitter"><i class="fa fa-twitter"/></a>
-                                 <a t-attf-href="https://github.com/{{ user.username_github }}/" t-if="user.username_github"><i class="fa fa-github"/></a>
-                             </h2>
-                         </div>
-                         <div class="col-md-6">
-                             <t t-if="user.presentation_youtube_link">
-                                 <iframe t-if="youtube_id" width="530" height="300" t-attf-src="{{ youtube_id }}/"></iframe>
-                                 <p t-if="youtube_id == False" style="text-align: center"> Youtube link is incorrect </p>
-                             </t>
+                     <h1 class="team_header"><span class="team_sub_header"><t t-esc="res_company.name"/></span> team</h1>
+                     <div class="team">
+                         <div class="user_profile">
+                             <div class="row">
+                                 <div class="col-md-12">
+                                     <t t-if="user.presentation_youtube_link and youtube_id">
+                                         <div class="video">
+                                             <iframe t-if="youtube_id" t-attf-src="{{ youtube_id }}/"></iframe>
+                                         </div>
+                                     </t>
+                                     <t t-if="user.presentation_youtube_link and not youtube_id">
+                                         <div class="without_video">
+                                             Youtube link is incorrect
+                                         </div>
+                                     </t>
+                                     <t t-if="not user.presentation_youtube_link">
+                                         <div class="without_video">
+                                             Current user have not added a youtube video yet
+                                         </div>
+                                     </t>
+                                 </div>
+                             </div>
+                             <div class="row info">
+                                 <div class="col-md-6"></div>
+                                 <div class="col-md-5">
+                                     <div class="user_info">
+                                         <div class="user">
+                                             <t t-esc="user.name"/>
+                                         </div>
+                                         <div class="job_position">
+                                             <t t-esc="user.partner_id.function"/>
+                                         </div>
+                                     </div>
+                                 </div>
+                                 <div class="col-md-1 user_avatar">
+                                     <t t-if="user.partner_id.image is not None">
+                                         <img class="team_image image" t-att-src="'data:image/png;base64,%s' % user.partner_id.image"/>
+                                     </t>
+                                     <t t-if="user.partner_id.image is None">
+                                         <img class="team_image image" src="/website_team/static/src/img/ava_lack.png"/>
+                                     </t>
+                                 </div>
+                             </div>
+                             <div class="row">
+                                 <div class="col-md-9"></div>
+                                 <div class="col-md-3">
+                                     <div class="team_link">
+                                         <div class="email">
+                                             <a t-attf-href="mailto:{{user.alias_name}}@{{user.alias_domain}}/" t-if="user.alias_name" target="_blank"><i class="fa fa-envelope"/></a>
+                                         </div>
+                                         <div class="github">
+                                             <a t-attf-href="https://github.com/{{ user.username_github }}/" t-if="user.username_github" target="_blank"><i class="fa fa-github"/></a>
+                                         </div>
+                                         <div class="upwork">
+                                             <a t-attf-href="{{ user.url_upwork }}/" t-if="user.url_upwork" target="_blank"><img src="/website_team/static/src/img/up.png"/></a>
+                                         </div>
+                                         <div class="twitter">
+                                             <a t-if="user.username_twitter" class="twitter-follow-button" t-attf-href="{{ user.username_twitter }}"
+                                                data-show-screen-name="false"
+                                                data-show-count="false"> Follow</a>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
                          </div>
                      </div>
                      <div t-if="user.user_description" itemprop="description" t-field="user.user_description" class="oe_structure mt16" id="user_full_description"/>
