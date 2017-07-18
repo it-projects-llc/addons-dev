@@ -3,6 +3,7 @@ from openerp import http
 import werkzeug
 from werkzeug.exceptions import NotFound
 
+
 class WebsiteTeam(http.Controller):
 
     @http.route('/team/', auth='public', website=True)
@@ -19,7 +20,6 @@ class WebsiteTeam(http.Controller):
 
         if not current_user:
             current_user = http.request.env['res.users'].sudo().search([('alias_name', '=', login)])
-            print current_user.username_github
             if current_user.username_github is not False and current_user.username_github != current_user.alias_name:
                 return werkzeug.utils.redirect("/team/" + current_user.username_github)
 
