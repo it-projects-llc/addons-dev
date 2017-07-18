@@ -12,7 +12,6 @@
                     <field name="username_github"/>
                     <field name="url_upwork"/>
                     <field name="username_twitter"/>
-                    <field name="username_work_email"/>
                     <field name="presentation_youtube_link"/>
                 </xpath>
             </field>

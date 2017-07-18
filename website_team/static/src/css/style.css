@@ -32,11 +32,15 @@
     margin-top: -2px;
     padding-right: 10px;
 }
+.team_profile .team_link .twitter {
+    float: right;
+    margin-top: -2px;
+}
 .team_link a:hover {
     color: #b00081;
 }
 .team_profile {
-    width: 150px;
+    width: 166px;
     height: 300px;
     margin: auto;
     font-size: 14px;
@@ -112,13 +116,36 @@
     font-size: 30px;
     padding: 50px;
 }
-.team .team_link .upwork img{
-    width: 40px;
-    margin-top: -8px;
+.team .team_link .upwork {
+    background-color: #6fda44;
+    font-size: 10px;
+    margin-top: 10px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 4px;
+}
+.team .team_link .upwork a{
+    color: white;
+    text-decoration: none;
+}
+.team .team_link .upwork a span{
+    text-transform: uppercase;
+}
+.team .team_link .upwork a:hover{
+    text-decoration: none;
+}
+.team .team_link .upwork:hover {
+    background-color: #37a000;
 }
 .team .team_link .github a, .team .team_link .email a{
     color: black;
 }
 .user_profile .team_link div {
-    display: inline-block;
+    float: right;
+    padding: 5px;
+}
+.user_profile .team_link .email {
+    margin-top: -2px;
 }

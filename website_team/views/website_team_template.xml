@@ -1,6 +1,7 @@
 <openerp>
     <data>
         <template id="website_team_twitter" name="Website Team Twitter">
+            <script src="https://buttons.github.io/buttons.js"></script>
             <script>
                 window.twttr = (function(d, s, id) {
                     var js, fjs = d.getElementsByTagName(s)[0],
@@ -40,10 +41,18 @@
                                         <div class="col-md-3">
                                             <div class="team_profile">
                                                 <t t-if="user.partner_id.image is not None">
-                                                    <img class="team_image image" t-att-src="'data:image/png;base64,%s' % user.partner_id.image"/>
+                                                    <a t-if="user.username_github" t-attf-href="/team/{{ user.username_github }}/"><img class="team_image image" t-att-src="'data:image/png;base64,%s' % user.partner_id.image"/></a>
+                                                    <a t-if="user.username_github is False and user.alias_name" t-attf-href="/team/{{ user.alias_name }}/"><img class="team_image image" t-att-src="'data:image/png;base64,%s' % user.partner_id.image"/></a>
+                                                    <t t-if="user.username_github is False and user.alias_name is False">
+                                                        <img class="team_image image" t-att-src="'data:image/png;base64,%s' % user.partner_id.image"/>
+                                                    </t>
                                                 </t>
                                                 <t t-if="user.partner_id.image is None">
-                                                    <img class="team_image image" src="/website_team/static/src/img/ava_lack.png"/>
+                                                    <a t-if="user.username_github" t-attf-href="/team/{{ user.username_github }}/"><img class="team_image image" src="/website_team/static/src/img/ava_lack.png"/></a>
+                                                    <a t-if="user.username_github is False and user.alias_name" t-attf-href="/team/{{ user.alias_name }}/"><img class="team_image image" src="/website_team/static/src/img/ava_lack.png"/></a>
+                                                    <t t-if="user.username_github is False and user.alias_name is False">
+                                                        <img class="team_image image" src="/website_team/static/src/img/ava_lack.png"/>
+                                                    </t>
                                                 </t>
                                                 <div class="user">
                                                     <a t-if="user.username_github" t-attf-href="/team/{{ user.username_github }}/"><t t-esc="user.name"/></a>
@@ -59,7 +68,7 @@
                                                 </div>
                                                 <div class="team_link">
                                                     <div class="github">
-                                                        <a t-attf-href="https://github.com/{{ user.username_github }}/" t-if="user.username_github" target="_blank"><i class="fa fa-github"/></a>
+                                                        <a t-if="user.username_github" class="github-button" t-attf-href="https://github.com/{{ user.username_github }}" data-show-count="true" aria-label="Follow @user on GitHub">Follow</a>
                                                     </div>
                                                     <div class="twitter">
                                                         <a t-if="user.username_twitter" class="twitter-follow-button" t-attf-href="{{ user.username_twitter }}"
@@ -81,7 +90,7 @@
         <template name="user card" id="user_template" page="True">
             <t t-call="website.layout">
                 <t t-call="website_team.website_team_twitter"/>
-                <t t-set="title"><t t-esc="user.username_github"/></t>
+                <t t-set="title"><t t-esc="user.name"/></t>
                  <div class="container">
                      <h1 class="team_header"><span class="team_sub_header"><t t-esc="res_company.name"/></span> team</h1>
                      <div class="team">
@@ -127,22 +136,20 @@
                                  </div>
                              </div>
                              <div class="row">
-                                 <div class="col-md-9"></div>
-                                 <div class="col-md-3">
+                                 <div class="col-md-8"></div>
+                                 <div class="col-md-4">
                                      <div class="team_link">
-                                         <div class="email">
-                                             <a t-attf-href="mailto:{{user.alias_name}}@{{user.alias_domain}}/" t-if="user.alias_name" target="_blank"><i class="fa fa-envelope"/></a>
+                                         <div class="twitter" t-if="user.username_twitter">
+                                             <a class="twitter-follow-button" t-attf-href="{{ user.username_twitter }}" data-show-screen-name="false" data-show-count="false"> Follow</a>
                                          </div>
-                                         <div class="github">
-                                             <a t-attf-href="https://github.com/{{ user.username_github }}/" t-if="user.username_github" target="_blank"><i class="fa fa-github"/></a>
+                                         <div class="upwork" t-if="user.url_upwork">
+                                             <a t-attf-href="{{ user.url_upwork }}/" target="_blank"><span class="sub_title">Hire me </span>on Upwork</a>
                                          </div>
-                                         <div class="upwork">
-                                             <a t-attf-href="{{ user.url_upwork }}/" t-if="user.url_upwork" target="_blank"><img src="/website_team/static/src/img/up.png"/></a>
+                                         <div class="github" t-if="user.username_github">
+                                             <a class="github-button" t-attf-href="https://github.com/{{ user.username_github }}" data-show-count="true" aria-label="Follow @user on GitHub">Follow</a>
                                          </div>
-                                         <div class="twitter">
-                                             <a t-if="user.username_twitter" class="twitter-follow-button" t-attf-href="{{ user.username_twitter }}"
-                                                data-show-screen-name="false"
-                                                data-show-count="false"> Follow</a>
+                                         <div class="email" t-if="user.alias_name">
+                                             <a t-attf-href="mailto:{{user.alias_name}}@{{user.alias_domain}}/" target="_blank"><i class="fa fa-envelope-o"/></a>
                                          </div>
                                      </div>
                                  </div>
@@ -150,6 +157,7 @@
                          </div>
                      </div>
                      <div t-if="user.user_description" itemprop="description" t-field="user.user_description" class="oe_structure mt16" id="user_full_description"/>
+                     <div t-if="user.company_id.company_description" itemprop="description" t-field="user.company_id.company_description" class="oe_structure mt16" id="company_full_description"/>
                  </div>
             </t>
         </template>
