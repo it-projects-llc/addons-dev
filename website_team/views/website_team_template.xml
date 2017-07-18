@@ -95,23 +95,11 @@
                      <h1 class="team_header"><span class="team_sub_header"><t t-esc="res_company.name"/></span> team</h1>
                      <div class="team">
                          <div class="user_profile">
-                             <div class="row">
+                             <div class="row" t-if="youtube_id">
                                  <div class="col-md-12">
-                                     <t t-if="user.presentation_youtube_link and youtube_id">
-                                         <div class="video">
-                                             <iframe t-if="youtube_id" t-attf-src="{{ youtube_id }}/"></iframe>
-                                         </div>
-                                     </t>
-                                     <t t-if="user.presentation_youtube_link and not youtube_id">
-                                         <div class="without_video">
-                                             Youtube link is incorrect
-                                         </div>
-                                     </t>
-                                     <t t-if="not user.presentation_youtube_link">
-                                         <div class="without_video">
-                                             Current user have not added a youtube video yet
-                                         </div>
-                                     </t>
+                                     <div class="video">
+                                         <iframe t-attf-src="{{ youtube_id }}/"></iframe>
+                                     </div>
                                  </div>
                              </div>
                              <div class="row info">

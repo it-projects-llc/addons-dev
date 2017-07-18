@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models, fields
+from openerp import models, fields, api, _
+from openerp.exceptions import Warning
 import re
 
 
@@ -16,7 +17,6 @@ class Users(models.Model):
     user_description = fields.Html('Description for the website user', translate=True)
 
     def youtube_url_validation(self, url):
-
         youtube_regex = (
             r'(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)/(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})')
         if url is False:
@@ -28,20 +28,21 @@ class Users(models.Model):
             return youtube_regex_match.group(6)
         return None
 
+    @api.constrains('presentation_youtube_link')
+    def _check_youtube_id(self):
+        if self.presentation_youtube_link is not False and self.get_youtube_id(self.presentation_youtube_link) is False:
+            raise Warning(_('Youtube link is incorrect.'))
+
     def get_youtube_id(self, link):
-
         link_id = self.youtube_url_validation(link)
-
         if link_id is None:
             return False
         return "https://www.youtube.com/embed/" + link_id + "?rel=0&amp;showinfo=0"
 
     def get_alias_mail(self):
-
         if self.alias_name:
             alias_email_full = self.alias_name + "@" + self.alias_domain
             return alias_email_full
-
         else:
             return False
 
