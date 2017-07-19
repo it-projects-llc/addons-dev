@@ -1,35 +1,36 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "queue_management",
+    "name": """Queue Management""",
+    "summary": """{SHORT_DESCRIPTION_OF_THE_MODULE}""",
+    "category": "{SOME_CATEGORY}",
+    # "live_test_URL": "",
+    "images": [],
+    "version": "1.0.0",
+    "application": False,
 
-    'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+    "author": "IT-Projects LLC, {DEVELOPER_NAME}",
+    "support": "apps@it-projects.info",
+    "website": "https://it-projects.info",
+    "license": "LGPL-3",
+    # "price": 9.00,
+    # "currency": "EUR",
 
-    'description': """
-        Long description of module's purpose
-    """,
-
-    'author': "My Company",
-    'website': "http://www.yourcompany.com",
-
-    # Categories can be used to filter modules in modules listing
-    # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
-    # for the full list
-    'category': 'Uncategorized',
-    'version': '0.1',
-
-    # any module necessary for this one to work correctly
-    'depends': ['base'],
-
-    # always loaded
-    'data': [
-        # 'security/ir.model.access.csv',
-        'views/views.xml',
-        'views/templates.xml',
+    "depends": [
+        "base"
     ],
-    # only loaded in demonstration mode
-    'demo': [
-        'demo/demo.xml',
+    "external_dependencies": {"python": [], "bin": []},
+    "data": [
+        "views/queue_management.xml",
     ],
+    "qweb": [
+    ],
+    "demo": [
+    ],
+
+    "post_load": None,
+    "pre_init_hook": None,
+    "post_init_hook": None,
+
+    "auto_install": False,
+    "installable": True,
 }
