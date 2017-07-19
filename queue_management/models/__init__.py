@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from . import models
+from . import queue_management
+from . import res_users
 

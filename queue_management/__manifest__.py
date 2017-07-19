@@ -16,11 +16,11 @@
     # "currency": "EUR",
 
     "depends": [
-        "base"
+        "base",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
-        "views/queue_management.xml",
+        "views/queue_management_views.xml",
     ],
     "qweb": [
     ],

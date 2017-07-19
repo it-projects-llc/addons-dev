@@ -1,10 +1,8 @@
 <odoo>
-  <data>
-    <!-- explicit list view definition -->
-    <!--
-    <record model="ir.ui.view" id="queue_management.list">
-      <field name="name">queue_management list</field>
-      <field name="model">queue_management.queue_management</field>
+  <!--
+  <record model="ir.ui.view" id="view_queue_management">
+      <field name="name">queue_management.form</field>
+      <field name="model">queue_management</field>
       <field name="arch" type="xml">
         <tree>
           <field name="name"/>
@@ -13,8 +11,7 @@
         </tree>
       </field>
     </record>
-    -->
-
+-->
     <!-- actions opening views on models -->
     <!--
     <record model="ir.actions.act_window" id="queue_management.action_window">
@@ -55,5 +52,4 @@
     <menuitem name="Server to list" id="queue_management" parent="queue_management.menu_2"
               action="queue_management.action_server"/>
     -->
-  </data>
 </odoo>
