@@ -21,14 +21,16 @@ odoo.define('pos_choosing_cashier', function(require){
             var self = this;
             this._super(options);
 
-            this.list    = options.list    || [];
+            this.list = options.list || [];
             this.renderElement();
         },
         click_item : function(event) {
             this.gui.close_popup();
             if (this.options.confirm) {
                 var item = this.list[parseInt($(event.target).data('item-index'))];
-                item = item ? item.item : item;
+                item = item 
+                    ? item.item 
+                    : item;
                 this.options.confirm.call(self,item);
             }
         }
@@ -99,7 +101,6 @@ odoo.define('pos_choosing_cashier', function(require){
         show_cashier_window: function() {
             var self = this;
             this.pos.barcode_reader.on_cashier_screen = true;
-            console.log(this.pos.barcode_reader.on_cashier_screen)
             return this.gui.select_user({
                 'security':     true,
                 'current_user': this.pos.get_cashier(),
@@ -142,7 +143,6 @@ odoo.define('pos_choosing_cashier', function(require){
                     this.pos.set_cashier(users[i]);
                     this.chrome.widget.username.renderElement();
                     if (this.pos.barcode_reader.on_cashier_screen) {
-                        console.log(this.pos.barcode_reader.on_cashier_screen)
                         this.pos.barcode_reader.on_cashier_screen = false;
                         this.gui.show_screen('payment');
                     }
@@ -174,9 +174,9 @@ odoo.define('pos_choosing_cashier', function(require){
                     });
                 }
             }
-            var popup_type = (options.cashier_window 
+            var popup_type = (options.cashier_window
                 ? 'cashier'
-                : 'selection')
+                : 'selection');
             this.show_popup(popup_type,{
                 'title': options.title || _t('Select User'),
                 list: list,
