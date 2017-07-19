@@ -80,3 +80,8 @@
 .order-note-line .label {
     font-size: 22px;
 }
+.pos .product_note li .active {
+    color: white;
+    background: black;
+    border: 1px solid black;
+}

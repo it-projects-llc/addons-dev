@@ -149,7 +149,7 @@ odoo.define('pos_cancel_order.order_note', function (require) {
             options = options || {};
             this._super(options);
             if (options.notes) {
-                this.events["click .product_note .button"] = "click_product_note_button";
+                this.events["click .product_note .button"] = "click_note_button";
                 this.events["click .note_type .button"] = "click_note_type"
             }
             this.renderElement();
@@ -170,13 +170,11 @@ odoo.define('pos_cancel_order.order_note', function (require) {
                 }
                 product_type.addClass("active");
             }
-
         },
         get_note_by_id: function(id) {
-            var note = this.options.notes.filter(function (item) {
+            return this.options.notes.find(function (item) {
                 return item.id === Number(id);
             });
-            return note[0];
         },
         click_note_type: function(e) {
             var order = this.pos.get_order();
@@ -191,13 +189,21 @@ odoo.define('pos_cancel_order.order_note', function (require) {
                 this.gui.screen_instances.products.action_buttons.orderline_note.button_click();
             }
         },
-        click_product_note_button: function(e) {
+        click_note_button: function(e) {
             var self = this;
             var id = e.currentTarget.id;
             if (id == 'other') {
                 self.gui.show_screen('notes_screen');
             } else {
+                this.set_action_note($(event.target));
                 this.$('.popup-confirm-note textarea').val(this.get_note_by_id(id).name);
+            }
+        },
+        set_active_note: function(note){
+            if (note.hasClass("active")) {
+                note.removeClass("active");
+            } else {
+                note.addClass("active");
             }
         },
         click_confirm: function(){
