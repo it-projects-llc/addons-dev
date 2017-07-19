@@ -3,24 +3,25 @@
     "name": """Website Team""",
     "summary": """Team""",
     "category": "website",
-    "images": [
-    ],
+    # "live_test_URL": "",
+    "images": [],
     "version": "1.0.0",
     "application": False,
 
-    "author": "Kolushov",
+    "author": "IT-Projects LLC, Kolushov Alexandr",
+    "support": "apps@it-projects.info",
+    # "website": "https://it-projects.info",
     "license": "LGPL-3",
+    # "price": 0.00,
+    # "currency": "EUR",
 
     "depends": [
         "website",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
-        "views/users_page.xml",
-        "views/assets.xml",
-        "views/website_users_all.xml",
-        "views/web_team.xml"
-
+        "views/website_team_template.xml",
+        "views/website_team_view.xml",
     ],
     "qweb": [
     ],
