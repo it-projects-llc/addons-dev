@@ -7,7 +7,7 @@ Installation
 
 * Install the pos_printer_network module on Odoo instance
 
-* Add hw_printer_network module to server wide modules (set server_wide_modules in config file or specify --load parameter in run command): e.g. ./odoo-bin --load hw_printer_network
+* Add hw_printer_network module together with hw_escpos and hw_proxy to server wide modules (set server_wide_modules in config file or specify --load parameter in run command): e.g. ./odoo-bin --load=hw_escpos,hw_proxy,hw_printer_network
 
 Configuration
 =============
