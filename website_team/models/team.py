@@ -50,4 +50,5 @@ class Users(models.Model):
 class ResCompany(models.Model):
     _inherit = ['res.company']
 
-    company_description = fields.Html('Description for the website company', translate=True)
+    team_website_description = fields.Html('Website Team Description', translate=True,
+                                           help="Common html for team member pages")

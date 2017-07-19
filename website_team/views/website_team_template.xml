@@ -163,7 +163,7 @@
                              </div>
                          </div>
                      </div>
-                     <div t-if="user.company_id.company_description" itemprop="description" t-field="user.company_id.company_description" class="oe_structure mt16" id="team_company_full_description"/>
+                     <div t-if="user.company_id.team_website_description" itemprop="description" t-field="user.company_id.team_website_description" class="oe_structure mt16" id="team_company_full_description"/>
                  </div>
             </t>
         </template>
