@@ -149,3 +149,11 @@
 .user_profile .team_link .email {
     margin-top: -2px;
 }
+.team_help_block {
+    text-align: center;
+    color: grey;
+    font-size: 24px;
+}
+.cke_editable.cke_editable_inline .team_help_block {
+    border-top: 2px solid gray;
+}

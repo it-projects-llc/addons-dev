@@ -144,8 +144,26 @@
                              </div>
                          </div>
                      </div>
-                     <div t-if="user.user_description" itemprop="description" t-field="user.user_description" class="oe_structure mt16" id="user_full_description"/>
-                     <div t-if="user.company_id.company_description" itemprop="description" t-field="user.company_id.company_description" class="oe_structure mt16" id="company_full_description"/>
+                     <div class="team_help_block cover js_fullheight" id="help" t-ignore="True">
+                         <div class="container">
+                             <div class="css_non_editable_mode_hidden">
+                                 <span class="team_help">
+                                     Here is published for personal page
+                                 </span>
+                             </div>
+                         </div>
+                     </div>
+                     <div t-if="user.user_description" itemprop="description" t-field="user.user_description" class="oe_structure mt16" id="team_user_full_description"/>
+                     <div class="team_help_block cover js_fullheight" id="help" t-ignore="True">
+                         <div class="container">
+                             <div class="css_non_editable_mode_hidden">
+                                 <span class="team_help">
+                                     Here is published for general page
+                                 </span>
+                             </div>
+                         </div>
+                     </div>
+                     <div t-if="user.company_id.company_description" itemprop="description" t-field="user.company_id.company_description" class="oe_structure mt16" id="team_company_full_description"/>
                  </div>
             </t>
         </template>
