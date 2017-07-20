@@ -52,15 +52,26 @@ odoo.define('pos_cancel_order.order_note', function (require) {
                 return this.note;
             } else return false;
         },
+        set_custom_notes: function(notes) {
+            this.custom_notes = notes;
+            this.trigger('change', this);
+        },
+        get_custom_notes: function() {
+            if (this.custom_notes && this.custom_notes.length) {
+                return this.custom_notes;
+            } else return false;
+        },
         export_as_JSON: function() {
             var data = _super_order.export_as_JSON.apply(this, arguments);
             data.note = this.note;
             data.old_note = this.old_note;
+            data.custom_notes = this.custom_notes;
             return data;
         },
         init_from_JSON: function(json) {
             this.note = json.note;
             this.old_note = json.old_note;
+            this.custom_notes = json.custom_notes;
             _super_order.init_from_JSON.call(this, json);
         },
         saveChanges: function(){
@@ -102,6 +113,24 @@ odoo.define('pos_cancel_order.order_note', function (require) {
                 this.set_note(this.product.note);
             }
         },
+        set_custom_notes: function(notes) {
+            this.custom_notes = notes;
+            this.trigger('change', this);
+        },
+        get_custom_notes: function() {
+            if (this.custom_notes && this.custom_notes.length) {
+                return this.custom_notes;
+            } else return false;
+        },
+        export_as_JSON: function() {
+            var data = _super_orderline.export_as_JSON.apply(this, arguments);
+            data.custom_notes = this.custom_notes;
+            return data;
+        },
+        init_from_JSON: function(json) {
+            this.custom_notes = json.custom_notes;
+            _super_orderline.init_from_JSON.call(this, json);
+        },
     });
 
     PosBaseWidget.include({
@@ -117,23 +146,25 @@ odoo.define('pos_cancel_order.order_note', function (require) {
                     if (order.note_type == "Order") {
                         title = _t('Add Note for Order');
                         value = order.get_note();
-                    } else {
-                        if (line) {
-                            order.note_type = "Product";
-                            title = _t('Add Note for Product');
-                            value = line.get_note();
-                        }
+                    } else if (line) {
+                        order.note_type = "Product";
+                        title = _t('Add Note for Product');
+                        value = line.get_note();
                     }
                     if (line) {
                         this.gui.show_popup('product_notes',{
                             title: title,
                             notes: self.pos.product_notes.slice(0,8),
                             value: value,
-                            confirm: function(note) {
+                            custom_order_ids: order.get_custom_notes(),
+                            custom_product_ids: line.get_custom_notes(),
+                            confirm: function(value) {
                                 if (order.note_type == "Order") {
-                                    order.set_note(note);
+                                    order.set_custom_notes(value.custom_order_ids);
+                                    order.set_note(value.note);
                                 } else if (order.note_type = "Product") {
-                                    line.set_note(note);
+                                    line.set_custom_notes(value.custom_product_ids)
+                                    line.set_note(value.note);
                                 }
                             },
                         });
@@ -145,17 +176,49 @@ odoo.define('pos_cancel_order.order_note', function (require) {
 
     var ProductNotesPopupWidget = PopupWidget.extend({
         template: 'ProductNotesPopupWidget',
-        show: function(options){
+        show: function(options) {
             options = options || {};
             this._super(options);
             if (options.notes) {
                 this.events["click .product_note .button"] = "click_note_button";
                 this.events["click .note_type .button"] = "click_note_type"
+                this.notes = options.notes;
             }
+            this.notes.forEach(function(note) {
+                note.active = false;
+            });
+
+            this.custom_order_ids = options.custom_order_ids || false;
+            this.custom_product_ids = options.custom_product_ids || false;
+
+            this.set_active_note_buttons();
             this.renderElement();
-            this.render_active_element();
+            this.render_active_note_type();
         },
-        render_active_element: function() {
+        set_active_note_buttons: function() {
+            if (!this.notes) {
+                return false;
+            }
+            var self = this;
+            var order = this.pos.get_order();
+            var custom_notes = false;
+            if (order.note_type == "Order") {
+               custom_notes = this.custom_order_ids;
+            } else if (order.note_type == "Product") {
+                custom_notes = this.custom_product_ids;
+            }
+            if (custom_notes && custom_notes.length) {
+                this.notes.forEach(function(note) {
+                    var res = custom_notes.find(function(element) {
+                        return String(note.number) === String(element.number);
+                    });
+                    if (res) {
+                        note.active = true;
+                    }
+                });
+            }
+        },
+        render_active_note_type: function() {
             var order = this.pos.get_order();
             var product_type = $(".note_type .product_type");
             var order_type = $(".note_type .order_type");
@@ -172,7 +235,7 @@ odoo.define('pos_cancel_order.order_note', function (require) {
             }
         },
         get_note_by_id: function(id) {
-            return this.options.notes.find(function (item) {
+            return this.notes.find(function (item) {
                 return item.id === Number(id);
             });
         },
@@ -195,21 +258,36 @@ odoo.define('pos_cancel_order.order_note', function (require) {
             if (id == 'other') {
                 self.gui.show_screen('notes_screen');
             } else {
-                this.set_action_note($(event.target));
-                this.$('.popup-confirm-note textarea').val(this.get_note_by_id(id).name);
+                self.set_active_note_status($(event.target), Number(id));
             }
         },
-        set_active_note: function(note){
-            if (note.hasClass("active")) {
-                note.removeClass("active");
+        set_active_note_status: function(note_obj, id){
+            var order = this.pos.get_order();
+            if (note_obj.hasClass("active")) {
+                note_obj.removeClass("active");
+                this.get_note_by_id(id).active = false;
             } else {
-                note.addClass("active");
+                note_obj.addClass("active");
+                this.get_note_by_id(id).active = true;
             }
         },
         click_confirm: function(){
+            var self = this;
             this.gui.close_popup();
-            if( this.options.confirm ){
-                var value = this.$('.popup-confirm-note textarea').val();
+            var order = this.pos.get_order();
+            var value = {};
+            var notes = this.notes.filter(function(note){
+                return note.active == true;
+            });
+
+            if (order.note_type == "Order") {
+                value.custom_order_ids = notes;
+            } else if (order.note_type == "Product") {
+                value.custom_product_ids = notes;
+            }
+
+            if (this.options.confirm){
+                value.note = this.$('.popup-confirm-note textarea').val();
                 this.options.confirm.call(this, value);
             }
         },
