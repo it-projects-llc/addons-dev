@@ -154,7 +154,7 @@ odoo.define('pos_cancel_order.order_note', function (require) {
                     if (line) {
                         this.gui.show_popup('product_notes',{
                             title: title,
-                            notes: self.pos.product_notes.slice(0,8),
+                            notes: self.pos.product_notes,
                             value: value,
                             custom_order_ids: order.get_custom_notes(),
                             custom_product_ids: line.get_custom_notes(),
@@ -258,11 +258,10 @@ odoo.define('pos_cancel_order.order_note', function (require) {
             if (id == 'other') {
                 self.gui.show_screen('notes_screen');
             } else {
-                self.set_active_note_status($(event.target), Number(id));
+                self.set_active_note_status($(e.target), Number(id));
             }
         },
         set_active_note_status: function(note_obj, id){
-            var order = this.pos.get_order();
             if (note_obj.hasClass("active")) {
                 note_obj.removeClass("active");
                 this.get_note_by_id(id).active = false;
@@ -298,8 +297,9 @@ odoo.define('pos_cancel_order.order_note', function (require) {
         template: 'ProducNotesScreenWidget',
         events: {
             'click .note-line': function (event) {
+                var id = event.currentTarget.id;
                 var line = $('.note-line#'+parseInt(event.currentTarget.id));
-                this.line_select(line, parseInt(event.currentTarget.id));
+                this.set_active_note_status(line, Number(id));
             },
             'click .note-back': function () {
                 this.gui.back();
@@ -309,71 +309,87 @@ odoo.define('pos_cancel_order.order_note', function (require) {
                 this.gui.back();
             },
         },
-        init: function(parent, options){
-            this._super(parent, options);
-            this.notes_cache = new screens.DomCache();
-            var self = this;
-        },
         auto_back: true,
         show: function(){
             var self = this;
             this._super();
             this.show_next_note_button = false;
-            var product_notes = self.pos.product_notes;
-            this.render_list(product_notes);
+            this.notes = this.pos.product_notes;
+            this.set_active_note_buttons();
+            this.render_list(this.notes);
+        },
+        set_active_note_buttons: function() {
+            if (!this.notes) {
+                return false;
+            }
+            var self = this;
+            var order = this.pos.get_order();
+            var custom_notes = false;
+            if (order.note_type == "Order") {
+               custom_notes = this.custom_order_ids;
+            } else if (order.note_type == "Product") {
+                custom_notes = this.custom_product_ids;
+            }
+            if (custom_notes && custom_notes.length) {
+                this.notes.forEach(function(note) {
+                    var res = custom_notes.find(function(element) {
+                        return String(note.number) === String(element.number);
+                    });
+                    if (res) {
+                        note.active = true;
+                    }
+                });
+            }
+        },
+        set_active_note_status: function(note_obj, id){
+            if (note_obj.hasClass("highlight")) {
+                note_obj.removeClass("highlight");
+                this.get_note_by_id(id).active = false;
+            } else {
+                note_obj.addClass("highlight");
+                this.get_note_by_id(id).active = true;
+            }
         },
         render_list: function(notes){
             var contents = this.$el[0].querySelector('.note-list-contents');
             contents.innerHTML = "";
             for(var i = 0, len = Math.min(notes.length,1000); i < len; i++){
                 var note = notes[i];
-                var product_note = this.notes_cache.get_node(note.id);
-                if(!product_note){
-                    var product_note_html = QWeb.render('ProductNotes',{widget: this, note:notes[i]});
-                    product_note = document.createElement('tbody');
-                    product_note.innerHTML = product_note_html;
-                    product_note = product_note.childNodes[1];
-                    this.notes_cache.cache_node(note.id,product_note);
+                var product_note_html = QWeb.render('ProductNotes',{widget: this, note:notes[i]});
+                var product_note = document.createElement('tbody');
+                product_note.innerHTML = product_note_html;
+                product_note = product_note.childNodes[1];
+
+                if (notes[i].active) {
+                    product_note.classList.add('highlight');
+                } else {
+                    product_note.classList.remove('highlight');
                 }
-                product_note.classList.remove('highlight');
                 contents.appendChild(product_note);
             }
         },
         save_changes: function(){
-            var self = this;
             var order = this.pos.get_order();
             var line = order.get_selected_orderline();
-            var note = $('.note-line#'+this.old_id+' td').text();
+
+            var notes = this.notes.filter(function(note){
+                return note.active == true;
+            });
+
+            var simple_note = $('.popup-confirm-note textarea').val();
+
             if (order.note_type == "Order") {
-                order.set_note(note);
-            } else if (order.note_type = "Product") {
-                line.set_note(note);
+                order.set_custom_notes(notes);
+                order.set_note(simple_note);
+            } else if (order.note_type == "Product") {
+                line.set_custom_notes(notes)
+                line.set_note(simple_note);
             }
         },
-        toggle_save_button: function(){
-            var $button = this.$('.button.next');
-            if (!this.show_next_note_button) {
-                $button.addClass('oe_hidden');
-                return;
-            } else {
-                $button.removeClass('oe_hidden');
-                $button.text(_t('Apply'));
-            }
-        },
-        line_select: function(line,id){
-            if (this.old_id !== id) {
-                this.show_next_note_button = true;
-                this.old_id = id;
-            }
-            if ( line.hasClass('highlight') ){
-                line.removeClass('highlight');
-                this.show_next_note_button = false;
-            }else{
-                this.$('.note-list .highlight').removeClass('highlight');
-                line.addClass('highlight');
-                this.show_next_note_button = true;
-            }
-            this.toggle_save_button();
+        get_note_by_id: function(id) {
+            return this.notes.find(function (item) {
+                return item.id === Number(id);
+            });
         },
     });
     gui.define_screen({name:'notes_screen', widget: ProducNotesScreenWidget});

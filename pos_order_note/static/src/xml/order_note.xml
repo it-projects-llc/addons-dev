@@ -134,7 +134,7 @@
                 <div class="product_note">
                     <ul>
                         <t t-if="widget.notes">
-                            <t t-foreach="widget.notes" t-as="note">
+                            <t t-foreach="widget.notes.slice(0,8)" t-as="note">
                                 <li>
                                     <t t-if="note.active">
                                         <div t-attf-id="{{note.id}}" t-attf-class="button active"><t t-esc="note.name"/></div>
@@ -175,7 +175,7 @@
                         <i class='fa fa-angle-double-left'></i>
                         Cancel
                     </span>
-                    <span class='note-next button next oe_hidden highlight'>
+                    <span class='note-next button next highlight'>
                         Apply
                         <i class='fa fa-angle-double-right'></i>
                     </span>
