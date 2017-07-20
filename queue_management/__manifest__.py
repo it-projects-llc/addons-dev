@@ -20,6 +20,7 @@
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
+        "security/queue_management_security.xml",
         "views/queue_management_views.xml",
     ],
     "qweb": [

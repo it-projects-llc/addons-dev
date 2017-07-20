@@ -3,6 +3,11 @@
 from odoo import models, fields, api
 
 
+class queue_management(models.Model):
+    _name = 'queue.management'
+    name = fields.Char(string="Queue Management", required=True)
+
+
 class queue_management_information(models.Model):
     _name = 'queue.management.info'
     company_name = fields.Char(required=True, string="Company Name")
@@ -27,16 +32,7 @@ class queue_management_branch(models.Model):
     _name = 'queue.management.branch'
     name = fields.Char(required=True, string="Branch Name")
     service_ids = fields.One2many('queue.management.service', 'branch_id', required=True)
-    user_ids = fields.One2many('queue.management.user', 'user_id')
-
-
-class queue_management_user(models.Model):
-    _name = 'queue.management.user'
-    position_id = fields.Many2one('res.groups', 'Position')
-    desk = fields.Selection([('1', '1'),
-                             ('2', '2')], 'Desk Number', required=True, copy=False, default='1')
-    primary_service_id = fields.Many2one('queue.management.service')
-    user_id = fields.Many2one('queue.management.branch', 'User')
+    user_ids = fields.One2many('queue.management.user', 'branch_id')
 
 
 class queue_management_screen(models.Model):
@@ -55,7 +51,7 @@ class queue_management_screen(models.Model):
 class queue_management_ticket(models.Model):
     _name = 'queue.management.ticket'
     name = fields.Char(required=True, string='Ticket Name')
-    ticket_id = fields.Many2one('queue.management.service', 'Ticket')
+    service_id = fields.Many2one('queue.management.service', 'Service')
 
 
 class queue_management_service(models.Model):
