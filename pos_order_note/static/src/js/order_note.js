@@ -43,6 +43,7 @@ odoo.define('pos_cancel_order.order_note', function (require) {
         set_note: function(note){
             this.old_note = {};
             this.old_note = this.note;
+            this.old_custom_notes = this.custom_notes;
             this.note = note;
             this.trigger('change',this);
             this.pos.gui.screen_instances.products.order_widget.renderElement(true);
@@ -61,28 +62,74 @@ odoo.define('pos_cancel_order.order_note', function (require) {
                 return this.custom_notes;
             } else return false;
         },
+        build_line_resume: function(){
+            var res = _super_order.build_line_resume.apply(this, arguments);
+            this.orderlines.each(function(line){
+                if (line.mp_skip) {
+                    return;
+                }
+                var line_hash = line.get_line_diff_hash();
+                var custom_notes = line.get_custom_notes();
+                var old_custom_notes = line.old_custom_notes || false;
+                res[line_hash].custom_notes = custom_notes;
+                res[line_hash].old_custom_notes = old_custom_notes;
+            });
+            return res;
+        },
         export_as_JSON: function() {
             var data = _super_order.export_as_JSON.apply(this, arguments);
             data.note = this.note;
             data.old_note = this.old_note;
             data.custom_notes = this.custom_notes;
+            data.old_custom_notes = this.old_custom_notes;
             return data;
         },
         init_from_JSON: function(json) {
             this.note = json.note;
             this.old_note = json.old_note;
             this.custom_notes = json.custom_notes;
+            this.old_custom_notes = json.old_custom_notes;
             _super_order.init_from_JSON.call(this, json);
         },
         saveChanges: function(){
             this.old_note = this.get_note();
+            this.old_custom_notes = this.get_custom_notes();
             _super_order.saveChanges.call(this, arguments);
         },
         computeChanges: function(categories){
+            var current_res = this.build_line_resume();
+            var old_res     = this.saved_resume || {};
+            var json        = this.export_as_JSON();
+            var add = [];
+            var rem = [];
+            var line_hash;
+
             var res = _super_order.computeChanges.apply(this, arguments);
-            var self = this;
+
             var old_order_note = this.old_note || false;
+            var old_order_custom_notes = this.old_custom_notes || false;
+
             var current_order_note = this.get_note();
+            var current_order_custom_notes = this.get_custom_notes();
+
+            if (old_order_custom_notes != current_order_custom_notes) {
+                if ( res['new'].length == 0 && res['cancelled'].length == 0){
+                    if (current_order_custom_notes) {
+                        res.new.push({
+                            name: "Order Custom Notes",
+                            qty: 1,
+                        });
+                    }
+                    if (old_order_custom_notes) {
+                        res.cancelled.push({
+                            name: "Order Custom Notes",
+                            qty: 1,
+                        })
+                        res.old_order_custom_notes = old_order_custom_notes;
+                    }
+                }
+            }
+
             if (old_order_note != current_order_note) {
                 if ( res['new'].length == 0 && res['cancelled'].length == 0){
                     if (current_order_note) {
@@ -101,6 +148,33 @@ odoo.define('pos_cancel_order.order_note', function (require) {
                 }
             }
             res.order_note = current_order_note;
+            res.order_custom_notes = current_order_custom_notes;
+
+            for ( line_hash in current_res) {
+                var curr = current_res[line_hash];
+                var old  = old_res[line_hash];
+                var current_product = curr.product_id;
+                var new_exist_product = false;
+                var cancelled_exist_product = false;
+                if (res.new) {
+                    var new_exist_product = res.new.find(function(product) {
+                        return product.id == current_product;
+                    });
+                }
+                if (res.cancelled) {
+                    var cancelled_exist_product = res.cancelled.find(function(product) {
+                        return product.id == current_product;
+                    });
+                }
+                if (new_exist_product) {
+                    new_exist_product.custom_notes = curr.custom_notes;
+                }
+                if (cancelled_exist_product) {
+                    if (curr.old_custom_notes && curr.old_custom_notes != curr.custom_notes) {
+                        cancelled_exist_product.custom_notes = curr.old_custom_notes;
+                    }
+                }
+            }
             return res
         },
     });
@@ -122,14 +196,44 @@ odoo.define('pos_cancel_order.order_note', function (require) {
                 return this.custom_notes;
             } else return false;
         },
+        set_old_custom_notes: function(notes) {
+            this.old_custom_notes = notes;
+            this.trigger('change', this);
+        },
         export_as_JSON: function() {
             var data = _super_orderline.export_as_JSON.apply(this, arguments);
             data.custom_notes = this.custom_notes;
+            data.old_custom_notes = this.old_custom_notes;
             return data;
         },
         init_from_JSON: function(json) {
             this.custom_notes = json.custom_notes;
+            this.old_custom_notes = json.old_custom_notes;
             _super_orderline.init_from_JSON.call(this, json);
+        },
+        get_line_diff_hash: function(){
+            var custom_notes_ids = [];
+            var custom_notes_ids_line = false;
+            if (this.get_custom_notes()) {
+                this.get_custom_notes().forEach(function(custom_notes) {
+                    custom_notes_ids.push(custom_notes.id);
+                });
+                custom_notes_ids_line = custom_notes_ids.join('');
+            }
+
+            if (this.get_note()) {
+                if(this.get_custom_notes()) {
+                    return this.id + '|' + this.get_note() + '|' + custom_notes_ids_line;
+                } else {
+                    _super_orderline.get_line_diff_hash.apply(this,arguments);
+                }
+            } else {
+                if(this.get_custom_notes()) {
+                    return this.id + '|' + custom_notes_ids_line;
+                } else {
+                    _super_orderline.get_line_diff_hash.apply(this,arguments);
+                }
+            }
         },
     });
 
@@ -152,6 +256,11 @@ odoo.define('pos_cancel_order.order_note', function (require) {
                         value = line.get_note();
                     }
                     if (line) {
+                        var old_line_custom_notes = false;
+                        if (line.get_custom_notes()) {
+                            old_line_custom_notes = line.get_custom_notes().concat()
+                            line.set_old_custom_notes(old_line_custom_notes);
+                        }
                         this.gui.show_popup('product_notes',{
                             title: title,
                             notes: self.pos.product_notes,
