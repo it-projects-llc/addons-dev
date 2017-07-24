@@ -52,3 +52,7 @@ class ResCompany(models.Model):
 
     team_website_description = fields.Html('Website Team Description', translate=True,
                                            help="Common html for team member pages")
+    team_website_description_top_block = fields.Html('Website Team Description Top Block', translate=True,
+                                                     help="Common html in the top block for the team members list page")
+    team_website_description_down_block = fields.Html('Website Team Description Down Block', translate=True,
+                                                      help="Common html in the down block for the team members list page")
