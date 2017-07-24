@@ -15,7 +15,7 @@ class Users(models.Model):
                                             help="A link to the user representation video.\n"
                                             "Copy a link in an address bar from a youtube page contained corresponding video and paste here")
     user_description = fields.Html('Description for the website user', translate=True)
-    location = fields.Text(string="location", help="User Location")
+    location = fields.Char(string="Location", help="User Location")
 
     def youtube_url_validation(self, url):
         youtube_regex = (
@@ -51,9 +51,13 @@ class Users(models.Model):
 class ResCompany(models.Model):
     _inherit = ['res.company']
 
+    def _default_team_website_description_top_block(self):
+        return '<h1 class="team_header"><span class="team_sub_header">'+self.env.user.company_id.name+'</span> team</h1>'
+
     team_website_description = fields.Html('Website Team Description', translate=True,
                                            help="Common html for team member pages")
     team_website_description_top_block = fields.Html('Website Team Description Top Block', translate=True,
-                                                     help="Common html in the top block for the team members list page")
+                                                     help="Common html in the top block for the team members list page",
+                                                     default=_default_team_website_description_top_block)
     team_website_description_bottom_block = fields.Html('Website Team Description Bottom Block', translate=True,
                                                         help="Common html in the bottom block for the team members list page")
