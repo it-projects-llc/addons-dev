@@ -114,57 +114,39 @@ odoo.define('pos_cancel_order.order_note', function (require) {
 
             var current_order_note = this.get_note();
             var current_order_custom_notes = this.get_custom_notes();
-
             if (old_order_custom_notes != current_order_custom_notes) {
-                if ( res['new'].length == 0 && res['cancelled'].length == 0){
-                    if (current_order_custom_notes) {
-                        res.new.push({
-                            name: "Order Note",
-                            qty: 1,
-                        });
-                    }
-                    if (old_order_custom_notes) {
-                        res.cancelled.push({
-                            name: "Order Note",
-                            qty: 1,
-                        })
-                        res.old_order_custom_notes = old_order_custom_notes;
-                    }
+                if (current_order_custom_notes) {
+                    res.new.push({
+                        name: "Order Note",
+                        qty: 1,
+                        order: true,
+                    });
+                }
+                if (old_order_custom_notes) {
+                    res.cancelled.push({
+                        name: "Order Note",
+                        qty: 1,
+                        order: true,
+                    })
+                    res.old_order_custom_notes = old_order_custom_notes;
                 }
             }
 
             if (old_order_note != current_order_note) {
-                if ( res['new'].length == 0 && res['cancelled'].length == 0){
-                    if (current_order_note) {
-                        res.new.push({
-                            name: "Order Note",
-                            qty: 1,
-                        });
-                    }
-                    if (old_order_note) {
-                        res.cancelled.push({
-                            name: "Order Note",
-                            qty: 1,
-                        })
-                        res.old_order_note = old_order_note;
-                    }
+                if (current_order_note) {
+                    res.new.push({
+                        name: "Order Note",
+                        qty: 1,
+                        order: true,
+                    });
                 }
-            }
-            if (old_order_note == current_order_note) {
-                if ( res['new'].length == 0 && res['cancelled'].length == 0){
-                    if (current_order_note) {
-                        res.new.push({
-                            name: "Order Note",
-                            qty: 1,
-                        });
-                    }
-                    if (old_order_note) {
-                        res.cancelled.push({
-                            name: "Order Note",
-                            qty: 1,
-                        })
-                        res.old_order_note = old_order_note;
-                    }
+                if (old_order_note) {
+                    res.cancelled.push({
+                        name: "Order Note",
+                        qty: 1,
+                        order: true,
+                    })
+                    res.old_order_note = old_order_note;
                 }
             }
 

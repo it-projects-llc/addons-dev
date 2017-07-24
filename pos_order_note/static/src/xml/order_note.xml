@@ -158,7 +158,22 @@
                 </t>
             </t>
         </t>
-
+        <t t-jquery='t[t-foreach="changes.cancelled"] line:first' t-operation="replace">
+            <t t-if="!change.order">
+                <line>
+                    <left><value><t t-esc="change.qty" /></value></left>
+                    <right><t t-esc="change.name" /></right>
+                </line>
+            </t>
+        </t>
+        <t t-jquery='t[t-foreach="changes.new"] line:first' t-operation="replace">
+            <t t-if="!change.order">
+                <line>
+                    <left><value><t t-esc="change.qty" /></value></left>
+                    <right><t t-esc="change.name" /></right>
+                </line>
+            </t>
+        </t>
         <t t-jquery='t[t-foreach="changes.new"] t[t-if="change.note"]' t-operation="replace">
             <t t-if="change.note">
                 <t t-if="change.custom_notes">
