@@ -17,6 +17,18 @@
             </field>
         </record>
 
+        <record id="view_users_form_simple_modif" model="ir.ui.view">
+            <field name="name">res.users.preferences.form</field>
+            <field name="model">res.users</field>
+            <field eval="18" name="priority"/>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='preferences']" position="inside">
+                    <field name="location" />
+                </xpath>
+            </field>
+        </record>
+
         <record id="team_page_link" model="website.menu">
             <field name="name">Team</field>
             <field name="url">/team</field>

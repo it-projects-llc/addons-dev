@@ -109,6 +109,11 @@
 .team .user_profile .user_info {
     float: right;
 }
+.team .user_info .location {
+    color: gray;
+    font-size: 12px;
+    max-width: 200px;
+}
 .team .user_profile .without_video {
     text-align: center;
     background-color: #a24588;

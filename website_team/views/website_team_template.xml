@@ -83,7 +83,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div t-if="company.team_website_description_down_block" itemprop="description" t-field="company.team_website_description_down_block" class="oe_structure mt16" id="team_company_full_description_in_the_down_block"/>
+                        <div t-if="company.team_website_description_bottom_block" itemprop="description" t-field="company.team_website_description_bottom_block" class="oe_structure mt16" id="team_company_full_description_in_the_down_block"/>
                     </div>
                 </div>
             </t>
@@ -113,6 +113,9 @@
                                          </div>
                                          <div class="job_position">
                                              <t t-esc="user.partner_id.function"/>
+                                         </div>
+                                         <div class="location">
+                                             <t t-esc="user.location"/>
                                          </div>
                                      </div>
                                  </div>
