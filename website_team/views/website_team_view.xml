@@ -7,6 +7,9 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//div[@class='oe_title']//field[@name='active']" position="after">
+                    <field name="show_in_page"/>
+                </xpath>
                 <xpath expr="//group[@name='preferences']" position="inside">
                     <field name="location"/>
                 </xpath>
