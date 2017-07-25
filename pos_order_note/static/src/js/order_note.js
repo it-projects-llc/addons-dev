@@ -114,7 +114,40 @@ odoo.define('pos_cancel_order.order_note', function (require) {
 
             var current_order_note = this.get_note();
             var current_order_custom_notes = this.get_custom_notes();
-            if (old_order_custom_notes != current_order_custom_notes) {
+            var old_order_custom_notes_ids = [];
+            var current_order_custom_notes_ids = [];
+            if (old_order_custom_notes) {
+                old_order_custom_notes.forEach(function(old_note) {
+                    old_order_custom_notes_ids.push(old_note.id);
+                });
+            }
+            if (current_order_custom_notes) {
+                current_order_custom_notes.forEach(function(current_note) {
+                    current_order_custom_notes_ids.push(current_note.id);
+                });
+            }
+
+            var DiffArrays = function(A,B)
+            {
+                var M = A.length, N = B.length, c = 0, C = [];
+                for (var i = 0; i < M; i++)
+                 { var j = 0, k = 0;
+                   while (B[j] !== A[ i ] && j < N) j++;
+                   while (C[k] !== A[ i ] && k < c) k++;
+                   if (j == N && k == c) C[c++] = A[ i ];
+                 }
+               return C;
+            }
+            var change_custom_notes = false;
+            if (current_order_custom_notes_ids.length == old_order_custom_notes_ids.length) {
+                var difference = DiffArrays(current_order_custom_notes_ids, old_order_custom_notes_ids)
+                if (difference.length) {
+                    change_custom_notes = true;
+                }
+            } else {
+                change_custom_notes = true;
+            }
+            if (change_custom_notes) {
                 if (current_order_custom_notes) {
                     res.new.push({
                         name: "Order Note",
