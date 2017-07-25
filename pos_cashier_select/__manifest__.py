@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 {
     "name": """POS Cashier Select""",
-    "summary": """None""",
+    "summary": """Forced choose a cashier before switching to payment screen""",
     "category": "POS",
-    "images": ['images/pos_cashier_select.png],
+    "images": ['images/pos_cashier_select.png'],
     "version": "1.0.0",
     "application": False,
 
@@ -11,6 +11,8 @@
     "support": "apps@it-projects.info",
     "website": "https://it-projects.info",
     "license": "LGPL-3",
+    "price": 39.00,
+    "currency": "EUR",
 
     "depends": [
         "point_of_sale",
