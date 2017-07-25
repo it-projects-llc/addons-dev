@@ -10,7 +10,7 @@ class WebsiteTeam(http.Controller):
     def index(self, **kw):
         users = http.request.env['res.users'].sudo()
         return http.request.render('website_team.team_template', {
-            'users': users.search([('show_in_page', '=', True)]),
+            'users': users.search([('show_in_page', '=', True)], order='create_date'),
             'company': http.request.env.user.company_id,
         })
 
