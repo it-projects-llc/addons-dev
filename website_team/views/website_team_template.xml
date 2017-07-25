@@ -29,7 +29,6 @@
 
         <template name="user list" id="team_template" page="True">
             <t t-call="website.layout">
-                <t t-call="website_team.website_team_twitter"/>
                 <t t-set="title">Team </t>
                 <div class="oe_structure">
                     <div class="container">
@@ -85,12 +84,12 @@
                         <div t-if="company.team_website_description_bottom_block" itemprop="description" t-field="company.team_website_description_bottom_block" class="oe_structure mt16" id="team_company_full_description_in_the_down_block"/>
                     </div>
                 </div>
+                <t t-call="website_team.website_team_twitter"/>
             </t>
         </template>
 
         <template name="user card" id="user_template" page="True">
             <t t-call="website.layout">
-                <t t-call="website_team.website_team_twitter"/>
                 <t t-set="title"><t t-esc="user.name"/></t>
                  <div class="container">
                      <div class="team">
@@ -168,6 +167,7 @@
                      </div>
                      <div t-if="user.company_id.team_website_description" itemprop="description" t-field="user.company_id.team_website_description" class="oe_structure mt16" id="team_company_full_description"/>
                  </div>
+                <t t-call="website_team.website_team_twitter"/>
             </t>
         </template>
     </data>
