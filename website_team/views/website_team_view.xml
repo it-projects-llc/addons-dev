@@ -7,12 +7,27 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//group[@name='preferences']" position="inside">
+                    <field name="location"/>
+                </xpath>
                 <xpath expr="//field[@name='signature']" position="after">
                     <field name="phone"/>
                     <field name="username_github"/>
                     <field name="url_upwork"/>
                     <field name="username_twitter"/>
                     <field name="presentation_youtube_link"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_users_form_simple_modif" model="ir.ui.view">
+            <field name="name">res.users.preferences.form</field>
+            <field name="model">res.users</field>
+            <field eval="18" name="priority"/>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='preferences']" position="inside">
+                    <field name="location" />
                 </xpath>
             </field>
         </record>

@@ -33,7 +33,7 @@
                 <t t-set="title">Team </t>
                 <div class="oe_structure">
                     <div class="container">
-                        <h1 class="team_header"><span class="team_sub_header"><t t-esc="res_company.name"/></span> team</h1>
+                        <div t-if="company.team_website_description_top_block" itemprop="description" t-field="company.team_website_description_top_block" class="oe_structure mt16" id="team_company_full_description_in_the_top_block"/>
                         <div class="team">
                             <div class="team_list">
                                 <div class="row">
@@ -82,6 +82,7 @@
                                 </div>
                             </div>
                         </div>
+                        <div t-if="company.team_website_description_bottom_block" itemprop="description" t-field="company.team_website_description_bottom_block" class="oe_structure mt16" id="team_company_full_description_in_the_down_block"/>
                     </div>
                 </div>
             </t>
@@ -92,7 +93,6 @@
                 <t t-call="website_team.website_team_twitter"/>
                 <t t-set="title"><t t-esc="user.name"/></t>
                  <div class="container">
-                     <h1 class="team_header"><span class="team_sub_header"><t t-esc="res_company.name"/></span> team</h1>
                      <div class="team">
                          <div class="user_profile">
                              <div class="row" t-if="youtube_id">
@@ -111,6 +111,9 @@
                                          </div>
                                          <div class="job_position">
                                              <t t-esc="user.partner_id.function"/>
+                                         </div>
+                                         <div class="location">
+                                             <t t-esc="user.location"/>
                                          </div>
                                      </div>
                                  </div>

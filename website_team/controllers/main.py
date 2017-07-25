@@ -10,7 +10,8 @@ class WebsiteTeam(http.Controller):
     def index(self, **kw):
         users = http.request.env['res.users'].sudo()
         return http.request.render('website_team.team_template', {
-            'users': users.search([])
+            'users': users.search([]),
+            'company': http.request.env.user.company_id,
         })
 
     @http.route('/team/<string:login>', auth='public', website=True)
