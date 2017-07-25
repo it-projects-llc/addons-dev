@@ -93,7 +93,6 @@
                 <t t-call="website_team.website_team_twitter"/>
                 <t t-set="title"><t t-esc="user.name"/></t>
                  <div class="container">
-                     <!--<h1 class="team_header"><span class="team_sub_header"><t t-esc="res_company.name"/></span> team</h1>-->
                      <div class="team">
                          <div class="user_profile">
                              <div class="row" t-if="youtube_id">
