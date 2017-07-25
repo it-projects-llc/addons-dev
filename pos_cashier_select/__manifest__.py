@@ -3,7 +3,7 @@
     "name": """POS Cashier Select""",
     "summary": """None""",
     "category": "POS",
-    "images": [],
+    "images": ['images/pos_cashier_select.png],
     "version": "1.0.0",
     "application": False,
 
