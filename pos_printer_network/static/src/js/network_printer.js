@@ -81,10 +81,12 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                             self.trigger('change:network_printer_status', status);
                         }
                     }, function(){
-                        self.old_network_printer_status.forEach(function(item){
-                            item.status = 'offline'
-                        })
-                        self.trigger('change:network_printer_status', self.old_network_printer_status);
+                        if (self.old_network_printer_status) {
+                            self.old_network_printer_status.forEach(function(item){
+                                item.status = 'offline'
+                            })
+                            self.trigger('change:network_printer_status', self.old_network_printer_status);
+                        }
                     }).always(function(){
                         setTimeout(network_printer_status,5000);
                     });
@@ -130,17 +132,73 @@ odoo.define('pos_restaurant.network_printer', function (require) {
             network_printers.forEach(function(item){
                 self.network_printers.push({'ip': item.config.proxy_ip, 'status': 'offline', 'name': item.config.name})
             });
-            return this._super(url,options).done(function(){
-                $.ajax({
-                    url: url + '/hw_proxy/network_printers',
-                    type: "POST",
-                    method: "POST",
-                    dataType: 'json',
-                    contentType: "application/json; charset=utf-8",
-                    data: JSON.stringify({'jsonrpc': "2.0", 'method': "call", "params": {'network_printers': self.network_printers}}),
-                    timeout: 1000,
+
+            if (!this.pos.config.usb_printer_active) {
+                function try_real_hard_to_connect(url, retries, done){
+                    done = done || new $.Deferred();
+
+                    $.ajax({
+                        url: url + '/hw_proxy/without_usb',
+                        method: 'GET',
+                        timeout: 1000,
+                    })
+                    .done(function(){
+                        done.resolve(url);
+                    })
+                    .fail(function(){
+                        if(retries > 0){
+                            try_real_hard_to_connect(url,retries-1,done);
+                        }else{
+                            done.reject();
+                        }
+                    });
+                    return done;
+                }
+                return try_real_hard_to_connect(url,3).done(function(){
+                    $.ajax({
+                        url: url + '/hw_proxy/network_printers',
+                        type: "POST",
+                        method: "POST",
+                        dataType: 'json',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify({'jsonrpc': "2.0", 'method': "call", "params": {'network_printers': self.network_printers}}),
+                        timeout: 1000,
+                    });
                 });
-            })
+            } else {
+                return this._super(url,options).done(function(){
+                    $.ajax({
+                        url: url + '/hw_proxy/network_printers',
+                        type: "POST",
+                        method: "POST",
+                        dataType: 'json',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify({'jsonrpc': "2.0", 'method': "call", "params": {'network_printers': self.network_printers}}),
+                        timeout: 1000,
+                    });
+                })
+            }
+        },
+        find_proxy: function(options){
+            var self = this;
+            var port  = ':' + (options.port || '8069');
+            if(url.indexOf('//') < 0){
+                url = 'http://'+url;
+            }
+            if(url.indexOf(':',5) < 0){
+                url = url+port;
+            }
+            if (!this.pos.config.usb_printer_active) {
+                return this._super(options).done(function(){
+                    $.ajax({
+                        url: url + '/hw_proxy/without_usb',
+                        method: 'GET',
+                        timeout: 1000,
+                    })
+                });
+            } else {
+                return this._super(options)
+            }
         },
     });
 
@@ -170,13 +228,18 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                         msg += _t('Scanner');
                     }
                 }
-                if( this.pos.config.iface_print_via_proxy ||
-                    this.pos.config.iface_cashdrawer ){
-                    var printer = status.drivers.escpos ? status.drivers.escpos.status : false;
-                    if( printer != 'connected' && printer != 'connecting'){
-                        warning = true;
-                        if (this.pos.debug) {
-                            console.log("USB Printer offline");
+                if (this.pos.config.usb_printer_active) {
+                    if( this.pos.config.iface_print_via_proxy ||
+                        this.pos.config.iface_cashdrawer ){
+                        var printer = status.drivers.escpos ? status.drivers.escpos.status : false;
+                        if( printer != 'connected' && printer != 'connecting'){
+                            warning = true;
+                            this.usb_printer_status = false;
+                            if (this.pos.debug) {
+                                console.log("USB Printer offline");
+                            }
+                        } else {
+                            this.usb_printer_status = true;
                         }
                     }
                 }
@@ -186,6 +249,14 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                         warning = true;
                         msg = msg ? msg + ' & ' : msg;
                         msg += _t('Scale');
+                    }
+                }
+                if (this.devices_status && this.devices_status.length) {
+                    var offline_network_printer = this.devices_status.find(function(printer) {
+                        return printer.status == "offline"
+                    });
+                    if (offline_network_printer) {
+                        warning = true;
                     }
                 }
                 msg = msg ? msg + ' ' + _t('Offline') : msg;
@@ -199,6 +270,7 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                 this.gui.show_popup('proxy_printers', {
                     title: "Printers",
                     value: this.devices_status,
+                    usb_status: this.usb_printer_status,
                 });
             }
         },
@@ -215,40 +287,27 @@ odoo.define('pos_restaurant.network_printer', function (require) {
             options = options || {};
             this._super(options);
             this.devices_status = options.value;
+            this.usb_status = options.usb_status;
             var network_printers = false;
-
-            // // all network printers
-            // var network_printers = this.pos.printers.filter(
-            //     function(r){
-            //         return (r.config.network_printer === true);
-            //     }
-            // );
-            // network_printers.forEach(function(item) {
-            //     item.config.status = 'offline';
-            // });
 
             // online network printers
             if (this.devices_status) {
                 network_printers = this.devices_status;
-                // var online_network_printers = this.devices_status.drivers.network_printers;
-                // if (online_network_printers) {
-                //     online_network_printers.forEach(function (item) {
-                //         var printer_obj = network_printers.find(function (printer) {
-                //             return printer.id === item.config.id;
-                //         });
-                //         printer_obj.config.status = 'online'
-                //     });
-                }
-                //
-                // var printer = this.devices_status.drivers.escpos ? this.devices_status.drivers.escpos.status : false;
-                // if( printer != 'connected' && printer != 'connecting'){
-                //
-                // }
-
-            this.usb_printer_status = [{'status':'offline'}];
+            }
             this.renderElement();
             this.render_network_list(network_printers);
-            this.render_usb_list(this.usb_printer_status);
+            if (this.pos.config.usb_printer_active) {
+                if (this.usb_status) {
+                    this.usb_printer_status = [{'status':'online'}];
+                } else {
+                    this.usb_printer_status = [{'status':'offline'}];
+                }
+
+                this.render_usb_list(this.usb_printer_status);
+            }
+        },
+        get_usb_printer_status: function(){
+            return this.pos.config.usb_printer_active;
         },
         render_network_list: function(network_printers) {
             var network_contents = this.$el[0].querySelector('.network-printers-list-contents');

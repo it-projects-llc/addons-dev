@@ -23,7 +23,14 @@ class UpdatedEscposDriver(EscposDriver):
 
     def __init__(self):
         self.network_printers = False
+        self.usb_printer_active = False
+        self.run_network_connection()
         super(UpdatedEscposDriver, self).__init__()
+
+    def run_network_connection(self):
+        while self.network_printers and len(self.network_printers) > 0:
+            driver.network_printers = self.connected_network_printers(self.network_printers)
+            time.sleep(5)
 
     def connected_network_printers(self, printers):
         printer = False
@@ -48,20 +55,6 @@ class UpdatedEscposDriver(EscposDriver):
             return network_printers
         return printers
 
-    # def get_escpos_printer(self):
-    #     printers = self.connected_usb_devices()
-    #     if len(printers) > 0:
-    #         return super(UpdatedEscposDriver, self).get_escpos_printer()
-    #     else:
-    #         network_printers = self.connected_network_printers()
-    #         if network_printers:
-    #             print "++++++++++++++++++ network_printers", network_printers
-    #             self.set_status('connected', "Connected to Network Printer")
-    #             return UpdatedNetwork(self.network_printers_ip[0])
-    #         else:
-    #             print "++++++++++++++++++ else network_printers", network_printers
-    #             return super(UpdatedEscposDriver, self).get_escpos_printer()
-
     def run(self):
         printer = None
         if not escpos:
@@ -69,8 +62,6 @@ class UpdatedEscposDriver(EscposDriver):
             return
         while True:
             try:
-                driver.network_printers = self.connected_network_printers(self.network_printers)
-
                 error = True
                 timestamp, task, data = self.queue.get(True)
                 printer = None
@@ -82,10 +73,20 @@ class UpdatedEscposDriver(EscposDriver):
                             printer = UpdatedNetwork(network_printer_proxy)
                             printer.receipt(data)
                 else:
-                    printer = self.get_escpos_printer()
+                    if self.usb_printer_active:
+                        printer = self.get_escpos_printer()
+                    elif self.network_printers:
+                        self.set_status('connected', 'Connected')
                 if printer is None:
-                    if task != 'status':
-                        self.queue.put((timestamp, task, data))
+                    if self.usb_printer_active is False:
+                        if self.network_printers:
+                            self.set_status('connected', 'Connected')
+                        else:
+                            if task != 'status':
+                                self.queue.put((timestamp, task, data))
+                    elif self.usb_printer_active is True:
+                        if task != 'status':
+                            self.queue.put((timestamp, task, data))
                     error = False
                     time.sleep(5)
                     continue
@@ -126,7 +127,6 @@ class UpdatedEscposDriver(EscposDriver):
 
 driver = UpdatedEscposDriver()
 hw_escpos_main.driver = driver
-
 driver.push_task('printstatus')
 
 
@@ -134,11 +134,9 @@ class UpdatedEscposProxy(EscposProxy):
     @http.route('/hw_proxy/print_xml_receipt', type='json', auth='none', cors='*')
     def print_xml_receipt(self, receipt, proxy=None):
         if proxy:
-            _logger.info('ESC/POS: PRINT XML RECEIPT', proxy)
             driver.push_task(['network_xml_receipt', proxy], receipt)
         else:
             super(UpdatedEscposProxy, self).print_xml_receipt(receipt)
-
 
     @http.route('/hw_proxy/network_printers', type='json', auth='none', cors='*')
     def networ_printers(self, network_printers=None):
@@ -146,10 +144,21 @@ class UpdatedEscposProxy(EscposProxy):
         for i in range(len(network_printers)):
             network_printers[i] = eval(network_printers[i])
         driver.network_printers = network_printers
+        driver.run_network_connection()
 
     @http.route('/hw_proxy/status_network_printers', type='json', auth='none', cors='*')
     def networ_printers_status(self):
         return driver.network_printers
+
+    @http.route('/hw_proxy/without_usb', type='http', auth='none', cors='*')
+    def without_usb(self):
+        driver.usb_printer_active = False
+        return "ping"
+
+    @http.route('/hw_proxy/hello', type='http', auth='none', cors='*')
+    def hello(self):
+        driver.usb_printer_active = True
+        return super(UpdatedEscposProxy, self).hello()
 
 
 class UpdatedNetwork(Network):
