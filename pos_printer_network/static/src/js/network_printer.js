@@ -64,7 +64,7 @@ odoo.define('pos_restaurant.network_printer', function (require) {
 
     devices.ProxyDevice.include({
         init: function(parent,options){
-            this.network_printer_keptalive  = false;
+            this.network_printer_keptalive = false;
             this.old_network_printer_status = false;
             this._super(parent,options);
         },
@@ -112,7 +112,7 @@ odoo.define('pos_restaurant.network_printer', function (require) {
         },
         try_hard_to_connect: function(url, options){
             var self = this;
-            var port  = ':' + (options.port || '8069');
+            var port = ':' + (options.port || '8069');
             if(url.indexOf('//') < 0){
                 url = 'http://' + url;
             }
@@ -206,7 +206,6 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                         if( printer !== 'connected' && printer !== 'connecting'){
                             warning = true;
                             this.usb_printer_status = false;
-                            if (this.pos.debug) console.log("USB Printer offline");
                         } else {
                             this.usb_printer_status = true;
                         }

@@ -3,6 +3,7 @@ from odoo import http
 import logging
 import time
 import traceback
+from ast import literal_eval
 
 
 _logger = logging.getLogger(__name__)
@@ -38,7 +39,7 @@ class UpdatedEscposDriver(EscposDriver):
             network_printers = []
             for p in printers:
                 if type(p) is str:
-                    p = eval(p)
+                    p = literal_eval(p)
                 try:
                     printer = UpdatedNetwork(p['ip'])
                     printer.close()
@@ -142,7 +143,7 @@ class UpdatedEscposProxy(EscposProxy):
     def networ_printers(self, network_printers=None):
         network_printers = list(set([str(e) for e in network_printers]))
         for i in range(len(network_printers)):
-            network_printers[i] = eval(network_printers[i])
+            network_printers[i] = literal_eval(network_printers[i])
         driver.network_printers = network_printers
         driver.run_network_connection()
 
