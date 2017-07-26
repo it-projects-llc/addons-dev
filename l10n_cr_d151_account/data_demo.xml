@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="account.cr.d151.code" id="d151_code_0">
+            <field name="name">V</field>
+            <field name="description">Ventas</field>
+            <field name="type">sale</field>
+        </record>
+
+        <record model="account.cr.d151.code" id="d151_code_1">
+            <field name="name">C</field>
+            <field name="description">Compas</field>
+            <field name="type">purchase</field>
+        </record>
+
+        <record model="account.cr.d151.code" id="d151_code_2">
+            <field name="name">SP</field>
+            <field name="description">Servicios Profesionales</field>
+            <field name="type">purchase</field>
+        </record>
+
+        <record model="account.cr.d151.code" id="d151_code_3">
+            <field name="name">A</field>
+            <field name="description">Alquileres</field>
+            <field name="type">purchase</field>
+        </record>
+
+        <record model="account.cr.d151.code" id="d151_code_4">
+            <field name="name">M</field>
+            <field name="description">Comisiones</field>
+            <field name="type">purchase</field>
+        </record>
+
+        <record model="account.cr.d151.code" id="d151_code_5">
+            <field name="name">I</field>
+            <field name="description">Intereses</field>
+            <field name="type">purchase</field>
+        </record>
+
+        <record model="account.cr.d151.category" id="d151_category_0">
+            <field name="name">Ventas: productos y servicios</field>
+            <field name="code_id" model="account.cr.d151.code" search="[('name', '=', 'V')]"/>
+            <field name="min_amount" eval="int(2500000)"/>
+            <field name="min_amount_currency_id" ref="base.CRC"/>
+            <field name="sign" eval="int(-1)"/>
+        </record>
+
+        <record model="account.cr.d151.category" id="d151_category_1">
+            <field name="name">Ventas: otros</field>
+            <field name="code_id" model="account.cr.d151.code" search="[('name', '=', 'V')]"/>
+            <field name="min_amount" eval="int(50000)"/>
+            <field name="min_amount_currency_id" ref="base.CRC"/>
+            <field name="sign" eval="int(-1)"/>
+        </record>
+
+        <record model="account.cr.d151.category" id="d151_category_2">
+            <field name="name">Compras</field>
+            <field name="code_id" model="account.cr.d151.code" search="[('name', '=', 'C')]"/>
+            <field name="min_amount" eval="int(2500000)"/>
+            <field name="min_amount_currency_id" ref="base.CRC"/>            
+            <field name="sign" eval="int(1)"/>
+        </record>
+
+        <record model="account.cr.d151.category" id="d151_category_3">
+            <field name="name">Servicios Profesionales</field>
+            <field name="code_id" model="account.cr.d151.code" search="[('name', '=', 'SP')]"/>
+            <field name="min_amount" eval="int(2500000)"/>
+            <field name="min_amount_currency_id" ref="base.CRC"/>
+            <field name="sign" eval="int(1)"/>
+        </record>
+
+        <record model="account.cr.d151.category" id="d151_category_4">
+            <field name="name">Alquileres</field>
+            <field name="code_id" model="account.cr.d151.code" search="[('name', '=', 'A')]"/>
+            <field name="min_amount" eval="int(50000)"/>
+            <field name="min_amount_currency_id" ref="base.CRC"/>
+            <field name="sign" eval="int(1)"/>
+        </record>
+
+        <record model="account.cr.d151.category" id="d151_category_5">
+            <field name="name">Comisiones</field>
+            <field name="code_id" model="account.cr.d151.code" search="[('name', '=', 'M')]"/>
+            <field name="min_amount" eval="int(50000)"/>
+            <field name="min_amount_currency_id" ref="base.CRC"/>
+            <field name="sign" eval="int(1)"/>
+        </record>
+
+        <record model="account.cr.d151.category" id="d151_category_5">
+            <field name="name">Intereses</field>
+            <field name="code_id" model="account.cr.d151.code" search="[('name', '=', 'I')]"/>
+            <field name="min_amount" eval="int(50000)"/>
+            <field name="min_amount_currency_id" ref="base.CRC"/>
+            <field name="sign" eval="int(1)"/>
+        </record>
+
+    </data>
+</odoo>

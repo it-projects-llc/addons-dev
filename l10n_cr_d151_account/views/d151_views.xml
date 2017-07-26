@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="d151_codes_tree_view">
+            <field name="name">account.cr.d151.code.tree</field>
+            <field name="model">account.cr.d151.code</field>
+            <field name="arch" type="xml">
+                <tree string="D151 Codes">
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="type"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="d151_codes_tree_form_view" model="ir.ui.view">
+            <field name="name">account.cr.d151.code.form</field>
+            <field name="model">account.cr.d151.code</field>
+            <field name="arch" type="xml">
+                <form string="D151 Code">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="description"/>
+                            <field name="type"/>
+                        </group>
+                        <field name="category_ids">
+                            <tree>
+                                <field name="name"/>
+                                <field name="min_amount"/>
+                                <field name="min_amount_currency_id"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="d151_codes_tree_search_view">
+            <field name="name">account.cr.d151.code.search</field>
+            <field name="model">account.cr.d151.code</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="type"/>
+                    <group extend="0" string="Group By">
+                        <filter name="type" string="Type" context="{'group_by' : 'type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_open_d151_codes_action" model="ir.actions.act_window">
+            <field name="name">D151 Code</field>
+            <field name="res_model">account.cr.d151.code</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+        </record>
+
+        <menuitem id="d151_codes_menu" name="D151 Codes" parent="account.account_account_menu"
+        action='action_open_d151_codes_action'/>
+
+        <record id="d151_category_form_view" model="ir.ui.view">
+            <field name="name">account.cr.d151.category.form</field>
+            <field name="model">account.cr.d151.category</field>
+            <field name="arch" type="xml">
+                <form string="D151 Category">
+                    <sheet>
+                        <div>
+                            <group>
+                                <field name="name"/>
+                                <field name="code_id"/>
+                            </group>
+                        </div>
+                        <div>
+                            <group>
+                                <field name="min_amount"/>
+                                <field name="min_amount_currency_id"/>
+                            </group>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>
