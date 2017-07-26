@@ -228,10 +228,11 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                     }
                 }
                 msg = msg ? msg + ' ' + _t('Offline') : msg;
-                this.set_status(warning ?
-                    'warning' :
-                    'connected',
-                    msg);
+                this.set_status(
+                warning ?
+                'warning' :
+                'connected',
+                msg);
             } else {
                 this._super(status);
             }
