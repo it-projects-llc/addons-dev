@@ -118,7 +118,7 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                 url = 'http://' + url;
             }
             if(url.indexOf(':',5) < 0){
-                url = url + port;
+                url += port;
             }
             var network_printers = this.pos.printers.filter(
                 function(r){
@@ -147,7 +147,7 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                         }
                     });
                     return done;
-                }
+                };
                 return try_real_hard_to_connect(url,3).done(function(){
                     $.ajax({
                         url: url + '/hw_proxy/network_printers',
