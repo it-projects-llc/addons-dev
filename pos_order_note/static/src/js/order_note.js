@@ -8,15 +8,10 @@ odoo.define('pos_cancel_order.order_note', function (require) {
     var multiprint = require('pos_restaurant.multiprint');
     var PosBaseWidget = require('point_of_sale.BaseWidget');
     var PopupWidget = require('point_of_sale.popups');
+    var splitbill = require('pos_restaurant.splitbill');
+
     var QWeb = core.qweb;
     var _t = core._t;
-
-    var splitbill = gui.Gui.prototype.screen_classes.filter(function(el) { return el.name == 'splitbill'});
-    if (splitbill && splitbill.length) {
-        console.log("split bill is exist!");
-        console.log(splitbill);
-    }
-//    gui.Gui.prototype.screen_classes.filter(function(el) { return el.name == 'clientlist'})[0].widget.include({
 
 
     models.load_models({
@@ -278,6 +273,11 @@ odoo.define('pos_cancel_order.order_note', function (require) {
                 }
             }
         },
+        clone: function(){
+            var orderline = _super_orderline.clone.call(this);
+            orderline.custom_notes = this.custom_notes;
+            return orderline;
+        },
     });
 
     PosBaseWidget.include({
@@ -322,10 +322,6 @@ odoo.define('pos_cancel_order.order_note', function (require) {
                         });
                     }
                 };
-            }
-            if (this.gui && this.gui.screen_instances.splitbill && this.gui.screen_instances.splitbill.pay) {
-                console.log("pay", this.gui.screen_instances.splitbill.pay);
-                console.log("action_buttons", this.gui.screen_instances.products.action_buttons);
             }
         }
     });
