@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from openerp import models, fields, api, _
-from openerp.exceptions import Warning
+from openerp.exceptions import Warning as UserError
 import re
 
 
@@ -16,6 +16,7 @@ class Users(models.Model):
                                             "Copy a link in an address bar from a youtube page contained corresponding video and paste here")
     user_description = fields.Html('Description for the website user', translate=True)
     location = fields.Char(string="Location", help="User Location")
+    website_published = fields.Boolean(string="Show at Team Page", default=True)
 
     def youtube_url_validation(self, url):
         youtube_regex = (
@@ -32,7 +33,7 @@ class Users(models.Model):
     @api.constrains('presentation_youtube_link')
     def _check_youtube_id(self):
         if self.presentation_youtube_link is not False and self.get_youtube_id(self.presentation_youtube_link) is False:
-            raise Warning(_('Youtube link is incorrect.'))
+            raise UserError(_('Youtube link is incorrect.'))
 
     def get_youtube_id(self, link):
         link_id = self.youtube_url_validation(link)
