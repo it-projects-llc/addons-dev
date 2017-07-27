@@ -11,6 +11,14 @@ odoo.define('pos_cancel_order.order_note', function (require) {
     var QWeb = core.qweb;
     var _t = core._t;
 
+    var splitbill = gui.Gui.prototype.screen_classes.filter(function(el) { return el.name == 'splitbill'});
+    if (splitbill && splitbill.length) {
+        console.log("split bill is exist!");
+        console.log(splitbill);
+    }
+//    gui.Gui.prototype.screen_classes.filter(function(el) { return el.name == 'clientlist'})[0].widget.include({
+
+
     models.load_models({
         model:  'product.template',
         fields: ['pos_notes','product_variant_id'],
@@ -314,6 +322,10 @@ odoo.define('pos_cancel_order.order_note', function (require) {
                         });
                     }
                 };
+            }
+            if (this.gui && this.gui.screen_instances.splitbill && this.gui.screen_instances.splitbill.pay) {
+                console.log("pay", this.gui.screen_instances.splitbill.pay);
+                console.log("action_buttons", this.gui.screen_instances.products.action_buttons);
             }
         }
     });
