@@ -41,10 +41,10 @@
                                         <div class="col-md-3">
                                             <div class="team_profile">
                                                 <t t-if="user.partner_id.image is not None">
-                                                    <a t-if="user.username_github" t-attf-href="/team/{{ user.username_github }}/"><img class="team_image image" t-att-src="'data:image/png;base64,%s' % user.partner_id.image"/></a>
-                                                    <a t-if="user.username_github is False and user.alias_name" t-attf-href="/team/{{ user.alias_name }}/"><img class="team_image image" t-att-src="'data:image/png;base64,%s' % user.partner_id.image"/></a>
+                                                    <a t-if="user.username_github" t-attf-href="/team/{{ user.username_github }}/"><span t-field="user.image" class="o_not_editable" t-field-options='{"widget": "image", "class": "img-circle pull-right mt16 media-object"}' /></a>
+                                                    <a t-if="user.username_github is False and user.alias_name" t-attf-href="/team/{{ user.alias_name }}/"><span t-field="user.image" class="o_not_editable" t-field-options='{"widget": "image", "class": "img-circle pull-right mt16 media-object"}' /></a>
                                                     <t t-if="user.username_github is False and user.alias_name is False">
-                                                        <img class="team_image image" t-attf-src="http://test.odoo8.local/web/binary/image?model=res.users&amp;id={{ user.id }}&amp;field=image_medium&amp;"/>
+                                                        <span t-field="user.image" class="o_not_editable" t-field-options='{"widget": "image", "class": "img-circle pull-right mt16 media-object"}' />
                                                     </t>
                                                 </t>
                                                 <t t-if="user.partner_id.image is None">
@@ -119,7 +119,7 @@
                                  </div>
                                  <div class="col-md-1 user_avatar">
                                      <t t-if="user.partner_id.image is not None">
-                                         <img class="team_image image" t-attf-src="http://test.odoo8.local/web/binary/image?model=res.users&amp;id={{ user.id }}&amp;field=image_medium&amp;"/>
+                                         <span t-field="user.image" class="o_not_editable" t-field-options='{"widget": "image", "class": "img-circle pull-right mt16 media-object"}' />
                                      </t>
                                      <t t-if="user.partner_id.image is None">
                                          <img class="team_image image" src="/website_team/static/src/img/ava_lack.png"/>
