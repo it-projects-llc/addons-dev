@@ -19,6 +19,10 @@
     width: 166px;
     height: 166px;
 }
+.team .team_image img{
+    width: 166px;
+    height: 166px;
+}
 .team_link div {
     font-size: 24px;
 }
@@ -31,7 +35,6 @@
 .team_profile .team_link .github {
     float: left;
     margin-top: -2px;
-    padding-right: 10px;
 }
 .team_profile .team_link .twitter {
     float: right;
