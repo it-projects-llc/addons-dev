@@ -29,7 +29,6 @@ class WebsiteTeam(http.Controller):
 
         youtube_id = current_user.get_youtube_id(current_user.presentation_youtube_link)
         alias_email_full = current_user.get_alias_mail()
-
         return http.request.render('website_team.user_template', {
             'user': current_user,
             'youtube_id': youtube_id,
