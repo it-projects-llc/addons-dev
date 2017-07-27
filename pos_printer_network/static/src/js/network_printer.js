@@ -131,17 +131,17 @@ odoo.define('pos_restaurant.network_printer', function (require) {
             });
 
             if (!this.pos.config.usb_printer_active) {
-                var try_real_hard_to_connect = function(url, retries, done) {
+                var try_real_hard_to_connect = function(new_url, retries, done) {
                     done = done || new $.Deferred();
                     $.ajax({
-                        url: url + '/hw_proxy/without_usb',
+                        url: new_url + '/hw_proxy/without_usb',
                         method: 'GET',
                         timeout: 1000,
                     }).done(function(){
-                        done.resolve(url);
+                        done.resolve(new_url);
                     }).fail(function(){
                         if(retries > 0){
-                            try_real_hard_to_connect(url,retries-1,done);
+                            try_real_hard_to_connect(new_url,retries-1,done);
                         }else{
                             done.reject();
                         }
@@ -159,7 +159,8 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                         timeout: 1000,
                     });
                 });
-            } return this._super(url,options).done(function(){
+            }
+            return this._super(url, options).done(function(){
                 $.ajax({
                     url: url + '/hw_proxy/network_printers',
                     type: "POST",
