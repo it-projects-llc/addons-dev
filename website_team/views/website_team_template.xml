@@ -170,5 +170,12 @@
                 <t t-call="website_team.website_team_twitter"/>
             </t>
         </template>
+
+        <template id="footer_custom" inherit_id="website.footer_default" name="Footer Team Link">
+            <xpath expr="//div[@id='info']/ul" position="inside">
+                <li><a href="/team">Team</a></li>
+            </xpath>
+        </template>
+
     </data>
 </openerp>
