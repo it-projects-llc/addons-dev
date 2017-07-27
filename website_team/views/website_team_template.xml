@@ -118,7 +118,7 @@
                                  </div>
                                  <div class="col-md-1 user_avatar">
                                      <t t-if="user.partner_id.image is not None">
-                                         <span t-field="user.image" class="team_image image" t-field-options='{"widget": "image"}' />
+                                         <span t-field="user.image" class="image" t-field-options='{"widget": "image"}' />
                                      </t>
                                      <t t-if="user.partner_id.image is None">
                                          <img class="team_image image" src="/website_team/static/src/img/ava_lack.png"/>
@@ -139,7 +139,7 @@
                                              <a class="github-button" t-attf-href="https://github.com/{{ user.username_github }}" data-show-count="true" aria-label="Follow @user on GitHub">Follow</a>
                                          </div>
                                          <div class="email" t-if="user.alias_name">
-                                             <a t-attf-href="mailto:{{user.alias_name}}@{{user.alias_domain}}/" target="_blank"><i class="fa fa-envelope-o"/></a>
+                                             <a t-attf-href="mailto:{{user.alias_name}}@{{user.alias_domain}}" target="_blank"><i class="fa fa-envelope-o"/></a>
                                          </div>
                                      </div>
                                  </div>
