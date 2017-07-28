@@ -82,8 +82,7 @@ class AccountMoveLine(models.Model):
 
 
 class AccountInvoice(models.Model):
-    _inherit ='account.invoice'
-
+    _inherit = 'account.invoice'
 
     def invoice_line_move_line_get(self):
         res= []
