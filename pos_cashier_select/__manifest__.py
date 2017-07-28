@@ -2,7 +2,7 @@
 {
     "name": """POS Cashier Select""",
     "summary": """Forced choose a cashier before switching to payment screen""",
-    "category": "POS",
+    "category": "Point of Sale",
     "images": ['images/pos_cashier_select.png'],
     "version": "1.0.0",
     "application": False,
