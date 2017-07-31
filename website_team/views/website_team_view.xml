@@ -33,7 +33,8 @@
                 </xpath>
             </field>
         </record>
-
+    </data>
+    <data noupdate="1">
         <record id="team_page_link" model="website.menu">
             <field name="name">Team</field>
             <field name="url">/team</field>
