@@ -126,8 +126,8 @@
                                  </div>
                              </div>
                              <div class="row">
-                                 <div class="col-md-8"></div>
-                                 <div class="col-md-4">
+                                 <div class="col-md-7"></div>
+                                 <div class="col-md-5">
                                      <div class="team_link">
                                          <div class="twitter" t-if="user.username_twitter">
                                              <a class="twitter-follow-button" t-attf-href="{{ user.username_twitter }}" data-show-screen-name="false" data-show-count="false"> Follow</a>
