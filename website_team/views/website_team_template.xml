@@ -97,7 +97,7 @@
                              <div class="row" t-if="youtube_id">
                                  <div class="col-md-12">
                                      <div class="video">
-                                         <iframe t-attf-src="{{ youtube_id }}/"></iframe>
+                                         <iframe t-attf-src="https://www.youtube.com/embed/{{ youtube_id }}?rel=0&amp;showinfo=0"></iframe>
                                      </div>
                                  </div>
                              </div>

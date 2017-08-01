@@ -39,7 +39,7 @@ class Users(models.Model):
         link_id = self.youtube_url_validation(link)
         if link_id is None:
             return False
-        return "https://www.youtube.com/embed/" + link_id + "?rel=0&amp;showinfo=0"
+        return link_id
 
     def get_alias_mail(self):
         if self.alias_name:
