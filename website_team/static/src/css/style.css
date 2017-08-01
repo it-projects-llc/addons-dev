@@ -75,6 +75,7 @@
 }
 .team .user_profile .user_avatar {
     text-align: right;
+    padding: 0;
 }
 .team .user_profile .user {
     text-align: left;
