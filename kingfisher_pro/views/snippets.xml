@@ -1,0 +1,1345 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <!-- Home Slider snippet -->
+    <template id="s_kingfisher_pro_home_slider" name="Home Slider">
+        <div id="myCarousel" class="carousel slide theme-home-slider s_kingfisher_pro_home_slider" data-interval="10000" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li data-slide-to="0" data-target="#myCarousel" class="active" />
+                <li data-slide-to="1" data-target="#myCarousel"/>
+            </ol>
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner">
+                <div class="item item1 active">
+                    <div class="container">
+                        <div class="row content">
+                            <blockquote class="col-md-6 col-sm-6 col-xs-6">
+                                <p>New Collection</p>
+                                <h2>Men Blazers</h2>
+                                <h5>Save <span>20%</span></h5>
+                                <div class="btn-box">
+                                    <a href="#">Shop now <i class="fa fa-angle-right"/></a>
+                                </div>
+                            </blockquote>
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <img src="/kingfisher_pro/static/src/img/men-blazer.png"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="item item2">
+                    <div class="container">
+                        <div class="row content">
+                            <blockquote class="pull-right col-md-5 col-sm-6 col-xs-6">
+                                <p>Western Wear</p>
+                                <h2>Women Tops</h2>
+                                <h5>Save <span>20%</span></h5>
+                                <div class="btn-box">
+                                    <a href="#">Shop now <i class="fa fa-angle-right"/></a>
+                                </div>
+                            </blockquote>
+                            <div class="col-md-7 col-sm-6 col-xs-6">
+                                    <img src="/kingfisher_pro/static/src/img/women-top.png"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Controls -->
+            <a class="left carousel-control" data-target="#myCarousel" data-slide="prev" role="button">
+                <span aria-hidden="true" class="previous-icon">
+                    <img src="/kingfisher_pro/static/src/img/prev-slide.png"/>
+                </span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" data-slide="next" data-target="#myCarousel" role="button">
+                <span aria-hidden="true" class="next-icon">
+                    <img src="/kingfisher_pro/static/src/img/next-slide.png"/>
+                </span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </template>
+
+    <!-- Promo Snippet -->
+    <template id="s_kingfisher_pro_promo_snippet" name="Promo">
+        <section class="ads-section s_kingfisher_pro_promo_snippet">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12 text-center">
+                        <section class="adsb-inner adsb-inner1 small-banners">
+                            <div class="inner-content">
+                                <h5>MEN'S SHOES</h5>
+                                <section class="image-section">
+                                    <img alt="Shoes" class="img-responsive" src="/kingfisher_pro/static/src/img/snippet/shoes.png" title="Shoes"/>
+                                </section>
+                                <div class="btn-box">
+                                    <button>SHOP NOW 
+                                        <i class="fa fa-angle-right"/></button>
+                                </div>
+                            </div>
+                            <a href="#">
+                                <span class="dark-div">
+                                    <span class="inner-div"/>
+                                </span>
+                            </a>
+                        </section>
+                        <section class="adsb-inner adsb-inner4 small-banners">
+                            <div class="inner-content">
+                                <h5>MEN'S WATCH</h5>
+                                <section class="image-section">
+                                    <img alt="Watch" class="img-responsive" src="/kingfisher_pro/static/src/img/snippet/watch.png" title="Watch"/>
+                                </section>
+                                <div class="btn-box">
+                                    <button>SHOP NOW 
+                                        <i class="fa fa-angle-right"/></button>
+                                </div>
+                            </div>
+                            <a href="#">
+                                <span class="dark-div">
+                                    <span class="inner-div"/>
+                                </span>
+                            </a>
+                        </section>
+                    </div>
+                    <div class="col-lg-6 col-md-4 col-sm-4 col-xs-12">
+                        <section class="adsb-inner adsb-inner2 middle-banner" style="background:rgba(0,0,0,0) url(/kingfisher_pro/static/src/img/snippet/middle-box-bg.png)no-repeat; background-size:cover">
+                            <div class="middle-content">
+                                <a href="#">
+                                    <span class="line1">BIGGEST</span><br/>
+                                    <span class="line2">SALE</span><br/>
+                                    <span class="line3">50%</span>
+                                </a>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                        <section class="adsb-inner adsb-inner3 small-banners">
+                            <div class="inner-content">
+                                <h5>WOMEN'S GLASSES</h5>
+                                <section class="image-section">
+                                    <img alt="Spacs" class="img-responsive" src="/kingfisher_pro/static/src/img/snippet/spacs.png" title="Spacs"/>
+                                </section>
+                                <div class="btn-box">
+                                    <button>SHOP NOW <i class="fa fa-angle-right"/></button>
+                                </div>
+                            </div>
+                           <a href="#">
+                                <span class="dark-div">
+                                    <span class="inner-div"/>
+                                </span>
+                            </a>
+                        </section>
+                        <section class="adsb-inner adsb-inner3 small-banners">
+                            <div class="inner-content">
+                                <h5>WOMEN'S JEWELLERY</h5>
+                                <section class="image-section">
+                                    <img alt="Jewellary" class="img-responsive" src="/kingfisher_pro/static/src/img/snippet/jewellary.png" title="Jewellary"/>
+                                </section>
+                                <div class="btn-box">
+                                    <button>SHOP NOW <i class="fa fa-angle-right"/></button>
+                                </div>
+                            </div>
+                           <a href="#">
+                                <span class="dark-div">
+                                    <span class="inner-div"/>
+                                </span>
+                            </a>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!-- Service Snippet -->
+    <template id="s_kingfisher_pro_service_snippet" name="Service">
+        <section class="services text-center s_kingfisher_pro_service_snippet">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <a href="#">
+                             <i class="fa fa-shopping-cart" aria-hidden="true" alt="Free Shipping"></i>
+                        </a>
+                        <h4 class="">
+                            <b>FREE SHIPPING WORLDWIDE</b>
+                        </h4>
+                        <h5 class="">FREE SHIPPING WORLDWIDE</h5>
+                    </div>
+                    <div class="col-sm-4">
+                        <a href="#">
+                            <i class="fa fa-phone" aria-hidden="true" Title="Customer Service" alt="Customer Service"></i>
+                        </a>
+                        <h4 class="">
+                            <b>24/7 CUSTOMER SERVICE</b>
+                        </h4>
+                        <h5 class="">SERVICE SUPPORT 24/7</h5>
+                    </div>
+                    <div class="col-sm-4">
+                        <a href="#">
+                            <i class="fa fa-money" aria-hidden="true" Title="Money Back" alt="Money Back"></i>
+                        </a>
+                        <h4 class="">
+                            <b>MONEY BACK GUARANTEE !</b>
+                        </h4>
+                        <h5 class="">100% MONEY BACK - 30 DAYS</h5>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!-- Product/Category Slider Snippet -->
+    <template id="s_kingfisher_pro_product_category_slider" name="Dynamic Product/Category">
+        <section class="oe_pro_cat_slider" data-prod-cat-slider-type="" contentEditable="false">
+            <div class="container">
+                <div class="row oe_our_slider">
+                    <div class="col-md-12">
+                        <div class="title-block">
+                            <h4 id="snippet-title" class="section-title style1">
+                                <span>Product/Category Slider</span>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="kingfisher_pro_product_category_slider_option" inherit_id="website.snippet_options" name="Modify Options">
+        <xpath expr="//div" position="after">
+            <div data-js="kingfisher_pro_product_category_slider"
+                 data-selector=".oe_pro_cat_slider"
+                 >
+                <li data-pro_cat_slider="">
+                    <a class="oe_pro_cat_slider">Modify</a>
+                </li>
+            </div>
+        </xpath>
+    </template>
+    <template id="kingfisher_pro_pro_cat_slider_view" name="Product/Category Slider">
+        <div class="title-block">
+            <h4 t-if="not slider_header">
+                <span>Trending</span>
+            </h4>
+            <h4 t-if="slider_header">
+                <span>
+                    <t t-esc="slider_header.name"/>
+                </span>
+            </h4>
+        </div>
+        <div class="psb-inner products-slider-section">
+            <div class="owl-carousel" t-att-id="'%s%s' % (slider_header.prod_cat_type, slider_header.id)" t-if="slider_details">
+                <t t-foreach="slider_details" t-as="slide">
+                    <t t-if="slider_type == 'product'">
+                        <div class="cs-product">
+                            <div class="pwp-img">
+                                <div t-if="slide and slide.product_style_tag_id" t-att-class="'%s' % slide.product_style_tag_id.color if slide and slide.product_style_tag_id else ''">
+                                    <t t-esc="slide.product_style_tag_id.name"/>
+                                </div>
+                                <a t-att-href="'/shop/product/%s' % slug(slide)">
+                                    <img class="front" t-att-alt="slide.name" t-att-title="slide.name" t-att-src="website.image_url(slide, 'image')"/>
+                                    <img class="back" t-att-alt="slide.name" t-att-title="slide.name" t-att-src="website.image_url(slide, 'flip_image')"/>
+                                </a>
+                            </div>
+                            <div class="pink-box">
+                                <ul class='ratings'>
+                                    <t t-call="rating.rating_card">
+                                        <t t-set="rating_stat" t-value="slide.rating_get_stats([('website_published', '=', True)])"/>
+                                        <t t-set="max_rate" t-value="5"/>
+                                        <t t-set="min_rate" t-value="1"/>
+                                    </t>
+                                </ul>
+                                <div class="view">
+                                    <div class="shopping-cart">
+                                        <a href="#">
+                                            <img alt="Shopping-cart" src="/kingfisher_pro/static/src/img/cart2.png" title="Shopping Cart"/>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pwp-info">
+                                <p class="pwpi-title">
+                                    <a t-att-href="'/shop/product/%s' % slug(slide)">
+                                        <t t-esc="slide.name"/>
+                                    </a>
+                                </p>
+                                <p class="price">
+                                    <span class="price">
+                                        <span t-field="slide.lst_price"
+                                              t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-if="slider_type == 'category'">
+                        <div class="cs-product">
+                            <div class="pwp-img">
+                                <a t-att-href=" '/shop/category/%s' % slug(slide)">
+                                    <img t-att-src="website.image_url(slide, 'image')" t-att-title="slide.name" t-att-alt="slide.name"/>
+                                </a>
+                            </div>
+                            <div id="only_categories" class="pwp-info">
+                                <p class="pwpi-title">
+                                    <a t-att-href="'/shop/category/%s' % slug(slide)">
+                                        <t t-esc="slide.name"/>
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </div>
+        </div>
+    </template>
+
+    <!-- Brands slider snippet -->
+    <template id="s_kingfisher_pro_brand_custom_slider" name="Brands">
+        <section class="king_pro_brand_slider" data-brand-count="0" contentEditable="false">
+            <div class="container">
+                <div class="row our-brands">
+                    <div class="col-md-12">
+                        <div class="title-block">
+                            <h4 class="section-title style1" id="snippet-title">
+                                <span>Our Brands</span>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="kingfisher_pro_brand_custom_slider_option" inherit_id="website.snippet_options" name="Modify Options">
+        <xpath expr="//div" position="after">
+            <div data-js="kingfisher_pro_brand_custom_slider"
+                 data-selector=".king_pro_brand_slider"
+                 data-snippet-option-id="kingfisher_pro_brand_custom_slider">
+                <li data-king_brand_slider="">
+                    <a class="king_pro_brand_slider">Modify</a>
+                </li>
+            </div>
+        </xpath>
+    </template>
+    <template id="kingfisher_pro_brand_slider_view" name="Brand Snippet">
+        <div class="container our-brand-section">
+            <div class="title-block">
+                <h4 class="section-title style1" t-if="not brand_header">
+                    <span>Our Brands</span>
+                </h4>
+                <h4 class="section-title style1" t-if="brand_header">
+                    <span>
+                        <t t-esc="brand_header"/>
+                    </span>
+                </h4>
+                <!-- <hr/> -->
+            </div>
+            <div class="psb-inner">
+                <t t-if="website_brands">
+                    <div id="kingfisher_pro_brand_slider" class="owl-carousel" t-if="website_brands">
+                        <t t-foreach="website_brands" t-as="brand">
+                            <a t-attf-href="/shop/brands?brand=#{ brand.id }">
+                                <div class="barnd-img text-center">
+                                    <img t-att-src="website.image_url(brand, 'brand_logo')" t-att-title="brand.name" t-att-alt="brand.name"/>
+                                </div>
+                            </a>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </template>
+
+    <!-- Single Banner snippet -->
+    <template id="s_kingfisher_pro_single_banner_snippet" name="Single banner without slider">
+        <section class="new-collection s_kingfisher_pro_single_banner_snippet" style="background-image:url(/kingfisher_pro/static/src/img/snippet/bg-banner.png)">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 sol-xs-6">
+                        <div class="inner-content">
+                            <h5 class="">New collection</h5>
+                            <h3>2016</h3>
+                            <p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse
+                                <br/>
+                                molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero
+                                <br/>
+                                eros et accumsan et iusto odio dignissim qui blandit praesent luptatum
+                                <br/>
+                                zzril delenit augue duis dolore te feugait nulla facilisi.</p>
+                        </div>
+                        <div class="btn-box">
+                            <a href="#">Shop now <i class="fa fa-angle-right"/></a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 sol-xs-6">
+                        <img alt="Bag" src="/kingfisher_pro/static/src/img/snippet/bag.png" title="Bag"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!-- Multi Product slider snippet -->
+    <template id="s_kingfisher_pro_multi_cat_custom_snippet" name="Multi Product Tabs Slider">
+        <section class="oe_multi_category_slider" data-multi-cat-slider-type="" contentEditable="false">
+            <div class="container">
+                <div class="row our-categories">
+                    <div class="col-md-12">
+                        <div class="title-block">
+                            <h4 id="snippet-title" class="section-title style1"><span>Multi Category Slider</span></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="kingfisher_pro_multi_cat_slider_option" inherit_id="website.snippet_options" name="Modify Options">
+        <xpath expr="//div" position="after">
+            <div data-js="kingfisher_pro_multi_cat_custom_snippet"
+                 data-selector=".oe_multi_category_slider"
+                 data-snippet-option-id="kingfisher_pro_multi_cat_custom_snippet">
+                <li data-multi_category_slider="">
+                    <a class="oe_multi_category_slider">Modify</a>
+                </li>
+            </div>
+        </xpath>
+    </template>
+    <template id="kingfisher_pro_multi_cat_slider_view" name="Multi Product Tabs Snippet">
+        <div class="container">
+            <div class="title-block">
+                <h4 class="section-title style1" t-if="not slider_header">
+                    <span>Trending</span>
+                </h4>
+                <h4 class="section-title style1" t-if="slider_header">
+                    <span>
+                        <t t-esc="slider_header.name"/>
+                    </span>
+                </h4>
+                <!-- <hr/> -->
+            </div>
+
+            <div class="lns-inner latest-news-section">
+                <div class="row">
+                    <div class="lns-post">
+                         <div class="psb-inner">
+                            <ul id="multi_dynamic_slider_tabs" class="nav nav-tabs">
+
+                                <t t-if="slider_details.no_of_collection == '2'">
+                                    <li class="active my-test">
+                                        <a href="#multi-collection1" data-toggle="tab">
+                                            <t t-esc='slider_details.label_collection_1'/>
+                                        </a>
+                                    </li>
+                                    <li class="my-test">
+                                        <a href="#multi-collection2" data-toggle="tab">
+                                            <t t-esc='slider_details.label_collection_2'/>
+                                        </a>
+                                    </li>
+                                </t>
+
+                                <t t-if="slider_details.no_of_collection == '3'">
+                                    <li class="active">
+                                        <a href="#multi-collection1" data-toggle="tab">
+                                            <t t-esc='slider_details.label_collection_1'/>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a href="#multi-collection2" data-toggle="tab">
+                                            <t t-esc='slider_details.label_collection_2'/>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a href="#multi-collection3" data-toggle="tab">
+                                            <t t-esc='slider_details.label_collection_3'/>
+                                        </a>
+                                    </li>
+                                </t>
+
+                                <t t-if="slider_details.no_of_collection == '4'">
+                                    <li class="active">
+                                        <a href="#multi-collection1" data-toggle="tab">
+                                            <t t-esc='slider_details.label_collection_1'/>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a href="#multi-collection2" data-toggle="tab">
+                                            <t t-esc='slider_details.label_collection_2'/>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a href="#multi-collection3" data-toggle="tab">
+                                            <t t-esc='slider_details.label_collection_3'/>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a href="#multi-collection4" data-toggle="tab">
+                                            <t t-esc='slider_details.label_collection_4'/>
+                                        </a>
+                                    </li>
+                                </t>
+
+                                <t t-if="slider_details.no_of_collection == '5'">
+                                    <li class="active">
+                                        <a href="#multi-collection1" data-toggle="tab">
+                                            <t t-esc='slider_details.label_collection_1'/>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a href="#multi-collection2" data-toggle="tab">
+                                            <t t-esc='slider_details.label_collection_2'/>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a href="#multi-collection3" data-toggle="tab">
+                                            <t t-esc='slider_details.label_collection_3'/>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a href="#multi-collection4" data-toggle="tab">
+                                            <t t-esc='slider_details.label_collection_4'/>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a href="#multi-collection5" data-toggle="tab">
+                                            <t t-esc='slider_details.label_collection_5'/>
+                                        </a>
+                                    </li>
+                                </t>
+                            </ul>
+
+                            <div class="tab-content">
+                                <t t-if="slider_details.no_of_collection == '2'">
+                                    <div class="active multi_hide" id="multi-collection1">
+                                        <div class="owl-carousel" t-att-id="'multi-collection1-%s-%s' %(slider_header.no_of_collection, slider_details.id)" t-if="slider_details">
+                                            <t t-foreach="slider_details.collection_1_ids" t-as="product">
+                                                <div class="cs-product">
+                                                    <div class="pwp-img">
+                                                        <div t-if="product and product.product_style_tag_id" t-att-class="'%s' % product.product_style_tag_id.color if product and product.product_style_tag_id else ''">
+                                                            <t t-esc="product.product_style_tag_id.name"/>
+                                                        </div>
+                                                        <a t-att-href="'/shop/product/%s' % slug(product)">
+                                                            <img class="front" t-att-alt="product.name" t-att-title="product.name" t-att-src="website.image_url(product, 'image')"/>
+                                                            <img class="back" t-att-alt="product.name" t-att-src="website.image_url(product, 'flip_image')"/>
+                                                        </a>
+                                                    </div>
+                                                    <div class="pink-box">
+                                                        <ul class='ratings'>
+                                                            <t t-call="rating.rating_card">
+                                                                <t t-set="rating_stat" t-value="product.rating_get_stats([('website_published', '=', True)])"/>
+                                                                <t t-set="max_rate" t-value="5"/>
+                                                                <t t-set="min_rate" t-value="1"/>
+                                                            </t>
+                                                        </ul>
+                                                        <div class="view">
+                                                            <div class="shopping-cart">
+                                                                <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                    <img src="/kingfisher_pro/static/src/img/cart2.png" alt="Shopping-cart" title="Shopping Cart" />
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pwp-info">
+                                                        <p class="pwpi-title">
+                                                            <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                <span t-field='product.name'/>
+                                                            </a>
+                                                        </p>
+                                                        <p class="price">
+                                                            <span class="price">
+                                                                <span t-field="product.lst_price"
+                                                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <div class="multi_hide" id="multi-collection2">
+                                        <div class="owl-carousel" t-att-id="'multi-collection2-%s-%s' %(slider_header.no_of_collection, slider_details.id)" t-if="slider_details">
+                                            <t t-foreach="slider_details.collection_2_ids" t-as="product">
+                                                <div class="cs-product">
+                                                    <div class="pwp-img">
+                                                        <div t-if="product and product.product_style_tag_id" t-att-class="'%s' % product.product_style_tag_id.color if product and product.product_style_tag_id else ''">
+                                                            <t t-esc="product.product_style_tag_id.name"/>
+                                                        </div>
+                                                        <a t-att-href="'/shop/product/%s' % slug(product)">
+                                                            <img class="front" t-att-alt="product.name" t-att-title="product.name" t-att-src="website.image_url(product, 'image')"/>
+                                                            <img class="back" t-att-alt="product.name" t-att-src="website.image_url(product, 'flip_image')"/>
+                                                        </a>
+                                                    </div>
+                                                    <div class="pink-box">
+                                                        <ul class='ratings'>
+                                                            <t t-call="rating.rating_card">
+                                                                <t t-set="rating_stat" t-value="product.rating_get_stats([('website_published', '=', True)])"/>
+                                                                <t t-set="max_rate" t-value="5"/>
+                                                                <t t-set="min_rate" t-value="1"/>
+                                                            </t>
+                                                        </ul>
+                                                        <div class="view">
+                                                            <div class="shopping-cart">
+                                                                <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                    <img src="/kingfisher_pro/static/src/img/cart2.png" alt="Shopping-cart" title="Shopping Cart" />
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pwp-info">
+                                                        <p class="pwpi-title">
+                                                            <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                <span t-field='product.name'/>
+                                                            </a>
+                                                        </p>
+                                                        <p class="price">
+                                                            <span class="price">
+                                                                <span t-field="product.lst_price"
+                                                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
+
+                                <t t-if="slider_details.no_of_collection == '3'">
+                                    <div class="active multi_hide" id="multi-collection1">
+                                        <div class="owl-carousel" t-att-id="'multi-collection1-%s-%s' %(slider_header.no_of_collection, slider_details.id)" t-if="slider_details">
+                                            <t t-foreach="slider_details.collection_1_ids" t-as="product">
+                                                <div class="cs-product">
+                                                    <div class="pwp-img">
+                                                        <div t-if="product and product.product_style_tag_id" t-att-class="'%s' % product.product_style_tag_id.color if product and product.product_style_tag_id else ''">
+                                                            <t t-esc="product.product_style_tag_id.name"/>
+                                                        </div>
+                                                        <a t-att-href="'/shop/product/%s' % slug(product)">
+                                                            <img class="front" t-att-alt="product.name" t-att-title="product.name" t-att-src="website.image_url(product, 'image')"/>
+                                                            <img class="back" t-att-alt="product.name" t-att-src="website.image_url(product, 'flip_image')"/>
+                                                        </a>
+                                                    </div>
+                                                    <div class="pink-box">
+                                                        <ul class='ratings'>
+                                                            <t t-call="rating.rating_card">
+                                                                <t t-set="rating_stat" t-value="product.rating_get_stats([('website_published', '=', True)])"/>
+                                                                <t t-set="max_rate" t-value="5"/>
+                                                                <t t-set="min_rate" t-value="1"/>
+                                                            </t>
+                                                        </ul>
+                                                        <div class="view">
+                                                            <div class="shopping-cart">
+                                                                <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                    <img src="/kingfisher_pro/static/src/img/cart2.png" alt="Shopping-cart" title="Shopping Cart" />
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pwp-info">
+                                                        <p class="pwpi-title">
+                                                            <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                <span t-field='product.name'/>
+                                                            </a>
+                                                        </p>
+                                                        <p class="price">
+                                                            <span class="price">
+                                                                <span t-field="product.lst_price"
+                                                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <div class="multi_hide" id="multi-collection2">
+                                        <div class="owl-carousel" t-att-id="'multi-collection2-%s-%s' %(slider_header.no_of_collection, slider_details.id)" t-if="slider_details">
+                                            <t t-foreach="slider_details.collection_2_ids" t-as="product">
+                                                <div class="cs-product">
+                                                    <div class="pwp-img">
+                                                        <div t-if="product and product.product_style_tag_id" t-att-class="'%s' % product.product_style_tag_id.color if product and product.product_style_tag_id else ''">
+                                                            <t t-esc="product.product_style_tag_id.name"/>
+                                                        </div>
+                                                        <a t-att-href="'/shop/product/%s' % slug(product)">
+                                                            <img class="front" t-att-alt="product.name" t-att-title="product.name" t-att-src="website.image_url(product, 'image')"/>
+                                                            <img class="back" t-att-alt="product.name" t-att-src="website.image_url(product, 'flip_image')"/>
+                                                        </a>
+                                                    </div>
+                                                    <div class="pink-box">
+                                                        <ul class='ratings'>
+                                                            <t t-call="rating.rating_card">
+                                                                <t t-set="rating_stat" t-value="product.rating_get_stats([('website_published', '=', True)])"/>
+                                                                <t t-set="max_rate" t-value="5"/>
+                                                                <t t-set="min_rate" t-value="1"/>
+                                                            </t>
+                                                        </ul>
+                                                        <div class="view">
+                                                            <div class="shopping-cart">
+                                                                <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                    <img src="/kingfisher_pro/static/src/img/cart2.png" alt="Shopping-cart" title="Shopping Cart" />
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pwp-info">
+                                                        <p class="pwpi-title">
+                                                            <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                <span t-field='product.name'/>
+                                                            </a>
+                                                        </p>
+                                                        <p class="price">
+                                                            <span class="price">
+                                                                <span t-field="product.lst_price"
+                                                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <div class="multi_hide" id="multi-collection3">
+                                        <div class="owl-carousel" t-att-id="'multi-collection3-%s-%s' %(slider_header.no_of_collection, slider_details.id)" t-if="slider_details">
+                                            <t t-foreach="slider_details.collection_3_ids" t-as="product">
+                                                <div class="cs-product">
+                                                    <div class="pwp-img">
+                                                        <div t-if="product and product.product_style_tag_id" t-att-class="'%s' % product.product_style_tag_id.color if product and product.product_style_tag_id else ''">
+                                                            <t t-esc="product.product_style_tag_id.name"/>
+                                                        </div>
+                                                        <a t-att-href="'/shop/product/%s' % slug(product)">
+                                                            <img class="front" t-att-alt="product.name" t-att-title="product.name" t-att-src="website.image_url(product, 'image')"/>
+                                                            <img class="back" t-att-alt="product.name" t-att-src="website.image_url(product, 'flip_image')"/>
+                                                        </a>
+                                                    </div>
+                                                    <div class="pink-box">
+                                                        <ul class='ratings'>
+                                                            <t t-call="rating.rating_card">
+                                                                <t t-set="rating_stat" t-value="product.rating_get_stats([('website_published', '=', True)])"/>
+                                                                <t t-set="max_rate" t-value="5"/>
+                                                                <t t-set="min_rate" t-value="1"/>
+                                                            </t>
+                                                        </ul>
+                                                        <div class="view">
+                                                            <div class="shopping-cart">
+                                                                <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                    <img src="/kingfisher_pro/static/src/img/cart2.png" alt="Shopping-cart" title="Shopping Cart" />
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pwp-info">
+                                                        <p class="pwpi-title">
+                                                            <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                <span t-field='product.name'/>
+                                                            </a>
+                                                        </p>
+                                                        <p class="price">
+                                                            <span class="price">
+                                                                <span t-field="product.lst_price"
+                                                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
+
+                                <t t-if="slider_details.no_of_collection == '4'">
+                                    <div class="active multi_hide" id="multi-collection1">
+                                        <div class="owl-carousel" t-att-id="'multi-collection1-%s-%s' %(slider_header.no_of_collection, slider_details.id)" t-if="slider_details">
+                                            <t t-foreach="slider_details.collection_1_ids" t-as="product">
+                                                <div class="cs-product">
+                                                    <div class="pwp-img">
+                                                        <div t-if="product and product.product_style_tag_id" t-att-class="'%s' % product.product_style_tag_id.color if product and product.product_style_tag_id else ''">
+                                                            <t t-esc="product.product_style_tag_id.name"/>
+                                                        </div>
+                                                        <a t-att-href="'/shop/product/%s' % slug(product)">
+                                                            <img class="front" t-att-alt="product.name" t-att-title="product.name" t-att-src="website.image_url(product, 'image')"/>
+                                                            <img class="back" t-att-alt="product.name" t-att-src="website.image_url(product, 'flip_image')"/>
+                                                        </a>
+                                                    </div>
+                                                    <div class="pink-box">
+                                                        <ul class='ratings'>
+                                                            <t t-call="rating.rating_card">
+                                                                <t t-set="rating_stat" t-value="product.rating_get_stats([('website_published', '=', True)])"/>
+                                                                <t t-set="max_rate" t-value="5"/>
+                                                                <t t-set="min_rate" t-value="1"/>
+                                                            </t>
+                                                        </ul>
+                                                        <div class="view">
+                                                            <div class="shopping-cart">
+                                                                <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                    <img src="/kingfisher_pro/static/src/img/cart2.png" alt="Shopping-cart" title="Shopping Cart" />
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pwp-info">
+                                                        <p class="pwpi-title">
+                                                            <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                <span t-field='product.name'/>
+                                                            </a>
+                                                        </p>
+                                                        <p class="price">
+                                                            <span class="price">
+                                                                <span t-field="product.lst_price"
+                                                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <div class="multi_hide" id="multi-collection2">
+                                        <div class="owl-carousel" t-att-id="'multi-collection2-%s-%s' %(slider_header.no_of_collection, slider_details.id)" t-if="slider_details">
+                                            <t t-foreach="slider_details.collection_2_ids" t-as="product">
+                                                <div class="cs-product">
+                                                    <div class="pwp-img">
+                                                        <div t-if="product and product.product_style_tag_id" t-att-class="'%s' % product.product_style_tag_id.color if product and product.product_style_tag_id else ''">
+                                                            <t t-esc="product.product_style_tag_id.name"/>
+                                                        </div>
+                                                        <a t-att-href="'/shop/product/%s' % slug(product)">
+                                                            <img class="front" t-att-alt="product.name" t-att-title="product.name" t-att-src="website.image_url(product, 'image')"/>
+                                                            <img class="back" t-att-alt="product.name" t-att-src="website.image_url(product, 'flip_image')"/>
+                                                        </a>
+                                                    </div>
+                                                    <div class="pink-box">
+                                                        <ul class='ratings'>
+                                                            <t t-call="rating.rating_card">
+                                                                <t t-set="rating_stat" t-value="product.rating_get_stats([('website_published', '=', True)])"/>
+                                                                <t t-set="max_rate" t-value="5"/>
+                                                                <t t-set="min_rate" t-value="1"/>
+                                                            </t>
+                                                        </ul>
+                                                        <div class="view">
+                                                            <div class="shopping-cart">
+                                                                <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                    <img src="/kingfisher_pro/static/src/img/cart2.png" alt="Shopping-cart" title="Shopping Cart" />
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pwp-info">
+                                                        <p class="pwpi-title">
+                                                            <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                <span t-field='product.name'/>
+                                                            </a>
+                                                        </p>
+                                                        <p class="price">
+                                                            <span class="price">
+                                                                <span t-field="product.lst_price"
+                                                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <div class="multi_hide" id="multi-collection3">
+                                        <div class="owl-carousel" t-att-id="'multi-collection3-%s-%s' %(slider_header.no_of_collection, slider_details.id)" t-if="slider_details">
+                                            <t t-foreach="slider_details.collection_3_ids" t-as="product">
+                                                <div class="cs-product">
+                                                    <div class="pwp-img">
+                                                        <div t-if="product and product.product_style_tag_id" t-att-class="'%s' % product.product_style_tag_id.color if product and product.product_style_tag_id else ''">
+                                                            <t t-esc="product.product_style_tag_id.name"/>
+                                                        </div>
+                                                        <a t-att-href="'/shop/product/%s' % slug(product)">
+                                                            <img class="front" t-att-alt="product.name" t-att-title="product.name" t-att-src="website.image_url(product, 'image')"/>
+                                                            <img class="back" t-att-alt="product.name" t-att-src="website.image_url(product, 'flip_image')"/>
+                                                        </a>
+                                                    </div>
+                                                    <div class="pink-box">
+                                                        <ul class='ratings'>
+                                                            <t t-call="rating.rating_card">
+                                                                <t t-set="rating_stat" t-value="product.rating_get_stats([('website_published', '=', True)])"/>
+                                                                <t t-set="max_rate" t-value="5"/>
+                                                                <t t-set="min_rate" t-value="1"/>
+                                                            </t>
+                                                        </ul>
+                                                        <div class="view">
+                                                            <div class="shopping-cart">
+                                                                <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                    <img src="/kingfisher_pro/static/src/img/cart2.png" alt="Shopping-cart" title="Shopping Cart" />
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pwp-info">
+                                                        <p class="pwpi-title">
+                                                            <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                <span t-field='product.name'/>
+                                                            </a>
+                                                        </p>
+                                                        <p class="price">
+                                                            <span class="price">
+                                                                <span t-field="product.lst_price"
+                                                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <div class="multi_hide" id="multi-collection4">
+                                        <div class="owl-carousel" t-att-id="'multi-collection4-%s-%s' %(slider_header.no_of_collection, slider_details.id)" t-if="slider_details">
+                                            <t t-foreach="slider_details.collection_4_ids" t-as="product">
+                                                <div class="cs-product">
+                                                    <div class="pwp-img">
+                                                        <div t-if="product and product.product_style_tag_id" t-att-class="'%s' % product.product_style_tag_id.color if product and product.product_style_tag_id else ''">
+                                                            <t t-esc="product.product_style_tag_id.name"/>
+                                                        </div>
+                                                        <a t-att-href="'/shop/product/%s' % slug(product)">
+                                                            <img class="front" t-att-alt="product.name" t-att-title="product.name" t-att-src="website.image_url(product, 'image')"/>
+                                                            <img class="back" t-att-alt="product.name" t-att-src="website.image_url(product, 'flip_image')"/>
+                                                        </a>
+                                                    </div>
+                                                    <div class="pink-box">
+                                                        <ul class='ratings'>
+                                                            <t t-call="rating.rating_card">
+                                                                <t t-set="rating_stat" t-value="product.rating_get_stats([('website_published', '=', True)])"/>
+                                                                <t t-set="max_rate" t-value="5"/>
+                                                                <t t-set="min_rate" t-value="1"/>
+                                                            </t>
+                                                        </ul>
+                                                        <div class="view">
+                                                            <div class="shopping-cart">
+                                                                <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                    <img src="/kingfisher_pro/static/src/img/cart2.png" alt="Shopping-cart" title="Shopping Cart" />
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pwp-info">
+                                                        <p class="pwpi-title">
+                                                            <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                <span t-field='product.name'/>
+                                                            </a>
+                                                        </p>
+                                                        <p class="price">
+                                                            <span class="price">
+                                                                <span t-field="product.lst_price"
+                                                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
+
+                                <t t-if="slider_details.no_of_collection == '5'">
+                                    <div class="active multi_hide" id="multi-collection1">
+                                        <div class="owl-carousel" t-att-id="'multi-collection1-%s-%s' %(slider_header.no_of_collection, slider_details.id)" t-if="slider_details">
+                                            <t t-foreach="slider_details.collection_1_ids" t-as="product">
+                                                <div class="cs-product">
+                                                    <div class="pwp-img">
+                                                        <div t-if="product and product.product_style_tag_id" t-att-class="'%s' % product.product_style_tag_id.color if product and product.product_style_tag_id else ''">
+                                                            <t t-esc="product.product_style_tag_id.name"/>
+                                                        </div>
+                                                        <a t-att-href="'/shop/product/%s' % slug(product)">
+                                                            <img class="front" t-att-alt="product.name" t-att-title="product.name" t-att-src="website.image_url(product, 'image')"/>
+                                                            <img class="back" t-att-alt="product.name" t-att-src="website.image_url(product, 'flip_image')"/>
+                                                        </a>
+                                                    </div>
+                                                    <div class="pink-box">
+                                                        <ul class='ratings'>
+                                                            <t t-call="rating.rating_card">
+                                                                <t t-set="rating_stat" t-value="product.rating_get_stats([('website_published', '=', True)])"/>
+                                                                <t t-set="max_rate" t-value="5"/>
+                                                                <t t-set="min_rate" t-value="1"/>
+                                                            </t>
+                                                        </ul>
+                                                        <div class="view">
+                                                            <div class="shopping-cart">
+                                                                <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                    <img src="/kingfisher_pro/static/src/img/cart2.png" alt="Shopping-cart" title="Shopping Cart" />
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pwp-info">
+                                                        <p class="pwpi-title">
+                                                            <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                <span t-field='product.name'/>
+                                                            </a>
+                                                        </p>
+                                                        <p class="price">
+                                                            <span class="price">
+                                                                <span t-field="product.lst_price"
+                                                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <div class="multi_hide" id="multi-collection2">
+                                        <div class="owl-carousel" t-att-id="'multi-collection2-%s-%s' %(slider_header.no_of_collection, slider_details.id)" t-if="slider_details">
+                                            <t t-foreach="slider_details.collection_2_ids" t-as="product">
+                                                <div class="cs-product">
+                                                    <div class="pwp-img">
+                                                        <div t-if="product and product.product_style_tag_id" t-att-class="'%s' % product.product_style_tag_id.color if product and product.product_style_tag_id else ''">
+                                                            <t t-esc="product.product_style_tag_id.name"/>
+                                                        </div>
+                                                        <a t-att-href="'/shop/product/%s' % slug(product)">
+                                                            <img class="front" t-att-alt="product.name" t-att-title="product.name" t-att-src="website.image_url(product, 'image')"/>
+                                                            <img class="back" t-att-alt="product.name" t-att-src="website.image_url(product, 'flip_image')"/>
+                                                        </a>
+                                                    </div>
+                                                    <div class="pink-box">
+                                                        <ul class='ratings'>
+                                                            <t t-call="rating.rating_card">
+                                                                <t t-set="rating_stat" t-value="product.rating_get_stats([('website_published', '=', True)])"/>
+                                                                <t t-set="max_rate" t-value="5"/>
+                                                                <t t-set="min_rate" t-value="1"/>
+                                                            </t>
+                                                        </ul>
+                                                        <div class="view">
+                                                            <div class="shopping-cart">
+                                                                <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                    <img src="/kingfisher_pro/static/src/img/cart2.png" alt="Shopping-cart" title="Shopping Cart" />
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pwp-info">
+                                                        <p class="pwpi-title">
+                                                            <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                <span t-field='product.name'/>
+                                                            </a>
+                                                        </p>
+                                                        <p class="price">
+                                                            <span class="price">
+                                                                <span t-field="product.lst_price"
+                                                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <div class="multi_hide" id="multi-collection3">
+                                        <div class="owl-carousel" t-att-id="'multi-collection3-%s-%s' %(slider_header.no_of_collection, slider_details.id)" t-if="slider_details">
+                                            <t t-foreach="slider_details.collection_3_ids" t-as="product">
+                                                <div class="cs-product">
+                                                    <div class="pwp-img">
+                                                        <div t-if="product and product.product_style_tag_id" t-att-class="'%s' % product.product_style_tag_id.color if product and product.product_style_tag_id else ''">
+                                                            <t t-esc="product.product_style_tag_id.name"/>
+                                                        </div>
+                                                        <a t-att-href="'/shop/product/%s' % slug(product)">
+                                                            <img class="front" t-att-alt="product.name" t-att-title="product.name" t-att-src="website.image_url(product, 'image')"/>
+                                                            <img class="back" t-att-alt="product.name" t-att-src="website.image_url(product, 'flip_image')"/>
+                                                        </a>
+                                                    </div>
+                                                    <div class="pink-box">
+                                                        <ul class='ratings'>
+                                                            <t t-call="rating.rating_card">
+                                                                <t t-set="rating_stat" t-value="product.rating_get_stats([('website_published', '=', True)])"/>
+                                                                <t t-set="max_rate" t-value="5"/>
+                                                                <t t-set="min_rate" t-value="1"/>
+                                                            </t>
+                                                        </ul>
+                                                        <div class="view">
+                                                            <div class="shopping-cart">
+                                                                <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                    <img src="/kingfisher_pro/static/src/img/cart2.png" alt="Shopping-cart" title="Shopping Cart" />
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pwp-info">
+                                                        <p class="pwpi-title">
+                                                            <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                <span t-field='product.name'/>
+                                                            </a>
+                                                        </p>
+                                                        <p class="price">
+                                                            <span class="price">
+                                                                <span t-field="product.lst_price"
+                                                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <div class="multi_hide" id="multi-collection4">
+                                        <div class="owl-carousel" t-att-id="'multi-collection4-%s-%s' %(slider_header.no_of_collection, slider_details.id)" t-if="slider_details">
+                                            <t t-foreach="slider_details.collection_4_ids" t-as="product">
+                                                <div class="cs-product">
+                                                    <div class="pwp-img">
+                                                        <div t-if="product and product.product_style_tag_id" t-att-class="'%s' % product.product_style_tag_id.color if product and product.product_style_tag_id else ''">
+                                                            <t t-esc="product.product_style_tag_id.name"/>
+                                                        </div>
+                                                        <a t-att-href="'/shop/product/%s' % slug(product)">
+                                                            <img class="front" t-att-alt="product.name" t-att-title="product.name" t-att-src="website.image_url(product, 'image')"/>
+                                                            <img class="back" t-att-alt="product.name" t-att-src="website.image_url(product, 'flip_image')"/>
+                                                        </a>
+                                                    </div>
+                                                    <div class="pink-box">
+                                                        <ul class='ratings'>
+                                                            <t t-call="rating.rating_card">
+                                                                <t t-set="rating_stat" t-value="product.rating_get_stats([('website_published', '=', True)])"/>
+                                                                <t t-set="max_rate" t-value="5"/>
+                                                                <t t-set="min_rate" t-value="1"/>
+                                                            </t>
+                                                        </ul>
+                                                        <div class="view">
+                                                            <div class="shopping-cart">
+                                                                <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                    <img src="/kingfisher_pro/static/src/img/cart2.png" alt="Shopping-cart" title="Shopping Cart" />
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pwp-info">
+                                                        <p class="pwpi-title">
+                                                            <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                <span t-field='product.name'/>
+                                                            </a>
+                                                        </p>
+                                                        <p class="price">
+                                                            <span class="price">
+                                                                <span t-field="product.lst_price"
+                                                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <div class="multi_hide" id="multi-collection5">
+                                        <div class="owl-carousel" t-att-id="'multi-collection5-%s-%s' %(slider_header.no_of_collection, slider_details.id)" t-if="slider_details">
+                                            <t t-foreach="slider_details.collection_5_ids" t-as="product">
+                                                <div class="cs-product">
+                                                    <div class="pwp-img">
+                                                        <div t-if="product and product.product_style_tag_id" t-att-class="'%s' % product.product_style_tag_id.color if product and product.product_style_tag_id else ''">
+                                                            <t t-esc="product.product_style_tag_id.name"/>
+                                                        </div>
+                                                        <a t-att-href="'/shop/product/%s' % slug(product)">
+                                                            <img class="front" t-att-alt="product.name" t-att-title="product.name" t-att-src="website.image_url(product, 'image')"/>
+                                                            <img class="back" t-att-alt="product.name" t-att-src="website.image_url(product, 'flip_image')"/>
+                                                        </a>
+                                                    </div>
+                                                    <div class="pink-box">
+                                                        <ul class='ratings'>
+                                                            <t t-call="rating.rating_card">
+                                                                <t t-set="rating_stat" t-value="product.rating_get_stats([('website_published', '=', True)])"/>
+                                                                <t t-set="max_rate" t-value="5"/>
+                                                                <t t-set="min_rate" t-value="1"/>
+                                                            </t>
+                                                        </ul>
+                                                        <div class="view">
+                                                            <div class="shopping-cart">
+                                                                <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                    <img src="/kingfisher_pro/static/src/img/cart2.png" alt="Shopping-cart" title="Shopping Cart" />
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pwp-info">
+                                                        <p class="pwpi-title">
+                                                            <a t-attf-href="/shop/product/#{ slug(product) }">
+                                                                <span t-field='product.name'/>
+                                                            </a>
+                                                        </p>
+                                                        <p class="price">
+                                                            <span class="price">
+                                                                <span t-field="product.lst_price"
+                                                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Blog Slider Snippet -->
+    <template id="s_kingfisher_pro_blog_custom_snippet" name="Blog Slider">
+        <section class="king_pro_blog_slider" data-blog-slider-type="" contentEditable="false">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="title-block">
+                            <h4 id="snippet-title" class="section-title style1"><span>Blog post slider</span></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="kingfisher_pro_blog_slider_option" inherit_id="website.snippet_options" name="Modify Options">
+        <xpath expr="//div" position="after">
+            <div data-js="kingfisher_pro_blog_custom_snippet"
+                 data-selector=".king_pro_blog_slider"
+                 data-snippet-option-id="kingfisher_pro_blog_custom_snippet">
+                <li data-king_blog_slider="">
+                    <a class="king_pro_blog_slider">Modify</a>
+                </li>
+            </div>
+        </xpath>
+    </template>
+    <template id="kingfisher_pro_blog_slider_view" name="Blog Snippet">
+        <div class="container">
+            <div class="title-block">
+                <h4 class="section-title style1" t-if="not slider_header">
+                    <span>Blog post slider</span>
+                </h4>
+                <h4 class="section-title style1" t-if="slider_header">
+                    <span>
+                        <t t-esc="slider_header.name"/>
+                    </span>
+                </h4>
+            </div>
+            <div class="lns-inner latest-news-section">
+                <div class="row">
+                    <div class="container">
+                    <div class="lns-post">
+                         <div class="psb-inner">
+                            <div class="owl-carousel" t-att-id="'%s-%s' % (slider_header.no_of_counts, slider_header.id)" t-if="blog_slider_details">
+                                <t t-foreach="blog_slider_details" t-as="slide">
+                                    <t t-set="website_blog" t-value="json.loads(slide.cover_properties)"/>
+                                    <div class="post-img">
+                                        <a t-attf-href="/blog/#{ slug(slide.blog_id) }/post/#{ slug(slide) }">
+                                            <div t-att-style="'background-image: %s; background-size: cover; width: 400px; height:300px;' % website_blog.get('background-image') if website_blog.get('background-image') != 'none' else 'background: black; background-size: cover; width: 400px; height:300px;'"/>
+                                        </a>
+                                        <div class="blog-meta">
+                                            <h3>
+                                                <a t-attf-href="/blog/#{ slug(slide.blog_id) }/post/#{ slug(slide) }">
+                                                    <h4 t-field="slide.name"/>
+                                                </a>
+                                            </h3>
+                                            <span class="pull-left text-left">by <t t-esc="slide.author_id.name"/></span>
+                                            <span class="time pull-right text-right"><span class='fa fa-clock-o'></span> <t t-esc="slide.create_date"/></span>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Testimonial Snippet -->
+    <template id="s_kingfisher_pro_testimonials_slider" name="Testimonials slider">
+        <section class="testimonials s_kingfisher_pro_testimonials_slider" style="background-image:url(/kingfisher_pro/static/src/img/snippet/testimonial-bg.png)" data-scroll-background-ratio="0.3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3 col-sm-12">
+                        <div class="pf-page-title">
+                            <h4 class="">Testimonials</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-9 col-sm-12 slider">
+
+                        <div id="myQuoteCarousel" class="psb-inner carousel quotecarousel slide s_kingfisher_pro_testimonials_slider" data-interval="10000">
+                            <div class="carousel-inner">
+                                <div class="item text_only active">
+                                    <div class="container">
+                                        <div class="row content">
+                                            <blockquote>
+                                                <p>
+                                                    Write a quote here from one of your customers. Quotes are a
+                                                    great way to build confidence in your products or services.
+                                                    This theme is very easy to build and form the customer's standpoint it's very
+                                                    intuitive.
+                                                </p>
+                                                <p class="author">John Warner</p>
+                                                <p class="designation">CEO, ABC company</p>
+                                            </blockquote>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item text_only">
+                                    <div class="container">
+                                        <div class="row content">
+                                            <blockquote>
+                                                <p>
+                                                    This theme is very easy to build and form the customer's standpoint it's very
+                                                    intuitive.
+                                                    Odoo provides essential platform for our project management.
+                                                    Things are better organized and more visible with it.
+                                                </p>
+                                                <p class="author">John Warner</p>
+                                                <p class="designation">CEO, ABC company</p>
+                                            </blockquote>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a class= "carousel-control left" data-target= "#myQuoteCarousel" data-slide= "prev">
+                                <i class='fa fa-angle-left'/>
+                            </a>
+                            <a class= "carousel-control right" data-target= "#myQuoteCarousel" data-slide= "next">
+                                <i class='fa fa-angle-right'/>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="kingfisher_pro_extra_snippet" inherit_id="website.snippets" name="Kingfisher Pro Extra Snippet">
+        <xpath expr="//div[@id='snippet_structure']/div[@class='o_panel_body']" position="inside">
+            <t t-snippet="kingfisher_pro.s_kingfisher_pro_home_slider"
+               t-thumbnail="/kingfisher_pro/static/src/img/icons/home-slider-icon.png"/>
+            <t t-snippet="kingfisher_pro.s_kingfisher_pro_promo_snippet"
+               t-thumbnail="/kingfisher_pro/static/src/img/icons/promo-snippet.png"/>
+            <t t-snippet="kingfisher_pro.s_kingfisher_pro_single_banner_snippet"
+               t-thumbnail="/kingfisher_pro/static/src/img/icons/banner-without-slider.png"/>
+            <t t-snippet="kingfisher_pro.s_kingfisher_pro_service_snippet"
+               t-thumbnail="/kingfisher_pro/static/src/img/icons/service.png"/>
+        </xpath>
+        <xpath expr="//div[@id='snippet_feature']/div[@class='o_panel_body']" position="inside">
+            <t t-snippet="kingfisher_pro.s_kingfisher_pro_testimonials_slider"
+               t-thumbnail="/kingfisher_pro/static/src/img/icons/testimonials.png"/>
+            <t t-snippet="kingfisher_pro.s_kingfisher_pro_product_category_slider"
+               t-thumbnail="/kingfisher_pro/static/src/img/icons/product-category-slider.png"/>
+            <t t-snippet="kingfisher_pro.s_kingfisher_pro_brand_custom_slider"
+               t-thumbnail="/kingfisher_pro/static/src/img/icons/brand.png"/>
+            <t t-snippet="kingfisher_pro.s_kingfisher_pro_blog_custom_snippet"
+               t-thumbnail="/kingfisher_pro/static/src/img/icons/blog.png"/>
+            <t t-snippet="kingfisher_pro.s_kingfisher_pro_multi_cat_custom_snippet"
+               t-thumbnail="/kingfisher_pro/static/src/img/icons/tabs.png"/>
+        </xpath>
+        <xpath expr="//div[@id='snippet_effect']" position="inside">
+        </xpath>
+    </template>
+
+</data>
+</openerp>

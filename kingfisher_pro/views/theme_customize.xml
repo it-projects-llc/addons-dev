@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template active="False" customize_show="True" id="option_primary_color_aqua_theme" inherit_id="website.assets_frontend" name="primary-color-aqua-theme">
+            <xpath expr="." position="inside">
+                <link href="/kingfisher_pro/static/src/less/options/colors/theme_aqua.less" rel="stylesheet" type="text/less"/>
+            </xpath>
+        </template>
+        <template active="False" customize_show="True" id="option_primary_color_blue_theme" inherit_id="website.assets_frontend" name="primary-color-blue-theme">
+            <xpath expr="." position="inside">
+                <link href="/kingfisher_pro/static/src/less/options/colors/theme_blue.less" rel="stylesheet" type="text/less"/>
+            </xpath>
+        </template>
+        <template active="False" customize_show="True" id="option_primary_color_brown_theme" inherit_id="website.assets_frontend" name="primary-color-brown-theme">
+            <xpath expr="." position="inside">
+                <link href="/kingfisher_pro/static/src/less/options/colors/theme_brown.less" rel="stylesheet" type="text/less"/>
+            </xpath>
+        </template>
+        <template active="False" customize_show="True" id="option_primary_color_orange" inherit_id="website.assets_frontend" name="primary-color-orange">
+            <xpath expr="." position="inside">
+                <link href="/kingfisher_pro/static/src/less/options/colors/theme_orange.less" rel="stylesheet" type="text/less"/>
+            </xpath>
+        </template>
+        <template active="False" customize_show="True" id="option_primary_color_pink" inherit_id="website.assets_frontend" name="primary-color-pink">
+            <xpath expr="." position="inside">
+                <link href="/kingfisher_pro/static/src/less/options/colors/theme_pink.less" rel="stylesheet" type="text/less"/>
+            </xpath>
+        </template>
+
+        <!-- Option Primary Fonts -->
+        <template active="False" customize_show="True" id="option_font_style_open_sans" inherit_id="website.assets_frontend" name="option_font_style_open_sans">
+            <xpath expr="." position="inside">
+                <link href="/kingfisher_pro/static/src/less/options/fonts/font-style-open-sans-font.less" rel="stylesheet" type="text/less"/>
+            </xpath>
+        </template>
+        <template active="False" customize_show="True" id="option_font_style_lato_font" inherit_id="website.assets_frontend" name="option_font_style_lato_font">
+            <xpath expr="." position="inside">
+                <link href="/kingfisher_pro/static/src/less/options/fonts/font-style-lato-font.less" rel="stylesheet" type="text/less"/>
+            </xpath>
+        </template>
+        <template active="False" customize_show="True" id="option_font_style_raleway" inherit_id="website.assets_frontend" name="option_font_style_raleway_font">
+            <xpath expr="." position="inside">
+                <link href="/kingfisher_pro/static/src/less/options/fonts/font-style-raleway-font.less" rel="stylesheet" type="text/less"/>
+            </xpath>
+        </template>
+        <template active="False" customize_show="True" id="option_font_style_source_sans_pro" inherit_id="website.assets_frontend" name="option_font_style_source_sans_pro">
+            <xpath expr="." position="inside">
+                <link href="/kingfisher_pro/static/src/less/options/fonts/font-style-source-sans-pro-font.less" rel="stylesheet" type="text/less"/>
+            </xpath>
+        </template>
+        <template active="False" customize_show="True" id="option_font_style_source_serif_pro" inherit_id="website.assets_frontend" name="option_font_style_source_serif_pro">
+            <xpath expr="." position="inside">
+                <link href="/kingfisher_pro/static/src/less/options/fonts/font-style-source-serif-pro-font.less" rel="stylesheet" type="text/less"/>
+            </xpath>
+        </template>
+        <template active="False" customize_show="True" id="option_font_style_varela_round" inherit_id="website.assets_frontend" name="option_font_style_varela_round">
+            <xpath expr="." position="inside">
+                <link href="/kingfisher_pro/static/src/less/options/fonts/font-style-varela-round-font.less" rel="stylesheet" type="text/less"/>
+            </xpath>
+        </template>
+
+        <template active="False" customize_show="True" id="boxed_layout" inherit_id="website.assets_frontend" name="boxed_layout">
+            <xpath expr="." position="inside">
+                <link href="/kingfisher_pro/static/src/less/options/layout/boxed.less" rel="stylesheet" type="text/less"/>
+            </xpath>
+        </template>
+
+        <!-- Background Pattern -->
+        <template id="option_bg_pattern_1" name="option_bg_pattern_1" inherit_id="website.assets_frontend" active="False" customize_show="True">
+            <xpath expr="." position="inside">
+                <link href="/kingfisher_pro/static/src/less/options/bg_patterns/bg-pattern-1.less" rel="stylesheet" type="text/less"/>
+            </xpath>
+        </template>
+        <template id="option_bg_pattern_2" name="option_bg_pattern_2" inherit_id="website.assets_frontend" active="False" customize_show="True">
+            <xpath expr="." position="inside">
+                <link href="/kingfisher_pro/static/src/less/options/bg_patterns/bg-pattern-2.less" rel="stylesheet" type="text/less"/>
+            </xpath>
+        </template>
+        <template id="option_bg_pattern_3" name="option_bg_pattern_3" inherit_id="website.assets_frontend" active="False" customize_show="True">
+            <xpath expr="." position="inside">
+                <link href="/kingfisher_pro/static/src/less/options/bg_patterns/bg-pattern-3.less" rel="stylesheet" type="text/less"/>
+            </xpath>
+        </template>
+        <template id="option_bg_pattern_4" name="option_bg_pattern_4" inherit_id="website.assets_frontend" active="False" customize_show="True">
+            <xpath expr="." position="inside">
+                <link href="/kingfisher_pro/static/src/less/options/bg_patterns/bg-pattern-4.less" rel="stylesheet" type="text/less"/>
+            </xpath>
+        </template>
+        <template id="option_bg_pattern_5" name="option_bg_pattern_5" inherit_id="website.assets_frontend" active="False" customize_show="True">
+            <xpath expr="." position="inside">
+                <link href="/kingfisher_pro/static/src/less/options/bg_patterns/bg-pattern-5.less" rel="stylesheet" type="text/less"/>
+            </xpath>
+        </template>
+        <template id="option_bg_pattern_6" name="option_bg_pattern_6" inherit_id="website.assets_frontend" active="False" customize_show="True">
+            <xpath expr="." position="inside">
+                <link href="/kingfisher_pro/static/src/less/options/bg_patterns/bg-pattern-6.less" rel="stylesheet" type="text/less"/>
+            </xpath>
+        </template>
+
+        <!-- Customize Theme Template -->
+        <template id="kingfisher_pro_theme_customize" inherit_id="website.theme_customize" name="Theme Kingfisher Pro Modal">
+            <xpath expr="//div" position="replace">
+                <div class="modal fade" id="theme_customize_modal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <!-- <input data-xmlid="website_less.option_bootstrap_less" id="less" style="display: none;"/> -->
+                            <div class="loading_backdrop"/>
+                            <div class="modal-header">
+                                <button class="close" type="button">×</button>
+                                <h4 class="modal-title" id="mySmallModalLabel">Customize your theme</h4>
+                            </div>
+                            <div class="modal-body">
+                                <h5 class="modal-h5">LAYOUT</h5>
+                                <table name="layout">
+                                    <tr>
+                                        <td class=" text-center" width="50%">
+                                            <label class=" center-block">
+                                                <div class="text-center" style="background-image: url(/kingfisher_pro/static/src/img/theme/layout-full.gif); background-size: 100%; line-height: 40px;">FULL WIDTH</div>
+                                                <input data-xmlid="" name="layoutvar" type="radio"/>
+                                            </label>
+                                        </td>
+                                        <td class=" text-center">
+                                            <label class=" center-block">
+                                                <div class="text-center" style="background-image: url(/kingfisher_pro/static/src/img/theme/layout-boxed.gif); background-size: 100%; line-height: 40px;">BOXED</div>
+                                                <input data-enable="less" data-xmlid="kingfisher_pro.boxed_layout" name="layoutvar" type="radio"/>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <h5 class="modal-h5">MAIN COLOR</h5>
+                                <table name="color">
+                                    <tr>
+                                        <td>
+                                            <label class="chd-color-combi">
+                                                <img alt="Golden" class="chd-color-combi-img" src="/kingfisher_pro/static/src/img/theme/variant-gold.gif"/>
+                                                <input data-disable="less" data-xmlid=""  name="colorvar-primary" type="radio"/>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="chd-color-combi">
+                                                <img alt="Aqua" class="chd-color-combi-img" src="/kingfisher_pro/static/src/img/theme/variant-emerald.gif"/>
+                                                <input name="colorvar-primary" type="radio" data-xmlid="kingfisher_pro.option_primary_color_aqua_theme" data-enable="less"/>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="chd-color-combi">
+                                                <img alt="Blue" class="chd-color-combi-img" src="/kingfisher_pro/static/src/img/theme/variant-cobalt.gif"/>
+                                                <input data-enable="less" data-xmlid="kingfisher_pro.option_primary_color_blue_theme"  name="colorvar-primary" type="radio"/>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label class="chd-color-combi">
+                                                <img alt="Brown" class="chd-color-combi-img" src="/kingfisher_pro/static/src/img/theme/variant-stone.gif"/>
+                                                <input data-enable="less" data-xmlid="kingfisher_pro.option_primary_color_brown_theme"  name="colorvar-primary" type="radio"/>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="chd-color-combi">
+                                                <img alt="Orange" class="chd-color-combi-img" src="/kingfisher_pro/static/src/img/theme/variant-ruby.gif"/>
+                                                <input data-enable="less" data-xmlid="kingfisher_pro.option_primary_color_orange"  name="colorvar-primary" type="radio"/>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="chd-color-combi">
+                                                <img alt="Pink" class="chd-color-combi-img" src="/kingfisher_pro/static/src/img/theme/variant-amethyst.gif"/>
+                                                <input data-enable="less" data-xmlid="kingfisher_pro.option_primary_color_pink"  name="colorvar-primary" type="radio"/>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <h5 class="modal-h5">Background Pattern</h5>
+                                <table name="bg_patterns">
+                                    <tr>
+                                        <td>
+                                            <label class="chd-color-combi">
+                                                <span class="pf-color1" />
+                                                <input data-enable="less" data-xmlid="kingfisher_pro.option_bg_pattern_1" name="colorvar_pattern" type="radio"/>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="chd-color-combi">
+                                                <span class="pf-color2" />
+                                                <input data-enable="less" data-xmlid="kingfisher_pro.option_bg_pattern_2" name="colorvar_pattern" type="radio"/>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="chd-color-combi">
+                                                <span class="pf-color3" />
+                                                <input data-enable="less" data-xmlid="kingfisher_pro.option_bg_pattern_3" name="colorvar_pattern" type="radio"/>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label class="chd-color-combi">
+                                                <span class="pf-color4" />
+                                                <input data-enable="less" data-xmlid="kingfisher_pro.option_bg_pattern_4" name="colorvar_pattern" type="radio"/>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="chd-color-combi">
+                                                <span class="pf-color5" />
+                                                <input data-enable="less" data-xmlid="kingfisher_pro.option_bg_pattern_5" name="colorvar_pattern" type="radio"/>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label class="chd-color-combi">
+                                                <span class="pf-color6" />
+                                                <input data-enable="less" data-xmlid="kingfisher_pro.option_bg_pattern_6" name="colorvar_pattern" type="radio"/>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <h5 class="modal-h5">FONTS COMBINATIONS</h5>
+                                <table name="font">
+                                    <tr>
+                                        <td width="50%">
+                                            <label>
+                                                <span class="font-style1" style="font-family: 'Open Sans', sans-serif;">Open Sans </span>
+                                                <input data-enable="less" data-xmlid="kingfisher_pro.option_font_style_open_sans" name="theme" type="radio"/>
+                                            </label>
+                                        </td>
+                                        <td width="50%">
+                                            <label>
+                                                <span class="font-style2" style="font-family: 'Lato', sans-serif;">Lato</span>
+                                                <input data-enable="less" data-xmlid="kingfisher_pro.option_font_style_lato_font" name="theme" type="radio"/>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="50%">
+                                            <label>
+                                                <span class="font-style1" style="font-family: 'Source Sans Pro', sans-serif;">Source Sans Pro</span>
+                                                <input data-enable="less" data-xmlid="kingfisher_pro.option_font_style_source_sans_pro" name="theme" type="radio"/>
+                                            </label>
+                                        </td>
+                                        <td width="50%">
+                                            <label>
+                                                <span class="font-style1" style="font-family: 'Source Serif Pro', serif;">Source Serif Pro</span>
+                                                <input data-enable="less" data-xmlid="kingfisher_pro.option_font_style_source_serif_pro" name="theme" type="radio"/>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="50%">
+                                            <label>
+                                                <span class="font-style3" style="font-family: 'Raleway', sans-serif;">Raleway</span>
+                                                <input data-enable="less" data-xmlid="kingfisher_pro.option_font_style_raleway" name="theme" type="radio"/>
+                                            </label>
+                                        </td>
+                                        <td width="50%">
+                                            <label>
+                                                <span class="font-style1" style="font-family: 'Varela Round', sans-serif;">Varela Round</span>
+                                                <input data-enable="less" data-xmlid="kingfisher_pro.option_font_style_varela_round" name="theme" type="radio"/>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</openerp>

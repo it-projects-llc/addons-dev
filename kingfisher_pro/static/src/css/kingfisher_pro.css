@@ -1,0 +1,24 @@
+.ug-gallery-wrapper .ug-slider-wrapper {
+    background-color: rgb(245, 245, 245);
+    overflow: hidden;
+    position: absolute;
+    z-index: 1;
+}
+.ug-gallery-wrapper .ug-strip-panel {
+    background-color: rgb(245, 245, 245);
+    position: absolute;
+    z-index: 2;
+}
+#o_shop_collapse_category li a {
+  display: inline-block;
+  width: 80%;
+  padding-left: 3px; }
+#o_shop_collapse_category li i.fa {
+  cursor: pointer; }
+  /*--- V10 patch --*/
+  .o_my_status_table .btn-primary{color:#fff !important;}
+  .o_my_status_table .btn-primary:hover{color:#333!important;}
+  .o_my_sidebar .btn-default:hover{color:#fff !important;}
+  
+
+

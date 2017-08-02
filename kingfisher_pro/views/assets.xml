@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+   <!-- Assets Frontend -->
+  
+    <template id="asset_frontend" inherit_id="website.assets_frontend" name="Kingfisher pro assets frontend">
+        <xpath expr="." position="inside">
+            <!-- Libraries -->
+            <link href="/kingfisher_pro/static/src/css/owl.carousel.css" rel="stylesheet"/>
+            <link href="/kingfisher_pro/static/src/css/unite-gallery.css" rel="stylesheet"/>
+            <link href='/kingfisher_pro/static/src/skins/alexis/alexis.css' rel="stylesheet"/>
+            <link href='/kingfisher_pro/static/src/css/ion.rangeSlider.css' rel="stylesheet"/>
+            <link href='/kingfisher_pro/static/src/css/ion.rangeSlider.skinHTML5.css' rel="stylesheet"/>
+            <link href='/kingfisher_pro/static/src/css/kingfisher_pro.css' rel="stylesheet"/>
+
+            <script src="/kingfisher_pro/static/src/js/unitegallery.min.js" type="text/javascript"/>
+            <script src="/kingfisher_pro/static/src/js/ug-theme-compact.js" type="text/javascript"/>
+            <script src="/kingfisher_pro/static/src/js/ion.rangeSlider.min.js" type="text/javascript"/>
+
+            <!-- Custom -->
+            <!-- Theme -->
+            <link href="/kingfisher_pro/static/src/less/options/colors/colors.less" rel="stylesheet" type="text/less"/>
+            <link href="/kingfisher_pro/static/src/less/mixins.less" rel="stylesheet" type="text/less"/>
+            <link href="/kingfisher_pro/static/src/less/box-layout.less" rel="stylesheet" type="text/less"/>
+            <link href="/kingfisher_pro/static/src/less/header.less" rel="stylesheet" type="text/less"/>
+            <link href="/kingfisher_pro/static/src/less/footer.less" rel="stylesheet" type="text/less"/>
+            <link href="/kingfisher_pro/static/src/less/product.less" rel="stylesheet" type="text/less"/>
+            <link href="/kingfisher_pro/static/src/less/style.less" rel="stylesheet" type="text/less"/>
+            <link href="/kingfisher_pro/static/src/less/web.less" rel="stylesheet" type="text/less"/> 
+
+            <script type="text/javascript" src="/kingfisher_pro/static/src/js/owl.carousel.min.js"></script>
+            <script type="text/javascript" src="/kingfisher_pro/static/src/js/carousel-swipe.js"></script>
+
+            <script src="/kingfisher_pro/static/src/js/kingfisher_pro_frontend.js" type="text/javascript"/>
+            <script src="/kingfisher_pro/static/src/js/kingfisher_pro.js" type="text/javascript"/>
+
+            <script src="/kingfisher_pro/static/src/js/custom.js" type="text/javascript"/>
+
+        </xpath>
+    </template>
+
+    <!-- Assets Editor -->
+    <template id="assets_editor" inherit_id="website.assets_editor" name="Kingfisher pro assets editor">
+        <xpath expr="." position="inside">
+            <script src="/kingfisher_pro/static/src/js/kingfisher_pro_editor.js" type="text/javascript"/>
+        </xpath>
+    </template>
+    
+ </data>
+ </openerp>

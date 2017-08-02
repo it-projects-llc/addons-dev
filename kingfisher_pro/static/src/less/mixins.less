@@ -1,0 +1,28 @@
+/*BG micin*/
+.bg-img(@img-name){
+	background-image: url('@{img-path}@{img-name}');
+}
+.bg-size(@cover){
+  background-size: @cover;
+  -moz-background-size: @cover;
+  -webkit-background-size: @cover;
+  -o-background-size: @cover;
+}
+
+
+/* Transition */
+.transition(@all, @s, @ease){
+   		transition: @all @s @ease;
+-webkit-transition: @all @s @ease;
+   -moz-transition: @all @s @ease;
+     -o-transition: @all @s @ease;
+}
+
+/*Responsive*/
+/*.media(@maxwidth; @rules) {
+    @media only screen and (max-width: @maxwidth) {
+        @rules();
+    }
+}*/
+
+

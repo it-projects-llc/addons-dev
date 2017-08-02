@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Website Config Settings for Multiple Image -->
+        <record id="view_website_config_settings_effects_inherit" model="ir.ui.view">
+            <field name="name">Website settings</field>
+            <field name="model">website.config.settings</field>
+            <field name="inherit_id" ref="website.view_website_config_settings"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/div/group[@name='advanced']" position="before">
+                    <group string="Multiple Product Image">
+                        <field name="no_extra_options"/>
+                        <field name="thumbnail_panel_position"
+                               attrs="{'invisible': [('no_extra_options', '=', False)]}"/>
+                        <field name="interval_play"
+                               attrs="{'invisible': [('no_extra_options', '=', False)]}"/>
+                        <field name="enable_disable_text"
+                               attrs="{'invisible': [('no_extra_options', '=', False)]}"/>
+                        <field name="color_opt_thumbnail"
+                               attrs="{'invisible': [('no_extra_options', '=', False)]}"/>
+                        <field name="change_thumbnail_size"/>
+                        <field name="thumb_height"
+                               attrs="{'invisible': [('change_thumbnail_size', '=', False)]}"/>
+                       <field name="thumb_width"
+                               attrs="{'invisible': [('change_thumbnail_size', '=', False)]}"/>
+                    </group>
+                </xpath>
+                <xpath expr="/form/div/group[@name='advanced']" position="before">
+                    <group string="Product per grid">
+                        <field name="product_display_grid"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Website Menu List view -->
+        <record id="website.menu_tree" model="ir.ui.view">
+            <field name="name">website.menu.tree</field>
+            <field name="model">website.menu</field>
+            <field name="field_parent">child_id</field>
+            <field name="arch" type="xml">
+                <tree string="Website menu">
+                    <field name="sequence" widget="handle"/>
+                    <field name="website_id" options="{'no_create': True}"/>
+                    <field name="name"/>
+                    <field name="is_megamenu"/>
+                    <field name="url"/>
+                    <field name="new_window"/>
+                    <field name="parent_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Website Menu Form view -->
+        <record id="view_website_menu_inherit" model="ir.ui.view">
+            <field name="name">Website Menu Form View Inherited</field>
+            <field name="model">website.menu</field>
+            <field name="field_parent">child_id</field>
+            <field name="arch" type="xml">
+                <form string="Website menu">
+                    <sheet>
+                        <group>
+                            <field name="website_id" options="{'no_create': True}"/>
+                            <field name="name"/>
+                            <field name="url"/>
+                            <field name="new_window"/>
+                            <field name="parent_id" domain="[('is_megamenu', '=', False)]"/>
+                        </group>
+                        <group attrs="{'invisible': [('parent_id', '=', False)]}">
+                            <field name="is_megamenu"/>
+                        </group>
+                        <group attrs="{'invisible': ['|', ('is_megamenu', '=', False), ('parent_id', '=', False)]}">
+                            <field name="megamenu_type"/>
+
+                            <field name="megamenu_bg"/>
+                            <field name="megamenu_bg_img_color"
+                                   widget="radio"
+                                   attrs="{'invisible': [('megamenu_bg', '=', False)]}"/>
+                            <field name="megamenu_bg_image"
+                                widget="image"
+                                height='64px'
+                                attrs="{'invisible': ['|', ('megamenu_bg', '=', False), ('megamenu_bg_img_color', '=', 'bg_color')],
+                                        'required': [('megamenu_bg', '!=', False), ('megamenu_bg_img_color', '=', 'bg_img')]}"/>
+                            <field name="megamenu_bg_color"
+                                placeholder="#ccc"
+                                attrs="{'invisible': ['|', ('megamenu_bg', '=', False), ('megamenu_bg_img_color', '=', 'bg_img')],
+                                        'required': [('megamenu_bg', '!=', False), ('megamenu_bg_img_color', '=', 'bg_color')]}"/>
+
+                            <field name="category_slider"/>
+                            <field name="carousel_header_name"
+                                   attrs="{'invisible': [('category_slider', '=', False)]}"/>
+                            <field name="category_slider_position"
+                                   attrs="{'invisible': [('category_slider', '=', False)]}"/>
+
+                            <field name="menu_icon"/>
+                            <field name="menu_icon_image" widget="image"
+                                   height='64px'
+                                   attrs="{'invisible': [('menu_icon', '=', False)],
+                                   'required': [('menu_icon', '=', True)]}"/>
+
+                            <field name="customize_menu_colors"/>
+                            <field name="main_category_color"
+                                   attrs="{'invisible': [('customize_menu_colors', '=', False)],
+                                           'required': [('customize_menu_colors', '=', True)]}"/>
+                            <field name="sub_category_color"
+                                   attrs="{'invisible': [('customize_menu_colors', '=', False)],
+                                           'required': [('customize_menu_colors', '=', True)]}"/>
+
+                            <field name="display_menu_footer"/>
+                            <field name="menu_footer"
+                                   attrs="{'invisible': [('display_menu_footer', '=', False)],
+                                           'required': [('display_menu_footer', '=', True)]}"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Website Menu Action -->
+        <record id="website.action_website_menu" model="ir.actions.act_window">
+            <field name="name">Website Menu</field>
+            <field name="res_model">website.menu</field>
+            <field name="view_mode">list,form</field>
+            <field name="context">{'search_default_my_websites':1}</field>
+        </record>
+
+    </data>
+</openerp>

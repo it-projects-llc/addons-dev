@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <menuitem id="menu_slider_config" parent="sales_team.menu_base_partner" name="Slider Configuration" sequence="101"/>
+
+<!-- Product Category Slider -->
+    <!-- Product Category Slider Form View-->
+    <record id="prod_cat_slider_form_view" model="ir.ui.view">
+        <field name="name">product.category.slider.form.view</field>
+        <field name="model">product.category.slider.config</field>
+        <field name="arch" type="xml">
+            <form string="Product/Category Slider">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="active"/>
+                        <field name="no_of_counts"/>
+                        <field name="prod_cat_type"/>
+                        <field name="auto_rotate"/>
+                        <field name="sliding_speed"
+                               attrs="{'invisible': [('auto_rotate', '=', False)]}"/>
+                        <field name="collections_product"
+                               attrs="{'invisible': [('prod_cat_type', '=', 'category')],
+                                       'required': [('prod_cat_type', '=', 'product')]}"
+                               widget="many2many_tags"/>
+                        <field name="collections_category"
+                               attrs="{'invisible': [('prod_cat_type', '=', 'product')],
+                                       'required': [('prod_cat_type', '=', 'category')]}"
+                               widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Product Category Slider List View-->
+    <record id="prod_cat_slider_list_view" model="ir.ui.view">
+        <field name="name">product.category.slider.list.view</field>
+        <field name="model">product.category.slider.config</field>
+        <field name="arch" type="xml">
+            <tree string="Product/Category Slider">
+                <field name="name"/>
+                <field name="no_of_counts"/>
+                <field name="prod_cat_type"/>
+<!--                 <field name="auto_rotate"/>
+                <field name="sliding_speed"/>
+                <field name="collections"/> -->
+            </tree>
+        </field>
+    </record>
+
+    <!-- Product Category Slider Action -->
+    <record id="prod_cat_slider_action" model="ir.actions.act_window">
+        <field name="name">Product/Category Slider</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.category.slider.config</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" eval="False"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to define a new slider.
+            </p>
+        </field>
+    </record>
+
+    <!-- Product Category menu in slider config -->
+    <menuitem id="prod_cat_slider_menu"
+              name="Product/Category Slider Configuraton"
+              action="prod_cat_slider_action"
+              parent="kingfisher_pro.menu_slider_config"
+              sequence="60"/>
+
+<!-- Brands slider -->
+    <record id="product_brandz_search_view" model="ir.ui.view">
+        <field name="name">product.brands.search.form</field>
+        <field name="model">product.brands</field>
+        <field name="arch" type="xml">
+            <search string="Product Brands">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Brand Products -->
+    <act_window id="action_open_brand_products"
+                name="Brand Products"
+                res_model="product.template"
+                view_type="form"
+                view_mode="kanban,form,tree"
+                domain="[('product_brand_id', '=', active_id)]"/>
+
+    <!-- Product Brand -->
+    <act_window id="action_open_single_product_brand"
+                name="Product Brand"
+                res_model="product.brands"
+                view_type="form"
+                view_mode="kanban,form,tree"
+                target="current"
+                domain="[('product_ids', 'in', active_id)]"/>
+
+    <!-- Product brand form view -->
+    <record id="view_product_brands_form_view" model="ir.ui.view">
+        <field name="name">product.brands.form</field>
+        <field name="model">product.brands</field>
+        <field name="arch" type="xml">
+            <form string="Product Brands">
+                <sheet>
+                    <field name="brand_logo" widget="image" class="oe_avatar oe_left"/>
+                    <div class="oe_title">
+                        <div class="oe_edit_only">
+                            <label for="name" string="Brand Name"/>
+                        </div>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <div class="oe_right oe_button_box">
+                        <button
+                            class="oe_inline oe_stat_button"
+                            type="action"
+                            name="%(action_open_brand_products)d"
+                            icon="fa-cubes">
+                            <field name="products_count" string="Products" widget="statinfo" />
+                        </button>
+                    </div>
+                    <group string="Brand Cover">
+                        <field name="brand_cover"
+                               height="74px"
+                               nolabel='1' widget="image"/>
+                    </group>
+                    <group string="Description">
+                        <field name="brand_description" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Product brand tree view -->
+    <record id="view_product_brands_tree_view" model="ir.ui.view">
+        <field name="name">product.brands.tree</field>
+        <field name="model">product.brands</field>
+        <field name="arch" type="xml">
+            <tree string="product.brands">
+                <field name="name"/>
+                <field name="brand_description"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Product brand kanban view -->
+    <record id="view_product_brands_kanban_view" model="ir.ui.view">
+        <field name="name">product.brands.kanban</field>
+        <field name="model">product.brands</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="brand_logo"/>
+                <field name="products_count"/>
+                <field name="brand_description"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_vignette oe_semantic_html_override">
+                            <a type="open">
+                                <img t-att-src="kanban_image('product.product', 'brand_logo', record.id.value)"
+                                     height="74"
+                                     width="74"
+                                     class="o_kanban_image"/>
+                            </a>
+                            <div class="oe_kanban_details">
+                                <h4>
+                                    <a type="open">
+                                        <field name="name"/>
+                                    </a>
+                                </h4>
+                                <div>
+                                    <a name="%(kingfisher_pro.action_open_brand_products)d"
+                                       type="action">
+                                        <t t-esc="record.products_count.value"/> Products
+                                    </a>
+                                </div>
+                                <span>
+                                    <t t-raw="record.brand_description.value.substr(0,200)"/>
+                                    <t t-if="record.brand_description.value.length > 200">
+                                        <a type="open"><b>...</b></a>
+                                    </t>
+                                </span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Product brand search view -->
+    <record id="inherit_product_search_view" model="ir.ui.view">
+        <field name="name">inherited.product.search.form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_search_form_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="product_brand_id"/>
+            </field>
+            <filter name="services" position='after'>
+                <filter string="Brands" name="groupby_brand" domain="[]"
+                        context="{'group_by' : 'product_brand_id'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <!-- Product template inherited search view -->
+    <record id="inherited_view_product_template_search_brand" model="ir.ui.view">
+        <field name="name">product.template.search.brand</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="product_brand_id"/>
+            </field>
+            <filter name="services" position='after'>
+                <filter string="Brand" name="groupby_brand" domain="[]"
+                        context="{'group_by' : 'product_brand_id'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <!-- Product product inherited search view -->
+    <record id="inherited_product_template_form_brand_add" model="ir.ui.view">
+        <field name="name">product.template.product.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view" />
+        <field name="arch" type="xml">
+            <field name="name" position="after"  >
+                <field name="product_brand_id" placeholder="Brand"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Product template inherited kanban view -->
+    <record id="inherited_view_product_template_kanban_brand" model="ir.ui.view">
+        <field name="name">product kanban view: add brand</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_kanban_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@class='oe_kanban_details']/strong" position="after">
+                <div>
+                    <a t-if="record.product_brand_id" type="action"
+                       name="%(action_open_single_product_brand)d">
+                        <field name="product_brand_id"/>
+                    </a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+
+    <!-- Product product inherited kanban view -->
+    <record id="inherited_view_product_variant_kanban_brand" model="ir.ui.view">
+        <field name="name">product variant kanban view: add brand</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_kanban_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@class='oe_kanban_details']/strong" position="after">
+                <div>
+                    <a t-if="record.product_brand_id" type="open">
+                        <field name="product_brand_id"/>
+                    </a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Product template inherited tree view -->
+    <record id="inherited_view_product_template_tree_brand" model="ir.ui.view">
+        <field name="name">product tree view: add brand</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="product_brand_id"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Product product inherited tree view -->
+    <record id="inherited_view_product_variant_tree_brand" model="ir.ui.view">
+        <field name="name">product variant tree view: add brand</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="product_brand_id"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Product brand action -->
+    <record model="ir.actions.act_window" id="action_product_brand">
+        <field name="name">Brands</field>
+        <field name="res_model">product.brands</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,form,tree</field>
+    </record>
+
+    <!-- Brand Menu -->
+    <menuitem id="menu_product_brand"
+              name="Product Brands"
+              action="action_product_brand"
+              parent="kingfisher_pro.menu_slider_config"/>
+
+<!-- Blog Slider -->
+    <!-- Blog Slider Form View-->
+    <record id="dynamic_blog_slider_form_view" model="ir.ui.view">
+        <field name="name">dynamic.blog.slider.form.view</field>
+        <field name="model">blog.slider.config</field>
+        <field name="arch" type="xml">
+            <form string="Blog Post Slider">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="active"/>
+                        <field name="no_of_counts"/>
+                        <field name="auto_rotate"/>
+                        <field name="sliding_speed"
+                               attrs="{'invisible': [('auto_rotate', '=', False)]}"/>
+                        <field name="collections_blog_post"
+                               widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Blog Slider List View-->
+    <record id="dynamic_blog_slider_list_view" model="ir.ui.view">
+        <field name="name">dynamic.blog.slider.list.view</field>
+        <field name="model">blog.slider.config</field>
+        <field name="arch" type="xml">
+            <tree string="Blog Post Slider">
+                <field name="name"/>
+                <field name="no_of_counts"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Blog Slider Action -->
+    <record id="dynamic_blog_slider_action" model="ir.actions.act_window">
+        <field name="name">Blog Post Slider</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">blog.slider.config</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" eval="False"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to define a new slider.
+            </p>
+        </field>
+    </record>
+
+    <!-- Blog slider main menu in config -->
+    <menuitem id="dynamic_blog_slider_menu"
+          name="Blog Slider Configuraton"
+          action="dynamic_blog_slider_action"
+          parent="website_blog.menu_website_blog_root"
+          sequence="60"/>
+
+
+    <!-- Multi Product Slider Form View-->
+    <record id="multi_slider_form_view" model="ir.ui.view">
+        <field name="name">multi.slider.form.view</field>
+        <field name="model">multi.slider.config</field>
+        <field name="arch" type="xml">
+            <form string="Multi Slider">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                    <group string="Slider configuration">
+                        <field name="auto_rotate"/>
+                        <field name="sliding_speed"
+                               attrs="{'invisible': [('auto_rotate', '=', False)]}"/>
+                    </group>
+                    <group string="Collection configuration">
+                        <field name="no_of_collection"/>
+
+                        <field name="label_collection_1"
+                               attrs="{'invisible': [('no_of_collection', '=', False)]}"/>
+                        <field name="collection_1_ids"
+                            attrs="{'invisible': [('no_of_collection', '=', False)]}"
+                            widget='many2many_tags'/>
+
+                        <field name="label_collection_2"
+                               attrs="{'invisible': [('no_of_collection', '=', False)]}" />
+                        <field name="collection_2_ids"
+                            attrs="{'invisible': [('no_of_collection', '=', False)]}"
+                            widget='many2many_tags'/>
+
+                        <field name="label_collection_3"
+                               attrs="{'invisible': ['|', ('no_of_collection', '=', False),
+                                                          ('no_of_collection', 'not in', ('3', '4', '5'))],
+                                       'required': [('no_of_collection', 'in', ('3', '4', '5'))]}"/>
+                        <field name="collection_3_ids"
+                            attrs="{'invisible': ['|', ('no_of_collection', '=', False),
+                                                       ('no_of_collection', 'not in', ('3', '4', '5'))],
+                                    'required': ['|', ('no_of_collection', 'in', ('3', '4', '5'))]}"
+                            widget='many2many_tags'/>
+
+                        <field name="label_collection_4"
+                               attrs="{'invisible': ['|', ('no_of_collection', '=', False),
+                                                          ('no_of_collection', 'not in', ('4', '5'))],
+                                       'required': [('no_of_collection', 'in', ('4', '5'))]}"/>
+                        <field name="collection_4_ids"
+                            attrs="{'invisible': ['|', ('no_of_collection', '=', False),
+                                                       ('no_of_collection', 'not in', ('4', '5'))],
+                                    'required': [('no_of_collection', 'in', ('4', '5'))]}"
+                            widget='many2many_tags'/>
+
+                        <field name="label_collection_5"
+                               attrs="{'invisible': ['|', ('no_of_collection', '=', False),
+                                                          ('no_of_collection', '!=', '5')],
+                                       'required': [('no_of_collection', '=', '5')]}"/>
+                        <field name="collection_5_ids"
+                            attrs="{'invisible': ['|', ('no_of_collection', '=', False),
+                                                       ('no_of_collection', '!=', '5')],
+                                    'required': [('no_of_collection', '=', '5')]}"
+                            widget='many2many_tags'/>
+
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Multi Product Slider List View-->
+    <record id="multi_slider_list_view" model="ir.ui.view">
+        <field name="name">multi.slider.list.view</field>
+        <field name="model">multi.slider.config</field>
+        <field name="arch" type="xml">
+            <tree string="Dynamic Slider">
+                <field name="name"/>
+                <field name="active"/>
+                <field name="no_of_collection"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Multi Product Slider Action -->
+    <record id="multi_slider_action" model="ir.actions.act_window">
+        <field name="name">Multi Slider</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">multi.slider.config</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" eval="False"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to define a new slider.
+            </p>
+        </field>
+    </record>
+
+    <!-- Main menu in config -->
+    <menuitem id="multi_slider_menu"
+              name="Multi Product Slider Configuraton"
+              action="multi_slider_action"
+              parent="kingfisher_pro.menu_slider_config"
+              sequence="70"/>
+
+</data>
+</openerp>

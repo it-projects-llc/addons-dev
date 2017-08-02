@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_product_category_slider_config,access_product_category_slider_config,model_product_category_slider_config,,1,0,0,0
+access_product_brands,access_product_brands,model_product_brands,,1,0,0,0
+access_blog_slider_config,access_blog_slider_config,model_blog_slider_config,,1,0,0,0
+access_biztech_product_images,access_biztech_product_images,model_biztech_product_images,,1,0,0,0
+access_biztech_product_tags,access_biztech_product_tags,model_biztech_product_tags,,1,0,0,0
+access_biztech_product_sortby,access_biztech_product_sortby,model_biztech_product_sortby,,1,0,0,0
+access_multi_slider_config,access_multi_slider_config,model_multi_slider_config,,1,0,0,0
+access_product_per_page_no,access_product_per_page_no,model_product_per_page_no,,1,0,0,0
+access_product_per_page,access_product_per_page,model_product_per_page,,1,0,0,0
+access_biztech_product_style_tag,access_biztech_product_style_tag,model_biztech_product_style_tag,,1,0,0,0
