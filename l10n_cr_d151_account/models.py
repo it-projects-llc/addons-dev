@@ -85,7 +85,7 @@ class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
     def invoice_line_move_line_get(self):
-        res= []
+        res = []
         for line in self.invoice_line_ids:
             move_line = super(AccountInvoice, self).invoice_line_move_line_get()
             move_line = move_line[0]
@@ -97,7 +97,7 @@ class AccountInvoice(models.Model):
         res = super(AccountInvoice, self).line_get_convert(line, part)
         res['cr_d151_category_id'] = line.get('cr_d151_category_id', None)
         return res
-            
+
 
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
@@ -109,10 +109,10 @@ class AccountInvoiceLine(models.Model):
         if self.invoice_id.type in ['in_invoice', 'in_refund']:
             domain = [('code_id.type', '=', 'purchase')]
         if self.invoice_id.type in ['out_invoice', 'out_refund']:
-            domain = [('code_id.type','=' , 'sale')]
+            domain = [('code_id.type', '=', 'sale')]
         return {
                 'domain': {'cr_d151_category_id': domain},
-        }
+                }
 
     @api.onchange('product_id', 'account_id', 'partner_id', 'invoice_id')
     def _get_cr_151_category(self):
@@ -190,3 +190,48 @@ class AccountReconcileModel(models.Model):
 
         elif self.second_account_id.purchase_cr_d151_category_id:
             self.second_cr_d151_category_id = self.second_account_id.purchase_cr_d151_category_id
+
+
+class AccountBankStatementLine(models.Model):
+    _inherit = 'account.bank.statement.line'
+
+    cr_d151_category_id = fields.Many2one('account.cr.d151.category', 'D151 category')
+
+    @api.onchange('account_id')
+    def _change_cr_151_category_id(self):
+        if self.account_id.sale_cr_d151_category_id:
+            self.cr_d151_category_id = self.account_id.sale_cr_d151_category_id
+
+        elif self.account_id.purchase_cr_d151_category_id:
+            self.cr_d151_category_id = self.account_id.purchase_cr_d151_category_id
+
+    def get_statement_line_for_reconciliation_widget(self):
+        data = super(AccountBankStatementLine, self).get_statement_line_for_reconciliation_widget()
+        if self.partner_id.sale_cr_d151_category_id:
+            cr_d151_category_id = self.partner_id.sale_cr_d151_category_id.id
+        elif self.partner_id.purchase_cr_d151_category_id:
+            cr_d151_category_id = self.partner_id.purchase_cr_d151_category_id.id
+        else:
+            cr_d151_category_id = False
+        data['cr_d151_category_id'] = cr_d151_category_id
+        return data
+
+    def reconciliation_widget_on_change_account(self, account_id):
+        account = self.env['account.account'].search([('id', '=', account_id)])
+
+        if self.partner_id.sale_cr_d151_category_id:
+            cr_d151_category_id = self.partner_id.sale_cr_d151_category_id.id
+
+        elif self.partner_id.purchase_cr_d151_category_id:
+            cr_d151_category_id = self.partner_id.purchase_cr_d151_category_id.id
+
+        elif account.sale_cr_d151_category_id:
+            cr_d151_category_id = account.sale_cr_d151_category_id.id
+
+        elif account.purchase_cr_d151_category_id:
+            cr_d151_category_id = account.purchase_cr_d151_category_id.id
+
+        else:
+            cr_d151_category_id = False
+
+        return cr_d151_category_id
