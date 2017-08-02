@@ -12,36 +12,36 @@ odoo.define('pos_orders_history', function (require) {
     var OrderLinesHistoryScreenWidget = screens.OrderLinesHistoryScreenWidget = {};
 
     models.load_models({
-	    model: 'pos.order',
-		fields: ['id', 'name', 'pos_reference', 'partner_id', 'date_order', 'user_id', 'amount_total', 'lines', 'state', 'sale_journal'],
-		loaded: function(self, orders) {
-		    self.db.pos_orders_history = orders;
-		    self.db.orders_history_by_id = {};
-			orders.forEach(function(order){
-				self.db.orders_history_by_id[order.id] = order;
-				self.db.order_search_string += self.db._order_search_string(order);
-			});
-		},
-	});
+        model: 'pos.order',
+        fields: ['id', 'name', 'pos_reference', 'partner_id', 'date_order', 'user_id', 'amount_total', 'lines', 'state', 'sale_journal'],
+        loaded: function(self, orders) {
+            self.db.pos_orders_history = orders;
+            self.db.orders_history_by_id = {};
+            orders.forEach(function(order){
+                self.db.orders_history_by_id[order.id] = order;
+                self.db.order_search_string += self.db._order_search_string(order);
+            });
+        },
+    });
 
-	models.load_models({
-	    model: 'pos.order.line',
-	    fields: ['product_id', 'qty', 'price_unit', 'discount','tax_ids','price_subtotal', 'price_subtotal_incl'],
-		loaded: function(self, lines) {
-		    self.db.pos_orders_history_lines = lines;
-			self.db.line_by_id = {};
-			lines.forEach(function(line){
-				self.db.line_by_id[line.id] = line;
-			});
-		},
-	});
+    models.load_models({
+        model: 'pos.order.line',
+        fields: ['product_id', 'qty', 'price_unit', 'discount','tax_ids','price_subtotal', 'price_subtotal_incl'],
+        loaded: function(self, lines) {
+            self.db.pos_orders_history_lines = lines;
+            self.db.line_by_id = {};
+            lines.forEach(function(line){
+                self.db.line_by_id[line.id] = line;
+            });
+        },
+    });
 
-	PosDB.include({
-	    init: function(options){
-	        this.order_search_string = "";
-	        this._super.apply(this, arguments);
-	    },
-	    search_order: function(query){
+    PosDB.include({
+        init: function(options){
+            this.order_search_string = "";
+            this._super.apply(this, arguments);
+        },
+        search_order: function(query){
             try {
                 query = query.replace(/[\[\]\(\)\+\*\?\.\-\!\&\^\$\|\~\_\{\}\:\,\\\/]/g,'.');
                 query = query.replace(' ','.+');
@@ -65,9 +65,7 @@ odoo.define('pos_orders_history', function (require) {
             return results;
         },
         _order_search_string: function(order){
-            'id', 'name', 'pos_reference', 'partner_id', 'date_order', 'user_id', 'amount_total', 'lines', 'state', 'sale_journal'
-
-            var str =  order.name;
+            var str = order.name;
             if(order.pos_reference){
                 str += '|' + order.pos_reference;
             }
@@ -86,7 +84,7 @@ odoo.define('pos_orders_history', function (require) {
             if(order.state){
                 str += '|' + order.state;
             }
-            str = '' + order.id + ':' + str.replace(':','') + '\n';
+            str = '' + String(order.id) + ':' + str.replace(':','') + '\n';
             return str;
         },
     });
@@ -176,7 +174,7 @@ odoo.define('pos_orders_history', function (require) {
                 orders = this.pos.db.search_order(query);
                 this.render_list(orders);
             }else{
-                var orders = this.pos.db.pos_orders_history;
+                orders = this.pos.db.pos_orders_history;
                 this.render_list(orders);
             }
         },
@@ -204,7 +202,7 @@ odoo.define('pos_orders_history', function (require) {
             var lines = [];
             this.order.lines.forEach(function(line_id) {
                 var orderline = self.pos.db.line_by_id[line_id];
-                orderline.image = self.get_product_image_url(orderline.product_id[0])
+                orderline.image = self.get_product_image_url(orderline.product_id[0]);
                 lines.push(self.pos.db.line_by_id[line_id]);
             });
             this.render_list(lines);
@@ -215,7 +213,7 @@ odoo.define('pos_orders_history', function (require) {
             contents.innerHTML = "";
 
             for(var i = 0, len = Math.min(lines.length,1000); i < len; i++){
-                var line    = lines[i];
+                var line = lines[i];
                 var orderline = this.lines_history_cache.get_node(line.id);
                 if(!orderline){
                     var orderline_html = QWeb.render('LineHistory',{widget: this, line:lines[i]});
