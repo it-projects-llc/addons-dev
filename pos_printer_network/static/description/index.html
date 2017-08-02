@@ -12,7 +12,60 @@
     <div class="oe_span12">
       <p class="oe_mt32">
 		<div class="alert alert-info" style="padding:8px;font-weight: 300; font-size: 20px;">
-		  By default, odoo supports usb printers only for POS order printing. The module makes it possible to print POS orders and receipts on Network printers.
+		  <i class="fa fa-hand-o-right"></i><b> Key features: </b>
+			<ul class="list-unstyled">
+			  <li>
+				<i class="fa fa-check-square-o text-primary"></i>
+				it is enough to have one posbox to use any number of network printers
+			  </li>
+			  <li>
+				<i class="fa fa-check-square-o text-primary"></i>
+				you just need to know IP address of network printer
+			  </li>
+			  <li>
+				<i class="fa fa-check-square-o text-primary"></i>
+				it works for any model of network printers, which support esc/pos protocol
+			  </li>
+			  <li>
+				<i class="fa fa-check-square-o text-primary"></i>
+				ability to print both order and payment receipts 
+			  </li>
+			  <li>
+				<i class="fa fa-check-square-o text-primary"></i>
+				ability to see connection status of each printer
+			  </li>
+			  <li>
+				<i class="fa fa-check-square-o text-primary"></i>
+				ability to disable USB printers if needed
+			  </li>
+			</ul>
+		</div>
+      </p>		
+    </div>
+  </div>
+</section>
+
+<section class="oe_container">
+  <div class="oe_row oe_spaced">
+    <div class="oe_span12">
+      <p class="oe_mt32">
+		<div class="alert alert-warning" style="padding:8px;font-weight: 300; font-size: 20px;">
+		  By default, odoo supports USB printers only for POS order printing. Actually, it is not flexible and there are some inconveniences:
+		  
+		  <div style="padding:4px;">
+		  <ul>
+			<li>
+			  if you have several USB printers and send receipt to print, it will be printed on the first one encountered, i.e. we have no chance to choose certain USB printer
+			</li>
+			<li>
+			  you can use limited number of USB printer models only
+			</li>
+			<li>
+			  you are not able to see connection status of each USB printer
+			</li>
+		  </ul>
+		  </div>
+		  The module eliminates these disadvantages, because makes it possible to print POS orders and receipts on Network printers.
 		</div>
       </p>
     </div>
@@ -152,7 +205,7 @@
 	<h3 class="oe_slogan">Note</h3>
     <div class="oe_span12 text-center">
       <p class="oe_mt32">
-		<font size="3px">See also the "Documentation" tab for installation and configuration details.</font>
+		<font size="3px">It should be noted that the module requires <a href="https://apps.odoo.com/apps/modules/10.0/hw_printer_network/">Hardware Network Printer</a> to be installed on PosBox. See also the "Documentation" tab for installation and configuration details.</font>
       </p>
 	</div>
   </div>

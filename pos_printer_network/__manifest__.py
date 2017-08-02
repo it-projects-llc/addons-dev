@@ -11,7 +11,7 @@
     "support": "apps@it-projects.info",
     "website": "https://twitter.com/gabbasov_dinar",
     "license": "OPL-1",
-    "price": 390.00,
+    "price": 340.00,
     "currency": "EUR",
 
     "depends": [
