@@ -1,0 +1,1976 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* kingfisher_pro
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 9.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-06-13 09:05+0000\n"
+"PO-Revision-Date: 2016-06-13 09:05+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_website_menu_inherit
+msgid "#ccc"
+msgstr "#ccc"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_service_snippet
+msgid "100% MONEY BACK - 30 DAYS"
+msgstr "100% geld terug - 30 DAGEN"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_label_collection_1
+msgid "1st collection name"
+msgstr "1 collectienaam"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_collection_1_ids
+msgid "1st product collection"
+msgstr "1 product collectie"
+
+#. module: kingfisher_pro
+#: selection:website.menu,megamenu_type:0
+msgid "2 Columns"
+msgstr "2 kolommen"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_single_banner_snippet
+msgid "2016"
+msgstr "2016"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_label_collection_2
+msgid "2nd collection name"
+msgstr "2 collectienaam"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_collection_2_ids
+msgid "2nd product collection"
+msgstr "2 product collectie"
+
+#. module: kingfisher_pro
+#: selection:website.menu,megamenu_type:0
+msgid "3 Columns"
+msgstr "3 kolommen"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_label_collection_3
+msgid "3rd collection name"
+msgstr "3 collectienaam"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_collection_3_ids
+msgid "3rd product collection"
+msgstr "3 product collectie"
+
+#. module: kingfisher_pro
+#: selection:website.menu,megamenu_type:0
+msgid "4 Columns"
+msgstr "4 Columns"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.404_page_template
+msgid "404"
+msgstr "404"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_label_collection_4
+msgid "4th collection name"
+msgstr "4 collectienaam"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_collection_4_ids
+msgid "4th product collection"
+msgstr "4 product collectie"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_label_collection_5
+msgid "5th collection name"
+msgstr "5 collectienaam"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_collection_5_ids
+msgid "5th product collection"
+msgstr "5 product collectie"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_service_snippet
+msgid "<b>24/7 CUSTOMER SERVICE</b>"
+msgstr "<b>24/7 Klantenservice</b>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_service_snippet
+msgid "<b>FREE SHIPPING WORLDWIDE</b>"
+msgstr "<b>GRATIS VERZENDING WERELDWIJD</b>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_service_snippet
+msgid "<b>MONEY BACK GUARANTEE !</b>"
+msgstr "<b>GELDTERUGGARANTIE !</b>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_product_details
+msgid "<i class=\"fa fa-shopping-cart\"/>Add to Cart"
+msgstr "<i class=\"fa fa-shopping-cart\"/>Voeg toe aan winkelmandje"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.hover_total
+msgid "<span class=\"col-xs-6 text-right h4\">Subtotal:</span>"
+msgstr "<span class=\"col-xs-6 text-right h4\">Subtotaal</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "<span class=\"font-style1\" style=\"font-family: 'Open Sans', sans-serif;\">Open Sans </span>"
+msgstr "<span class=\"font-style1\" style=\"font-family: 'Open Sans', sans-serif;\">Open Sans </span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "<span class=\"font-style1\" style=\"font-family: 'Source Sans Pro', sans-serif;\">Source Sans Pro</span>"
+msgstr "<span class=\"font-style1\" style=\"font-family: 'Source Sans Pro', sans-serif;\">Bron Sans Pro</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "<span class=\"font-style1\" style=\"font-family: 'Source Serif Pro', serif;\">Source Serif Pro</span>"
+msgstr "<span class=\"font-style1\" style=\"font-family: 'Source Serif Pro', serif;\">Bron Serif Pro</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "<span class=\"font-style1\" style=\"font-family: 'Varela Round', sans-serif;\">Varela Round</span>"
+msgstr "<span class=\"font-style1\" style=\"font-family: 'Varela Round', sans-serif;\">Varela Ronde</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "<span class=\"font-style2\" style=\"font-family: 'Lato', sans-serif;\">Lato</span>"
+msgstr "<span class=\"font-style2\" style=\"font-family: 'Lato', sans-serif;\">kant</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "<span class=\"font-style3\" style=\"font-family: 'Raleway', sans-serif;\">Raleway</span>"
+msgstr "<span class=\"font-style3\" style=\"font-family: 'Raleway', sans-serif;\">Raleway</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_promo_snippet
+msgid "<span class=\"line1\">BIGGEST</span><br/>\n"
+"                                    <span class=\"line2\">SALE</span><br/>\n"
+"                                    <span class=\"line3\">50%</span>"
+msgstr "<span class=\"line1\">BIGGEST</span><br/>\n"
+"                                    <span class=\"line2\">VERKOOP</span><br/>\n"
+"                                    <span class=\"line3\">50%</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_home_slider
+msgid "<span class=\"sr-only\">Next</span>"
+msgstr "<span class=\"sr-only\">volgende</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_home_slider
+msgid "<span class=\"sr-only\">Previous</span>"
+msgstr "<span class=\"sr-only\">voorgaand</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_blog_slider_view
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_blog_custom_snippet
+msgid "<span>Blog post slider</span>"
+msgstr "<span>Blogpost slider</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_multi_cat_custom_snippet
+msgid "<span>Multi Category Slider</span>"
+msgstr "<span>Multi Categorie Slider</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_brand_slider_view
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_brand_custom_slider
+msgid "<span>Our Brands</span>"
+msgstr "<span>Onze merken</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_product_category_slider
+msgid "<span>Product/Category Slider</span>"
+msgstr "<span>Product- / Categorie Slider</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_multi_cat_slider_view
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_pro_cat_slider_view
+msgid "<span>Trending</span>"
+msgstr "<span>Trending</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.footer_copyright
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "About Us"
+msgstr "Over ons"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_tags_active
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config_active
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_active
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_active
+msgid "Active"
+msgstr "Actief"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_biztech_product_images
+msgid "Add Multiple Image in Product"
+msgstr "Voeg Meervoudig beeld in Product"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_template_multi_image
+msgid "Add Multiple Images?"
+msgstr "Voeg meerdere afbeeldingen ?"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_template_is_flip_image
+msgid "Add flip image"
+msgstr "Voeg het beeld flip"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_product_template_form_multiple_image
+msgid "Add flip image which will be visible on product hover in website"
+msgstr "Voeg flip beeld dat zichtbaar is op het product zweven op de website zal worden"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.king_pro_products_item
+msgid "Add to cart"
+msgstr "Voeg toe aan winkelmandje"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "Add..."
+msgstr "Toevoegen..."
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Affiliates"
+msgstr "Affiliates"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_sale_products
+msgid "All Products"
+msgstr "Alle Producten"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_alt
+msgid "Alt"
+msgstr "Alt"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:24
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:56
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:83
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:110
+#, python-format
+msgid "Apply"
+msgstr "Van toepassing zijn"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "Aqua"
+msgstr "Aqua"
+
+#. module: kingfisher_pro
+#: selection:biztech.product.sortby,sort_type:0
+msgid "Ascending"
+msgstr "oplopend"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config_auto_rotate
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_auto_rotate
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_auto_rotate
+msgid "Auto Rotate Slider"
+msgstr "Auto Rotate Slider"
+
+#. module: kingfisher_pro
+#: selection:website,color_opt_thumbnail:0
+msgid "B/W"
+msgstr "B/W"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "BOXED"
+msgstr "BOXED"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "Background Pattern"
+msgstr "Achtergrondpatroon"
+
+#. module: kingfisher_pro
+#: selection:website.menu,megamenu_bg_img_color:0
+msgid "Background color"
+msgstr "Achtergrond kleur"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_megamenu_bg_color
+msgid "Background color for megamenu"
+msgstr "Achtergrondkleur voor megamenu"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_menu_megamenu_bg_color
+msgid "Background color for megamenu, for setting background color you have to pass hexacode here."
+msgstr "Achtergrondkleur voor megamenu , voor het instellen van de achtergrond kleur moet je hexacode hier passeren ."
+
+#. module: kingfisher_pro
+#: selection:website.menu,megamenu_bg_img_color:0
+msgid "Background image"
+msgstr "Achtergrond afbeelding"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_megamenu_bg_image
+msgid "Background image for megamenu"
+msgstr "achtergrond voor megamenu"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_single_banner_snippet
+msgid "Bag"
+msgstr "Zak"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/js/kingfisher_pro_editor.js:204
+#: model:ir.actions.act_window,name:kingfisher_pro.dynamic_blog_slider_action
+#: model:ir.ui.view,arch_db:kingfisher_pro.dynamic_blog_slider_form_view
+#: model:ir.ui.view,arch_db:kingfisher_pro.dynamic_blog_slider_list_view
+#, python-format
+msgid "Blog Post Slider"
+msgstr "Blog Post Slider"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:68
+#, python-format
+msgid "Blog Slider Configuration"
+msgstr "Blog Slider Configuration"
+
+#. module: kingfisher_pro
+#: model:ir.ui.menu,name:kingfisher_pro.dynamic_blog_slider_menu
+msgid "Blog Slider Configuraton"
+msgstr "Blog Slider Configuraton"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "Blue"
+msgstr "Blauw"
+
+#. module: kingfisher_pro
+#: selection:website,color_opt_thumbnail:0
+msgid "Blur"
+msgstr "vervagen"
+
+#. module: kingfisher_pro
+#: selection:website,thumbnail_panel_position:0
+msgid "Bottom"
+msgstr "Bodem"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_template_product_brand_id
+#: model:ir.ui.view,arch_db:kingfisher_pro.inherited_product_template_form_brand_add
+#: model:ir.ui.view,arch_db:kingfisher_pro.inherited_view_product_template_search_brand
+msgid "Brand"
+msgstr "Merk"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands_brand_cover
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_product_brands_form_view
+msgid "Brand Cover"
+msgstr "Brand Cover"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands_brand_logo
+msgid "Brand Logo"
+msgstr "Brand Logo"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands_name
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_product_brands_form_view
+msgid "Brand Name"
+msgstr "Brand Name"
+
+#. module: kingfisher_pro
+#: model:ir.actions.act_window,name:kingfisher_pro.action_open_brand_products
+msgid "Brand Products"
+msgstr "Brand Products"
+
+#. module: kingfisher_pro
+#: model:ir.actions.act_window,name:kingfisher_pro.action_product_brand
+#: model:ir.ui.view,arch_db:kingfisher_pro.inherit_product_search_view
+msgid "Brands"
+msgstr "Brands"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:36
+#, python-format
+msgid "Brands Slider Configuration"
+msgstr "Brands Slider Configuration"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "Brown"
+msgstr "Bruin"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_slider_layout
+msgid "By Price"
+msgstr "Op Prijs"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_testimonials_slider
+msgid "CEO, ABC company"
+msgstr "CEO , ABC bedrijf"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "CURRENCY"
+msgstr "VALUTA"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:23
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:55
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:82
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:109
+#, python-format
+msgid "Cancel"
+msgstr "Annuleer"
+
+#. module: kingfisher_pro
+#: selection:product.category.slider.config,prod_cat_type:0
+msgid "Category"
+msgstr "Category"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_category_slider_position
+msgid "Category Slider Position"
+msgstr "Category Slider Position"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_change_thumbnail_size
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_config_settings_change_thumbnail_size
+msgid "Change thumbnail size"
+msgstr "Verander miniatuurformaat"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "Checkout"
+msgstr "Uitchecken"
+
+#. module: kingfisher_pro
+#: model:ir.actions.act_window,help:kingfisher_pro.dynamic_blog_slider_action
+#: model:ir.actions.act_window,help:kingfisher_pro.multi_slider_action
+#: model:ir.actions.act_window,help:kingfisher_pro.prod_cat_slider_action
+msgid "Click to define a new slider."
+msgstr "Klik om een ​​nieuwe slider definiëren."
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.multi_slider_form_view
+msgid "Collection configuration"
+msgstr "Collection configuratie"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_multi_slider_config_label_collection_1
+#: model:ir.model.fields,help:kingfisher_pro.field_multi_slider_config_label_collection_2
+#: model:ir.model.fields,help:kingfisher_pro.field_multi_slider_config_label_collection_3
+#: model:ir.model.fields,help:kingfisher_pro.field_multi_slider_config_label_collection_4
+#: model:ir.model.fields,help:kingfisher_pro.field_multi_slider_config_label_collection_5
+msgid "Collection label to be displayed in website like Men, Women, Kids, etc..."
+msgstr "Collection label moet worden weergegeven op de website , zoals mannen , vrouwen , kinderen , etc ..."
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config_collections_blog_post
+msgid "Collections of blog posts"
+msgstr "Verzamelingen van blogberichten"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_collections_category
+msgid "Collections of category"
+msgstr "Collections of category"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_collections_product
+msgid "Collections of product"
+msgstr "Collections of product"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_style_tag_color
+msgid "Color"
+msgstr "Kleur"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "Configure"
+msgstr "Instellen"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_res_config_ppp
+msgid "Configure website product pagination"
+msgstr "Configureren website product paginering"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Contact"
+msgstr "Contactpersoon"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.footer_copyright
+msgid "Contact Us"
+msgstr "Neem contact met ons op"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config_no_of_counts
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_no_of_counts
+msgid "Counts"
+msgstr "Counts"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_biztech_product_images_cover_image
+msgid "Cover Image will be show untill video is loaded."
+msgstr "Cover Afbeelding zal show tot video is geladen"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_cover_image
+msgid "Cover image"
+msgstr "Omslagfoto"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_create_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_sortby_create_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_style_tag_create_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_tags_create_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config_create_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_create_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands_create_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_create_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_create_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_no_create_uid
+msgid "Created by"
+msgstr "Aangemaakt door"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_create_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_sortby_create_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_style_tag_create_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_tags_create_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config_create_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_create_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands_create_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_create_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_create_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_no_create_date
+msgid "Created on"
+msgstr "Aangemaakt op"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.footer_copyright
+msgid "Customer Service"
+msgstr "Klantenservice"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "Customize your theme"
+msgstr "Pas uw thema"
+
+#. module: kingfisher_pro
+#: selection:website,color_opt_thumbnail:0
+msgid "Default"
+msgstr "Standaard"
+
+#. module: kingfisher_pro
+#: selection:biztech.product.sortby,sort_type:0
+msgid "Descending"
+msgstr "Aflopend"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands_brand_description
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_public_category_description
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_product_details
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_product_brands_form_view
+msgid "Description"
+msgstr "Omschrijving"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_display_name
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_sortby_display_name
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_style_tag_display_name
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_tags_display_name
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config_display_name
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_display_name
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands_display_name
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_display_name
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_display_name
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_no_display_name
+msgid "Display Name"
+msgstr "Schermnaam"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_display_menu_footer
+msgid "Display menu footer"
+msgstr "Display menu footer"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_config_settings_product_display_grid
+#: model:ir.model.fields,help:kingfisher_pro.field_website_product_display_grid
+msgid "Display no. of products per line in website product grid."
+msgstr "Displaynummer . producten per lijn op de website van de product-grid ."
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_single_banner_snippet
+msgid "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse\n"
+"                                <br/>\n"
+"                                molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero\n"
+"                                <br/>\n"
+"                                eros et accumsan et iusto odio dignissim qui blandit praesent luptatum\n"
+"                                <br/>\n"
+"                                zzril delenit augue duis dolore te feugait nulla facilisi."
+msgstr "Duis autem vel eum ipsum dolor in hendrerit in vulputate velit esse\n"
+"                                <br/>\n"
+"                                molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero\n"
+"                                <br/>\n"
+"                                eros et accumsan et iusto odio dignissim qui blandit praesent luptatum\n"
+"                                <br/>\n"
+"                                zzril delenit augue duis dolore te feugait nulla facilisi."
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.multi_slider_list_view
+msgid "Dynamic Slider"
+msgstr "Dynamic Slider"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_config_settings_enable_first_last_pager
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_enable_first_last_pager
+msgid "Enable First and Last Pager"
+msgstr "Inschakelen Eerste en laatste Pager"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_biztech_product_tags_active
+msgid "Enable or Disable tag from website"
+msgstr "Inschakelen of tag uitschakelen van de website"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_config_settings_enable_sort_by
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_enable_sort_by
+msgid "Enable product sorting option"
+msgstr "Enable product sorteeroptie"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_config_settings_enable_disable_text
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_enable_disable_text
+msgid "Enable the text panel"
+msgstr "Schakel de tekst panel"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_product_template_is_flip_image
+msgid "Enable this checkbox for adding flip image on product website."
+msgstr "Schakel dit vakje voor het toevoegen van flip op product website."
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_config_settings_enable_first_last_pager
+#: model:ir.model.fields,help:kingfisher_pro.field_website_enable_first_last_pager
+msgid "Enable this checkbox to make 'First' and 'Last' button in pager on website."
+msgstr "Schakel dit vakje aan 'First ' te maken en 'Last ' knop in pager op de website ."
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_config_settings_enable_disable_text
+#: model:ir.model.fields,help:kingfisher_pro.field_website_enable_disable_text
+msgid "Enable/Disable text which is visible on the image in multi image."
+msgstr "Enable / tekst die zichtbaar is op de afbeelding multi- afbeelding in te schakelen."
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:43
+#, python-format
+msgid "Enter Count"
+msgstr "Voer Count"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:49
+#, python-format
+msgid "Enter Label (for e.g: Our Brands)"
+msgstr "Voer Label ( voor bijvoorbeeld : Onze merken )"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "FONTS COMBINATIONS"
+msgstr "FONTS COMBINATIONS"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_service_snippet
+msgid "FREE SHIPPING WORLDWIDE"
+msgstr "GRATIS VERZENDING WERELDWIJD"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "FULL WIDTH"
+msgstr "VOLLE BREEDTE"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.website_pager_addition
+msgid "First"
+msgstr "Eerste"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_template_flip_image
+msgid "Flip image"
+msgstr "flip Afbeelding"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_product_template_flip_image
+msgid "Flip image will be shown on mouse hover in website on specific product."
+msgstr "Flip beeld wordt getoond op de muis hover in website voor specifieke productgroepen ."
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_menu_footer
+msgid "Footer content"
+msgstr "footer inhoud"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_menu_menu_footer
+msgid "Footer name for megamenu"
+msgstr "Footer naam voor megamenu"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_menu_display_menu_footer
+msgid "For displaying footer in megamenu"
+msgstr "Voor het weergeven van footer in megamenu"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_config_settings_enable_sort_by
+#: model:ir.model.fields,help:kingfisher_pro.field_website_enable_sort_by
+msgid "For enabling product sorting feature in website."
+msgstr "Voor het inschakelen van het product te sorteren functie op de website ."
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Free Shipping"
+msgstr "Geen verzendkosten"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Gift Cards"
+msgstr "Cadeaubonnen"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "Golden"
+msgstr "gouden"
+
+#. module: kingfisher_pro
+#: selection:biztech.product.style.tag,color:0
+msgid "Green"
+msgstr "Groen"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_sale_products
+msgid "Grid View"
+msgstr "Rasterweergave"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_menu_carousel_header_name
+msgid "Header name for carousel slider in megamenu"
+msgstr "Header naam voor carrousel slider in megamenu"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Help"
+msgstr "Hulp"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_product_details
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_sale_products
+msgid "Home"
+msgstr "Huis"
+
+#. module: kingfisher_pro
+#: selection:biztech.product.images,video_type:0
+msgid "Html5 Video"
+msgstr "Html5 Video"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_id
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_sortby_id
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_style_tag_id
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_tags_id
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config_id
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_id
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands_id
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_id
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_id
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_no_id
+msgid "ID"
+msgstr "ID"
+
+#. module: kingfisher_pro
+#: selection:biztech.product.images,attach_type:0
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_image
+msgid "Image"
+msgstr "Afbeelding"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_template_images
+msgid "Images"
+msgstr "Afbeeldingen"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_public_category_include_in_megamenu
+#: model:ir.model.fields,help:kingfisher_pro.field_product_public_category_include_in_megamenu
+msgid "Include in mega menu"
+msgstr "Opnemen in mega menu"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "International"
+msgstr "Internationale"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_is_megamenu
+msgid "Is megamenu...?"
+msgstr "Megamenu is ... ?"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_product_template_form_multiple_image
+msgid "It is required"
+msgstr "Het is verplicht"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_promo_snippet
+msgid "Jewellary"
+msgstr "Jewellary"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Jobs"
+msgstr "Jobs"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_testimonials_slider
+msgid "John Warner"
+msgstr "John Warner"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "LANGUAGE"
+msgstr "TAAL"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "LAYOUT"
+msgstr "LAYOUT"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:47
+#, python-format
+msgid "Label"
+msgstr "Etiket"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_name
+msgid "Label Name"
+msgstr "Label Naam"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.website_pager_addition
+msgid "Last"
+msgstr "Laatste"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images___last_update
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_sortby___last_update
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_style_tag___last_update
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_tags___last_update
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config___last_update
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config___last_update
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands___last_update
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config___last_update
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page___last_update
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_no___last_update
+msgid "Last Modified on"
+msgstr "Laatst gewijzigd op"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_write_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_sortby_write_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_style_tag_write_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_tags_write_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config_write_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_write_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands_write_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_write_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_no_write_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_write_uid
+msgid "Last Updated by"
+msgstr "Laatst bijgewerkt door"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_write_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_sortby_write_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_style_tag_write_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_tags_write_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config_write_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_write_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands_write_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_write_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_no_write_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_write_date
+msgid "Last Updated on"
+msgstr "Laatst bijgewerkt op"
+
+#. module: kingfisher_pro
+#: selection:website,thumbnail_panel_position:0
+#: selection:website.menu,category_slider_position:0
+msgid "Left"
+msgstr "Laatste"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Legal"
+msgstr "wettelijk"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_biztech_product_images_video_mp4
+msgid "Link for mp4 format video"
+msgstr "Link voor mp4 formaat video"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_biztech_product_images_video_ogv
+msgid "Link for ogv format video"
+msgstr "Link voor OGV formaat video"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_biztech_product_images_video_webm
+msgid "Link for webm format video"
+msgstr "Link for webm format video"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_sale_products
+msgid "List View"
+msgstr "Lijstweergave"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "Login"
+msgstr "Login"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "Logout"
+msgstr "Uitloggen"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "MAIN COLOR"
+msgstr "hoofdkleur"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_promo_snippet
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "MEN'S SHOES"
+msgstr "MANNENSCHOENEN"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_promo_snippet
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "MEN'S WATCH"
+msgstr "HORLOGE HEREN"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_main_category_color
+msgid "Main category color"
+msgstr "Hoofdcategorie kleur"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_public_category_menu_id
+msgid "Main menu"
+msgstr "Hoofdmenu"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Meet The Maker"
+msgstr "Maak kennis met de maker"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_megamenu_bg_img_color
+msgid "Megamenu background selection"
+msgstr "Megamenu achtergrond selectie"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_megamenu_type
+msgid "Megamenu type"
+msgstr "Mega Menutype"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_home_slider
+msgid "Men Blazers"
+msgstr "Men Blazers"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_menu_icon_image
+msgid "Menu Icon"
+msgstr "Menu Icon"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_menu_menu_icon_image
+msgid "Menu icon for your menu"
+msgstr "Menu pictogram voor uw menu"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_blog_slider_option
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_brand_custom_slider_option
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_multi_cat_slider_option
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_product_category_slider_option
+msgid "Modify"
+msgstr "Wijzigen"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_more_view_exclude
+msgid "More View Exclude"
+msgstr "Uitsluiten More Bekijk"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/js/kingfisher_pro_editor.js:279
+#, python-format
+msgid "Multi Category Slider"
+msgstr "Multi Category Slider"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:95
+#, python-format
+msgid "Multi Product Slider Configuration"
+msgstr "Multi Product Slider Configuration"
+
+#. module: kingfisher_pro
+#: model:ir.ui.menu,name:kingfisher_pro.multi_slider_menu
+msgid "Multi Product Slider Configuraton"
+msgstr "Multi Product Slider Configuraton"
+
+#. module: kingfisher_pro
+#: model:ir.actions.act_window,name:kingfisher_pro.multi_slider_action
+#: model:ir.ui.view,arch_db:kingfisher_pro.multi_slider_form_view
+msgid "Multi Slider"
+msgstr "Multi Slider"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_product_template_form_multiple_image
+msgid "Multiple Image"
+msgstr "Multiple Image"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_website_config_settings_effects_inherit
+msgid "Multiple Product Image"
+msgstr "Multiple Product Image"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "My account"
+msgstr "Mijn rekening"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_sortby_name
+msgid "Name"
+msgstr "Naam"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_biztech_product_sortby_name
+msgid "Name for sorting option"
+msgstr "Naam voor het sorteren optie"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_home_slider
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "New Collection"
+msgstr "Nieuwe collectie"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_single_banner_snippet
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "New collection"
+msgstr "Nieuwe collectie"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Newsletter!"
+msgstr "Nieuwsbrief!"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_blog_slider_config_no_of_counts
+msgid "No of blogs to be displayed in slider."
+msgstr "Geen van de blogs te geven in slider ."
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_multi_slider_config_no_of_collection
+msgid "No of collections to be displayed on slider."
+msgstr "Geen van de collecties worden weergegeven op slider ."
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_no_ids
+msgid "No of product to display"
+msgstr "Geen van het product om te laten zien"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_product_category_slider_config_no_of_counts
+msgid "No of products to be displayed in slider."
+msgstr "Geen van de producten die worden weergegeven in slider .."
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_no_of_collection
+msgid "No. of collections to show"
+msgstr "Aantal verzamelingen tonen"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands_products_count
+msgid "Number of products"
+msgstr "Aantal producten"
+
+#. module: kingfisher_pro
+#: selection:biztech.product.style.tag,color:0
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "Orange"
+msgstr "Oranje"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.biztech_form_view_for_product_sorting
+msgid "Order By"
+msgstr "Door Bestel"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Order Status"
+msgstr "Bestelstatus"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/js/kingfisher_pro_editor.js:130
+#, python-format
+msgid "Our Brands"
+msgstr "Onze merken"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "Pink"
+msgstr "Roze"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_config_settings_interval_play
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_interval_play
+msgid "Play interval of slideshow"
+msgstr "Speel interval van diavoorstelling"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.404_page_template
+msgid "Please try one of the following pages"
+msgstr "Probeer één van de volgende pagina's"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_product_tag
+msgid "Popular Tags"
+msgstr "populaire Tags"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_custom_filterz
+msgid "Price-Range:"
+msgstr "Prijsbereik:"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Privacy"
+msgstr "Privacy"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.footer_copyright
+msgid "Privacy Policy"
+msgstr "Privacybeleid"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.hover_total
+msgid "Proceed to checkout"
+msgstr "Ga naar de kassa"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_no_prod_page_id
+msgid "Prod page id"
+msgstr "Prod pagina id"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_product_tmpl_id
+#: selection:product.category.slider.config,prod_cat_type:0
+msgid "Product"
+msgstr "Artikel"
+
+#. module: kingfisher_pro
+#: model:ir.actions.act_window,name:kingfisher_pro.action_open_single_product_brand
+msgid "Product Brand"
+msgstr "product merk"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands_product_ids
+#: model:ir.ui.menu,name:kingfisher_pro.menu_product_brand
+#: model:ir.ui.view,arch_db:kingfisher_pro.product_brandz_search_view
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_product_brands_form_view
+msgid "Product Brands"
+msgstr "productmerken"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_product_template_form_multiple_image
+msgid "Product Flip Image"
+msgstr "Product Flip Afbeelding"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_product_template_form_multiple_image
+msgid "Product Multiple Images"
+msgstr "Product Meerdere beelden"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_product_details
+msgid "Product Name"
+msgstr "Productnaam"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.form_view_product_per_page_no
+msgid "Product Per Page No"
+msgstr "Product per pagina Geen"
+
+#. module: kingfisher_pro
+#: model:ir.actions.act_window,name:kingfisher_pro.action_for_product_sorting
+#: model:ir.ui.menu,name:kingfisher_pro.sub_menu_sort_by
+msgid "Product Sorting"
+msgstr "product sorteren"
+
+#. module: kingfisher_pro
+#: model:ir.ui.menu,name:kingfisher_pro.biztech_product_style_tag
+msgid "Product Style Tag"
+msgstr "Product Style Tag"
+
+#. module: kingfisher_pro
+#: model:ir.actions.act_window,name:kingfisher_pro.action_for_biztech_product_style_tag
+msgid "Product Style Tags"
+msgstr "Product Style Tags"
+
+#. module: kingfisher_pro
+#: model:ir.actions.act_window,name:kingfisher_pro.action_for_biztech_product_tags
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_style_tag_product_ids
+#: model:ir.ui.menu,name:kingfisher_pro.biztech_product_tags
+msgid "Product Tags"
+msgstr "Product Tags"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_product_template
+msgid "Product Template"
+msgstr "Productsjabloon"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_product_details
+msgid "Product not available"
+msgstr "Product niet beschikbaar"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_config_settings_product_display_grid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_product_display_grid
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_website_config_settings_effects_inherit
+msgid "Product per grid"
+msgstr "Product per grid"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_no_name
+msgid "Product per page"
+msgstr "Product per pagina"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/js/kingfisher_pro_editor.js:65
+#: model:ir.actions.act_window,name:kingfisher_pro.prod_cat_slider_action
+#: model:ir.ui.view,arch_db:kingfisher_pro.prod_cat_slider_form_view
+#: model:ir.ui.view,arch_db:kingfisher_pro.prod_cat_slider_list_view
+#, python-format
+msgid "Product/Category Slider"
+msgstr "Product/Category Slider"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:9
+#, python-format
+msgid "Product/Category Slider Configuration"
+msgstr "Product/Category Slider Configuration"
+
+#. module: kingfisher_pro
+#: model:ir.ui.menu,name:kingfisher_pro.prod_cat_slider_menu
+msgid "Product/Category Slider Configuraton"
+msgstr "Product/Category Slider Configuraton"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_tags_product_ids
+#: model:ir.ui.view,arch_db:kingfisher_pro.form_view_for_biztech_product_tags
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_product_details
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_sale_products
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_product_brands_form_view
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_product_brands_kanban_view
+msgid "Products"
+msgstr "Producten"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "Recently added item(s)"
+msgstr "Recent toegevoegde artikel (en )"
+
+#. module: kingfisher_pro
+#: selection:biztech.product.style.tag,color:0
+msgid "Red"
+msgstr "Rood"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "Register"
+msgstr "Registreren"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Returns &amp; Exchanges"
+msgstr "Returns &amp; uitwisselingen"
+
+#. module: kingfisher_pro
+#: selection:website,thumbnail_panel_position:0
+#: selection:website.menu,category_slider_position:0
+msgid "Right"
+msgstr "Rechts"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_service_snippet
+msgid "SERVICE SUPPORT 24/7"
+msgstr "SERVICE SUPPORT 24/7"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_promo_snippet
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "SHOP NOW \n"
+"                                        <i class=\"fa fa-angle-right\"/>"
+msgstr "WINKEL NU \n"
+"                                        <i class=\"fa fa-angle-right\"/>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_promo_snippet
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "SHOP NOW <i class=\"fa fa-angle-right\"/>"
+msgstr "WINKEL NU <i class=\"fa fa-angle-right\"/>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "SUBSCRIBE NOW <i class=\"fa fa-angle-right\"/>"
+msgstr "ABONNEER NU <i class=\"fa fa-angle-right\"/>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_home_slider
+msgid "Save <span>20%</span>"
+msgstr "Save <span>20%</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "Search"
+msgstr "Zoek"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "Search..."
+msgstr "Zoeken..."
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Security"
+msgstr "Beveiliging"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_product_template_product_brand_id
+msgid "Select a brand for this product"
+msgstr "Kies een merk voor dit product"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_product_template_product_style_tag_id
+msgid "Select a tag for this product"
+msgstr "Selecteer een label voor dit product"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_biztech_product_sortby_sort_on
+msgid "Select field on which you want to apply sorting"
+msgstr "Kies een veld waarop u wilt toepassen sorteren"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_product_category_slider_config_prod_cat_type
+msgid "Select product or category for whom you want to show a slider."
+msgstr "Selecteer een product of categorie voor wie u wilt een slider tonen"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_config_settings_thumbnail_panel_position
+#: model:ir.model.fields,help:kingfisher_pro.field_website_thumbnail_panel_position
+msgid "Select the position where you want to display the thumbnail panel in multi image."
+msgstr "Selecteer de positie waar u wilt naar de verkleinde panel multi- afbeelding in te geven.."
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_custom_filterz
+msgid "Selected Filters"
+msgstr "geselecteerde filters"
+
+#. module: kingfisher_pro
+#: selection:website,color_opt_thumbnail:0
+msgid "Sepia"
+msgstr "Sepia"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_tags_sequence
+#: model:ir.ui.view,arch_db:kingfisher_pro.form_view_for_biztech_product_tags
+#: model:ir.ui.view,arch_db:kingfisher_pro.list_view_for_biztech_product_tags
+msgid "Sequence"
+msgstr "Reeks"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_menu_main_category_color
+msgid "Set color for main category in megamenu"
+msgstr "Stel kleur voor hoofdcategorie in megamenu"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_menu_sub_category_color
+msgid "Set color for sab category in megamenu"
+msgstr "Set kleur voor categorie in megamenu sab"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_no_set_default_check
+msgid "Set default"
+msgstr "Standaard instellen"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_promo_snippet
+msgid "Shoes"
+msgstr "Schoenen"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_home_slider
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_single_banner_snippet
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "Shop now <i class=\"fa fa-angle-right\"/>"
+msgstr "Winkel nu <i class=\"fa fa-angle-right\"/>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_multi_cat_slider_view
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_pro_cat_slider_view
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_products_add_to_cart
+msgid "Shopping Cart"
+msgstr "Winkelmandje"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_multi_cat_slider_view
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_pro_cat_slider_view
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_products_add_to_cart
+msgid "Shopping-cart"
+msgstr "Winkelmandje"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_product_public_category_description
+msgid "Short description which will be visible below category slider."
+msgstr "Korte beschrijving die zichtbaar onder de categorie slider zal zijn"
+
+#. module: kingfisher_pro
+#: model:product.per.page,name:kingfisher_pro.record_no_of_product_per_page
+msgid "Show"
+msgstr "Tonen"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Sign up for our newsletter!"
+msgstr "Meld je aan voor onze nieuwsbrief!"
+
+#. module: kingfisher_pro
+#: model:ir.ui.menu,name:kingfisher_pro.menu_slider_config
+msgid "Slider Configuration"
+msgstr "Slider Configuration"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.multi_slider_form_view
+msgid "Slider configuration"
+msgstr "Slider configuration"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_config_settings_no_extra_options
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_no_extra_options
+msgid "Slider effects"
+msgstr "slider effecten"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_carousel_header_name
+msgid "Slider label"
+msgstr "Slider label"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config_name
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_name
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_name
+msgid "Slider name"
+msgstr "slider naam"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config_sliding_speed
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_sliding_speed
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_sliding_speed
+msgid "Slider sliding speed"
+msgstr "Slider glijsnelheid"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_multi_slider_config_name
+#: model:ir.model.fields,help:kingfisher_pro.field_product_category_slider_config_name
+msgid "Slider title to be displayed on website like Best products, Latest and etc..."
+msgstr "Slider titel moet worden weergegeven op de website , zoals Beste producten , nieuwste en etc ..."
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_blog_slider_config_name
+msgid "Slider title to be displayed on website like Our Blogs, Latest Blog Post and etc..."
+msgstr "Slider titel moet worden weergegeven op de website , zoals Onze Blogs, Laatste Blog Post en etc ..."
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_config_settings_no_extra_options
+#: model:ir.model.fields,help:kingfisher_pro.field_website_no_extra_options
+msgid "Slider with all options for next, previous, play, pause, fullscreen, hide/show thumbnail panel."
+msgstr "Slider met alle opties voor de volgende, vorige , afspelen, pauzeren, volledig scherm , verberg / toon thumbnail panel ."
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_blog_slider_config_sliding_speed
+#: model:ir.model.fields,help:kingfisher_pro.field_multi_slider_config_sliding_speed
+#: model:ir.model.fields,help:kingfisher_pro.field_product_category_slider_config_sliding_speed
+msgid "Sliding speed of a slider can be set from here and it will be in milliseconds."
+msgstr "Sliding snelheid van een slider kan worden ingesteld van hier en het zal in milliseconden ."
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_product_sorting
+msgid "Sort By"
+msgstr "Sorteer op"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_custom_filterz
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_product_sorting
+msgid "Sort By:"
+msgstr "Sorteer op:"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_sortby_sort_on
+msgid "Sort On"
+msgstr "Sorteren op"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_sequence
+msgid "Sort Order"
+msgstr "sorteervolgorde"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_promo_snippet
+msgid "Spacs"
+msgstr "Spacs"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_website_megamenu_submenu
+msgid "Still, No category assigned to this menu.!!!"
+msgstr "Toch Geen categorie toegewezen aan deze menu. !!!"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_sub_category_color
+msgid "Sub category color"
+msgstr "Subcategorie kleur"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Supply chain"
+msgstr "Bevoorradingsketen"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_style_tag_name
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_tags_name
+#: model:ir.model.fields,help:kingfisher_pro.field_biztech_product_tags_name
+msgid "Tag Name"
+msgstr "Tag Naam"
+
+#. module: kingfisher_pro
+#: sql_constraint:biztech.product.tags:0
+msgid "Tag name should be unique..!"
+msgstr "Tag naam moet uniek zijn ..!"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_custom_filterz
+msgid "Tag:"
+msgstr "Label:"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_template_product_style_tag_id
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_template_tag_ids
+msgid "Tags"
+msgstr "Labels"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_testimonials_slider
+msgid "Testimonials"
+msgstr "getuigenissen"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Text Messaging"
+msgstr "Sms'en"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Thanks"
+msgstr "Bedankt"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Thanks for your subscription!"
+msgstr "Bedankt voor uw aanmelding!"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.404_page_template
+msgid "This is not the webpage you are looking for"
+msgstr "Dit is niet de webpagina die u op zoek bent naar"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_testimonials_slider
+msgid "This theme is very easy to build and form the customer's standpoint it's very\n"
+"                                                    intuitive.\n"
+"                                                    Odoo provides essential platform for our project management.\n"
+"                                                    Things are better organized and more visible with it."
+msgstr "Dit thema is zeer eenvoudig op te bouwen en te vormen het standpunt van de klant is het heel\n"
+"                                                    intuïtief.\n"
+"                                                   ODOO biedt essentiële platform voor ons project management.\n"
+"                                                    Things are better organized and more visible with it."
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_config_settings_thumb_height
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_thumb_height
+msgid "Thumb height"
+msgstr "duim hoogte"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_config_settings_thumb_width
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_thumb_width
+msgid "Thumb width"
+msgstr "Thumb breedte"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_color_opt_thumbnail
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_config_settings_color_opt_thumbnail
+msgid "Thumbnail overlay effects"
+msgstr "Thumbnail overlay effecten"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_config_settings_thumbnail_panel_position
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_thumbnail_panel_position
+msgid "Thumbnails panel position"
+msgstr "Thumbnails paneel positie"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_name
+msgid "Title"
+msgstr "titel"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:41
+#, python-format
+msgid "Total Count"
+msgstr "Totaal"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:14
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:73
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:100
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_attach_type
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_sortby_sort_type
+#, python-format
+msgid "Type"
+msgstr "Soort"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_prod_cat_type
+msgid "Type of slider"
+msgstr "Type of slider"
+
+#. module: kingfisher_pro
+#: selection:biztech.product.images,attach_type:0
+msgid "Video"
+msgstr "Video"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_video_id
+msgid "Video ID"
+msgstr "Video ID"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_video_mp4
+msgid "Video MP4"
+msgstr "Video MP4"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_video_ogv
+msgid "Video OGV"
+msgstr "Video OGV"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_video_webm
+msgid "Video WEBM"
+msgstr "Video WEBM"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_video_type
+msgid "Video media player"
+msgstr "Video mediaspeler"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.hover_total
+msgid "View all"
+msgstr "Bekijk alles"
+
+#. module: kingfisher_pro
+#: selection:biztech.product.images,video_type:0
+msgid "Vimeo"
+msgstr "Vimeo"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_promo_snippet
+msgid "WOMEN'S GLASSES"
+msgstr "BRIL VAN VROUWEN"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_promo_snippet
+msgid "WOMEN'S JEWELLERY"
+msgstr "DAMES SIERADEN"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_customize_menu_colors
+msgid "Want to customize menu colors"
+msgstr "Wil je menu kleuren aan te passen"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_category_slider
+msgid "Want to display category slider"
+msgstr "Wilt u categorie schuifknop weer te geven"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_menu_icon
+msgid "Want to display menu icon"
+msgstr "Wil je menu pictogram weer"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_megamenu_bg
+msgid "Want to set megamenu background"
+msgstr "Wil je megamenu achtergrond in te stellen"
+
+#. module: kingfisher_pro
+#: code:addons/kingfisher_pro/models/products.py:143
+#: code:addons/kingfisher_pro/models/products.py:154
+#, python-format
+msgid "Warning! You cannot set 'zero' for product page."
+msgstr "Waarschuwing! Je kunt geen 'nul' voor de productpagina."
+
+#. module: kingfisher_pro
+#: code:addons/kingfisher_pro/models/products.py:176
+#, python-format
+msgid "Warning! You have to set atleast one default value."
+msgstr "Waarschuwing! Je moet minstens één standaard waarde in te stellen."
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_promo_snippet
+msgid "Watch"
+msgstr "Horloge"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_website
+msgid "Website"
+msgstr "Website"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_website_menu
+msgid "Website Menu"
+msgstr "Website menu"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_product_public_category
+msgid "Website Product Category"
+msgstr "Website productcategorie"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_website_config_settings_f_l_pager
+msgid "Website Product Pager Settings"
+msgstr "Website Product Pager Instellingen"
+
+#. module: kingfisher_pro
+#: model:ir.actions.act_window,name:kingfisher_pro.action_product_per_page
+#: model:ir.ui.view,arch_db:kingfisher_pro.form_view_product_per_page
+#: model:ir.ui.view,arch_db:kingfisher_pro.list_view_product_per_page
+msgid "Website Product Pagination"
+msgstr "Website Product Pagination"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_res_config_ppp
+msgid "Website Product Paging"
+msgstr "Website Product Paging"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_website_menu_inherit
+msgid "Website menu"
+msgstr "Website menu"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "Welcome,"
+msgstr "Welkom,"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_home_slider
+msgid "Western Wear"
+msgstr "Western Wear"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_config_settings_interval_play
+#: model:ir.model.fields,help:kingfisher_pro.field_website_interval_play
+msgid "With this field you can set the interval play time between two images."
+msgstr "Met dit veld kunt u de interval speeltijd tussen twee foto's in te stellen."
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_home_slider
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "Women Tops"
+msgstr "vrouwen Tops"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_testimonials_slider
+msgid "Write a quote here from one of your customers. Quotes are a\n"
+"                                                    geweldige manier om het vertrouwen in uw producten of diensten te bouwen.\n"
+"                                                    This theme is very easy to build and form the customer's standpoint it's very\n"
+"                                                    intuitive."
+msgstr "Schrijf een citaat hier van één van uw klanten. quotes zijn\n"
+"                                                    great way to build confidence in your products or services.\n"
+"                                                    Dit thema is zeer eenvoudig op te bouwen en te vormen het standpunt van de klant is het heel\n"
+"                                                    intuitive."
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.404_page_template
+msgid "Writizmo"
+msgstr "Writizmo"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_biztech_product_tags_sequence
+msgid "You can define sequence of tags you want to show tags"
+msgstr "U kunt de volgorde van de labels te definiëren die u wilt om labels te tonen"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "Your cart is empty!"
+msgstr "Je winkelmandje is leeg!"
+
+#. module: kingfisher_pro
+#: selection:biztech.product.images,video_type:0
+msgid "Youtube"
+msgstr "Youtube"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_biztech_product_sortby
+msgid "biztech.product.sortby"
+msgstr "biztech.product.sortby"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_biztech_product_style_tag
+msgid "biztech.product.style.tag"
+msgstr "biztech.product.style.tag"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_biztech_product_tags
+msgid "biztech.product.tags"
+msgstr "biztech.product.tags"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_blog_slider_config
+msgid "blog.slider.config"
+msgstr "blog.slider.config"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_blog_slider_view
+msgid "by"
+msgstr "door"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.hover_total
+msgid "details"
+msgstr "details"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.404_page_template
+msgid "home page"
+msgstr "home page"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_multi_slider_config
+msgid "multi.slider.config"
+msgstr "multi.slider.config"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_product_brands
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_product_brands_tree_view
+msgid "product.brands"
+msgstr "product.brands"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_product_category_slider_config
+msgid "product.category.slider.config"
+msgstr "product.category.slider.config"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_product_per_page
+msgid "product.per.page"
+msgstr "product.per.page"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_product_per_page_no
+msgid "product.per.page.no"
+msgstr "product.per.page.no"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_product_details
+msgid "review(s) | Add your review"
+msgstr "review (s ) | Voeg uw recensie"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_website_config_settings
+msgid "website.config.settings"
+msgstr "website.config.settings"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "your email..."
+msgstr "uw e-mail..."
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.footer_copyright
+msgid "© 2016 By <span>Kingfisher Pro Fashion.</span> All Rights Reserved."
+msgstr "© 2016 By <span>Kingfisher Pro Mode .</span> Alle rechten voorbehouden."
+
+
+
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_home_slider
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "WOMEN'S GLASSES"
+msgstr "WOMEN'S GLASSES"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_home_slider
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "WOMEN'S JEWELLARY"
+msgstr "WOMEN'S JE"
+
+
+
+

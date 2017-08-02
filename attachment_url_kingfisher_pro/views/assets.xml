@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="assets_backend" name="Assets Backend" inherit_id="web.assets_backend">
+            <xpath expr="//link[last()]" position="after">
+                <link rel="stylesheet" href="/attachment_url_kingfisher_pro/static/src/css/image_styles.css"/>
+            </xpath>
+        </template>
+    </data>
+</openerp>

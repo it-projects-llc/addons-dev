@@ -1,0 +1,2022 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* kingfisher_pro
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 9.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-06-13 09:13+0000\n"
+"PO-Revision-Date: 2016-06-13 09:13+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_website_menu_inherit
+msgid "#ccc"
+msgstr "#ccc"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_service_snippet
+msgid "100% MONEY BACK - 30 DAYS"
+msgstr "100％退款 - 30天"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_label_collection_1
+msgid "1st collection name"
+msgstr "第一個集合名稱"
+
+
+
+
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_collection_1_ids
+msgid "1st product collection"
+msgstr "第一個產品收集"
+
+#. module: kingfisher_pro
+#: selection:website.menu,megamenu_type:0
+msgid "2 Columns"
+msgstr "2列"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_single_banner_snippet
+msgid "2016"
+msgstr "2016年"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_label_collection_2
+msgid "2nd collection name"
+msgstr "第二個集合名稱"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_collection_2_ids
+msgid "2nd product collection"
+msgstr "第二個產品收集"
+
+#. module: kingfisher_pro
+#: selection:website.menu,megamenu_type:0
+msgid "3 Columns"
+msgstr "3列"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_label_collection_3
+msgid "3rd collection name"
+msgstr "第三集合名稱"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_collection_3_ids
+msgid "3rd product collection"
+msgstr "第3集產品"
+
+#. module: kingfisher_pro
+#: selection:website.menu,megamenu_type:0
+msgid "4 Columns"
+msgstr "4列"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.404_page_template
+msgid "404"
+msgstr "404"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_label_collection_4
+msgid "4th collection name"
+msgstr "第四集合名稱"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_collection_4_ids
+msgid "4th product collection"
+msgstr "第4集產品"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_label_collection_5
+msgid "5th collection name"
+msgstr "第五集合名稱"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_collection_5_ids
+msgid "5th product collection"
+msgstr "第5集產品"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_service_snippet
+msgid "<b>24/7 CUSTOMER SERVICE</b>"
+msgstr "<b>24/7客戶服務</b>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_service_snippet
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "<b>FREE SHIPPING WORLDWIDE</b>"
+msgstr "<b>全球免費送貨</b>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_service_snippet
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "<b>MONEY BACK GUARANTEE !</b>"
+msgstr "<b>退款保證！</b>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_product_details
+msgid "<i class=\"fa fa-shopping-cart\"/>Add to Cart"
+msgstr "<i class=\"fa fa-shopping-cart\"/>添加到購物車"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.hover_total
+msgid "<span class=\"col-xs-6 text-right h4\">Subtotal:</span>"
+msgstr "<span class=\"col-xs-6 text-right h4\">小計:</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "<span class=\"font-style1\" style=\"font-family: 'Open Sans', sans-serif;\">Open Sans </span>"
+msgstr "<span class=\"font-style1\" style=\"font-family: 'Open Sans', sans-serif;\">打開三世 </span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "<span class=\"font-style1\" style=\"font-family: 'Source Sans Pro', sans-serif;\">Source Sans Pro</span>"
+msgstr "<span class=\"font-style1\" style=\"font-family: 'Source Sans Pro', sans-serif;\">Source Sans Pro</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "<span class=\"font-style1\" style=\"font-family: 'Source Serif Pro', serif;\">Source Serif Pro</span>"
+msgstr "<span class=\"font-style1\" style=\"font-family: 'Source Serif Pro', serif;\">來源三世臨</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "<span class=\"font-style1\" style=\"font-family: 'Varela Round', sans-serif;\">Varela Round</span>"
+msgstr "<span class=\"font-style1\" style=\"font-family: 'Varela Round', sans-serif;\">瓦雷拉回合</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "<span class=\"font-style2\" style=\"font-family: 'Lato', sans-serif;\">Lato</span>"
+msgstr "<span class=\"font-style2\" style=\"font-family: 'Lato', sans-serif;\">側</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "<span class=\"font-style3\" style=\"font-family: 'Raleway', sans-serif;\">Raleway</span>"
+msgstr "<span class=\"font-style3\" style=\"font-family: 'Raleway', sans-serif;\">Raleway</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_promo_snippet
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "<span class=\"line1\">BIGGEST</span><br/>\n"
+"                                    <span class=\"line2\">SALE</span><br/>\n"
+"                                    <span class=\"line3\">50%</span>"
+msgstr "<span class=\"line1\">最大</span><br/>\n"
+"                                    <span class=\"line2\">銷售</span><br/>\n"
+"                                    <span class=\"line3\">50%</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_home_slider
+msgid "<span class=\"sr-only\">Next</span>"
+msgstr "<span class=\"sr-only\">下一個</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_home_slider
+msgid "<span class=\"sr-only\">Previous</span>"
+msgstr "<span class=\"sr-only\">以前</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_blog_slider_view
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_blog_custom_snippet
+msgid "<span>Blog post slider</span>"
+msgstr "<span>博客文章滑塊</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_multi_cat_custom_snippet
+msgid "<span>Multi Category Slider</span>"
+msgstr "<span>多類別滑塊</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_brand_slider_view
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_brand_custom_slider
+msgid "<span>Our Brands</span>"
+msgstr "<span>我們的品牌</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_product_category_slider
+msgid "<span>Product/Category Slider</span>"
+msgstr "<span>產品/類別滑塊</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_multi_cat_slider_view
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_pro_cat_slider_view
+msgid "<span>Trending</span>"
+msgstr "<span>趨勢</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.footer_copyright
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "About Us"
+msgstr "關於我們"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_tags_active
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config_active
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_active
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_active
+msgid "Active"
+msgstr "有效"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_biztech_product_images
+msgid "Add Multiple Image in Product"
+msgstr "添加多個圖片中的產品"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_template_multi_image
+msgid "Add Multiple Images?"
+msgstr "添加多張圖片？"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_template_is_flip_image
+msgid "Add flip image"
+msgstr "添加翻轉圖像"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_product_template_form_multiple_image
+msgid "Add flip image which will be visible on product hover in website"
+msgstr "加入這將是在網站上的產品懸停可見翻轉圖像"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.king_pro_products_item
+msgid "Add to cart"
+msgstr "添加到購物車"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "Add..."
+msgstr "加..."
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Affiliates"
+msgstr "關聯公司"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_sale_products
+msgid "All Products"
+msgstr "所有产品"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_alt
+msgid "Alt"
+msgstr "鍵"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:24
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:56
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:83
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:110
+#, python-format
+msgid "Apply"
+msgstr "應用"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "Aqua"
+msgstr "水族"
+
+#. module: kingfisher_pro
+#: selection:biztech.product.sortby,sort_type:0
+msgid "Ascending"
+msgstr "上升"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config_auto_rotate
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_auto_rotate
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_auto_rotate
+msgid "Auto Rotate Slider"
+msgstr "自動旋轉滑塊"
+
+#. module: kingfisher_pro
+#: selection:website,color_opt_thumbnail:0
+msgid "B/W"
+msgstr "黑/白"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "BOXED"
+msgstr "盒裝"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "Background Pattern"
+msgstr "背景圖案"
+
+#. module: kingfisher_pro
+#: selection:website.menu,megamenu_bg_img_color:0
+msgid "Background color"
+msgstr "背景顏色"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_megamenu_bg_color
+msgid "Background color for megamenu"
+msgstr "背景顏色為megamenu"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_menu_megamenu_bg_color
+msgid "Background color for megamenu, for setting background color you have to pass hexacode here."
+msgstr "對於megamenu背景顏色，設置背景顏色，你必須通過這裡hexacode 。"
+
+#. module: kingfisher_pro
+#: selection:website.menu,megamenu_bg_img_color:0
+msgid "Background image"
+msgstr "背景圖"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_megamenu_bg_image
+msgid "Background image for megamenu"
+msgstr "對於megamenu背景圖片"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_single_banner_snippet
+msgid "Bag"
+msgstr "袋"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/js/kingfisher_pro_editor.js:204
+#: model:ir.actions.act_window,name:kingfisher_pro.dynamic_blog_slider_action
+#: model:ir.ui.view,arch_db:kingfisher_pro.dynamic_blog_slider_form_view
+#: model:ir.ui.view,arch_db:kingfisher_pro.dynamic_blog_slider_list_view
+#, python-format
+msgid "Blog Post Slider"
+msgstr "博客文章滑塊"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:68
+#, python-format
+msgid "Blog Slider Configuration"
+msgstr "博客滑塊配置"
+
+#. module: kingfisher_pro
+#: model:ir.ui.menu,name:kingfisher_pro.dynamic_blog_slider_menu
+msgid "Blog Slider Configuraton"
+msgstr "博客滑塊Configuraton"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "Blue"
+msgstr "蓝色"
+
+#. module: kingfisher_pro
+#: selection:website,color_opt_thumbnail:0
+msgid "Blur"
+msgstr "模糊"
+
+#. module: kingfisher_pro
+#: selection:website,thumbnail_panel_position:0
+msgid "Bottom"
+msgstr "底部"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_template_product_brand_id
+#: model:ir.ui.view,arch_db:kingfisher_pro.inherited_product_template_form_brand_add
+#: model:ir.ui.view,arch_db:kingfisher_pro.inherited_view_product_template_search_brand
+msgid "Brand"
+msgstr "牌"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands_brand_cover
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_product_brands_form_view
+msgid "Brand Cover"
+msgstr "品牌封面"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands_brand_logo
+msgid "Brand Logo"
+msgstr "品牌標識"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands_name
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_product_brands_form_view
+msgid "Brand Name"
+msgstr "品牌"
+
+#. module: kingfisher_pro
+#: model:ir.actions.act_window,name:kingfisher_pro.action_open_brand_products
+msgid "Brand Products"
+msgstr "品牌產品"
+
+#. module: kingfisher_pro
+#: model:ir.actions.act_window,name:kingfisher_pro.action_product_brand
+#: model:ir.ui.view,arch_db:kingfisher_pro.inherit_product_search_view
+msgid "Brands"
+msgstr "品牌"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:36
+#, python-format
+msgid "Brands Slider Configuration"
+msgstr "品牌滑塊配置"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "Brown"
+msgstr "棕色"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_slider_layout
+msgid "By Price"
+msgstr "按價格"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_testimonials_slider
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "CEO, ABC company"
+msgstr "CEO ， ABC公司"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "CURRENCY"
+msgstr "貨幣"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:23
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:55
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:82
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:109
+#, python-format
+msgid "Cancel"
+msgstr "取消"
+
+#. module: kingfisher_pro
+#: selection:product.category.slider.config,prod_cat_type:0
+msgid "Category"
+msgstr "類別"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_category_slider_position
+msgid "Category Slider Position"
+msgstr "類別滑塊位置"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_change_thumbnail_size
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_config_settings_change_thumbnail_size
+msgid "Change thumbnail size"
+msgstr "更改縮略圖大小"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "Checkout"
+msgstr "查看"
+
+#. module: kingfisher_pro
+#: model:ir.actions.act_window,help:kingfisher_pro.dynamic_blog_slider_action
+#: model:ir.actions.act_window,help:kingfisher_pro.multi_slider_action
+#: model:ir.actions.act_window,help:kingfisher_pro.prod_cat_slider_action
+msgid "Click to define a new slider."
+msgstr "按此定義一個新的滑塊。"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.multi_slider_form_view
+msgid "Collection configuration"
+msgstr "收集配置"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_multi_slider_config_label_collection_1
+#: model:ir.model.fields,help:kingfisher_pro.field_multi_slider_config_label_collection_2
+#: model:ir.model.fields,help:kingfisher_pro.field_multi_slider_config_label_collection_3
+#: model:ir.model.fields,help:kingfisher_pro.field_multi_slider_config_label_collection_4
+#: model:ir.model.fields,help:kingfisher_pro.field_multi_slider_config_label_collection_5
+msgid "Collection label to be displayed in website like Men, Women, Kids, etc..."
+msgstr "要顯示在網站像男裝，女裝，童裝等收藏標籤..."
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config_collections_blog_post
+msgid "Collections of blog posts"
+msgstr "博客文章的集合"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_collections_category
+msgid "Collections of category"
+msgstr "類的集合"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_collections_product
+msgid "Collections of product"
+msgstr "產品的集合"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_style_tag_color
+msgid "Color"
+msgstr "顏色"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "Configure"
+msgstr "配置"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_res_config_ppp
+msgid "Configure website product pagination"
+msgstr "配置網站產品分頁"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Contact"
+msgstr "联系人"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.footer_copyright
+msgid "Contact Us"
+msgstr "联络我们"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config_no_of_counts
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_no_of_counts
+msgid "Counts"
+msgstr "計數"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_biztech_product_images_cover_image
+msgid "Cover Image will be show untill video is loaded."
+msgstr "封面圖片將顯示，直到視頻被加載。"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_cover_image
+msgid "Cover image"
+msgstr "封面圖片"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_create_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_sortby_create_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_style_tag_create_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_tags_create_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config_create_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_create_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands_create_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_create_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_create_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_no_create_uid
+msgid "Created by"
+msgstr "创建者"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_create_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_sortby_create_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_style_tag_create_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_tags_create_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config_create_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_create_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands_create_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_create_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_create_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_no_create_date
+msgid "Created on"
+msgstr "创建时间"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.footer_copyright
+msgid "Customer Service"
+msgstr "客戶服務"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "Customize your theme"
+msgstr "自定義主題"
+
+#. module: kingfisher_pro
+#: selection:website,color_opt_thumbnail:0
+msgid "Default"
+msgstr "默認"
+
+#. module: kingfisher_pro
+#: selection:biztech.product.sortby,sort_type:0
+msgid "Descending"
+msgstr "降序"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands_brand_description
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_public_category_description
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_product_details
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_product_brands_form_view
+msgid "Description"
+msgstr "说明"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_display_name
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_sortby_display_name
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_style_tag_display_name
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_tags_display_name
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config_display_name
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_display_name
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands_display_name
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_display_name
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_display_name
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_no_display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_display_menu_footer
+msgid "Display menu footer"
+msgstr "顯示菜單頁腳"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_config_settings_product_display_grid
+#: model:ir.model.fields,help:kingfisher_pro.field_website_product_display_grid
+msgid "Display no. of products per line in website product grid."
+msgstr "不顯示。每行的產品在網站上的產品網格."
+
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.multi_slider_list_view
+msgid "Dynamic Slider"
+msgstr "動態滑塊"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_config_settings_enable_first_last_pager
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_enable_first_last_pager
+msgid "Enable First and Last Pager"
+msgstr "啟用第一個和最後尋呼機"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_biztech_product_tags_active
+msgid "Enable or Disable tag from website"
+msgstr "啟用或禁用網站標籤"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_config_settings_enable_sort_by
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_enable_sort_by
+msgid "Enable product sorting option"
+msgstr "啟用產品排序選項"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_config_settings_enable_disable_text
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_enable_disable_text
+msgid "Enable the text panel"
+msgstr "啟用文本面板"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_product_template_is_flip_image
+msgid "Enable this checkbox for adding flip image on product website."
+msgstr "啟用此複選框為產品添加網站圖像翻轉。"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_config_settings_enable_first_last_pager
+#: model:ir.model.fields,help:kingfisher_pro.field_website_enable_first_last_pager
+msgid "Enable this checkbox to make 'First' and 'Last' button in pager on website."
+msgstr "選中該複選框，使“第一” ，並在網站上尋呼機“最後一個”按鈕。"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_config_settings_enable_disable_text
+#: model:ir.model.fields,help:kingfisher_pro.field_website_enable_disable_text
+msgid "Enable/Disable text which is visible on the image in multi image."
+msgstr "選中該複選框，使“第一” ，並在網站上尋呼機“最後一個”按鈕。"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:43
+#, python-format
+msgid "Enter Count"
+msgstr "進入計數"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:49
+#, python-format
+msgid "Enter Label (for e.g: Our Brands)"
+msgstr "輸入標籤（例如：我們的品牌）"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "FONTS COMBINATIONS"
+msgstr "FONTS組合的"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_service_snippet
+msgid "FREE SHIPPING WORLDWIDE"
+msgstr "全球免費送貨"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "FULL WIDTH"
+msgstr "全屏寬度"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.website_pager_addition
+msgid "First"
+msgstr "第一"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_template_flip_image
+msgid "Flip image"
+msgstr "翻轉圖像"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_product_template_flip_image
+msgid "Flip image will be shown on mouse hover in website on specific product."
+msgstr "翻轉圖像將在網站上的特定產品顯示鼠標懸停。"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_menu_footer
+msgid "Footer content"
+msgstr "頁腳內容"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_menu_menu_footer
+msgid "Footer name for megamenu"
+msgstr "對於megamenu頁腳名"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_menu_display_menu_footer
+msgid "For displaying footer in megamenu"
+msgstr "對於megamenu顯示頁腳"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_config_settings_enable_sort_by
+#: model:ir.model.fields,help:kingfisher_pro.field_website_enable_sort_by
+msgid "For enabling product sorting feature in website."
+msgstr "為使產品在網站排序功能"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Free Shipping"
+msgstr "免費送貨"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Gift Cards"
+msgstr "禮品卡"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "Golden"
+msgstr "金色的"
+
+#. module: kingfisher_pro
+#: selection:biztech.product.style.tag,color:0
+msgid "Green"
+msgstr "綠色"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_sale_products
+msgid "Grid View"
+msgstr "網格視圖"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_menu_carousel_header_name
+msgid "Header name for carousel slider in megamenu"
+msgstr "在megamenu旋轉木馬滑塊頭名"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Help"
+msgstr "帮助"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_product_details
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_sale_products
+msgid "Home"
+msgstr "首页"
+
+#. module: kingfisher_pro
+#: selection:biztech.product.images,video_type:0
+msgid "Html5 Video"
+msgstr "HTML5視頻"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_id
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_sortby_id
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_style_tag_id
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_tags_id
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config_id
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_id
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands_id
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_id
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_id
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_no_id
+msgid "ID"
+msgstr "ID"
+
+#. module: kingfisher_pro
+#: selection:biztech.product.images,attach_type:0
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_image
+msgid "Image"
+msgstr "图像"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_template_images
+msgid "Images"
+msgstr "圖片"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_public_category_include_in_megamenu
+#: model:ir.model.fields,help:kingfisher_pro.field_product_public_category_include_in_megamenu
+msgid "Include in mega menu"
+msgstr "包括大型菜單"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "International"
+msgstr "國際"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_is_megamenu
+msgid "Is megamenu...?"
+msgstr "Megamenu是...？"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_product_template_form_multiple_image
+msgid "It is required"
+msgstr "這是必須的"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_promo_snippet
+msgid "Jewellary"
+msgstr "Jewellary"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Jobs"
+msgstr "工作"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_testimonials_slider
+msgid "John Warner"
+msgstr "約翰·沃納"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "LANGUAGE"
+msgstr "語言"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "LAYOUT"
+msgstr "佈局"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:47
+#, python-format
+msgid "Label"
+msgstr "標籤"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_name
+msgid "Label Name"
+msgstr "標籤名稱"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.website_pager_addition
+msgid "Last"
+msgstr "標籤名稱"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images___last_update
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_sortby___last_update
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_style_tag___last_update
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_tags___last_update
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config___last_update
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config___last_update
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands___last_update
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config___last_update
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page___last_update
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_no___last_update
+msgid "Last Modified on"
+msgstr "最后修改日"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_write_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_sortby_write_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_style_tag_write_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_tags_write_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config_write_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_write_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands_write_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_write_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_no_write_uid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_write_uid
+msgid "Last Updated by"
+msgstr "最后更新人"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_write_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_sortby_write_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_style_tag_write_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_tags_write_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config_write_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_write_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands_write_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_write_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_no_write_date
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_write_date
+msgid "Last Updated on"
+msgstr "最后更新时间"
+
+#. module: kingfisher_pro
+#: selection:website,thumbnail_panel_position:0
+#: selection:website.menu,category_slider_position:0
+msgid "Left"
+msgstr "剩下"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Legal"
+msgstr "剩下"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_biztech_product_images_video_mp4
+msgid "Link for mp4 format video"
+msgstr "鏈接MP4格式視頻"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_biztech_product_images_video_ogv
+msgid "Link for ogv format video"
+msgstr "鏈接OGV格式視頻"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_biztech_product_images_video_webm
+msgid "Link for webm format video"
+msgstr "鏈接OGV格式視頻"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_sale_products
+msgid "List View"
+msgstr "列表顯示"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "Login"
+msgstr "登錄"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "Logout"
+msgstr "注销"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "MAIN COLOR"
+msgstr "主色"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_promo_snippet
+msgid "MEN'S SHOES"
+msgstr "男鞋"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_promo_snippet
+msgid "MEN'S WATCH"
+msgstr "男士腕錶"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_main_category_color
+msgid "Main category color"
+msgstr "主要類別顏色"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_public_category_menu_id
+msgid "Main menu"
+msgstr "主菜單"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Meet The Maker"
+msgstr "滿足製造者"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_megamenu_bg_img_color
+msgid "Megamenu background selection"
+msgstr "Megamenu背景選擇"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_megamenu_type
+msgid "Megamenu type"
+msgstr "兆豐菜單式"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_home_slider
+msgid "Men Blazers"
+msgstr "男子開拓者"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_menu_icon_image
+msgid "Menu Icon"
+msgstr "菜單圖標"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_menu_menu_icon_image
+msgid "Menu icon for your menu"
+msgstr "為您的菜單菜單圖標"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_blog_slider_option
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_brand_custom_slider_option
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_multi_cat_slider_option
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_product_category_slider_option
+msgid "Modify"
+msgstr "修改"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_more_view_exclude
+msgid "More View Exclude"
+msgstr "更多視圖中排除"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/js/kingfisher_pro_editor.js:279
+#, python-format
+msgid "Multi Category Slider"
+msgstr "多類別滑塊"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:95
+#, python-format
+msgid "Multi Product Slider Configuration"
+msgstr "多產品滑塊配置"
+
+#. module: kingfisher_pro
+#: model:ir.ui.menu,name:kingfisher_pro.multi_slider_menu
+msgid "Multi Product Slider Configuraton"
+msgstr "多產品滑塊Configuraton"
+
+#. module: kingfisher_pro
+#: model:ir.actions.act_window,name:kingfisher_pro.multi_slider_action
+#: model:ir.ui.view,arch_db:kingfisher_pro.multi_slider_form_view
+msgid "Multi Slider"
+msgstr "多滑塊"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_product_template_form_multiple_image
+msgid "Multiple Image"
+msgstr "多重圖像"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_website_config_settings_effects_inherit
+msgid "Multiple Product Image"
+msgstr "多個產品圖片"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "My account"
+msgstr "我的帳戶"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_sortby_name
+msgid "Name"
+msgstr "名称"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_biztech_product_sortby_name
+msgid "Name for sorting option"
+msgstr "名稱排序選項"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_home_slider
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "New Collection"
+msgstr "新系列"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_single_banner_snippet
+#: model:ir.ui.view,arch_db:website.website2_homepage
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "New collection"
+msgstr "新系列"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Newsletter!"
+msgstr "通訊！"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_blog_slider_config_no_of_counts
+msgid "No of blogs to be displayed in slider."
+msgstr "沒有博客要顯示在滑塊。"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_multi_slider_config_no_of_collection
+msgid "No of collections to be displayed on slider."
+msgstr "沒有收藏要在滑塊顯示。"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_no_ids
+msgid "No of product to display"
+msgstr "沒有產品的顯示"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_product_category_slider_config_no_of_counts
+msgid "No of products to be displayed in slider."
+msgstr "沒有的產品要顯示在滑塊。"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_no_of_collection
+msgid "No. of collections to show"
+msgstr "集合號，以顯示"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands_products_count
+msgid "Number of products"
+msgstr "產品數量"
+
+#. module: kingfisher_pro
+#: selection:biztech.product.style.tag,color:0
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "Orange"
+msgstr "橙子"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.biztech_form_view_for_product_sorting
+msgid "Order By"
+msgstr "Order By"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Order Status"
+msgstr "訂單狀態"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/js/kingfisher_pro_editor.js:130
+#, python-format
+msgid "Our Brands"
+msgstr "我們的品牌"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_theme_customize
+msgid "Pink"
+msgstr "粉"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_config_settings_interval_play
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_interval_play
+msgid "Play interval of slideshow"
+msgstr "播放幻燈片間隔"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.404_page_template
+msgid "Please try one of the following pages"
+msgstr "請嘗試以下頁面之一"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_product_tag
+msgid "Popular Tags"
+msgstr "熱門標籤"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_custom_filterz
+msgid "Price-Range:"
+msgstr "價格範圍："
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Privacy"
+msgstr "隐私"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.footer_copyright
+msgid "Privacy Policy"
+msgstr "隱私政策"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.hover_total
+msgid "Proceed to checkout"
+msgstr "進行結算"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_no_prod_page_id
+msgid "Prod page id"
+msgstr "正式版頁編號"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_product_tmpl_id
+#: selection:product.category.slider.config,prod_cat_type:0
+msgid "Product"
+msgstr "产品"
+
+#. module: kingfisher_pro
+#: model:ir.actions.act_window,name:kingfisher_pro.action_open_single_product_brand
+msgid "Product Brand"
+msgstr "產品品牌"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_brands_product_ids
+#: model:ir.ui.menu,name:kingfisher_pro.menu_product_brand
+#: model:ir.ui.view,arch_db:kingfisher_pro.product_brandz_search_view
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_product_brands_form_view
+msgid "Product Brands"
+msgstr "產品品牌"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_product_template_form_multiple_image
+msgid "Product Flip Image"
+msgstr "產品翻轉圖像"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_product_template_form_multiple_image
+msgid "Product Multiple Images"
+msgstr "產品多張圖片"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_product_details
+msgid "Product Name"
+msgstr "产品名称"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.form_view_product_per_page_no
+msgid "Product Per Page No"
+msgstr "產品每頁否"
+
+#. module: kingfisher_pro
+#: model:ir.actions.act_window,name:kingfisher_pro.action_for_product_sorting
+#: model:ir.ui.menu,name:kingfisher_pro.sub_menu_sort_by
+msgid "Product Sorting"
+msgstr "產品排序"
+
+#. module: kingfisher_pro
+#: model:ir.ui.menu,name:kingfisher_pro.biztech_product_style_tag
+msgid "Product Style Tag"
+msgstr "產品風格標籤"
+
+#. module: kingfisher_pro
+#: model:ir.actions.act_window,name:kingfisher_pro.action_for_biztech_product_style_tag
+msgid "Product Style Tags"
+msgstr "產品風格標籤"
+
+#. module: kingfisher_pro
+#: model:ir.actions.act_window,name:kingfisher_pro.action_for_biztech_product_tags
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_style_tag_product_ids
+#: model:ir.ui.menu,name:kingfisher_pro.biztech_product_tags
+msgid "Product Tags"
+msgstr "商品標籤"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_product_template
+msgid "Product Template"
+msgstr "产品模板"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_product_details
+msgid "Product not available"
+msgstr "产品无效！"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_config_settings_product_display_grid
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_product_display_grid
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_website_config_settings_effects_inherit
+msgid "Product per grid"
+msgstr "每格產品"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_no_name
+msgid "Product per page"
+msgstr "每頁產品"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/js/kingfisher_pro_editor.js:65
+#: model:ir.actions.act_window,name:kingfisher_pro.prod_cat_slider_action
+#: model:ir.ui.view,arch_db:kingfisher_pro.prod_cat_slider_form_view
+#: model:ir.ui.view,arch_db:kingfisher_pro.prod_cat_slider_list_view
+#, python-format
+msgid "Product/Category Slider"
+msgstr "產品/類別滑塊"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:9
+#, python-format
+msgid "Product/Category Slider Configuration"
+msgstr "產品/類別滑塊配置"
+
+#. module: kingfisher_pro
+#: model:ir.ui.menu,name:kingfisher_pro.prod_cat_slider_menu
+msgid "Product/Category Slider Configuraton"
+msgstr "產品/類別滑塊配置"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_tags_product_ids
+#: model:ir.ui.view,arch_db:kingfisher_pro.form_view_for_biztech_product_tags
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_product_details
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_sale_products
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_product_brands_form_view
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_product_brands_kanban_view
+msgid "Products"
+msgstr "产品"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "Recently added item(s)"
+msgstr "最近添加的項目（S ）"
+
+#. module: kingfisher_pro
+#: selection:biztech.product.style.tag,color:0
+msgid "Red"
+msgstr "紅"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "Register"
+msgstr "寄存器"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Returns &amp; Exchanges"
+msgstr "退貨和放大器;交易所"
+
+#. module: kingfisher_pro
+#: selection:website,thumbnail_panel_position:0
+#: selection:website.menu,category_slider_position:0
+msgid "Right"
+msgstr "對"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_service_snippet
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "SERVICE SUPPORT 24/7"
+msgstr "服務支持24/7"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_promo_snippet
+msgid "SHOP NOW \n"
+"                                        <i class=\"fa fa-angle-right\"/>"
+msgstr "現在去購物 \n"
+"                                        <i class=\"fa fa-angle-right\"/>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_promo_snippet
+msgid "SHOP NOW <i class=\"fa fa-angle-right\"/>"
+msgstr "現在去購物 <i class=\"fa fa-angle-right\"/>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "SUBSCRIBE NOW <i class=\"fa fa-angle-right\"/>"
+msgstr "現在訂閱 <i class=\"fa fa-angle-right\"/>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_home_slider
+msgid "Save <span>20%</span>"
+msgstr "保存 <span>20%</span>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "Search"
+msgstr "搜索"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "Search..."
+msgstr "搜索..."
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Security"
+msgstr "安全"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_product_template_product_brand_id
+msgid "Select a brand for this product"
+msgstr "選擇一個品牌本產品"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_product_template_product_style_tag_id
+msgid "Select a tag for this product"
+msgstr "選擇一個標籤說明此產品"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_biztech_product_sortby_sort_on
+msgid "Select field on which you want to apply sorting"
+msgstr "要在其上應用排序選擇字段"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_product_category_slider_config_prod_cat_type
+msgid "Select product or category for whom you want to show a slider."
+msgstr "選擇產品或為其要顯示一個滑塊類別。"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_config_settings_thumbnail_panel_position
+#: model:ir.model.fields,help:kingfisher_pro.field_website_thumbnail_panel_position
+msgid "Select the position where you want to display the thumbnail panel in multi image."
+msgstr "選擇您要顯示在多圖像縮略圖面板的位置。"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_custom_filterz
+msgid "Selected Filters"
+msgstr "選定的過濾器"
+
+#. module: kingfisher_pro
+#: selection:website,color_opt_thumbnail:0
+msgid "Sepia"
+msgstr "烏賊"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_tags_sequence
+#: model:ir.ui.view,arch_db:kingfisher_pro.form_view_for_biztech_product_tags
+#: model:ir.ui.view,arch_db:kingfisher_pro.list_view_for_biztech_product_tags
+msgid "Sequence"
+msgstr "序号"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_menu_main_category_color
+msgid "Set color for main category in megamenu"
+msgstr "設置顏色為megamenu主要類別"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_menu_sub_category_color
+msgid "Set color for sab category in megamenu"
+msgstr "設置顏色為megamenu主要類別"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_per_page_no_set_default_check
+msgid "Set default"
+msgstr "默認設置"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_promo_snippet
+msgid "Shoes"
+msgstr "鞋"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_home_slider
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_single_banner_snippet
+msgid "Shop now <i class=\"fa fa-angle-right\"/>"
+msgstr "現在去購物 <i class=\"fa fa-angle-right\"/>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_multi_cat_slider_view
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_pro_cat_slider_view
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_products_add_to_cart
+msgid "Shopping Cart"
+msgstr "购物车"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_multi_cat_slider_view
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_pro_cat_slider_view
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_products_add_to_cart
+msgid "Shopping-cart"
+msgstr "购物车"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_product_public_category_description
+msgid "Short description which will be visible below category slider."
+msgstr "簡短描述下面將類別滑塊可見。"
+
+#. module: kingfisher_pro
+#: model:product.per.page,name:kingfisher_pro.record_no_of_product_per_page
+msgid "Show"
+msgstr "顯示"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Sign up for our newsletter!"
+msgstr "註冊我們的通訊！"
+
+#. module: kingfisher_pro
+#: model:ir.ui.menu,name:kingfisher_pro.menu_slider_config
+msgid "Slider Configuration"
+msgstr "滑塊配置"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.multi_slider_form_view
+msgid "Slider configuration"
+msgstr "滑塊配置"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_config_settings_no_extra_options
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_no_extra_options
+msgid "Slider effects"
+msgstr "滑塊配置"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_carousel_header_name
+msgid "Slider label"
+msgstr "滑塊配置"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config_name
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_name
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_name
+msgid "Slider name"
+msgstr "滑塊名"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_blog_slider_config_sliding_speed
+#: model:ir.model.fields,field_description:kingfisher_pro.field_multi_slider_config_sliding_speed
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_sliding_speed
+msgid "Slider sliding speed"
+msgstr "滑塊滑動速度"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_multi_slider_config_name
+#: model:ir.model.fields,help:kingfisher_pro.field_product_category_slider_config_name
+msgid "Slider title to be displayed on website like Best products, Latest and etc..."
+msgstr "要顯示在網站標題滑塊像最好的產品，最新的等.."
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_blog_slider_config_name
+msgid "Slider title to be displayed on website like Our Blogs, Latest Blog Post and etc..."
+msgstr "要顯示在網站像我們的博客，最新的博客文章等滑塊標題..."
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_config_settings_no_extra_options
+#: model:ir.model.fields,help:kingfisher_pro.field_website_no_extra_options
+msgid "Slider with all options for next, previous, play, pause, fullscreen, hide/show thumbnail panel."
+msgstr "滑蓋與下一個，上，播放，暫停，全屏的所有選項，隱藏/顯示縮略圖面板。"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_blog_slider_config_sliding_speed
+#: model:ir.model.fields,help:kingfisher_pro.field_multi_slider_config_sliding_speed
+#: model:ir.model.fields,help:kingfisher_pro.field_product_category_slider_config_sliding_speed
+msgid "Sliding speed of a slider can be set from here and it will be in milliseconds."
+msgstr "滑塊的滑動速度可以從這裡進行設置，這將是毫秒。"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_product_sorting
+msgid "Sort By"
+msgstr "排序方式"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_custom_filterz
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_product_sorting
+msgid "Sort By:"
+msgstr "排序方式:"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_sortby_sort_on
+msgid "Sort On"
+msgstr "排序"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_sequence
+msgid "Sort Order"
+msgstr "排序"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_promo_snippet
+msgid "Spacs"
+msgstr "特別併購上市"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_website_megamenu_submenu
+msgid "Still, No category assigned to this menu.!!!"
+msgstr "儘管如此，沒有類別分配給該菜單。 !!!"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_sub_category_color
+msgid "Sub category color"
+msgstr "子類別顏色"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Supply chain"
+msgstr "供應鏈"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_style_tag_name
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_tags_name
+#: model:ir.model.fields,help:kingfisher_pro.field_biztech_product_tags_name
+msgid "Tag Name"
+msgstr "標籤名稱"
+
+#. module: kingfisher_pro
+#: sql_constraint:biztech.product.tags:0
+msgid "Tag name should be unique..!"
+msgstr "標籤名稱應該是唯一的..！"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_custom_filterz
+msgid "Tag:"
+msgstr "標籤："
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_template_product_style_tag_id
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_template_tag_ids
+msgid "Tags"
+msgstr "标签"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_testimonials_slider
+msgid "Testimonials"
+msgstr "褒獎"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Text Messaging"
+msgstr "短信"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Thanks"
+msgstr "谢谢"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "Thanks for your subscription!"
+msgstr "感谢您的订阅!"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.404_page_template
+msgid "This is not the webpage you are looking for"
+msgstr "這是不是你要找的網頁"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_testimonials_slider
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "This theme is very easy to build and form the customer's standpoint it's very\n"
+"                                                    intuitive.\n"
+"                                                    Odoo provides essential platform for our project management.\n"
+"                                                    Things are better organized and more visible with it."
+msgstr "這個主題是很容易建立，形成了客戶的角度來看這是非常\n"
+"                                                    直觀。\n"
+"                                                    Odoo為我們項目管理的基本平台。\n"
+"                                                    事情是更好的組織，並用它更加明顯。"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_config_settings_thumb_height
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_thumb_height
+msgid "Thumb height"
+msgstr "拇指高度"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_config_settings_thumb_width
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_thumb_width
+msgid "Thumb width"
+msgstr "拇指寬"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_color_opt_thumbnail
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_config_settings_color_opt_thumbnail
+msgid "Thumbnail overlay effects"
+msgstr "縮略圖疊加效應"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_config_settings_thumbnail_panel_position
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_thumbnail_panel_position
+msgid "Thumbnails panel position"
+msgstr "縮略圖面板位置"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_name
+msgid "Title"
+msgstr "称谓"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:41
+#, python-format
+msgid "Total Count"
+msgstr "總計數"
+
+#. module: kingfisher_pro
+#. openerp-web
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:14
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:73
+#: code:addons/kingfisher_pro/static/src/xml/kingfisher_pro.xml:100
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_attach_type
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_sortby_sort_type
+#, python-format
+msgid "Type"
+msgstr "类型"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_product_category_slider_config_prod_cat_type
+msgid "Type of slider"
+msgstr "滑塊類型"
+
+#. module: kingfisher_pro
+#: selection:biztech.product.images,attach_type:0
+msgid "Video"
+msgstr "視頻"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_video_id
+msgid "Video ID"
+msgstr "視頻 ID"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_video_mp4
+msgid "Video MP4"
+msgstr "視頻 MP4"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_video_ogv
+msgid "Video OGV"
+msgstr "視頻OGV"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_video_webm
+msgid "Video WEBM"
+msgstr "視頻WEBM"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_biztech_product_images_video_type
+msgid "Video media player"
+msgstr "視頻媒體播放器"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.hover_total
+msgid "View all"
+msgstr "查看全部"
+
+#. module: kingfisher_pro
+#: selection:biztech.product.images,video_type:0
+msgid "Vimeo"
+msgstr "Vimeo的"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_promo_snippet
+msgid "WOMEN'S GLASSES"
+msgstr "婦女的眼鏡"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_promo_snippet
+msgid "WOMEN'S JEWELLERY"
+msgstr "女士珠寶首飾"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_customize_menu_colors
+msgid "Want to customize menu colors"
+msgstr "想要自定義菜單顏色"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_category_slider
+msgid "Want to display category slider"
+msgstr "要顯示類別滑塊"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_menu_icon
+msgid "Want to display menu icon"
+msgstr "要顯示菜單圖標"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,field_description:kingfisher_pro.field_website_menu_megamenu_bg
+msgid "Want to set megamenu background"
+msgstr "要設置megamenu背景"
+
+#. module: kingfisher_pro
+#: code:addons/kingfisher_pro/models/products.py:143
+#: code:addons/kingfisher_pro/models/products.py:154
+#, python-format
+msgid "Warning! You cannot set 'zero' for product page."
+msgstr "警告！不能設置“零”的產品頁面。"
+
+#. module: kingfisher_pro
+#: code:addons/kingfisher_pro/models/products.py:176
+#, python-format
+msgid "Warning! You have to set atleast one default value."
+msgstr "警告！你必須設置用於至少一個默認值。"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_promo_snippet
+msgid "Watch"
+msgstr "看"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_website
+msgid "Website"
+msgstr "网站"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_website_menu
+msgid "Website Menu"
+msgstr "网站菜单"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_product_public_category
+msgid "Website Product Category"
+msgstr "网站产品目录"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_website_config_settings_f_l_pager
+msgid "Website Product Pager Settings"
+msgstr "網站產品尋呼機設置"
+
+#. module: kingfisher_pro
+#: model:ir.actions.act_window,name:kingfisher_pro.action_product_per_page
+#: model:ir.ui.view,arch_db:kingfisher_pro.form_view_product_per_page
+#: model:ir.ui.view,arch_db:kingfisher_pro.list_view_product_per_page
+msgid "Website Product Pagination"
+msgstr "網站產品分頁"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_res_config_ppp
+msgid "Website Product Paging"
+msgstr "網站產品分頁"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_website_menu_inherit
+msgid "Website menu"
+msgstr "网站菜单"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "Welcome,"
+msgstr "歡迎,"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_home_slider
+msgid "Western Wear"
+msgstr "磨西"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_website_config_settings_interval_play
+#: model:ir.model.fields,help:kingfisher_pro.field_website_interval_play
+msgid "With this field you can set the interval play time between two images."
+msgstr "有了這個字段，你可以設置兩個圖像之間的間隔播放時間。"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_home_slider
+msgid "Women Tops"
+msgstr "女裝上衣"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_testimonials_slider
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "Write a quote here from one of your customers. Quotes are a\n"
+"                                                    great way to build confidence in your products or services.\n"
+"                                                    This theme is very easy to build and form the customer's standpoint it's very\n"
+"                                                    intuitive."
+msgstr "寫從你的一個客戶在這裡的報價。行情是\n"
+"                                                    偉大的方式來建立你的產品或服務的信心。\n"
+"                                                    這個主題是很容易建立，形成了客戶的角度來看這是非常\n"
+"                                                   直觀。"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.404_page_template
+msgid "Writizmo"
+msgstr "Writizmo"
+
+#. module: kingfisher_pro
+#: model:ir.model.fields,help:kingfisher_pro.field_biztech_product_tags_sequence
+msgid "You can define sequence of tags you want to show tags"
+msgstr "您可以定義的標籤序列要顯示的標籤"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_header_layout
+msgid "Your cart is empty!"
+msgstr "您的购物车是空的！"
+
+#. module: kingfisher_pro
+#: selection:biztech.product.images,video_type:0
+msgid "Youtube"
+msgstr "的Youtube"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_biztech_product_sortby
+msgid "biztech.product.sortby"
+msgstr "biztech.product.sortby"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_biztech_product_style_tag
+msgid "biztech.product.style.tag"
+msgstr "biztech.product.style.tag"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_biztech_product_tags
+msgid "biztech.product.tags"
+msgstr "biztech.product.tags"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_blog_slider_config
+msgid "blog.slider.config"
+msgstr "blog.slider.config"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_blog_slider_view
+msgid "by"
+msgstr "作者"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.hover_total
+msgid "details"
+msgstr "細節"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.404_page_template
+msgid "home page"
+msgstr "主頁"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_multi_slider_config
+msgid "multi.slider.config"
+msgstr "multi.slider.config"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_product_brands
+#: model:ir.ui.view,arch_db:kingfisher_pro.view_product_brands_tree_view
+msgid "product.brands"
+msgstr "product.brands"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_product_category_slider_config
+msgid "product.category.slider.config"
+msgstr "product.category.slider.config"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_product_per_page
+msgid "product.per.page"
+msgstr "product.per.page"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_product_per_page_no
+msgid "product.per.page.no"
+msgstr "product.per.page.no"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_product_details
+msgid "review(s) | Add your review"
+msgstr "review(s) | Add your review"
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.model_website_config_settings
+msgid "website.config.settings"
+msgstr "website.config.settings"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.kingfisher_pro_footer_customize
+msgid "your email..."
+msgstr "你的电子邮件地址..."
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.footer_copyright
+msgid "© 2016 By <span>Kingfisher Pro Fashion.</span> All Rights Reserved."
+msgstr "© 2016 By <span>Kingfisher Pro Fashion.</span> All Rights Reserved."
+
+
+
+#. module: kingfisher_pro
+#: model:ir.model,name:kingfisher_pro.homepage_body
+msgid "New collection"
+msgstr "新系列"
+
+
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "SHOP NOW <i class=\"fa fa-angle-right\"/>"
+msgstr "現在去購物 <i class=\"fa fa-angle-right\"/>"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "MEN'S SHOES"
+msgstr "男鞋"
+
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "Testimonials"
+msgstr "褒獎"
+
+
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "WOMEN'S JEWELLARY"
+msgstr "男鞋JEWELLARY"
+
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "WOMEN'S GLASSES"
+msgstr "婦女的眼鏡"
+
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "MEN'S WATCH"
+msgstr "男鞋"
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_single_banner_snippet
+#: model:ir.ui.view,arch_db:kingfisher_pro.homepage_body
+msgid "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse\n"
+"                                <br/>\n"
+"                                molestie consequat ，韋爾ILLUM dolore歐盟feugiat法無facilisis在維羅\n"
+"                                <br/>\n"
+"                                eros et accumsan et iusto odio dignissim qui blandit praesent luptatum\n"
+"                                <br/>\n"
+"                                zzril delenit augue duis dolore te feugait nulla facilisi."
+msgstr "DUIS autem VEL EUM存有悲在hendrerit在vulputate velit埃塞\n"
+"                                <br/>\n"
+"                                nonumy奧迪奧dignissim魁blandit愛神等accumsan等二人胡斯托\n"
+"                                <br/>\n"
+"                                nonumy奧迪奧dignissim魁blandit愛神等accumsan等二人胡斯托\n"
+"                                <br/>\n"
+"                                zzril delenit augue duis dolore te feugait nulla facilisi."
+
+
+
+
+#. module: kingfisher_pro
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_home_slider
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_single_banner_snippet
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_single_banner_snippet
+#: model:ir.ui.view,arch_db:kingfisher_pro.s_kingfisher_pro_promo_snippet
+
+msgid "SHOP NOW <i class=\"fa fa-angle-right\"/>"
+msgstr "現在去購物 <i class=\"fa fa-angle-right\"/>"
+

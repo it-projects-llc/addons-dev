@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="record_no_of_product_per_page_no_10" model="product.per.page.no">
+            <field name="name">9</field>
+        </record>
+
+        <record id="record_no_of_product_per_page_no_20" model="product.per.page.no">
+            <field name="name">18</field>
+            <field name="set_default_check">True</field>
+        </record>
+
+        <record id="record_no_of_product_per_page_no_30" model="product.per.page.no">
+            <field name="name">27</field>
+        </record>
+
+        <record id="record_no_of_product_per_page_no_40" model="product.per.page.no">
+            <field name="name">36</field>
+        </record>
+
+        <record id="record_no_of_product_per_page_no_50" model="product.per.page.no">
+            <field name="name">45</field>
+        </record>
+
+        <record id="record_no_of_product_per_page_no_100" model="product.per.page.no">
+            <field name="name">90</field>
+        </record>
+
+        <record id="record_no_of_product_per_page" model="product.per.page" >
+            <field name="name">Show</field>
+            <field name="no_ids" eval="[(6, 0, [ref('record_no_of_product_per_page_no_10'),
+                                               ref('record_no_of_product_per_page_no_20'),
+                                               ref('record_no_of_product_per_page_no_30'),
+                                               ref('record_no_of_product_per_page_no_40'),
+                                               ref('record_no_of_product_per_page_no_50'),
+                                               ref('record_no_of_product_per_page_no_100')])]"/>
+        </record>
+
+    </data>
+</openerp>

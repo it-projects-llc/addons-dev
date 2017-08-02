@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="kingfisher_pro.king_pro_dynamic_product_category_slider">
+        <div aria-hidden="true" aria-labelledby="myModalLabel" class="modal" contenteditable="False" role="dialog" style="z-index:2001" tabindex="1">
+            <div class="modal-dialog">
+                <div class="modal-content" id="s_media_block_modal">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Product/Category Slider Configuration</h4>
+                    </div>
+                    <div class="modal-body" contenteditable="false">
+                        <form class="form-horizontal container-fluid" role="form">
+                            <div class="col-sm-12 form-group">
+                                <label for="slider_type" class="col-sm-3 control-label">Type</label>
+                                <div class="col-sm-7">
+                                    <select id="slider_type" class="form-control" name="slider_type">
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal" id="cancel">Cancel</button>
+                        <button class="btn btn-danger" data-dismiss="modal" id="pro_cat_sub_data">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="kingfisher_pro.king_pro_brands_slider_block">
+        <div aria-hidden="true" aria-labelledby="myModalLabel" class="modal" contenteditable="False" role="dialog" style="z-index:2001" tabindex="1">
+            <div class="modal-dialog">
+                <div class="modal-content" id="s_media_block_modal">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Brands Slider Configuration</h4>
+                    </div>
+                    <div class="modal-body" contenteditable="false">
+                        <form class="form-horizontal container-fluid" role="form">
+                            <div class="col-sm-12 form-group">
+                                <label for="brand-count" class="col-sm-3 control-label">Total Count</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" id="brand-count" placeholder="Enter Count" />
+                                </div>
+                            </div>
+                            <div class="col-sm-12 form-group">
+                                <label class="col-sm-3 control-label" for="product-label">Label</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" required="required" id="product-label" placeholder="Enter Label (for e.g: Our Brands)" value="Our Brands" type="text"/>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal" id="cancel">Cancel</button>
+                        <button class="btn btn-danger" data-dismiss="modal" id="brand_sub_data" type="submit">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="kingfisher_pro.king_pro_blog_slider_block">
+        <div aria-hidden="true" aria-labelledby="myModalLabel" class="modal" contenteditable="False" role="dialog" style="z-index:2001" tabindex="1">
+            <div class="modal-dialog">
+                <div class="modal-content" id="s_media_block_modal">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Blog Slider Configuration</h4>
+                    </div>
+                    <div class="modal-body" contenteditable="false">
+                        <form class="form-horizontal container-fluid" role="form">
+                            <div class="col-sm-12 form-group">
+                                <label for="blog_slider_type" class="col-sm-3 control-label">Type</label>
+                                <div class="col-sm-7">
+                                    <select id="blog_slider_type" class="form-control" name="blog_slider_type">
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal" id="cancel">Cancel</button>
+                        <button class="btn btn-danger" data-dismiss="modal" id="blog_sub_data">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="kingfisher_pro.multi_product_custom_slider_block">
+        <div aria-hidden="true" aria-labelledby="myModalLabel" class="modal" contenteditable="False" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content" id="s_media_block_modal">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Multi Product Slider Configuration</h4>
+                    </div>
+                    <div class="modal-body" contenteditable="false">
+                        <form class="form-horizontal container-fluid" role="form">
+                            <div class="col-sm-12 form-group">
+                                <label for="slider_type" class="col-sm-3 control-label">Type</label>
+                                <div class="col-sm-9">
+                                    <select id="slider_type" class="form-control" name="slider_type">
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal" id="cancel">Cancel</button>
+                        <button class="btn btn-danger" data-dismiss="modal" id="snippnet_submit">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

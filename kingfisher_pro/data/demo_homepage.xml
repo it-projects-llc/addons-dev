@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="1">
+
+    <!-- Home Page -->
+    <template id="homepage_body" inherit_id="website.homepage">
+        <xpath expr="//div" position="inside">
+            <div class="oe_structure">
+            <!-- Home slider -->
+                <section class="theme-home-slider oe_snippet_body">
+                    <div id="myCarousel" class="carousel slide theme-home-slider s_kingfisher_pro_home_slider" data-interval="10000" data-ride="carousel">
+                        <!-- Indicators -->
+                        <ol class="carousel-indicators">
+                            <li data-slide-to="0" data-target="#myCarousel" class="active" />
+                            <li data-slide-to="1" data-target="#myCarousel"/>
+                        </ol>
+                        <!-- Wrapper for slides -->
+                        <div class="carousel-inner">
+                            <div class="item item1 active">
+                                <div class="container">
+                                    <div class="row content">
+                                        <blockquote class="col-md-6 col-sm-6 col-xs-6">
+                                            <p>New Collection</p>
+                                            <h2>Men Blazers</h2>
+                                            <h5>Save <span>20%</span></h5>
+                                            <div class="btn-box">
+                                                <a href="#">Shop now <i class="fa fa-angle-right"/></a>
+                                            </div>
+                                        </blockquote>
+                                        <div class="col-md-6 col-sm-6 col-xs-6">
+                                            <img src="/kingfisher_pro/static/src/img/men-blazer.png"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item item2">
+                                <div class="container">
+                                    <div class="row content">
+                                        <blockquote class="pull-right col-md-6 col-sm-6 sol-xs-6">
+                                            <p>Western Wear</p>
+                                            <h2>Women Tops</h2>
+                                            <h5>Save <span>20%</span></h5>
+                                            <div class="btn-box">
+                                                <a href="#">Shop now <i class="fa fa-angle-right"/></a>
+                                            </div>
+                                        </blockquote>
+                                        <div class="col-md-6 col-sm-6 col-xs-6">
+                                                <img src="/kingfisher_pro/static/src/img/women-top.png"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Controls -->
+                        <a class="left carousel-control" data-target="#myCarousel" data-slide="prev" role="button">
+                            <span aria-hidden="true" class="previous-icon">
+                                <img src="/kingfisher_pro/static/src/img/prev-slide.png"/>
+                            </span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="right carousel-control" data-slide="next" data-target="#myCarousel" role="button">
+                            <span aria-hidden="true" class="next-icon">
+                                <img src="/kingfisher_pro/static/src/img/next-slide.png"/>
+                            </span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </section>
+
+                <!-- Promo snippet -->
+                <section class="ads-section oe_snippet_body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12 text-center">
+                                <section class="adsb-inner adsb-inner1 small-banners">
+                                    <div class="inner-content">
+                                        <h5>MEN'S SHOES</h5>
+                                        <section class="image-section">
+                                            <img alt="Shoes" class="img-responsive" src="/kingfisher_pro/static/src/img/snippet/shoes.png" title="Shoes"/>
+                                        </section>
+                                        <div class="btn-box">
+                                            <button>SHOP NOW 
+                                                <i class="fa fa-angle-right"/></button>
+                                        </div>
+                                    </div>
+                                    <a href="#">
+                                        <span class="dark-div">
+                                            <span class="inner-div"/>
+                                        </span>
+                                    </a>
+                                </section>
+                                <section class="adsb-inner adsb-inner4 small-banners">
+                                    <div class="inner-content">
+                                        <h5>MEN'S WATCH</h5>
+                                        <section class="image-section">
+                                            <img alt="Watch" class="img-responsive" src="/kingfisher_pro/static/src/img/snippet/watch.png" title="Watch"/>
+                                        </section>
+                                        <div class="btn-box">
+                                            <button>SHOP NOW 
+                                                <i class="fa fa-angle-right"/></button>
+                                        </div>
+                                    </div>
+                                    <a href="#">
+                                        <span class="dark-div">
+                                            <span class="inner-div"/>
+                                        </span>
+                                    </a>
+                                </section>
+                            </div>
+                            <div class="col-lg-6 col-md-4 col-sm-4 col-xs-12">
+                                <section class="adsb-inner adsb-inner2 middle-banner" style="background:rgba(0,0,0,0) url(/kingfisher_pro/static/src/img/snippet/middle-box-bg.png)no-repeat; background-size:cover">
+                                    <div class="middle-content">
+                                        <a href="#">
+                                            <span class="line1">BIGGEST</span><br/>
+                                            <span class="line2">SALE</span><br/>
+                                            <span class="line3">50%</span>
+                                        </a>
+                                    </div>
+                                </section>
+                            </div>
+                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                                <section class="adsb-inner adsb-inner3 small-banners">
+                                    <div class="inner-content">
+                                        <h5>WOMEN'S GLASSES</h5>
+                                        <section class="image-section">
+                                            <img alt="Spacs" class="img-responsive" src="/kingfisher_pro/static/src/img/snippet/spacs.png" title="Spacs"/>
+                                        </section>
+                                        <div class="btn-box">
+                                            <button>SHOP NOW <i class="fa fa-angle-right"/></button>
+                                        </div>
+                                    </div>
+                                   <a href="#">
+                                        <span class="dark-div">
+                                            <span class="inner-div"/>
+                                        </span>
+                                    </a>
+                                </section>
+                                <section class="adsb-inner adsb-inner3 small-banners">
+                                    <div class="inner-content">
+                                        <h5>WOMEN'S JEWELLARY</h5>
+                                        <section class="image-section">
+                                            <img alt="Jewellary" class="img-responsive" src="/kingfisher_pro/static/src/img/snippet/jewellary.png" title="Jewellary"/>
+                                        </section>
+                                        <div class="btn-box">
+                                            <button>SHOP NOW <i class="fa fa-angle-right"/></button>
+                                        </div>
+                                    </div>
+                                   <a href="#">
+                                        <span class="dark-div">
+                                            <span class="inner-div"/>
+                                        </span>
+                                    </a>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Single banner without slider -->
+                <section class="new-collection" style="background-image:url(/kingfisher_pro/static/src/img/snippet/bg-banner.png)">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 sol-xs-6">
+                                <div class="inner-content">
+                                    <h5 class="">New collection</h5>
+                                    <h3>2016</h3>
+                                    <p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse
+                                        <br/>
+                                        molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero
+                                        <br/>
+                                        eros et accumsan et iusto odio dignissim qui blandit praesent luptatum
+                                        <br/>
+                                        zzril delenit augue duis dolore te feugait nulla facilisi.</p>
+                                </div>
+                                <div class="btn-box">
+                                    <a href="#">Shop now <i class="fa fa-angle-right"/></a>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 sol-xs-6">
+                                <img alt="Bag" src="/kingfisher_pro/static/src/img/snippet/bag.png" title="Bag"/>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Testimonals -->
+                <section class="testimonials oe_snippet_body" style="background-image:url(/kingfisher_pro/static/src/img/snippet/testimonial-bg.png)" data-scroll-background-ratio="0.3">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-12">
+                                <div class="pf-page-title">
+                                    <h4 class="">Testimonials</h4>
+                                </div>
+                            </div>
+                            <div class="col-md-9 col-sm-12 slider">
+
+                                <div id="myQuoteCarousel" class="psb-inner carousel quotecarousel slide">
+                                    <div class="carousel-inner">
+                                        <div class="item text_only active">
+                                            <div class="container">
+                                                <div class="row content">
+                                                    <blockquote>
+                                                        <p>
+                                                            Write a quote here from one of your customers. Quotes are a
+                                                            great way to build confidence in your products or services.
+                                                        </p>
+                                                        <p class="author">John Warner</p>
+                                                        <p class="designation">CEO, ABC company</p>
+                                                    </blockquote>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="item text_only">
+                                            <div class="container">
+                                                <div class="row content">
+                                                    <blockquote>
+                                                        <p>
+                                                            Odoo provides essential platform for our project management.
+                                                            Things are better organized and more visible with it.
+                                                        </p>
+                                                        <p class="author">John Warner</p>
+                                                        <p class="designation">CEO, ABC company</p>
+                                                    </blockquote>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a class= "carousel-control left" href= "#myQuoteCarousel" data-slide= "prev"><i class='fa fa-arrow-left'/></a>
+                                    <a class= "carousel-control right" href= "#myQuoteCarousel" data-slide= "next"><i class='fa fa-arrow-right'/></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Service snippet -->
+                <section class="services text-center s_kingfisher_pro_service_snippet">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <a href="#">
+                                     <i class="fa fa-shopping-cart" aria-hidden="true" alt="Free Shipping"></i>
+                                </a>
+                                <h4 class="">
+                                    <b>FREE SHIPPING WORLDWIDE</b>
+                                </h4>
+                                <h5 class="">FREE SHIPPING WORLDWIDE</h5>
+                            </div>
+                            <div class="col-sm-4">
+                                <a href="#">
+                                    <i class="fa fa-phone" aria-hidden="true" Title="Customer Service" alt="Customer Service"></i>
+                                </a>
+                                <h4 class="">
+                                    <b>24/7 CUSTOMER SERVICE</b>
+                                </h4>
+                                <h5 class="">SERVICE SUPPORT 24/7</h5>
+                            </div>
+                            <div class="col-sm-4">
+                                <a href="#">
+                                    <i class="fa fa-money" aria-hidden="true" Title="Money Back" alt="Money Back"></i>
+                                </a>
+                                <h4 class="">
+                                    <b>MONEY BACK GUARANTEE !</b>
+                                </h4>
+                                <h5 class="">100% MONEY BACK - 30 DAYS</h5>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+        </xpath>
+    </template>
+
+</data>
+</openerp>
