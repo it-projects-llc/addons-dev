@@ -42,23 +42,20 @@
     <div class="oe_span12">
       <p class="oe_mt32">
 		<div class="alert alert-warning" style="padding:8px;font-weight: 300; font-size: 20px;">
-		  By default, odoo supports USB printers only for POS order printing. Actually, it is not flexible and there are some inconveniences:
+		  Out-of-box odoo POS supports USB printers only, which lead to different inconveniences:
 		  
 		  <div style="padding:4px;">
 		  <ul>
+			  <li>
+		              it requires to have posbox per each USB Printer
+			  </li>
 			<li>
-			  if you have several USB printers and send receipt to print, it will be printed on the first one encountered, i.e. we have no chance to choose certain USB printer
-			</li>
-			<li>
-			  you can use limited number of USB printer models only
-			</li>
-			<li>
-			  you are not able to see connection status of each USB printer
+			  limited number of USB printer models are supported
 			</li>
 		  </ul>
 		  </div>
-		  The module eliminates these disadvantages, because makes it possible to print POS orders and receipts on Network printers.
-		</div>
+		  Using network printers eliminates those disadvantages
+	    </div>
       </p>
     </div>
   </div>
