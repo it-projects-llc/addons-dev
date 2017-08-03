@@ -225,11 +225,9 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                             this.usb_printer_status = true;
                         }
                     }
-                } else {
-                    if (this.pos.config.receipt_printer_type === "usb_printer") {
-                        warning = true;
-                        this.usb_printer_status = false;
-                    }
+                } else if (this.pos.config.receipt_printer_type === "usb_printer") {
+                    warning = true;
+                    this.usb_printer_status = false;
                 }
                 if( this.pos.config.iface_electronic_scale ){
                     var scale = status.drivers.scale
@@ -303,12 +301,10 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                 } else {
                     this.usb_printer_status = [{'status':'offline'}];
                 }
+            } else if (this.pos.config.receipt_printer_type === "usb_printer") {
+                this.usb_printer_status = [{'status':'offline'}];
             } else {
-                if (this.pos.config.receipt_printer_type === "usb_printer") {
-                    this.usb_printer_status = [{'status':'offline'}];
-                } else {
-                    this.usb_printer_status = false;
-                }
+                this.usb_printer_status = false;
             }
             this.renderElement();
             this.render_network_list(network_printers);
