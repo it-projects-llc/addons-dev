@@ -98,11 +98,21 @@ class AccountInvoice(models.Model):
         res['cr_d151_category_id'] = line.get('cr_d151_category_id', None)
         return res
 
+    @api.onchange('type')
+    def _on_type_change(self):
+        for line in self.invoice_line_ids:
+            line._get_cr_151_category()
+
 
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
-    cr_d151_category_id = fields.Many2one('account.cr.d151.category', 'D151 category')
+    def _get_default_cr_d151_category(self):
+        self._get_cr_151_category()
+
+    cr_d151_category_id = fields.Many2one('account.cr.d151.category', 'D151 category',
+        default=_get_default_cr_d151_category)
+
 
     @api.onchange('cr_d151_category_id')
     def _compute_d151_domain(self):

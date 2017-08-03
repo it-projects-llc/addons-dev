@@ -33,7 +33,7 @@ abstractReconciliation.include({
 });
 
 bankStatementReconciliationLine.include({
-    initializeCreateForm: function() {
+    initializeCreateForm: function () {
         var self = this;
         this._super();
         this.cr_d151_category_id_field.set('value', this.st_line.cr_d151_category_id);
@@ -44,19 +44,27 @@ bankStatementReconciliationLine.include({
             then(function(result) {
                 if (result) {
                     self.cr_d151_category_id_field.set('value', result);
-                    self.st_line['cr_d151_category_id'] = self.cr_d151_category_id_field.get('value');
                 }
             });
         });
     },
 
-    prepareDataForPersisting: function() {
+    prepareDataForPersisting: function () {
         var result = this._super();
         var cr_d151_category_id = this.cr_d151_category_id_field.get('value');
         for (var i=0; i<result['new_aml_dicts'].length; i++) {
             result['new_aml_dicts'][i]['cr_d151_category_id'] = cr_d151_category_id;
         }
         return result;
+    },
+
+    persistAndBowOut: function () {
+        var cr_d151_category_id = this.cr_d151_category_id_field.get('value');
+        if (cr_d151_category_id && this.st_line.has_no_partner) {
+            alert('You need to select a partner to use the D151 category.')
+            return;
+        }
+        this._super()
     }
 });
 
