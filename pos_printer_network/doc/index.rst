@@ -19,7 +19,7 @@ Configuration
 
   * Click on ``[Create]``
   * Specify a name of new printer in the "Printer Name" field
-  * Specify the proxy server IP address of network printer
+  * Specify the IP address of network printer
   * Check the "Network Printer" box if this printer is a network printer
   * Select Product Categories
   * Click on ``[Save]``
@@ -28,9 +28,9 @@ Configuration
 
   * Open POS configuration form
   * Click on ``[Edit]``
-  * Specify IP address for ``Hardware Proxy / PosBox``
-  * Check the "Network Printer" box
-  * Specify the network printer IP address for Receipt Printer (optional)
+  * Specify IP address for ``Hardware Proxy / PosBox`` (The hostname or ip address of the hardware proxy, Will be autodetected if left empty)
+  * Switch Printer Type on "Network Printer"
+  * Specify the network printer IP address for Receipt Printer
   * Add an item (network printer) in the "Order Printers" menu
   * Click on ``[Save]``
 
@@ -56,4 +56,3 @@ Note
 ====
 
 In the POS interface you can see the connection status of your printers by clicking on posbox icon at the top right corner.
-
