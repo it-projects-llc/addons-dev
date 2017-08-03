@@ -1,10 +1,8 @@
-from openerp import api, models, fields
-
-from openerp.tools import html_escape as escape
-import werkzeug
+# -*- coding: utf-8 -*-
+from openerp import models, fields
 
 
-class product_template(models.Model):
+class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     sale_button = fields.Selection([
@@ -16,5 +14,4 @@ After clicking on "buy now" at web shop:\n
 * cart is cleared and the product is added\n
 * user is redirected to /shop/checkout page\n
 * page /shop/cart is still availabe, but\n
-  * it doesn't have "continue shopping button"\n''',
-                                   default='add_to_cart')
+* it doesn't have "continue shopping button"\n''', default='add_to_cart')
