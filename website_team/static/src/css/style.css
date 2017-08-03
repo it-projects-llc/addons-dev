@@ -149,12 +149,15 @@
 .team .team_link .upwork:hover {
     background-color: #37a000;
 }
-.team .team_link .github a, .team .team_link .email a{
+.team .team_link .github a {
     color: black;
 }
 .user_profile .team_link div {
     float: right;
     padding: 5px;
+}
+.team .team_link .email a {
+    color: gray;
 }
 .user_profile .team_link .email {
     margin-top: -2px;
