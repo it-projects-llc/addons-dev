@@ -120,9 +120,7 @@ class AccountInvoiceLine(models.Model):
             domain = [('code_id.type', '=', 'purchase')]
         if self.invoice_id.type in ['out_invoice', 'out_refund']:
             domain = [('code_id.type', '=', 'sale')]
-        return {
-                'domain': {'cr_d151_category_id': domain},
-                }
+        return {'domain': {'cr_d151_category_id': domain}}
 
     @api.onchange('product_id', 'account_id', 'partner_id', 'invoice_id')
     def _get_cr_151_category(self):
