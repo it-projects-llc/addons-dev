@@ -84,7 +84,7 @@ odoo.define('pos_orders_history', function (require) {
             if(order.state){
                 str += '|' + order.state;
             }
-            str = '' + String(order.id) + ':' + str.replace(':','') + '\n';
+            str = String(order.id) + ':' + str.replace(':','') + '\n';
             return str;
         },
     });
