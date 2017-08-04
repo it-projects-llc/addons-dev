@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-# © 2014 Alexis de Lattre <alexis.delattre@akretion.com>
+# © 2014-2016 Akretion (Alexis de Lattre <alexis.delattre@akretion.com>)
 # © 2014 Lorenzo Battistini <lorenzo.battistini@agilebg.com>
 # © 2016 Pedro M. Baeza <pedro.baeza@serviciosbaeza.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import models, fields, api, _
-from openerp.exceptions import UserError
+from odoo import _, api, fields, models, tools
+from odoo.exceptions import UserError
 import requests
 import tempfile
 import StringIO
@@ -27,10 +27,14 @@ class BetterZipGeonamesImport(models.TransientModel):
     _rec_name = 'country_id'
 
     country_id = fields.Many2one('res.country', 'Country', required=True)
-    title_case = fields.Boolean(
-        string='Title Case',
-        help='Converts retreived city and state names to Title Case.',
-    )
+    letter_case = fields.Selection([
+        ('unchanged', 'Unchanged'),
+        ('title', 'Title Case'),
+        ('upper', 'Upper Case'),
+        ], string='Letter Case', default='unchanged',
+        help="Converts retreived city and state names to Title Case "
+        "(upper case on each first letter of a word) or Upper Case "
+        "(all letters upper case).")
 
     @api.model
     def transform_city_name(self, city, country):
@@ -55,6 +59,8 @@ class BetterZipGeonamesImport(models.TransientModel):
             'city': self.transform_city_name(row[2], country),
             'state_id': state.id,
             'country_id': country.id,
+            'latitude': row[9],
+            'longitude': row[10],
             }
         return vals
 
@@ -66,9 +72,12 @@ class BetterZipGeonamesImport(models.TransientModel):
                     "correspond to the selected country (%s).")
                 % (row[0], country.code))
         logger.debug('ZIP = %s - City = %s' % (row[1], row[2]))
-        if (self.title_case):
+        if self.letter_case == 'title':
             row[2] = row[2].title()
             row[3] = row[3].title()
+        elif self.letter_case == 'upper':
+            row[2] = row[2].upper()
+            row[3] = row[3].upper()
         if row[1] and row[2]:
             zip_model = self.env['res.better.zip']
             zips = zip_model.search(self._domain_search_better_zip(
@@ -79,28 +88,30 @@ class BetterZipGeonamesImport(models.TransientModel):
                 vals = self._prepare_better_zip(row, country)
                 if vals:
                     return zip_model.create(vals)
-        else:
+        else:  # pragma: no cover
             return False
+
+    @tools.ormcache('country_id', 'code')
+    def _get_state(self, country_id, code, name):
+        state = self.env['res.country.state'].search(
+            [('country_id', '=', country_id),
+             ('code', '=', code)], limit=1,
+        )
+        if state:  # pragma: no cover
+            return state
+        else:
+            return self.env['res.country.state'].create({
+                'name': name,
+                'code': code,
+                'country_id': country_id,
+            })
 
     @api.model
     def select_or_create_state(
             self, row, country, code_row_index=4, name_row_index=3):
-        states = self.env['res.country.state'].search([
-            ('country_id', '=', country.id),
-            ('code', '=', row[code_row_index]),
-            ])
-        if len(states) > 1:
-            raise UserError(
-                _("Too many states with code %s for country %s")
-                % (row[code_row_index], country.code))
-        if len(states) == 1:
-            return states[0]
-        else:
-            return self.env['res.country.state'].create({
-                'name': row[name_row_index],
-                'code': row[code_row_index],
-                'country_id': country.id
-                })
+        return self._get_state(
+            country.id, row[code_row_index], row[name_row_index],
+        )
 
     @api.multi
     def run_import(self):
@@ -133,7 +144,7 @@ class BetterZipGeonamesImport(models.TransientModel):
             zip_code = self.create_better_zip(row, self.country_id)
             if zip_code in zips_to_delete:
                 zips_to_delete -= zip_code
-            if max_import and i == max_import:
+            if max_import and (i + 1) == max_import:
                 break
         data_file.close()
         if zips_to_delete and not max_import:

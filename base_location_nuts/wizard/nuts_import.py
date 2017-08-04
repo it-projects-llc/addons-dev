@@ -1,19 +1,28 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-# For copyright and license notices, see __openerp__.py file in root directory
-##############################################################################
+# Copyright 2015 Antonio Espinosa <antonio.espinosa@tecnativa.com>
+# Copyright 2016 Jairo Llopis <jairo.llopis@tecnativa.com>
+# Copyright 2017 David Vidal <jairo.llopis@tecnativa.com>
+# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from openerp import models, api, _
-from openerp.exceptions import Warning
+from odoo import _, api, models
+from odoo.exceptions import UserError
 import requests
 import re
 import logging
 from lxml import etree
 from collections import OrderedDict
 
-from pprint import pformat
-
 logger = logging.getLogger(__name__)
+
+# Default server values
+URL_BASE = 'http://ec.europa.eu'
+URL_PATH = '/eurostat/ramon/nomenclatures/index.cfm'
+URL_PARAMS = {'TargetUrl': 'ACT_OTH_CLS_DLD',
+              'StrNom': 'NUTS_2013',
+              'StrFormat': 'XML',
+              'StrLanguageCode': 'EN',
+              'StrLayoutCode': 'HIERARCHIC'
+              }
 
 
 class NutsImport(models.TransientModel):
@@ -93,32 +102,29 @@ class NutsImport(models.TransientModel):
             else:
                 logger.debug("xpath = '%s', not found" % field_xpath)
             if field_required and not value:
-                raise Warning(
+                raise UserError(
                     _('Value not found for mandatory field %s' % k))
             item[k] = value
         return item
 
-    def _download_nuts(self):
-        url_base = 'http://ec.europa.eu'
-        url_path = '/eurostat/ramon/nomenclatures/index.cfm'
-        url_params = {
-            'TargetUrl': 'ACT_OTH_CLS_DLD',
-            'StrNom': 'NUTS_2013',
-            'StrFormat': 'XML',
-            'StrLanguageCode': 'EN',
-            'StrLayoutCode': 'HIERARCHIC'
-        }
+    def _download_nuts(self, url_base=None, url_path=None, url_params=None):
+        if not url_base:
+            url_base = URL_BASE
+        if not url_path:
+            url_path = URL_PATH
+        if not url_params:
+            url_params = URL_PARAMS
         url = url_base + url_path + '?'
         url += '&'.join([k + '=' + v for k, v in url_params.iteritems()])
         logger.info('Starting to download %s' % url)
         try:
             res_request = requests.get(url)
         except Exception, e:
-            raise Warning(
+            raise UserError(
                 _('Got an error when trying to download the file: %s.') %
                 str(e))
         if res_request.status_code != requests.codes.ok:
-            raise Warning(
+            raise UserError(
                 _('Got an error %d when trying to download the file %s.')
                 % (res_request.status_code, url))
         logger.info('Download successfully %d bytes' %
@@ -127,7 +133,7 @@ class NutsImport(models.TransientModel):
         pattern = re.compile(r'^.*<\?xml', re.DOTALL)
         content_fixed = re.sub(pattern, '<?xml', res_request.content)
         if not re.match(r'<\?xml', content_fixed):
-            raise Warning(_('Downloaded file is not a valid XML file'))
+            raise UserError(_('Downloaded file is not a valid XML file'))
         return content_fixed
 
     @api.model
@@ -140,7 +146,6 @@ class NutsImport(models.TransientModel):
         #   UK => GB (United Kingdom)
         self._countries['EL'] = self._countries['GR']
         self._countries['UK'] = self._countries['GB']
-        logger.info('_load_countries = %s' % pformat(self._countries))
 
     @api.model
     def state_mapping(self, data, node):
@@ -174,7 +179,7 @@ class NutsImport(models.TransientModel):
             self._parents[level - 1] = nuts.id
         return nuts
 
-    @api.one
+    @api.multi
     def run_import(self):
         nuts_model = self.env['res.partner.nuts'].\
             with_context(defer_parent_store_computation=True)
@@ -184,16 +189,16 @@ class NutsImport(models.TransientModel):
         nuts_to_delete = nuts_model.search(
             [('country_id', 'in', [x.id for x in self._countries.values()])])
         # Download NUTS in english, create or update
-        logger.info('Import NUTS 2013 English')
+        logger.info('Importing NUTS 2013 English...')
         xmlcontent = self._download_nuts()
         dom = etree.fromstring(xmlcontent)
         for node in dom.iter('Item'):
-                logger.info('Reading level=%s, id=%s' %
-                            (node.get('idLevel', 'N/A'),
-                             node.get('id', 'N/A')))
-                nuts = self.create_or_update_nuts(node)
-                if nuts and nuts in nuts_to_delete:
-                    nuts_to_delete -= nuts
+            logger.debug('Reading level=%s, id=%s',
+                         node.get('idLevel', 'N/A'),
+                         node.get('id', 'N/A'))
+            nuts = self.create_or_update_nuts(node)
+            if nuts and nuts in nuts_to_delete:
+                nuts_to_delete -= nuts
         # Delete obsolete NUTS
         if nuts_to_delete:
             logger.info('%d NUTS entries deleted' % len(nuts_to_delete))
@@ -201,5 +206,4 @@ class NutsImport(models.TransientModel):
         logger.info(
             'The wizard to create NUTS entries from RAMON '
             'has been successfully completed.')
-
         return True

@@ -4,7 +4,7 @@
 
 """Test default values for models."""
 
-from openerp.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase
 from .base import MailInstalled
 
 
@@ -29,7 +29,6 @@ class PersonCase(TransactionCase):
         self.record = (self.env[self.model]
                        .with_context(self.context)
                        .create(self.values))
-
         for key, value in self.good_values.iteritems():
             self.assertEqual(
                 self.record[key],
