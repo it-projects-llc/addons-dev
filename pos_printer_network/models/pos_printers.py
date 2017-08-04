@@ -19,7 +19,7 @@ class PosConfig(models.Model):
         ('network_printer', 'Network Printer')], "Printer Type",
         default='usb_printer', required=True,
         help="Select the printer type you want to use receipt printing")
-    receipt_network_printer_ip = fields.Char(default=False, string="Network Printer IP", help="The ip address of the network printer for receipt")
+    receipt_network_printer_ip = fields.Char(default=False, string="Network Printer IP", help="IP address of the network printer used for receipts")
 
     @api.onchange('receipt_printer_type')
     def _onchange_receipt_printer_type(self):
