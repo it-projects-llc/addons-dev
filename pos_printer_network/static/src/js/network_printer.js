@@ -94,7 +94,7 @@ odoo.define('pos_restaurant.network_printer', function (require) {
             this._super();
         },
         message : function(name,params){
-            if (name === 'print_xml_receipt' && this.pos.config.receipt_network_printer_ip) {
+            if (name === 'print_xml_receipt' && this.pos.config.receipt_printer_type === "network_printer") {
                 var connection = new Session(void 0, this.pos.proxy.host, {
                     use_cors: true
                 });
@@ -130,15 +130,9 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                 self.network_printers.push({'ip': item.config.proxy_ip, 'status': 'offline', 'name': item.config.name});
             });
 
-            var exist_usb_printer = this.pos.printers.find(function(printer){
+            this.pos.usb_printer_active = this.pos.printers.find(function(printer){
                 return !printer.config.network_printer;
             });
-
-            if (exist_usb_printer) {
-                this.pos.usb_printer_active = true;
-            } else {
-                this.pos.usb_printer_active = false;
-            }
 
             if (!this.pos.usb_printer_active) {
                 var try_real_hard_to_connect = function(new_url, retries, done) {
@@ -266,7 +260,7 @@ odoo.define('pos_restaurant.network_printer', function (require) {
             var network_printer = this.pos.printers.find(function(printer) {
                 return printer.config.network_printer === true;
             });
-            if (this.pos.config.receipt_network_printer_ip || network_printer) {
+            if (this.pos.config.receipt_printer_type === "network_printer" || network_printer) {
                 this.gui.show_popup('proxy_printers', {
                     title: "Printers",
                     value: this.devices_status,
