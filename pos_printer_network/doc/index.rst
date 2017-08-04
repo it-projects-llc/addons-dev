@@ -29,7 +29,7 @@ Configuration
   * Open POS configuration form
   * Click on ``[Edit]``
   * Specify IP address for ``Hardware Proxy / PosBox`` -- the hostname or ip address of the your PosBox. It will be looked up in local network, if is not set.
-  * Switch Printer Type on "Network Printer"
+  * Switch **Printer Type** to *Network Printer*
   * Specify the network printer IP address for Receipt Printer
   * Add an item (network printer) in the "Order Printers" menu
   * Click on ``[Save]``
