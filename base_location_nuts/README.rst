@@ -7,28 +7,22 @@ NUTS Regions
 
 This module allows to import NUTS locations.
 
-Creates two new fields in Partner object:
+Creates four new fields in Partner object, one per NUTS level
 
-* Region (res.partner.region): Classification over state, automatically
-  calculated when state is selected
-* Substate (res.partner.substate): Classification above state, user must select
-  one from available for selected state
+* NUTS L1: Country level
+* NUTS L2: Normally state or big region level
+* NUTS L3: Normally substate or state level
+* NUTS L4: Normally small region or province level
 
 
 Installation
 ============
 
-You need to install another addon (one for each country) in order to use
-these NUTS, for example:
+We recommend to install another addon (one for each country) in order to relate
+NUTS with states defined by each localization addon, for example:
 
-* l10n_es_location_nuts :
-    * Spanish Provinces (NUTS level 4) as Partner State
-    * Spanish Autonomous communities (NUTS level 3) as Partner Substate
-    * Spanish Regions (NUTS level 2) as Partner Region
-* l10n_de_location_nuts :
-    * German states (NUTS level 2) as Partner State
-    * German districts (NUTS level 3) as Partner Substate
-    * German regions (NUTS level 4) as Partner Region
+* l10n_es_location_nuts : Spanish Provinces (NUTS level 4) related to Partner State
+* l10n_de_location_nuts : German states (NUTS level 2) related to Partner State
 
 
 Configuration
@@ -54,17 +48,15 @@ in order to allow to assign them to partner object.
 
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
    :alt: Try me on Runbot
-   :target: https://runbot.odoo-community.org/runbot/134/{branch}
-
+   :target: https://runbot.odoo-community.org/runbot/134/10.0
 
 Bug Tracker
 ===========
 
-Bugs are tracked on `GitHub Issues <https://github.com/OCA/partner-contact/issues>`_.
-In case of trouble, please check there if your issue has already been reported.
-If you spotted it first, help us smashing it by providing a detailed and welcomed feedback
-`here <https://github.com/OCA/partner-contact/issues/new?body=module:%20base_location_nuts%0Aversion:%208.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
-
+Bugs are tracked on `GitHub Issues
+<https://github.com/OCA/partner_contact/issues>`_. In case of trouble, please
+check there if your issue has already been reported. If you spotted it first,
+help us smash it by providing detailed and welcomed feedback.
 
 Credits
 =======
@@ -72,8 +64,10 @@ Credits
 Contributors
 ------------
 
-* Rafael Blasco <rafabn@antiun.com>
-* Antonio Espinosa <antonioea@antiun.com>
+* Rafael Blasco <rafael.blasco@tecnativa.com>
+* Antonio Espinosa <antonio.espinosa@tecnativa.com>
+* Jairo Llopis <jairo.llopis@tecnativa.com>
+* David Vidal <david.vidal@tecnativa.com>
 
 Maintainer
 ----------
@@ -88,4 +82,4 @@ OCA, or the Odoo Community Association, is a nonprofit organization whose
 mission is to support the collaborative development of Odoo features and
 promote its widespread use.
 
-To contribute to this module, please visit http://odoo-community.org.
+To contribute to this module, please visit https://odoo-community.org.
