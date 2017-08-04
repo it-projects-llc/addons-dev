@@ -15,7 +15,7 @@ class AccountCategory(models.Model):
     _name = 'account.cr.d151.category'
 
     name = fields.Char(string='Name', required=True)
-    code_id = fields.Many2one('account.cr.d151.code', required=True)
+    code_id = fields.Many2one('account.cr.d151.code',string='Code' ,required=True)
     min_amount = fields.Float(string='Minimum amount')
     min_amount_currency_id = fields.Many2one('res.currency', required=True, string="Currency")
     sign = fields.Float(string='Sign In Report', digits=0)
