@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": """l10n_cr_d151_account""",
-    "summary": """None""",
+    "summary": """The module adds D151 info""",
     "category": "None",
     "images": [],
     "version": "1.0.0",
