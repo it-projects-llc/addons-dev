@@ -9,10 +9,13 @@ Installation
 
 Configuration
 =============
+
 The module does not require a special configuration.
 
 Usage
 =====
 
-* Open menu ``{Accounting} >> {D151 Codes}``
-* Click on any item to see its form view in a regular way.
+* Open menu ``Accounting >> D151 Codes``
+* Click on ``[Create]``
+* Specify the fields required
+* Click on ``[Save]``
