@@ -14,10 +14,15 @@ Contributors
 Sponsors
 --------
 * `IT-Projects LLC <https://it-projects.info>`__
+* `ClearCorp S.A. <http://clearcorp.cr>`__
 
 Maintainers
 -----------
 * `IT-Projects LLC <https://it-projects.info>`__
+
+Copyright
+---------
+* Contact `ClearCorp S.A. <http://clearcorp.cr>`__ <carlos.vasquez@clearcorp.co.cr> for copyright and license information
 
 Further information
 ===================
