@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- QWeb Reports -->
+        <report 
+            id="action_d151_report"
+            model="account.cr.d151.category"
+            string="D151 category"
+            report_type="qweb-pdf"
+            name="account.cr.d151.category"
+            file="account.cr.d151.category"
+            attachment_use="False"
+        />
+
+    </data>
+</odoo>
