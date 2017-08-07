@@ -15,7 +15,7 @@ class AccountCategory(models.Model):
     _name = 'account.cr.d151.category'
 
     name = fields.Char(string='Name', required=True)
-    code_id = fields.Many2one('account.cr.d151.code',string='Code' ,required=True)
+    code_id = fields.Many2one('account.cr.d151.code', string='Code', required=True)
     min_amount = fields.Float(string='Minimum amount')
     min_amount_currency_id = fields.Many2one('res.currency', required=True, string="Currency")
     sign = fields.Float(string='Sign In Report', digits=0)
@@ -110,9 +110,10 @@ class AccountInvoiceLine(models.Model):
     def _get_default_cr_d151_category(self):
         self._get_cr_151_category()
 
-    cr_d151_category_id = fields.Many2one('account.cr.d151.category', 'D151 category',
-        default=_get_default_cr_d151_category)
-
+    cr_d151_category_id = fields.Many2one(
+        'account.cr.d151.category',
+        'D151 category', default=_get_default_cr_d151_category
+    )
 
     @api.onchange('cr_d151_category_id')
     def _compute_d151_domain(self):
