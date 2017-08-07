@@ -1,0 +1,209 @@
+<odoo>
+    <data>
+
+        <record id="partner_property_form_d151_inherit" model="ir.ui.view">
+            <field name="name">res.partner.property.form.d151.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="priority">2</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='property_account_position_id']" position="after">
+                    <field name="sale_cr_d151_category_id"/>
+                    <field name="purchase_cr_d151_category_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="d151_partner_search_view">
+            <field name="name">d151.partner.search</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="sale_cr_d151_category_id"/>
+                    <field name="purchase_cr_d151_category_id"/>
+                    <group extend="0" string="Group By">
+                        <filter name="type" string="Customer D151 category" context="{'group_by' : 'sale_cr_d151_category_id'}"/>
+                        <filter name="type" string="Vendor D151 category" context="{'group_by' : 'purchase_cr_d151_category_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="product_template_form_d151_inherit" model="ir.ui.view">
+            <field name="name">product.template.form.d151.inherit</field>
+            <field name="model">product.template</field>
+            <field name="priority">2</field>
+            <field name="inherit_id" ref="account.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='taxes_id']" position="after">
+                    <field name="sale_cr_d151_category_id"/>
+                </xpath>
+                <xpath expr="//field[@name='supplier_taxes_id']" position="after">
+                    <field name="purchase_cr_d151_category_id"/>
+                </xpath>
+            </field>
+        </record>
+
+         <record model="ir.ui.view" id="d151_product_template_search_view">
+            <field name="name">d151.product.template.search</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="sale_cr_d151_category_id" string="Product Customer D151 category"/>
+                    <field name="purchase_cr_d151_category_id" string="Product Vendor D151 category"/>
+                    <group extend="0" string="Group By">
+                        <filter name="type" string="Customer D151 category" context="{'group_by' : 'sale_cr_d151_category_id'}"/>
+                        <filter name="type" string="Vendor D151 category" context="{'group_by' : 'purchase_cr_d151_category_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="category_property_form_d151_inherit" model="ir.ui.view">
+            <field name="name">product.category.property.form.d151.inherit</field>
+            <field name="model">product.category</field>
+            <field name="priority">2</field>
+            <field name="inherit_id" ref="account.view_category_property_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='property_account_expense_categ_id']" position="after">
+                    <field name="sale_cr_d151_category_id"/>
+                    <field name="purchase_cr_d151_category_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="d151_product_category_search_view">
+            <field name="name">d151.product.category.search</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_search_view"/>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="sale_cr_d151_category_id"/>
+                    <field name="purchase_cr_d151_category_id"/>
+                    <group extend="0" string="Group By">
+                        <filter name="type" string="Customer D151 category" context="{'group_by' : 'sale_cr_d151_category_id'}"/>
+                        <filter name="type" string="Vendor D151 category" context="{'group_by' : 'purchase_cr_d151_category_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="account_form_d151_inherit" model="ir.ui.view">
+            <field name="name">account.account.form.d151.inherit</field>
+            <field name="model">account.account</field>
+            <field name="priority">2</field>
+            <field name="inherit_id" ref="account.view_account_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='tax_ids']" position="after">
+                    <field name="sale_cr_d151_category_id"/>
+                    <field name="purchase_cr_d151_category_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="account_search_d151_inherit" model="ir.ui.view" >
+            <field name="name">account.account.search.d151.inherit</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_type_id']" position="after">
+                    <field name="sale_cr_d151_category_id"/>
+                    <field name="purchase_cr_d151_category_id"/>
+                </xpath>
+                <xpath expr="//group" position="inside">
+                    <filter name="type" string="Customer D151 category" context="{'group_by' : 'sale_cr_d151_category_id'}"/>
+                    <filter name="type" string="Vendor D151 category" context="{'group_by' : 'purchase_cr_d151_category_id'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="move_line_form_form_d151_inherit" model="ir.ui.view">
+            <field name="name">account.move.line.form.d151.inherit</field>
+            <field name="model">account.move.line</field>
+            <field name="priority">2</field>
+            <field name="inherit_id" ref="account.view_move_line_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='statement_id']" position="after">
+                    <field name="cr_d151_category_id" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="move_line_tree_d151_inherit" model="ir.ui.view">
+            <field name="name">account.move.line.tree.d151.inherit</field>
+            <field name="model">account.move.line</field>
+            <field eval="1" name="priority"/>
+            <field name="inherit_id" ref="account.view_move_line_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='account_id']" position="after">
+                    <field name="cr_d151_category_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="move_line_filter_d151_inherit" model="ir.ui.view" >
+            <field name="name">account.move.line.search.d151.inherit</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_account_move_line_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='tax_ids']" position="after">
+                    <field name="cr_d151_category_id"/>
+                </xpath>
+                <xpath expr="//group" position="inside">
+                    <filter name="type" string="D151 category" context="{'group_by' : 'cr_d151_category_id'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="invoice_line_form_d151_inherit" model="ir.ui.view">
+            <field name="name">account.invoice.line.form.d151.inherit</field>
+            <field name="model">account.invoice.line</field>
+            <field name="priority">2</field>
+            <field name="inherit_id" ref="account.view_invoice_line_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='account_id']" position="after">
+                    <field name="cr_d151_category_id" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_invoice_line_tree_d151_inherit" model="ir.ui.view">
+            <field name="name">account.invoice.line.tree.d151.inherit</field>
+            <field name="model">account.invoice.line</field>
+            <field eval="1" name="priority"/>
+            <field name="inherit_id" ref="account.view_invoice_line_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='account_id']" position="after">
+                    <field name="cr_d151_category_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="invoice_form_d151_inherit" model="ir.ui.view">
+            <field name="name">account.invoice.form.d151.inherit</field>
+            <field name="model">account.invoice</field>
+            <field eval="1" name="priority"/>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='account_id']" position="after">
+                    <field name="cr_d151_category_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="invoice_supplier_form_d151_inherit" model="ir.ui.view">
+            <field name="name">account.invoice.supplier.form.d151.inherit</field>
+            <field name="model">account.invoice</field>
+            <field eval="1" name="priority"/>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='account_id']" position="after">
+                    <field name="cr_d151_category_id"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
