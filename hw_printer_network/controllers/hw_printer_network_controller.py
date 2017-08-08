@@ -72,7 +72,10 @@ class UpdatedEscposDriver(EscposDriver):
                             network_printer_proxy = task[1]
                             # print in network printer
                             printer = UpdatedNetwork(network_printer_proxy)
-                            printer.receipt(data)
+                            # printer.receipt(data)
+                            print "=================="
+                            print data
+                            print "=================="
                 else:
                     if self.usb_printer_active:
                         printer = self.get_escpos_printer()

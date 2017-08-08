@@ -114,6 +114,7 @@ odoo.define('pos_restaurant.network_printer', function (require) {
             var self = this;
             var port = ':' + (options.port || '8069');
             var url = current_url;
+            this.pos.usb_printer_active = true;
             if(url.indexOf('//') < 0){
                 url = 'http://' + url;
             }
@@ -125,15 +126,14 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                     return (r.config.network_printer === true);
                 }
             );
+            // Network printers are used when using receipt printers
             this.network_printers = [];
             network_printers.forEach(function(item){
                 self.network_printers.push({'ip': item.config.proxy_ip, 'status': 'offline', 'name': item.config.name});
             });
-
-            this.pos.usb_printer_active = this.pos.printers.find(function(printer){
-                return !printer.config.network_printer;
-            });
-
+            if (this.pos.config.receipt_printer_type === "network_printer") {
+                this.pos.usb_printer_active = false;
+            }
             if (!this.pos.usb_printer_active) {
                 var try_real_hard_to_connect = function(new_url, retries, done) {
                     done = done || new $.Deferred();
@@ -153,27 +153,22 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                     return done;
                 };
                 return try_real_hard_to_connect(url,3).done(function(){
-                    $.ajax({
-                        url: url + '/hw_proxy/network_printers',
-                        type: "POST",
-                        method: "POST",
-                        dataType: 'json',
-                        contentType: "application/json; charset=utf-8",
-                        data: JSON.stringify({'jsonrpc': "2.0", 'method': "call", "params": {'network_printers': self.network_printers}}),
-                        timeout: 1000,
-                    });
+                    self.send_network_printers_to_pos_box(url, self.network_printers);
                 });
             }
             return this._super(url, options).done(function(){
-                $.ajax({
-                    url: url + '/hw_proxy/network_printers',
-                    type: "POST",
-                    method: "POST",
-                    dataType: 'json',
-                    contentType: "application/json; charset=utf-8",
-                    data: JSON.stringify({'jsonrpc': "2.0", 'method': "call", "params": {'network_printers': self.network_printers}}),
-                    timeout: 1000,
-                });
+                self.send_network_printers_to_pos_box(url, self.network_printers);
+            });
+        },
+        send_network_printers_to_pos_box: function(url, network_printers) {
+            $.ajax({
+                url: url + '/hw_proxy/network_printers',
+                type: "POST",
+                method: "POST",
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({'jsonrpc': "2.0", 'method': "call", "params": {'network_printers': network_printers}}),
+                timeout: 1000,
             });
         },
     });
