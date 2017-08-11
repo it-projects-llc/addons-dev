@@ -1,0 +1,111 @@
+.pos {
+    .discount_product, .promo, .promo .info{
+        color: #8c8c8c;
+        font-style: italic;
+        font-size: 85%;
+    }
+    .promo .info em {
+        color: #8c8c8c!important;
+        font-style: italic !important;
+        font-size: 85% !important;
+    }
+    .discount_product .info em {
+        color: #8c8c8c!important;
+        font-style: italic !important;
+        font-size: 85% !important;
+    }
+    .discount_product {
+        cursor: initial !important;
+        width: 100%;
+        margin: 0px;
+        padding-top: 3px;
+        padding-bottom: 10px;
+        padding-left: 15px;
+        padding-right: 15px;
+        cursor: pointer;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+        .product-name {
+            width: initial!important;
+        }
+        .price {
+            float: right;
+            text-align: right;
+        }
+    }
+}
+.promo-popup {
+    height: 430px !important;
+    .title {
+        position: relative;
+        .promo-home {
+            position: absolute;
+            height: 64px;
+            width: 64px;
+            margin: 0;
+            top: 0;
+            left: 0;
+            font-size: 35px;
+            border: none;
+            background: initial;
+            i {
+                padding: 15px;
+            }
+            &:hover, &:focus {
+               background: eee;
+            }
+        }
+    }
+    .category_popup {
+        .promo_products_content {
+            max-height: 270px;
+            overflow: auto;
+            .promo-product-list {
+                width: 420px;
+                margin: auto;
+            }
+        }
+        .promo_category_content {
+            max-height: 326px;
+            overflow: auto;
+            .promo-category_list {
+                font-size: 20px;
+                font-weight: 300;
+                padding: 5px;
+                text-align: initial;
+                padding-left: 10px;
+                cursor: pointer;
+            }
+        }
+    }
+    .footer {
+        height: 40px!important;
+    }
+    .searchbox {
+        padding-top: 10px;
+        margin-bottom: -10px;
+        display: block;
+        position: relative;
+        right: 0px;
+    }
+    .searchbox input {
+        border: 1px solid #cecbcb;
+        padding: 10px 20px;
+        padding-left: 38px;
+        margin: 6px;
+        background: url(../img/search.png) no-repeat 15px;
+        background-color: white;
+        border-radius: 20px;
+        font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
+        font-size: 13px;
+    }
+    .search-clear {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        top: 22px;
+        left: 53px;
+        cursor: pointer;
+    }
+}
