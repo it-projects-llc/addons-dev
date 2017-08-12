@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- QWeb Reports -->
         <report 
-            id="action_d151_report"
+            id="d151_xlsx"
             model="account.cr.d151.category"
             string="D151 category"
-            report_type="qweb-pdf"
-            name="account.cr.d151.category"
-            file="account.cr.d151.category"
+            report_type="xlsx"
+            name="l10n_cr_d151_report.d151_report_template"
+            file="l10n_cr_d151_report.d151_report_template"
             attachment_use="False"
         />
 

@@ -14,13 +14,13 @@
 
     "depends": [
         "account",
-        "l10n_cr_d151_account"
+        "l10n_cr_d151_account",
+        "report_xlsx"
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
-        "d151_report.xml",
     	"views.xml",
-        "report_template.xml",
+        "l10n_cr_d151_report_report.xml"
     ],
     "qweb": [],
     "demo": [

@@ -3,7 +3,7 @@
     <data>
         <record id="d151_report_view" model="ir.ui.view">
             <field name="name">D151 report</field>
-            <field name="model">d151.report</field>
+            <field name="model">d151.wizard</field>
             <field name="arch" type="xml">
                 <form string="Report Options">
                     <group>
@@ -23,7 +23,7 @@
                         <field name="show_details"/>
                     </group>
                     <footer>
-                        <button name="check_report" string="Print" type="object" default_focus="1" class="oe_highlight"/>
+                        <button name="print_xls_report" string="Print" type="object" default_focus="1" class="oe_highlight"/>
                         or 
                         <button string="Cancel" class="oe_link" special="cancel" />
                     </footer>
@@ -33,7 +33,7 @@
 
         <record id="action_account_d151_report" model="ir.actions.act_window">
             <field name="name">D151 statement</field>
-            <field name="res_model">d151.report</field>
+            <field name="res_model">d151.wizard</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
