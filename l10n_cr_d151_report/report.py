@@ -1,4 +1,6 @@
 from odoo import models, fields, api
+from odoo.exceptions import UserError
+
 
 class D151Report(models.TransientModel):
     _name = "d151.wizard"
@@ -14,9 +16,15 @@ class D151Report(models.TransientModel):
     @api.multi
     def print_xls_report(self):
         data = self.read()[0]
-        aml_data = self.get_filtered_data_for_report()
-        aml_data = self.get_json_data(aml_data)
-        data['filtered_data'] = aml_data
+        raw_data = self.get_filtered_data_for_report()
+        json_data = self.get_json_data(raw_data)
+        json_data = map(self.get_amounts, json_data)
+        json_data = map(self.check_min_amount, json_data)
+        json_data = filter(None, json_data)
+        json_data = map(self.filter_data, json_data)
+        if not json_data:
+            raise UserError('There are no reports for specified criteria.')
+        data['filtered_data'] = json_data
 
         return {
             'type': 'ir.actions.report.xml',
@@ -38,12 +46,12 @@ class D151Report(models.TransientModel):
         return account_move_lines
 
     def get_json_data(self, data):
-        #TODO: partner total amount <= min_amount filter
         res = []
         for aml_d151_category in data.mapped('cr_d151_category_id'):
             aml_dict = {
                 'cr_d151_category_name': aml_d151_category.name,
                 'cr_d151_category_code': aml_d151_category.code_id.name,
+                'cr_d151_category_min_amount': aml_d151_category.min_amount,
                 'partners': []
             }
             partners_filtered = data.mapped('partner_id')
@@ -65,3 +73,30 @@ class D151Report(models.TransientModel):
                         })
             res.append(aml_dict)
         return res
+
+    @staticmethod
+    def get_amounts(data):
+        category_amount = 0
+        for p in data['partners']:
+            partner_amount = 0
+            for a in p['amls']:
+                partner_amount += float(a['amount'])
+            p.update({ 'partner_amount' : partner_amount})
+            category_amount += partner_amount
+        data.update({'category_amount': category_amount})
+        return data
+
+    @staticmethod
+    def filter_data(data):
+        data['partners'] = [p for p in data['partners'] if p['amls']]
+        if not data['partners']:
+            return
+        return data
+
+    @staticmethod
+    def check_min_amount(data):
+        min_amount = float(data['cr_d151_category_min_amount'])
+        data['partners'] = [p for p in data['partners'] if float(p['partner_amount'] >= min_amount)]
+        if not data['partners']:
+            return
+        return data
