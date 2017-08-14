@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 from odoo.exceptions import UserError
+from datetime import datetime
 
 
 class D151Report(models.TransientModel):
@@ -7,8 +8,9 @@ class D151Report(models.TransientModel):
     _description = "D151 Report"
 
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
-    date_from = fields.Date(string='Start Date')
-    date_to = fields.Date(string='End Date')
+    date_from = fields.Date(string='Start Date', default=lambda *a: datetime.now().
+        date().replace(month=1, day=1).strftime('%Y-%m-%d'))
+    date_to = fields.Date(string='End Date', default=lambda *a: datetime.now().strftime('%Y-%m-%d'))
     partner_ids = fields.Many2many('res.partner', string='Partners')
     cr_d151_category_ids = fields.Many2many('account.cr.d151.category', string='D151 categories')
     show_details = fields.Boolean(default=False)
