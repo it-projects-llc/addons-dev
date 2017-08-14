@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 {
-    "name": """l10n_cr_d151_account""",
+    "name": """D151 info for Accounting""",
     "summary": """The module adds D151 info""",
-    "category": "None",
+    "category": "Localization",
     "images": [],
     "version": "1.0.0",
     "application": False,
@@ -10,7 +10,7 @@
     "author": "IT-Projects LLC, Artyom Losev",
     "support": "apps@it-projects.info",
     "website": "https://it-projects.info",
-    "license": "LGPL-3",
+    "license": "OPL-1",
 
     "depends": [
         "account",
