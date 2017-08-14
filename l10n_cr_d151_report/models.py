@@ -36,13 +36,6 @@ class D151Xlsx(ReportXlsx):
                 sheet.write(column, 2, partner['partner_amount'], partner_cell)
                 column += 1
 
-
-
-
-
-
-
-        
     @staticmethod
     def render_detailed_report(workbook, data):
         filtered_data = data['filtered_data']
@@ -87,8 +80,6 @@ class D151Xlsx(ReportXlsx):
                         sheet.write(column, 4, aml['journal'], cell)
                         sheet.write(column, 5, aml['amount'], cell)
                         column += 1
-
-
 
 D151Xlsx('report.l10n_cr_d151_report.d151_report_template',
     'account.cr.d151.category')

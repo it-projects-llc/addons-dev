@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 {
-    "name": """l10n_cr_d151_report""",
-    "summary": """None""",
-    "category": "None",
+    "name": """D151 Report""",
+    "summary": """The module adds D151 report""",
+    "category": "Localization",
     "images": [],
     "version": "1.0.0",
     "application": False,
