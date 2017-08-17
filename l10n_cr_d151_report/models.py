@@ -14,7 +14,6 @@ class D151Xlsx(ReportXlsx):
     def render_report(workbook, data):
         filtered_data = data['filtered_data']
         # formatting
-        bold = workbook.add_format({'bold': True})
         category = workbook.add_format({'bold': True})
         partner_cell = workbook.add_format({'bold': True})
         category.set_bg_color('silver')
@@ -52,7 +51,7 @@ class D151Xlsx(ReportXlsx):
         for item in sorted(filtered_data, key=lambda k: k['cr_d151_category_code']):
             name = '%s - %s' % (item['cr_d151_category_code'], item['cr_d151_category_name'])
             sheet.write(column, 0, name, category)
-            for i in range(1,5):
+            for i in range(1, 5):
                 sheet.write(column, i, '', category)
             sheet.write(column, 5, item['category_amount'], category)
 
