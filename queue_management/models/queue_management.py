@@ -1,65 +1,67 @@
 # -*- coding: utf-8 -*-
-
 from odoo import models, fields, api
 
-
-class queue_management(models.Model):
-    _name = 'queue.management'
-    name = fields.Char(string="Queue Management", required=True)
-
-
-class queue_management_information(models.Model):
-    _name = 'queue.management.info'
-    company_name = fields.Char(required=True, string="Company Name")
-    industry = fields.Selection([('telecoms', 'Telecoms'),
-                                 ('public_services', 'Public Services'),
-                                 ('banks', 'Banks'),
-                                 ('clinics', 'Hospitals/Clinics'),
-                                 ('utilities', 'Utilities'),
-                                 ('insurance', 'Insurance'),
-                                 ('education', 'Education'),
-                                 ('service_center', 'Service Centers'),
-                                 ('travel', 'Travel'),
-                                 ('automotive', 'Automotive')], 'Industry', required=True, copy=False)
-    number_of_branches = fields.Integer(required=True, string="N.Branches")
-    address = fields.Char(required=True, string="Address")
-    postal_code = fields.Char(required=True, string="Postal Code")
-    region = fields.Char(required=True, string="State/Region")
-    city = fields.Char(required=True, string="City")
+number_of_desks = {'1': '1',
+                   '2': '2',
+                   '3': '3',
+                   '4': '4',
+                   '5': '5'}
 
 
-class queue_management_branch(models.Model):
+class QueueManagementBranch(models.Model):
     _name = 'queue.management.branch'
-    name = fields.Char(required=True, string="Branch Name")
-    service_ids = fields.One2many('queue.management.service', 'branch_id', required=True)
-    user_ids = fields.One2many('queue.management.user', 'branch_id')
+    _inherits = {'res.company': 'company_id'}
+    company_id = fields.Many2one('res.company')
+    service_ids = fields.One2many('queue.management.service', 'branch_id', required=True, string="Services")
 
 
-class queue_management_screen(models.Model):
-    _name = 'queue.management.screen'
+class QueueManagementLog(models.Model):
+    _name = 'queue.management.log'
     ticket_id = fields.Many2one('queue.management.ticket', 'Ticket number')
-    desk_id = fields.Many2one('queue.magment.user', 'Desk', domain='')# не знаю пока какие условия для домена делать
+    desk_id = fields.Many2one('queue.magment.user', 'Desk')
     service_id = fields.Many2one('queue.management.service', 'Service')
-    state = fields.Selection([
+    ticket_state = fields.Char(string='Ticket State', related='ticket_id.name', readonly=True)
+
+
+class QueueManagementTicket(models.Model):
+    _name = 'queue.management.ticket'
+    name = fields.Char(string='Ticket Name', readonly=True)
+    service_id = fields.Many2one('queue.management.service', 'Service', required='True')
+    ticket_state = fields.Selection([
         ('previous', 'Previous'),
         ('current', 'Current'),
         ('next', 'Next'),
         ('done', 'Done'),
         ('no-show', 'No-show')], 'Ticket State', required=True, copy=False, default='next')
 
+    @api.model
+    def create(self, vals):
+        if not vals.get('name'):
+            service = self.env['queue.management.service'].browse(vals.get('service_id'))
+            vals['name'] = service.sequence_id.next_by_id()
+        return super(QueueManagementTicket, self).create(vals)
 
-class queue_management_ticket(models.Model):
-    _name = 'queue.management.ticket'
-    name = fields.Char(required=True, string='Ticket Name')
-    service_id = fields.Many2one('queue.management.service', 'Service')
 
-
-class queue_management_service(models.Model):
+class QueueManagementService(models.Model):
     _name = 'queue.management.service'
     name = fields.Char(required=True, string='Service Name')
     state = fields.Selection([
             ('opened', 'Opened'),
-            ('closed', 'Closed'),
-    ], 'Service status', required=True, copy=False, default='closed')
+            ('closed', 'Closed')], 'Service status', required=True, copy=False, default='closed')
     branch_id = fields.Many2one('queue.management.branch', 'Branch', required=True)
-    letter = fields.Char(required=True, string="Service Letter")
+    sequence_id = fields.Many2one('ir.sequence', string='Letter', required=True)
+
+
+class QueueManagementAgent(models.Model):
+    _name = 'queue.management.agent'
+    _inherits = {'res.users': 'user_id'}
+    user_id = fields.Many2one('res.users')
+    desk = fields.Selection([(k, v) for k, v in number_of_desks.items()],
+                            'Desk', required=True, copy=False, default='1')
+    primary_service_id = fields.Many2one('queue.management.service', string="Primary service")
+
+    @api.model
+    def default_get(self, fields_list):
+        result = super(QueueManagementAgent, self).default_get(fields_list)
+        result['groups_id'] = [(4, self.env.ref('queue_management.group_queue_management_branch_agent').id, 0)]
+        return result

@@ -4,80 +4,155 @@
             id="main_menu_qm"
             groups="group_queue_management_branch_agent"/>
 
+  <menuitem name="Queue"
+            id="menu_qm_queue"
+            parent="main_menu_qm"
+            groups="group_queue_management_branch_agent"/>
+
+  <record model="ir.ui.view" id="queue_management_screen">
+    <field name="name">queue.management.screen</field>
+    <field name="model">queue.management.log</field>
+    <field name="arch" type="xml">
+      <tree string="queue_management_sreen_form" create="false" delete="false" edit="false">
+        <field name="ticket_id"/>
+        <field name="desk_id"/>
+        <field name="service_id"/>
+      </tree>
+    </field>
+  </record>
+
   <record model="ir.actions.act_window" id="action_screen">
     <field name="name">Screen</field>
-    <field name="res_model">queue.management.screen</field>
+    <field name="res_model">queue.management.log</field>
+    <field name="domain">[('ticket_state','=','current')]</field>
     <field name="view_mode">tree,form</field>
   </record>
 
   <menuitem name="Screen"
             id="menu_qm_screen"
-            parent="main_menu_qm"
+            parent="menu_qm_queue"
             groups="group_queue_management_branch_agent"
             action="action_screen"/>
   
-  <!-- <menuitem name="Users" -->
-  <!--           id="menu_qm_users" -->
-  <!--           parent="main_menu_qm" -->
-  <!--           groups="group_queue_management_admin"/> -->
+  <record model="ir.ui.view" id="queue_management_ticket">
+    <field name="name">queue.management.ticket</field>
+    <field name="model">queue.management.ticket</field>
+    <field name="arch" type="xml">
+      <tree string="queue_management_ticket_form">
+        <field name="name"/>
+        <field name="ticket_state"/>
+        <field name="service_id"/>
+      </tree>
+    </field>
+  </record>
 
-  <!-- <menuitem name="Branches" -->
-  <!--           id="menu_qm_screen" -->
-  <!--           parent="main_menu_qm" -->
-  <!--           groups="group_queue_management_branch_manager"/> -->
+  <record model="ir.actions.act_window" id="action_ticket">
+    <field name="name">Tickets</field>
+    <field name="res_model">queue.management.ticket</field>
+    <field name="view_mode">tree,form</field>
+  </record>
 
-  <!-- <menuitem name="Tickets" -->
-  <!--           id="menu_qm_screen" -->
-  <!--           parent="main_menu_qm" -->
-  <!--           groups="group_queue_management_branch_agent"/> -->
+  <menuitem name="Tickets"
+            id="menu_qm_ticket"
+            parent="main_menu_qm"
+            groups="group_queue_management_branch_agent"
+            action="action_ticket"/>
+  
+  <record model="ir.ui.view" id="queue_management_log">
+    <field name="name">queue.management.ticket</field>
+    <field name="model">queue.management.ticket</field>
+    <field name="arch" type="xml">
+      <tree string="queue_management_ticket_form">
+        <field name="name"/>
+        <field name="ticket_state"/>
+        <field name="service_id"/>
+      </tree>
+    </field>
+  </record>
 
+  <record model="ir.actions.act_window" id="action_log">
+    <field name="name">Log</field>
+    <field name="res_model">queue.management.log</field>
+    <field name="view_mode">tree</field>
+  </record>
 
-  <!-- <record model="queue.management" id="view_queue_management"> -->
-  <!--   <field name="name">Queue Management</field> -->
-  <!--   <field name="model">queue_management</field> -->
-  <!--   <field name="arch" type="xml"> -->
-  <!--     <field name="name"/> -->
-  <!--   </field> -->
-  <!-- </record> -->
+  <menuitem name="Log"
+            id="menu_qm_log"
+            parent="menu_qm_queue"
+            groups="group_queue_management_branch_manager"
+            action="action_log"/>
 
-    <!-- actions opening views on models -->
-    <!--
-    <record model="ir.actions.act_window" id="queue_management.action_window">
-      <field name="name">queue_management window</field>
-      <field name="res_model">queue_management.queue_management</field>
-      <field name="view_mode">tree,form</field>
-    </record>
-    -->
+  <record model="ir.actions.act_window" id="action_service">
+    <field name="name">Service</field>
+    <field name="res_model">queue.management.service</field>
+    <field name="view_mode">tree,form</field>
+  </record>
 
-    <!-- server action to the one above -->
-    <!--
-    <record model="ir.actions.server" id="queue_management.action_server">
-      <field name="name">queue_management server</field>
-      <field name="model_id" ref="model_queue_management_queue_management"/>
-      <field name="code">
-        action = {
-          "type": "ir.actions.act_window",
-          "view_mode": "tree,form",
-          "res_model": self._name,
-        }
-      </field>
-    </record>
-    -->
+  <menuitem name="Service"
+            id="menu_qm_service"
+            parent="main_menu_qm"
+            groups="group_queue_management_branch_manager"
+            action="action_service"/>
+  
+  <record model="ir.ui.view" id="queue_management_view_form_agent">
+    <field name="name">queue.management.agent</field>
+    <field name="model">queue.management.agent</field>
+    <field name="arch" type="xml">
+      <form string="queue_management_agent_form">
+        <group>
+          <field name="name"/>
+          <field name="login"/>
+          <field name="company_id"/>
+          <field name="desk"/>
+          <field name="primary_service_id"/>
+        </group>
+      </form>
+    </field>
+  </record>
 
-    <!-- Top menu item -->
-    <!--
-    <menuitem name="queue_management" id="queue_management.menu_root"/>
-    -->
-    <!-- menu categories -->
-    <!--
-    <menuitem name="Menu 1" id="queue_management.menu_1" parent="queue_management.menu_root"/>
-    <menuitem name="Menu 2" id="queue_management.menu_2" parent="queue_management.menu_root"/>
-    -->
-    <!-- actions -->
-    <!--
-    <menuitem name="List" id="queue_management.menu_1_list" parent="queue_management.menu_1"
-              action="queue_management.action_window"/>
-    <menuitem name="Server to list" id="queue_management" parent="queue_management.menu_2"
-              action="queue_management.action_server"/>
-    -->
+  <record model="ir.actions.act_window" id="action_agent">
+    <field name="name">Agent</field>
+    <field name="res_model">queue.management.agent</field>
+    <field name="view_mode">tree,form</field>
+    <field name="view_id" ref="queue_management_view_form_agent"/>
+  </record>
+
+  <menuitem name="Agent"
+            id="menu_qm_agent"
+            parent="main_menu_qm"
+            groups="group_queue_management_admin"
+            action="action_agent"/>
+
+  <record model="ir.ui.view" id="queue_management_view_form_branch">
+    <field name="name">queue.management.branch</field>
+    <field name="model">queue.management.branch</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="base.view_company_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//notebook" position="inside">
+        <page string="Queue Management">
+            <field name="service_ids">
+              <tree>
+                <field name="name"/>
+                <field name="state"/>
+                <field name="sequence_id"/>
+              </tree>
+            </field>
+        </page>
+      </xpath>
+    </field>
+  </record>
+
+  <record model="ir.actions.act_window" id="action_branch">
+    <field name="name">Branch</field>
+    <field name="res_model">queue.management.branch</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <menuitem name="Branch"
+            id="menu_qm_branch"
+            parent="main_menu_qm"
+            groups="group_queue_management_admin"
+            action="action_branch"/>
+
 </odoo>
