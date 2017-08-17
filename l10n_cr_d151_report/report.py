@@ -1,4 +1,5 @@
-from odoo import models, fields, api
+# coding: utf-8
+from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 from datetime import datetime
 
@@ -8,8 +9,8 @@ class D151Report(models.TransientModel):
     _description = "D151 Report"
 
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
-    date_from = fields.Date(string='Start Date', default=lambda *a: datetime.now().
-        date().replace(month=1, day=1).strftime('%Y-%m-%d'))
+    date_from = fields.Date(
+        string='Start Date', default=lambda *a: datetime.now().date().replace(month=1, day=1).strftime('%Y-%m-%d'))
     date_to = fields.Date(string='End Date', default=lambda *a: datetime.now().strftime('%Y-%m-%d'))
     partner_ids = fields.Many2many('res.partner', string='Partners')
     cr_d151_category_ids = fields.Many2many('account.cr.d151.category', string='D151 categories')
@@ -25,7 +26,7 @@ class D151Report(models.TransientModel):
         json_data = filter(None, json_data)
         json_data = map(self.filter_data, json_data)
         if not json_data:
-            raise UserError('There are no reports for specified criteria.')
+            raise UserError(_('There are no reports matching specified criteria.'))
         data['filtered_data'] = json_data
 
         return {
@@ -83,7 +84,7 @@ class D151Report(models.TransientModel):
             partner_amount = 0
             for a in p['amls']:
                 partner_amount += float(a['amount'])
-            p.update({ 'partner_amount' : partner_amount})
+            p.update({'partner_amount': partner_amount})
             category_amount += partner_amount
         data.update({'category_amount': category_amount})
         return data

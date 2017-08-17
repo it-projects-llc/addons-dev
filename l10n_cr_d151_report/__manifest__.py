@@ -19,7 +19,7 @@
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
-    	"views.xml",
+        "views.xml",
         "l10n_cr_d151_report_report.xml"
     ],
     "qweb": [],
