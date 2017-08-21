@@ -2,12 +2,12 @@
 
   <menuitem name="Queue Management"
             id="main_menu_qm"
-            groups="group_queue_management_branch_agent"/>
+            groups="group_queue_management_branch_agent,group_queue_management_branch_manager"/>
 
   <menuitem name="Queue"
             id="menu_qm_queue"
             parent="main_menu_qm"
-            groups="group_queue_management_branch_agent"/>
+            groups="group_queue_management_branch_agent,group_queue_management_branch_manager"/>
 
   <record model="ir.ui.view" id="queue_management_screen">
     <field name="name">queue.management.screen</field>
@@ -31,7 +31,7 @@
   <menuitem name="Screen"
             id="menu_qm_screen"
             parent="menu_qm_queue"
-            groups="group_queue_management_branch_agent"
+            groups="group_queue_management_branch_agent,group_queue_management_branch_manager"
             action="action_screen"/>
 
   <record model="ir.ui.view" id="queue_management_ticket">
@@ -40,7 +40,7 @@
     <field name="arch" type="xml">
       <tree string="queue_management_ticket_form" editable="bottom"
             colors="red:ticket_state == 'current';gray:ticket_state == 'done';green:ticket_state == 'next';blue:ticket_state == 'pending'">
-          <button name="call_client" icon="fa-angle-right" type="object"
+          <button name="call_client" icon="fa-arrow-circle-right" type="object"
                   attrs="{'invisible': [('ticket_state', 'not in', 'next')]}"/>
           <button name="change_state_done" icon="fa-check" type="object"
                   attrs="{'invisible': [('ticket_state', 'not in', 'current')]}"/>
@@ -75,22 +75,22 @@
     <field name="name">Tickets</field>
     <field name="res_model">queue.management.ticket</field>
     <field name="view_mode">tree,form</field>
-    <field name="context">{
-    'search_default_next_customer': 1,
-    'search_default_current_customer': 1, 
-    'search_default_done_customer': 1,
-    'search_default_pending_customer': 1,
-    }
-    </field>
+    <!-- <field name="context">{ -->
+    <!-- 'search_default_next_customer': 1, -->
+    <!-- 'search_default_current_customer': 1,  -->
+    <!-- 'search_default_done_customer': 1, -->
+    <!-- 'search_default_pending_customer': 1, -->
+    <!-- } -->
+    <!-- </field> -->
   </record>
 
   <menuitem name="Tickets"
             id="menu_qm_ticket"
             parent="main_menu_qm"
-            groups="group_queue_management_branch_agent"
+            groups="group_queue_management_branch_agent,group_queue_management_branch_manager"
             action="action_ticket"/>
   
-  <record model="ir.ui.view" id="queue_management_log">
+  <record model="ir.ui.view" id="queue_management_ticket_view_tree">
     <field name="name">queue.management.ticket</field>
     <field name="model">queue.management.ticket</field>
     <field name="arch" type="xml">
@@ -102,6 +102,19 @@
     </field>
   </record>
 
+  <record model="ir.ui.view" id="queue_management_log_view_tree">
+    <field name="name">queue.management.log</field>
+    <field name="model">queue.management.log</field>
+    <field name="arch" type="xml">
+      <tree string="queue_management_log_form">
+        <field name="ticket_id"/>
+        <field name="desk_id"/>
+        <field name="ticket_state"/>
+        <field name="service_id"/>
+      </tree>
+    </field>
+  </record>
+  
   <record model="ir.actions.act_window" id="action_log">
     <field name="name">Log</field>
     <field name="res_model">queue.management.log</field>
@@ -111,7 +124,7 @@
   <menuitem name="Log"
             id="menu_qm_log"
             parent="menu_qm_queue"
-            groups="group_queue_management_branch_manager"
+            groups="group_queue_management_branch_agent,group_queue_management_branch_manager"
             action="action_log"/>
 
   <record model="ir.actions.act_window" id="action_service">
@@ -146,7 +159,6 @@
     <field name="name">Agent</field>
     <field name="res_model">queue.management.agent</field>
     <field name="view_mode">tree,form</field>
-    <field name="view_id" ref="queue_management_view_form_agent"/>
   </record>
 
   <menuitem name="Agent"

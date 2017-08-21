@@ -19,10 +19,11 @@ class QueueManagementBranch(models.Model):
 
 class QueueManagementLog(models.Model):
     _name = 'queue.management.log'
-    ticket_id = fields.Many2one('queue.management.ticket', 'Ticket number')
-    desk_id = fields.Many2one('queue.magment.user', 'Desk')
-    service_id = fields.Many2one('queue.management.service', 'Service')
-    ticket_state = fields.Char(string='Ticket State', related='ticket_id.name', readonly=True)
+    ticket_id = fields.Many2one('queue.management.ticket', 'Ticket')
+    desk_id = fields.Selection([(k, v) for k, v in number_of_desks.items()],
+                            'Desk', required=True, copy=False, default='1')
+    service_id = fields.Many2one('queue.management.service', 'Service', related='ticket_id.service_id')
+    ticket_state = fields.Selection(string='Ticket State', related='ticket_id.ticket_state', readonly=True)
 
 
 class QueueManagementTicket(models.Model):
@@ -35,7 +36,7 @@ class QueueManagementTicket(models.Model):
         ('current', 'Current'),
         ('next', 'Next'),
         ('done', 'Done'),
-        ('no-show', 'No-show')], 'Ticket State', required=True, copy=False, default='pending')
+        ('no-show', 'No-show')], 'Ticket State', required=True, copy=False, default='pending')#readonly
 
     def _generate_order_by(self, order_spec, query):
         my_order = "CASE WHEN ticket_state='current'  THEN 0   WHEN ticket_state = 'next'  THEN 1 WHEN ticket_state = 'pending'  THEN 2 END"
@@ -64,16 +65,26 @@ class QueueManagementTicket(models.Model):
     @api.multi
     def call_client(self):
         self.ensure_one()
-        agent = self.env['queue.management.agent'].search([('user_id', '=', self.env.uid)])
+        agent = self.env['queue.management.agent'].sudo().search([('user_id', '=', self.env.uid)])
         current = self.search([('ticket_state', '=', 'current'),
                                ('service_id', 'in', agent.service_ids.mapped('id') + agent.primary_service_id.mapped('id'))])
         if current:
             raise UserError(_('You already have current ticket, make it done first.'))
         else:
             self.ticket_state = 'current'
+            self.env['queue.management.log'].create({'ticket_id': self.id,
+                                                     'desk_id': agent.desk,})
             ticket = self.get_next_ticket(agent.primary_service_id.id)
             if ticket:
                 ticket.ticket_state = 'next'
+                self.env['queue.management.log'].create({'ticket_id': ticket.id,
+                                                         'desk_id': agent.desk,})
+            return{
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'tree',
+                'res_model': 'queue.management.ticket',
+            }
 
 
 class QueueManagementService(models.Model):
