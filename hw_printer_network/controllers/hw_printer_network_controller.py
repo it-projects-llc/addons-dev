@@ -72,10 +72,7 @@ class UpdatedEscposDriver(EscposDriver):
                             network_printer_proxy = task[1]
                             # print in network printer
                             printer = UpdatedNetwork(network_printer_proxy)
-                            # printer.receipt(data)
-                            print "=================="
-                            print data
-                            print "=================="
+                            printer.receipt(data)
                 else:
                     if self.usb_printer_active:
                         printer = self.get_escpos_printer()
@@ -138,6 +135,7 @@ class UpdatedEscposProxy(EscposProxy):
     @http.route('/hw_proxy/print_xml_receipt', type='json', auth='none', cors='*')
     def print_xml_receipt(self, receipt, proxy=None):
         if proxy:
+            print receipt
             driver.push_task(['network_xml_receipt', proxy], receipt)
         else:
             super(UpdatedEscposProxy, self).print_xml_receipt(receipt)
