@@ -17,6 +17,7 @@ odoo.define('pos_orders_history', function (require) {
         loaded: function(self, orders) {
             self.db.pos_orders_history = orders;
             self.db.orders_history_by_id = {};
+            self.db.sorted_orders_history(orders);
             orders.forEach(function(order){
                 self.db.orders_history_by_id[order.id] = order;
                 self.db.order_search_string += self.db._order_search_string(order);
@@ -39,6 +40,7 @@ odoo.define('pos_orders_history', function (require) {
     PosDB.include({
         init: function(options){
             this.order_search_string = "";
+            this.sorted_orders = [];
             this._super.apply(this, arguments);
         },
         search_order: function(query){
@@ -87,12 +89,22 @@ odoo.define('pos_orders_history', function (require) {
             str = String(order.id) + ':' + str.replace(':','') + '\n';
             return str;
         },
+        get_sorted_orders_history: function(count) {
+            return this.sorted_orders.slice(0, count);
+        },
+        sorted_orders_history: function(orders) {
+           var orders_history = orders;
+            function compareNumeric(order1, order2) {
+                return order2.id - order1.id;
+            }
+            this.sorted_orders = orders_history.sort(compareNumeric);
+        },
     });
 
     OrdersHistoryButton = screens.ActionButtonWidget.extend({
         template: 'OrdersHistoryButton',
         button_click: function(){
-            if (this.pos.db.pos_orders_history) {
+            if (this.pos.db.pos_orders_history.length) {
                 this.gui.show_screen('orders_history_screen');
             }
         },
@@ -121,7 +133,9 @@ odoo.define('pos_orders_history', function (require) {
             this.$('.back').click(function(){
                 self.gui.show_screen('products');
             });
-            var orders = this.pos.db.pos_orders_history;
+
+            var orders = this.pos.db.get_sorted_orders_history(1000);
+
             this.render_list(orders);
             this.$('.details').click(function(event){
                 var order = self.pos.db.orders_history_by_id[Number(this.dataset.id)];
