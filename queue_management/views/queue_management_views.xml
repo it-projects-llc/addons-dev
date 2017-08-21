@@ -33,16 +33,41 @@
             parent="menu_qm_queue"
             groups="group_queue_management_branch_agent"
             action="action_screen"/>
-  
+
   <record model="ir.ui.view" id="queue_management_ticket">
     <field name="name">queue.management.ticket</field>
     <field name="model">queue.management.ticket</field>
     <field name="arch" type="xml">
-      <tree string="queue_management_ticket_form">
-        <field name="name"/>
-        <field name="ticket_state"/>
-        <field name="service_id"/>
+      <tree string="queue_management_ticket_form" editable="bottom"
+            colors="red:ticket_state == 'current';gray:ticket_state == 'done';green:ticket_state == 'next';blue:ticket_state == 'pending'">
+          <button name="call_client" icon="fa-angle-right" type="object"
+                  attrs="{'invisible': [('ticket_state', 'not in', 'next')]}"/>
+          <button name="change_state_done" icon="fa-check" type="object"
+                  attrs="{'invisible': [('ticket_state', 'not in', 'current')]}"/>
+          <field name="name"/>
+          <field name="ticket_state"/>
+          <field name="service_id"/>
       </tree>
+    </field>
+  </record>
+
+  <record model="ir.ui.view" id="queue_management_ticket_filter">
+    <field name="name">queue.management.ticket.filter</field>
+    <field name="model">queue.management.ticket</field>
+    <field name="arch" type="xml">
+      <search string="Filter">
+        <filter string="Next" domain="[('ticket_state','=', 'next')]" name="next_customer"/>
+        <separator/>
+        <filter string="Current" domain="[('ticket_state','=','current')]" name="current_customer"/>
+        <separator/>
+        <filter string="Done" domain="[('ticket_state','=','done')]" name="done_customer"/>
+        <separator/>
+        <filter string="Pending" domain="[('ticket_state','=','pending')]" name="pending_customer"/>
+        <group expand="0" string="Group By">
+          <filter string="Ticket State" domain="[]" context="{'group_by':'ticket_state'}"/>
+          <filter string="Service" domain="[]" context="{'group_by':'service_id'}"/>
+        </group>
+      </search>
     </field>
   </record>
 
@@ -50,6 +75,13 @@
     <field name="name">Tickets</field>
     <field name="res_model">queue.management.ticket</field>
     <field name="view_mode">tree,form</field>
+    <field name="context">{
+    'search_default_next_customer': 1,
+    'search_default_current_customer': 1, 
+    'search_default_done_customer': 1,
+    'search_default_pending_customer': 1,
+    }
+    </field>
   </record>
 
   <menuitem name="Tickets"

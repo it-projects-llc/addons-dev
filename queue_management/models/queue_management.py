@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
+from odoo.exceptions import Warning as UserError
+from odoo.tools.translate import _
 
 number_of_desks = {'1': '1',
                    '2': '2',
@@ -28,11 +30,18 @@ class QueueManagementTicket(models.Model):
     name = fields.Char(string='Ticket Name', readonly=True)
     service_id = fields.Many2one('queue.management.service', 'Service', required='True')
     ticket_state = fields.Selection([
+        ('pending', 'Pending'),
         ('previous', 'Previous'),
         ('current', 'Current'),
         ('next', 'Next'),
         ('done', 'Done'),
-        ('no-show', 'No-show')], 'Ticket State', required=True, copy=False, default='next')
+        ('no-show', 'No-show')], 'Ticket State', required=True, copy=False, default='pending')
+
+    def _generate_order_by(self, order_spec, query):
+        my_order = "CASE WHEN ticket_state='current'  THEN 0   WHEN ticket_state = 'next'  THEN 1 WHEN ticket_state = 'pending'  THEN 2 END"
+        if order_spec:
+            return super(QueueManagementTicket, self)._generate_order_by(order_spec, query) + ", " + my_order
+        return " order by " + my_order
 
     @api.model
     def create(self, vals):
@@ -40,6 +49,31 @@ class QueueManagementTicket(models.Model):
             service = self.env['queue.management.service'].browse(vals.get('service_id'))
             vals['name'] = service.sequence_id.next_by_id()
         return super(QueueManagementTicket, self).create(vals)
+
+    @api.multi
+    def change_state_done(self):
+        for record in self:
+            record.ticket_state = 'done'
+
+    @api.model
+    def get_next_ticket(self, service_id):
+        next_ticket = self.search([('ticket_state', '=', 'pending'),
+                                   ('service_id', '=', service_id)], limit=1, order='name')
+        return next_ticket
+
+    @api.multi
+    def call_client(self):
+        self.ensure_one()
+        agent = self.env['queue.management.agent'].search([('user_id', '=', self.env.uid)])
+        current = self.search([('ticket_state', '=', 'current'),
+                               ('service_id', 'in', agent.service_ids.mapped('id') + agent.primary_service_id.mapped('id'))])
+        if current:
+            raise UserError(_('You already have current ticket, make it done first.'))
+        else:
+            self.ticket_state = 'current'
+            ticket = self.get_next_ticket(agent.primary_service_id.id)
+            if ticket:
+                ticket.ticket_state = 'next'
 
 
 class QueueManagementService(models.Model):
@@ -58,7 +92,8 @@ class QueueManagementAgent(models.Model):
     user_id = fields.Many2one('res.users')
     desk = fields.Selection([(k, v) for k, v in number_of_desks.items()],
                             'Desk', required=True, copy=False, default='1')
-    primary_service_id = fields.Many2one('queue.management.service', string="Primary service")
+    primary_service_id = fields.Many2one('queue.management.service', string="Primary service", required=True)
+    service_ids = fields.Many2many('queue.management.service')
 
     @api.model
     def default_get(self, fields_list):
