@@ -5,7 +5,7 @@ from odoo import models, fields
 _logger = logging.getLogger(__name__)
 
 
-class PosConfig(models.Model):
+class RestaurantPrinter(models.Model):
     _inherit = 'restaurant.printer'
 
     network_printer = fields.Boolean(default=False, string='Network Printer', help="Check this box if this printer is Network printer")
