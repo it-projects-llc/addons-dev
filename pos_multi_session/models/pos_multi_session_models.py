@@ -110,9 +110,8 @@ class PosMultiSession(models.Model):
         if order:
             order.state = 'deleted'
         self.broadcast_message(message)
-        message = {'order_ID': self.order_ID}
-        return message
-
+        return {'order_ID': self.order_ID}
+      
     @api.multi
     def broadcast_message(self, message):
         self.ensure_one()
