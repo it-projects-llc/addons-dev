@@ -6,11 +6,49 @@ odoo.define('pos_orders_history', function (require) {
     var PosDB = require('point_of_sale.DB');
     var core = require('web.core');
     var QWeb = core.qweb;
+    var Model = require('web.Model');
 
     var OrdersHistoryButton = screens.OrdersHistoryButton = {};
     var OrdersHistoryScreenWidget = screens.OrdersHistoryScreenWidget = {};
     var OrderLinesHistoryScreenWidget = screens.OrderLinesHistoryScreenWidget = {};
 
+    var _super_pos_model = models.PosModel.prototype;
+    models.PosModel = models.PosModel.extend({
+        _flush_orders: function(orders, options) {
+            var res =  _super_pos_model._flush_orders.call(this, orders, options);
+            var self = this;
+            res.then(function(result) {
+                if (result && result.length) {
+                    result.forEach(function(id) {
+                        self.get_order_history(id);
+                        self.get_order_history_lines(id);
+                    });
+                }
+            });
+            return res;
+        },
+        get_order_history: function (id) {
+            var self = this;
+            new Model('pos.order').call('search_read', [[['id', '=', id]]]).done(function(order) {
+                console.log("new order", order);
+                var orders = self.db.pos_orders_history.concat(order);
+                self.db.pos_orders_history = orders;
+                self.db.sorted_orders_history(orders);
+            });
+        },
+        get_order_history_lines: function (id) {
+            var self = this;
+            new Model('pos.order.line').call('search_read', [[['order_id', '=', id]]]).done(function(lines) {
+                lines.forEach(function(line){
+                    self.db.line_by_id[line.id] = line;
+                });
+//                self.db.pos_orders_history_lines = self.db.pos_orders_history_lines.concat(lines);
+
+//                self.pos.db.add_order_history(order);
+//                  read orderline by id
+            });
+        },
+    });
     models.load_models({
         model: 'pos.order',
         fields: ['id', 'name', 'pos_reference', 'partner_id', 'date_order', 'user_id', 'amount_total', 'lines', 'state', 'sale_journal'],
