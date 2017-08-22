@@ -135,7 +135,9 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                 this.pos.receipt_printer_is_usb = false;
             }
             var connect = false;
-            if (!this.pos.receipt_printer_is_usb) {
+            if (this.pos.receipt_printer_is_usb) {
+                connect = this._super(url, options);
+            } else {
                 var try_real_hard_to_connect = function(new_url, retries, done) {
                     done = done || new $.Deferred();
                     $.ajax({
@@ -154,8 +156,6 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                     return done;
                 };
                 connect = try_real_hard_to_connect(url,3);
-            } else {
-                connect = this._super(url, options);
             }
             return connect.done(function(){
                 self.send_network_printers_to_pos_box(url, self.network_printers);
