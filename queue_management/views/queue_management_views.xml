@@ -13,7 +13,7 @@
     <field name="name">queue.management.screen</field>
     <field name="model">queue.management.log</field>
     <field name="arch" type="xml">
-      <tree string="queue_management_sreen_form" create="false" delete="false" edit="false">
+      <tree string="queue_management_screen_form">
         <field name="ticket_id"/>
         <field name="desk_id"/>
         <field name="service_id"/>
@@ -43,6 +43,8 @@
           <button name="call_client" icon="fa-arrow-circle-right" type="object"
                   attrs="{'invisible': [('ticket_state', 'not in', 'next')]}"/>
           <button name="change_state_done" icon="fa-check" type="object"
+                  attrs="{'invisible': [('ticket_state', 'not in', 'current')]}"/>
+          <button name="change_state_no_show" icon="fa-arrow-circle-down" type="object"
                   attrs="{'invisible': [('ticket_state', 'not in', 'current')]}"/>
           <field name="name"/>
           <field name="ticket_state"/>

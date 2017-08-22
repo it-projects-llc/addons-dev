@@ -21,7 +21,7 @@ class QueueManagementLog(models.Model):
     _name = 'queue.management.log'
     ticket_id = fields.Many2one('queue.management.ticket', 'Ticket')
     desk_id = fields.Selection([(k, v) for k, v in number_of_desks.items()],
-                            'Desk', required=True, copy=False, default='1')
+                               'Desk', required=True, copy=False, default='1')
     service_id = fields.Many2one('queue.management.service', 'Service', related='ticket_id.service_id')
     ticket_state = fields.Selection(string='Ticket State', related='ticket_id.ticket_state', readonly=True)
 
@@ -37,6 +37,18 @@ class QueueManagementTicket(models.Model):
         ('next', 'Next'),
         ('done', 'Done'),
         ('no-show', 'No-show')], 'Ticket State', required=True, copy=False, default='pending')#readonly
+    # hide_ticket = fields.Boolean(compute='_compute_hide_ticket')
+
+    # @api.multi
+    # def _compute_hide_ticket(self):
+    #     self.ensure_one()
+    #     for record in self:
+    #         agent = self.env['queue.management.agent'].sudo().search([('user_id', '=', self.env.uid)])
+    #         current = self.search([('service_id', 'not in', agent.service_ids.mapped('id') + agent.primary_service_id.mapped('id'))])
+    #         if current:
+    #             record.hide_ticket = True
+    #         else:
+    #             record.hide_ticket = False
 
     def _generate_order_by(self, order_spec, query):
         my_order = "CASE WHEN ticket_state='current'  THEN 0   WHEN ticket_state = 'next'  THEN 1 WHEN ticket_state = 'pending'  THEN 2 END"
@@ -49,17 +61,36 @@ class QueueManagementTicket(models.Model):
         if not vals.get('name'):
             service = self.env['queue.management.service'].browse(vals.get('service_id'))
             vals['name'] = service.sequence_id.next_by_id()
+        if not self.is_next_exist(vals['service_id']):
+            vals['ticket_state'] = 'next'
         return super(QueueManagementTicket, self).create(vals)
 
     @api.multi
     def change_state_done(self):
         for record in self:
             record.ticket_state = 'done'
+        return{
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'tree',
+                'res_model': 'queue.management.ticket',
+            }
+
+    @api.multi
+    def change_state_no_show(self):
+        for record in self:
+            record.ticket_state = 'no-show'
+
+    @api.model
+    def is_next_exist(self, service_id):
+        return self.search_count([('ticket_state', '=', 'next')])
 
     @api.model
     def get_next_ticket(self, service_id):
         next_ticket = self.search([('ticket_state', '=', 'pending'),
                                    ('service_id', '=', service_id)], limit=1, order='name')
+        if self.is_next_exist(service_id):
+            return None
         return next_ticket
 
     @api.multi
