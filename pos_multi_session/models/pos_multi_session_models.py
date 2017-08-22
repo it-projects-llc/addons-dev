@@ -26,8 +26,7 @@ class PosMultiSession(models.Model):
     name = fields.Char('Name')
     pos_ids = fields.One2many('pos.config', 'multi_session_id', 'POSes')
     order_ids = fields.One2many('pos.multi_session.order', 'multi_session_id', 'Orders')
-    order_ID = fields.Integer(string="Order number", default=0,
-                              help="Current Order Number shared across all POS in Multi Session")
+    order_ID = fields.Integer(string="Order number", default=0, help="Current Order Number shared across all POS in Multi Session")
 
     @api.multi
     def on_update_message(self, message):
@@ -111,7 +110,7 @@ class PosMultiSession(models.Model):
             order.state = 'deleted'
         self.broadcast_message(message)
         return {'order_ID': self.order_ID}
-      
+
     @api.multi
     def broadcast_message(self, message):
         self.ensure_one()
