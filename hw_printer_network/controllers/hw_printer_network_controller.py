@@ -135,7 +135,6 @@ class UpdatedEscposProxy(EscposProxy):
     @http.route('/hw_proxy/print_xml_receipt', type='json', auth='none', cors='*')
     def print_xml_receipt(self, receipt, proxy=None):
         if proxy:
-            print receipt
             driver.push_task(['network_xml_receipt', proxy], receipt)
         else:
             super(UpdatedEscposProxy, self).print_xml_receipt(receipt)
