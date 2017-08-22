@@ -114,7 +114,7 @@ odoo.define('pos_restaurant.network_printer', function (require) {
             var self = this;
             var port = ':' + (options.port || '8069');
             var url = current_url;
-            this.pos.usb_printer_active = true;
+            this.pos.receipt_printer_is_usb = true;
             if(url.indexOf('//') < 0){
                 url = 'http://' + url;
             }
@@ -132,9 +132,9 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                 self.network_printers.push({'ip': item.config.proxy_ip, 'status': 'offline', 'name': item.config.name});
             });
             if (this.pos.config.receipt_printer_type === "network_printer") {
-                this.pos.usb_printer_active = false;
+                this.pos.receipt_printer_is_usb = false;
             }
-            if (!this.pos.usb_printer_active) {
+            if (!this.pos.receipt_printer_is_usb) {
                 var try_real_hard_to_connect = function(new_url, retries, done) {
                     done = done || new $.Deferred();
                     $.ajax({
@@ -201,7 +201,7 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                         msg += _t('Scanner');
                     }
                 }
-                if (this.pos.usb_printer_active) {
+                if (this.pos.receipt_printer_is_usb) {
                     if( this.pos.config.iface_print_via_proxy ||
                         this.pos.config.iface_cashdrawer ) {
                         var printer = status.drivers.escpos
@@ -284,7 +284,7 @@ odoo.define('pos_restaurant.network_printer', function (require) {
                 network_printers = this.devices_status;
             }
             // usb printer
-            if (this.pos.usb_printer_active) {
+            if (this.pos.receipt_printer_is_usb) {
                 if (this.usb_status) {
                     this.usb_printer_status = [{'status':'online'}];
                 } else {
@@ -302,7 +302,7 @@ odoo.define('pos_restaurant.network_printer', function (require) {
             }
         },
         get_usb_printer_status: function(){
-            return this.pos.usb_printer_active;
+            return this.pos.receipt_printer_is_usb;
         },
         render_network_list: function(network_printers) {
             var network_contents = this.$el[0].querySelector('.network-printers-list-contents');
