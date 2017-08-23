@@ -13,11 +13,16 @@ Configuration
 * Go to ``Point of Sale >> Configuration >> Order Printers``
 
   * Click on ``[Create]``
-  * Specify a name of new printer in the "Printer Name" field
-  * Specify the IP address of printer
-  * Select Product Categories
-  * Select Products
+  * Specify a name of new printer in the **Printer Name** field
+  * Specify the **IP Address** of printer
+  * Select **Printed Product Categories**
+  * Select **Printed Products**
   * Click on ``[Save]``
+
+Note
+====
+
+* If neither **Printed Product Categories** nor **Printed Products** are set, then printer will print all products
 
 Usage
 =====

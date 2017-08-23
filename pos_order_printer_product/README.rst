@@ -2,7 +2,7 @@
  POS Order Printer Product
 ===========================
 
-POS Order Printer Product
+The module allows to print products on kitchen printers without use product categories.
 
 Credits
 =======
