@@ -12,7 +12,13 @@ odoo.define('pos_restaurant_base.models', function (require) {
     var _super_order = models.Order.prototype;
     models.Order = models.Order.extend({
         computeChanges: function(categories, config){
-            //  DIFFERENCES FROM ORIGINAL: config - printers config (NEW CODE)
+            //  DIFFERENCES FROM ORIGINAL: 
+            // * new incomming argument "config" (printer config)
+            //   it's not used here, but may be used in extension 
+            //   (yes, we know that declaration of config is not necessary here,
+            //   but we'd like to do it to make code more readable)
+            //
+            // * new attributes in return: new_all and cancelled_all - lines without filtration with categories
             var current_res = this.build_line_resume();
             var old_res     = this.saved_resume || {};
             var json        = this.export_as_JSON();
@@ -93,7 +99,6 @@ odoo.define('pos_restaurant_base.models', function (require) {
             var minutes = '' + d.getMinutes();
                 minutes = minutes.length < 2 ? ('0' + minutes) : minutes;
 
-            //  DIFFERENCES FROM ORIGINAL: new_all and cancelled_all - lines without filtration with categories (NEW CODE)
             return {
                 'new': add,
                 'cancelled': rem,
@@ -112,10 +117,12 @@ odoo.define('pos_restaurant_base.models', function (require) {
             var self = this;
             var printers = this.pos.printers;
             for(var i = 0; i < printers.length; i++){
-                //  DIFFERENCES FROM ORIGINAL: call compute change with config
+                // DIFFERENCES FROM ORIGINAL: 
+                // * call computeChanges with config
                 var changes = this.computeChanges(printers[i].config.product_categories_ids, printers[i].config);
 
-                // DIFFERENCES FROM ORIGINAL: Is split into a separate function
+                // DIFFERENCES FROM ORIGINAL:
+                // * move printing to a separate function
                 this.print_order_receipt(printers[i], changes);
             }
         },
