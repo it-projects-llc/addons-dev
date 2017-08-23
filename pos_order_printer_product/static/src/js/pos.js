@@ -3,7 +3,6 @@ odoo.define('pos_order_printer_product', function(require){
     var exports = {};
 
     var Backbone = window.Backbone;
-    var session = require('web.session');
     var core = require('web.core');
     var models = require('pos_restaurant_base.models');
     var multiprint = require('pos_restaurant.multiprint');
@@ -38,16 +37,17 @@ odoo.define('pos_order_printer_product', function(require){
             if (config && config.product_ids && config.product_ids.length) {
                 var add = [];
                 var rem = [];
+                var i = 0;
 
                 // filter the added and removed orders to only contains
                 // products that belong the products list supplied as a parameter
-                for(var i = 0; i < res.new_all.length; i++){
+                for(i = 0; i < res.new_all.length; i++){
                     if(this.pos.is_product_in_product_list(res.new_all[i].id, config.product_ids)){
                         add.push(res.new_all[i]);
                     }
                 }
 
-                for(var i = 0; i < res.cancelled_all.length; i++){
+                for(i = 0; i < res.cancelled_all.length; i++){
                     if(this.is_product_in_product_list(res.cancelled_all[i].id, config.product_ids)){
                         rem.push(res.cancelled_all[i]);
                     }
