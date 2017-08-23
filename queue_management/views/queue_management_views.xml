@@ -9,13 +9,18 @@
             parent="main_menu_qm"
             groups="group_queue_management_branch_agent,group_queue_management_branch_manager"/>
 
+  <menuitem name="Users"
+            id="menu_qm_users"
+            parent="main_menu_qm"
+            groups="group_queue_management_admin"/>
+
   <record model="ir.ui.view" id="queue_management_screen">
     <field name="name">queue.management.screen</field>
     <field name="model">queue.management.log</field>
     <field name="arch" type="xml">
-      <tree string="queue_management_screen_form">
+      <tree string="queue_management_screen_form" create="false" delete="false" edit="false">
         <field name="ticket_id"/>
-        <field name="desk_id"/>
+        <field name="desk"/>
         <field name="service_id"/>
       </tree>
     </field>
@@ -41,11 +46,14 @@
       <tree string="queue_management_ticket_form" editable="bottom"
             colors="red:ticket_state == 'current';gray:ticket_state == 'done';green:ticket_state == 'next';blue:ticket_state == 'pending'">
           <button name="call_client" icon="fa-arrow-circle-right" type="object"
-                  attrs="{'invisible': [('ticket_state', 'not in', 'next')]}"/>
+                  attrs="{'invisible': [('ticket_state', 'not in', 'next')]}"
+                  groups="queue_management_ticket.group_queue_management_branch_agent"/>
           <button name="change_state_done" icon="fa-check" type="object"
-                  attrs="{'invisible': [('ticket_state', 'not in', 'current')]}"/>
+                  attrs="{'invisible': [('ticket_state', 'not in', 'current')]}"
+                  groups="queue_management_ticket.group_queue_management_branch_agent"/>
           <button name="change_state_no_show" icon="fa-arrow-circle-down" type="object"
-                  attrs="{'invisible': [('ticket_state', 'not in', 'current')]}"/>
+                  attrs="{'invisible': [('ticket_state', 'not in', 'current')]}"
+                  groups="queue_management_ticket.group_queue_management_branch_agent"/>
           <field name="name"/>
           <field name="ticket_state"/>
           <field name="service_id"/>
@@ -110,7 +118,7 @@
     <field name="arch" type="xml">
       <tree string="queue_management_log_form">
         <field name="ticket_id"/>
-        <field name="desk_id"/>
+        <field name="desk"/>
         <field name="ticket_state"/>
         <field name="service_id"/>
       </tree>
@@ -163,12 +171,41 @@
     <field name="view_mode">tree,form</field>
   </record>
 
-  <menuitem name="Agent"
+  <menuitem name="Agents"
             id="menu_qm_agent"
-            parent="main_menu_qm"
+            parent="menu_qm_users"
             groups="group_queue_management_admin"
             action="action_agent"/>
+  <!-- -->
+  <!-- <record model="ir.ui.view" id="queue_management_view_form_manager"> -->
+  <!--   <field name="name">queue.management.manager</field> -->
+  <!--   <field name="model">queue.management.manger</field> -->
+  <!--   <field name="arch" type="xml"> -->
+  <!--     <form string="queue_management_manager_form"> -->
+  <!--       <group> -->
+  <!--         <field name="name"/> -->
+  <!--         <field name="login"/> -->
+  <!--         <field name="company_id"/> -->
+  <!--         <field name="desk"/> -->
+  <!--         <field name="primary_service_id"/> -->
+  <!--       </group> -->
+  <!--     </form> -->
+  <!--   </field> -->
+  <!-- </record> -->
 
+  <record model="ir.actions.act_window" id="action_manager">
+    <field name="name">Manager</field>
+    <field name="res_model">queue.management.manager</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <menuitem name="Managers"
+            id="menu_qm_manager"
+            parent="menu_qm_users"
+            groups="group_queue_management_admin"
+            action="action_manager"/>
+
+  <!-- -->
   <record model="ir.ui.view" id="queue_management_view_form_branch">
     <field name="name">queue.management.branch</field>
     <field name="model">queue.management.branch</field>
@@ -195,7 +232,7 @@
     <field name="view_mode">tree,form</field>
   </record>
 
-  <menuitem name="Branch"
+  <menuitem name="Branches"
             id="menu_qm_branch"
             parent="main_menu_qm"
             groups="group_queue_management_admin"

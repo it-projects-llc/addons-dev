@@ -20,8 +20,8 @@ class QueueManagementBranch(models.Model):
 class QueueManagementLog(models.Model):
     _name = 'queue.management.log'
     ticket_id = fields.Many2one('queue.management.ticket', 'Ticket')
-    desk_id = fields.Selection([(k, v) for k, v in number_of_desks.items()],
-                               'Desk', required=True, copy=False, default='1')
+    desk = fields.Selection([(k, v) for k, v in number_of_desks.items()],
+                            'Desk', required=True, copy=False, default='1')
     service_id = fields.Many2one('queue.management.service', 'Service', related='ticket_id.service_id')
     ticket_state = fields.Selection(string='Ticket State', related='ticket_id.ticket_state', readonly=True)
 
@@ -104,12 +104,12 @@ class QueueManagementTicket(models.Model):
         else:
             self.ticket_state = 'current'
             self.env['queue.management.log'].create({'ticket_id': self.id,
-                                                     'desk_id': agent.desk,})
+                                                     'desk': agent.desk,})
             ticket = self.get_next_ticket(agent.primary_service_id.id)
             if ticket:
                 ticket.ticket_state = 'next'
                 self.env['queue.management.log'].create({'ticket_id': ticket.id,
-                                                         'desk_id': agent.desk,})
+                                                         'desk': agent.desk,})
             return{
                 'type': 'ir.actions.act_window',
                 'view_type': 'form',
@@ -141,4 +141,16 @@ class QueueManagementAgent(models.Model):
     def default_get(self, fields_list):
         result = super(QueueManagementAgent, self).default_get(fields_list)
         result['groups_id'] = [(4, self.env.ref('queue_management.group_queue_management_branch_agent').id, 0)]
+        return result
+
+
+class QueueManagementManager(models.Model):
+    _name = 'queue.management.manager'
+    _inherits = {'res.users': 'user_id'}
+    user_id = fields.Many2one('res.users')
+
+    @api.model
+    def default_get(self, fields_list):
+        result = super(QueueManagementManager, self).default_get(fields_list)
+        result['groups_id'] = [(4, self.env.ref('queue_management.group_queue_management_branch_manager').id, 0)]
         return result
