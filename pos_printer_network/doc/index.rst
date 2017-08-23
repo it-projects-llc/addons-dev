@@ -1,5 +1,5 @@
 =====================
- Pos Network Printer
+ POS Network Printer
 =====================
 
 Installation
@@ -56,4 +56,3 @@ Note
 ====
 
 In the POS interface you can see the connection status of your printers by clicking on posbox icon at the top right corner.
-
