@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, models, fields
+from odoo import models, fields
 
 
 class RestaurantPrinter(models.Model):
