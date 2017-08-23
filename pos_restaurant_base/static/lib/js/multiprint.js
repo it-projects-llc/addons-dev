@@ -77,6 +77,6 @@ odoo.define('pos_restaurant.base', function (require) {
             return _super_posmodel.initialize.call(this, session, attributes);
         },
     });
-
+    // DIFFERENCES FROM ORIGINAL: return Printer class
     return Printer;
 });
