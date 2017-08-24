@@ -16,12 +16,15 @@
     # "currency": "EUR",
 
     "depends": [
+        "base_action_rule",
+        "pos_longpolling",
         "point_of_sale",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
         "views/pos_orders_history_view.xml",
         "views/pos_orders_history_template.xml",
+        "data/base_action_rule.xml",
     ],
     "qweb": [
         "static/src/xml/pos.xml",

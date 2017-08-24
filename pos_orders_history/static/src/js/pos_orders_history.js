@@ -7,6 +7,7 @@ odoo.define('pos_orders_history', function (require) {
     var core = require('web.core');
     var QWeb = core.qweb;
     var Model = require('web.Model');
+    var longpolling = require('pos_longpolling');
 
     var OrdersHistoryButton = screens.OrdersHistoryButton = {};
     var OrdersHistoryScreenWidget = screens.OrdersHistoryScreenWidget = {};
@@ -14,38 +15,45 @@ odoo.define('pos_orders_history', function (require) {
 
     var _super_pos_model = models.PosModel.prototype;
     models.PosModel = models.PosModel.extend({
-        _flush_orders: function(orders, options) {
-            var res =  _super_pos_model._flush_orders.call(this, orders, options);
+        initialize: function(){
+            _super_pos_model.initialize.apply(this, arguments);
+            this.add_channel("pos_orders_history", this.on_orders_history_updates, this);
+        },
+        on_orders_history_updates: function(message) {
             var self = this;
-            res.then(function(result) {
-                if (result && result.length) {
-                    result.forEach(function(id) {
-                        self.get_order_history(id);
-                        self.get_order_history_lines(id);
-                    });
-                }
+            message.updated_orders.forEach(function(id) {
+                self.get_order_history(id).done(function(order) {
+                    self.update_orders_history(order);
+                });
+                self.get_order_history_lines_by_order_id(id).done(function(lines) {
+                    self.update_orders_history_lines(lines);
+                });
             });
-            return res;
         },
         get_order_history: function (id) {
+            return new Model('pos.order').call('search_read', [[['id', '=', id]]]);
+        },
+        get_order_history_lines_by_order_id: function (id) {
+            return new Model('pos.order.line').call('search_read', [[['order_id', '=', id]]]);
+        },
+        update_orders_history: function(orders) {
+            if (!(orders instanceof Array)) {
+                orders = [orders];
+            }
             var self = this;
-            new Model('pos.order').call('search_read', [[['id', '=', id]]]).done(function(order) {
-                console.log("new order", order);
-                var orders = self.db.pos_orders_history.concat(order);
-                self.db.pos_orders_history = orders;
-                self.db.sorted_orders_history(orders);
+            var all_orders = this.db.pos_orders_history.concat(orders);
+            this.db.pos_orders_history = all_orders;
+            this.db.sorted_orders_history(all_orders);
+            all_orders.forEach(function(current_order){
+                self.db.orders_history_by_id[current_order.id] = current_order;
             });
         },
-        get_order_history_lines: function (id) {
+        update_orders_history_lines: function(lines) {
             var self = this;
-            new Model('pos.order.line').call('search_read', [[['order_id', '=', id]]]).done(function(lines) {
-                lines.forEach(function(line){
-                    self.db.line_by_id[line.id] = line;
-                });
-//                self.db.pos_orders_history_lines = self.db.pos_orders_history_lines.concat(lines);
-
-//                self.pos.db.add_order_history(order);
-//                  read orderline by id
+            var all_lines = this.db.pos_orders_history_lines.concat(lines);
+            this.db.pos_orders_history_lines = all_lines;
+            all_lines.forEach(function(line){
+                self.db.line_by_id[line.id] = line;
             });
         },
     });
@@ -53,13 +61,7 @@ odoo.define('pos_orders_history', function (require) {
         model: 'pos.order',
         fields: ['id', 'name', 'pos_reference', 'partner_id', 'date_order', 'user_id', 'amount_total', 'lines', 'state', 'sale_journal'],
         loaded: function(self, orders) {
-            self.db.pos_orders_history = orders;
-            self.db.orders_history_by_id = {};
-            self.db.sorted_orders_history(orders);
-            orders.forEach(function(order){
-                self.db.orders_history_by_id[order.id] = order;
-                self.db.order_search_string += self.db._order_search_string(order);
-            });
+            self.update_orders_history(orders);
         },
     });
 
@@ -67,11 +69,7 @@ odoo.define('pos_orders_history', function (require) {
         model: 'pos.order.line',
         fields: ['product_id', 'qty', 'price_unit', 'discount','tax_ids','price_subtotal', 'price_subtotal_incl'],
         loaded: function(self, lines) {
-            self.db.pos_orders_history_lines = lines;
-            self.db.line_by_id = {};
-            lines.forEach(function(line){
-                self.db.line_by_id[line.id] = line;
-            });
+            self.update_orders_history_lines(lines);
         },
     });
 
@@ -79,6 +77,10 @@ odoo.define('pos_orders_history', function (require) {
         init: function(options){
             this.order_search_string = "";
             this.sorted_orders = [];
+            this.orders_history_by_id = {};
+            this.line_by_id = {};
+            this.pos_orders_history = [];
+            this.pos_orders_history_lines = [];
             this._super.apply(this, arguments);
         },
         search_order: function(query){
@@ -131,11 +133,16 @@ odoo.define('pos_orders_history', function (require) {
             return this.sorted_orders.slice(0, count);
         },
         sorted_orders_history: function(orders) {
-           var orders_history = orders;
+            var self = this;
+            var orders_history = orders;
             function compareNumeric(order1, order2) {
                 return order2.id - order1.id;
             }
             this.sorted_orders = orders_history.sort(compareNumeric);
+            this.order_search_string = "";
+            this.sorted_orders.forEach(function(order){
+                self.order_search_string += self._order_search_string(order);
+            });
         },
     });
 
