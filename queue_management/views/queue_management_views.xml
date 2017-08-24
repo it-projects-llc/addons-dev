@@ -159,7 +159,8 @@
           <field name="login"/>
           <field name="company_id"/>
           <field name="desk"/>
-          <field name="primary_service_id"/>
+          <field name="service_ids" widget="many2many_checkboxes"/>
+          <field name="primary_service_id" options="{'no_create': True}"/>
         </group>
       </form>
     </field>
@@ -176,22 +177,18 @@
             parent="menu_qm_users"
             groups="group_queue_management_admin"
             action="action_agent"/>
-  <!-- -->
-  <!-- <record model="ir.ui.view" id="queue_management_view_form_manager"> -->
-  <!--   <field name="name">queue.management.manager</field> -->
-  <!--   <field name="model">queue.management.manger</field> -->
-  <!--   <field name="arch" type="xml"> -->
-  <!--     <form string="queue_management_manager_form"> -->
-  <!--       <group> -->
-  <!--         <field name="name"/> -->
-  <!--         <field name="login"/> -->
-  <!--         <field name="company_id"/> -->
-  <!--         <field name="desk"/> -->
-  <!--         <field name="primary_service_id"/> -->
-  <!--       </group> -->
-  <!--     </form> -->
-  <!--   </field> -->
-  <!-- </record> -->
+  
+  <!--Manager-->
+  <record model="ir.ui.view" id="queue_management_view_form_manager">
+    <field name="name">queue.management.manager</field>
+    <field name="model">queue.management.manager</field>
+    <field name="arch" type="xml">
+      <form string="queue_management_manager_form">
+        <group>
+        </group>
+      </form>
+    </field>
+  </record>
 
   <record model="ir.actions.act_window" id="action_manager">
     <field name="name">Manager</field>

@@ -37,18 +37,6 @@ class QueueManagementTicket(models.Model):
         ('next', 'Next'),
         ('done', 'Done'),
         ('no-show', 'No-show')], 'Ticket State', required=True, copy=False, default='pending')#readonly
-    # hide_ticket = fields.Boolean(compute='_compute_hide_ticket')
-
-    # @api.multi
-    # def _compute_hide_ticket(self):
-    #     self.ensure_one()
-    #     for record in self:
-    #         agent = self.env['queue.management.agent'].sudo().search([('user_id', '=', self.env.uid)])
-    #         current = self.search([('service_id', 'not in', agent.service_ids.mapped('id') + agent.primary_service_id.mapped('id'))])
-    #         if current:
-    #             record.hide_ticket = True
-    #         else:
-    #             record.hide_ticket = False
 
     def _generate_order_by(self, order_spec, query):
         my_order = "CASE WHEN ticket_state='current'  THEN 0   WHEN ticket_state = 'next'  THEN 1 WHEN ticket_state = 'pending'  THEN 2 END"
@@ -134,8 +122,10 @@ class QueueManagementAgent(models.Model):
     user_id = fields.Many2one('res.users')
     desk = fields.Selection([(k, v) for k, v in number_of_desks.items()],
                             'Desk', required=True, copy=False, default='1')
-    primary_service_id = fields.Many2one('queue.management.service', string="Primary service", required=True)
-    service_ids = fields.Many2many('queue.management.service')
+    primary_service_id = fields.Many2one('queue.management.service',
+                                         string="Primary service", required=True,
+                                         domain="[('id', 'in', service_ids[0][2])]")
+    service_ids = fields.Many2many('queue.management.service', string="Services")
 
     @api.model
     def default_get(self, fields_list):
