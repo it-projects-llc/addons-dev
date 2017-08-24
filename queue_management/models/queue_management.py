@@ -16,6 +16,13 @@ class QueueManagementBranch(models.Model):
     company_id = fields.Many2one('res.company')
     service_ids = fields.One2many('queue.management.service', 'branch_id', required=True, string="Services")
 
+    @api.model
+    def create(self, vals):
+        vals['details_model'] = 'queue.management.branch'
+        result = super(QueueManagementBranch, self).create(vals)
+        result.details_res_id = result.id
+        return result
+
 
 class QueueManagementLog(models.Model):
     _name = 'queue.management.log'
@@ -125,7 +132,6 @@ class QueueManagementAgent(models.Model):
     primary_service_id = fields.Many2one('queue.management.service',
                                          string="Primary service", required=True,
                                          domain="[('id', 'in', service_ids[0][2])]")
-    service_ids = fields.Many2many('queue.management.service', string="Services")
 
     @api.model
     def default_get(self, fields_list):
@@ -141,6 +147,14 @@ class QueueManagementManager(models.Model):
 
     @api.model
     def default_get(self, fields_list):
+        fields_list.pop(fields_list.index('company_id'))
         result = super(QueueManagementManager, self).default_get(fields_list)
         result['groups_id'] = [(4, self.env.ref('queue_management.group_queue_management_branch_manager').id, 0)]
+        return result
+
+    @api.model
+    def create(self, vals):
+        company_id = vals["company_id"]
+        vals["company_ids"] = [(4, company_id, 0)]
+        result = super(QueueManagementManager, self).create(vals)
         return result

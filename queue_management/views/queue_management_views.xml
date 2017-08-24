@@ -12,7 +12,7 @@
   <menuitem name="Users"
             id="menu_qm_users"
             parent="main_menu_qm"
-            groups="group_queue_management_admin"/>
+            groups="group_queue_management_branch_manager"/>
 
   <record model="ir.ui.view" id="queue_management_screen">
     <field name="name">queue.management.screen</field>
@@ -155,11 +155,10 @@
     <field name="arch" type="xml">
       <form string="queue_management_agent_form">
         <group>
-          <field name="name"/>
+          <field name="name" required="True"/>
           <field name="login"/>
-          <field name="company_id"/>
           <field name="desk"/>
-          <field name="service_ids" widget="many2many_checkboxes"/>
+          <field name="service_ids" widget="many2many_checkboxes" required="True"/>
           <field name="primary_service_id" options="{'no_create': True}"/>
         </group>
       </form>
@@ -175,7 +174,7 @@
   <menuitem name="Agents"
             id="menu_qm_agent"
             parent="menu_qm_users"
-            groups="group_queue_management_admin"
+            groups="group_queue_management_branch_manager"
             action="action_agent"/>
   
   <!--Manager-->
@@ -185,6 +184,11 @@
     <field name="arch" type="xml">
       <form string="queue_management_manager_form">
         <group>
+          <field name="name" required="True"/>
+          <field name="login"/>
+          <field name="company_id" string="Branch"
+                 domain="[('details_model', '=', 'queue.management.branch')]"
+                 options="{'no_create': True, 'no_open': True}"/>
         </group>
       </form>
     </field>

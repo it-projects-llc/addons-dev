@@ -17,21 +17,35 @@
   
   <record id="group_queue_management_admin" model="res.groups">
     <field name="name">Queue Administrator</field>
-    <field name="implied_ids" eval="[(4, ref('group_queue_management_branch_manager'))]"/>
+    <field name="implied_ids" eval="[(4, ref('base.group_multi_company')),
+                                     (4, ref('group_queue_management_branch_manager'))]"/>
     <field name="category_id" ref="module_queue_management_category"/>
   </record>
 
-  <!-- <record model="ir.rule" id="queue_management_rule"> -->
-  <!--   <field name="name">The Agent sees tickets related only to him</field> -->
-  <!--   <field name="model_id" ref="queue_management.model_queue_management_ticket"/> -->
-  <!--   <field name="groups" eval="[(4,ref('queue_management.group_queue_management_branch_agent'))]"/> -->
-  <!--   <field name="domain_force">[ -->
-  <!--   ('primary_service_id', '=', agent.service_id.id), -->
-  <!--   ]</field> -->
-  <!--   <field name="perm_unlink" eval="True"/> -->
-  <!--   <field name="perm_write" eval="True"/> -->
-  <!--   <field name="perm_create" eval="True"/> -->
-  <!--   <field name="perm_read" eval="True"/> -->
-  <!-- </record> -->
+  <record model="ir.rule" id="queue_management_agent_rule">
+    <field name="name">The Agent sees tickets related only to him</field>
+    <field name="model_id" ref="queue_management.model_queue_management_ticket"/>
+    <field name="groups" eval="[(4,ref('queue_management.group_queue_management_branch_agent'))]"/>
+    <field name="domain_force">[
+    ('service_id', 'in', user.service_ids.ids),
+    ]</field>
+    <field name="perm_unlink" eval="True"/>
+    <field name="perm_write" eval="True"/>
+    <field name="perm_create" eval="True"/>
+    <field name="perm_read" eval="True"/>
+  </record>
+
+  <record model="ir.rule" id="queue_management_manager_rule">
+    <field name="name">The Manager sees services related only to him</field>
+    <field name="model_id" ref="queue_management.model_queue_management_ticket"/>
+    <field name="groups" eval="[(4,ref('queue_management.group_queue_management_branch_manager'))]"/>
+    <field name="domain_force">[
+    ('company_id', 'in', user.company_ids.ids),
+    ]</field>
+    <field name="perm_unlink" eval="True"/>
+    <field name="perm_write" eval="True"/>
+    <field name="perm_create" eval="True"/>
+    <field name="perm_read" eval="True"/>
+  </record>
   
 </odoo>
