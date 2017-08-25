@@ -1,6 +1,6 @@
-===========================
- POS Order Printer Product
-===========================
+===============================================
+ Direct product assignment to Kitchen Printers
+===============================================
 
 The module allows assign products to kitchen printers directly without using product categories.
 
