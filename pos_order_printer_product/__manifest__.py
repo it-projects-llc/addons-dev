@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
-    "name": """POS Order Printer Product""",
-    "summary": """POS Order Printer Product""",
+    "name": """Direct product assignment to Kitchen Printers""",
+    "summary": """More flexible way to specify which product need to be printed""",
     "category": "Point of Sale",
     # "live_test_URL": "",
     "images": [],
