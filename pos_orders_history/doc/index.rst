@@ -10,10 +10,12 @@ Installation
 Configuration
 =============
 
+To deactivate Orders History on some POSes do as following:
+
 * Go to ``Point of Sale >> Configuraion >> Point of Sale`` menu
 * Open POS form
 * Click on ``[Edit]``
-* Check the box ``Orders History``
+* Swith ``[ ] Orders History`` off
 * Click on ``[Save]``
 
 Usage

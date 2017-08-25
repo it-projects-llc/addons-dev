@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": """POS Orders History""",
-    "summary": """All Order List in POS""",
+    "summary": """Work with paid POS Orders directly in POS interface.""",
     "category": "point_of_sale",
     # "live_test_URL": "",
     "images": [],
