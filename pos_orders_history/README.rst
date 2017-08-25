@@ -2,7 +2,7 @@
  POS Orders History
 ====================
 
-This module is linked with POS Reorder
+POS Orders History module display all paid orders in the POS interface
 
 Credits
 =======
