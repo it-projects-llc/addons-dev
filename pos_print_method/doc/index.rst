@@ -1,6 +1,6 @@
-====================
- POS Orders History
-====================
+==================
+ POS Print Method
+==================
 
 Installation
 ============
@@ -10,10 +10,10 @@ Installation
 Configuration
 =============
 
-* Go to ``Point of Sale >> Configuraion >> Point of Sale`` menu
-* Open POS form
+* Go to ``Point of Sale >> Configuraion >> Order Printers`` menu
+* Open order printer form
 * Click on ``[Edit]``
-* Check the box ``Orders History``
+* Select print method on ``Print Method`` field 
 * Click on ``[Save]``
 
 Usage
@@ -21,5 +21,7 @@ Usage
 
 * Go to ``Point of Sale`` menu
 * Open POS interface
-* Click on ``History``
-* You will see all orders list
+* Add products to order
+* Click on ``Order``
+* See the printed receipt(s) depending on print method you have selected
+
