@@ -119,7 +119,7 @@ class QueueManagementService(models.Model):
     state = fields.Selection([
             ('opened', 'Opened'),
             ('closed', 'Closed')], 'Service status', required=True, copy=False, default='closed')
-    branch_id = fields.Many2one('queue.management.branch', 'Branch', required=True)
+    branch_id = fields.Many2one('queue.management.branch')
     sequence_id = fields.Many2one('ir.sequence', string='Letter', required=True)
 
 
@@ -147,7 +147,8 @@ class QueueManagementManager(models.Model):
 
     @api.model
     def default_get(self, fields_list):
-        fields_list.pop(fields_list.index('company_id'))
+        if 'company_id' in fields_list:
+            fields_list.pop(fields_list.index('company_id'))
         result = super(QueueManagementManager, self).default_get(fields_list)
         result['groups_id'] = [(4, self.env.ref('queue_management.group_queue_management_branch_manager').id, 0)]
         return result

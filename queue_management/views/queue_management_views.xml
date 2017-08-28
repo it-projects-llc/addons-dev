@@ -136,6 +136,20 @@
             parent="menu_qm_queue"
             groups="group_queue_management_branch_agent,group_queue_management_branch_manager"
             action="action_log"/>
+  
+  <record model="ir.ui.view" id="queue_management_service_view_form">
+    <field name="name">queue.management.service</field>
+    <field name="model">queue.management.service</field>
+    <field name="arch" type="xml">
+      <form string="queue_management_service_form">
+        <group>
+          <field name="name"/>
+          <field name="state"/>
+          <field name="sequence_id"/>
+        </group>
+      </form>
+    </field>
+  </record>
 
   <record model="ir.actions.act_window" id="action_service">
     <field name="name">Service</field>
@@ -169,6 +183,10 @@
     <field name="name">Agent</field>
     <field name="res_model">queue.management.agent</field>
     <field name="view_mode">tree,form</field>
+    <field name="contex">{
+    "default_name" : "agent",
+    "default_login" : "agent"}
+    </field>
   </record>
 
   <menuitem name="Agents"
