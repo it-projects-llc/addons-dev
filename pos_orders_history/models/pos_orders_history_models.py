@@ -9,6 +9,11 @@ class PosConfig(models.Model):
     _inherit = 'pos.config'
 
     orders_history = fields.Boolean("Orders History", help="Show all orders list in POS", default=True)
+    current_day_orders_only = fields.Boolean("Current Day Orders", help="Show current day orders only", default=True)
+    show_cancelled_orders = fields.Boolean("Show Cancelled Orders", default=True)
+    show_posted_orders = fields.Boolean("Show Posted Orders", default=False)
+    details_button = fields.Boolean("Details Button", help="Check the box for available the Details Button"
+                                                           " in Orders History screen", default=True)
 
     # ir.actions.server methods:
     @api.model

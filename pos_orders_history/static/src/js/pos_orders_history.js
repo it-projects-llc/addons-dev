@@ -56,15 +56,53 @@ odoo.define('pos_orders_history', function (require) {
                 self.db.line_by_id[line.id] = line;
             });
         },
+        get_date: function() {
+            var currentdate = new Date();
+            var year = currentdate.getFullYear();
+            var month = (currentdate.getMonth()+1);
+            var day = currentdate.getDate();
+            if (Math.floor(month / 10) === 0) {
+                month = '0' + month;
+            }
+            if (Math.floor(day / 10) === 0) {
+                day = '0' + day;
+            }
+            return year + "-" + month + "-" + day;
+        },
     });
+
     models.load_models({
         model: 'pos.order',
-        fields: ['id', 'name', 'pos_reference', 'partner_id', 'date_order', 'user_id', 'amount_total', 'lines', 'state', 'sale_journal'],
+        fields: ['id', 'name', 'pos_reference', 'partner_id', 'date_order', 'user_id', 'amount_total', 'lines', 'state', 'sale_journal', 'config_id'],
+        domain: function(self){
+            var domain = [['state','=','paid']];
+//            if (self.config.show_cancelled_orders) {
+//                domain.push(['state','=','cancel']);
+//            }
+            if (self.config.show_posted_orders) {
+                domain.push(['state','=','done']);
+            }
+            if (domain.length === 1) {
+                domain = [domain[1]];
+            } else if (domain.length === 2) {
+                domain.unshift('|');
+            } else if (domain.length === 3) {
+                domain.unshift('|','|');
+            }
+            console.log("domain", domain);
+            return domain;
+        },
         loaded: function(self, orders) {
+            if (self.config.current_day_orders_only) {
+                orders = orders.filter(function(order) {
+                    return self.get_date() === order.date_order.split(" ")[0];
+                });
+            }
             self.update_orders_history(orders);
         },
     });
 
+    // TODO: don't load all lines
     models.load_models({
         model: 'pos.order.line',
         fields: ['product_id', 'qty', 'price_unit', 'discount','tax_ids','price_subtotal', 'price_subtotal_incl'],
@@ -169,6 +207,7 @@ odoo.define('pos_orders_history', function (require) {
         init: function(parent, options){
             this._super(parent, options);
             this.orders_history_cache = new screens.DomCache();
+            this.filters = [];
         },
         auto_back: true,
 
@@ -180,8 +219,16 @@ odoo.define('pos_orders_history', function (require) {
             });
 
             var orders = this.pos.db.get_sorted_orders_history(1000);
-
             this.render_list(orders);
+
+            this.$('.filters .user-filter').click(function(e){
+                self.change_filter('user', $(this));
+            });
+
+            this.$('.filters .pos-filter').click(function(){
+                self.change_filter('pos', $(this));
+            });
+
             this.$('.details').click(function(event){
                 var order = self.pos.db.orders_history_by_id[Number(this.dataset.id)];
                 self.gui.show_screen('order_lines_history_screen', {order: order});
@@ -203,6 +250,46 @@ odoo.define('pos_orders_history', function (require) {
             this.$('.searchbox .search-clear').click(function(){
                 self.clear_search();
             });
+        },
+        change_filter: function(filter_name, filter) {
+            if (filter.hasClass("active")){
+                filter.removeClass("active");
+                this.remove_active_filter(filter_name);
+            } else {
+                filter.addClass("active");
+                this.set_active_filter(filter_name);
+            }
+            this.apply_filters();
+        },
+        remove_active_filter: function(name) {
+            this.filters.splice(this.filters.indexOf(name), 1);
+        },
+        set_active_filter: function(name) {
+            this.filters.push(name);
+        },
+        apply_filters: function() {
+            var self = this;
+            var orders = this.pos.db.get_sorted_orders_history(1000);
+            this.filters.forEach(function(filter) {
+                orders = self.get_orders_by_filter(filter, orders);
+            });
+            this.render_list(orders);
+        },
+        get_orders_by_filter: function(filter, orders) {
+            var self = this;
+            if (filter === "user") {
+                var user_id = this.pos.cashier ? this.pos.cashier.id : this.pos.user.id;
+                if (this.pos.cashier && this.pos.cashier.id) {
+                    user_id = this.pos.cashier.id;
+                }
+                return orders.filter(function(order) {
+                    return order.user_id[0] === user_id;
+                });
+            } else if (filter === "pos") {
+                return orders.filter(function(order) {
+                    return order.config_id[0] === self.pos.config.id;
+                });
+            }
         },
         render_list: function(orders) {
             var contents = this.$el[0].querySelector('.order-list-contents');

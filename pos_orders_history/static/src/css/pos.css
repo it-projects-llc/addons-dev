@@ -46,7 +46,29 @@
     border-color: black;
     color: white;
 }
-
+/*Search Box*/
+.pos .orders-list-screen .searchbox {
+    top: 0px;
+    padding: 8px 3px;
+}
+/*Filters*/
+.pos .orders-list-screen .filters {
+    position: relative;
+    line-height: 32px;
+    font-size: 20px;
+    padding: 14px 13px;
+    background: white;
+}
+.pos .orders-list-screen .filters .active {
+    color: white;
+    background: black;
+    border: 1px solid black;
+}
+.pos .orders-list-screen .filters .button{
+    display: inline-block;
+    position: initial;
+    margin: 12px 0 0;
+}
 /*LinesHistoryScreenWidget*/
 .pos .orderlines-list-screen .orderline-list{
     font-size: 16px;

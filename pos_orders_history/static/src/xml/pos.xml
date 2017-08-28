@@ -15,6 +15,16 @@
                         <i class='fa fa-angle-double-left'></i>
                         Cancel
                     </span>
+                    <span class="filters">
+                        <i class='fa fa-filter'></i>
+                        Filters
+                        <span class="button user-filter">
+                            User
+                        </span>
+                        <span class="button pos-filter">
+                            POS
+                        </span>
+                    </span>
                     <span class='searchbox'>
                         <input placeholder='Search Orders' />
                         <span class='search-clear'></span>
@@ -36,7 +46,7 @@
                                                 <th>Salesman</th>
                                                 <th>Total</th>
                                                 <th>Status</th>
-                                                <th>Action</th>
+                                                <th t-if="widget.pos.config.details_button">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody class='order-list-contents'>
@@ -63,7 +73,7 @@
             <td><t t-esc='order.user_id[1]' /></td>
             <td><t t-esc='order.amount_total' /></td>
             <td><t t-esc='order.state' /></td>
-            <td><span class='button details' t-att-data-id='order.id'>Details</span></td>
+            <td t-if="widget.pos.config.details_button"><span class='button details' t-att-data-id='order.id'>Order Details</span></td>
         </tr>
     </t>
 

@@ -6,8 +6,18 @@
             <field name="model">pos.config</field>
             <field name="inherit_id" ref="point_of_sale.view_pos_config_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='features']//group" position="inside">
-                    <field name="orders_history"/>
+                <xpath expr="//group[@name='features']" position="after">
+                    <group string="Orders History">
+                        <group>
+                            <field name="orders_history"/>
+                            <field name="current_day_orders_only" attrs="{'invisible' : [('orders_history', '=', False)]}"/>
+                            <field name="show_cancelled_orders" attrs="{'invisible' : [('orders_history', '=', False)]}"/>
+                            <field name="show_posted_orders" attrs="{'invisible' : [('orders_history', '=', False)]}"/>
+                        </group>
+                        <group name="buttons" attrs="{'invisible' : [('orders_history', '=', False)]}">
+                            <field name="details_button"/>
+                        </group>
+                    </group>
                 </xpath>
             </field>
         </record>
