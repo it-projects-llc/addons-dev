@@ -22,3 +22,9 @@ class PosConfig(models.Model):
         if len(ids):
             message = {"updated_orders": ids}
             self.search([])._send_to_channel(CHANNEL, message)
+
+
+class PosOrder(models.Model):
+    _inherit = 'pos.order'
+
+    pos_name = fields.Char(related="config_id.name")

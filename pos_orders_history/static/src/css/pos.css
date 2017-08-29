@@ -30,21 +30,13 @@
     background: rgb(227, 246, 237);
 }
 .pos .order-line .details {
-    padding: 3px 13px;
-    font-size: 16px;
-    background: rgb(230, 230, 230);
-    border-radius: 3px;
-    border: solid 1px rgb(209, 209, 209);
     cursor: pointer;
-    transition: all 150ms linear;
 }
-.pos .order-line .details:hover {
-    background: #efefef;
+.pos .order-line .active{
+    color: rgb(120,210,165);
 }
-.pos .order-line .details:active {
-    background: black;
-    border-color: black;
-    color: white;
+.pos .order-line .details:active, .pos .order-line .details:hover {
+    color: rgb(120,210,165);
 }
 /*Search Box*/
 .pos .orders-list-screen .searchbox {

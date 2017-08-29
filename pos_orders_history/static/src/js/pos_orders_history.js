@@ -74,7 +74,7 @@ odoo.define('pos_orders_history', function (require) {
 
     models.load_models({
         model: 'pos.order',
-        fields: ['id', 'name', 'pos_reference', 'partner_id', 'date_order', 'user_id', 'amount_total', 'lines', 'state', 'sale_journal', 'config_id', 'table_id'],
+        fields: [],
         domain: function(self){
             var domain = [['state','=','paid']];
             if (self.config.show_cancelled_orders) {
@@ -93,6 +93,7 @@ odoo.define('pos_orders_history', function (require) {
         },
         loaded: function(self, orders) {
             if (self.config.current_day_orders_only) {
+                console.log("orders", orders);
                 orders = orders.filter(function(order) {
                     return self.get_date() === order.date_order.split(" ")[0];
                 });
@@ -104,7 +105,7 @@ odoo.define('pos_orders_history', function (require) {
     // TODO: don't load all lines
     models.load_models({
         model: 'pos.order.line',
-        fields: ['product_id', 'qty', 'price_unit', 'discount','tax_ids','price_subtotal', 'price_subtotal_incl'],
+        fields: [],
         loaded: function(self, lines) {
             self.update_orders_history_lines(lines);
         },
@@ -232,9 +233,8 @@ odoo.define('pos_orders_history', function (require) {
                 self.change_filter('table', $(this));
             });
 
-            this.$('.details').click(function(event){
-                var order = self.pos.db.orders_history_by_id[Number(this.dataset.id)];
-                self.gui.show_screen('order_lines_history_screen', {order: order});
+            this.$('.order-list-contents').delegate('.details','click',function(event){
+                self.line_select(event,$(this),parseInt($(this).data('id')));
             });
             var search_timeout = null;
             if(this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard){
@@ -293,8 +293,13 @@ odoo.define('pos_orders_history', function (require) {
                     return order.config_id[0] === self.pos.config.id;
                 });
             } else if (filter === "table") {
+                if (this.pos.table) {
+                    return orders.filter(function(order) {
+                        return order.table_id[0] === self.pos.table.id;
+                    });
+                }
                 return orders.filter(function(order) {
-                    return order.table_id[0] === self.pos.table.id;
+                    return !order.table_id;
                 });
             }
         },
@@ -320,6 +325,66 @@ odoo.define('pos_orders_history', function (require) {
             this.render_list(orders);
             this.$('.searchbox input')[0].value = '';
             this.$('.searchbox input').focus();
+        },
+        line_select: function(event, $line, id){
+            this.$(".order-line .details.active"):not($line).removeClass('active');
+//            $line.parents()[1].after("<tr></tr>")
+//            see https://stackoverflow.com/questions/3897396/can-a-table-row-expand-and-close
+            var order = this.pos.db.orders_history_by_id[id];
+            if ($line.hasClass('active') ){
+                $line.removeClass('active');
+                console.log("click1");
+//                this.display_order_details('hide', order);
+            } else {
+                $line.addClass('active');
+                var y = event.pageY - $line.parent().offset().top;
+                console.log("click2");
+//                this.display_order_details('show', order, y);
+            }
+        },
+        // Shows or hides the order details box :
+        // visibility: 'show', 'hide'
+        // order:    the order object to show
+        // clickpos:   the height of the click on the list (in pixel), used
+        //             to maintain consistent scroll.
+        display_order_details: function(visibility, order, clickpos) {
+            var contents = this.$('.orders-details-contents');
+            var parent   = this.$('.order-list').parent();
+            var scroll   = parent.scrollTop();
+            var height   = contents.height();
+
+            if(visibility === 'show') {
+                contents.empty();
+                contents.append($(QWeb.render('OrderHistoryDetails',{widget:this,order:order})));
+
+                var new_height   = contents.height();
+
+                if(!this.details_visible){
+                    // resize client list to take into account client details
+                    parent.height('-=' + new_height);
+
+                    if(clickpos < scroll + new_height + 20 ){
+                        parent.scrollTop( clickpos - 20 );
+                    }else{
+                        parent.scrollTop(parent.scrollTop() + new_height);
+                    }
+                }else{
+                    parent.scrollTop(parent.scrollTop() - height + new_height);
+                }
+                this.details_visible = true;
+            } else if (visibility === 'hide') {
+                contents.empty();
+                parent.height('100%');
+                if( height > scroll ){
+                    contents.css({height:height+'px'});
+                    contents.animate({height:0},400,function(){
+                        contents.css({height:''});
+                    });
+                }else{
+                    parent.scrollTop( parent.scrollTop() - height);
+                }
+                this.details_visible = false;
+            }
         },
         perform_search: function(query, associate_result){
             var orders = false;
