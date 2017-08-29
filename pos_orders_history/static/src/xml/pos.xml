@@ -24,6 +24,9 @@
                         <span class="button pos-filter">
                             POS
                         </span>
+                        <span class="button table-filter">
+                            Table
+                        </span>
                     </span>
                     <span class='searchbox'>
                         <input placeholder='Search Orders' />

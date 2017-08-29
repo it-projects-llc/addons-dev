@@ -8,6 +8,7 @@ odoo.define('pos_orders_history', function (require) {
     var QWeb = core.qweb;
     var Model = require('web.Model');
     var longpolling = require('pos_longpolling');
+    var floors = require('pos_restaurant.floors');
 
     var OrdersHistoryButton = screens.OrdersHistoryButton = {};
     var OrdersHistoryScreenWidget = screens.OrdersHistoryScreenWidget = {};
@@ -73,18 +74,16 @@ odoo.define('pos_orders_history', function (require) {
 
     models.load_models({
         model: 'pos.order',
-        fields: ['id', 'name', 'pos_reference', 'partner_id', 'date_order', 'user_id', 'amount_total', 'lines', 'state', 'sale_journal', 'config_id'],
+        fields: ['id', 'name', 'pos_reference', 'partner_id', 'date_order', 'user_id', 'amount_total', 'lines', 'state', 'sale_journal', 'config_id', 'table_id'],
         domain: function(self){
             var domain = [['state','=','paid']];
-//            if (self.config.show_cancelled_orders) {
-//                domain.push(['state','=','cancel']);
-//            }
+            if (self.config.show_cancelled_orders) {
+                domain.push(['state','=','cancel']);
+            }
             if (self.config.show_posted_orders) {
                 domain.push(['state','=','done']);
             }
-            if (domain.length === 1) {
-                domain = [domain[1]];
-            } else if (domain.length === 2) {
+            if (domain.length === 2) {
                 domain.unshift('|');
             } else if (domain.length === 3) {
                 domain.unshift('|','|');
@@ -229,6 +228,10 @@ odoo.define('pos_orders_history', function (require) {
                 self.change_filter('pos', $(this));
             });
 
+            this.$('.filters .table-filter').click(function(){
+                self.change_filter('table', $(this));
+            });
+
             this.$('.details').click(function(event){
                 var order = self.pos.db.orders_history_by_id[Number(this.dataset.id)];
                 self.gui.show_screen('order_lines_history_screen', {order: order});
@@ -288,6 +291,10 @@ odoo.define('pos_orders_history', function (require) {
             } else if (filter === "pos") {
                 return orders.filter(function(order) {
                     return order.config_id[0] === self.pos.config.id;
+                });
+            } else if (filter === "table") {
+                return orders.filter(function(order) {
+                    return order.table_id[0] === self.pos.table.id;
                 });
             }
         },
