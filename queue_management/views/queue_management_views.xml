@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
   <menuitem name="Queue Management"
@@ -14,14 +15,39 @@
             parent="main_menu_qm"
             groups="group_queue_management_branch_manager"/>
 
+  <record model="ir.ui.view" id="queue_management_log_view_tree">
+    <field name="name">queue.management.log</field>
+    <field name="model">queue.management.log</field>
+    <field name="arch" type="xml">
+      <tree string="queue_management_log_form">
+        <field name="ticket_id"/>
+        <field name="desk"/>
+        <field name="ticket_state"/>
+        <field name="service_id"/>
+      </tree>
+    </field>
+  </record>
+  
+  <record model="ir.actions.act_window" id="action_log">
+    <field name="name">Log</field>
+    <field name="res_model">queue.management.log</field>
+    <field name="view_mode">tree</field>
+  </record>
+
+  <menuitem name="Log"
+            id="menu_qm_log"
+            parent="menu_qm_queue"
+            groups="group_queue_management_branch_agent,group_queue_management_branch_manager"
+            action="action_log"/>
+  
   <record model="ir.ui.view" id="queue_management_screen">
     <field name="name">queue.management.screen</field>
     <field name="model">queue.management.log</field>
     <field name="arch" type="xml">
-      <tree string="queue_management_screen_form" create="false" delete="false" edit="false">
-        <field name="ticket_id"/>
-        <field name="desk"/>
-        <field name="service_id"/>
+      <tree string="queue_management_screen_tree">
+          <field name="ticket_id"/>
+          <field name="desk"/>
+          <field name="service_id"/>
       </tree>
     </field>
   </record>
@@ -39,7 +65,7 @@
             groups="group_queue_management_branch_agent,group_queue_management_branch_manager"
             action="action_screen"/>
 
-  <record model="ir.ui.view" id="queue_management_ticket">
+  <record model="ir.ui.view" id="queue_management_ticket_view">
     <field name="name">queue.management.ticket</field>
     <field name="model">queue.management.ticket</field>
     <field name="arch" type="xml">
@@ -47,13 +73,13 @@
             colors="red:ticket_state == 'current';gray:ticket_state == 'done';green:ticket_state == 'next';blue:ticket_state == 'pending'">
           <button name="call_client" icon="fa-arrow-circle-right" type="object"
                   attrs="{'invisible': [('ticket_state', 'not in', 'next')]}"
-                  groups="queue_management_ticket.group_queue_management_branch_agent"/>
+                  groups="queue_management.group_queue_management_branch_agent"/>
           <button name="change_state_done" icon="fa-check" type="object"
                   attrs="{'invisible': [('ticket_state', 'not in', 'current')]}"
-                  groups="queue_management_ticket.group_queue_management_branch_agent"/>
+                  groups="queue_management.group_queue_management_branch_agent"/>
           <button name="change_state_no_show" icon="fa-arrow-circle-down" type="object"
                   attrs="{'invisible': [('ticket_state', 'not in', 'current')]}"
-                  groups="queue_management_ticket.group_queue_management_branch_agent"/>
+                  groups="queue_management.group_queue_management_branch_agent"/>
           <field name="name"/>
           <field name="ticket_state"/>
           <field name="service_id"/>
@@ -112,30 +138,6 @@
     </field>
   </record>
 
-  <record model="ir.ui.view" id="queue_management_log_view_tree">
-    <field name="name">queue.management.log</field>
-    <field name="model">queue.management.log</field>
-    <field name="arch" type="xml">
-      <tree string="queue_management_log_form">
-        <field name="ticket_id"/>
-        <field name="desk"/>
-        <field name="ticket_state"/>
-        <field name="service_id"/>
-      </tree>
-    </field>
-  </record>
-  
-  <record model="ir.actions.act_window" id="action_log">
-    <field name="name">Log</field>
-    <field name="res_model">queue.management.log</field>
-    <field name="view_mode">tree</field>
-  </record>
-
-  <menuitem name="Log"
-            id="menu_qm_log"
-            parent="menu_qm_queue"
-            groups="group_queue_management_branch_agent,group_queue_management_branch_manager"
-            action="action_log"/>
   
   <record model="ir.ui.view" id="queue_management_service_view_form">
     <field name="name">queue.management.service</field>
@@ -183,10 +185,6 @@
     <field name="name">Agent</field>
     <field name="res_model">queue.management.agent</field>
     <field name="view_mode">tree,form</field>
-    <field name="contex">{
-    "default_name" : "agent",
-    "default_login" : "agent"}
-    </field>
   </record>
 
   <menuitem name="Agents"

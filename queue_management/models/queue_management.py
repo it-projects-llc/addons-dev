@@ -2,6 +2,7 @@
 from odoo import models, fields, api
 from odoo.exceptions import Warning as UserError
 from odoo.tools.translate import _
+from odoo.addons.hw_escpos.escpos.printer import Network
 
 number_of_desks = {'1': '1',
                    '2': '2',
@@ -119,8 +120,23 @@ class QueueManagementService(models.Model):
     state = fields.Selection([
             ('opened', 'Opened'),
             ('closed', 'Closed')], 'Service status', required=True, copy=False, default='closed')
-    branch_id = fields.Many2one('queue.management.branch')
+    branch_id = fields.Many2one('queue.management.branch', required=True)
+    company_id = fields.Many2one('res.company', related='branch_id.company_id', store=True)
     sequence_id = fields.Many2one('ir.sequence', string='Letter', required=True)
+
+    @api.model
+    def default_get(self, fields_list):
+        result = super(QueueManagementService, self).default_get(fields_list)
+        company_id = self.env.user.company_id.id
+        result['branch_id'] = self.env['queue.management.branch'].search([('company_id', '=', company_id)]).id
+        return result
+
+    @api.multi
+    def new_ticket(self):
+        self.ensure_one()
+        ticket_id = self.env['queue.management.ticket'].create({'service_id': self.id})
+        printer = Network('192.168.1.169')
+        printer._raw(ticket_id.name)
 
 
 class QueueManagementAgent(models.Model):

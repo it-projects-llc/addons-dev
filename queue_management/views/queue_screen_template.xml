@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <template id="queue_screen">
+      <t t-call="web.layout">
+          <div class="row">
+            <t t-foreach="branch.service_ids" t-as="service">
+              <div class="col">
+                <a class="btn btn-default" t-attf-href="new_ticket?service_id=#{service.id}"><t t-esc="service.name"/></a>
+              </div>
+            </t>
+          </div>
+      </t>
+    </template>
+  </data>
+</odoo>

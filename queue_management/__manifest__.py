@@ -18,12 +18,15 @@
     "depends": [
         "base",
         "base_details",
+        "hw_escpos",
+        "website",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
         "security/queue_management_security.xml",
         "security/ir.model.access.csv",
         "views/queue_management_views.xml",
+        "views/queue_screen_template.xml"
     ],
     "qweb": [
     ],
