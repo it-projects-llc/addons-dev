@@ -1,6 +1,6 @@
-===============================================
- Direct product assignment to Kitchen Printers
-===============================================
+==========================================
+ Print certain products on Order Printers
+==========================================
 
 Installation
 ============
@@ -13,8 +13,8 @@ Configuration
 * Go to ``Point of Sale >> Configuration >> Order Printers``
 
   * Click on ``[Create]``
-  * Specify a name of new printer in the **Printer Name** field
-  * Specify the **IP Address** of printer
+  * Specify **Printer Name** 
+  * Specify **IP Address** of printer
   * Select **Printed Product Categories**
   * Select **Printed Products**
   * Click on ``[Save]``
@@ -28,5 +28,5 @@ Usage
 =====
 
 * Open POS session
-* Add a product to order
-* Click ``[Order]``
+* Add products to order
+* Click on ``[Order]``

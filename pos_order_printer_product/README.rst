@@ -1,8 +1,8 @@
-===============================================
- Direct product assignment to Kitchen Printers
-===============================================
+==========================================
+ Print certain products on Order Printers
+==========================================
 
-The module allows assign products to kitchen printers directly without using product categories.
+By default, you can assign product categories only to be printed on order printers and it is not convenient in some cases, e.g. if you want to print some products on one printer and other products of the same category on another one. The module eliminates this disadvantage and allows to specify certain products, which should be printed on order printers, directly. Note that in this case it is not required to specify product categories.
 
 Credits
 =======
