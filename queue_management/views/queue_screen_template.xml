@@ -2,15 +2,13 @@
 <odoo>
   <data>
     <template id="queue_screen">
-      <t t-call="web.layout">
-          <div class="row">
-            <t t-foreach="branch.service_ids" t-as="service">
-              <div class="col">
-                <a class="btn btn-default" t-attf-href="new_ticket?service_id=#{service.id}"><t t-esc="service.name"/></a>
-              </div>
-            </t>
-          </div>
-      </t>
+      <link rel="stylesheet" type="text/css" href="/queue_management/static/src/less/bootstrap.min.css"/>
+      <script type="text/javascript" src="/queue_management/static/src/js/jquery.min.js"></script>
+      <script type="text/javascript" src="/queue_management/static/src/js/bootstrap.min.js"></script>
+      <h1>Queue</h1>
+      <table class="table">
+              <t t-esc="log"/>
+      </table>
     </template>
   </data>
 </odoo>

@@ -26,7 +26,8 @@
         "security/queue_management_security.xml",
         "security/ir.model.access.csv",
         "views/queue_management_views.xml",
-        "views/queue_screen_template.xml"
+        "views/queue_screen_template.xml",
+        "views/queue_service_template.xml"
     ],
     "qweb": [
     ],
@@ -40,4 +41,3 @@
     "auto_install": False,
     "installable": True,
 }
-
