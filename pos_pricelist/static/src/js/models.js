@@ -117,9 +117,9 @@ odoo.define('pos_pricelist.models', function (require) {
          * @param options
          */
         initialize: function (attr, options) {
+            this.show_list_price = false;
             var result = _super_orderline.initialize.apply(this, arguments);
             this.manual_price = false;
-            this.show_list_price = false;
             if (this.product !== undefined) {
                 var qty = this.compute_qty(this.order, this.product);
                 var partner = this.order ? this.order.get_client() : null;
