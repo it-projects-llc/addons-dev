@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 {
-    "name": """Sale Layout Hidden Section""",
+    "name": """Hidden Layouts for Sale Orders""",
     "summary": """
-        Allows to encapsulate layouts in sale orders.""",
+        Use layouts within specific Sale Order only""",
     "category": "Sale",
     "images": ['images/sale_layout_hidden_section.png'],
     "version": "1.0.0",
