@@ -103,7 +103,12 @@ odoo.define('pos_pricelist.models', function (require) {
                     false;
                 this.pricelist_engine.update_products_ui(partner);
             }
-        }
+        },
+        add_new_order: function(){
+            var order = _super_posmodel.add_new_order.apply(this, arguments);
+            this.pricelist_engine.update_products_ui(false);
+            return order;
+        },
     });
 
 
@@ -588,6 +593,9 @@ odoo.define('pos_pricelist.models', function (require) {
                     var price = this.compute_price_all(
                         db, product, partner, qty
                     );
+                    if (price === false) {
+                        price = product.price;
+                    }
                     if (price !== false) {
                         if (this.pos.config.iface_tax_included) {
                             var prices = this.simulate_price(
