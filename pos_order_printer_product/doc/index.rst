@@ -15,18 +15,17 @@ Configuration
   * Click on ``[Create]``
   * Specify **Printer Name** 
   * Specify **IP Address** of printer
-  * Select **Printed Product Categories**
-  * Select **Printed Products**
+  * Add items to **Printed Products**
   * Click on ``[Save]``
 
 Note
 ====
 
-* If neither **Printed Product Categories** nor **Printed Products** are set, then printer will print all products
+* If neither **Printed Product Categories** nor **Printed Products** are set, then printer will print all available products in POS
 
 Usage
 =====
 
 * Open POS session
-* Add products to order
+* Add products to an order
 * Click on ``[Order]``
