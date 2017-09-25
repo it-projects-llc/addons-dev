@@ -22,10 +22,10 @@ Maintainers
 Further information
 ===================
 
-HTML Description: https://apps.odoo.com/apps/modules/{VERSION}/{TECHNICAL_NAME}/
+HTML Description: https://apps.odoo.com/apps/modules/10.0/pos_discount_absolute/
 
 Usage instructions: `<doc/index.rst>`_
 
 Changelog: `<doc/changelog.rst>`_
 
-Tested on Odoo 10.0 {ODOO_COMMIT_SHA_TO_BE_UPDATED}
+Tested on Odoo 10.0 3d61fcb7a23f65862e10115955645f325db33289
