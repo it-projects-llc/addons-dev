@@ -17,7 +17,7 @@ odoo.define('pos_discount_absolute', function (require) {
             var self = this;
             this._super(parent,options);
             if (this.gui && this.gui.screen_instances.products &&
-                this.gui.screen_instances.products.action_buttons.discount && this.pos.config.discount_abs_on) {
+                this.gui.screen_instances.products.action_buttons.discount && this.pos.config.discount_abs_enabled) {
                 var disc_widget = this.gui.screen_instances.products.action_buttons.discount;
                 disc_widget.button_click = function () {
                     self.gui.show_popup('number', {
@@ -62,7 +62,7 @@ odoo.define('pos_discount_absolute', function (require) {
             var self = this;
             this._super(options);
             this.popup_abs_discount = false;
-            if (this.pos.config.discount_abs_on) {
+            if (this.pos.config.discount_abs_enabled) {
                 self.popup_abs_discount = true;
                 self.events["click .absolute.button"] = "click_absolute_discount";
                 self.events["click .percentage.button"] = "click_percentage_discount";
@@ -126,7 +126,7 @@ odoo.define('pos_discount_absolute', function (require) {
 
             var products_widgets = this.pos.gui.screen_instances.products;
             var discount_is_set = _.find(this.order.get_orderlines(), function(line){return line.price < 0 })
-            if ( discount_is_set && this.pos.config.discount_abs_on && products_widgets &&
+            if ( discount_is_set && this.pos.config.discount_abs_enabled && products_widgets &&
             products_widgets.action_buttons && products_widgets.action_buttons.discount){
                 var disc_widget = products_widgets.action_buttons.discount;
                 disc_widget.apply_abs_discount(this.pos.config.discount_abs_value);

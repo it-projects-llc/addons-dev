@@ -18,11 +18,11 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='iface_discount']" position="replace">
                 <field name='iface_discount'/>
-                <field name='discount_abs_on'/>
+                <field name='discount_abs_enabled'/>
             </xpath>
 
             <xpath expr="//field[@name='discount_pc']" position="after">
-                <field name='discount_abs_value' attrs="{'invisible':[('discount_abs_on','=', False)]}"/>
+                <field name='discount_abs_value' attrs="{'invisible':[('discount_abs_enabled','=', False)]}"/>
             </xpath>
         </field>
     </record>
