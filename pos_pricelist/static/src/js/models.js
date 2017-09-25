@@ -103,12 +103,7 @@ odoo.define('pos_pricelist.models', function (require) {
                     false;
                 this.pricelist_engine.update_products_ui(partner);
             }
-        },
-        add_new_order: function(){
-            var order = _super_posmodel.add_new_order.apply(this, arguments);
-            this.pricelist_engine.update_products_ui(false);
-            return order;
-        },
+        }
     });
 
 
@@ -678,7 +673,6 @@ odoo.define('pos_pricelist.models', function (require) {
                     db, product, partner, quantity
                 );
                 if (price !== false) {
-                    var price_list_id = false;
                     if (partner) {
                         if (partner.property_product_pricelist && this.pos.db.pricelist_by_id[partner.property_product_pricelist[0]].pos_discount_policy === "without_discount") {
                             var discount_percent = line.calc_discount_percent(product.list_price, price);
