@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="point_of_sale.pos_config_main" model="pos.config">
+        <field name="iface_discount">True</field>
+        <field name="discount_abs_enabled">True</field>
+        <field name="discount_abs_value">10</field>
+    </record>
+
+</odoo>
