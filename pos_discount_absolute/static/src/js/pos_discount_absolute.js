@@ -11,7 +11,7 @@ odoo.define('pos_discount_absolute', function (require) {
 
     var QWeb = core.qweb;
 
-
+//    ScreenWidget = PosBaseWidget.extend({
     PosBaseWidget.include({
         init:function(parent,options){
             var self = this;
@@ -47,7 +47,7 @@ odoo.define('pos_discount_absolute', function (require) {
                     var discount = - Math.min(val, order.get_total_with_tax());
                     order.add_product(product, { price: discount });
                 } else {
-                    var discount = - val / 100.0 * order.get_total_with_tax();
+                    var discount = - Math.min(val, 100) / 100.0 * order.get_total_with_tax();
                     if( discount < 0 ){
                         order.add_product(product, { price: discount });
                     }
