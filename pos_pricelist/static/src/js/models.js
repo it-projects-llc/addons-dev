@@ -117,9 +117,9 @@ odoo.define('pos_pricelist.models', function (require) {
          * @param options
          */
         initialize: function (attr, options) {
+            this.show_list_price = false;
             var result = _super_orderline.initialize.apply(this, arguments);
             this.manual_price = false;
-            this.show_list_price = false;
             if (this.product !== undefined) {
                 var qty = this.compute_qty(this.order, this.product);
                 var partner = this.order ? this.order.get_client() : null;
@@ -130,7 +130,13 @@ odoo.define('pos_pricelist.models', function (require) {
                 );
                 if (price !== false) {
                     var current_price = round_di(parseFloat(price) || 0, this.pos.dp['Product Price']);
-                    if (this.pos.db.pricelist_by_id[this.pos.pricelist.id].pos_discount_policy === "without_discount") {
+                    var price_list_id = false;
+                    if (partner && partner.property_product_pricelist) {
+                        price_list_id = partner.property_product_pricelist[0];
+                    } else {
+                        price_list_id = this.pos.config.pricelist_id[0];
+                    }
+                    if (this.pos.db.pricelist_by_id[price_list_id].pos_discount_policy === "without_discount") {
                         var discount_percent = this.calc_discount_percent(product.list_price, current_price);
                         this.price = product.list_price;
                         this.show_list_price = true;
@@ -183,7 +189,13 @@ odoo.define('pos_pricelist.models', function (require) {
                the unit price of the previous quantity, to preserve manually
                entered prices as much as possible. */
             if (price !== false && price !== old_price) {
-                if (this.pos.db.pricelist_by_id[this.pos.pricelist.id].pos_discount_policy === "without_discount") {
+                var price_list_id = false;
+                if (partner && partner.property_product_pricelist) {
+                    price_list_id = partner.property_product_pricelist[0];
+                } else {
+                    price_list_id = this.pos.config.pricelist_id[0];
+                }
+                if (this.pos.db.pricelist_by_id[price_list_id].pos_discount_policy === "without_discount") {
                     var discount_percent = this.calc_discount_percent(product.list_price, price);
                     this.show_list_price = true;
                     this.set_discount(discount_percent);
@@ -588,6 +600,15 @@ odoo.define('pos_pricelist.models', function (require) {
                     var price = this.compute_price_all(
                         db, product, partner, qty
                     );
+                    var price_list_id = false;
+                    if (partner && partner.property_product_pricelist) {
+                        price_list_id = partner.property_product_pricelist[0];
+                    } else {
+                        price_list_id = this.pos.config.pricelist_id[0];
+                    }
+                    if (price === false || this.pos.db.pricelist_by_id[price_list_id].pos_discount_policy === "without_discount") {
+                        price = product.list_price;
+                    }
                     if (price !== false) {
                         if (this.pos.config.iface_tax_included) {
                             var prices = this.simulate_price(
@@ -652,7 +673,29 @@ odoo.define('pos_pricelist.models', function (require) {
                     db, product, partner, quantity
                 );
                 if (price !== false) {
-                    line.price = price;
+                    if (partner) {
+                        if (partner.property_product_pricelist && this.pos.db.pricelist_by_id[partner.property_product_pricelist[0]].pos_discount_policy === "without_discount") {
+                            var discount_percent = line.calc_discount_percent(product.list_price, price);
+                            line.show_list_price = true;
+                            line.price = product.list_price;
+                            line.set_discount(discount_percent);
+                        } else {
+                            line.set_discount(0);
+                            line.show_list_price = false;
+                            line.price = price;
+                        }
+                    } else {
+                        if (this.pos.db.pricelist_by_id[this.pos.config.pricelist_id[0]].pos_discount_policy === "without_discount") {
+                            var discount_percent = line.calc_discount_percent(product.list_price, price);
+                            line.show_list_price = true;
+                            line.price = product.list_price;
+                            line.set_discount(discount_percent);
+                        } else {
+                            line.set_discount(0);
+                            line.show_list_price = false;
+                            line.price = price;
+                        }
+                    }
                 }
                 line.trigger('change', line);
             }
