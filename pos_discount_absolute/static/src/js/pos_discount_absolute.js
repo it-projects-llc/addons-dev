@@ -34,7 +34,6 @@ odoo.define('pos_discount_absolute', function (require) {
         apply_discount: function(val) {
             var order = this.pos.get_order();
             var lines = order.get_orderlines();
-            var product = this.pos.db.get_product_by_id(this.pos.config.discount_product_id[0]);
             // Remove existing discounts
             lines.forEach( function(line){
                 if (line.get_product() === product){
@@ -44,9 +43,11 @@ odoo.define('pos_discount_absolute', function (require) {
             // Add discount
             if (val != 0){
                 if (this.pos.config.discount_abs_type){
+                    var product = this.pos.db.get_product_by_id(this.pos.config.discount_abs_product_id[0]);
                     var discount = - Math.min(val, order.get_total_with_tax());
                     order.add_product(product, { price: discount });
                 } else {
+                    var product = this.pos.db.get_product_by_id(this.pos.config.discount_product_id[0]);
                     var discount = - Math.min(val, 100) / 100.0 * order.get_total_with_tax();
                     if( discount < 0 ){
                         order.add_product(product, { price: discount });

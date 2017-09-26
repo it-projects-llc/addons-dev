@@ -23,6 +23,7 @@
 
             <xpath expr="//field[@name='discount_pc']" position="after">
                 <field name='discount_abs_value' attrs="{'invisible':[('discount_abs_enabled','=', False)]}"/>
+                <field name='discount_abs_product_id' attrs="{'invisible':[('discount_abs_enabled','=', False)], 'required': [('discount_abs_enabled', '=', True)]}" />
             </xpath>
         </field>
     </record>
