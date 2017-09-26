@@ -8,7 +8,7 @@ odoo.define('pos_discount_absolute', function (require) {
     var PopupWidget = require('point_of_sale.popups');
     var core = require('web.core');
     var screens = require('point_of_sale.screens');
-
+//    var round_pr = utils.round_precision;
     var QWeb = core.qweb;
 
 //    ScreenWidget = PosBaseWidget.extend({
@@ -24,38 +24,44 @@ odoo.define('pos_discount_absolute', function (require) {
                         'title': 'Absolute Discount',
                         'value': self.pos.config.discount_abs_value,
                         'confirm': function (val) {
-                            self.apply_discount(val);
-                            self.pos.config.discount_abs_value = val;
+                            self.apply_discount(val, {});
+                            if (self.pos.config.discount_abs_type){
+                                self.pos.config.discount_abs_value = val;
+                            }
                         },
                     });
                 };
             }
         },
-        apply_discount: function(val) {
+        apply_discount: function(val,options) {
             var order = this.pos.get_order();
-            var lines = order.get_orderlines();
+            var abs_disc_product = this.pos.db.get_product_by_id(this.pos.config.discount_abs_product_id[0]);
+            // Add discount
+            if (val != 0){
+                if (this.pos.config.discount_abs_type || (options && options.mode === 'absolute')){
+                    this.remove_discount_product(order, abs_disc_product);
+                    var discount = - Math.min(val, order.get_total_with_tax());
+                    order.add_product(abs_disc_product, { price: discount });
+                } else if (!this.pos.config.discount_abs_type && !options.mode){
+                    var product = this.pos.db.get_product_by_id(this.pos.config.discount_product_id[0]);
+                    this.remove_discount_product(order, product);
+                    var discount = - Math.min(val, 100) / 100.0 * order.get_total_with_tax_without_abs_discount(abs_disc_product);
+                    if( discount < 0 ){
+                        order.add_product(product, { price: discount });
+                        console.log("dsvfsfsd")
+                    }
+                }
+            }
+        },
+        remove_discount_product: function(order, product){
             // Remove existing discounts
+            var lines = order.get_orderlines();
             lines.forEach( function(line){
                 if (line.get_product() === product){
                     order.remove_orderline(line);
                 }
             });
-            // Add discount
-            if (val != 0){
-                if (this.pos.config.discount_abs_type){
-                    var product = this.pos.db.get_product_by_id(this.pos.config.discount_abs_product_id[0]);
-                    var discount = - Math.min(val, order.get_total_with_tax());
-                    order.add_product(product, { price: discount });
-                } else {
-                    var product = this.pos.db.get_product_by_id(this.pos.config.discount_product_id[0]);
-                    var discount = - Math.min(val, 100) / 100.0 * order.get_total_with_tax();
-                    if( discount < 0 ){
-                        order.add_product(product, { price: discount });
-                    }
-                }
-            }
         },
-
     });
 
     PopupWidget.include({
@@ -104,10 +110,30 @@ odoo.define('pos_discount_absolute', function (require) {
                 return;
             }
             var total = order ? order.get_total_with_tax() : 0;
-            total = total != 0 && total || 'FREE'
+            if (total < 0 && this.gui.screen_instances.products &&
+            this.gui.screen_instances.products.action_buttons &&
+            this.gui.screen_instances.products.action_buttons.discount){
+               var pos_base_widget = this.gui.screen_instances.products.action_buttons.discount;
+               pos_base_widget.apply_discount(this.pos.config.discount_abs_value, {mode: 'absolute'});
+            }
+            total = total != 0 && total || 'FREE';
             this.el.querySelector('.summary .total > .value').textContent = this.format_currency(total);
         },
 
+    });
+
+    var OrderSuper = models.Order;
+    models.Order = models.Order.extend({
+        get_total_with_tax_without_abs_discount: function(abs_disc_prod){
+            var temporary = this.get_orderlines();
+            var prod_id = this.pos.config.discount_abs_product_id[0];
+            temporary = temporary.find(function(line){return prod_id === line.product.id});
+            if (temporary){
+                return this.get_total_with_tax() - temporary.price;
+            } else {
+                return this.get_total_with_tax();
+            }
+        },
     });
 
     var OrderlineSuper = models.Orderline;
@@ -128,7 +154,7 @@ odoo.define('pos_discount_absolute', function (require) {
             if ( discount_is_set && this.pos.config.discount_abs_enabled && products_widgets &&
             products_widgets.action_buttons && products_widgets.action_buttons.discount){
                 var disc_widget = products_widgets.action_buttons.discount;
-                disc_widget.apply_discount(this.pos.config.discount_abs_value);
+                disc_widget.apply_discount(this.pos.config.discount_abs_value,{});
                 this.order.select_orderline(this);
                 this.pos.gui.current_screen.numpad.state.set({mode: "discount"});
             }
