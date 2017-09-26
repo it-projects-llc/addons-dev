@@ -24,14 +24,14 @@ odoo.define('pos_discount_absolute', function (require) {
                         'title': 'Absolute Discount',
                         'value': self.pos.config.discount_abs_value,
                         'confirm': function (val) {
-                            self.apply_abs_discount(val);
+                            self.apply_discount(val);
                             self.pos.config.discount_abs_value = val;
                         },
                     });
                 };
             }
         },
-        apply_abs_discount: function(val) {
+        apply_discount: function(val) {
             var order = this.pos.get_order();
             var lines = order.get_orderlines();
             var product = this.pos.db.get_product_by_id(this.pos.config.discount_product_id[0]);
@@ -117,19 +117,17 @@ odoo.define('pos_discount_absolute', function (require) {
         },
         set_discount: function(discount){
             var previous_disc = this.get_discount() || 0;
+            var new_disc = discount === "" && "0" || parseFloat(discount) + previous_disc*10;
+            discount = new_disc.toString();
 
-            var new_disc = discount === "" && "0" || Math.min(Math.max(parseFloat(discount) + previous_disc*10, 0),100);
-            this.discount = parseFloat(new_disc);
-            this.discountStr = '' + new_disc;
-            this.trigger('change',this);
-//            OrderlineSuper.prototype.set_discount.apply(this, arguments);
+            OrderlineSuper.prototype.set_discount.apply(this, [discount]);
 
             var products_widgets = this.pos.gui.screen_instances.products;
             var discount_is_set = _.find(this.order.get_orderlines(), function(line){return line.price < 0 })
             if ( discount_is_set && this.pos.config.discount_abs_enabled && products_widgets &&
             products_widgets.action_buttons && products_widgets.action_buttons.discount){
                 var disc_widget = products_widgets.action_buttons.discount;
-                disc_widget.apply_abs_discount(this.pos.config.discount_abs_value);
+                disc_widget.apply_discount(this.pos.config.discount_abs_value);
                 this.order.select_orderline(this);
                 this.pos.gui.current_screen.numpad.state.set({mode: "discount"});
             }
