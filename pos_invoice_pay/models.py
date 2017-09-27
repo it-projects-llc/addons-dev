@@ -1,4 +1,7 @@
 from odoo import api, fields, models, tools, _
+from odoo.exceptions import UserError
+from openerp.http import Response
+
 
 class PosOrder(models.Model):
     _inherit = 'pos.order'
@@ -16,12 +19,9 @@ class PosOrder(models.Model):
         for statement in invoice['data']['statement_ids']:
             inv_id = invoice['data']['invoice_to_pay']['id']
             inv_obj = self.env['account.invoice'].search([('id', '=', inv_id)])
-
             journal_id = statement[2]['journal_id']
             journal = self.env['account.journal'].search([('id', '=', journal_id)])
             currency_id = inv_obj.currency_id
-            print '*' * 80
-            print currency_id
             vals = {
                 'journal_id': journal.id,
                 'payment_method_id': 1,
@@ -39,4 +39,6 @@ class PosOrder(models.Model):
             credit_aml_id = filter(lambda x: x.credit>0, payment.move_line_ids)[0]
             inv_obj.assign_outstanding_credit(credit_aml_id.id)
 
-
+    @api.model
+    def process_invoices_creation(self, sale_order_id):
+        return self.env['sale.order'].browse(sale_order_id).action_invoice_create()[0]

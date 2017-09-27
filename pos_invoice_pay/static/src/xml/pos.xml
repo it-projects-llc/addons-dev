@@ -16,7 +16,9 @@
             <td><t t-esc='item.date_order' /></td>
             <td><t t-esc='item.partner_id[1]' /></td>
             <td><t t-esc='item.user_id[1]' /></td>
-            <td><t t-esc='item.amount_total' /></td>
+            <td><t t-esc='widget.format_currency(item.amount_total' /></td>
+            <td><t t-esc='item.invoice_status' /></td>
+
         </tr>
     </t>
 
@@ -34,7 +36,7 @@
                     </span>
                     <span class='searchbox'></span>
                     <span class='button next oe_hidden highlight'>
-                        Validate
+                        Create Invoice
                         <i class='fa fa-angle-double-right'></i>
                     </span>
                 </section>
@@ -57,6 +59,7 @@
                                                 <th>Customer</th>
                                                 <th>Salesperson</th>
                                                 <th>Total</th>
+                                                <th>Invoice Status</th>
                                             </tr>
                                         </thead>
                                         <tbody class='client-list-contents'>
@@ -78,8 +81,8 @@
             <td><t t-esc='item.number' /></td>
             <td><t t-esc='item.user_id[1]' /></td>
             <td><t t-esc='item.date_due' /></td>
-            <td><t t-esc='item.amount_total' /></td>
-            <td><t t-esc='item.residual' /></td>
+            <td><t t-esc='widget.format_currency(item.amount_total)' /></td>
+            <td><t t-esc='widget.format_currency(item.residual)' /></td>
             <td><t t-esc='item.state' /></td>
 
         </tr>
@@ -98,8 +101,9 @@
                         <span class='search-clear'></span>
                     </span>
                     <span class='searchbox'></span>
+
                     <span class='button next oe_hidden highlight'>
-                        Select Invoice
+
                         <i class='fa fa-angle-double-right'></i>
                     </span>
                 </section>
@@ -236,14 +240,14 @@
                     <t t-foreach='paymentlines' t-as='line'>
                         <t t-if='line.selected'>
                             <tr class='paymentline selected'>
-                                <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.get_due(line))' /> </td>
+                                <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.invoice_to_pay.get_change(line))' /> </td>
                                 <td class='col-tendered edit'> 
                                     <t t-esc='widget.inputbuffer' />
                                     <!-- <t t-esc='line.get_amount()' /> -->
                                 </td>
                                 <t t-if='order.get_change(line)'>
                                     <td class='col-change highlight' > 
-                                        <t t-esc='widget.format_currency_no_symbol(order.get_change(line))' />
+                                        <t t-esc='widget.format_currency_no_symbol(order.invoice_to_pay.get_change(line))' />
                                     </td>
                                 </t>
                                 <t t-if='!order.get_change(line)'>
@@ -256,7 +260,7 @@
                         </t>
                         <t t-if='!line.selected'>
                             <tr class='paymentline' t-att-data-cid='line.cid'>
-                                <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.get_due(line))' /> </td>
+                                <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.invoice_to_pay.get_change(line))' /> </td>
                                 <td class='col-tendered'> <t t-esc='widget.format_currency_no_symbol(line.get_amount())' /> </td>
                                 <td class='col-change'> 
                                     <t t-if='order.get_change(line)'>
