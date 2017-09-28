@@ -16,7 +16,7 @@
             <td><t t-esc='item.date_order' /></td>
             <td><t t-esc='item.partner_id[1]' /></td>
             <td><t t-esc='item.user_id[1]' /></td>
-            <td><t t-esc='widget.format_currency(item.amount_total' /></td>
+            <td><t t-esc='widget.format_currency(item.amount_total)' /></td>
             <td><t t-esc='item.invoice_status' /></td>
 
         </tr>
