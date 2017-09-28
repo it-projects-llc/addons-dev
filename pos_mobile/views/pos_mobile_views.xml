@@ -6,9 +6,9 @@
         <field name="inherit_id" ref="point_of_sale.view_pos_config_kanban"/>
         <field name="arch" type="xml">
             <xpath expr="////div[contains(@class, 'o_kanban_primary_left')]" position="inside">
-                <button t-if="record.current_session_state.raw_value === 'opened'" class="btn btn-primary" name="open_ui" type="object" context="{'mobile': True}">Resume to Mobile</button>
-                <button t-if="record.current_session_state.raw_value === 'opening_control'" class="btn btn-primary" name="open_existing_session_cb" type="object" context="{'mobile': True}">Open Session in Mobile</button>
-                <button t-if="!record.current_session_id.raw_value" class="btn btn-primary" name="open_session_cb" type="object" context="{'mobile': True}">New Session in Mobile</button>
+                <button t-if="record.current_session_state.raw_value === 'opened'" class="btn btn-primary" name="open_ui" type="object" context="{'mobile': True}">Resume (Mobile)</button>
+                <button t-if="record.current_session_state.raw_value === 'opening_control'" class="btn btn-primary" name="open_existing_session_cb" type="object" context="{'mobile': True}">Open Session (Mobile)</button>
+                <button t-if="!record.current_session_id.raw_value" class="btn btn-primary" name="open_session_cb" type="object" context="{'mobile': True}">New Session (Mobile)</button>
             </xpath>
         </field>
     </record>
