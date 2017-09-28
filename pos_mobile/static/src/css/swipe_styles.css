@@ -1,0 +1,13 @@
+.swipe {
+    overflow: hidden;
+    position: relative!important;
+    height: 100%;
+}
+.swipe .leftpane, .swipe .rightpane {
+    left: 0px;
+    float: left;
+    position: relative!important;
+    height: 100%;
+    overflow: hidden;
+    max-width: 1300px;
+}
