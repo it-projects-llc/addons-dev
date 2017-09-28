@@ -1,7 +1,5 @@
-from odoo import api, fields, models, tools, _
-from odoo.exceptions import UserError
-from openerp.http import Response
-
+# -*- coding: utf-8 -*-
+from odoo import api, models
 
 class PosOrder(models.Model):
     _inherit = 'pos.order'

@@ -8,11 +8,15 @@ var PosDb = require('point_of_sale.DB');
 var ProductScreenWidget = require('point_of_sale.screens').ProductScreenWidget;
 var ClientListScreenWidget = require('point_of_sale.screens').ClientListScreenWidget;
 var PaymentScreenWidget = require('point_of_sale.screens').PaymentScreenWidget;
+var ReceiptScreenWidget = require('point_of_sale.screens').ReceiptScreenWidget;
+var utils = require('web.utils');
 
 var Model = require('web.Model');
 
 var QWeb = core.qweb;
 var _t = core._t;
+var round_pr = utils.round_precision;
+
 
 var _super_posmodel = models.PosModel.prototype;
 models.PosModel = models.PosModel.extend({
@@ -23,7 +27,7 @@ models.PosModel = models.PosModel.extend({
             model: 'sale.order',
             fields: ['name', 'partner_id', 'date_order', 'user_id',
             'amount_total', 'order_line', 'invoice_status'],
-            domain:[['invoice_status', '!=', 'invoiced']],
+            domain:[['invoice_status', '!=', 'invoiced'], ['state', '=', 'sale']],
             loaded: function (self, sale_orders) {
                 self.prepare_so_data(sale_orders);
                 self.sale_orders = sale_orders;
@@ -32,9 +36,9 @@ models.PosModel = models.PosModel.extend({
         },{
             model: 'account.invoice',
             fields: ['name', 'partner_id', 'date_invoice','number', 'date_due',
-            'amount_total', 'user_id', 'residual', 'state'],
+            'amount_total', 'user_id', 'residual', 'state', 'amount_untaxed', 'amount_tax'],
             domain: [['state', 'in', ['open', 'draft']],
-            ['type','=', 'out_invoice'], ['residual', '>', 0]],
+            ['type','=', 'out_invoice']],
             loaded: function (self, invoices) {
                 self.prepare_invoices_data(invoices);
                 self.invoices = invoices;
@@ -53,7 +57,7 @@ models.PosModel = models.PosModel.extend({
                     }
                 }
             }
-            var stateAttr = item.state
+            var stateAttr = item.state;
             item.state = stateAttr.charAt(0).toUpperCase() + stateAttr.slice(1);
         });
     },
@@ -65,14 +69,14 @@ models.PosModel = models.PosModel.extend({
                     item.invoice_status = 'To invoice';
                     break;
                 case 'no':
-                    item.invoice_status = 'Nothing to invoice'
+                    item.invoice_status = 'Nothing to invoice';
                     break;
             }
         });
     },
 
     update_or_fetch_invoice: function(id) {
-        def = $.Deferred();
+        var def = $.Deferred();
         var self = this;
         var fields = _.find(this.models,function(model){ return model.model === 'account.invoice'; }).fields;
         new Model('account.invoice').query(fields).
@@ -563,9 +567,50 @@ var InvoicePayment = PaymentScreenWidget.extend({
             return;
         }
         order.invoice_to_pay = this.pos.selected_invoice;
-        order.invoice_to_pay.get_change = function(line) {
-            return self.pos.selected_invoice.residual - order.get_total_paid();
+
+        order.invoice_to_pay.get_due = function(paymentline) {
+            total = self.pos.selected_invoice.residual;
+            if (!paymentline) {
+                var due = total - order.get_total_paid();
+            } else {
+                var due = total;
+                var lines = order.paymentlines.models;
+                for (var i = 0; i < lines.length; i++) {
+                    if (lines[i] === paymentline) {
+                        break;
+                    } else {
+                        due -= lines[i].get_amount();
+                    }
+                }
+            }
+            return round_pr(Math.max(0,due), self.pos.currency.rounding);
+
         }
+
+        order.invoice_to_pay.get_change = function(paymentline) {
+            var due = self.pos.selected_invoice.residual;
+            if (!paymentline) {
+                var change = -due + order.get_total_paid();
+            } else {
+                var change = -due; 
+                var lines  = order.paymentlines.models;
+                for (var i = 0; i < lines.length; i++) {
+                    change += lines[i].get_amount();
+                    if (lines[i] === paymentline) {
+                        break;
+                    }
+                }
+            }
+            return round_pr(Math.max(0,change), self.pos.currency.rounding);
+        }
+
+        order.invoice_to_pay.get_subtotal = function () {
+            var tax = self.pos.selected_invoice.amount_tax;
+            var due = self.pos.selected_invoice.residual;
+            return due - tax;
+            // return due - (due/100*tax)
+        }
+
         var lines = order.get_paymentlines();
         var due   = order.invoice_to_pay.amount_due;
         var extradue = 0;
@@ -642,7 +687,7 @@ var InvoicePayment = PaymentScreenWidget.extend({
         } else {
             this.pos.push_order(order).then(function() {
                 self.pos.update_or_fetch_invoice(self.pos.selected_invoice.id);
-                self.gui.show_screen('receipt');
+                self.gui.show_screen('invoice_receipt');
             });   
         }
     },
@@ -654,5 +699,22 @@ var InvoicePayment = PaymentScreenWidget.extend({
 });
 
 gui.define_screen({name:'invoice_payment', widget: InvoicePayment});
+
+var InvoiceReceiptScreenWidget = ReceiptScreenWidget.extend({
+    template: 'InvoiceReceiptScreenWidget',
+    render_receipt: function() {
+        var order = this.pos.get_order();
+        this.$('.pos-receipt-container').html(QWeb.render('PosInvoiceTicket',{
+                widget:this,
+                order: order,
+                receipt: order.export_for_printing(),
+                orderlines: order.get_orderlines(),
+                paymentlines: order.get_paymentlines(),
+            }));
+    },
+});
+
+gui.define_screen({name:'invoice_receipt', widget: InvoiceReceiptScreenWidget});
+
 
 });
