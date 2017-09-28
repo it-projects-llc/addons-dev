@@ -24,6 +24,11 @@ odoo.define('pos_mobile.screens', function (require) {
                     callback: function(index, element) {},
                     transitionEnd: function(index, element) {}
                 });
+
+                var rightpane = $(".rightpane tbody");
+                var tr = rightpane.find(".header-row");
+                tr.detach();
+                rightpane.append(tr);
             });
         },
     });

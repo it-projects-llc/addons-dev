@@ -13,4 +13,12 @@
         </t>
     </t>
 
+    <t t-extend="CategorySimpleButton">
+        <t t-jquery="span[class='category-simple-button js-category-switch']" t-operation="replace">
+            <span class='control-button js-category-switch' t-att-data-category-id="category.id" >
+                <t t-esc="category.name"/>
+            </span>
+        </t>
+    </t>
+
 </templates>
