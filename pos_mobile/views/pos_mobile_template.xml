@@ -29,7 +29,7 @@ var getUrlParameter = function getUrlParameter(sParam) {
 };
 odoo.is_mobile = getUrlParameter('m');
 
-// exclude pos_mobile from module list if it's not mobile running
+// exclude pos_mobile from module list if the url doesn't have parameter "m" in agrs (e.g. /pos/web?m=1 )
 if (!odoo.is_mobile){
     odoo._modules.splice(odoo._modules.indexOf('pos_mobile'), 1);
 }
