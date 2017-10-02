@@ -3,13 +3,19 @@
 
     <t t-extend="ProductScreenWidget">
         <t t-jquery="div[class='product-screen screen']">
-            $(this).addClass('swipe');
+            $(this).addClass('swiper-wrapper');
+        </t>
+        <t t-jquery="div[class='leftpane']">
+            $(this).addClass('swiper-slide');
+        </t>
+        <t t-jquery="div[class='rightpane']">
+            $(this).addClass('swiper-slide');
         </t>
     </t>
 
     <t t-extend="Chrome">
         <t t-jquery="div[class='subwindow-container-fix screens']">
-            $(this).addClass('swipe').attr('id', 'mySwipe');
+            $(this).addClass('swiper-container');
         </t>
     </t>
 

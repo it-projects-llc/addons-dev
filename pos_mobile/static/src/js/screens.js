@@ -9,23 +9,15 @@ odoo.define('pos_mobile.screens', function (require) {
         renderElement: function () {
             this._super.apply(this, arguments);
             this.pos.ready.then(function(){
-                var swipe = $("#mySwipe");
-                var div = swipe.find(".swipe");
-                div.detach();
-                swipe.prepend(div);
+                var swiper = new Swiper('.swiper-container');
+                var elements = $(".swiper-slide");
+                var width = elements.css('width');
+                width = Number(width.split("px")[0]);
 
-                var element = document.getElementById('mySwipe');
-                window.mySwipe = new Swipe(element, {
-                    startSlide: 1,
-                    auto: false,
-                    draggable: true,
-                    autoRestart: false,
-                    continuous: false,
-                    disableScroll: true,
-                    stopPropagation: true,
-                    callback: function(index, element) {},
-                    transitionEnd: function(index, element) {}
-                });
+                var screen_width = elements.length * width;
+
+                $(".swiper-slide").css('width')
+                $('.pos .screen').css({'width': screen_width + 'px'});
 
                 var rightpane = $(".rightpane tbody");
                 var tr = rightpane.find(".header-row");

@@ -1,0 +1,73 @@
+.pos .screen, .swiper-container {
+    width: 100%;
+    height: 100%;
+}
+.pos .leftpane, .pos .rightpane {
+    /* Center slide text vertically */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    left: 0px;
+    float: left;
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+.pos .searchbox {
+    float: left;
+    position: relative;
+}
+.pos .searchbox input {
+    border-radius: initial;
+}
+.pos .search-clear {
+    top: 10px;
+    left: 10px;
+}
+.category-list-scroller .control-button {
+    margin: 10px;
+    padding: 5px;
+}
+.pos .numpad {
+    float: left;
+}
+.pos .order {
+    max-width: initial;
+}
+.pos .product-list {
+    text-align: center;
+}
+.pos .categories {
+    border-bottom: none;
+}
+.category-list-scroller .control-button {
+    width: 200px;
+}
+.pos .category-list.simple {
+    display: block;
+    -webkit-flex-flow: initial;
+    flex-flow: initial;
+    border-bottom: none;
+    background-color: white;
+    text-align: center;
+}
+.pos .rightpane-header {
+    background: #e2e2e2;
+    border-top: 1px solid #d3d3d3;
+    border-bottom: 1px solid #d3d3d3;
+}
+.pos .control-button:hover {
+    background: #6EC89B;
+}
+.pos .control-button:active {
+    background: #6EC89B;
+}
