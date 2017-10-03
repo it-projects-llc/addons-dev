@@ -52,17 +52,30 @@
     <field name="perm_read" eval="True"/>
   </record>
   
-  <!-- <record model="ir.rule" id="queue_management_manager_service_rule"> -->
-  <!--   <field name="name">The Manager sees services related only to his Company</field> -->
-  <!--   <field name="model_id" ref="queue_management.model_queue_management_service"/> -->
-  <!--   <field name="groups" eval="[(4,ref('queue_management.group_queue_management_branch_manager'))]"/> -->
-  <!--   <field name="domain_force">[ -->
-  <!--   ('company_id', '=', user.company_id.id), -->
-  <!--   ]</field> -->
-  <!--   <field name="perm_unlink" eval="True"/> -->
-  <!--   <field name="perm_write" eval="True"/> -->
-  <!--   <field name="perm_create" eval="True"/> -->
-  <!--   <field name="perm_read" eval="True"/> -->
-  <!-- </record> -->
+  <record model="ir.rule" id="queue_management_manager_service_rule">
+    <field name="name">The Manager sees services related only to his Company</field>
+    <field name="model_id" ref="queue_management.model_queue_management_service"/>
+    <field name="groups" eval="[(4,ref('queue_management.group_queue_management_branch_manager'))]"/>
+    <field name="domain_force">[
+    ('company_id', '=', user.company_id.id),
+    ]</field>
+    <field name="perm_unlink" eval="True"/>
+    <field name="perm_write" eval="True"/>
+    <field name="perm_create" eval="True"/>
+    <field name="perm_read" eval="True"/>
+  </record>
+
+  <record model="ir.rule" id="queue_management_manager_log_rule">
+    <field name="name">The Manager sees records related only to his Company</field>
+    <field name="model_id" ref="queue_management.model_queue_management_log"/>
+    <field name="groups" eval="[(4,ref('queue_management.group_queue_management_branch_manager'))]"/>
+    <field name="domain_force">[
+    ('company_id', '=', user.company_id.id),
+    ]</field>
+    <field name="perm_unlink" eval="True"/>
+    <field name="perm_write" eval="True"/>
+    <field name="perm_create" eval="True"/>
+    <field name="perm_read" eval="True"/>
+  </record>
 
 </odoo>

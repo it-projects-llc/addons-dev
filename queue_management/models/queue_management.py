@@ -32,6 +32,7 @@ class QueueManagementLog(models.Model):
                             'Desk', required=True, copy=False, default='1')
     service_id = fields.Many2one('queue.management.service', 'Service', related='ticket_id.service_id')
     ticket_state = fields.Selection(string='Ticket State', related='ticket_id.ticket_state', readonly=True)
+    company_id = fields.Many2one('res.company', related='service_id.company_id', store=True)
 
 
 class QueueManagementTicket(models.Model):
@@ -65,21 +66,32 @@ class QueueManagementTicket(models.Model):
     def change_state_done(self):
         for record in self:
             record.ticket_state = 'done'
-        return{
-                'type': 'ir.actions.act_window',
-                'view_type': 'form',
-                'view_mode': 'tree',
-                'res_model': 'queue.management.ticket',
-            }
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'tree',
+            'res_model': 'queue.management.ticket'
+        }
 
     @api.multi
     def change_state_no_show(self):
         for record in self:
             record.ticket_state = 'no-show'
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'tree',
+            'res_model': 'queue.management.ticket',
+        }
 
     @api.model
     def is_next_exist(self, service_id):
         return self.search_count([('ticket_state', '=', 'next')])
+
+    # @api.model
+    # def is_pending_exist(self, service_id):
+    #     return self.search([('ticket_state', '=', 'pending'),
+    #                         ('service_id', '=', service_id)], limit=1, order='name')
 
     @api.model
     def get_next_ticket(self, service_id):
@@ -99,14 +111,14 @@ class QueueManagementTicket(models.Model):
             raise UserError(_('You already have current ticket, make it done first.'))
         else:
             self.ticket_state = 'current'
-            self.env['queue.management.log'].create({'ticket_id': self.id,
-                                                     'desk': agent.desk,})
+            self.env['queue.management.log'].sudo().create({'ticket_id': self.id,
+                                                            'desk': agent.desk})
             ticket = self.get_next_ticket(agent.primary_service_id.id)
-            if ticket:
+            if ticket and ticket.id != self.id:
                 ticket.ticket_state = 'next'
-                self.env['queue.management.log'].create({'ticket_id': ticket.id,
-                                                         'desk': agent.desk,})
-            return{
+                self.env['queue.management.log'].sudo().create({'ticket_id': ticket.id,
+                                                                'desk': agent.desk})
+            return {
                 'type': 'ir.actions.act_window',
                 'view_type': 'form',
                 'view_mode': 'tree',
@@ -149,6 +161,12 @@ class QueueManagementAgent(models.Model):
                                          string="Primary service", required=True,
                                          domain="[('id', 'in', service_ids[0][2])]")
 
+    @api.multi
+    def unlink(self):
+        user_id = self.user_id
+        super(QueueManagementAgent, self).unlink()
+        user_id.unlink()
+
     @api.model
     def default_get(self, fields_list):
         result = super(QueueManagementAgent, self).default_get(fields_list)
@@ -160,6 +178,12 @@ class QueueManagementManager(models.Model):
     _name = 'queue.management.manager'
     _inherits = {'res.users': 'user_id'}
     user_id = fields.Many2one('res.users')
+
+    @api.multi
+    def unlink(self):
+        user_id = self.user_id
+        super(QueueManagementManager, self).unlink()
+        user_id.unlink()
 
     @api.model
     def default_get(self, fields_list):
