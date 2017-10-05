@@ -88,11 +88,6 @@ class QueueManagementTicket(models.Model):
     def is_next_exist(self, service_id):
         return self.search_count([('ticket_state', '=', 'next')])
 
-    # @api.model
-    # def is_pending_exist(self, service_id):
-    #     return self.search([('ticket_state', '=', 'pending'),
-    #                         ('service_id', '=', service_id)], limit=1, order='name')
-
     @api.model
     def get_next_ticket(self, service_id):
         next_ticket = self.search([('ticket_state', '=', 'pending'),
@@ -116,8 +111,6 @@ class QueueManagementTicket(models.Model):
             ticket = self.get_next_ticket(agent.primary_service_id.id)
             if ticket and ticket.id != self.id:
                 ticket.ticket_state = 'next'
-                self.env['queue.management.log'].sudo().create({'ticket_id': ticket.id,
-                                                                'desk': agent.desk})
             return {
                 'type': 'ir.actions.act_window',
                 'view_type': 'form',

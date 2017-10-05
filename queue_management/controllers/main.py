@@ -6,7 +6,7 @@ from odoo.http import request
 
 class QueueManagement(http.Controller):
     @http.route('/queue/services/', auth='public')
-    def index(self, **kw):
+    def service(self, **kw):
         branch_id = int(kw.get('branch_id'))
         branch = request.env['queue.management.branch'].sudo().browse(branch_id)
         values = {
@@ -22,13 +22,14 @@ class QueueManagement(http.Controller):
         return werkzeug.utils.redirect('/queue/services?branch_id={}'.format(service.branch_id.id))
 
     @http.route('/queue/screen/', auth='public')
-    def index1(self, **kw):
+    def screen(self, **kw):
         branch_id = int(kw.get('branch_id'))
         branch = request.env['queue.management.branch'].sudo().browse(branch_id)
         log_records = request.env['queue.management.log'].sudo().search([('ticket_state', '=', 'current'),
                                                                          ('service_id.branch_id', '=', branch.id)])
+        print '\n\n\n', log_records, '\n\n\n'
         values = {
             'branch': branch,
-            'log': log_records,
+            'log_records': log_records,
         }
         return http.request.render('queue_management.queue_screen', values)

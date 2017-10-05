@@ -7,8 +7,23 @@
       <script type="text/javascript" src="/queue_management/static/src/js/bootstrap.min.js"></script>
       <h1>Queue</h1>
       <table class="table">
-              <t t-esc="log"/>
+        <thead>
+          <tr>
+            <th>Ticket</th>
+            <th>Desk</th>
+            <th>Service</th>
+          </tr>
+        </thead>
+        <tbody>
+          <t t-foreach="log_records" t-as="record">
+            <tr>
+              <td><t t-esc='record.ticket_id.name'/></td>
+              <td><t t-esc='record.desk'/></td>
+              <td><t t-esc='record.service_id.name'/></td>
+            </tr>
+          </t>
+        </tbody>
       </table>
-    </template>
+      </template>
   </data>
 </odoo>
