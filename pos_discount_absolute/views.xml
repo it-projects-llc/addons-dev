@@ -15,6 +15,7 @@
         <field name="name">pos.config.form.inherit</field>
         <field name="model">pos.config</field>
         <field name="inherit_id" ref="pos_discount.view_pos_config_form" />
+        <field name="priority" eval="32" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='iface_discount']" position="replace">
                 <field name='iface_discount'/>

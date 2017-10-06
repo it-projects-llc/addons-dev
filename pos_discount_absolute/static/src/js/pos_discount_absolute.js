@@ -8,10 +8,8 @@ odoo.define('pos_discount_absolute', function (require) {
     var PopupWidget = require('point_of_sale.popups');
     var core = require('web.core');
     var screens = require('point_of_sale.screens');
-//    var round_pr = utils.round_precision;
     var QWeb = core.qweb;
 
-//    ScreenWidget = PosBaseWidget.extend({
     PosBaseWidget.include({
         init:function(parent,options){
             var self = this;
@@ -46,7 +44,7 @@ odoo.define('pos_discount_absolute', function (require) {
             var abs_disc_product = this.pos.db.get_product_by_id(this.pos.config.discount_abs_product_id[0]);
             this.remove_discount_product(order, abs_disc_product);
             var discount = - Math.min(val, order.get_total_with_tax());
-            if (val != 0){
+            if (val !== 0){
                 order.add_product(abs_disc_product, { price: discount });
             }
         },
@@ -56,7 +54,7 @@ odoo.define('pos_discount_absolute', function (require) {
             var product = this.pos.db.get_product_by_id(this.pos.config.discount_product_id[0]);
             this.remove_discount_product(order, product);
             var discount = - Math.min(val, 100) / 100.0 * order.get_total_with_tax_without_abs_disc(abs_disc_product);
-            if( discount < 0 && val != 0){
+            if( discount < 0 && val !== 0){
                 order.add_product(product, { price: discount });
             }
         },
@@ -103,7 +101,9 @@ odoo.define('pos_discount_absolute', function (require) {
                 div.className = "header";
                 node.parentElement.insertBefore(div, node);
                 var header_title = node.parentElement.getElementsByClassName("title")[0];
-                var text = this.pos.config.discount_abs_type && "Absolute Discount" || "Discount Percentage"
+                var text = this.pos.config.discount_abs_type ?
+                    "Absolute Discount" :
+                    "Discount Percentage";
                 header_title.innerText = text;
             }
         },
@@ -116,13 +116,15 @@ odoo.define('pos_discount_absolute', function (require) {
             if (!this.pos.config.discount_abs_enabled || !order.get_orderlines().length){
                 return;
             }
-            var total = order ? order.get_total_with_tax() : 0;
+            var total = order ?
+                order.get_total_with_tax() :
+                0;
             var abs_prod_id = this.pos.config.discount_abs_product_id[0];
             var abs_disc_prod = this.pos.get_order().get_orderlines().find(function(line){
-                return abs_prod_id === line.product.id
+                return abs_prod_id === line.product.id;
             });
             if (abs_disc_prod){
-                var recalc = - abs_disc_prod.price != + this.pos.config.discount_abs_value;
+                var recalc = - abs_disc_prod.price !== Number(this.pos.config.discount_abs_value);
                 if (( total < 0 || (recalc && total > 0)) && this.gui.screen_instances.products &&
                     this.gui.screen_instances.products.action_buttons &&
                     this.gui.screen_instances.products.action_buttons.discount){
@@ -130,9 +132,13 @@ odoo.define('pos_discount_absolute', function (require) {
                     var pos_base_widget = this.gui.screen_instances.products.action_buttons.discount;
                     pos_base_widget.apply_absolute_discount(this.pos.config.discount_abs_value);
                 }
-                total = order ? order.get_total_with_tax() : 0;
+                total = order ?
+                    order.get_total_with_tax() :
+                    0;
             }
-            total = total != 0 && total || 'FREE';
+            total = total !== 0 ?
+                total :
+                'FREE';
             this.el.querySelector('.summary .total > .value').textContent = this.format_currency(total);
         },
     });
@@ -142,12 +148,13 @@ odoo.define('pos_discount_absolute', function (require) {
         get_total_with_tax_without_abs_disc: function(abs_disc_prod){
             var temporary = this.get_orderlines();
             var prod_id = this.pos.config.discount_abs_product_id[0];
-            temporary = temporary.find(function(line){return prod_id === line.product.id});
+            temporary = temporary.find(function(line){
+                return prod_id === line.product.id;
+            });
             if (temporary){
                 return this.get_total_with_tax() - temporary.price;
-            } else {
-                return this.get_total_with_tax();
             }
+            return this.get_total_with_tax();
         },
     });
 
@@ -159,13 +166,17 @@ odoo.define('pos_discount_absolute', function (require) {
         },
         set_discount: function(discount){
             var previous_disc = this.get_discount() || 0;
-            var new_disc = discount === "" && "0" || parseFloat(discount) + previous_disc*10;
+            var new_disc = discount === "" ?
+                "0" :
+                parseFloat(discount) + previous_disc*10;
             discount = new_disc.toString();
 
             OrderlineSuper.prototype.set_discount.apply(this, [discount]);
 
             var products_widgets = this.pos.gui.screen_instances.products;
-            var discount_is_set = _.find(this.order.get_orderlines(), function(line){return line.price < 0 })
+            var discount_is_set = _.find(this.order.get_orderlines(), function(line){
+                return line.price < 0;
+            });
             if ( discount_is_set && this.pos.config.discount_abs_enabled && products_widgets &&
             products_widgets.action_buttons && products_widgets.action_buttons.discount){
                 var disc_widget = products_widgets.action_buttons.discount;
@@ -176,10 +187,13 @@ odoo.define('pos_discount_absolute', function (require) {
         },
         get_display_price: function(){
             if (this.pos.config.iface_tax_included) {
-                return this.get_price_with_tax() === 0 && "FREE" || this.get_price_with_tax();
-            } else {
-                return this.get_base_price() === 0 && "FREE" || this.get_base_price();
+                return this.get_price_with_tax() === 0 ?
+                    "FREE" :
+                    this.get_price_with_tax();
             }
+            return this.get_base_price() === 0 ?
+                "FREE" :
+                this.get_base_price();
         },
     });
 

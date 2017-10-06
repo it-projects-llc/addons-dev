@@ -21,6 +21,9 @@
     'qweb': [
         'static/src/xml/DiscountAbs.xml',
     ],
+    "demo": [
+        "demo/demo.xml",
+    ],
 
     "auto_install": False,
     "installable": True,
