@@ -165,22 +165,19 @@ odoo.define('pos_discount_absolute', function (require) {
             OrderlineSuper.prototype.initialize.apply(this, arguments);
         },
         set_discount: function(discount){
+            if (!this.pos.config.discount_abs_enabled || discount.length >= 2){
+                OrderlineSuper.prototype.set_discount.apply(this, [discount]);
+                return;
+            }
             var previous_disc = this.get_discount() || 0;
             var new_disc = discount === "" ?
                 "0" :
                 parseFloat(discount) + previous_disc*10;
             discount = new_disc.toString();
-
             OrderlineSuper.prototype.set_discount.apply(this, [discount]);
-
             var products_widgets = this.pos.gui.screen_instances.products;
-            var discount_is_set = _.find(this.order.get_orderlines(), function(line){
-                return line.price < 0;
-            });
-            if ( discount_is_set && this.pos.config.discount_abs_enabled && products_widgets &&
-            products_widgets.action_buttons && products_widgets.action_buttons.discount){
-                var disc_widget = products_widgets.action_buttons.discount;
-                disc_widget.apply_discount(this.pos.config.discount_abs_value,{});
+            if (this.pos.config.discount_abs_enabled && products_widgets &&
+                products_widgets.action_buttons && products_widgets.action_buttons.discount){
                 this.order.select_orderline(this);
                 this.pos.gui.current_screen.numpad.state.set({mode: "discount"});
             }
