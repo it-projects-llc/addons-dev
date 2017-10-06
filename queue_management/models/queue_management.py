@@ -86,7 +86,7 @@ class QueueManagementTicket(models.Model):
 
     @api.model
     def is_next_exist(self, service_id):
-        return self.search_count([('ticket_state', '=', 'next')])
+        return self.search_count([('ticket_state', '=', 'next'), ('service_id', '=', service_id)])
 
     @api.model
     def get_next_ticket(self, service_id):
@@ -123,8 +123,8 @@ class QueueManagementService(models.Model):
     _name = 'queue.management.service'
     name = fields.Char(required=True, string='Service Name')
     state = fields.Selection([
-            ('opened', 'Opened'),
-            ('closed', 'Closed')], 'Service status', required=True, copy=False, default='closed')
+        ('opened', 'Opened'),
+        ('closed', 'Closed')], 'Service status', required=True, copy=False, default='opened')
     branch_id = fields.Many2one('queue.management.branch', required=True)
     company_id = fields.Many2one('res.company', related='branch_id.company_id', store=True)
     sequence_id = fields.Many2one('ir.sequence', string='Letter', required=True)

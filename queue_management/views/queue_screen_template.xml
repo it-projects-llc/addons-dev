@@ -6,8 +6,8 @@
       <script type="text/javascript" src="/queue_management/static/src/js/jquery.min.js"></script>
       <script type="text/javascript" src="/queue_management/static/src/js/bootstrap.min.js"></script>
       <h1>Queue</h1>
-      <table class="table">
-        <thead>
+      <table class="table table-striped">
+        <thead class="thead-inverse">
           <tr>
             <th>Ticket</th>
             <th>Desk</th>

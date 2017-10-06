@@ -7,19 +7,19 @@
       <script type="text/javascript" src="/queue_management/static/src/js/jquery.min.js"></script>
       <script type="text/javascript" src="/queue_management/static/src/js/bootstrap.min.js"></script>
       <div class="container">
-        <div class="parent">
-          <div class="block">
+        <!-- <div class="parent"> -->
+        <!--   <div class="block"> -->
             <h1>Services</h1>
             <div class="row">
-              <t t-foreach="branch.service_ids" t-as="service">
+              <t t-foreach="service_ids" t-as="service">
                 <div class="col-md-3">
                   <a class="btn btn-default" t-attf-href="new_ticket?service_id=#{service.id}"><t t-esc="service.name"/></a>
                 </div>
               </t>
             </div>
           </div>
-        </div>
-      </div>
+      <!--   </div> -->
+      <!-- </div> -->
     </template>
   </data>
 </odoo>

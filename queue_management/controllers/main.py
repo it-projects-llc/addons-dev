@@ -9,8 +9,9 @@ class QueueManagement(http.Controller):
     def service(self, **kw):
         branch_id = int(kw.get('branch_id'))
         branch = request.env['queue.management.branch'].sudo().browse(branch_id)
+        service_ids = request.env['queue.management.service'].sudo().search([('branch_id', '=', branch.id), ('state', '=', 'opened')])
         values = {
-            'branch': branch,
+            'service_ids': service_ids,
         }
         return http.request.render('queue_management.queue_service', values)
 
@@ -27,7 +28,6 @@ class QueueManagement(http.Controller):
         branch = request.env['queue.management.branch'].sudo().browse(branch_id)
         log_records = request.env['queue.management.log'].sudo().search([('ticket_state', '=', 'current'),
                                                                          ('service_id.branch_id', '=', branch.id)])
-        print '\n\n\n', log_records, '\n\n\n'
         values = {
             'branch': branch,
             'log_records': log_records,
