@@ -8,9 +8,11 @@ class PosOrder(models.Model):
     def create_from_ui(self, orders):
         invoices_to_pay = [o for o in orders if o.get('data').get('invoice_to_pay')]
         original_orders = [o for o in orders if o not in invoices_to_pay]
+        res = super(PosOrder, self).create_from_ui(original_orders)
         if invoices_to_pay:
             ids = map(self.process_invoice_payment, invoices_to_pay)
-        return super(PosOrder, self).create_from_ui(original_orders)
+            res += ids
+        return res
 
     @api.model
     def process_invoice_payment(self, invoice):
@@ -40,3 +42,45 @@ class PosOrder(models.Model):
     @api.model
     def process_invoices_creation(self, sale_order_id):
         return self.env['sale.order'].browse(sale_order_id).action_invoice_create()[0]
+
+    @api.model
+    def send_longpolling_data(self):
+        return {
+            'dbname': self._cr.dbname,
+            'uid': self.env.uid
+        }
+
+class AccountInvoice(models.Model):
+    _inherit = 'account.invoice'
+
+    def action_updated_invoice(self):
+        channel = '["%s","%s","%s"]' % (self._cr.dbname, "account.invoice", self.env.uid)
+        self.env['bus.bus'].sendone(channel, self.id)
+
+
+class SaleOrder(models.Model):
+    _inherit = 'sale.order'
+
+    def action_updated_sale_order(self):
+        channel = '["%s","%s","%s"]' % (self._cr.dbname, "sale.order", self.env.uid)
+        self.env['bus.bus'].sendone(channel, self.id)
+
+    @api.model
+    def get_order_lines_for_pos(self, sale_order_ids):
+        res = []
+        order_lines = self.env['sale.order.line'].search([('order_id', 'in', sale_order_ids)])
+        for l in order_lines:
+            line = {
+                'order_id': l.order_id.id,
+                'id': l.id,
+                'description': l.name,
+                'product': l.product_id.name,
+                'prdered Quantinty': l.product_uom_qty,
+                'invoiced': l.qty_invoiced,
+                'tax': l.tax_id.id,
+                'tubtotal': l.price_subtotal,
+                'total': l.price_total
+            }
+            res.append(line)
+        return res
+

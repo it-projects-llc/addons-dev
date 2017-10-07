@@ -10,6 +10,7 @@ var ClientListScreenWidget = require('point_of_sale.screens').ClientListScreenWi
 var PaymentScreenWidget = require('point_of_sale.screens').PaymentScreenWidget;
 var ReceiptScreenWidget = require('point_of_sale.screens').ReceiptScreenWidget;
 var utils = require('web.utils');
+var bus = require('bus.bus').bus;
 
 var Model = require('web.Model');
 
@@ -22,6 +23,8 @@ var _super_posmodel = models.PosModel.prototype;
 models.PosModel = models.PosModel.extend({
     initialize: function (session, attributes) {
         var self = this;
+        this.bus = bus;
+        this.prepare_bus();
         this.models.push(
         {
             model: 'sale.order',
@@ -29,6 +32,7 @@ models.PosModel = models.PosModel.extend({
             'amount_total', 'order_line', 'invoice_status'],
             domain:[['invoice_status', '!=', 'invoiced'], ['state', '=', 'sale']],
             loaded: function (self, sale_orders) {
+                self.get_sale_order_lines();
                 self.prepare_so_data(sale_orders);
                 self.sale_orders = sale_orders;
                 self.db.add_sale_orders(sale_orders);
@@ -46,6 +50,69 @@ models.PosModel = models.PosModel.extend({
             }
         });
         return _super_posmodel.initialize.apply(this, arguments);
+    },
+
+    get_sale_order_lines: function () {
+        new Model('sale.order').call('get_order_lines_for_pos', [[1, 2, 3]]).
+            then(function (res) {
+                console.log(res);
+            });
+    },
+
+    prepare_bus: function () {
+        var self = this;
+        new Model('pos.order').call('send_longpolling_data', []).
+        then(function (res) {
+            var invoices_channel = JSON.stringify([res.dbname, 'account.invoice', res.uid.toString()]);
+            var so_channel = JSON.stringify([res.dbname, 'sale.order', res.uid.toString()]);
+            self.bus.add_channel(invoices_channel);
+            self.bus.add_channel(so_channel);
+            self.bus.on("notification", self, self.on_notification);
+            self.bus.start_polling();
+        });
+    },
+
+    on_notification: function(notification) {
+        console.log(notification)
+        invoices_to_update = [];
+        sale_orders_to_update = [];
+        for (var i = 0; i < notification.length; i++) {
+            var channel = notification[i][0];
+            var message = notification[i][1];
+            if (_.isString(channel)) {
+                var channel = JSON.parse(channel);
+            }
+            if (Array.isArray(channel) && channel[1] === 'account.invoice') {
+                invoices_to_update.push(message)
+            }
+            if (Array.isArray(channel) && channel[1] === 'sale.order') {
+                sale_orders_to_update.push(message);
+            }
+        }
+        if (invoices_to_update.length > 0) {
+            this.update_invoices_from_poll(_.unique(invoices_to_update));
+        }
+        if (sale_orders_to_update.length > 0) {
+            this.update_sale_orders_from_poll(_.unique(sale_orders_to_update));
+        }
+    },
+
+    update_invoices_from_poll: function (ids) {
+        var self = this;
+        _.each(ids, function (id) {
+            self.update_or_fetch_invoice(id).then(function () {
+                self.gui.current_screen.show();
+            });
+        });
+    },
+
+    update_sale_orders_from_poll : function (ids) {
+        var self = this;
+        _.each(ids, function (id) {
+            self.update_or_fetch_sale_order(id).then(function () {
+                self.gui.current_screen.show();
+            });
+        });
     },
 
     prepare_invoices_data: function (data) {
@@ -75,20 +142,53 @@ models.PosModel = models.PosModel.extend({
         });
     },
 
-    update_or_fetch_invoice: function(id) {
-        var def = $.Deferred();
-        var self = this;
-        var fields = _.find(this.models,function(model){ return model.model === 'account.invoice'; }).fields;
-        new Model('account.invoice').query(fields).
+    get_res: function (model_name, id) {
+        var fields = _.find(this.models, function (model){ 
+            return model.model === model_name;
+        }).fields;
+        return new Model(model_name).
+            query(fields).
             filter([['id', '=', id]]).
-            all().then(function(res) {
+            all();
+    },
+
+    update_or_fetch_invoice: function (id) {
+        var self = this;
+        var def = $.Deferred();
+        this.get_res('account.invoice', id).
+            then(function (res) {
                 self.prepare_invoices_data(res);
                 self.db.update_invoice_db(res[0]);
-                self.selected_invoice = false;
-                def.resolve();
+                def.resolve(id);
             });
         return def.promise();
-    }
+    },
+
+    update_or_fetch_sale_order: function (id) {
+        var def = $.Deferred();
+        var self = this;
+            this.get_res('sale.order', id).
+                then(function (res) {
+                    self.prepare_so_data(res);
+                    self.db.update_so_db(res[0]);
+                    def.resolve();
+            });
+        return def.promise();
+    },
+
+    validate_invoice: function (id) {
+        var result = $.Deferred();
+        new Model('account.invoice').
+            call('action_invoice_open', [id]).
+            then(function(res) {
+                if (res) {
+                    result.resolve(id);
+                } else {
+                    result.reject();
+                }
+            });
+        return result.promise();
+    },
 });
 
 var _super_order = models.Order.prototype;
@@ -125,7 +225,7 @@ PosDb.include({
         });
     },
 
-    _sale_order_search_string: function(sale_order){
+    _sale_order_search_string: function (sale_order) {
         var str =  sale_order.name;
         if(sale_order.date_order){
             str += '|' + sale_order.date_order;
@@ -171,11 +271,15 @@ PosDb.include({
     },
 
     update_so_db: function (updated_so) {
-        for (var i=0; i<this.sale_orders.length; i++) {
+        for (var i=0; i < this.sale_orders.length; i++) {
             if (this.sale_orders[i].id === updated_so.id) {
                 this.sale_orders.splice(i, 1);
-            }
-            delete this.sale_orders_by_id[updated_so.id];
+            } 
+        }
+        delete this.sale_orders_by_id[updated_so.id];
+        if ((updated_so.invoice_status === 'Nothing to invoice') || (updated_so.invoice_status === 'To invoice')) {
+            this.sale_orders.unshift(updated_so);
+            this.sale_orders_by_id[updated_so.id] = updated_so;
         }
     },
 
@@ -265,17 +369,14 @@ ProductScreenWidget.include({
 });
 
 var InvoicesAndOrdersBaseWidget = ClientListScreenWidget.extend({
-    show: function(){
+    show: function () {
         var self = this;
         this._super();
+        console.log(this.pos);
 
         this.renderElement();
         this.details_visible = false;
         this.old_client = this.pos.get_order().get_client();
-
-        this.$('.back').click(function(){
-            self.gui.back();
-        });
 
         this.$('.next').click(function(e){
             e.preventDefault;
@@ -326,6 +427,18 @@ var InvoicesAndOrdersBaseWidget = ClientListScreenWidget.extend({
         }
     },
 
+    // render_corresponding_lines: function () {
+    //     // Dummy method for testing purposes
+    //     var contents = this.$el[0].querySelector('.sale-order-line-contents');
+    //     contents.innerHTML = "";
+    //     var line = {'name': 'testName', 'product': 'testProduct'};
+    //     var item_html = QWeb.render('SaleOrderLine', {widget: this, line:line});
+    //     var item_line = document.createElement('tbody');
+    //     item_line.innerHTML = item_html;
+    //     item_line = item_line.childNodes[1];
+    //     contents.appendChild(item_line);
+    // }
+
 });
 
 
@@ -342,13 +455,12 @@ var SaleOrdersWidget = InvoicesAndOrdersBaseWidget.extend({
     show: function () {
         var self = this;
         this._super.apply(this, arguments);
-        this.$('.back').unbind('click');
         this.$('.back').click(function () {
             self.gui.show_screen('products');
         });
     },
 
-    select_line: function(event,$line,id){
+    select_line: function (event,$line,id) {
         var sale_order = this.pos.db.get_sale_order_by_id(id);
         this.$('.client-list .lowlight').removeClass('lowlight');
         if ( $line.hasClass('highlight') ){
@@ -359,6 +471,7 @@ var SaleOrdersWidget = InvoicesAndOrdersBaseWidget.extend({
             this.$('.client-list .highlight').removeClass('highlight');
             $line.addClass('highlight');
             this.selected_SO = sale_order;
+            // this.render_corresponding_lines();
         }
         this.toggle_save_button(this.selected_SO);
     },
@@ -391,9 +504,14 @@ var SaleOrdersWidget = InvoicesAndOrdersBaseWidget.extend({
         new Model('pos.order').call('process_invoices_creation', [sale_order.id])
             .then(function (res) {
                 self.pos.update_or_fetch_invoice(res)
-                    .then(function () {
-                        self.pos.db.update_so_db(sale_order);
-                        self.gui.show_screen('invoices_list');
+                    .then(function (res) {
+                        self.render_data(self.pos.db.sale_orders);
+                        self.pos.validate_invoice(res).then(function (res) {
+                            console.log(res);
+                            self.pos.selected_invoice = self.pos.db.get_invoice_by_id(res);
+                            self.pos.gui.screen_instances.invoice_payment.render_paymentlines()
+                            self.gui.show_screen('invoice_payment');
+                        });
                     });
             }, function (err, event) {   
                 self.gui.show_popup('error', {
@@ -415,7 +533,7 @@ var SaleOrdersWidget = InvoicesAndOrdersBaseWidget.extend({
             this.render_data(sale_orders);
         }
     },
-    _clear_search: function(){
+    _clear_search: function () {
         var sale_orders = this.pos.db.sale_orders;
         this.render_data(sale_orders);
         this.$('.searchbox input')[0].value = '';
@@ -434,10 +552,17 @@ var InvoicesWidget = InvoicesAndOrdersBaseWidget.extend({
         this.$listEl = '.invoice';
         this.itemTemplate = 'Invoice';
         this.selected_invoice = false;
-
     },
 
-    select_line: function(event,$line,id){
+    show: function () {
+        var self = this;
+        this._super.apply(this, arguments);
+        this.$('.back').click(function () {
+            self.gui.back();
+        });
+    },
+
+    select_line: function (event,$line,id) {
         var invoice = this.pos.db.get_invoice_by_id(id);
         this.$('.client-list .lowlight').removeClass('lowlight');
         if ($line.hasClass('highlight')){
@@ -484,7 +609,7 @@ var InvoicesWidget = InvoicesAndOrdersBaseWidget.extend({
         }
     },
 
-     _clear_search: function(){
+     _clear_search: function () {
         var invoices = this.pos.db.invoices;
         this.render_data(invoices);
         this.$('.searchbox input')[0].value = '';
@@ -497,15 +622,15 @@ var InvoicesWidget = InvoicesAndOrdersBaseWidget.extend({
             this.pos.selected_invoice = this.selected_invoice;
             switch (this.selected_invoice.state) {
                 case "Draft":                    
-                    this.validate_invoice().
-                        then(function() {
+                    this.pos.validate_invoice(this.selected_invoice.id).
+                        then(function () {
                             self.pos.update_or_fetch_invoice(self.selected_invoice.id).
                             then(function() {
                                 self.render_data(self.pos.db.invoices);
                                 self.toggle_save_button();
                             });
                             
-                        }).fail(function() {
+                        }).fail(function () {
                             this.gui.show_popup('error',{
                                 'title': _t('Error'),
                                 'body':  _t('Can\'t validate selected invoice.'),
@@ -524,19 +649,18 @@ var InvoicesWidget = InvoicesAndOrdersBaseWidget.extend({
         }
     },
 
-    validate_invoice: function () {
-        var result = $.Deferred();
-        new Model('account.invoice').
-            call('action_invoice_open', [this.selected_invoice.id]).
-            then(function(res) {
-                if (res) {
-                    result.resolve();
-                } else {
-                    result.reject();
+    check_invoice_mutex: function (invoice) {
+        orders =  this.pos.db.get_order();
+        if (orders){
+            _.each(orders, function (order) {
+                if (order.invoice_to_pay) {
+                    if (order.invoice_to_pay.id === invoice.id) {
+                        // order.invoice_to_pay.muted = true;
+                    }
                 }
             });
-        return result.promise();
         }
+    },
 });
 
 gui.define_screen({name:'invoices_list', widget: InvoicesWidget});
@@ -557,7 +681,7 @@ var InvoicePayment = PaymentScreenWidget.extend({
         return 0;
     },
 
-    render_paymentlines: function() {
+    render_paymentlines: function () {
         var self  = this;
         var order = this.pos.get_order();
         if (!order) {
@@ -568,7 +692,7 @@ var InvoicePayment = PaymentScreenWidget.extend({
         }
         order.invoice_to_pay = this.pos.selected_invoice;
 
-        order.invoice_to_pay.get_due = function(paymentline) {
+        order.invoice_to_pay.get_due = function (paymentline) {
             total = self.pos.selected_invoice.residual;
             if (!paymentline) {
                 var due = total - order.get_total_paid();
@@ -587,7 +711,7 @@ var InvoicePayment = PaymentScreenWidget.extend({
 
         }
 
-        order.invoice_to_pay.get_change = function(paymentline) {
+        order.invoice_to_pay.get_change = function (paymentline) {
             var due = self.pos.selected_invoice.residual;
             if (!paymentline) {
                 var change = -due + order.get_total_paid();
@@ -607,14 +731,14 @@ var InvoicePayment = PaymentScreenWidget.extend({
         order.invoice_to_pay.get_subtotal = function () {
             var tax = self.pos.selected_invoice.amount_tax;
             var due = self.pos.selected_invoice.residual;
-            return due - tax;
-            // return due - (due/100*tax)
+            var subtotal = due -tax;
+            return round_pr(Math.max(0,subtotal), self.pos.currency.rounding);
         }
 
         var lines = order.get_paymentlines();
         var due   = order.invoice_to_pay.amount_due;
         var extradue = 0;
-        // if (due && lines.length  && due !== order.get_due(lines[lines.length-1])) {
+        // if (due && lines.length  && due !== order.invoice_to_pay.get_due(lines[lines.length-1])) {
         //     extradue = due;
         // }
 
@@ -637,11 +761,11 @@ var InvoicePayment = PaymentScreenWidget.extend({
         lines.appendTo(this.$('.paymentlines-container'));
     },
 
-    finalize_validation: function() {
+    finalize_validation: function () {
         var self = this;
         var order = this.pos.get_order();
         order.invoice_to_pay = this.pos.selected_invoice;
-
+        console.log(this.pos.db.get_orders())
         if (order.is_paid_with_cash() && this.pos.config.iface_cashdrawer) { 
             this.pos.proxy.open_cashbox();
         }
@@ -662,17 +786,17 @@ var InvoicePayment = PaymentScreenWidget.extend({
                             self.gui.show_screen('clientlist');
                         },
                     });
-                } else if (error.code < 0) {        // XmlHttpRequest Errors
+                } else if (error.code < 0) {
                     self.gui.show_popup('error',{
                         'title': _t('The order could not be sent'),
                         'body': _t('Check your internet connection and try again.'),
                     });
-                } else if (error.code === 200) {    // OpenERP Server Errors
+                } else if (error.code === 200) {
                     self.gui.show_popup('error-traceback',{
                         'title': error.data.message || _t("Server Error"),
                         'body': error.data.debug || _t('The server encountered an error while receiving your order.'),
                     });
-                } else {                            // ???
+                } else {
                     self.gui.show_popup('error',{
                         'title': _t("Unknown Error"),
                         'body':  _t("The order could not be sent to the server due to an unknown error"),
@@ -685,7 +809,7 @@ var InvoicePayment = PaymentScreenWidget.extend({
                 self.gui.show_screen('receipt');
             });
         } else {
-            this.pos.push_order(order).then(function() {
+            this.pos.push_order(order).then(function(res) {
                 self.pos.update_or_fetch_invoice(self.pos.selected_invoice.id);
                 self.gui.show_screen('invoice_receipt');
             });   
@@ -702,7 +826,7 @@ gui.define_screen({name:'invoice_payment', widget: InvoicePayment});
 
 var InvoiceReceiptScreenWidget = ReceiptScreenWidget.extend({
     template: 'InvoiceReceiptScreenWidget',
-    render_receipt: function() {
+    render_receipt: function () {
         var order = this.pos.get_order();
         this.$('.pos-receipt-container').html(QWeb.render('PosInvoiceTicket',{
                 widget:this,
@@ -715,6 +839,5 @@ var InvoiceReceiptScreenWidget = ReceiptScreenWidget.extend({
 });
 
 gui.define_screen({name:'invoice_receipt', widget: InvoiceReceiptScreenWidget});
-
 
 });

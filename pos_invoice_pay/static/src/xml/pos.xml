@@ -18,7 +18,13 @@
             <td><t t-esc='item.user_id[1]' /></td>
             <td><t t-esc='widget.format_currency(item.amount_total)' /></td>
             <td><t t-esc='item.invoice_status' /></td>
+        </tr>
+    </t>
 
+    <t t-name="SaleOrderLine">
+        <tr class='sale-order-line' t-att-data-id='line.id'>
+            <td><t t-esc='line.product'/></td>
+            <td><t t-esc='line.name'/></td>
         </tr>
     </t>
 
