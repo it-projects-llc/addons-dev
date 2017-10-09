@@ -63,10 +63,7 @@ odoo.define('pos_discount_absolute', function (require) {
             var order = this.pos.get_order();
             var lines = order.get_orderlines();
             lines.forEach( function(line){
-                    console.log(line.get_product().id)
-                    console.log(product.id)
                 if (line.get_product() === product){
-
                     order.remove_orderline(line);
                 }
             });
@@ -85,12 +82,10 @@ odoo.define('pos_discount_absolute', function (require) {
             }
         },
         click_absolute_discount: function() {
-            var self = this;
             this.pos.config.discount_abs_type = true;
             this.renderElement();
         },
         click_percentage_discount: function() {
-            var self = this;
             this.pos.config.discount_abs_type = false;
             this.renderElement();
         },
