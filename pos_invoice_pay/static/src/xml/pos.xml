@@ -21,10 +21,57 @@
         </tr>
     </t>
 
+    <t t-name="SaleOrderLinesHeader">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Description</th>
+                <th>Ordered Qty</th>
+                <th>Delivered</th>
+                <th>Invoiced</th>
+                <th>Unit Price</th>
+                <th>Taxes</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+    </t>
+
     <t t-name="SaleOrderLine">
         <tr class='sale-order-line' t-att-data-id='line.id'>
             <td><t t-esc='line.product'/></td>
             <td><t t-esc='line.name'/></td>
+            <td><t t-esc='line.uom_qty'/></td>
+            <td><t t-esc='line.qty_delivered'/></td>
+            <td><t t-esc='line.qty_invoiced'/></td>
+            <td><t t-esc='widget.format_currency(line.total)'/></td>
+            <td><t t-esc='line.tax'/></td>
+            <td><t t-esc='widget.format_currency(line.subtotal)'/></td>
+        </tr>
+    </t>
+
+<t t-name="InvoiceLinesHeader">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Description</th>
+                <th>Account</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Taxes</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+    </t>
+
+    <t t-name="InvoiceLine">
+        <tr class='sale-order-line' t-att-data-id='line.id'>
+            <td><t t-esc='line.product'/></td>
+            <td><t t-esc='line.name'/></td>
+            <td><t t-esc='line.account'/></td>
+            <td><t t-esc='line.qty'/></td>
+            <td><t t-esc='widget.format_currency(line.price_unit)'/></td>
+            <td><t t-esc='line.tax'/></td>
+            <td><t t-esc='widget.format_currency(line.amount)'/></td>
         </tr>
     </t>
 

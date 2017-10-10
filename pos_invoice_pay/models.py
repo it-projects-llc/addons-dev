@@ -50,12 +50,32 @@ class PosOrder(models.Model):
             'uid': self.env.uid
         }
 
+
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
     def action_updated_invoice(self):
         channel = '["%s","%s","%s"]' % (self._cr.dbname, "account.invoice", self.env.uid)
         self.env['bus.bus'].sendone(channel, self.id)
+
+    @api.model
+    def get_invoice_lines_for_pos(self, invoice_ids):
+        res = []
+        invoice_lines = self.env['account.invoice.line'].search([('invoice_id', 'in', invoice_ids)])
+        for inv in invoice_lines:
+            line = {
+                'invoice_id': inv.invoice_id.id,
+                'id': inv.id,
+                'name': inv.name,
+                'account': inv.account_id.name,
+                'product': inv.product_id.name,
+                'price_unit': inv.price_unit,
+                'qty': inv.quantity,
+                'tax': inv.invoice_line_tax_ids.ids,
+                'amount': inv.price_subtotal
+            }
+            res.append(line)
+        return res
 
 
 class SaleOrder(models.Model):
@@ -73,14 +93,14 @@ class SaleOrder(models.Model):
             line = {
                 'order_id': l.order_id.id,
                 'id': l.id,
-                'description': l.name,
+                'name': l.name,
                 'product': l.product_id.name,
-                'prdered Quantinty': l.product_uom_qty,
-                'invoiced': l.qty_invoiced,
+                'uom_qty': l.product_uom_qty,
+                'qty_delivered': l.qty_delivered,
+                'qty_invoiced': l.qty_invoiced,
                 'tax': l.tax_id.id,
-                'tubtotal': l.price_subtotal,
+                'subtotal': l.price_subtotal,
                 'total': l.price_total
             }
             res.append(line)
         return res
-

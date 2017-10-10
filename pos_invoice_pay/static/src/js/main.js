@@ -32,10 +32,11 @@ models.PosModel = models.PosModel.extend({
             'amount_total', 'order_line', 'invoice_status'],
             domain:[['invoice_status', '!=', 'invoiced'], ['state', '=', 'sale']],
             loaded: function (self, sale_orders) {
-                self.get_sale_order_lines();
                 self.prepare_so_data(sale_orders);
                 self.sale_orders = sale_orders;
                 self.db.add_sale_orders(sale_orders);
+                self.get_sale_order_lines(sale_orders);
+
             }
         },{
             model: 'account.invoice',
@@ -47,15 +48,61 @@ models.PosModel = models.PosModel.extend({
                 self.prepare_invoices_data(invoices);
                 self.invoices = invoices;
                 self.db.add_invoices(invoices);
+                self.get_invoice_lines(invoices);
             }
         });
         return _super_posmodel.initialize.apply(this, arguments);
     },
 
-    get_sale_order_lines: function () {
-        new Model('sale.order').call('get_order_lines_for_pos', [[1, 2, 3]]).
+    // get_sale_order_lines: function (sale_orders) {
+    //     var self = this;
+    //     ids = _.pluck(sale_orders, 'id');
+    //     new Model('sale.order', model_name).call('get_order_lines_for_pos', [ids]).
+    //         then(function (res) {
+    //             for (var i =0; i<res.length; i++) {
+    //                 var so_id = res[i].order_id
+    //                 var so = self.db.sale_orders_by_id[so_id];
+    //                 if (!so.hasOwnProperty('lines')) {
+    //                     so.lines = [];
+    //                 }
+    //                 so.lines.push(res[i]);
+    //             }
+    //         });
+    // },
+
+    get_lines: function (data, model_name, method_name) {
+        var self= this;
+        ids = _.pluck(data, 'id');
+        return new Model(model_name).call(method_name, [ids]);
+    },
+
+    get_sale_order_lines: function (data) {
+        var self = this;
+        this.get_lines(data, 'sale.order', 'get_order_lines_for_pos').
             then(function (res) {
-                console.log(res);
+                for (var i =0; i<res.length; i++) {
+                    var so_id = res[i].order_id
+                    var so = self.db.sale_orders_by_id[so_id];
+                    if (!so.hasOwnProperty('lines')) {
+                        so.lines = [];
+                    }
+                    so.lines.push(res[i]);
+                }
+            });
+    },
+
+    get_invoice_lines: function (data) {
+        var self = this;
+        this.get_lines(data, 'account.invoice', 'get_invoice_lines_for_pos').
+            then(function (res) {
+                for (var i =0; i<res.length; i++) {
+                    var inv_id = res[i].invoice_id
+                    var inv = self.db.invoices_by_id[inv_id];
+                    if (!inv.hasOwnProperty('lines')) {
+                        inv.lines = [];
+                    }
+                    inv.lines.push(res[i]);
+                }
             });
     },
 
@@ -171,7 +218,7 @@ models.PosModel = models.PosModel.extend({
                 then(function (res) {
                     self.prepare_so_data(res);
                     self.db.update_so_db(res[0]);
-                    def.resolve();
+                    def.resolve(id);
             });
         return def.promise();
     },
@@ -372,7 +419,6 @@ var InvoicesAndOrdersBaseWidget = ClientListScreenWidget.extend({
     show: function () {
         var self = this;
         this._super();
-        console.log(this.pos);
 
         this.renderElement();
         this.details_visible = false;
@@ -421,23 +467,59 @@ var InvoicesAndOrdersBaseWidget = ClientListScreenWidget.extend({
             var item = data[i];
                 var item_html = QWeb.render(this.itemTemplate,{widget: this, item:data[i]});
                 var item_line = document.createElement('tbody');
+
+                $tr = document.createElement('tr');
+                if (data[i].lines) {
+                    $td = document.createElement('td');
+                    $td.setAttribute("colspan", this.num_columns);
+
+                    $tr.classList.add('line-element-hidden');
+
+                    var $table = this.render_lines_table(data[i].lines);
+
+                    $td.appendChild($table);
+                    $tr.appendChild($td);
+                }
+                
                 item_line.innerHTML = item_html;
                 item_line = item_line.childNodes[1];
+
             contents.appendChild(item_line);
+            contents.appendChild($tr);
+
         }
     },
 
-    // render_corresponding_lines: function () {
-    //     // Dummy method for testing purposes
-    //     var contents = this.$el[0].querySelector('.sale-order-line-contents');
-    //     contents.innerHTML = "";
-    //     var line = {'name': 'testName', 'product': 'testProduct'};
-    //     var item_html = QWeb.render('SaleOrderLine', {widget: this, line:line});
-    //     var item_line = document.createElement('tbody');
-    //     item_line.innerHTML = item_html;
-    //     item_line = item_line.childNodes[1];
-    //     contents.appendChild(item_line);
-    // }
+    render_lines_table: function (data_lines) {
+
+        var $table = document.createElement('table');
+        $table.classList.add('lines-table');
+
+        $header = this.render_header();
+        $tableData = this.render_product_lines(data_lines);
+
+        $table.appendChild($header);
+        $table.appendChild($tableData);
+
+        return $table;
+    },
+
+    render_header: function () {
+        $header = document.createElement('thead');
+        $header.innerHTML = QWeb.render(this.linesHeaderTemplate);
+        return $header;
+    },
+
+    render_product_lines: function (data_lines) {
+        var $body = document.createElement('tbody');
+        var lines = '';
+        for(var i = 0;i<data_lines.length; i++) {
+            var line_html = QWeb.render(this.lineTemplate, {widget: this, line:data_lines[i]});
+            lines += line_html
+        }
+        $body.innerHTML = lines;
+        return $body;
+    },
 
 });
 
@@ -448,7 +530,12 @@ var SaleOrdersWidget = InvoicesAndOrdersBaseWidget.extend({
         this._super.apply(this, arguments);
         this.data = this.pos.db.sale_orders;
         this.$listEl = '.sale-order';
+
         this.itemTemplate = 'SaleOrder';
+        this.linesHeaderTemplate = 'SaleOrderLinesHeader';
+        this.lineTemplate = 'SaleOrderLine';
+        this.num_columns = 6;
+
         this.selected_SO = false;
     },
 
@@ -467,11 +554,13 @@ var SaleOrdersWidget = InvoicesAndOrdersBaseWidget.extend({
             this.selected_SO = false;
             $line.removeClass('highlight');
             $line.addClass('lowlight');
+            $line.next().addClass('line-element-hidden');
+
         }else{
             this.$('.client-list .highlight').removeClass('highlight');
             $line.addClass('highlight');
             this.selected_SO = sale_order;
-            // this.render_corresponding_lines();
+            $line.next().removeClass('line-element-hidden');
         }
         this.toggle_save_button(this.selected_SO);
     },
@@ -507,10 +596,12 @@ var SaleOrdersWidget = InvoicesAndOrdersBaseWidget.extend({
                     .then(function (res) {
                         self.render_data(self.pos.db.sale_orders);
                         self.pos.validate_invoice(res).then(function (res) {
-                            console.log(res);
-                            self.pos.selected_invoice = self.pos.db.get_invoice_by_id(res);
-                            self.pos.gui.screen_instances.invoice_payment.render_paymentlines()
-                            self.gui.show_screen('invoice_payment');
+                            self.pos.update_or_fetch_invoice(res).then(function(res) {
+                                self.pos.selected_invoice = self.pos.db.get_invoice_by_id(res);
+                                self.pos.gui.screen_instances.invoice_payment.render_paymentlines()
+                                self.gui.show_screen('invoice_payment');
+                            });
+                            
                         });
                     });
             }, function (err, event) {   
@@ -550,8 +641,14 @@ var InvoicesWidget = InvoicesAndOrdersBaseWidget.extend({
         this._super.apply(this, arguments);
         this.data = this.pos.db.invoices;
         this.$listEl = '.invoice';
+
         this.itemTemplate = 'Invoice';
+        this.linesHeaderTemplate = 'InvoiceLinesHeader';
+        this.lineTemplate = 'InvoiceLine';
+        this.num_columns = 8;
+
         this.selected_invoice = false;
+
     },
 
     show: function () {
@@ -569,10 +666,14 @@ var InvoicesWidget = InvoicesAndOrdersBaseWidget.extend({
             this.selected_invoice = false;
             $line.removeClass('highlight');
             $line.addClass('lowlight');
+            $line.next().addClass('line-element-hidden');
+
         }else{
             this.$('.client-list .highlight').removeClass('highlight');
             $line.addClass('highlight');
             this.selected_invoice = invoice;
+            $line.next().removeClass('line-element-hidden');
+
         }
         this.toggle_save_button(this.selected_invoice);
     },
@@ -649,18 +750,18 @@ var InvoicesWidget = InvoicesAndOrdersBaseWidget.extend({
         }
     },
 
-    check_invoice_mutex: function (invoice) {
-        orders =  this.pos.db.get_order();
-        if (orders){
-            _.each(orders, function (order) {
-                if (order.invoice_to_pay) {
-                    if (order.invoice_to_pay.id === invoice.id) {
-                        // order.invoice_to_pay.muted = true;
-                    }
-                }
-            });
-        }
-    },
+    // check_invoice_mutex: function (invoice) {
+    //     orders =  this.pos.db.get_order();
+    //     if (orders){
+    //         _.each(orders, function (order) {
+    //             if (order.invoice_to_pay) {
+    //                 if (order.invoice_to_pay.id === invoice.id) {
+    //                     // order.invoice_to_pay.muted = true;
+    //                 }
+    //             }
+    //         });
+    //     }
+    // },
 });
 
 gui.define_screen({name:'invoices_list', widget: InvoicesWidget});
@@ -765,7 +866,6 @@ var InvoicePayment = PaymentScreenWidget.extend({
         var self = this;
         var order = this.pos.get_order();
         order.invoice_to_pay = this.pos.selected_invoice;
-        console.log(this.pos.db.get_orders())
         if (order.is_paid_with_cash() && this.pos.config.iface_cashdrawer) { 
             this.pos.proxy.open_cashbox();
         }

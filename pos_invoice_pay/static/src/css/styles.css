@@ -40,3 +40,15 @@
 .inv-so:hover {
     background: #efefef;
 }
+
+.line-element-hidden {
+    display: none;
+}
+
+.lines-table {
+    width:100%;
+    border: solid 1px rgb(215,215,215);
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
