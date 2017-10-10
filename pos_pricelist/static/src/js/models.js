@@ -154,6 +154,13 @@ odoo.define('pos_pricelist.models', function (require) {
          * @returns percent
          */
         calc_discount_percent: function(product_price, current_price) {
+            if (this.order && this.order.active_pricelist_item) {
+                if (this.order.active_pricelist_item['price_discount']) {
+                    return this.order.active_pricelist_item['price_discount'];
+                } else if (this.order.active_pricelist_item['percent_price']) {
+                    return this.order.active_pricelist_item['percent_price'];
+                }
+            }
             var percent = 0;
             var rounding = this.pos.currency.rounding;
 
@@ -569,6 +576,10 @@ odoo.define('pos_pricelist.models', function (require) {
                             price, price_limit + rule['price_min_margin']
                         )
                     }
+                }
+                var order = this.pos.get_order();
+                if (order) {
+                    order.active_pricelist_item = rule;
                 }
                 break;
             }
