@@ -9,6 +9,7 @@ odoo.define('pos_discount_absolute', function (require) {
     var core = require('web.core');
     var screens = require('point_of_sale.screens');
     var QWeb = core.qweb;
+    var _t = core._t;
 
     PosBaseWidget.include({
         init:function(parent,options){
@@ -20,28 +21,32 @@ odoo.define('pos_discount_absolute', function (require) {
                 disc_widget.button_click = function () {
                     self.gui.show_popup('number', {
                         'title': 'Absolute Discount',
-                        'value': self.pos.config.discount_abs_value,
+                        'value': self.pos.discount_abs_value,
                         'confirm': function (val) {
                             self.apply_discount(val);
-                            if (self.pos.config.discount_abs_type){
-                                self.pos.config.discount_abs_value = val;
+                            if (self.pos.discount_abs_type){
+                                self.pos.discount_abs_value = val;
                             }
+                            this.pos.taxes_on_discounts = false;
                         },
                     });
                 };
             }
         },
         apply_discount: function(val,options) {
-            if (this.pos.config.discount_abs_type){
+            if (this.pos.discount_abs_type){
                 this.apply_absolute_discount(val);
             } else {
                 this.apply_relative_discount(val);
             }
         },
         apply_absolute_discount: function(val){
-            this.pos.config.discount_abs_value = val;
+            this.pos.discount_abs_value = val;
             var order = this.pos.get_order();
             var abs_disc_product = this.pos.db.get_product_by_id(this.pos.config.discount_abs_product_id[0]);
+            if (abs_disc_product.taxes_id.length){
+                this.pos.taxes_on_discounts = true;
+            }
             this.remove_discount_product(abs_disc_product);
             var discount = - Math.min(val, order.get_total_with_tax());
             if (val !== 0){
@@ -52,6 +57,9 @@ odoo.define('pos_discount_absolute', function (require) {
             var order = this.pos.get_order();
             var abs_disc_product = this.pos.db.get_product_by_id(this.pos.config.discount_abs_product_id[0]);
             var product = this.pos.db.get_product_by_id(this.pos.config.discount_product_id[0]);
+            if (product.taxes_id.length){
+                this.pos.taxes_on_discounts = true;
+            }
             this.remove_discount_product(product);
             var discount = - Math.min(val, 100) / 100.0 * order.get_total_with_tax_without_abs_disc(abs_disc_product);
             if( discount < 0 && val !== 0){
@@ -82,28 +90,24 @@ odoo.define('pos_discount_absolute', function (require) {
             }
         },
         click_absolute_discount: function() {
-            this.pos.config.discount_abs_type = true;
-            this.renderElement();
+            this.pos.discount_abs_type = true;
+            this.renderElement("Absolute Discount");
         },
         click_percentage_discount: function() {
-            this.pos.config.discount_abs_type = false;
-            this.renderElement();
+            this.pos.discount_abs_type = false;
+            this.renderElement("Discount Percentage");
         },
-        renderElement: function(){
+        renderElement: function(options){
             this._super();
             if (this.popup_abs_discount) {
                 this.$('.popup.popup-number').addClass("popup-abs-discount");
                 var header_buttons_html = QWeb.render('abs_disc_widget_header_buttons',{widget: this});
-                var node = document.getElementsByClassName("popup-input value active")[0];
+                var node = $('.popup-abs-discount > .popup-input')[0];
                 var div = document.createElement('div');
                 div.innerHTML = header_buttons_html;
                 div.className = "header";
                 node.parentElement.insertBefore(div, node);
-                var header_title = node.parentElement.getElementsByClassName("title")[0];
-                var text = this.pos.config.discount_abs_type
-                    ? "Absolute Discount"
-                    : "Discount Percentage";
-                header_title.innerText = text;
+                $('.popup-abs-discount > .title').text( options );
             }
         },
     });
@@ -122,23 +126,24 @@ odoo.define('pos_discount_absolute', function (require) {
             var abs_disc_prod = this.pos.get_order().get_orderlines().find(function(line){
                 return abs_prod_id === line.product.id;
             });
-            if (abs_disc_prod){
-                var recalc = - abs_disc_prod.price !== Number(this.pos.config.discount_abs_value);
+            // taxes_on_discounts is needed to prevent endless cycle caused by negative price due to negative taxes
+            if (abs_disc_prod && !this.pos.taxes_on_discounts){
+                var recalc = - abs_disc_prod.price !== Number(this.pos.discount_abs_value);
                 if (( total < 0 || (recalc && total > 0)) && this.gui.screen_instances.products &&
                     this.gui.screen_instances.products.action_buttons &&
                     this.gui.screen_instances.products.action_buttons.discount){
 
                     var pos_base_widget = this.gui.screen_instances.products.action_buttons.discount;
-                    pos_base_widget.apply_absolute_discount(this.pos.config.discount_abs_value);
+                    pos_base_widget.apply_absolute_discount(this.pos.discount_abs_value);
                 }
                 total = order
                     ? order.get_total_with_tax()
                     : 0;
             }
             total = total === 0
-                ? 'FREE'
-                : total;
-            this.el.querySelector('.summary .total > .value').textContent = this.format_currency(total);
+                ? _t('FREE')
+                : Number(total.toFixed(2));
+            $('.summary .total > .value').text(total);
         },
     });
 

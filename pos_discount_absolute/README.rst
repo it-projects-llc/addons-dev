@@ -2,7 +2,8 @@
  POS Absolute and Relative Discounts
 =====================================
 
-Provides absolute discounting for Point of Sale
+Provides absolute discounting for Point of Sale.
+Whilst creation of a discount product be sure you removed all default taxes. It could lead to negative taxes and in that option instant discount recalculation would be switched off.
 
 Credits
 =======
