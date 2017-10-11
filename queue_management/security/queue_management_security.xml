@@ -78,12 +78,38 @@
     <field name="perm_read" eval="True"/>
   </record>
 
+  <record model="ir.rule" id="queue_management_manager_desk_rule">
+    <field name="name">The Manager sees desks related only to his company</field>
+    <field name="model_id" ref="queue_management.model_queue_management_desk"/>
+    <field name="groups" eval="[(4,ref('queue_management.group_queue_management_branch_manager'))]"/>
+    <field name="domain_force">[
+    ('company_id', '=', user.company_id.id),
+    ]</field>
+    <field name="perm_unlink" eval="True"/>
+    <field name="perm_write" eval="True"/>
+    <field name="perm_create" eval="True"/>
+    <field name="perm_read" eval="True"/>
+  </record>
+
   <record model="ir.rule" id="queue_management_agent_log_rule">
     <field name="name">The Agent sees records related only to his service</field>
     <field name="model_id" ref="queue_management.model_queue_management_log"/>
     <field name="groups" eval="[(4,ref('queue_management.group_queue_management_branch_agent'))]"/>
     <field name="domain_force">[
     ('service_id', 'in', user.service_ids.ids),
+    ]</field>
+    <field name="perm_unlink" eval="True"/>
+    <field name="perm_write" eval="True"/>
+    <field name="perm_create" eval="True"/>
+    <field name="perm_read" eval="True"/>
+  </record>
+
+  <record model="ir.rule" id="queue_management_agent_desk_rule">
+    <field name="name">The Agent sees desks related only to his service</field>
+    <field name="model_id" ref="queue_management.model_queue_management_desk"/>
+    <field name="groups" eval="[(4,ref('queue_management.group_queue_management_branch_agent'))]"/>
+    <field name="domain_force">[
+    ('company_id', '=', user.company_id.id),
     ]</field>
     <field name="perm_unlink" eval="True"/>
     <field name="perm_write" eval="True"/>

@@ -4,12 +4,6 @@ from odoo.exceptions import Warning as UserError
 from odoo.tools.translate import _
 from odoo.addons.hw_escpos.escpos.printer import Network
 
-number_of_desks = {'1': '1',
-                   '2': '2',
-                   '3': '3',
-                   '4': '4',
-                   '5': '5'}
-
 
 class QueueManagementBranch(models.Model):
     _name = 'queue.management.branch'
@@ -28,8 +22,7 @@ class QueueManagementBranch(models.Model):
 class QueueManagementLog(models.Model):
     _name = 'queue.management.log'
     ticket_id = fields.Many2one('queue.management.ticket', 'Ticket')
-    desk = fields.Selection([(k, v) for k, v in number_of_desks.items()],
-                            'Desk', required=True, copy=False, default='1')
+    desk_id = fields.Many2one('queue.management.desk', string='Desk', required=True, copy=False)
     service_id = fields.Many2one('queue.management.service', 'Service', related='ticket_id.service_id')
     ticket_state = fields.Selection(string='Ticket State', related='ticket_id.ticket_state', readonly=True)
     company_id = fields.Many2one('res.company', related='service_id.company_id', store=True)
@@ -45,7 +38,7 @@ class QueueManagementTicket(models.Model):
         ('current', 'Current'),
         ('next', 'Next'),
         ('done', 'Done'),
-        ('no-show', 'No-show')], 'Ticket State', required=True, copy=False, default='pending')#readonly
+        ('no-show', 'No-show')], 'Ticket State', required=True, copy=False, default='pending', readonly=True)
 
     def _generate_order_by(self, order_spec, query):
         my_order = "CASE WHEN ticket_state='current'  THEN 0   WHEN ticket_state = 'next'  THEN 1 WHEN ticket_state = 'pending'  THEN 2 END"
@@ -119,6 +112,12 @@ class QueueManagementTicket(models.Model):
             }
 
 
+class QueueManagementDesk(models.Model):
+    _name = 'queue.management.desk'
+    name = fields.Char(required=True, string='Desk')
+    company_id = fields.Many2one('res.company')
+
+
 class QueueManagementService(models.Model):
     _name = 'queue.management.service'
     name = fields.Char(required=True, string='Service Name')
@@ -148,8 +147,7 @@ class QueueManagementAgent(models.Model):
     _name = 'queue.management.agent'
     _inherits = {'res.users': 'user_id'}
     user_id = fields.Many2one('res.users')
-    desk = fields.Selection([(k, v) for k, v in number_of_desks.items()],
-                            'Desk', required=True, copy=False, default='1')
+    desk_id = fields.Many2one('queue.management.desk', string='Desk', required=True, copy=False)
     primary_service_id = fields.Many2one('queue.management.service',
                                          string="Primary service", required=True,
                                          domain="[('id', 'in', service_ids[0][2])]")

@@ -21,7 +21,7 @@
     <field name="arch" type="xml">
       <tree string="queue_management_log_form">
         <field name="ticket_id"/>
-        <field name="desk"/>
+        <field name="desk_id"/>
         <field name="ticket_state"/>
         <field name="service_id"/>
       </tree>
@@ -46,7 +46,7 @@
     <field name="arch" type="xml">
       <tree string="queue_management_screen_tree">
           <field name="ticket_id"/>
-          <field name="desk"/>
+          <field name="desk_id"/>
           <field name="service_id"/>
       </tree>
     </field>
@@ -86,26 +86,33 @@
       </tree>
     </field>
   </record>
-
-  <record model="ir.ui.view" id="queue_management_ticket_filter">
-    <field name="name">queue.management.ticket.filter</field>
-    <field name="model">queue.management.ticket</field>
+  
+<!-- Desk! -->
+  <record model="ir.ui.view" id="queue_management_desk_view_form">
+    <field name="name">queue.management.desk</field>
+    <field name="model">queue.management.desk</field>
     <field name="arch" type="xml">
-      <search string="Filter">
-        <filter string="Next" domain="[('ticket_state','=', 'next')]" name="next_customer"/>
-        <separator/>
-        <filter string="Current" domain="[('ticket_state','=','current')]" name="current_customer"/>
-        <separator/>
-        <filter string="Done" domain="[('ticket_state','=','done')]" name="done_customer"/>
-        <separator/>
-        <filter string="Pending" domain="[('ticket_state','=','pending')]" name="pending_customer"/>
-        <group expand="0" string="Group By">
-          <filter string="Ticket State" domain="[]" context="{'group_by':'ticket_state'}"/>
-          <filter string="Service" domain="[]" context="{'group_by':'service_id'}"/>
+      <form string="queue_management_desk_form">
+        <group>
+          <field name="name"/>
+          <field name="company_id"/>
         </group>
-      </search>
+      </form>
     </field>
   </record>
+
+  <record model="ir.actions.act_window" id="action_desk">
+    <field name="name">Desk</field>
+    <field name="res_model">queue.management.desk</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <menuitem name="Desk"
+            id="menu_qm_desk"
+            parent="main_menu_qm"
+            groups="group_queue_management_branch_manager"
+            action="action_desk"/>
+  <!-- -->
 
   <record model="ir.actions.act_window" id="action_ticket">
     <field name="name">Tickets</field>
@@ -173,7 +180,7 @@
         <group>
           <field name="name" required="True"/>
           <field name="login"/>
-          <field name="desk"/>
+          <field name="desk_id"/>
           <field name="service_ids" widget="many2many_checkboxes" required="True"/>
           <field name="primary_service_id" options="{'no_create': True}"/>
         </group>
