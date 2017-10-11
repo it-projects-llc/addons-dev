@@ -125,7 +125,7 @@ class QueueManagementService(models.Model):
         ('opened', 'Opened'),
         ('closed', 'Closed')], 'Service status', required=True, copy=False, default='opened')
     branch_id = fields.Many2one('queue.management.branch', required=True)
-    company_id = fields.Many2one('res.company', related='branch_id.company_id', store=True)
+    company_id = fields.Many2one('res.company', related='branch_id.company_id')
     sequence_id = fields.Many2one('ir.sequence', string='Letter', required=True)
 
     @api.model

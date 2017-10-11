@@ -152,6 +152,7 @@
     <field name="arch" type="xml">
       <form string="queue_management_service_form">
         <group>
+          <field name="branch_id" invisible="1"/>
           <field name="name"/>
           <field name="state"/>
           <field name="sequence_id"/>
