@@ -189,11 +189,11 @@ odoo.define('pos_discount_absolute', function (require) {
         get_display_price: function(){
             if (this.pos.config.iface_tax_included) {
                 return this.get_price_with_tax() === 0
-                    ? "FREE"
+                    ? _t("FREE")
                     : this.get_price_with_tax();
             }
             return this.get_base_price() === 0
-                ? "FREE"
+                ? _t("FREE")
                 : this.get_base_price();
         },
     });
