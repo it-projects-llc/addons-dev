@@ -4,6 +4,14 @@
 
 The modules creates ``res.user`` from every ``event.registration`` (*attendee*) and sends link to finish registration at portal.
 
+Also, the module does following:
+
+* Introduces new field ``agent_id`` (``res.users``) to ``event.registration`` and sets it to user who created (purchased) the registration
+* Modifies behaviour of ``event_partner`` module:
+
+  * create partner if Contact's email (``partner_id.email`` in ``event.registration``) differs from attendees email (``email`` in ``event.registration``)
+
+
 Credits
 =======
 

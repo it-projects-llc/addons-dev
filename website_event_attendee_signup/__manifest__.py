@@ -11,21 +11,19 @@
     "author": "IT-Projects LLC, Ivan Yelizariev",
     "support": "apps@it-projects.info",
     "website": "https://it-projects.info/team/yelizariev",
-    "license": "LGPL-3",
+    "license": "AGPL-3",
     # "price": 9.00,
     # "currency": "EUR",
 
     "depends": [
-        "{DEPENDENCY1}",
-        "{DEPENDENCY2}",
+        "event",
+        "event_partner",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
-        "{FILE1}.xml",
-        "{FILE2}.xml",
+        "views/event_event_views.xml",
     ],
     "qweb": [
-        "static/src/xml/{QWEBFILE1}.xml",
     ],
     "demo": [
         "demo/{DEMOFILE1}.xml",
