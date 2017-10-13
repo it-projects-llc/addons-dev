@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-extend="Orderline">
+        <t t-jquery="t[t-if*='line.get_discount_str()']" t-operation="after">
+            <t t-if="line.get_absolute_discount_str() and line.get_absolute_discount_str() !== '0'">
+                <li class="info">
+                    With a
+                    <em>
+                        <t t-esc='line.pos.currency.symbol'/> <t t-esc="line.get_absolute_discount_str()" />
+                    </em>
+                    discount
+                </li>
+            </t>
+        </t>
+    </t>
+</templates>
