@@ -155,7 +155,7 @@ odoo.define('pos_pricelist.models', function (require) {
          */
         calc_discount_percent: function(product_price, current_price) {
             if (this.order && this.order.active_pricelist_item) {
-                if (this.order.active_pricelist_item['price_discount']) {
+                if (this.order.active_pricelist_item['price_discount'] && !this.order.active_pricelist_item['price_surcharge']) {
                     return this.order.active_pricelist_item['price_discount'];
                 } else if (this.order.active_pricelist_item['percent_price']) {
                     return this.order.active_pricelist_item['percent_price'];
