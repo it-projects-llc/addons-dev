@@ -23,4 +23,3 @@ class TestCreate(common.TestCase):
             registration.partner_id.id,
             agent.id
         )
-
