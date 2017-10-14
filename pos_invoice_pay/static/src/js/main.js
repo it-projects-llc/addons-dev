@@ -54,22 +54,6 @@ models.PosModel = models.PosModel.extend({
         return _super_posmodel.initialize.apply(this, arguments);
     },
 
-    // get_sale_order_lines: function (sale_orders) {
-    //     var self = this;
-    //     ids = _.pluck(sale_orders, 'id');
-    //     new Model('sale.order', model_name).call('get_order_lines_for_pos', [ids]).
-    //         then(function (res) {
-    //             for (var i =0; i<res.length; i++) {
-    //                 var so_id = res[i].order_id
-    //                 var so = self.db.sale_orders_by_id[so_id];
-    //                 if (!so.hasOwnProperty('lines')) {
-    //                     so.lines = [];
-    //                 }
-    //                 so.lines.push(res[i]);
-    //             }
-    //         });
-    // },
-
     get_lines: function (data, model_name, method_name) {
         var self= this;
         ids = _.pluck(data, 'id');
@@ -263,6 +247,25 @@ PosDb.include({
         this.invoices_search_string = '';
     },
 
+    get_invoices_to_render: function () {
+        var self = this;
+        var orders_to_check = _.filter(this.get_orders(), function(order) {
+            return order.data.invoice_to_pay;
+        });
+        if(orders_to_check) {
+            var muted_invoices_ids = [];
+            for(var i=0; orders_to_check.length>i; i++) {
+                var order = orders_to_check[i];
+                var id = order.data.invoice_to_pay.id;
+                muted_invoices_ids.push(id)
+            }
+            return _.filter(this.invoices, function (inv) {
+                return !muted_invoices_ids.includes(inv.id);
+            });
+            return this.invoices;
+        }
+    },
+
     add_sale_orders: function (sale_orders) {
         var self = this;
         _.each(sale_orders, function (order) {
@@ -431,7 +434,7 @@ var InvoicesAndOrdersBaseWidget = ClientListScreenWidget.extend({
             // self.gui.back();
         });
 
-        this.render_data(this.data);
+        this.render_data(this.pos.db.get_invoices_to_render());
 
         this.$('.client-list-contents').delegate(this.$listEl,'click',function(event){
             self.select_line(event,$(this),parseInt($(this).data('id')));
