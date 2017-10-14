@@ -12,6 +12,7 @@ Configuration
 
 * At ``Events`` menu create or select existing event
 * Switch **[x] Signup attendees to portal** on
+* Switch **[x] Create Partners in registration** on
 
 Usage
 =====
