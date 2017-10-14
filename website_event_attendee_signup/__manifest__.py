@@ -17,16 +17,16 @@
 
     "depends": [
         "event",
-        "event_partner",
+        "partner_event",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
         "views/event_event_views.xml",
+        "data/mail_template_data.xml",
     ],
     "qweb": [
     ],
     "demo": [
-        "demo/{DEMOFILE1}.xml",
     ],
 
     "post_load": None,
