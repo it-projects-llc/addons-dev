@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record model="event.event.attendee_field" id="attendee_field_name">
+    <record id="attendee_field_name" model="event.event.attendee_field">
         <field name="field_id" ref="event.field_event_event_name"/>
         <field name="form_type">text</field>
         <field name="width">5</field>
