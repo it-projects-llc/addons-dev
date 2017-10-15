@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-import re
-
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class Event(models.Model):
@@ -25,7 +23,7 @@ class AttendeeField(models.Model):
 
     width = fields.Selection([
         (str(v), str(v))
-        for v in xrange(1,13)  # 13 is not included
+        for v in xrange(1, 13)  # 13 is not included
     ], string='Width', help="Field of a width in the form. One row may have width up to 12")
 
     @api.multi
