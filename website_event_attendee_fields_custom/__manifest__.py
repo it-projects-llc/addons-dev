@@ -16,13 +16,14 @@
     # "currency": "EUR",
 
     "depends": [
-        "{DEPENDENCY1}",
-        "{DEPENDENCY2}",
+        "partner_contact_birthdate",
+        "partner_firstname",
+        "partner_identification",
+        "partner_contact_nationality",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
-        "{FILE1}.xml",
-        "{FILE2}.xml",
+        "data/event_event_attendee_field_data.xml",
     ],
     "qweb": [
         "static/src/xml/{QWEBFILE1}.xml",
