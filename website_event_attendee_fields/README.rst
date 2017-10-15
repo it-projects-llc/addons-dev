@@ -2,9 +2,8 @@
  Customizable fields for attendees on Events
 ===============
 
-Need more information about attendees than three default one (name, email, phone)?
+By default website_event_sale module asks only three fields to fill about attendees (name, email, phone). This module allows to customize any set of fields.
 
-{Then add more detailed description, technical specifications, any other information that could be interested for other developers. Don't forget that Usage instructions is a separated and has to be located in doc/index.rst file.}
 
 Credits
 =======

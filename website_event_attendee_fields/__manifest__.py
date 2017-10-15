@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": """Customizable fields for attendees on Events""",
-    "summary": """Need more information about attendees than three default one (name, email, phone)?""",
+    "summary": """Do you need more information about attendees than three default fields (name, email, phone)?""",
     "category": "Marketing",
     # "live_test_url": "",
     "images": [],
