@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
+<odoo noupdate="1">
     <record id="email_template_signup" model="mail.template">
         <field name="name">Signup email, on attendee registration</field>
         <field name="email_from">${(object.partner_id.email or '')|safe}</field>
