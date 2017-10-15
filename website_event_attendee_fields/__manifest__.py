@@ -16,19 +16,19 @@
     # "currency": "EUR",
 
     "depends": [
-        "{DEPENDENCY1}",
-        "{DEPENDENCY2}",
+        "website_event",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
-        "{FILE1}.xml",
-        "{FILE2}.xml",
+        "views/website_event_templates.xml",
+        "views/event_event_views.xml",
+        "security/ir.model.access.csv",
     ],
     "qweb": [
-        "static/src/xml/{QWEBFILE1}.xml",
     ],
     "demo": [
-        "demo/{DEMOFILE1}.xml",
+        "data/event_event_attendee_field_demo.xml",
+        "data/event_event_demo.yml",
     ],
 
     "post_load": None,
