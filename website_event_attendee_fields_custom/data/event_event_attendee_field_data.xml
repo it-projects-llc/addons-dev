@@ -20,13 +20,13 @@
     </record>
 
     <record id="attendee_field_nationality" model="event.event.attendee_field">
-        <field name="field_id" ref="partner_contact_nationality.field_nationality_id"/>
-        <field name="form_type">text</field>
+        <field name="field_id" ref="partner_contact_nationality.field_res_partner_nationality_id"/>
+        <field name="form_type">many2one</field>
         <field name="width">4</field>
     </record>
 
     <record id="attendee_field_passport" model="event.event.attendee_field">
-        <field name="field_id" ref="website_event_attendee_fields_custom.field_passport"/>
+        <field name="field_id" ref="website_event_attendee_fields_custom.field_res_partner_passport"/>
         <field name="form_type">text</field>
         <field name="width">4</field>
     </record>
