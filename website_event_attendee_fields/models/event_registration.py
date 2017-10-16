@@ -45,4 +45,3 @@ class EventRegistration(models.Model):
         _logger.debug('registration vals after removing: %s', vals)
         _logger.debug('partner values: %s', res)
         return res
-
