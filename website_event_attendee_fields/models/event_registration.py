@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
+import logging
+
 from odoo import models, api
+
+
+_logger = logging.getLogger(__name__)
 
 
 class EventRegistration(models.Model):
@@ -14,16 +19,30 @@ class EventRegistration(models.Model):
         return data
 
     def _prepare_partner(self, vals):
+        """method from partner_event module"""
         event = self.env['event.event'].browse(vals['event_id'])
+        if not event.attendee_field_ids:
+            # attendee_field_ids is not configure
+            # May happen in tests of other modules, which don't suppose that this module is installed.
+            # Just return super values.
+            return super(EventRegistration, self)._prepare_partner(vals)
+
+        # copy partner fields to return and removes non-registration fields from vals
         res = {}
         partner_fields = self.env['res.partner']._fields
+        _logger.debug('registration vals before removing: %s', vals)
         for field in event.attendee_field_ids:
             fn = field.field_name
             if field.field_model == 'res.partner' or fn in partner_fields:
+                # partner fields
                 res[fn] = vals.get(field.field_name)
 
             if fn not in self._fields:
+                # non-registration fields
                 if fn in vals:
                     del vals[fn]
 
+        _logger.debug('registration vals after removing: %s', vals)
+        _logger.debug('partner values: %s', res)
         return res
+
