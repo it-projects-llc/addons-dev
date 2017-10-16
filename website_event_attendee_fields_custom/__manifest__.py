@@ -26,10 +26,9 @@
         "data/event_event_attendee_field_data.xml",
     ],
     "qweb": [
-        "static/src/xml/{QWEBFILE1}.xml",
     ],
     "demo": [
-        "demo/{DEMOFILE1}.xml",
+        "data/event_event_demo.yml",
     ],
 
     "post_load": None,
