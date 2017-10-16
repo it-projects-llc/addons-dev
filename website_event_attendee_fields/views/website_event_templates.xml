@@ -2,8 +2,9 @@
 <odoo>
 
 <template id="registration_attendee_details" inherit_id="website_event.registration_attendee_details">
+
     <xpath expr="//t[@t-foreach='tickets']/div[@class='row']" position="replace">
-        <div class="row">
+        <div class="row" t-if="event.use_attendees_header">
             <t t-foreach="event.attendee_field_ids" t-as="field">
                 <div t-attf-class="col-md-{{field.width}}"><strong t-raw="field.field_description"/><t t-if="not field.is_required"> <span class="text-muted">(Optional)</span></t></div>
             </t>
@@ -11,10 +12,10 @@
     </xpath>
 
     <xpath expr="//t[@t-as='att_counter']/div[@class='row mb4']" position="replace">
-        <div class="row mb4">
+        <div class="row">
             <t t-set="attendee_placeholder">[Attendee #%s] </t>
             <t t-foreach="event.attendee_field_ids" t-as="field">
-                <div t-attf-class="col-md-{{field.width}}">
+                <div t-attf-class="col-md-{{field.width}} mb8">
                     <t t-if="field.form_type in ['many2one']">
                         <select
                             class="form-control"

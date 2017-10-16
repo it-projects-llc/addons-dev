@@ -17,6 +17,7 @@
 
     "depends": [
         "website_event",
+        "partner_event",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [

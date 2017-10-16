@@ -6,6 +6,13 @@ from odoo.tools.safe_eval import safe_eval
 class Event(models.Model):
     _inherit = 'event.event'
     attendee_field_ids = fields.Many2many('event.event.attendee_field')
+    use_attendees_header = fields.Boolean(compute='_compute_use_attendees_header')
+
+    @api.multi
+    def _compute_use_attendees_header(self):
+        for r in self:
+            total_width = sum([int(f.width) or 1 for f in self.attendee_field_ids])
+            r.use_attendees_header = total_width <= 12
 
 
 class AttendeeField(models.Model):
