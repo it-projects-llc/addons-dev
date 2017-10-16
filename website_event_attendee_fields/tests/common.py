@@ -19,7 +19,7 @@ class TestCase(TransactionCase):
             'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
         })
         self.event.write({
-            'attendee_field_ids': [(6,0,[
+            'attendee_field_ids': [(6, 0, [
                 self.env.ref('website_event_attendee_fields.attendee_field_name').id,
                 self.env.ref('website_event_attendee_fields.attendee_field_email').id,
                 self.env.ref('website_event_attendee_fields.attendee_field_phone').id,

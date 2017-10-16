@@ -16,7 +16,6 @@ class EventRegistration(models.Model):
     def _prepare_partner(self, vals):
         event = self.env['event.event'].browse(vals['event_id'])
         res = {}
-        print 'vals BEFORE', vals
         partner_fields = self.env['res.partner']._fields
         for field in event.attendee_field_ids:
             fn = field.field_name
@@ -27,6 +26,4 @@ class EventRegistration(models.Model):
                 if fn in vals:
                     del vals[fn]
 
-        print 'vals AFTER', vals
-        print 'res', res
         return res
