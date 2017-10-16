@@ -1,6 +1,6 @@
-===============
+=========================================================
  Attendee registration: Birthdate, Passport, Nationality
-===============
+=========================================================
 
 Ask information on registration and stores at Partner record:
 
