@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models
+from odoo.tools.safe_eval import safe_eval
 
 
 class Event(models.Model):
     _inherit = 'event.event'
-    attendee_fields = fields.Many2many('event.event.attendee_field')
+    attendee_field_ids = fields.Many2many('event.event.attendee_field')
 
 
 class AttendeeField(models.Model):
@@ -14,6 +15,7 @@ class AttendeeField(models.Model):
     sequence = fields.Integer('Sequence')
     field_id = fields.Many2one('ir.model.fields', domain="[('model_id.model', 'in', ['res.partner', 'event.registration'])]")
     field_name = fields.Char(related='field_id.name', readonly=True)
+    field_model = fields.Char(related='field_id.relation', readonly=True)
     field_description = fields.Char(related='field_id.field_description', readonly=True)
     is_required = fields.Boolean('Required', default=True)
     form_type = fields.Selection([
@@ -31,12 +33,15 @@ class AttendeeField(models.Model):
         ('time', 'Time'),
         ('url', 'URL'),
         ('week', 'Week'),
-    ], string='Type at Form')
+        ('many2one', 'Many2one'),
+    ], string='Type at Form', default='text', required=True)
 
     width = fields.Selection([
         (str(v), str(v))
         for v in xrange(1, 13)  # 13 is not included
-    ], string='Width', help="Field of a width in the form. One row may have width up to 12")
+    ], string='Width', required=True, default=4, help="Field of a width in the form. One row may have width up to 12")
+
+    domain = fields.Char('Domain')
 
     @api.multi
     def name_get(self):
@@ -44,3 +49,17 @@ class AttendeeField(models.Model):
             (r.id, '#%s: %s (width=%s)' % (r.sequence, r.field_name, r.width, ))
             for r in self
         ]
+
+    @api.multi
+    def get_select_options(self):
+        self.ensure_one()
+        domain = safe_eval(self.domain or '[]')
+        records = self.env[self.field_model].search(domain)
+        res = [
+            {
+                'id': r.id,
+                'name': r.display_name,
+            }
+            for r in records
+        ]
+        return res

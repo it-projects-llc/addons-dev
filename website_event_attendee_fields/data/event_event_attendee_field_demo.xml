@@ -19,5 +19,11 @@
         <field name="width">3</field>
         <field name="is_required" eval="False"/>
     </record>
+
+    <record id="attendee_field_country_id" model="event.event.attendee_field">
+        <field name="field_id" ref="base.field_res_partner_country_id"/>
+        <field name="form_type">many2one</field>
+        <field name="width">3</field>
+    </record>
     
 </odoo>
