@@ -10,6 +10,7 @@
                 <page string="Website Fields">
                     <field name="attendee_fields">
                         <tree>
+                            <field name="sequence" widget="handle"/>
                             <field name="field_id"/>
                             <field name="is_required"/>
                             <field name="form_type"/>

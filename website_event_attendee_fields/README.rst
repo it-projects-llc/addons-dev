@@ -4,6 +4,15 @@
 
 By default ``website_event`` module asks only three fields to fill about attendees (name, email, phone). This module allows to customize any set of fields.
 
+Also,
+
+* shows field name in input placeholder (it's neede when there are many fields per each attendee)
+
+Demo mode
+---------
+In demo installation:
+
+* on installation each Event gets standarts fields (Name, Email, Phone).
 
 Credits
 =======
