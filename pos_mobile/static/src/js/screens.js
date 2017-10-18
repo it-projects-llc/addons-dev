@@ -57,8 +57,7 @@ odoo.define('pos_mobile.screens', function (require) {
 
                 var screen_width = elements.length * width;
 
-                $(".swiper-slide").css('width')
-                $('.pos .screen').css({'width': screen_width + 'px'});
+                $('.pos .swiper-wrapper').css({'width': screen_width + 'px'});
 
                 var rightpane = $(".rightpane tbody");
                 var tr = rightpane.find(".header-row");
