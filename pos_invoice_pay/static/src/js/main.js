@@ -29,14 +29,16 @@ models.PosModel = models.PosModel.extend({
         {
             model: 'sale.order',
             fields: ['name', 'partner_id', 'date_order', 'user_id',
-            'amount_total', 'order_line', 'invoice_status'],
+            'amount_total', 'order_line', 'invoice_status', 'delivery_count'],
             domain:[['invoice_status', '!=', 'invoiced'], ['state', '=', 'sale']],
             loaded: function (self, sale_orders) {
                 self.prepare_so_data(sale_orders);
                 self.sale_orders = sale_orders;
                 self.db.add_sale_orders(sale_orders);
-                self.get_sale_order_lines(sale_orders);
 
+                var so_ids = _.pluck(sale_orders, 'id');
+
+                self.get_sale_order_lines(so_ids);
             }
         },{
             model: 'account.invoice',
@@ -48,46 +50,68 @@ models.PosModel = models.PosModel.extend({
                 self.prepare_invoices_data(invoices);
                 self.invoices = invoices;
                 self.db.add_invoices(invoices);
-                self.get_invoice_lines(invoices);
+
+                var invoices_ids = _.pluck(invoices, 'id');
+
+                self.get_invoice_lines(invoices_ids);
             }
         });
         return _super_posmodel.initialize.apply(this, arguments);
     },
 
-    get_lines: function (data, model_name, method_name) {
-        var self= this;
-        ids = _.pluck(data, 'id');
+    get_lines: function (ids, model_name, method_name) {
         return new Model(model_name).call(method_name, [ids]);
     },
 
-    get_sale_order_lines: function (data) {
+    get_sale_order_lines: function (ids) {
+        var def = $.Deferred();
         var self = this;
-        this.get_lines(data, 'sale.order', 'get_order_lines_for_pos').
+        this.get_lines(ids, 'sale.order', 'get_order_lines_for_pos').
             then(function (res) {
                 for (var i =0; i<res.length; i++) {
                     var so_id = res[i].order_id
                     var so = self.db.sale_orders_by_id[so_id];
+                    if (!so) {
+                        return;
+                    }
                     if (!so.hasOwnProperty('lines')) {
                         so.lines = [];
                     }
                     so.lines.push(res[i]);
+                    def.resolve();
                 }
+            }, function (err) {
+                console.log(err)
             });
+        return def.promise();
     },
 
     get_invoice_lines: function (data) {
+        var def = $.Deferred();
         var self = this;
         this.get_lines(data, 'account.invoice', 'get_invoice_lines_for_pos').
             then(function (res) {
-                for (var i =0; i<res.length; i++) {
-                    var inv_id = res[i].invoice_id
+                _.each(res, function(res) {
+                    var inv_id = res.invoice_id;
                     var inv = self.db.invoices_by_id[inv_id];
+                    inv.lines = [];
+                });
+                for (var i=0; i<res.length; i++) {
+                    inv_id = res[i].invoice_id;
+                    inv = self.db.invoices_by_id[inv_id];
+
+                    if (!inv) {
+                        return;
+                    }
+
                     if (!inv.hasOwnProperty('lines')) {
                         inv.lines = [];
                     }
                     inv.lines.push(res[i]);
+                    def.resolve();
                 }
             });
+        return def.promise();
     },
 
     prepare_bus: function () {
@@ -190,7 +214,10 @@ models.PosModel = models.PosModel.extend({
             then(function (res) {
                 self.prepare_invoices_data(res);
                 self.db.update_invoice_db(res[0]);
-                def.resolve(id);
+                self.get_invoice_lines([res[0].id]).
+                    then(function() {
+                        def.resolve(id);
+                    });
             });
         return def.promise();
     },
@@ -202,7 +229,10 @@ models.PosModel = models.PosModel.extend({
                 then(function (res) {
                     self.prepare_so_data(res);
                     self.db.update_so_db(res[0]);
-                    def.resolve(id);
+                    self.get_sale_order_lines([res[0].id]).
+                    then(function() {
+                        def.resolve(id);
+                    });
             });
         return def.promise();
     },
@@ -220,6 +250,49 @@ models.PosModel = models.PosModel.extend({
             });
         return result.promise();
     },
+
+    get_invoices_to_render: function (invoices) {
+        var self = this;
+        var orders_to_mute = _.filter(this.db.get_orders(), function(order) {
+            return order.data.invoice_to_pay;
+        });
+
+        var muted_invoices_ids = [];
+        if(orders_to_mute) {
+            for(var i=0; orders_to_mute.length>i; i++) {
+                var order = orders_to_mute[i];
+                var id = order.data.invoice_to_pay.id;
+                muted_invoices_ids.push(id)
+            }
+        }
+
+        if (muted_invoices_ids) {
+            invoices = _.filter(invoices, function (inv) {
+                return !muted_invoices_ids.includes(inv.id)
+            });
+        }
+
+        var client = this.get_client();
+        if (client) {
+            invoices = _.filter(invoices, function(inv) {
+                return inv.partner_id[0] === client.id
+            });
+            return invoices;
+        }
+
+        return invoices;
+    },
+
+    get_sale_order_to_render: function (sale_orders) {
+        var client = this.get_client();
+        if (client) {
+            sale_orders = _.filter(sale_orders, function(so) {
+                return so.partner_id[0] === client.id
+            });
+            return sale_orders;
+        }
+        return sale_orders;
+    }
 });
 
 var _super_order = models.Order.prototype;
@@ -247,24 +320,6 @@ PosDb.include({
         this.invoices_search_string = '';
     },
 
-    get_invoices_to_render: function () {
-        var self = this;
-        var orders_to_check = _.filter(this.get_orders(), function(order) {
-            return order.data.invoice_to_pay;
-        });
-        if(orders_to_check) {
-            var muted_invoices_ids = [];
-            for(var i=0; orders_to_check.length>i; i++) {
-                var order = orders_to_check[i];
-                var id = order.data.invoice_to_pay.id;
-                muted_invoices_ids.push(id)
-            }
-            return _.filter(this.invoices, function (inv) {
-                return !muted_invoices_ids.includes(inv.id);
-            });
-            return this.invoices;
-        }
-    },
 
     add_sale_orders: function (sale_orders) {
         var self = this;
@@ -434,7 +489,7 @@ var InvoicesAndOrdersBaseWidget = ClientListScreenWidget.extend({
             // self.gui.back();
         });
 
-        this.render_data(this.pos.db.get_invoices_to_render());
+        this.render_data(this.get_data());
 
         this.$('.client-list-contents').delegate(this.$listEl,'click',function(event){
             self.select_line(event,$(this),parseInt($(this).data('id')));
@@ -531,7 +586,6 @@ var SaleOrdersWidget = InvoicesAndOrdersBaseWidget.extend({
     template: 'SaleOrdersWidget',
     init: function () {
         this._super.apply(this, arguments);
-        this.data = this.pos.db.sale_orders;
         this.$listEl = '.sale-order';
 
         this.itemTemplate = 'SaleOrder';
@@ -548,6 +602,9 @@ var SaleOrdersWidget = InvoicesAndOrdersBaseWidget.extend({
         this.$('.back').click(function () {
             self.gui.show_screen('products');
         });
+    },
+    get_data: function () {
+        return this.pos.get_sale_order_to_render(this.pos.db.sale_orders);
     },
 
     select_line: function (event,$line,id) {
@@ -621,9 +678,11 @@ var SaleOrdersWidget = InvoicesAndOrdersBaseWidget.extend({
         var sale_orders;
         if(query){
             sale_orders = this.pos.db.search_sale_orders(query);
+            sale_orders = this.pos.get_sale_order_to_render(sale_orders);
             this.render_data(sale_orders);
         }else{
             sale_orders = this.pos.db.sale_orders;
+            sale_orders = this.pos.get_sale_order_to_render(sale_orders);
             this.render_data(sale_orders);
         }
     },
@@ -642,7 +701,6 @@ var InvoicesWidget = InvoicesAndOrdersBaseWidget.extend({
     template: 'InvoicesWidget',
     init: function () {
         this._super.apply(this, arguments);
-        this.data = this.pos.db.invoices;
         this.$listEl = '.invoice';
 
         this.itemTemplate = 'Invoice';
@@ -653,6 +711,9 @@ var InvoicesWidget = InvoicesAndOrdersBaseWidget.extend({
         this.selected_invoice = false;
 
     },
+     get_data: function () {
+        return this.pos.get_invoices_to_render(this.pos.db.invoices);
+     },
 
     show: function () {
         var self = this;
@@ -683,17 +744,6 @@ var InvoicesWidget = InvoicesAndOrdersBaseWidget.extend({
 
     toggle_save_button: function (selected_invoice) {
         var $button = this.$('.button.next');
-
-        if (selected_invoice) {
-            switch (selected_invoice.state) {
-                case "Draft":
-                    $button.text('Validate');
-                    break;
-                case "Open":
-                    $button.text('Register payment');
-            }
-        }
-
         if (selected_invoice) {
             $button.removeClass('oe_hidden');
         } else {
@@ -706,9 +756,13 @@ var InvoicesWidget = InvoicesAndOrdersBaseWidget.extend({
         var invoices;
         if(query){
             invoices = this.pos.db.search_invoices(query);
+            console.log(invoices);
+            invoices = this.pos.get_invoices_to_render(invoices);
+            console.log(invoices)
             this.render_data(invoices);
         }else{
             invoices = this.pos.db.invoices;
+            invoices = this.pos.get_invoices_to_render(invoices);
             this.render_data(invoices);
         }
     },
@@ -727,11 +781,13 @@ var InvoicesWidget = InvoicesAndOrdersBaseWidget.extend({
             switch (this.selected_invoice.state) {
                 case "Draft":                    
                     this.pos.validate_invoice(this.selected_invoice.id).
-                        then(function () {
-                            self.pos.update_or_fetch_invoice(self.selected_invoice.id).
+                        then(function (id) {
+                            self.pos.update_or_fetch_invoice(id).
                             then(function() {
-                                self.render_data(self.pos.db.invoices);
+                                self.render_data(self.pos.get_invoices_to_render(self.pos.db.invoices));
                                 self.toggle_save_button();
+                                self.pos.selected_invoice = self.pos.db.get_invoice_by_id(self.selected_invoice.id);
+                                self.gui.show_screen('invoice_payment');
                             });
                             
                         }).fail(function () {
@@ -752,19 +808,6 @@ var InvoicesWidget = InvoicesAndOrdersBaseWidget.extend({
             return false;
         }
     },
-
-    // check_invoice_mutex: function (invoice) {
-    //     orders =  this.pos.db.get_order();
-    //     if (orders){
-    //         _.each(orders, function (order) {
-    //             if (order.invoice_to_pay) {
-    //                 if (order.invoice_to_pay.id === invoice.id) {
-    //                     // order.invoice_to_pay.muted = true;
-    //                 }
-    //             }
-    //         });
-    //     }
-    // },
 });
 
 gui.define_screen({name:'invoices_list', widget: InvoicesWidget});
@@ -842,9 +885,6 @@ var InvoicePayment = PaymentScreenWidget.extend({
         var lines = order.get_paymentlines();
         var due   = order.invoice_to_pay.amount_due;
         var extradue = 0;
-        // if (due && lines.length  && due !== order.invoice_to_pay.get_due(lines[lines.length-1])) {
-        //     extradue = due;
-        // }
 
         this.$('.paymentlines-container').empty();
         var lines = $(QWeb.render('InvoicePaymentScreen-Paymentlines', { 

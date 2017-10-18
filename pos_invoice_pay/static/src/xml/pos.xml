@@ -158,6 +158,7 @@
                     <span class='button next oe_hidden highlight'>
 
                         <i class='fa fa-angle-double-right'></i>
+                        Register Payment
                     </span>
                 </section>
                 <section class="full-content">
@@ -221,7 +222,7 @@
                     <section class='paymentlines-container'>
                     </section>
 
-                    <section class='payment-numpad'>
+                    <section class='payment-numpad invoice'>
                     </section>
 
                     <div class='payment-buttons'>
@@ -236,13 +237,13 @@
                                 </t>
                             </span>
                         </div> -->
-                        <t t-if='widget.pos.config.iface_invoicing'>
+                       <!--  <t t-if='widget.pos.config.iface_invoicing'>
                             <t t-if='widget.pos.get_order()'>
                                 <div t-attf-class='button js_invoice #{ widget.pos.get_order().is_to_invoice() ? "highlight" : ""} '>
                                     <i class='fa fa-file-text-o' /> Invoice
                                 </div>
                             </t>
-                        </t>
+                        </t> -->
                         <t t-if='widget.pos.config.tip_product_id'>
                             <div class='button js_tip'>
                                 <i class='fa fa-heart' /> Tip 
@@ -362,6 +363,8 @@
             
             <div class="pos-center-align"><t t-esc="moment().format('L LT')"/> <t t-esc="order.name"/></div>
             <br />
+            Cash payment of Invoice <t t-esc="order.invoice_to_pay.number"/><br />
+
             <t t-esc="widget.pos.company.name"/><br />
             Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
             User: <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name"/><br />
