@@ -1,8 +1,8 @@
-.pos .screen, .swiper-container {
+.pos.mobile .screen, .swiper-container {
     width: 100%;
     height: 100%;
 }
-.pos .leftpane, .pos .rightpane {
+.pos.mobile .leftpane, .pos.mobile .rightpane {
     /* Center slide text vertically */
     display: -webkit-box;
     display: -ms-flexbox;
@@ -22,14 +22,14 @@
     height: 100%;
     width: 100%;
 }
-.pos .searchbox {
+.pos.mobile .searchbox {
     float: left;
     position: relative;
 }
-.pos .searchbox input {
+.pos.mobile .searchbox input {
     border-radius: initial;
 }
-.pos .search-clear {
+.pos.mobile .search-clear {
     top: 10px;
     left: 10px;
 }
@@ -37,22 +37,23 @@
     margin: 10px;
     padding: 5px;
 }
-.pos .numpad {
+.pos.mobile .numpad {
     float: left;
 }
-.pos .order {
+.pos.mobile .order {
     max-width: initial;
 }
-.pos .product-list {
+.pos.mobile .product-list {
     text-align: center;
 }
-.pos .categories {
+.pos.mobile .categories {
     border-bottom: none;
+    display: none;
 }
 .category-list-scroller .control-button {
     width: 200px;
 }
-.pos .category-list.simple {
+.pos.mobile .category-list.simple {
     display: block;
     -webkit-flex-flow: initial;
     flex-flow: initial;
@@ -60,14 +61,65 @@
     background-color: white;
     text-align: center;
 }
-.pos .rightpane-header {
+.pos.mobile .rightpane-header {
     background: #e2e2e2;
     border-top: 1px solid #d3d3d3;
     border-bottom: 1px solid #d3d3d3;
 }
-.pos .control-button:hover {
+.pos.mobile .control-button:hover {
     background: #6EC89B;
 }
-.pos .control-button:active {
+.pos.mobile .control-button:active {
     background: #6EC89B;
+}
+.pos.mobile .pos-branding .username {
+    float: left;
+    margin-right: 0px;
+    margin-left: 10px;
+}
+.pos.mobile .pos-branding {
+    width: initial;
+    position: relative;
+}
+.pos.mobile .pos-logo {
+    float: left;
+}
+.pos.mobile .pos-rightheader {
+    display: inline-block;
+}
+.pos.mobile .order-selector, .pos.mobile .oe_status, .pos.mobile .pos-rightheader .header-button , .pos.mobile .orders.touch-scrollable, .pos.mobile .order-button.square{
+    display: inline-block;
+    float: left;
+}
+.pos.mobile .pos-rightheader {
+    display: table-cell;
+    position: relative;
+    left: 10px;
+}
+.pos.mobile .order-button.square {
+    background: #e2e2e2;
+    color: rgb(255, 255, 255);
+    box-shadow: initial;
+    height: 40px;
+    border-radius: 3px;
+    min-width: 40px;
+    line-height: 40px;
+    margin-top: 5px;
+}
+
+.pos.mobile .rightpane-header .category-list-button, .pos.mobile .rightpane-header .order-action-buttons {
+    position: relative;
+    display: inline-block;
+    text-align: left;
+    float: left;
+    line-height: 48px;
+    font-size: 26px;
+    cursor: pointer;
+    margin: 0 5px;
+}
+.pos.mobile .rightpane-header .order-action-buttons .fa-minus-square-o {
+    display: none;
+}
+.pos.mobile .leftpane .pads {
+    display: none;
 }
