@@ -107,7 +107,7 @@
     margin-top: 5px;
 }
 
-.pos.mobile .rightpane-header .category-list-button, .pos.mobile .rightpane-header .order-action-buttons {
+.pos.mobile .rightpane-header .category-list-button, .pos.mobile .rightpane-header .order-action-buttons, .pos.mobile .rightpane-header .mobile-order-screen{
     position: relative;
     display: inline-block;
     text-align: left;
@@ -116,10 +116,27 @@
     font-size: 26px;
     cursor: pointer;
     margin: 0 5px;
+    color: #808080;
 }
 .pos.mobile .rightpane-header .order-action-buttons .fa-minus-square-o {
     display: none;
 }
-.pos.mobile .leftpane .pads {
+.pos.mobile .rightpane-header .mobile-order-screen{
+    margin-left: 15px;
+}
+.pos.mobile .breadcrumbs {
     display: none;
+}
+.pos.mobile .window {
+    display: none;
+    }
+.slide-search {
+    height: 48px;
+}
+.order-and-products {
+    height: 92%;
+}
+
+.under-search {
+    height: 40%;
 }
