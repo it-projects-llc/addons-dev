@@ -29,7 +29,7 @@ models.PosModel = models.PosModel.extend({
         {
             model: 'sale.order',
             fields: ['name', 'partner_id', 'date_order', 'user_id',
-            'amount_total', 'order_line', 'invoice_status', 'delivery_count'],
+            'amount_total', 'order_line', 'invoice_status'],
             domain:[['invoice_status', '!=', 'invoiced'], ['state', '=', 'sale']],
             loaded: function (self, sale_orders) {
                 self.prepare_so_data(sale_orders);
@@ -94,6 +94,9 @@ models.PosModel = models.PosModel.extend({
                 _.each(res, function(res) {
                     var inv_id = res.invoice_id;
                     var inv = self.db.invoices_by_id[inv_id];
+                    if (!inv) {
+                        return;
+                    }
                     inv.lines = [];
                 });
                 for (var i=0; i<res.length; i++) {
@@ -330,6 +333,22 @@ PosDb.include({
         });
     },
 
+    update_so_search_string: function (sale_orders) {
+        var self = this;
+        self.sale_orders_search_string = '';
+        _.each(sale_orders, function(order) {
+            self.sale_orders_search_string += self._sale_order_search_string(order);
+        });
+    },
+
+    update_invoices_search_string: function (invoices) {
+        var self = this;
+        self.invoices_search_string = '';
+        _.each(invoices, function(inv) {
+            self.invoices_search_string += self._invoice_search_string(inv);
+        });
+    },
+
     _sale_order_search_string: function (sale_order) {
         var str =  sale_order.name;
         if(sale_order.date_order){
@@ -386,6 +405,7 @@ PosDb.include({
             this.sale_orders.unshift(updated_so);
             this.sale_orders_by_id[updated_so.id] = updated_so;
         }
+        this.update_so_search_string(this.sale_orders);
     },
 
     add_invoices: function (invoices) {
@@ -393,7 +413,7 @@ PosDb.include({
         _.each(invoices, function (invoice) {
             self.invoices.push(invoice);
             self.invoices_by_id[invoice.id] = invoice;
-            self.invoices_search_string += self._invoices_search_string(invoice);
+            self.invoices_search_string += self._invoice_search_string(invoice);
         });
     },
 
@@ -408,10 +428,11 @@ PosDb.include({
             this.invoices_by_id[updated_invoice.id] = updated_invoice;
         } else {
             delete this.invoices_by_id[updated_invoice.id];
-        }  
+        }
+        this.update_invoices_search_string(this.invoices);
     },
 
-    _invoices_search_string: function (invoice) {
+    _invoice_search_string: function (invoice) {
         var str = invoice.partner_id[1];
         if (invoice.number) {
             str += '|' + invoice.number;
@@ -756,9 +777,7 @@ var InvoicesWidget = InvoicesAndOrdersBaseWidget.extend({
         var invoices;
         if(query){
             invoices = this.pos.db.search_invoices(query);
-            console.log(invoices);
             invoices = this.pos.get_invoices_to_render(invoices);
-            console.log(invoices)
             this.render_data(invoices);
         }else{
             invoices = this.pos.db.invoices;
