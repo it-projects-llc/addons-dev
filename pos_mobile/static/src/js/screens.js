@@ -93,18 +93,5 @@ odoo.define('pos_mobile.screens', function (require) {
         },
     });
 
-    screens.ActionpadWidget.include({
-        renderElement: function() {
-            this._super();
-            var swiper_container = $('.swiper-container-v');
-            this.$('.pay').click(function(){
-                swiper_container.css({'display': 'none'});
-
-            });
-            this.$('.set-customer').click(function(){
-                swiper_container.css({'display': 'none'});
-            });
-        }
-    });
     return screens;
 });

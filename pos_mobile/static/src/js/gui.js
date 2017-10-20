@@ -10,11 +10,13 @@ odoo.define('pos_mobile.gui', function (require) {
     gui.Gui.include({
         show_screen: function(screen_name,params,refresh,skip_close_popup) {
             this._super(screen_name,params,refresh,skip_close_popup);
+            var swiper_container = $('.swiper-container-v');
             if (screen_name === "products") {
-                $('.swiper-container-v').css({'display': 'block'});
+                swiper_container.css({'display': 'block'});
+            } else {
+                swiper_container.css({'display': 'none'});
             }
         }
     });
-
     return gui;
 });
