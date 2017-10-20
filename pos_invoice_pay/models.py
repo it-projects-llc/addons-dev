@@ -71,7 +71,7 @@ class AccountInvoice(models.Model):
                 'product': inv.product_id.name,
                 'price_unit': inv.price_unit,
                 'qty': inv.quantity,
-                'tax': inv.invoice_line_tax_ids.ids,
+                'tax': inv.invoice_line_tax_ids.name or ' ',
                 'amount': inv.price_subtotal
             }
             res.append(line)
@@ -98,7 +98,7 @@ class SaleOrder(models.Model):
                 'uom_qty': l.product_uom_qty,
                 'qty_delivered': l.qty_delivered,
                 'qty_invoiced': l.qty_invoiced,
-                'tax': l.tax_id.id,
+                'tax': l.tax_id.name or ' ',
                 'subtotal': l.price_subtotal,
                 'total': l.price_total
             }

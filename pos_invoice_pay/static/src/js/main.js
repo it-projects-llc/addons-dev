@@ -68,13 +68,13 @@ models.PosModel = models.PosModel.extend({
         var self = this;
         this.get_lines(ids, 'sale.order', 'get_order_lines_for_pos').
             then(function (res) {
-                for (var i =0; i<res.length; i++) {
+                for (var i = 0, max = res.length; i < max; i++) {
                     var so_id = res[i].order_id
                     var so = self.db.sale_orders_by_id[so_id];
                     if (!so) {
                         return;
                     }
-                    if (!so.hasOwnProperty('lines')) {
+                    if (!Object.prototype.hasOwnProperty.call(so, 'lines')) {
                         so.lines = [];
                     }
                     so.lines.push(res[i]);
@@ -99,7 +99,7 @@ models.PosModel = models.PosModel.extend({
                     }
                     inv.lines = [];
                 });
-                for (var i=0; i<res.length; i++) {
+                for (var i = 0, max = res.length; i < max; i++) {
                     inv_id = res[i].invoice_id;
                     inv = self.db.invoices_by_id[inv_id];
 
@@ -107,7 +107,7 @@ models.PosModel = models.PosModel.extend({
                         return;
                     }
 
-                    if (!inv.hasOwnProperty('lines')) {
+                    if (!Object.prototype.hasOwnProperty.call(inv, 'lines')) {
                         inv.lines = [];
                     }
                     inv.lines.push(res[i]);
@@ -176,7 +176,7 @@ models.PosModel = models.PosModel.extend({
     prepare_invoices_data: function (data) {
         _.each(data, function (item) {
             for (var property in item) {
-                if (item.hasOwnProperty(property)) {
+                if (Object.prototype.hasOwnProperty.call(item, property)) {
                     if (item[property] === false) {
                         item[property] = ' ';
                     }
@@ -190,18 +190,18 @@ models.PosModel = models.PosModel.extend({
     prepare_so_data: function (data) {
         _.each(data, function (item) {
             switch (item.invoice_status) {
-                case 'to invoice':
-                    item.invoice_status = 'To invoice';
-                    break;
-                case 'no':
-                    item.invoice_status = 'Nothing to invoice';
-                    break;
+            case 'to invoice':
+                item.invoice_status = 'To invoice';
+                break;
+            case 'no':
+                item.invoice_status = 'Nothing to invoice';
+                break;
             }
         });
     },
 
     get_res: function (model_name, id) {
-        var fields = _.find(this.models, function (model){ 
+        var fields = _.find(this.models, function (model){
             return model.model === model_name;
         }).fields;
         return new Model(model_name).
@@ -395,7 +395,7 @@ PosDb.include({
     },
 
     update_so_db: function (updated_so) {
-        for (var i=0; i < this.sale_orders.length; i++) {
+        for (var i = 0; i< this.sale_orders.length; i++) {
             if (this.sale_orders[i].id === updated_so.id) {
                 this.sale_orders.splice(i, 1);
             } 
@@ -418,9 +418,10 @@ PosDb.include({
     },
 
     update_invoice_db: function (updated_invoice) {
-        for (var i=0; i<this.invoices.length; i++) {
+        for (var i = 0; i < this.invoices.length; i++) {
             if (this.invoices[i].id === updated_invoice.id) {
                 this.invoices.splice(i, 1);
+                continue;
             }
         }
         if (updated_invoice.state === "Draft" || updated_invoice.state === "Open") {
@@ -559,7 +560,6 @@ var InvoicesAndOrdersBaseWidget = ClientListScreenWidget.extend({
                     $td.appendChild($table);
                     $tr.appendChild($td);
                 }
-                
                 item_line.innerHTML = item_html;
                 item_line = item_line.childNodes[1];
 
@@ -592,7 +592,7 @@ var InvoicesAndOrdersBaseWidget = ClientListScreenWidget.extend({
     render_product_lines: function (data_lines) {
         var $body = document.createElement('tbody');
         var lines = '';
-        for(var i = 0;i<data_lines.length; i++) {
+        for(var i = 0, max = data_lines.length; i < max; i++) {
             var line_html = QWeb.render(this.lineTemplate, {widget: this, line:data_lines[i]});
             lines += line_html
         }
@@ -682,17 +682,16 @@ var SaleOrdersWidget = InvoicesAndOrdersBaseWidget.extend({
                                 self.pos.gui.screen_instances.invoice_payment.render_paymentlines()
                                 self.gui.show_screen('invoice_payment');
                             });
-                            
                         });
                     });
-            }, function (err, event) {   
+            }, function (err, event) {
                 self.gui.show_popup('error', {
                     'title': _t(err.message),
                     'body': _t(err.data.arguments[0])
                 });
                 console.log(err);
                 event.preventDefault();
-            });   
+            });
     },
 
     _search: function (query) {
@@ -798,26 +797,25 @@ var InvoicesWidget = InvoicesAndOrdersBaseWidget.extend({
         if (this.selected_invoice) {
             this.pos.selected_invoice = this.selected_invoice;
             switch (this.selected_invoice.state) {
-                case "Draft":                    
-                    this.pos.validate_invoice(this.selected_invoice.id).
-                        then(function (id) {
-                            self.pos.update_or_fetch_invoice(id).
-                            then(function() {
-                                self.render_data(self.pos.get_invoices_to_render(self.pos.db.invoices));
-                                self.toggle_save_button();
-                                self.pos.selected_invoice = self.pos.db.get_invoice_by_id(self.selected_invoice.id);
-                                self.gui.show_screen('invoice_payment');
-                            });
-                            
-                        }).fail(function () {
-                            this.gui.show_popup('error',{
-                                'title': _t('Error'),
-                                'body':  _t('Can\'t validate selected invoice.'),
-                            });
+            case "Draft":
+                this.pos.validate_invoice(this.selected_invoice.id).
+                    then(function (id) {
+                        self.pos.update_or_fetch_invoice(id).
+                        then(function() {
+                            self.render_data(self.pos.get_invoices_to_render(self.pos.db.invoices));
+                            self.toggle_save_button();
+                            self.pos.selected_invoice = self.pos.db.get_invoice_by_id(self.selected_invoice.id);
+                            self.gui.show_screen('invoice_payment');
                         });
-                    break;
-                case "Open":
-                    this.gui.show_screen('invoice_payment');
+                    }).fail(function () {
+                        this.gui.show_popup('error',{
+                            'title': _t('Error'),
+                            'body':  _t('Can\'t validate selected invoice.'),
+                        });
+                    });
+                break;
+            case "Open":
+                this.gui.show_screen('invoice_payment');
             }
         } else {
             this.gui.show_popup('error',{
@@ -882,7 +880,7 @@ var InvoicePayment = PaymentScreenWidget.extend({
             if (!paymentline) {
                 var change = -due + order.get_total_paid();
             } else {
-                var change = -due; 
+                var change = -due;
                 var lines  = order.paymentlines.models;
                 for (var i = 0; i < lines.length; i++) {
                     change += lines[i].get_amount();
@@ -906,8 +904,8 @@ var InvoicePayment = PaymentScreenWidget.extend({
         var extradue = 0;
 
         this.$('.paymentlines-container').empty();
-        var lines = $(QWeb.render('InvoicePaymentScreen-Paymentlines', { 
-            widget: this, 
+        var lines = $(QWeb.render('InvoicePaymentScreen-Paymentlines', {
+            widget: this,
             order: order,
             paymentlines: lines,
             extradue: extradue,
@@ -920,7 +918,7 @@ var InvoicePayment = PaymentScreenWidget.extend({
         lines.on('click','.paymentline',function(){
             self.click_paymentline($(this).data('cid'));
         });
-            
+
         lines.appendTo(this.$('.paymentlines-container'));
     },
 
@@ -928,12 +926,10 @@ var InvoicePayment = PaymentScreenWidget.extend({
         var self = this;
         var order = this.pos.get_order();
         order.invoice_to_pay = this.pos.selected_invoice;
-        if (order.is_paid_with_cash() && this.pos.config.iface_cashdrawer) { 
+        if (order.is_paid_with_cash() && this.pos.config.iface_cashdrawer) {
             this.pos.proxy.open_cashbox();
         }
-
         order.initialize_validation_date();
-
         if (order.is_to_invoice()) {
             var invoiced = this.pos.push_and_invoice_order(order);
             this.invoicing = true;
@@ -974,7 +970,7 @@ var InvoicePayment = PaymentScreenWidget.extend({
             this.pos.push_order(order).then(function(res) {
                 self.pos.update_or_fetch_invoice(self.pos.selected_invoice.id);
                 self.gui.show_screen('invoice_receipt');
-            });   
+            });
         }
     },
 
