@@ -15,4 +15,6 @@ odoo.define('pos_mobile.gui', function (require) {
             }
         }
     });
+
+    return gui;
 });
