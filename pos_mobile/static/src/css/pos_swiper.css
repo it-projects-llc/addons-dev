@@ -127,16 +127,12 @@
 .pos.mobile .breadcrumbs {
     display: none;
 }
-.pos.mobile .window {
-    display: none;
-    }
 .slide-search {
     height: 48px;
 }
 .order-and-products {
     height: 92%;
 }
-
 .under-search {
     height: 40%;
 }

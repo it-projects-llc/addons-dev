@@ -27,6 +27,8 @@ odoo.define('pos_mobile.screens', function (require) {
             var slider = this.chrome.swiperV;
             slider.slidePrev();
             this.current_bottom_slide = false;
+            $('.fa-plus-square-o').css('display','inline-block');
+            $('.fa-minus-square-o').css('display','none');
         },
         // second horizontal swiper contain categories, numpad and buttons slides
         change_categories_slide: function() {
@@ -42,8 +44,6 @@ odoo.define('pos_mobile.screens', function (require) {
         change_numpad_slide: function() {
             if (this.current_bottom_slide === "numpad") {
                 this.close_bottom_menu();
-                $('.fa-plus-square-o').css('display','inline-block');
-                $('.fa-minus-square-o').css('display','none');
             } else {
                 this.open_bottom_menu();
                 var slider = this.chrome.swiperH[1];
@@ -91,6 +91,20 @@ odoo.define('pos_mobile.screens', function (require) {
                 'min-width': '60px',
             }, 400) } );
         },
+    });
+
+    screens.ActionpadWidget.include({
+        renderElement: function() {
+            this._super();
+            var swiper_container = $('.swiper-container-v');
+            this.$('.pay').click(function(){
+                swiper_container.css({'display': 'none'});
+
+            });
+            this.$('.set-customer').click(function(){
+                swiper_container.css({'display': 'none'});
+            });
+        }
     });
     return screens;
 });

@@ -73,5 +73,22 @@ odoo.define('pos_mobile.chrome', function (require) {
         },
     });
 
+    chrome.OrderSelectorWidget.include({
+        order_click_handler: function(event,$el) {
+            this._super(event,$el);
+            var order = this.get_order_by_uid($el.data('uid'));
+            if (order) {
+                this.chrome.swiperH[0].slideTo(0, 0);
+            }
+        },
+        neworder_click_handler: function(event, $el) {
+            this._super(event,$el);
+            this.chrome.swiperH[0].slideTo(0, 0);
+        },
+        deleteorder_click_handler: function(event, $el) {
+            this._super(event,$el);
+            this.chrome.swiperH[0].slideTo(0, 0);
+        },
+    });
     return chrome;
 });
