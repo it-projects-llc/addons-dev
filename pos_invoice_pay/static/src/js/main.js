@@ -30,7 +30,7 @@ models.PosModel = models.PosModel.extend({
             model: 'sale.order',
             fields: ['name', 'partner_id', 'date_order', 'user_id',
             'amount_total', 'order_line', 'invoice_status'],
-            domain:[['invoice_status', '!=', 'invoiced'], ['state', '=', 'sale']],
+            domain:[['invoice_status', '=', 'to invoice'], ['state', '=', 'sale']],
             loaded: function (self, sale_orders) {
                 self.prepare_so_data(sale_orders);
                 self.sale_orders = sale_orders;
@@ -401,7 +401,7 @@ PosDb.include({
             } 
         }
         delete this.sale_orders_by_id[updated_so.id];
-        if ((updated_so.invoice_status === 'Nothing to invoice') || (updated_so.invoice_status === 'To invoice')) {
+        if (updated_so.invoice_status === 'To invoice') {
             this.sale_orders.unshift(updated_so);
             this.sale_orders_by_id[updated_so.id] = updated_so;
         }
@@ -570,30 +570,29 @@ var InvoicesAndOrdersBaseWidget = ClientListScreenWidget.extend({
     },
 
     render_lines_table: function (data_lines) {
-
-        var $table = document.createElement('table');
-        $table.classList.add('lines-table');
-
-        $header = this.render_header();
+        var $table = document.createElement('table'),
+        $header = this.render_header(),
         $tableData = this.render_product_lines(data_lines);
+
+        $table.classList.add('lines-table');
 
         $table.appendChild($header);
         $table.appendChild($tableData);
-
         return $table;
     },
 
     render_header: function () {
-        $header = document.createElement('thead');
+        var $header = document.createElement('thead');
         $header.innerHTML = QWeb.render(this.linesHeaderTemplate);
         return $header;
     },
 
     render_product_lines: function (data_lines) {
-        var $body = document.createElement('tbody');
-        var lines = '';
+        var $body = document.createElement('tbody'),
+        lines = '',
+        line_html = '';
         for(var i = 0, max = data_lines.length; i < max; i++) {
-            var line_html = QWeb.render(this.lineTemplate, {widget: this, line:data_lines[i]});
+            line_html = QWeb.render(this.lineTemplate, {widget: this, line:data_lines[i]});
             lines += line_html
         }
         $body.innerHTML = lines;
@@ -673,8 +672,8 @@ var SaleOrdersWidget = InvoicesAndOrdersBaseWidget.extend({
         var self = this;
         new Model('pos.order').call('process_invoices_creation', [sale_order.id])
             .then(function (res) {
-                self.pos.update_or_fetch_invoice(res)
-                    .then(function (res) {
+                self.pos.update_or_fetch_invoice(res).
+                    then(function (res) {
                         self.render_data(self.pos.db.sale_orders);
                         self.pos.validate_invoice(res).then(function (res) {
                             self.pos.update_or_fetch_invoice(res).then(function(res) {
@@ -857,12 +856,13 @@ var InvoicePayment = PaymentScreenWidget.extend({
         order.invoice_to_pay = this.pos.selected_invoice;
 
         order.invoice_to_pay.get_due = function (paymentline) {
-            total = self.pos.selected_invoice.residual;
+            var total = self.pos.selected_invoice.residual,
+            due = 0,
+            lines = order.paymentlines.models;
             if (!paymentline) {
-                var due = total - order.get_total_paid();
+                due = total - order.get_total_paid();
             } else {
-                var due = total;
-                var lines = order.paymentlines.models;
+                due = total;
                 for (var i = 0; i < lines.length; i++) {
                     if (lines[i] === paymentline) {
                         break;
@@ -873,15 +873,16 @@ var InvoicePayment = PaymentScreenWidget.extend({
             }
             return round_pr(Math.max(0,due), self.pos.currency.rounding);
 
-        }
+        };
 
         order.invoice_to_pay.get_change = function (paymentline) {
-            var due = self.pos.selected_invoice.residual;
+            var due = self.pos.selected_invoice.residual,
+            change = 0,
+            lines = order.paymentlines.models;
             if (!paymentline) {
-                var change = -due + order.get_total_paid();
+                change = -due + order.get_total_paid();
             } else {
-                var change = -due;
-                var lines  = order.paymentlines.models;
+                change = -due;
                 for (var i = 0; i < lines.length; i++) {
                     change += lines[i].get_amount();
                     if (lines[i] === paymentline) {
@@ -890,17 +891,17 @@ var InvoicePayment = PaymentScreenWidget.extend({
                 }
             }
             return round_pr(Math.max(0,change), self.pos.currency.rounding);
-        }
+        };
 
         order.invoice_to_pay.get_subtotal = function () {
             var tax = self.pos.selected_invoice.amount_tax;
             var due = self.pos.selected_invoice.residual;
             var subtotal = due -tax;
             return round_pr(Math.max(0,subtotal), self.pos.currency.rounding);
-        }
+        };
 
         var lines = order.get_paymentlines();
-        var due   = order.invoice_to_pay.amount_due;
+        var due = order.invoice_to_pay.amount_due;
         var extradue = 0;
 
         this.$('.paymentlines-container').empty();

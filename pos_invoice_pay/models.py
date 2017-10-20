@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import api, models
 
+
 class PosOrder(models.Model):
     _inherit = 'pos.order'
 
@@ -21,7 +22,6 @@ class PosOrder(models.Model):
             inv_obj = self.env['account.invoice'].search([('id', '=', inv_id)])
             journal_id = statement[2]['journal_id']
             journal = self.env['account.journal'].search([('id', '=', journal_id)])
-            currency_id = inv_obj.currency_id
             vals = {
                 'journal_id': journal.id,
                 'payment_method_id': 1,
@@ -36,7 +36,7 @@ class PosOrder(models.Model):
             }
             payment = self.env['account.payment'].create(vals)
             payment.post()
-            credit_aml_id = filter(lambda x: x.credit>0, payment.move_line_ids)[0]
+            credit_aml_id = filter(lambda x: x.credit > 0, payment.move_line_ids)[0]
             inv_obj.assign_outstanding_credit(credit_aml_id.id)
 
     @api.model
