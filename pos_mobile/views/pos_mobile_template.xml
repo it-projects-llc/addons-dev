@@ -8,6 +8,7 @@
                 <script type="text/javascript" src="/pos_mobile/static/lib/swiper.js"></script>
                 <script type="text/javascript" src="/pos_mobile/static/src/js/mobile.js"></script>
                 <script type="text/javascript" src="/pos_mobile/static/src/js/screens.js"></script>
+                <script type="text/javascript" src="/pos_mobile/static/src/js/chrome.js"></script>
             </xpath>
         </template>
         <template id="assets_backend" name="pos_mobile assets" inherit_id="web.assets_backend">

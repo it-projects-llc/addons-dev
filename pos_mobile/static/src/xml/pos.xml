@@ -1,22 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <!--<t t-extend="ProductScreenWidget">-->
-        <!--<t t-jquery="div[class='product-screen screen']">-->
-            <!--$(this).addClass('swiper-wrapper');-->
-        <!--</t>-->
-        <!--<t t-jquery="div[class='leftpane']">-->
-            <!--$(this).addClass('swiper-slide');-->
-        <!--</t>-->
-        <!--<t t-jquery="div[class='rightpane']">-->
-            <!--$(this).addClass('swiper-slide');-->
-        <!--</t>-->
-        <!--<t t-jquery="div[class='subwindow-container-fix pads']" t-operation="append">-->
-            <!--<span class="placeholder-ProductCategoriesWidget1" />-->
-        <!--</t>-->
-
-    <!--</t>-->
-
     <t t-extend="Chrome">
         <t t-jquery="div[class='pos-content']" t-operation="prepend">
             <div class="swiper-container swiper-container-v">
@@ -58,16 +42,16 @@
 
     <t t-extend="ProductCategoriesWidget">
         <t t-jquery="header[class='rightpane-header']" t-operation="append">
-            <div class="category-list-button">
+            <div class="slide-categories-button">
                 <i class='fa fa-th-list'></i>
             </div>
-            <div class="order-action-buttons">
+            <div class="slide-numpad-button">
                 <i class='fa fa-plus-square-o'></i>
                 <i class='fa fa-minus-square-o'></i>
             </div>
         </t>
         <t t-jquery="div[class='breadcrumbs']" t-operation="before">
-            <div class="mobile-order-screen">
+            <div class="slide-order-button">
                 <i class='fa fa-cutlery'></i>
             </div>
         </t>
