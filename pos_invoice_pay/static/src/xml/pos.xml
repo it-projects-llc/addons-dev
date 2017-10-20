@@ -363,7 +363,7 @@
             
             <div class="pos-center-align"><t t-esc="moment().format('L LT')"/> <t t-esc="order.name"/></div>
             <br />
-            Cash payment of Invoice <t t-esc="order.invoice_to_pay.number"/><br />
+            Payment of Invoice <t t-esc="order.invoice_to_pay.number"/><br />
 
             <t t-esc="widget.pos.company.name"/><br />
             Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
