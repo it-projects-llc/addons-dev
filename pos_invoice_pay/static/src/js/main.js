@@ -69,7 +69,7 @@ models.PosModel = models.PosModel.extend({
         this.get_lines(ids, 'sale.order', 'get_order_lines_for_pos').
             then(function (res) {
                 for (var i = 0, max = res.length; i < max; i++) {
-                    var so_id = res[i].order_id
+                    var so_id = res[i].order_id;
                     var so = self.db.sale_orders_by_id[so_id];
                     if (!so) {
                         return;
@@ -81,7 +81,7 @@ models.PosModel = models.PosModel.extend({
                     def.resolve();
                 }
             }, function (err) {
-                console.log(err)
+                console.log(err);
             });
         return def.promise();
     },
@@ -100,8 +100,8 @@ models.PosModel = models.PosModel.extend({
                     inv.lines = [];
                 });
                 for (var i = 0, max = res.length; i < max; i++) {
-                    inv_id = res[i].invoice_id;
-                    inv = self.db.invoices_by_id[inv_id];
+                    var inv_id = res[i].invoice_id;
+                    var inv = self.db.invoices_by_id[inv_id];
 
                     if (!inv) {
                         return;
@@ -131,17 +131,16 @@ models.PosModel = models.PosModel.extend({
     },
 
     on_notification: function(notification) {
-        console.log(notification)
-        invoices_to_update = [];
-        sale_orders_to_update = [];
+        var invoices_to_update = [];
+        var sale_orders_to_update = [];
         for (var i = 0; i < notification.length; i++) {
             var channel = notification[i][0];
             var message = notification[i][1];
             if (_.isString(channel)) {
-                var channel = JSON.parse(channel);
+                channel = JSON.parse(channel);
             }
             if (Array.isArray(channel) && channel[1] === 'account.invoice') {
-                invoices_to_update.push(message)
+                invoices_to_update.push(message);
             }
             if (Array.isArray(channel) && channel[1] === 'sale.order') {
                 sale_orders_to_update.push(message);
@@ -265,20 +264,20 @@ models.PosModel = models.PosModel.extend({
             for(var i=0; orders_to_mute.length>i; i++) {
                 var order = orders_to_mute[i];
                 var id = order.data.invoice_to_pay.id;
-                muted_invoices_ids.push(id)
+                muted_invoices_ids.push(id);
             }
         }
 
         if (muted_invoices_ids) {
             invoices = _.filter(invoices, function (inv) {
-                return !muted_invoices_ids.includes(inv.id)
+                return !muted_invoices_ids.includes(inv.id);
             });
         }
 
         var client = this.get_client();
         if (client) {
             invoices = _.filter(invoices, function(inv) {
-                return inv.partner_id[0] === client.id
+                return inv.partner_id[0] === client.id;
             });
             return invoices;
         }
@@ -290,7 +289,7 @@ models.PosModel = models.PosModel.extend({
         var client = this.get_client();
         if (client) {
             sale_orders = _.filter(sale_orders, function(so) {
-                return so.partner_id[0] === client.id
+                return so.partner_id[0] === client.id;
             });
             return sale_orders;
         }
@@ -350,7 +349,7 @@ PosDb.include({
     },
 
     _sale_order_search_string: function (sale_order) {
-        var str =  sale_order.name;
+        var str = sale_order.name;
         if(sale_order.date_order){
             str += '|' + sale_order.date_order;
         }
@@ -363,7 +362,7 @@ PosDb.include({
         if(sale_order.amount_total){
             str += '|' + sale_order.amount_total;
         }
-        str = '' + sale_order.id + ':' + str.replace(':','') + '\n';
+        str = '' + String(sale_order.id) + ':' + str.replace(':','') + '\n';
         return str;
     },
 
@@ -505,10 +504,8 @@ var InvoicesAndOrdersBaseWidget = ClientListScreenWidget.extend({
         this.old_client = this.pos.get_order().get_client();
 
         this.$('.next').click(function(e){
-            e.preventDefault;
+            e.preventDefault();
             self.handle_next();
-            // self.save_changes();
-            // self.gui.back();
         });
 
         this.render_data(this.get_data());
@@ -516,8 +513,6 @@ var InvoicesAndOrdersBaseWidget = ClientListScreenWidget.extend({
         this.$('.client-list-contents').delegate(this.$listEl,'click',function(event){
             self.select_line(event,$(this),parseInt($(this).data('id')));
         });
-
-        // this.reload_partners();
 
         var search_timeout = null;
 
@@ -548,9 +543,9 @@ var InvoicesAndOrdersBaseWidget = ClientListScreenWidget.extend({
                 var item_html = QWeb.render(this.itemTemplate,{widget: this, item:data[i]});
                 var item_line = document.createElement('tbody');
 
-                $tr = document.createElement('tr');
+                var $tr = document.createElement('tr');
                 if (data[i].lines) {
-                    $td = document.createElement('td');
+                    var $td = document.createElement('td');
                     $td.setAttribute("colspan", this.num_columns);
 
                     $tr.classList.add('line-element-hidden');
@@ -593,7 +588,7 @@ var InvoicesAndOrdersBaseWidget = ClientListScreenWidget.extend({
         line_html = '';
         for(var i = 0, max = data_lines.length; i < max; i++) {
             line_html = QWeb.render(this.lineTemplate, {widget: this, line:data_lines[i]});
-            lines += line_html
+            lines += line_html;
         }
         $body.innerHTML = lines;
         return $body;
@@ -670,15 +665,15 @@ var SaleOrdersWidget = InvoicesAndOrdersBaseWidget.extend({
 
     create_invoice: function (sale_order) {
         var self = this;
-        new Model('pos.order').call('process_invoices_creation', [sale_order.id])
-            .then(function (res) {
+        new Model('pos.order').call('process_invoices_creation', [sale_order.id]).
+            then(function (res) {
                 self.pos.update_or_fetch_invoice(res).
                     then(function (res) {
                         self.render_data(self.pos.db.sale_orders);
                         self.pos.validate_invoice(res).then(function (res) {
                             self.pos.update_or_fetch_invoice(res).then(function(res) {
                                 self.pos.selected_invoice = self.pos.db.get_invoice_by_id(res);
-                                self.pos.gui.screen_instances.invoice_payment.render_paymentlines()
+                                self.pos.gui.screen_instances.invoice_payment.render_paymentlines();
                                 self.gui.show_screen('invoice_payment');
                             });
                         });
@@ -694,7 +689,7 @@ var SaleOrdersWidget = InvoicesAndOrdersBaseWidget.extend({
     },
 
     _search: function (query) {
-        var sale_orders;
+        var sale_orders = [];
         if(query){
             sale_orders = this.pos.db.search_sale_orders(query);
             sale_orders = this.pos.get_sale_order_to_render(sale_orders);
