@@ -22,16 +22,8 @@
     height: 100%;
     width: 100%;
 }
-.pos.mobile .searchbox {
-    float: left;
-    position: relative;
-}
 .pos.mobile .searchbox input {
     border-radius: initial;
-}
-.pos.mobile .search-clear {
-    top: 10px;
-    left: 10px;
 }
 .category-list-scroller .control-button {
     margin: 10px;
@@ -112,26 +104,55 @@
     display: inline-block;
     text-align: left;
     float: left;
-    line-height: 48px;
-    font-size: 26px;
+    line-height: 96px;
+    font-size: 52px;
     cursor: pointer;
-    margin: 0 5px;
+    margin: 0 10px;
     color: #808080;
 }
 .pos.mobile .rightpane-header .slide-numpad-button .fa-minus-square-o {
     display: none;
 }
 .pos.mobile .rightpane-header .slide-order-button{
-    margin-left: 15px;
+    margin-left: 30px;
 }
 .pos.mobile .breadcrumbs {
     display: none;
 }
-.slide-search {
-    height: 48px;
-}
 .order-and-products {
-    height: 92%;
+    height: 88%;
+}
+/* Search slide common styles*/
+.slide-search {
+    height: 96px;
+}
+.pos.mobile .rightpane-header {
+    height: 96px;
+}
+.pos.mobile .searchbox {
+    float: left;
+    position: relative;
+}
+.pos.mobile .searchbox input {
+    width: 200px;
+    border: 2px solid #cecbcb;
+    padding: 20px 40px;
+    padding-left: 76px;
+    margin: 12px;
+    background: inherit;
+    border-radius: 40px;
+    font-size: 26px;
+}
+.pos.mobile .search-clear {
+    top: 20px;
+    left: 20px;
+}
+.pos.mobile .search-clear {
+    width: 60px;
+    height: 60px;
+    font-size: 52px;
+    margin: 0 10px;
+    color: #808080;
 }
 .under-search {
     height: 40%;
