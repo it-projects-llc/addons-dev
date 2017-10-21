@@ -7,6 +7,14 @@ odoo.define('pos_mobile.chrome', function (require) {
     var chrome = require('point_of_sale.chrome');
 
     chrome.Chrome.include({
+        init: function() {
+            this._super();
+            this.pos.ready.done(function(){
+                var categories = $('.rightpane .categories');
+                categories.detach();
+                $('.slide-categories').append(categories);
+            });
+        },
         // This method instantiates all the screens, widgets, etc.
         build_widgets: function() {
             this._super();
@@ -49,27 +57,6 @@ odoo.define('pos_mobile.chrome', function (require) {
             var search = $('.rightpane-header');
             search.detach();
             $('.slide-search').append(search);
-
-            var categories = $('.rightpane .categories');
-            categories.detach();
-            $('.slide-categories').append(categories);
-
-            /* var payment = $('.payment-screen');
-            payment.detach();
-            $('.slide-payment').append(payment);
-
-            var clientlist = $('.clientlist-screen');
-            clientlist.detach();
-            $('.slide-clientlist').append(clientlist);
-
-            var receipt = $('.receipt-screen');
-            receipt.detach();
-            $('.slide-receipt').append(receipt);
-
-            var scale = $('.scale-screen');
-            scale.detach();
-            $('.slide-scale').append(scale); */
-
         },
     });
 

@@ -84,11 +84,11 @@ odoo.define('pos_mobile.screens', function (require) {
             }, 400) } );
             var $pi = $('span[data-product-id="'+product.id+'"] img');
             $($pi).animate({
-                'max-height': '120px',
-                'min-width': '100px',
+                'max-height': '240px',
+                'min-width': '200px',
             }, 200, function(){ $($pi).animate({
-                'max-height': '100px',
-                'min-width': '60px',
+                'max-height': '200px',
+                'min-width': '128px',
             }, 400) } );
         },
     });

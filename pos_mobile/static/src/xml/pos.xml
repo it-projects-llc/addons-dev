@@ -23,20 +23,8 @@
                             </div>
                         </div>
                     </div>
-                    <!--<div class="swiper-slide slide-payment"></div>-->
-                    <!--<div class="swiper-slide slide-clientlist"></div>-->
-                    <!--<div class="swiper-slide slide-receipt"></div>-->
-                    <!--<div class="swiper-slide slide-scale"></div>-->
                 </div>
             </div>
-        </t>
-    </t>
-
-    <t t-extend="CategorySimpleButton">
-        <t t-jquery="span[class='category-simple-button js-category-switch']" t-operation="replace">
-            <span class='control-button js-category-switch' t-att-data-category-id="category.id" >
-                <t t-esc="category.name"/>
-            </span>
         </t>
     </t>
 
