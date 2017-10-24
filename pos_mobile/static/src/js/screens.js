@@ -93,5 +93,10 @@ odoo.define('pos_mobile.screens', function (require) {
         },
     });
 
+    screens.ClientListScreenWidget.include({
+        partner_icon_url: function(id){
+            return '/web/image?model=res.partner&id='+id+'&field=image_medium';
+        },
+    });
     return screens;
 });

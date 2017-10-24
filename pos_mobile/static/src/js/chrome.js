@@ -53,10 +53,19 @@ odoo.define('pos_mobile.chrome', function (require) {
             var pads = $('.leftpane .pads');
             pads.detach();
             $('.slide-numpad').append(pads);
+            $('.slide-numpad .pads').css({
+                width: '874px',
+                margin: '0 auto',
+            });
 
             var search = $('.rightpane-header');
             search.detach();
             $('.slide-search').append(search);
+//            $(window).resize(function(){
+//              $('.order-and-products').each(function(){
+//                $(this).css('height', $(this).parent().height()-150);
+//              })
+//            });
         },
     });
 
