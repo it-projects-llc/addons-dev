@@ -1,4 +1,4 @@
-odoo.define('pos_discount_absolute.Tour', function (require) {
+odoo.define('pos_discount_absolute.tour', function (require) {
     "use strict";
 
     var tour = require("web_tour.tour");
@@ -10,7 +10,6 @@ odoo.define('pos_discount_absolute.Tour', function (require) {
         }, {
             content: 'the ' + product_name + ' have been added to the order',
             trigger: '.order .product-name:contains("' + product_name + '")',
-//            run: function () {}, // it's a check
         }];
     }
 
@@ -53,6 +52,6 @@ odoo.define('pos_discount_absolute.Tour', function (require) {
     steps = steps.concat(add_relative_discount());
     console.log(steps);
 
-    tour.register('pos_discount_tour', { test: true, url: '/pos/web' }, steps);
+    tour.register('pos_abs_discount_tour', { test: true, url: '/pos/web' }, steps);
 
 });

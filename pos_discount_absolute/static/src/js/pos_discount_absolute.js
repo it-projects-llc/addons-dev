@@ -98,6 +98,9 @@ odoo.define('pos_discount_absolute', function (require) {
             this.renderElement("Discount Percentage");
         },
         renderElement: function(options){
+            if (options) {
+                this.options.title = options;
+            }
             this._super();
             if (this.popup_abs_discount) {
                 this.$('.popup.popup-number').addClass("popup-abs-discount");
@@ -107,7 +110,6 @@ odoo.define('pos_discount_absolute', function (require) {
                 div.innerHTML = header_buttons_html;
                 div.className = "header";
                 node.parentElement.insertBefore(div, node);
-                $('.popup-abs-discount > .title').text( options );
             }
         },
     });
