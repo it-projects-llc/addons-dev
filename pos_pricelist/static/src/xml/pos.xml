@@ -41,7 +41,7 @@
         <t t-jquery="table[class='receipt-orderlines'] t[t-esc*='format_currency']" t-operation="replace">
             <t t-if="orderline.show_list_price">
                 <t t-esc="widget.format_currency(orderline.get_display_list_price())" />
-                <div class="pos-disc-font">
+                <div class="pos-disc-font pos-new-price">
                     <t t-esc="widget.format_currency(orderline.get_display_price())" />
                 </div>
             </t>
