@@ -21,22 +21,30 @@ class PosOrder(models.Model):
             inv_obj = self.env['account.invoice'].search([('id', '=', inv_id)])
             journal_id = statement[2]['journal_id']
             journal = self.env['account.journal'].search([('id', '=', journal_id)])
+            amount = statement[2]['amount']
+            writeoff_acc_id = False
+            payment_difference_handling = 'open'
+
+            if amount > inv_obj.residual:
+                writeoff_acc_id = self.env['account.account'].search([('code', '=', 220000)]).id
+                payment_difference_handling = 'reconcile'
+
             vals = {
                 'journal_id': journal.id,
                 'payment_method_id': 1,
                 'payment_date': invoice['data']['creation_date'],
                 'communication': invoice['data']['invoice_to_pay']['number'],
-                'invoice_ids': (4, inv_id, None),
+                'invoice_ids': [(4, inv_id, None)],
                 'payment_type': 'inbound',
-                'amount': statement[2]['amount'],
+                'amount': amount,
                 'currency_id': inv_obj.currency_id.id,
                 'partner_id': invoice['data']['invoice_to_pay']['partner_id'][0],
                 'partner_type': 'customer',
+                'payment_difference_handling': payment_difference_handling,
+                'writeoff_account_id': writeoff_acc_id,
             }
             payment = self.env['account.payment'].create(vals)
             payment.post()
-            credit_aml_id = filter(lambda x: x.credit > 0, payment.move_line_ids)[0]
-            inv_obj.assign_outstanding_credit(credit_aml_id.id)
 
     @api.model
     def process_invoices_creation(self, sale_order_id):
