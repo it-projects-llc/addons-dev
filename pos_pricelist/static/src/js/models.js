@@ -106,7 +106,18 @@ odoo.define('pos_pricelist.models', function (require) {
         }
     });
 
-
+    var _super_order = models.Order.prototype;
+    models.Order = models.Order.extend({
+        export_as_JSON: function() {
+            var data = _super_order.export_as_JSON.apply(this, arguments);
+            data.active_pricelist_item = this.active_pricelist_item;
+            return data;
+        },
+        init_from_JSON: function(json) {
+            this.active_pricelist_item = json.active_pricelist_item;
+            _super_order.init_from_JSON.call(this, json);
+        }
+    });
     /**
      * Extend the Order line
      */
