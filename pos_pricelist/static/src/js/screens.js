@@ -30,8 +30,38 @@ odoo.define('pos_pricelist.screens', function (require) {
                 var partner = currentOrder.get_client();
                 this.pos.pricelist_engine.update_products_ui(partner);
                 this.pos.pricelist_engine.update_ticket(partner, orderLines);
+                if (partner && partner.property_product_pricelist[0] !== this.pos.config.pricelist_id[0]) {
+                    var buttons = this.getParent().screens.products.action_buttons;
+                    if (buttons && buttons.pricelist) {
+                        buttons.pricelist.highlight(true);
+                        var order = this.pos.get_order();
+                        order.default_pricelist_is_active = true;
+                    }
+                }
             }
         }
     });
+    var PricelistButton = screens.ActionButtonWidget.extend({
+        template: 'PricelistButton',
+        button_click: function() {
+            var order = this.pos.get_order();
+            if (order.default_pricelist_is_active) {
+                this.apply_pricelist();
+            }
+        },
+        apply_pricelist: function() {
+            var buttons = this.getParent().action_buttons;
+            if (buttons && buttons.pricelist) {
+                buttons.pricelist.highlight(false);
+                var order = this.pos.get_order();
+                order.default_pricelist_is_active = false;
+                order.set_default_pricelist();
+            }
+        },
+    });
 
+    screens.define_action_button({
+        'name': 'pricelist',
+        'widget': PricelistButton,
+    });
 });

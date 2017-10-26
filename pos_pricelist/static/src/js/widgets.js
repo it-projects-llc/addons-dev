@@ -67,7 +67,7 @@ odoo.define('pos_pricelist.widgets', function (require) {
             this._super();
             var order = posmodel.get_order();
             var customer = null;
-            if(order) {
+            if(order && order.default_pricelist_is_active) {
                 customer = order.get_client();
             }
             this.pos.pricelist_engine.update_products_ui(customer);
