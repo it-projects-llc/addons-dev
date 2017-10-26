@@ -147,4 +147,10 @@
 .pos .pos-right-align {
     text-align: right;
     vertical-align: top;
+    position: relative;
+}
+.pos .pos-new-price {
+    position: absolute;
+    right: 0;
+    bottom: 0;
 }
