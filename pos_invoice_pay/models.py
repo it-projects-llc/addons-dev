@@ -99,7 +99,8 @@ class SaleOrder(models.Model):
                 'qty_invoiced': l.qty_invoiced,
                 'tax': l.tax_id.name or ' ',
                 'subtotal': l.price_subtotal,
-                'total': l.price_total
+                'total': l.price_total,
+                'invoiceble': ((l.qty_delivered > 0) or (l.product_id.invoice_policy == 'order'))
             }
             res.append(line)
         return res
