@@ -61,6 +61,11 @@ odoo.define('pos_mobile.chrome', function (require) {
             var search = $('.rightpane-header');
             search.detach();
             $('.slide-search').append(search);
+
+            var buttons = $('.control-buttons');
+            buttons.detach();
+            $('.slide-buttons').append(buttons);
+
 //            $(window).resize(function(){
 //              $('.order-and-products').each(function(){
 //                $(this).css('height', $(this).parent().height()-150);
