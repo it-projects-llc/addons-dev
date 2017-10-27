@@ -626,12 +626,12 @@
 /* b) The payment screen */
 .pos.mobile .payment-numpad {
     padding: 32px;
-    margin-top: 300px;
+    margin-top: 450px;
     width: 100%;
 }
 .pos.mobile .payment-numpad .numpad {
     border-radius: 8px;
-    width: 700px;
+    width: 728px;
     max-width: initial;
     margin-left: 5px;
 }
