@@ -27,8 +27,10 @@ odoo.define('pos_mobile.screens', function (require) {
             var slider = this.chrome.swiperV;
             slider.slidePrev();
             this.current_bottom_slide = false;
-            $('.fa-plus-square-o').css('display','inline-block');
-            $('.fa-minus-square-o').css('display','none');
+            $('.plus-square').css('display','inline-block');
+            $('.minus-square').css('display','none');
+            $('.category-open-menu').css('display','inline-block');
+            $('.category-close-menu').css('display','none');
         },
         // second horizontal swiper contain categories, numpad and buttons slides
         change_categories_slide: function() {
@@ -39,6 +41,8 @@ odoo.define('pos_mobile.screens', function (require) {
                 var slider = this.chrome.swiperH[1];
                 slider.slideTo(0);
                 this.current_bottom_slide = "categories";
+                $('.category-open-menu').css('display','none');
+                $('.category-close-menu').css('display','inline-block');
             }
         },
         change_numpad_slide: function() {
@@ -49,8 +53,8 @@ odoo.define('pos_mobile.screens', function (require) {
                 var slider = this.chrome.swiperH[1];
                 slider.slideTo(1);
                 this.current_bottom_slide = "numpad";
-                $('.fa-plus-square-o').css('display','none');
-                $('.fa-minus-square-o').css('display','inline-block');
+                $('.plus-square').css('display','none');
+                $('.minus-square').css('display','inline-block');
             }
         },
         // first horizontal swiper contain order and products slides

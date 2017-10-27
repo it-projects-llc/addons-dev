@@ -54,7 +54,7 @@ odoo.define('pos_mobile.chrome', function (require) {
             pads.detach();
             $('.slide-numpad').append(pads);
             $('.slide-numpad .pads').css({
-                width: '874px',
+                width: '922px',
                 margin: '0 auto',
             });
 
@@ -86,5 +86,33 @@ odoo.define('pos_mobile.chrome', function (require) {
             this.chrome.swiperH[0].slideTo(0, 0);
         },
     });
+
+    chrome.HeaderButtonWidget.include({
+        renderElement: function(){
+            var self = this;
+            this._super();
+            if(this.action){
+                this.$el.click(function(){
+                    self.change_action();
+                });
+            }
+        },
+        change_action: function() {
+            console.log("click change", this);
+            var cancel_button = '<img src="/pos_mobile/static/src/img/svg/close.svg"/>';
+            var confirm_cancel_button = '<img src="/pos_mobile/static/src/img/svg/confirm.svg"/>';
+            var self = this;
+            if (!this.confirmed_change) {
+                this.$el.text('');
+                this.$el.append(confirm_cancel_button);
+                this.confirmed_change = setTimeout(function(){
+                    self.$el.text('');
+                    self.$el.append(cancel_button);
+                    self.confirmed_change = false;
+                },2000);
+            }
+        },
+    });
+
     return chrome;
 });
