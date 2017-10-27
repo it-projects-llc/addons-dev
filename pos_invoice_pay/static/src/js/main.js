@@ -42,7 +42,7 @@ models.PosModel = models.PosModel.extend({
             }
         },{
             model: 'account.invoice',
-            fields: ['name', 'partner_id', 'date_invoice','number', 'date_due',
+            fields: ['name', 'partner_id', 'date_invoice','number', 'date_due', 'origin',
             'amount_total', 'user_id', 'residual', 'state', 'amount_untaxed', 'amount_tax'],
             domain: [['state', '=', 'open'],
             ['type','=', 'out_invoice']],
