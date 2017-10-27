@@ -110,4 +110,9 @@
             </t>
         </t>
     </t>
+    <t t-name="PricelistButton">
+        <div class='control-button js_pricelist'>
+            <i class='fa fa-usd' /> Default Pricelist
+        </div>
+    </t>
 </templates>

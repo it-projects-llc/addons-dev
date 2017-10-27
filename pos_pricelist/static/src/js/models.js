@@ -108,13 +108,19 @@ odoo.define('pos_pricelist.models', function (require) {
 
     var _super_order = models.Order.prototype;
     models.Order = models.Order.extend({
+        set_default_pricelist: function() {
+            this.pos.pricelist_engine.update_products_ui(null);
+            this.pos.pricelist_engine.update_ticket(null, this.orderlines.models);
+        },
         export_as_JSON: function() {
             var data = _super_order.export_as_JSON.apply(this, arguments);
             data.active_pricelist_item = this.active_pricelist_item;
+            data.default_pricelist_is_active = this.default_pricelist_is_active;
             return data;
         },
         init_from_JSON: function(json) {
             this.active_pricelist_item = json.active_pricelist_item;
+            this.default_pricelist_is_active = json.default_pricelist_is_active;
             _super_order.init_from_JSON.call(this, json);
         }
     });
@@ -142,7 +148,7 @@ odoo.define('pos_pricelist.models', function (require) {
                 if (price !== false) {
                     var current_price = round_di(parseFloat(price) || 0, this.pos.dp['Product Price']);
                     var price_list_id = false;
-                    if (partner && partner.property_product_pricelist) {
+                    if (partner && partner.property_product_pricelist && this.order && this.order.default_pricelist_is_active) {
                         price_list_id = partner.property_product_pricelist[0];
                     } else {
                         price_list_id = this.pos.config.pricelist_id[0];
