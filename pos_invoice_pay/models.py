@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, models
+from odoo import api, models, fields
 
 
 class PosOrder(models.Model):
@@ -16,12 +16,15 @@ class PosOrder(models.Model):
 
     @api.model
     def process_invoice_payment(self, invoice):
+        print '*' * 80
+        print invoice
         for statement in invoice['data']['statement_ids']:
             inv_id = invoice['data']['invoice_to_pay']['id']
             inv_obj = self.env['account.invoice'].search([('id', '=', inv_id)])
             journal_id = statement[2]['journal_id']
             journal = self.env['account.journal'].search([('id', '=', journal_id)])
             amount = statement[2]['amount']
+            cashier = invoice['data']['user_id']
             writeoff_acc_id = False
             payment_difference_handling = 'open'
 
@@ -42,6 +45,8 @@ class PosOrder(models.Model):
                 'partner_type': 'customer',
                 'payment_difference_handling': payment_difference_handling,
                 'writeoff_account_id': writeoff_acc_id,
+                'paid_by_pos': True,
+                'cashier': cashier
             }
             payment = self.env['account.payment'].create(vals)
             payment.post()
@@ -56,6 +61,13 @@ class PosOrder(models.Model):
             'dbname': self._cr.dbname,
             'uid': self.env.uid
         }
+
+
+class AccountPayment(models.Model):
+    _inherit ='account.payment'
+
+    paid_by_pos = fields.Boolean(default=False)
+    cashier = fields.Many2one('res.users')
 
 
 class AccountInvoice(models.Model):
