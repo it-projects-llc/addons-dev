@@ -4,6 +4,7 @@ odoo.define('pos_mobile.screens', function (require) {
         return;
 
     var screens = require('point_of_sale.screens');
+    var models = require('pos_mobile.models');
 
     screens.ProductCategoriesWidget.include({
         init: function(parent, options){
@@ -83,6 +84,9 @@ odoo.define('pos_mobile.screens', function (require) {
         click_product: function(product) {
             this._super.apply(this, arguments);
             // adds click effect
+            if ($('.product-count')) {
+                $('.product-count').remove();
+            }
             var $p = $('span[data-product-id="'+product.id+'"]');
             $($p).animate({
                 'opacity': 0.5,
@@ -93,10 +97,22 @@ odoo.define('pos_mobile.screens', function (require) {
             $($pi).animate({
                 'max-height': '240px',
                 'min-width': '200px',
-            }, 200, function(){ $($pi).animate({
-                'max-height': '200px',
-                'min-width': '128px',
-            }, 400) } );
+            }, 200, function(){
+                $($pi).animate({
+                    'max-height': '200px',
+                    'min-width': '128px',
+                }, 400)
+            });
+            var order = this.pos.get_order();
+            var qty = order.get_quantity_by_product_id(product.id);
+            $p.append('<span class="product-count">'+qty+'</span>');
+            var count = $($p.children()[2]);
+            count.animate({
+                'font-size': '150px',
+                'top': '-40%',
+            }, 400, function(){
+                count.remove();
+            });
         },
     });
 

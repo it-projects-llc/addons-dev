@@ -327,10 +327,10 @@
     width: 60px;
 }
 .pos.mobile .actionpad .button.set-customer img{
-    width: 40px;
+    width: 50px;
     position: absolute;
-    left: 90px;
-    top: 25px;
+    left: 30px;
+    top: 20px;
 }
 /*  ********* The Numpad ********* */
 .pos.mobile .numpad {
@@ -540,6 +540,14 @@
     border: 2px solid #e8e8e8;
     border-radius: 6px;
     box-shadow: 0px 5px 30px -14px black;
+}
+.pos.mobile .product .product-count{
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    font-size: 10px;
+    color: black !important;
 }
 .pos.mobile .product .product-img {
     width: 200px;
