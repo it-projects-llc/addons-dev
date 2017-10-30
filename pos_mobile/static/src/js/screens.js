@@ -121,5 +121,18 @@ odoo.define('pos_mobile.screens', function (require) {
             return '/web/image?model=res.partner&id='+id+'&field=image_medium';
         },
     });
+
+    screens.NumpadWidget.include({
+        clickAppendNewChar: function(event) {
+            var res = this._super(event);
+            this.scroll_to_selected_line();
+            return res;
+        },
+        scroll_to_selected_line: function() {
+            var order = this.pos.get_order();
+            var width = order.get_orderlines().indexOf(order.get_selected_orderline());
+            $('.order-scroller').animate({scrollTop:104 * width}, 200, 'swing');
+        },
+    });
     return screens;
 });
