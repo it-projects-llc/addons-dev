@@ -643,19 +643,19 @@
 /* b) The payment screen */
 .pos.mobile .payment-numpad {
     padding: 32px;
-    margin-top: 450px;
+    margin-top: 310px;
     width: 100%;
 }
 .pos.mobile .payment-numpad .numpad {
     border: none;
     border-radius: 8px;
-    width: 728px;
+    width: 100% !important;
     max-width: initial;
     margin-left: 5px;
 }
 .pos.mobile .payment-numpad .numpad button {
-    width: 172px;
-    height: 172px;
+    width: 160px;
+    height: 160px;
 }
 .pos.mobile .payment-numpad .numpad button:first-child {
     border-top-left-radius: 8px;
@@ -877,8 +877,8 @@
     margin-left: 60px;
 }
 .pos.mobile .clientlist-screen .subwindow:nth-child(2) .subwindow-container-fix {
-    max-height: 1300px;
-    min-height: 900px;
+    max-height: 700px;
+    min-height: 700px;
     border-bottom: 8px solid rgb(110,200,155) !important;
 }
 /*  ********* The OrderWidget  ********* */
