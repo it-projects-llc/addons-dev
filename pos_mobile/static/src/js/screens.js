@@ -19,6 +19,11 @@ odoo.define('pos_mobile.screens', function (require) {
             this.click_order_slide = function(event){
                 self.change_order_slide();
             };
+            this.switch_category_handler = function(event){
+                self.set_category(self.pos.db.get_category_by_id(Number(this.dataset.categoryId)));
+                self.renderElement();
+                self.chrome.swiperH[0].slideTo(1);
+            };
         },
         open_bottom_menu: function() {
             var slider = this.chrome.swiperV;
@@ -77,6 +82,19 @@ odoo.define('pos_mobile.screens', function (require) {
             this.el.querySelector('.slide-categories-button').addEventListener('click', this.click_categories_slide);
             this.el.querySelector('.slide-numpad-button').addEventListener('click', this.click_numpad_slide);
             this.el.querySelector('.slide-order-button').addEventListener('click', this.click_order_slide);
+        },
+        perform_search: function(category, query, buy_result){
+            this._super.apply(this, arguments);
+            if (query) {
+                this.chrome.swiperH[0].slideTo(1);
+            }
+        },
+        clear_search: function(){
+            this._super();
+            var parent = $(".pos.mobile .swiper-container .rightpane-header")[0];
+            var input = parent.querySelector('.searchbox input');
+                input.value = '';
+                input.focus();
         },
     });
 
