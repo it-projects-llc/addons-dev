@@ -41,6 +41,9 @@ odoo.define('pos_mobile.chrome', function (require) {
                 },
             });
 
+            // remove all events for vertical swiper
+            this.swiperV.destroy(false , false);
+
             // move some widgets and screens from screen block to slide blocks
             var products = $('.rightpane .content-row');
             products.detach();
@@ -53,10 +56,6 @@ odoo.define('pos_mobile.chrome', function (require) {
             var pads = $('.leftpane .pads');
             pads.detach();
             $('.slide-numpad').append(pads);
-            $('.slide-numpad .pads').css({
-                width: '922px',
-                margin: '0 auto',
-            });
 
             var search = $('.rightpane-header');
             search.detach();
@@ -65,12 +64,6 @@ odoo.define('pos_mobile.chrome', function (require) {
             var buttons = $('.control-buttons');
             buttons.detach();
             $('.slide-buttons').append(buttons);
-
-//            $(window).resize(function(){
-//              $('.order-and-products').each(function(){
-//                $(this).css('height', $(this).parent().height()-150);
-//              })
-//            });
         },
     });
 

@@ -213,6 +213,10 @@
 .pos.mobile .leftpane .pads {
     border-top: solid 6px rgb(110, 200, 155);
 }
+.pos.mobile .subwindow-container-fix.pads {
+    width: 922px;
+    margin: 0 auto;
+}
 /*  ********* The control buttons ********* */
 .pos.mobile .control-buttons {
     padding: 16px 32px 0px 22px;
@@ -580,6 +584,7 @@
 }
 
 .pos.mobile .screen .top-content{
+    background: white;
     height: 128px;
     border-bottom: dashed 2px rgb(215,215,215);
 }
@@ -606,12 +611,16 @@
 }
 .pos.mobile .screen .left-content.pc40{
     right: 75%;
+    margin-top: 2px;
+    background: white;
 }
 .pos.mobile .screen .right-content{
     top: 128px;
 }
 .pos.mobile .screen .right-content.pc60{
     left: 25%;
+    background: white;
+    margin-top: 2px;
 }
 .pos.mobile .screen .centered-content{
     top: 128px;
@@ -630,6 +639,7 @@
     width: 100%;
 }
 .pos.mobile .payment-numpad .numpad {
+    border: none;
     border-radius: 8px;
     width: 728px;
     max-width: initial;
@@ -1194,6 +1204,10 @@
 .pos.mobile .order-and-products {
     height: 100%;
     height: calc(100% - 150px);
+    -webkit-transition: 0.5s;
+    -moz-transition: 0.5s;
+    -o-transition: 0.5s;
+    transition: 0.5s;
 }
 .pos.mobile .slide-search {
     height: 150px;
@@ -1206,4 +1220,25 @@
 }
 .pos.mobile .slide-buttons {
     background: white;
+}
+.pos.mobile .swipe-is-open {
+    transform: translate3d(0px, 0px, 0px) !important;
+    transition: 0.3s !important;
+}
+/* New size for order-and-products blocks */
+.pos.mobile .swipe-is-open .order-and-products{
+    height: calc(100% - 654px)!important;
+    -webkit-transition: 0.3s;
+    -moz-transition: 0.3s;
+    -o-transition: 0.3s;
+    transition: 0.3s;
+}
+/* Show or hide slide buttons */
+.pos.mobile .open-categories-slide .category-open-menu,
+.pos.mobile .open-numpad-slide .plus-square {
+    display: none;
+}
+.pos.mobile .open-categories-slide .category-close-menu,
+.pos.mobile .open-numpad-slide .minus-square {
+    display: inline-block;
 }

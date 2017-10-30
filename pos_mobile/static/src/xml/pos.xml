@@ -4,7 +4,7 @@
     <t t-extend="Chrome">
         <t t-jquery="div[class='pos-content']" t-operation="prepend">
             <div class="swiper-container swiper-container-v">
-                <div class="swiper-wrapper">
+                <div class="order-swiper swiper-wrapper">
                     <div class="swiper-slide order-and-products">
                         <div class="swiper-container swiper-container-h">
                             <div class="swiper-wrapper">

@@ -22,15 +22,15 @@ odoo.define('pos_mobile.screens', function (require) {
         open_bottom_menu: function() {
             var slider = this.chrome.swiperV;
             slider.slideNext();
+            $('.order-swiper').addClass('swipe-is-open');
         },
         close_bottom_menu: function() {
             var slider = this.chrome.swiperV;
             slider.slidePrev();
             this.current_bottom_slide = false;
-            $('.plus-square').css('display','inline-block');
-            $('.minus-square').css('display','none');
-            $('.category-open-menu').css('display','inline-block');
-            $('.category-close-menu').css('display','none');
+            $('.order-swiper').removeClass('swipe-is-open');
+            $('.order-swiper').removeClass('open-categories-slide');
+            $('.order-swiper').removeClass('open-numpad-slide');
         },
         // second horizontal swiper contain categories, numpad and buttons slides
         change_categories_slide: function() {
@@ -38,11 +38,13 @@ odoo.define('pos_mobile.screens', function (require) {
                 this.close_bottom_menu();
             } else {
                 this.open_bottom_menu();
+                // go to first slide
                 var slider = this.chrome.swiperH[1];
                 slider.slideTo(0);
+
                 this.current_bottom_slide = "categories";
-                $('.category-open-menu').css('display','none');
-                $('.category-close-menu').css('display','inline-block');
+                $('.order-swiper').removeClass('open-numpad-slide');
+                $('.order-swiper').addClass('open-categories-slide');
             }
         },
         change_numpad_slide: function() {
@@ -50,11 +52,12 @@ odoo.define('pos_mobile.screens', function (require) {
                 this.close_bottom_menu();
             } else {
                 this.open_bottom_menu();
+                // go to second slide
                 var slider = this.chrome.swiperH[1];
                 slider.slideTo(1);
                 this.current_bottom_slide = "numpad";
-                $('.plus-square').css('display','none');
-                $('.minus-square').css('display','inline-block');
+                $('.order-swiper').removeClass('open-categories-slide');
+                $('.order-swiper').addClass('open-numpad-slide');
             }
         },
         // first horizontal swiper contain order and products slides
