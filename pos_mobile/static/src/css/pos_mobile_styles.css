@@ -699,6 +699,7 @@
     padding: 32px;
     margin-top: 310px;
     width: 100%;
+    max-width: 760px;
 }
 .pos.mobile .payment-numpad .numpad {
     border: none;
@@ -736,7 +737,7 @@
     font-size: 44px;
 }
 .pos.mobile .paymentline.selected {
-    font-size: 44px;
+    font-size: 35px;
 }
 .pos.mobile .paymentline.selected .edit {
     outline: 6px blue;

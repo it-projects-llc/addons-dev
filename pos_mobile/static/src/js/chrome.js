@@ -100,7 +100,6 @@ odoo.define('pos_mobile.chrome', function (require) {
             }
         },
         change_action: function() {
-            console.log("click change", this);
             var cancel_button = '<img src="/pos_mobile/static/src/img/svg/close.svg"/>';
             var confirm_cancel_button = '<img src="/pos_mobile/static/src/img/svg/confirm.svg"/>';
             var self = this;

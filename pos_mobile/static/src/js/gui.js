@@ -10,13 +10,17 @@ odoo.define('pos_mobile.gui', function (require) {
     gui.Gui.include({
         show_screen: function(screen_name,params,refresh,skip_close_popup) {
             this._super(screen_name,params,refresh,skip_close_popup);
-            var swiper_container = $('.swiper-container-v');
-            if (screen_name === "products") {
-                swiper_container.css({'display': 'block'});
-                $('.pos-content .window').css({'display': 'none'});
-            } else {
-                swiper_container.css({'display': 'none'});
-                $('.pos-content .window').css({'display': 'table'});
+            var order = this.pos.get_order();
+            if (order) {
+                var current_screen_name = order.get_screen_data('screen');
+                var swiper_container = $('.swiper-container-v');
+                if (current_screen_name === "products") {
+                    swiper_container.css({'display': 'block'});
+                    $('.pos-content .window').css({'display': 'none'});
+                } else {
+                    swiper_container.css({'display': 'none'});
+                    $('.pos-content .window').css({'display': 'table'});
+                }
             }
         }
     });
