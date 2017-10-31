@@ -16,9 +16,9 @@ odoo.define('pos_mobile.screens', function (require) {
             this.click_numpad_slide = function(event){
                 self.change_numpad_slide();
             };
-            this.click_order_slide = function(event){
-                self.change_order_slide();
-            };
+//            this.click_order_slide = function(event){
+//                self.change_order_slide();
+//            };
             this.switch_category_handler = function(event){
                 self.set_category(self.pos.db.get_category_by_id(Number(this.dataset.categoryId)));
                 self.renderElement();
@@ -66,22 +66,22 @@ odoo.define('pos_mobile.screens', function (require) {
                 $('.order-swiper').addClass('open-numpad-slide');
             }
         },
-        // first horizontal swiper contain order and products slides
-        change_order_slide: function() {
-            var slider = this.chrome.swiperH[0];
-            if (slider.activeIndex === 0) {
-                slider.slideNext();
-            } else {
-                slider.slidePrev();
-            }
-        },
+//        // first horizontal swiper contain order and products slides
+//        change_order_slide: function() {
+//            var slider = this.chrome.swiperH[0];
+//            if (slider.activeIndex === 0) {
+//                slider.slideNext();
+//            } else {
+//                slider.slidePrev();
+//            }
+//        },
         renderElement: function(){
             var self = this;
             this._super.apply(this, arguments);
             // adds event for buttons in search panel
             this.el.querySelector('.slide-categories-button').addEventListener('click', this.click_categories_slide);
             this.el.querySelector('.slide-numpad-button').addEventListener('click', this.click_numpad_slide);
-            this.el.querySelector('.slide-order-button').addEventListener('click', this.click_order_slide);
+//            this.el.querySelector('.slide-order-button').addEventListener('click', this.click_order_slide);
         },
         perform_search: function(category, query, buy_result){
             this._super.apply(this, arguments);

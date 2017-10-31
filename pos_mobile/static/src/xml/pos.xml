@@ -40,9 +40,9 @@
             </div>
         </t>
         <t t-jquery="div[class='breadcrumbs']" t-operation="before">
-            <div class="slide-order-button">
-                <img src="/pos_mobile/static/src/img/svg/list.svg"/>
-            </div>
+            <!--<div class="slide-order-button">-->
+                <!--<img src="/pos_mobile/static/src/img/svg/list.svg"/>-->
+            <!--</div>-->
         </t>
         <t t-jquery="span[class='search-clear']" t-operation="append">
             <i class='fa fa-search'></i>
