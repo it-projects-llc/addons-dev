@@ -629,6 +629,7 @@
 /* a) Generic Screen Layout Constructs */
 .pos.mobile .screen .screen-content{
     max-width: 2048px;
+    background: #f7f7f7;
 }
 
 .pos.mobile .screen .top-content{
@@ -641,8 +642,11 @@
     padding: 6px 26px;
     font-size: 35px;
     margin: 24px;
-    border-radius: 6px;
-    border: solid 2px rgb(209, 209, 209);
+    border: 2px solid #e8e8e8;
+    border-radius: 15px;
+    box-shadow: 0px 9px 20px -14px black;
+    background: #ededed;
+    font-weight: inherit;
 }
 .pos.mobile .screen .top-content .button:hover {
     background: #efefef;
@@ -684,6 +688,8 @@
     border-left: dashed 2px rgb(215,215,215);
     right: 15%;
     left: 15%;
+    background: #f7f7f7;
+    margin-top: 2px;
 }
 .pos.mobile .screen .full-content{
     top: 130px;
@@ -762,7 +768,12 @@
     line-height: 146px;
     font-size: 32px;
     padding: 0px 16px;
-    border: solid 2px rgb(200,200,200);
+    border: 2px solid #e8e8e8;
+    border-radius: 15px;
+    margin: 10px;
+    box-shadow: 0px 9px 20px -14px black;
+    background: #ededed;
+    font-weight: inherit;
 }
 .pos.mobile .payment-screen .payment-buttons .button:first-child {
     border-top-left-radius: 6px;
@@ -798,14 +809,17 @@
     padding: 6px 26px;
     font-size: 40px;
     margin: 32px;
-    border-radius: 6px;
-    border: solid 2px rgb(209, 209, 209);
+    border: 2px solid #e8e8e8;
+    border-radius: 15px;
+    box-shadow: 0px 9px 20px -14px black;
+    background: #ededed;
+    font-weight: inherit;
 }
 .pos.mobile .pos-receipt-container {
     font-size: 1.5em;
 }
 .pos.mobile .pos-sale-ticket {
-    width:600px;
+    width: 550px;
     margin: 40px;
     padding: 30px;
     font-size: 28px;
@@ -996,6 +1010,10 @@
 .pos.mobile .order .orderline .info-list{
     margin-left:20px;
 }
+.pos.mobile .order .orderline .product-name,
+.pos.mobile .order .orderline .price {
+    color: #6EC89B;
+}
 /*  ********* SplitBill ********* */
 .pos.mobile .splitbill-screen .order-info {
     margin-bottom:40px;
@@ -1026,7 +1044,12 @@
 .pos.mobile .paymentmethods .button {
     line-height: 90px;
     font-size: 32px;
-    border: solid 2px rgb(202, 202, 202);
+    border: 2px solid #e8e8e8;
+    border-radius: 15px;
+    margin: 10px;
+    box-shadow: 0px 9px 20px -14px black;
+    background: #ededed;
+    font-weight: inherit;
 }
 .pos.mobile .paymentmethods .button:first-child {
     border-top-width: 2px;
