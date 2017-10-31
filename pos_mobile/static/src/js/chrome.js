@@ -53,6 +53,10 @@ odoo.define('pos_mobile.chrome', function (require) {
             order.detach();
             $('.slide-order').append(order);
 
+            var summary = $('.pos.mobile .order-container .summary.clearfix');
+            summary.detach();
+            $('.pos.mobile .order-container').append(summary);
+
             var pads = $('.leftpane .pads');
             pads.detach();
             $('.slide-numpad').append(pads);

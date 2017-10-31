@@ -284,6 +284,16 @@
     background: #ededed;
     font-weight: inherit;
 }
+.pos .actionpad .button:hover {
+    background: #6EC89B;
+    color: white;
+    border-color: transparent;
+}
+.pos .actionpad .button:active {
+    background: black;
+    color: white;
+    border-color: transparent;
+}
 .pos.mobile .actionpad .button:first-child {
     border-top-left-radius: 15px;
 }
@@ -372,6 +382,16 @@
 }
 .pos.mobile .mode-button {
     font-size: 28px;
+}
+.pos.mobile .numpad button:hover {
+    background: #6EC89B;
+    color: white;
+    border-color: transparent;
+}
+.pos.mobile .numpad button:active {
+    background: black;
+    color: white;
+    border-color: transparent;
 }
 /*  ********* The right pane contains the screens and headers ********* */
 .pos.mobile .rightpane {
@@ -508,6 +528,26 @@
     font-weight: inherit;
     border: 2px solid #e8e8e8;
 }
+.pos.mobile .category-simple-button:active{
+    color: white;
+    background: black;
+    border-color: black;
+
+    -webkit-transition-property: background, border;
+    -webkit-transition-duration: 0.2s;
+    -webkit-transition-timing-function: ease-out;
+    transition: 0.2s;
+}
+.pos.mobile .category-simple-button:hover {
+    color: white;
+    background: black;
+    border-color: black;
+
+    -webkit-transition-property: background, border;
+    -webkit-transition-duration: 0.2s;
+    -webkit-transition-timing-function: ease-out;
+    transition: 0.order-scroller2s;
+}
 .pos.mobile .category-button .category-img {
     width: 240px;
     height: 200px;
@@ -603,6 +643,14 @@
     margin: 24px;
     border-radius: 6px;
     border: solid 2px rgb(209, 209, 209);
+}
+.pos.mobile .screen .top-content .button:hover {
+    background: #efefef;
+}
+.pos.mobile .screen .top-content .button:active {
+    background: black;
+    border-color: black;
+    color: white;
 }
 .pos.mobile .screen .top-content .button.highlight {
     border: solid 2px rgb(110,200,155);
@@ -897,31 +945,46 @@
 .pos.mobile .order .order-empty h1 {
     font-size: 40px;
 }
-.pos.mobile .order .summary{
-    margin-top:40px;
-    margin-bottom:20px;
+.pos.mobile .summary {
+    border-top: 3px solid #e8e8e8;
+    padding: 15px;
+    font-size: 35px;
+    font-weight: bold;
 }
-.pos.mobile .order .summary .line{
+.pos.mobile .summary .label,
+.pos.mobile .summary .value{
+    display: inline-block;
+    float: left;
+}
+.pos.mobile .summary .line{
     margin-right:30px;
     margin-left: 30px;
-    padding-top:10px;
-    border-top: solid 4px;
 }
-.pos.mobile .order .summary .total {
-    font-size: 44px;
+.pos.mobile .summary .total {
+    text-align: center;
 }
-.pos.mobile .order .summary .line .subentry{
-    font-size: 32px;
+.pos.mobile .summary .line .subentry{
+    display: inline-block;
 }
-.pos.mobile .order .summary .fidpoints{
-    left: 40px;
-    padding: 20px;
-    border-radius: 6px;
+.pos.mobile .summary .line .subentry .value{
+    float: none;
 }
+/*If pos product category discount module is installed*/
+.pos.mobile .summary .line .discount{
+    display: inline-block;
+    float: right;
+}
+.pos.mobile .summary .line .discount .value{
+    float: none;
+}
+/*______________________________________________________*/
 .pos.mobile .submit-kitchen-button {
     padding: 24px 40px;
     margin: 0px 30px;
     border-radius: 6px;
+}
+.pos.mobile .order-scroller{
+    height:calc(100% - 72px);
 }
 /*  ********* The OrderLineWidget  ********* */
 .pos.mobile .order .orderline{

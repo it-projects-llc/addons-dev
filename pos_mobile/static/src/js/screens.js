@@ -152,5 +152,14 @@ odoo.define('pos_mobile.screens', function (require) {
             $('.order-scroller').animate({scrollTop:104 * width}, 200, 'swing');
         },
     });
+
+    screens.OrderWidget.include({
+        renderElement: function(scrollbottom){
+            this._super(scrollbottom);
+            var summary = $('.pos.mobile .order-container .summary.clearfix');
+            summary.detach();
+            $('.pos.mobile .order-container').append(summary);
+        },
+    });
     return screens;
 });
