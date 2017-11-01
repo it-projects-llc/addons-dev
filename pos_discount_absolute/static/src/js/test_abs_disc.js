@@ -50,7 +50,6 @@ odoo.define('pos_discount_absolute.tour', function (require) {
     steps = steps.concat(add_product_to_order('Ekomurz.nl'));
     steps = steps.concat(add_absolute_discount());
     steps = steps.concat(add_relative_discount());
-    console.log(steps);
 
     tour.register('pos_abs_discount_tour', { test: true, url: '/pos/web' }, steps);
 

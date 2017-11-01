@@ -15,67 +15,32 @@ odoo.define('pos_discount_absolute', function (require) {
         init:function(parent,options){
             var self = this;
             this._super(parent,options);
-            if (this.gui && this.gui.screen_instances.products &&
-                this.gui.screen_instances.products.action_buttons.discount && this.pos.config.discount_abs_enabled) {
+            if (this.gui && this.gui.screen_instances.products && this.gui.screen_instances.products.action_buttons.discount) {
                 var disc_widget = this.gui.screen_instances.products.action_buttons.discount;
-                disc_widget.button_click = function () {
-                    self.gui.show_popup('number', {
-                        'title': 'Absolute Discount',
-                        'value': self.pos.discount_abs_value,
-                        'confirm': function (val) {
-                            self.apply_discount(val);
-                            if (self.pos.discount_abs_type){
-                                self.pos.discount_abs_value = val;
-                            }
-                            this.pos.taxes_on_discounts = false;
-                        },
-                    });
+                disc_widget.apply_discount = function(val) {
+                    if (self.pos.discount_abs_type){
+                        self.pos.discount_abs_value = val;
+                        self.pos.gui.screen_instances.products.order_widget.apply_absolute_discount(val);
+                    } else {
+                        self._super(val);
+                    }
                 };
             }
         },
-        apply_discount: function(val,options) {
-            if (this.pos.discount_abs_type){
-                this.apply_absolute_discount(val);
-            } else {
-                this.apply_relative_discount(val);
-            }
-        },
-        apply_absolute_discount: function(val){
-            this.pos.discount_abs_value = val;
-            var order = this.pos.get_order();
-            var abs_disc_product = this.pos.db.get_product_by_id(this.pos.config.discount_abs_product_id[0]);
-            if (abs_disc_product.taxes_id.length){
-                this.pos.taxes_on_discounts = true;
-            }
-            this.remove_discount_product(abs_disc_product);
-            var discount = - Math.min(val, order.get_total_with_tax());
-            if (val !== 0){
-                order.add_product(abs_disc_product, { price: discount });
-            }
-        },
-        apply_relative_discount: function(val){
-            var order = this.pos.get_order();
-            var abs_disc_product = this.pos.db.get_product_by_id(this.pos.config.discount_abs_product_id[0]);
-            var product = this.pos.db.get_product_by_id(this.pos.config.discount_product_id[0]);
-            if (product.taxes_id.length){
-                this.pos.taxes_on_discounts = true;
-            }
-            this.remove_discount_product(product);
-            var discount = - Math.min(val, 100) / 100.0 * order.get_total_with_tax_without_abs_disc(abs_disc_product);
-            if( discount < 0 && val !== 0){
-                order.add_product(product, { price: discount });
-            }
-        },
-        remove_discount_product: function(product){
-            // Remove existing discounts
-            var order = this.pos.get_order();
-            var lines = order.get_orderlines();
-            lines.forEach( function(line){
-                if (line.get_product() === product){
-                    order.remove_orderline(line);
-                }
-            });
-        },
+
+//        apply_relative_discount: function(val){
+//            var order = this.pos.get_order();
+//            var abs_disc_product = this.pos.db.get_product_by_id(this.pos.config.discount_abs_product_id[0]);
+//            var product = this.pos.db.get_product_by_id(this.pos.config.discount_product_id[0]);
+//            if (product.taxes_id.length){
+//                this.pos.taxes_on_discounts = true;
+//            }
+//            this.remove_discount_product(product);
+//            var discount = - Math.min(val, 100) / 100.0 * order.get_total_with_tax_without_abs_disc(abs_disc_product);
+//            if( discount < 0 && val !== 0){
+//                order.add_product(product, { price: discount });
+//            }
+//        },
     });
 
     PopupWidget.include({
@@ -114,7 +79,30 @@ odoo.define('pos_discount_absolute', function (require) {
         },
     });
 
+    var DiscountButton = screens.ActionButtonWidget.extend({
+
+
+
+    });
     screens.OrderWidget.include({
+        apply_absolute_discount: function(val){
+            this.pos.discount_abs_value = val;
+            var order = this.pos.get_order();
+            var lines = order.get_orderlines();
+            var abs_disc_product = this.pos.db.get_product_by_id(this.pos.config.discount_abs_product_id[0]);
+            if (abs_disc_product.taxes_id.length){
+                this.pos.taxes_on_discounts = true;
+            }
+            lines.forEach( function(line){
+                if (line.get_product() === abs_disc_product){
+                    order.remove_orderline(line);
+                }
+            });
+            var discount = - Math.min(val, order.get_total_with_tax());
+            if (val !== 0){
+                order.add_product(abs_disc_product, { price: discount });
+            }
+        },
         update_summary: function(){
             var order = this.pos.get('selectedOrder');
             this._super();
@@ -130,13 +118,9 @@ odoo.define('pos_discount_absolute', function (require) {
             });
             // taxes_on_discounts is needed to prevent endless cycle caused by negative price due to negative taxes
             if (abs_disc_prod && !this.pos.taxes_on_discounts){
-                var recalc = - abs_disc_prod.price !== Number(this.pos.discount_abs_value);
-                if (( total < 0 || (recalc && total > 0)) && this.gui.screen_instances.products &&
-                    this.gui.screen_instances.products.action_buttons &&
-                    this.gui.screen_instances.products.action_buttons.discount){
-
-                    var pos_base_widget = this.gui.screen_instances.products.action_buttons.discount;
-                    pos_base_widget.apply_absolute_discount(this.pos.discount_abs_value);
+                var recalc = - abs_disc_prod.price !== (Number(this.pos.discount_abs_value) || 0);
+                if (( total < 0 || (recalc && total > 0)) ){
+                    this.apply_absolute_discount(this.pos.discount_abs_value)
                 }
                 total = order
                     ? order.get_total_with_tax()
