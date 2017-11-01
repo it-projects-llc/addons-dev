@@ -1,9 +1,10 @@
 /*===================Common styles for mobile version=============================*/
 .pos.mobile textarea {
-    font-size: 40px;
+    font-size: 38px;
     padding: 20px;
     border-radius: 6px;
     box-shadow: 0px 0px 0px 2px rgb(220,220,220) inset;
+    resize: none;
 }
 .pos.mobile textarea:focus {
     box-shadow: 0px 0px 0px 6px #6EC89B;
@@ -1095,8 +1096,10 @@
 /*  ********* The PopupWidgets  ********* */
 
 .pos.mobile .modal-dialog .popup{
-    width:800px;
-    height:500px;
+    max-width: 1000px;
+    width:100%;
+    max-height: 1000px;
+    height: 800px;
     font-size:40px;
     border-radius: 6px;
     box-shadow: 0px 20px 40px rgba(0,0,0,0.4);

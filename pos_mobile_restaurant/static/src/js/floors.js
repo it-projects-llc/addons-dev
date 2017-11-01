@@ -1,6 +1,9 @@
 odoo.define('pos_mobile_restaurant.floors', function (require) {
     "use strict";
 
+    if (!odoo.is_mobile)
+        return;
+
     var floors = require('pos_restaurant.floors');
     var chrome = require('pos_mobile_restaurant.chrome');
 

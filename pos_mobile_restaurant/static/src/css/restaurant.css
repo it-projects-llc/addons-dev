@@ -42,7 +42,7 @@
 /* ------ FLOOR MAP ------- */
 
 .pos.mobile .floor-map {
-    box-shadow: 0px 12px 0px -6px rgba(0,0,0,0.07) inset;
+    box-shadow: initial;
 }
 .pos.mobile .floor-map .tables {
     overflow-y: auto;
@@ -239,6 +239,19 @@
     -ms-transform: translateY(-26px) rotate(45deg);
     transform: translateY(-26px) rotate(45deg);
 }
+/* ---- SPLITBILL ---- */
+.pos.mobile .splitbill-screen .orderline.selected .product-name,
+.pos.mobile .splitbill-screen .orderline.selected .price {
+    color: white;
+}
+.pos.mobile .splitbill-screen .left-content {
+    width: 60%;
+}
+.pos.mobile .splitbill-screen .right-content {
+    width: 40%;
+    left: 60%;
+}
+
 /*Order Button*/
 .pos.mobile .control-button.order-submit {
     padding: initial;
