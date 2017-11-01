@@ -11,16 +11,25 @@ odoo.define('pos_mobile.gui', function (require) {
         show_screen: function(screen_name,params,refresh,skip_close_popup) {
             this._super(screen_name,params,refresh,skip_close_popup);
             var order = this.pos.get_order();
+            var current_screen_name = screen_name;
             if (order) {
                 var current_screen_name = order.get_screen_data('screen');
-                var swiper_container = $('.swiper-container-v');
-                if (current_screen_name === "products") {
-                    swiper_container.css({'display': 'block'});
-                    $('.pos-content .window').css({'display': 'none'});
-                } else {
-                    swiper_container.css({'display': 'none'});
-                    $('.pos-content .window').css({'display': 'table'});
-                }
+            }
+            this.change_screen_type(current_screen_name);
+        },
+        change_screen_type: function(current_screen) {
+            var swiper_order_container = $('.swiper-order-container');
+            if (current_screen === "products") {
+                swiper_order_container.addClass('mobile-active-screen');
+                swiper_order_container.css({display:''});
+            } else {
+                swiper_order_container.removeClass('mobile-active-screen');
+                swiper_order_container.css({display:'none'});
+            }
+            if ($('.mobile-active-screen').length) {
+                $('.pos.mobile .window').css({display: 'none'});
+            } else {
+                $('.pos.mobile .window').css({display: 'table'});
             }
         }
     });

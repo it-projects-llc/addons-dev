@@ -1337,3 +1337,10 @@
 .pos.mobile .open-numpad-slide .minus-square {
     display: inline-block;
 }
+/*Mobile screen*/
+.pos.mobile .window {
+    display: none;
+}
+.pos.mobile .mobile-active-screen {
+    display: block;
+}

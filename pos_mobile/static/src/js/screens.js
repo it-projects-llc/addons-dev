@@ -66,15 +66,6 @@ odoo.define('pos_mobile.screens', function (require) {
                 $('.order-swiper').addClass('open-numpad-slide');
             }
         },
-//        // first horizontal swiper contain order and products slides
-//        change_order_slide: function() {
-//            var slider = this.chrome.swiperH[0];
-//            if (slider.activeIndex === 0) {
-//                slider.slideNext();
-//            } else {
-//                slider.slidePrev();
-//            }
-//        },
         renderElement: function(){
             var self = this;
             this._super.apply(this, arguments);

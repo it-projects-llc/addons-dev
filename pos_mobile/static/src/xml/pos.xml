@@ -3,7 +3,7 @@
 
     <t t-extend="Chrome">
         <t t-jquery="div[class='pos-content']" t-operation="prepend">
-            <div class="swiper-container swiper-container-v">
+            <div class="swiper-order-container swiper-container swiper-container-v">
                 <div class="order-swiper swiper-wrapper">
                     <div class="swiper-slide order-and-products">
                         <div class="swiper-container swiper-container-h">
@@ -77,6 +77,12 @@
         <t t-jquery="t[t-esc='widget.label']" t-operation="replace">
             <img src="/pos_mobile/static/src/img/svg/close.svg"/>
             <img src="/pos_mobile/static/src/img/svg/confirm.svg"/>
+        </t>
+    </t>
+
+    <t t-extend="SaleDetailsButton">
+        <t t-jquery="i[class='fa fa-fw fa-print']" t-operation="replace">
+            <img src="/pos_mobile/static/src/img/svg/printer.svg"/>
         </t>
     </t>
 
