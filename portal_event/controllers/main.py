@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import http, _
+from odoo import http
 from odoo.exceptions import AccessError
 from odoo.http import request
 
@@ -74,10 +74,8 @@ class website_account(website_account):
             has_access = False
 
         has_access = has_access \
-                     or ticket.partner_id.id == request.env.user.partner_id \
-                     or request.env.user.has_group('event.group_event_manager')
-
-
+            or ticket.partner_id.id == request.env.user.partner_id \
+            or request.env.user.has_group('event.group_event_manager')
 
         if not has_access:
             return request.render("website.403")
