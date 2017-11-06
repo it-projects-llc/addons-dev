@@ -34,7 +34,7 @@ class website_account(website_account):
         Registration = request.env['event.registration']
 
         domain = self._tickets_domain()
-        archive_groups = self._get_archive_groups('sale.order', domain)
+        archive_groups = self._get_archive_groups('event.registration', domain)
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
