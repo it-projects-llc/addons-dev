@@ -38,7 +38,7 @@ Click Fork button at top right hand corner
 # Create new branch
 
     # specify target, repo and branch:
-    export REPO=misc-addons BRANCH=10.0 FEATURE=some_feature
+    export REPO=misc-addons BRANCH=11.0 FEATURE=some_feature
 
     # fetch remote
     git fetch ${REPO}
@@ -55,8 +55,8 @@ Click Fork button at top right hand corner
 
 
     # get branch from upstream
-    git fetch upstream misc-addons-10.0-some_feature
-    git checkout -b misc-addons-10.0-some_feature upstream/misc-addons-10.0-some_feature
+    git fetch upstream misc-addons-11.0-some_feature
+    git checkout -b misc-addons-11.0-some_feature upstream/misc-addons-11.0-some_feature
 
 
 # PR to addons-dev
@@ -66,7 +66,7 @@ Click Fork button at top right hand corner
     git commit ...
    
     # push to origin
-    git push origin misc-addons-10.0-some_feature
+    git push origin misc-addons-11.0-some_feature
    
     # create pull request via github interface to it-projects-llc/addons-dev repo
 
@@ -98,12 +98,12 @@ https://github.com/it-projects-llc/addons-dev/pull/178
     git remote add addons-dev https://github.com/it-projects-llc/addons-dev.git
 
     # fetch remote
-    git fetch addons-dev misc-addons-10.0-some_feature
+    git fetch addons-dev misc-addons-11.0-some_feature
 
     # create branch
-    git checkout -b 10.0-some-feature addons-dev/misc-addons-10.0-some_feature
+    git checkout -b 11.0-some-feature addons-dev/misc-addons-11.0-some_feature
 
     # push to your fork of target repo
-    git push origin 10.0-some-feature
+    git push origin 11.0-some-feature
 
     # create PR to target repo
