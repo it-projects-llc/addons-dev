@@ -2,6 +2,7 @@ odoo.define('access_apps.dashboard', function (require) {
     "use strict";
 
     var dashboard = require('web_settings_dashboard');
+    var Model = require('web.Model');
 
     var def = $.Deferred();
 
@@ -24,7 +25,7 @@ odoo.define('access_apps.dashboard', function (require) {
         },
 
         load_apps: function(data){
-            if(data.has_access_to_apps) {
+            if(this.has_access_to_apps) {
                 return this._super(data);
             }
             this.$('.o_web_settings_dashboard_apps').parent().remove();
