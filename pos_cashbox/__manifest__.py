@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    "name": """Cashier Opening from Backend""",
+    "name": """Open CashBox from Backend""",
     "summary": """The module allows to open the CashBox from Backend""",
     "category": "Point of Sale",
     # "live_test_url": "",

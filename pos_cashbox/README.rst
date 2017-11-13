@@ -1,6 +1,6 @@
-==============================
- Cashier Opening from Backend
-==============================
+===========================
+ Open CashBox from Backend
+===========================
 
 The module allows to open the CashBox from Backend
 
