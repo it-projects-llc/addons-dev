@@ -13,7 +13,7 @@ odoo.define('pos_cashbox.open', function (require) {
     WidgetButton.include({
         on_click: function(){
             var self = this;
-            if (this.node.attrs.special == 'open_backend_cashbox'){
+            if (this.node.attrs.special === 'open_backend_cashbox'){
                 var config_id = this.view.datarecord.config_id[0];
                 new Model('pos.config').call("search_read", [[['id', '=', config_id]], ["proxy_ip"]]).then(function(res) {
                     var proxy_ip = res[0].proxy_ip;
@@ -68,7 +68,7 @@ odoo.define('pos_cashbox.open', function (require) {
                     }
                 });
                 return done;
-            };
+            }
             return send_opening_job(3);
         },
     });
