@@ -8,7 +8,14 @@
             <field name="arch" type="xml">
                 <xpath expr="//form/header/button[@name='action_pos_session_open']" position="before">
                     <field name="iface_cashdrawer" invisible="1"/>
-                    <button name="open_backend_cashbox" type="object" string="Open CashBox" attrs="{'invisible' : ['|', ('iface_cashdrawer', '=', False),('state', '!=', 'opened')]}" class="oe_highlight o_wow" special="open_backend_cashbox">
+                    <button name="open_backend_cashbox" type="object" string="Open CashBox"
+                            attrs="{'invisible':['|','|', ('iface_cashdrawer', '=', False), ('cash_control', '=', False), ('state', '!=', 'opening_control')]}"
+                            class="oe_highlight o_wow" special="open_backend_cashbox">
+                        <i class='fa fa-archive' />
+                    </button>
+                    <button name="open_backend_cashbox" type="object" string="Open CashBox"
+                            attrs="{'invisible':['|','|', ('iface_cashdrawer', '=', False), ('cash_control', '=', False), ('state', '!=', 'closing_control')]}"
+                            class="oe_highlight o_wow" special="open_backend_cashbox">
                         <i class='fa fa-archive' />
                     </button>
                 </xpath>
