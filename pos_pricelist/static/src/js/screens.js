@@ -59,7 +59,9 @@ odoo.define('pos_pricelist.screens', function (require) {
         },
         set_change_pricelist_button(status, line) {
             this.highlight(status);
-            line.default_pricelist_is_active = status;
+            if (line) {
+                line.default_pricelist_is_active = status;
+            }
         },
     });
 

@@ -41,8 +41,15 @@ odoo.define('pos_pricelist.widgets', function (require) {
         },
         change_selected_order: function() {
             this._super();
-            if (this.pos.get_order()) {
-                console.log("change order");
+            var order = this.pos.get_order();
+            var buttons = this.getParent().action_buttons;
+            if (order && buttons && buttons.pricelist) {
+                var line = order.get_selected_orderline();
+                if (line) {
+                    buttons.pricelist.set_change_pricelist_button(line.default_pricelist_is_active, line)
+                } else {
+                    buttons.pricelist.set_change_pricelist_button(false, false);
+                }
             }
         },
         set_value: function (val) {
