@@ -35,6 +35,7 @@ odoo.define('pos_pricelist.widgets', function (require) {
                 var mode = this.numpad_state.get('mode');
                 if (mode === 'price') {
                     order.get_selected_orderline().set_manual_price(true);
+                    order.get_selected_orderline().set_old_unit_price(val);
                 }
             }
         }
