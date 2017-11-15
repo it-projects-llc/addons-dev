@@ -108,19 +108,22 @@ odoo.define('pos_pricelist.models', function (require) {
 
     var _super_order = models.Order.prototype;
     models.Order = models.Order.extend({
-        set_default_pricelist: function() {
-            this.pos.pricelist_engine.update_products_ui(null);
-            this.pos.pricelist_engine.update_ticket(null, this.orderlines.models);
+        select_orderline: function(line){
+            var old_select_orderline_id = this.get_selected_orderline()
+                                        ? this.get_selected_orderline().id
+                                        : false;
+            _super_order.select_orderline.apply(this, arguments);
+            if (line && line.id !== old_select_orderline_id) {
+                this.pos.trigger("change:selectedLine", this.get_selected_orderline());
+            }
         },
         export_as_JSON: function() {
             var data = _super_order.export_as_JSON.apply(this, arguments);
             data.active_pricelist_item = this.active_pricelist_item;
-            data.default_pricelist_is_active = this.default_pricelist_is_active;
             return data;
         },
         init_from_JSON: function(json) {
             this.active_pricelist_item = json.active_pricelist_item;
-            this.default_pricelist_is_active = json.default_pricelist_is_active;
             _super_order.init_from_JSON.call(this, json);
         }
     });
@@ -149,8 +152,9 @@ odoo.define('pos_pricelist.models', function (require) {
                 if (price !== false) {
                     var current_price = round_di(parseFloat(price) || 0, this.pos.dp['Product Price']);
                     var price_list_id = false;
-                    if (partner && partner.property_product_pricelist && this.order && this.order.default_pricelist_is_active) {
+                    if (partner && partner.property_product_pricelist) {
                         price_list_id = partner.property_product_pricelist[0];
+                        this.default_pricelist_is_active = true;
                     } else {
                         price_list_id = this.pos.config.pricelist_id[0];
                     }
@@ -238,6 +242,10 @@ odoo.define('pos_pricelist.models', function (require) {
                 }
             }
         },
+        set_default_pricelist: function() {
+            this.pos.pricelist_engine.update_products_ui(null);
+            this.pos.pricelist_engine.update_ticket(null, this.orderlines.models);
+        },
         /**
          * override this method to take fiscal positions in consideration
          * get all price
@@ -257,7 +265,6 @@ odoo.define('pos_pricelist.models', function (require) {
             var price_unit = this.get_unit_price() * (1.0 - (this.get_discount() / 100.0));
             var all_taxes = this.compute_all(product_taxes, price_unit, this.get_quantity(), this.pos.currency.rounding);
             _(all_taxes.taxes).each(function (tax) {
-                // console.log(tax);
                 if (tax.price_include) {
                     totalNoTax -= tax.amount;
                 } else {
@@ -434,6 +441,7 @@ odoo.define('pos_pricelist.models', function (require) {
         },
         export_as_JSON: function() {
             var res = _super_orderline.export_as_JSON.apply(this, arguments);
+            res.default_pricelist_is_active = this.default_pricelist_is_active;
             var product_tax_ids = this.get_product().taxes_id || [];
             var partner = this.order ? this.order.get_client() : null;
             if (partner && partner.property_account_position) {
@@ -444,6 +452,10 @@ odoo.define('pos_pricelist.models', function (require) {
             }
             res["tax_ids"] = [[6, false, product_tax_ids]];
             return res;
+        },
+        init_from_JSON: function(json) {
+            this.default_pricelist_is_active = json.default_pricelist_is_active;
+            _super_orderline.init_from_JSON.call(this, json);
         }
     });
 

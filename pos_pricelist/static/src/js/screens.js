@@ -33,9 +33,11 @@ odoo.define('pos_pricelist.screens', function (require) {
                 if (partner && partner.property_product_pricelist[0] !== this.pos.config.pricelist_id[0]) {
                     var buttons = this.getParent().screens.products.action_buttons;
                     if (buttons && buttons.pricelist) {
-                        buttons.pricelist.highlight(true);
-                        var order = this.pos.get_order();
-                        order.default_pricelist_is_active = true;
+                        if (orderLines.length) {
+                            orderLines.forEach(function(line){
+                                buttons.pricelist.set_change_pricelist_button(true, line)
+                            });
+                        }
                     }
                 }
             }
@@ -45,18 +47,19 @@ odoo.define('pos_pricelist.screens', function (require) {
         template: 'PricelistButton',
         button_click: function() {
             var order = this.pos.get_order();
-            if (order.default_pricelist_is_active) {
+            var orderline = order.get_selected_orderline();
+            if (orderline.default_pricelist_is_active) {
                 this.apply_pricelist();
             }
         },
         apply_pricelist: function() {
-            var buttons = this.getParent().action_buttons;
-            if (buttons && buttons.pricelist) {
-                buttons.pricelist.highlight(false);
-                var order = this.pos.get_order();
-                order.default_pricelist_is_active = false;
-                order.set_default_pricelist();
-            }
+            var order = this.pos.get_order();
+            var line = order.get_selected_orderline();
+            this.set_change_pricelist_button(false, line);
+        },
+        set_change_pricelist_button(status, line) {
+            this.highlight(status);
+            line.default_pricelist_is_active = status;
         },
     });
 
