@@ -243,8 +243,11 @@ odoo.define('pos_pricelist.models', function (require) {
             }
         },
         set_default_pricelist: function() {
-            this.pos.pricelist_engine.update_products_ui(null);
-            this.pos.pricelist_engine.update_ticket(null, this.orderlines.models);
+            var default_pricelist = true;
+            var price = this.pos.pricelist_engine.compute_price_all(
+                db, product, partner, quantity, default_pricelist
+            );
+
         },
         /**
          * override this method to take fiscal positions in consideration
@@ -479,9 +482,10 @@ odoo.define('pos_pricelist.models', function (require) {
          * @param qty
          * @returns {*}
          */
-        compute_price_all: function (db, product, partner, qty) {
+        compute_price_all: function (db, product, partner, qty, default_pricelist) {
             var price_list_id = false;
-            if (partner && partner.property_product_pricelist) {
+            default_pricelist = default_pricelist || false;
+            if (partner && partner.property_product_pricelist && !default_pricelist) {
                 price_list_id = partner.property_product_pricelist[0];
             } else {
                 price_list_id = this.pos.config.pricelist_id[0];
