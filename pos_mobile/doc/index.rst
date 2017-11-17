@@ -24,7 +24,9 @@ Without using mobile telephone:
 * RESULT: POS interface with default version
 * Use ``/pos/web/?m=1`` to force the mobile version
 
-The POS icon to Home Screen:
+
+Adding POS icon to a phone homescreen
+=====================================
 
 * Chrome
 
