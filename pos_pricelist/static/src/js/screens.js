@@ -56,6 +56,7 @@ odoo.define('pos_pricelist.screens', function (require) {
             var order = this.pos.get_order();
             var line = order.get_selected_orderline();
             this.set_change_pricelist_button(false, line);
+
         },
         set_change_pricelist_button(status, line) {
             this.highlight(status);

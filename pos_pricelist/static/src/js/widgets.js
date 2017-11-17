@@ -68,9 +68,9 @@ odoo.define('pos_pricelist.widgets', function (require) {
     screens.ActionButtonWidget = screens.ActionButtonWidget.extend({
         selectOrder: function (event) {
             this._super(event);
-            var partner = this.order.get_client()
-                ? this.order.get_client()
-                : false;
+            var partner = this.order.get_client() ?
+                          this.order.get_client() :
+                          false;
             this.pos.pricelist_engine.update_products_ui(partner);
         }
     });
