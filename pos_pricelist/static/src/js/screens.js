@@ -48,7 +48,7 @@ odoo.define('pos_pricelist.screens', function (require) {
         button_click: function() {
             var order = this.pos.get_order();
             var orderline = order.get_selected_orderline();
-            if (orderline.default_pricelist_is_active) {
+            if (orderline && orderline.default_pricelist_is_active) {
                 this.apply_pricelist();
             }
         },

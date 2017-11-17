@@ -146,6 +146,9 @@ odoo.define('pos_pricelist.models', function (require) {
                 var partner = this.order ? this.order.get_client() : null;
                 var product = this.product;
                 var db = this.pos.db;
+                if (!this.old_price) {
+                    this.old_price = product.list_price;
+                }
                 var price = this.pos.pricelist_engine.compute_price_all(
                     db, product, partner, qty
                 );
@@ -159,9 +162,6 @@ odoo.define('pos_pricelist.models', function (require) {
                         price_list_id = this.pos.config.pricelist_id[0];
                     }
                     if (this.pos.db.pricelist_by_id[price_list_id].pos_discount_policy === "without_discount") {
-                        if (!this.old_price) {
-                            this.old_price = product.list_price;
-                        }
                         var discount_percent = this.calc_discount_percent(this.old_price, current_price);
                         this.price = this.old_price;
                         this.show_old_price = true;
@@ -243,11 +243,20 @@ odoo.define('pos_pricelist.models', function (require) {
             }
         },
         set_default_pricelist: function() {
-            var default_pricelist = true;
+            var db = this.pos.db;
             var price = this.pos.pricelist_engine.compute_price_all(
-                db, product, partner, quantity, default_pricelist
+                db, this.product, false, this.quantity
             );
-
+            var default_price_list_id = this.pos.config.pricelist_id[0];
+            if (this.pos.db.pricelist_by_id[default_price_list_id].pos_discount_policy === "without_discount") {
+                var discount_percent = this.calc_discount_percent(this.old_price, price);
+                this.show_old_price = true;
+                this.set_discount(discount_percent);
+            } else {
+                this.set_unit_price(price);
+                this.show_old_price = false;
+                this.set_discount(0);
+            }
         },
         /**
          * override this method to take fiscal positions in consideration
@@ -482,10 +491,9 @@ odoo.define('pos_pricelist.models', function (require) {
          * @param qty
          * @returns {*}
          */
-        compute_price_all: function (db, product, partner, qty, default_pricelist) {
+        compute_price_all: function (db, product, partner, qty) {
             var price_list_id = false;
-            default_pricelist = default_pricelist || false;
-            if (partner && partner.property_product_pricelist && !default_pricelist) {
+            if (partner && partner.property_product_pricelist) {
                 price_list_id = partner.property_product_pricelist[0];
             } else {
                 price_list_id = this.pos.config.pricelist_id[0];
