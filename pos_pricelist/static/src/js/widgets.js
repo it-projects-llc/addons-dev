@@ -28,6 +28,30 @@ odoo.define('pos_pricelist.widgets', function (require) {
     var round_di = utils.round_decimals;
 
     screens.OrderWidget.include({
+        init: function(parent, options) {
+            this._super(parent, options);
+            this.pos.bind('change:selectedLine', this.change_selected_line, this);
+        },
+        change_selected_line: function() {
+            var buttons = this.getParent().action_buttons;
+            var line = this.pos.get_order().get_selected_orderline();
+            if (buttons && buttons.pricelist) {
+                buttons.pricelist.set_change_pricelist_button(line.default_pricelist_is_active, line)
+            }
+        },
+        change_selected_order: function() {
+            this._super();
+            var order = this.pos.get_order();
+            var buttons = this.getParent().action_buttons;
+            if (order && buttons && buttons.pricelist) {
+                var line = order.get_selected_orderline();
+                if (line) {
+                    buttons.pricelist.set_change_pricelist_button(line.default_pricelist_is_active, line)
+                } else {
+                    buttons.pricelist.set_change_pricelist_button(false, false);
+                }
+            }
+        },
         set_value: function (val) {
             this._super(val);
             var order = this.pos.get('selectedOrder');
@@ -35,6 +59,7 @@ odoo.define('pos_pricelist.widgets', function (require) {
                 var mode = this.numpad_state.get('mode');
                 if (mode === 'price') {
                     order.get_selected_orderline().set_manual_price(true);
+                    order.get_selected_orderline().set_old_unit_price(val);
                 }
             }
         }
@@ -43,9 +68,9 @@ odoo.define('pos_pricelist.widgets', function (require) {
     screens.ActionButtonWidget = screens.ActionButtonWidget.extend({
         selectOrder: function (event) {
             this._super(event);
-            var partner = this.order.get_client()
-                ? this.order.get_client()
-                : false;
+            var partner = this.order.get_client() ?
+                          this.order.get_client() :
+                          false;
             this.pos.pricelist_engine.update_products_ui(partner);
         }
     });
@@ -67,7 +92,7 @@ odoo.define('pos_pricelist.widgets', function (require) {
             this._super();
             var order = posmodel.get_order();
             var customer = null;
-            if(order && order.default_pricelist_is_active) {
+            if(order) {
                 customer = order.get_client();
             }
             this.pos.pricelist_engine.update_products_ui(customer);
