@@ -43,6 +43,6 @@ class TestBackend(HttpCase):
 
         registration = test_env['event.registration'].search([], order='id desc', limit=1)
 
-        _logger.debug("registration_count_after=%s; registration: %s", registration_count_after, (registration, registration.partner_id.name))
+        _logger.debug("registration_count_after=%s; registration: %s", registration_count_after, (registration, registration.partner_id, registration.partner_id.name))
         self.assertEqual(registration.partner_id.email, att_email, "Latest registration doesn't have correct partner's email")
         self.assertEqual(registration.partner_id.function, att_function, "Latest registration doesn't have correct partner's Job")
