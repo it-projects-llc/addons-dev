@@ -14,8 +14,14 @@ class TestBackend(HttpCase):
     post_install = False
 
     def test_base(self):
+        att_email = "att2@example.com"
+        att_function = "JOB2"
+
         # data in tours are saved (but not commited!) via different cursor. So, we have to use that one
         test_env = api.Environment(self.registry.test_cr, self.uid, {})
+
+        partner = test_env['res.partner'].search([('email', '=ilike', att_email)])
+        self.assertFalse(partner, "It's assumed that partner with email %s doesn't not exist" % att_email)
 
         registration_count_before = test_env['event.registration'].search_count([])
 
@@ -35,10 +41,8 @@ class TestBackend(HttpCase):
 
         self.assertEqual(registration_count_before, registration_count_after - 2, "Amount of created registrations is not equal to 2")
 
-        att_email = "att2@example.com"
-        att_function = "JOB2"
-
         registration = test_env['event.registration'].search([], order='id desc', limit=1)
 
+        _logger.debug("registration_count_after=%s; registration: %s", registration_count_after, (registration, registration.partner_id.name))
         self.assertEqual(registration.partner_id.email, att_email, "Latest registration doesn't have correct partner's email")
         self.assertEqual(registration.partner_id.function, att_function, "Latest registration doesn't have correct partner's Job")
