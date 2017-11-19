@@ -9,12 +9,16 @@ _logger = logging.getLogger(__name__)
 
 
 class TestBackend(HttpCase):
-    # We cannot run it with post_install, because other modules on travis may change demo events
-    # Also, other modules may install website_event_sale as dependency
+    # Making post_install True requires to update demo data, because other modules may change them
     at_install = True
     post_install = False
 
     def test_base(self):
+        # data in tours are saved (but not commited!) via different cursor. So, we have to use that one
+        test_env = api.Environment(self.registry.test_cr, self.uid, {})
+
+        registration_count_before = test_env['event.registration'].search_count([])
+
         self.phantom_js(
             '/event',
 
@@ -27,8 +31,9 @@ class TestBackend(HttpCase):
             login='demo',
             timeout=200,
         )
-        # data in tours are saved (but not commited!) via different cursor. So, we have to use that one
-        test_env = api.Environment(self.registry.test_cr, self.uid, {})
+        registration_count_after = test_env['event.registration'].search_count([])
+
+        self.assertEqual(registration_count_before, registration_count_after - 2, "Amount of created registrations is not equal to 2")
 
         att_email = "att2@example.com"
         att_function = "JOB2"
