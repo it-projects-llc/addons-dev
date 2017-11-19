@@ -6,10 +6,6 @@ By default ``website_event`` module asks only three fields to fill about attende
 
 Also,
 
-* depends on ``website_event_attendee_signup`` module to allow saving fields to ``res.partner`` model (signup feature is optional there)
-
-  * TODO: probably we need to update module ``partner_event`` to avoid such dependency
-
 * if total bootstrap width of field columns is more that 12
 
   * hides Header at Attendee form

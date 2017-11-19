@@ -9,11 +9,10 @@ The modules adds email template ``Event: Signup``, which can be used directly or
 
 Also, the module does following:
 
-* Introduces new field ``agent_id`` (``res.partner``) to ``event.registration`` and sets it to the partner who created (purchased) the registration
 * Modifies behaviour of ``event_partner`` module:
 
-  * create partner if Contact's email (``partner_id.email`` in ``event.registration``) differs from attendees email (``email`` in ``event.registration``)
-  * updates Contact's data at any way
+  * Don't create partner if Contact's email (``partner_id.email`` in ``event.registration``) is the same as attendee email (``email`` in ``event.registration``)
+  * always updates Registration's name and phone (it's needed if website_event_attendee_fields is installed and partner_firstname is used, where name is computed field and user asked for **First Name** nad **Last Name** instead of **Name**)
 
 Credits
 =======

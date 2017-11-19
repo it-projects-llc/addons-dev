@@ -18,7 +18,6 @@
     "depends": [
         "website_event",
         "partner_event",
-        "website_event_attendee_signup",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
