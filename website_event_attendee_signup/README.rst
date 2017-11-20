@@ -12,7 +12,6 @@ Also, the module does following:
 * Modifies behaviour of ``event_partner`` module:
 
   * Don't create partner if Contact's email (``partner_id.email`` in ``event.registration``) is the same as attendee email (``email`` in ``event.registration``)
-  * always updates Registration's name and phone (it's needed if website_event_attendee_fields is installed and partner_firstname is used, where name is computed field and user asked for **First Name** nad **Last Name** instead of **Name**)
 
 Credits
 =======
