@@ -9,7 +9,7 @@ The modules adds email template ``Event: Signup``, which can be used directly or
 
 Also, the module does following:
 
-* Modifies behaviour of ``event_partner`` module:
+* Modifies behaviour of ``partner_event`` module:
 
   * Don't create partner if Contact's email (``partner_id.email`` in ``event.registration``) is the same as attendee email (``email`` in ``event.registration``)
 

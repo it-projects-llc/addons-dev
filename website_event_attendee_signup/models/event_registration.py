@@ -19,6 +19,6 @@ class EventRegistration(models.Model):
                                'login': login,
                                'partner_id': res.attendee_partner_id.id,
                            })
-                user.attendee_partner_id.signup_prepare()
+                user.partner_id.signup_prepare()
 
         return res

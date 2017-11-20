@@ -25,7 +25,7 @@ Also,
 
     * grey them out with a message "This email address already has an account. Data will be taken from this account"
 
-* Modifies behaviour of ``event_partner`` module:
+* Modifies behaviour of ``partner_event`` module:
 
   * always updates Registration's name and phone to corresponded values of Attendee Partner, because they be taken from Partner record (e.g. Public User)
 
