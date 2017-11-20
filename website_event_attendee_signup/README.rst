@@ -7,12 +7,6 @@ and calls ``signup_prepare()`` method to allow to send an email with signup url 
 
 The modules adds email template ``Event: Signup``, which can be used directly or as an example to modify other email template.
 
-Also, the module does following:
-
-* Modifies behaviour of ``partner_event`` module:
-
-  * Don't create partner if Contact's email (``partner_id.email`` in ``event.registration``) is the same as attendee email (``email`` in ``event.registration``)
-
 Credits
 =======
 
