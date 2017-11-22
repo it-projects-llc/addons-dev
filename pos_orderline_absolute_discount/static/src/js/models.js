@@ -10,7 +10,7 @@ odoo.define('pos_absolute_discount.models', function(require){
     var _super_orderline = models.Orderline.prototype;
     models.Orderline = models.Orderline.extend({
         initialize: function(attr,options){
-            this.absolute_discount = 0;
+//            this.absolute_discount = 0;
             _super_orderline.initialize.apply(this, arguments);
         },
         init_from_JSON: function(json) {
