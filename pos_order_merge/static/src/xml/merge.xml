@@ -3,7 +3,7 @@
 
     <t t-name="OrderMergeButton">
         <span class="control-button order-merge">
-            <i class="fa fa-compress"></i>
+            <i class="fa fa-file-o"></i>
             Order Merge
         </span>
     </t>

@@ -51,14 +51,16 @@ odoo.define('pos_order_merge.merge', function (require) {
 
             for(var i = 0; i < orders.length; i++){
                 var order = orders[i];
-                var client = order.get('client') ? order.get('client').name : false;
-                var orderwidget = $(QWeb.render('OrderMerge', {
-                    widget:this,
-                    order:order,
-                    client: client,
-                    selected: false,
-                }));
-                this.$('.merge-orders').append(orderwidget);
+                if (order.uid !== this.pos.main_order_uid) {
+                    var client = order.get('client') ? order.get('client').name : false;
+                    var orderwidget = $(QWeb.render('OrderMerge', {
+                        widget:this,
+                        order:order,
+                        client: client,
+                        selected: false,
+                    }));
+                    this.$('.merge-orders').append(orderwidget);
+                }
             }
 
             // change the table for merge
@@ -124,7 +126,6 @@ odoo.define('pos_order_merge.merge', function (require) {
             this.pos.order_merge_status = false;
             this.gui.show_screen("products");
             this.pos.set_order(main_order);
-            // TODO: не показывать в списке всех ордеров главный ордер
             // TODO: исправить ошибку объединения нескольких столов в пределах одного стола
             this.mergeorders.forEach(function(uid) {
                 var order = self.get_order_by_uid(uid);
