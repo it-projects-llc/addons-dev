@@ -41,6 +41,15 @@ odoo.define('pos_absolute_discount.models', function(require){
         get_absolute_discount_str: function(){
             return this.absolute_discountStr;
         },
+        set_quantity: function(quantity){
+            var self = this;
+             _super_orderline.set_quantity.call(this, quantity);
+             var absolute_discount = this.get_absolute_discount();
+             if(quantity !== 'remove' && absolute_discount){
+                var qty = parseFloat(quantity) || 0;
+                this.set_absolute_discount(absolute_discount * qty);
+             }
+        },
         clone: function(){
             var res = _super_orderline.clone.apply(this, arguments);
             res.absolute_discount = this.absolute_discount;
@@ -72,14 +81,15 @@ odoo.define('pos_absolute_discount.models', function(require){
         get_base_price: function(){
             var rounding = this.pos.currency.rounding;
             if (this.get_absolute_discount()) {
-                return round_pr((this.get_unit_price() - this.get_absolute_discount()) * this.get_quantity(), rounding);
+                return round_pr((this.get_unit_price() * this.get_quantity() - this.get_absolute_discount()), rounding);
             } else {
                 return _super_orderline.get_base_price.apply(this, arguments);
             }
         },
         get_all_prices: function(){
+            var res = _super_orderline.get_all_prices.apply(this, arguments);
             if (this.get_absolute_discount()) {
-                var price_unit = this.get_unit_price() - this.get_absolute_discount();
+                var price_unit = this.get_unit_price() - this.get_absolute_discount() / this.get_quantity();
                 var taxtotal = 0;
 
                 var product =  this.get_product();
@@ -99,16 +109,12 @@ odoo.define('pos_absolute_discount.models', function(require){
                     taxtotal += tax.amount;
                     taxdetail[tax.id] = tax.amount;
                 });
-
-                return {
-                    "priceWithTax": all_taxes.total_included,
-                    "priceWithoutTax": all_taxes.total_excluded,
-                    "tax": taxtotal,
-                    "taxDetails": taxdetail,
-                };
-            } else {
-                return _super_orderline.get_all_prices.apply(this, arguments);
+                res.priceWithTax = all_taxes.total_included;
+                res.priceWithoutTax = all_taxes.total_excluded;
+                res.tax = taxtotal;
+                res.taxDetails = taxdetail;
             }
+            return res;
         },
     });
     var _super_order = models.Order.prototype;
