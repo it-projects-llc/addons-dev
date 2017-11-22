@@ -16,11 +16,12 @@
     # "currency": "EUR",
 
     "depends": [
-        "product",
+        "sale",
+        "access_settings_menu",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
-        'security/accounting_manager.xml',
+        'security/accounting_manager_security.xml',
         'security/ir.model.access.csv',
     ],
     "qweb": [
