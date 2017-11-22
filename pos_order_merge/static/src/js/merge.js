@@ -36,6 +36,14 @@ odoo.define('pos_order_merge.merge', function (require) {
                 _super_posmodel.set_table.apply(this, arguments);
             }
         },
+        // this is called when an order is removed from the order collection.
+        on_removed_order: function(removed_order,index,reason){
+            if (this.order_merge_status) {
+                return;
+            } else {
+                _super_posmodel.on_removed_order.apply(this, arguments);
+            }
+        },
     });
 
     var OrderMergeScreenWidget = screens.ScreenWidget.extend({
@@ -123,10 +131,10 @@ odoo.define('pos_order_merge.merge', function (require) {
         merge: function() {
             var self = this;
             var main_order = this.get_order_by_uid(this.pos.main_order_uid);
-            this.pos.order_merge_status = false;
+
             this.gui.show_screen("products");
             this.pos.set_order(main_order);
-            // TODO: исправить ошибку объединения нескольких столов в пределах одного стола
+
             this.mergeorders.forEach(function(uid) {
                 var order = self.get_order_by_uid(uid);
                 var orderlines = order.get_orderlines();
@@ -140,6 +148,8 @@ odoo.define('pos_order_merge.merge', function (require) {
                     order.destroy({'reason':'abandon'});
                 }
             });
+
+            this.pos.order_merge_status = false;
         },
         get_order_by_uid: function(uid) {
             var orders = this.pos.get('orders').models;
