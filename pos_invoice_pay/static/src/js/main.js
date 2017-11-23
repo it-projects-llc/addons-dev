@@ -865,8 +865,8 @@ var InvoicePayment = PaymentScreenWidget.extend({
 
         order.invoice_to_pay.get_due = function (paymentline) {
             var total = self.pos.selected_invoice.residual,
-            due = 0,
-            lines = order.paymentlines.models;
+                due = 0,
+                lines = order.paymentlines.models;
             if (!paymentline) {
                 due = total - order.get_total_paid();
             } else {
@@ -963,7 +963,36 @@ var InvoicePayment = PaymentScreenWidget.extend({
     },
 
     validate_order: function () {
-        this.finalize_validation();
+        if (this.order_is_valid()) {
+            this.finalize_validation();
+        }
+    },
+
+    order_is_valid: function () {
+        var order = this.pos.get_order(),
+            plines = order.get_paymentlines(),
+            i,
+            sum = 0;
+            
+        if (plines.length === 0) {
+             this.gui.show_popup('error',{
+                    'title': _t('Zero payment amount.'),
+                    'body': _t('You can not validate the order with zero payment amount.'),
+                });
+            return false;
+        }
+
+        sum = _.reduce(plines, function (sum, pline) {
+            return sum += pline.get_amount();
+        }, 0);
+        if (sum <= 0) {
+                this.gui.show_popup('error',{
+                    'title': _t('Zero payment amount.'),
+                    'body': _t('You can not validate the order with zero payment amount.'),
+                });
+                return false;
+        }
+        return true;
     }
 
 });
