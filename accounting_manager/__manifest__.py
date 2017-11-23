@@ -23,6 +23,8 @@
     "data": [
         'security/accounting_manager_security.xml',
         'security/ir.model.access.csv',
+        'views/res_company_view.xml',
+        'data/ir_values_data.xml',
     ],
     "qweb": [
     ],
