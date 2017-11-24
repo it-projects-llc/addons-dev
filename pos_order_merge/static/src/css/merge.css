@@ -56,7 +56,32 @@
     color: white;
     border-color: #6EC89B;
 }
-.pos .order-merge-screen .button.cancel {
+.pos .order-merge-screen .button.change_table {
     right: 0px;
     margin-right: 16px;
+}
+.pos .order-merge-screen .order-sequence {
+    text-align: center;
+    color: white;
+    background: black;
+    display: inline-block;
+    line-height: 24px;
+    min-width: 24px;
+    border-radius: 12px;
+    margin-right: 4px;
+    margin-left: -4px;
+}
+.pos .order-merge-screen h2 {
+    color: #6EC89B;
+}
+.pos .order-merge-screen h2 img {
+    width: 22px;
+}
+.pos .order-merge-screen h2 span {
+    margin: 5px;
+}
+.pos .order-merge-screen .button.highlight {
+    background: rgb(110,200,155);
+    color: white;
+    border: solid 1px rgb(110,200,155);
 }

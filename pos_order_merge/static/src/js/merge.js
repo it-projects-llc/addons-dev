@@ -56,6 +56,7 @@ odoo.define('pos_order_merge.merge', function (require) {
             this._super();
 
             var orders = this.pos.get_table_orders(this.pos.merge_table);
+            console.log("this.pos.merge_table", this.pos.merge_table);
 
             for(var i = 0; i < orders.length; i++){
                 var order = orders[i];
@@ -72,12 +73,12 @@ odoo.define('pos_order_merge.merge', function (require) {
             }
 
             // change the table for merge
-            this.$('.back').click(function(){
+            this.$('.change_table').click(function(){
                 self.gui.show_screen(self.previous_screen);
             });
 
             // back to current order
-            this.$('.cancel').click(function(){
+            this.$('.back').click(function(){
                 self.pos.order_merge_status = false;
                 var order = self.get_order_by_uid(self.pos.main_order_uid);
                 if (order) {
@@ -110,6 +111,7 @@ odoo.define('pos_order_merge.merge', function (require) {
                 selected: selected,
                 client: client,
             })));
+            this.change_button();
         },
         show: function(){
             var self = this;
@@ -160,6 +162,13 @@ odoo.define('pos_order_merge.merge', function (require) {
             }
             return undefined;
         },
+        change_button: function() {
+            if (this.mergeorders.length) {
+                this.$('.mergemethods .button').addClass('highlight');
+            } else {
+                this.$('.mergemethods .button').removeClass('highlight');
+            }
+        }
     });
 
     gui.define_screen({

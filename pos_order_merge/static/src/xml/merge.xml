@@ -4,12 +4,15 @@
     <t t-name="OrderMergeButton">
         <span class="control-button order-merge">
             <i class="fa fa-file-o"></i>
-            Order Merge
+            Join
         </span>
     </t>
 
     <t t-name="OrderMerge">
         <li t-attf-class="order #{ selected ? 'selected' : ''}" t-att-data-uid="order.uid">
+            <span class="order-sequence">
+               <t t-esc="order.sequence_number"/>
+            </span>
             <span class="order-name">
                 <t t-esc="order.name"/>
             </span>
@@ -25,15 +28,26 @@
         <div class='order-merge-screen screen'>
             <div class='screen-content'>
                 <div class='top-content'>
+                    <span class='button change_table highlight'>
+                        <i class='fa fa-table'></i>
+                        Change Table
+                    </span>
                     <span class='button back'>
                         <i class='fa fa-angle-double-left'></i>
                         Back
                     </span>
-                    <span class='button cancel'>
-                        <i class='fa fa-ban'></i>
-                        Cancel
-                    </span>
-                    <h1>Order Merge</h1>
+                    <t t-if="widget.pos.merge_table">
+                        <h2>
+                            <span>
+                                <img class="plus-square" src="/pos_order_merge/static/src/img/svg/floor.svg"/>
+                                <t t-esc="widget.pos.merge_table.floor.name"/>
+                            </span>
+                            <span>
+                                <img class="plus-square" src="/pos_order_merge/static/src/img/svg/table.svg"/>
+                                <t t-esc="widget.pos.merge_table.name"/>
+                            </span>
+                        </h2>
+                    </t>
                 </div>
                 <div class='left-content touch-scrollable scrollable-y'>
                     <div class='orders-list'>
@@ -44,7 +58,7 @@
                 <div class='right-content touch-scrollable scrollable-y'>
                     <div class='mergemethods'>
                         <div class='button merge'>
-                            <i class='fa fa-chevron-right' /> Merge
+                            <i class='fa fa-chevron-right' /> Join
                         </div>
                     </div>
                 </div>
