@@ -5,18 +5,18 @@ var core = require('web.core');
 var gui = require('point_of_sale.gui');
 var models = require('point_of_sale.models');
 var PosDb = require('point_of_sale.DB');
-var ProductScreenWidget = require('point_of_sale.screens').ProductScreenWidget;
-var ClientListScreenWidget = require('point_of_sale.screens').ClientListScreenWidget;
-var PaymentScreenWidget = require('point_of_sale.screens').PaymentScreenWidget;
-var ReceiptScreenWidget = require('point_of_sale.screens').ReceiptScreenWidget;
 var utils = require('web.utils');
 var bus = require('bus.bus').bus;
-
 var Model = require('web.Model');
 
 var QWeb = core.qweb;
 var _t = core._t;
 var round_pr = utils.round_precision;
+
+var ProductScreenWidget = require('point_of_sale.screens').ProductScreenWidget;
+var ClientListScreenWidget = require('point_of_sale.screens').ClientListScreenWidget;
+var PaymentScreenWidget = require('point_of_sale.screens').PaymentScreenWidget;
+var ReceiptScreenWidget = require('point_of_sale.screens').ReceiptScreenWidget;
 
 
 var _super_posmodel = models.PosModel.prototype;
@@ -38,7 +38,7 @@ models.PosModel = models.PosModel.extend({
                 self.db.add_sale_orders(sale_orders);
                 self.get_sale_order_lines(so_ids);
             }
-        },{
+        }, {
             model: 'account.invoice',
             fields: ['name', 'partner_id', 'date_invoice','number', 'date_due', 'origin',
             'amount_total', 'user_id', 'residual', 'state', 'amount_untaxed', 'amount_tax'],
@@ -216,7 +216,7 @@ models.PosModel = models.PosModel.extend({
                 self.prepare_invoices_data(res);
                 self.db.update_invoice_db(res[0]);
                 self.get_invoice_lines([res[0].id]).
-                    then(function() {
+                    then(function () {
                         def.resolve(id);
                     });
             });
@@ -231,9 +231,9 @@ models.PosModel = models.PosModel.extend({
                     self.prepare_so_data(res);
                     self.db.update_so_db(res[0]);
                     self.get_sale_order_lines([res[0].id]).
-                    then(function() {
-                        def.resolve(id);
-                    });
+                        then(function () {
+                            def.resolve(id);
+                        });
             });
         return def.promise();
     },
@@ -269,20 +269,17 @@ models.PosModel = models.PosModel.extend({
                 muted_invoices_ids.push(id);
             }
         }
-
         if (muted_invoices_ids) {
             invoices = _.filter(invoices, function (inv) {
                 return !muted_invoices_ids.includes(inv.id);
             });
         }
-
         if (client) {
             invoices = _.filter(invoices, function(inv) {
                 return inv.partner_id[0] === client.id;
             });
             return invoices;
         }
-
         invoices = _.filter(invoices, function (inv) {
             return inv.state === 'Open';
         });
@@ -299,7 +296,6 @@ models.PosModel = models.PosModel.extend({
         }
         return sale_orders;
     },
-
 
     start_invoice_processing: function () {
         this.add_itp_data = true;
@@ -318,7 +314,20 @@ models.Order = models.Order.extend({
             data.invoice_to_pay = this.invoice_to_pay;
             return data;
         }
-        return _super_order.export_as_JSON.apply(this, arguments);
+        return _super_order.export_as_JSON.call(this, arguments);
+    },
+
+    add_paymentline: function(cashregister, mode) {
+        if (!mode) {
+            return _super_order.add_paymentline.call(this, cashregister);
+        } 
+        this.assert_editable();
+        var newPaymentline = new models.Paymentline({},{order: this, cashregister:cashregister, pos: this.pos});
+        if(cashregister.journal.type !== 'cash' || this.pos.config.iface_precompute_cash){
+            newPaymentline.set_amount( Math.max(this.invoice_to_pay.get_due(),0) );
+        }
+        this.paymentlines.add(newPaymentline);
+        this.select_paymentline(newPaymentline);
     },
 });
 
@@ -381,16 +390,16 @@ PosDb.include({
             query = query.replace(/[\[\]\(\)\+\*\?\.\-\!\&\^\$\|\~\_\{\}\:\,\\\/]/g,'.');
             query = query.replace(/ /g,'.+');
             var re = RegExp("([0-9]+):.*?"+query,"gi");
-        }catch(e){
+        } catch (e) {
             return [];
         }
         var results = [];
         for(var i = 0; i < this.limit; i++){
             var r = re.exec(this.sale_orders_search_string);
-            if(r){
+            if (r) {
                 var id = Number(r[1]);
                 results.push(this.get_sale_order_by_id(id));
-            }else{
+            } else {
                 break;
             }
         }
@@ -606,7 +615,6 @@ var InvoicesAndOrdersBaseWidget = ClientListScreenWidget.extend({
 
 });
 
-
 var SaleOrdersWidget = InvoicesAndOrdersBaseWidget.extend({
     template: 'SaleOrdersWidget',
     init: function () {
@@ -628,6 +636,7 @@ var SaleOrdersWidget = InvoicesAndOrdersBaseWidget.extend({
             self.gui.show_screen('products');
         });
     },
+
     get_data: function () {
         return this.pos.get_sale_order_to_render(this.pos.db.sale_orders);
     },
@@ -652,7 +661,6 @@ var SaleOrdersWidget = InvoicesAndOrdersBaseWidget.extend({
 
     toggle_save_button: function (selected_invoice) {
         var $button = this.$('.button.next');
-
         if (selected_invoice) {
             $button.removeClass('oe_hidden');
         } else {
@@ -720,21 +728,18 @@ var SaleOrdersWidget = InvoicesAndOrdersBaseWidget.extend({
 
 gui.define_screen({name:'sale_orders_list', widget: SaleOrdersWidget});
 
-
 var InvoicesWidget = InvoicesAndOrdersBaseWidget.extend({
     template: 'InvoicesWidget',
     init: function () {
         this._super.apply(this, arguments);
         this.$listEl = '.invoice';
-
         this.itemTemplate = 'Invoice';
         this.linesHeaderTemplate = 'InvoiceLinesHeader';
         this.lineTemplate = 'InvoiceLine';
         this.num_columns = 8;
-
         this.selected_invoice = false;
-
     },
+
      get_data: function () {
         return this.pos.get_invoices_to_render(this.pos.db.invoices);
      },
@@ -755,13 +760,11 @@ var InvoicesWidget = InvoicesAndOrdersBaseWidget.extend({
             $line.removeClass('highlight');
             $line.addClass('lowlight');
             $line.next().addClass('line-element-hidden');
-
-        }else{
+        } else {
             this.$('.client-list .highlight').removeClass('highlight');
             $line.addClass('highlight');
             this.selected_invoice = invoice;
             $line.next().removeClass('line-element-hidden');
-
         }
         this.toggle_save_button(this.selected_invoice);
     },
@@ -772,17 +775,16 @@ var InvoicesWidget = InvoicesAndOrdersBaseWidget.extend({
             $button.removeClass('oe_hidden');
         } else {
             $button.addClass('oe_hidden');
-
         }
     },
 
      _search: function (query) {
         var invoices;
-        if(query){
+        if (query){
             invoices = this.pos.db.search_invoices(query);
             invoices = this.pos.get_invoices_to_render(invoices);
             this.render_data(invoices);
-        }else{
+        } else {
             invoices = this.pos.db.invoices;
             invoices = this.pos.get_invoices_to_render(invoices);
             this.render_data(invoices);
@@ -805,7 +807,7 @@ var InvoicesWidget = InvoicesAndOrdersBaseWidget.extend({
                 this.pos.validate_invoice(this.selected_invoice.id).
                     then(function (id) {
                         self.pos.update_or_fetch_invoice(id).
-                        then(function() {
+                        then(function () {
                             self.render_data(self.pos.get_invoices_to_render(self.pos.db.invoices));
                             self.toggle_save_button();
                             self.pos.selected_invoice = self.pos.db.get_invoice_by_id(self.selected_invoice.id);
@@ -835,13 +837,6 @@ gui.define_screen({name:'invoices_list', widget: InvoicesWidget});
 
 var InvoicePayment = PaymentScreenWidget.extend({
     template: 'InvoicePaymentScreenWidget',
-    init: function () {
-        this._super.apply(this, arguments);
-    },
-    show: function () {
-        this._super.apply(this, arguments);
-    },
-
     get_invoice_residual: function () {
         if (this.pos.selected_invoice) {
             return this.pos.selected_invoice.residual;
@@ -850,8 +845,8 @@ var InvoicePayment = PaymentScreenWidget.extend({
     },
 
     render_paymentlines: function () {
-        var self  = this;
-        var order = this.pos.get_order();
+        var self  = this,
+            order = this.pos.get_order();
         if (!order) {
             return;
         }
@@ -877,18 +872,18 @@ var InvoicePayment = PaymentScreenWidget.extend({
                 }
             }
             return round_pr(Math.max(0,due), self.pos.currency.rounding);
-
         };
 
         order.invoice_to_pay.get_change = function (paymentline) {
             var due = self.pos.selected_invoice.residual,
-            change = 0,
-            lines = order.paymentlines.models;
+                change = 0,
+                lines = order.paymentlines.models,
+                i;
             if (!paymentline) {
                 change = -due + order.get_total_paid();
             } else {
                 change = -due;
-                for (var i = 0; i < lines.length; i++) {
+                for (i = 0; i < lines.length; i++) {
                     change += lines[i].get_amount();
                     if (lines[i] === paymentline) {
                         break;
@@ -899,9 +894,9 @@ var InvoicePayment = PaymentScreenWidget.extend({
         };
 
         order.invoice_to_pay.get_subtotal = function () {
-            var tax = self.pos.selected_invoice.amount_tax;
-            var due = self.pos.selected_invoice.residual;
-            var subtotal = due -tax;
+            var tax = self.pos.selected_invoice.amount_tax,
+                due = self.pos.selected_invoice.residual,
+                subtotal = due -tax;
             return round_pr(Math.max(0,subtotal), self.pos.currency.rounding);
         };
 
@@ -928,6 +923,19 @@ var InvoicePayment = PaymentScreenWidget.extend({
         lines.appendTo(this.$('.paymentlines-container'));
     },
 
+    click_paymentmethods: function(id) {
+        var cashregister = null;
+        for (var i = 0; i < this.pos.cashregisters.length; i++) {
+            if (this.pos.cashregisters[i].journal_id[0] === id) {
+                cashregister = this.pos.cashregisters[i];
+                break;
+            }
+        }
+        this.pos.get_order().add_paymentline(cashregister, 'pos_invoice_pay');
+        this.reset_input();
+        this.render_paymentlines();
+    },
+
     finalize_validation: function () {
         var self = this,
             order = this.pos.get_order();
@@ -946,7 +954,6 @@ var InvoicePayment = PaymentScreenWidget.extend({
                     then(function (action) {
                         self.chrome.do_action(action);
                         self.pos.stop_invoice_processing()
-
                     });
             });
         } else {
@@ -971,10 +978,10 @@ var InvoicePayment = PaymentScreenWidget.extend({
             sum = 0;
             
         if (plines.length === 0) {
-             this.gui.show_popup('error',{
-                    'title': _t('Zero payment amount.'),
-                    'body': _t('You can not validate the order with zero payment amount.'),
-                });
+            this.gui.show_popup('error', {
+                'title': _t('Zero payment amount.'),
+                'body': _t('You can not validate the order with zero payment amount.'),
+            });
             return false;
         }
 
@@ -982,11 +989,11 @@ var InvoicePayment = PaymentScreenWidget.extend({
             return sum += pline.get_amount();
         }, 0);
         if (sum <= 0) {
-                this.gui.show_popup('error',{
-                    'title': _t('Zero payment amount.'),
-                    'body': _t('You can not validate the order with zero payment amount.'),
-                });
-                return false;
+            this.gui.show_popup('error',{
+                'title': _t('Wrong payment amount.'),
+                'body': _t('You can not validate the order with zero or negative payment amount.'),
+            });
+            return false;
         }
         return true;
     }

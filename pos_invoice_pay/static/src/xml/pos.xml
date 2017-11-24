@@ -226,17 +226,6 @@
                     </section>
 
                     <div class='payment-buttons'>
-<!--                         <div class='button js_set_customer'>
-                            <i class='fa fa-user' /> 
-                            <span class='js_customer_name'> 
-                                <t t-if="widget.pos.get_client()">
-                                    <t t-esc="widget.pos.get_client().name" />
-                                </t>
-                                <t t-if="!widget.pos.get_client()">
-                                    Customer
-                                </t>
-                            </span>
-                        </div> -->
                         <t t-if='widget.pos.config.iface_invoicing'>
                             <t t-if='widget.pos.get_order()'>
                                 <div t-attf-class='button js_invoice #{ widget.pos.get_order().is_to_invoice() ? "highlight" : ""} '>
@@ -297,8 +286,8 @@
                                 <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.invoice_to_pay.get_due(line))' /> </td>
                                 <td class='col-tendered edit'> 
                                     <t t-esc='widget.inputbuffer' />
-                                    <!-- <t t-esc='line.get_amount()' /> -->
-                                </td>
+<!--                                     <t t-esc='line.get_amount()' />
+ -->                                </td>
                                 <t t-if='order.get_change(line)'>
                                     <td class='col-change highlight' > 
                                         <t t-esc='widget.format_currency_no_symbol(order.invoice_to_pay.get_change(line))' />
