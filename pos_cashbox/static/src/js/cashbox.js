@@ -52,7 +52,7 @@ odoo.define('pos_cashbox.open', function (require) {
             return url;
         },
         connect: function(url) {
-            this.connection = new Session(undefined, url, { use_cors: true});
+            this.connection = new Session(void 0, url, { use_cors: true});
         },
         open_cashbox: function(){
             var self = this;
