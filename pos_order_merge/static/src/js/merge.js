@@ -61,9 +61,9 @@ odoo.define('pos_order_merge.merge', function (require) {
             for(var i = 0; i < orders.length; i++){
                 var order = orders[i];
                 if (order.uid !== this.pos.main_order_uid) {
-                    var client = order.get('client') ?
-                                 order.get('client').name :
-                                 false;
+                    var client = order.get('client')
+                                 ? order.get('client').name
+                                 : false;
                     var orderwidget = $(QWeb.render('OrderMerge', {
                         widget:this,
                         order:order,
@@ -106,9 +106,9 @@ odoo.define('pos_order_merge.merge', function (require) {
             }
 
             var order = this.get_order_by_uid(uid);
-            var client = order.get('client') ?
-                         order.get('client').name :
-                         false;
+            var client = order.get('client')
+                         ? order.get('client').name
+                         : false;
             $el.replaceWith($(QWeb.render('OrderMerge',{
                 widget: this,
                 order: order,
