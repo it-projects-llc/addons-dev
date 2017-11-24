@@ -32,12 +32,10 @@ models.PosModel = models.PosModel.extend({
             'amount_total', 'order_line', 'invoice_status'],
             domain:[['invoice_status', '=', 'to invoice'], ['state', '=', 'sale']],
             loaded: function (self, sale_orders) {
+                var so_ids = _.pluck(sale_orders, 'id');
                 self.prepare_so_data(sale_orders);
                 self.sale_orders = sale_orders;
                 self.db.add_sale_orders(sale_orders);
-
-                var so_ids = _.pluck(sale_orders, 'id');
-
                 self.get_sale_order_lines(so_ids);
             }
         },{
@@ -47,12 +45,10 @@ models.PosModel = models.PosModel.extend({
             domain: [['state', '=', 'open'],
             ['type','=', 'out_invoice']],
             loaded: function (self, invoices) {
+                var invoices_ids = _.pluck(invoices, 'id');
                 self.prepare_invoices_data(invoices);
                 self.invoices = invoices;
                 self.db.add_invoices(invoices);
-
-                var invoices_ids = _.pluck(invoices, 'id');
-
                 self.get_invoice_lines(invoices_ids);
             }
         });
@@ -64,13 +60,14 @@ models.PosModel = models.PosModel.extend({
     },
 
     get_sale_order_lines: function (ids) {
-        var def = $.Deferred();
-        var self = this;
+        var def = $.Deferred(),
+            self = this,
+            i;
         this.get_lines(ids, 'sale.order', 'get_order_lines_for_pos').
             then(function (res) {
-                for (var i = 0, max = res.length; i < max; i++) {
-                    var so_id = res[i].order_id;
-                    var so = self.db.sale_orders_by_id[so_id];
+                for (i = 0, max = res.length; i < max; i++) {
+                    var so_id = res[i].order_id,
+                        so = self.db.sale_orders_by_id[so_id];
                     if (!so) {
                         return;
                     }
@@ -87,26 +84,25 @@ models.PosModel = models.PosModel.extend({
     },
 
     get_invoice_lines: function (data) {
-        var def = $.Deferred();
-        var self = this;
+        var def = $.Deferred(),
+            self = this,
+            i;
         this.get_lines(data, 'account.invoice', 'get_invoice_lines_for_pos').
             then(function (res) {
                 _.each(res, function(res) {
-                    var inv_id = res.invoice_id;
-                    var inv = self.db.invoices_by_id[inv_id];
+                    var inv_id = res.invoice_id,
+                        inv = self.db.invoices_by_id[inv_id];
                     if (!inv) {
                         return;
                     }
                     inv.lines = [];
                 });
-                for (var i = 0, max = res.length; i < max; i++) {
-                    var inv_id = res[i].invoice_id;
-                    var inv = self.db.invoices_by_id[inv_id];
-
+                for (i = 0, max = res.length; i < max; i++) {
+                    inv_id = res[i].invoice_id;
+                    inv = self.db.invoices_by_id[inv_id];
                     if (!inv) {
                         return;
                     }
-
                     if (!Object.prototype.hasOwnProperty.call(inv, 'lines')) {
                         inv.lines = [];
                     }
@@ -121,8 +117,8 @@ models.PosModel = models.PosModel.extend({
         var self = this;
         new Model('pos.order').call('send_longpolling_data', []).
         then(function (res) {
-            var invoices_channel = JSON.stringify([res.dbname, 'account.invoice', res.uid.toString()]);
-            var so_channel = JSON.stringify([res.dbname, 'sale.order', res.uid.toString()]);
+            var invoices_channel = JSON.stringify([res.dbname, 'account.invoice', res.uid.toString()]),
+                so_channel = JSON.stringify([res.dbname, 'sale.order', res.uid.toString()]);
             self.bus.add_channel(invoices_channel);
             self.bus.add_channel(so_channel);
             self.bus.on("notification", self, self.on_notification);
@@ -131,11 +127,14 @@ models.PosModel = models.PosModel.extend({
     },
 
     on_notification: function(notification) {
-        var invoices_to_update = [];
-        var sale_orders_to_update = [];
-        for (var i = 0; i < notification.length; i++) {
-            var channel = notification[i][0];
-            var message = notification[i][1];
+        var invoices_to_update = [],
+            sale_orders_to_update = [],
+            channel,
+            message,
+            i;
+        for (i = 0; i < notification.length; i++) {
+            channel = notification[i][0];
+            message = notification[i][1];
             if (_.isString(channel)) {
                 channel = JSON.parse(channel);
             }
@@ -200,7 +199,7 @@ models.PosModel = models.PosModel.extend({
     },
 
     get_res: function (model_name, id) {
-        var fields = _.find(this.models, function (model){
+        var fields = _.find(this.models, function (model) {
             return model.model === model_name;
         }).fields;
         return new Model(model_name).
@@ -210,8 +209,8 @@ models.PosModel = models.PosModel.extend({
     },
 
     update_or_fetch_invoice: function (id) {
-        var self = this;
-        var def = $.Deferred();
+        var self = this,
+            def = $.Deferred();
         this.get_res('account.invoice', id).
             then(function (res) {
                 self.prepare_invoices_data(res);
@@ -225,8 +224,8 @@ models.PosModel = models.PosModel.extend({
     },
 
     update_or_fetch_sale_order: function (id) {
-        var def = $.Deferred();
-        var self = this;
+        var def = $.Deferred(),
+            self = this;
             this.get_res('sale.order', id).
                 then(function (res) {
                     self.prepare_so_data(res);
@@ -254,16 +253,19 @@ models.PosModel = models.PosModel.extend({
     },
 
     get_invoices_to_render: function (invoices) {
-        var self = this;
-        var orders_to_mute = _.filter(this.db.get_orders(), function(order) {
+        var self = this,
+            muted_invoices_ids = [],
+            order = {},
+            id,
+            i,
+            client = this.get_client(),
+            orders_to_mute = _.filter(this.db.get_orders(), function(order) {
             return order.data.invoice_to_pay;
         });
-
-        var muted_invoices_ids = [];
-        if(orders_to_mute) {
-            for(var i=0; orders_to_mute.length>i; i++) {
-                var order = orders_to_mute[i];
-                var id = order.data.invoice_to_pay.id;
+        if (orders_to_mute) {
+            for(i = 0; orders_to_mute.length > i; i++) {
+                order = orders_to_mute[i];
+                id = order.data.invoice_to_pay.id;
                 muted_invoices_ids.push(id);
             }
         }
@@ -274,7 +276,6 @@ models.PosModel = models.PosModel.extend({
             });
         }
 
-        var client = this.get_client();
         if (client) {
             invoices = _.filter(invoices, function(inv) {
                 return inv.partner_id[0] === client.id;
@@ -285,7 +286,6 @@ models.PosModel = models.PosModel.extend({
         invoices = _.filter(invoices, function (inv) {
             return inv.state === 'Open';
         });
-
         return invoices;
     },
 
@@ -325,16 +325,13 @@ models.Order = models.Order.extend({
 PosDb.include({
     init: function (options) {
         this._super(options);
-
         this.sale_orders = [];
         this.sale_orders_by_id = {};
         this.sale_orders_search_string = '';
-
         this.invoices = [];
         this.invoices_by_id = {};
         this.invoices_search_string = '';
     },
-
 
     add_sale_orders: function (sale_orders) {
         var self = this;
@@ -953,11 +950,10 @@ var InvoicePayment = PaymentScreenWidget.extend({
                     });
             });
         } else {
-            this.pos.push_order(order).then(function(res) {
+            this.pos.push_order(order).then(function (res) {
                 self.pos.update_or_fetch_invoice(self.pos.selected_invoice.id);
                 self.gui.show_screen('invoice_receipt');
                 self.pos.stop_invoice_processing()
-
             });
         }
     },
@@ -994,7 +990,6 @@ var InvoicePayment = PaymentScreenWidget.extend({
         }
         return true;
     }
-
 });
 
 gui.define_screen({name:'invoice_payment', widget: InvoicePayment});
@@ -1011,6 +1006,11 @@ var InvoiceReceiptScreenWidget = ReceiptScreenWidget.extend({
                 paymentlines: order.get_paymentlines(),
             }));
     },
+
+    render_change: function () {
+        var order = this.pos.get_order();
+        this.$('.change-value').html(this.format_currency(order.invoice_to_pay.get_change()));
+    }
 });
 
 gui.define_screen({name:'invoice_receipt', widget: InvoiceReceiptScreenWidget});
