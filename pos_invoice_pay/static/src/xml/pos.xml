@@ -365,7 +365,7 @@
                 </div>
                 <br />
             </t>
-            <table class='receipt-orderlines'>
+            <!-- <table class='receipt-orderlines'>
                 <colgroup>
                     <col width='50%' />
                     <col width='25%' />
@@ -388,7 +388,7 @@
                     </td>
                 </tr>
             </table>
-            <br />
+            <br /> -->
             <table class='receipt-total'>
                 <tr>
                     <td>Subtotal:</td>
