@@ -80,6 +80,9 @@
 .pos .order-merge-screen h2 span {
     margin: 5px;
 }
+.pos .order-merge-screen .button {
+    transition: all 150ms linear;
+}
 .pos .order-merge-screen .button.highlight {
     background: rgb(110,200,155);
     color: white;
