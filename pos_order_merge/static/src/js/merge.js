@@ -19,7 +19,8 @@ odoo.define('pos_order_merge.merge', function (require) {
         },
         // changes the current table.
         set_table: function(table) {
-            if (!table) { // no table ? go back to the floor plan, see ScreenSelector
+            if (!table) {
+                // no table ? go back to the floor plan, see ScreenSelector
                 this.set_order(null);
             } else if (this.order_merge_status) {
                 var orders = this.get_table_orders(table);
@@ -40,9 +41,8 @@ odoo.define('pos_order_merge.merge', function (require) {
         on_removed_order: function(removed_order,index,reason){
             if (this.order_merge_status) {
                 return;
-            } else {
-                _super_posmodel.on_removed_order.apply(this, arguments);
             }
+            _super_posmodel.on_removed_order.apply(this, arguments);
         },
     });
 
@@ -61,7 +61,9 @@ odoo.define('pos_order_merge.merge', function (require) {
             for(var i = 0; i < orders.length; i++){
                 var order = orders[i];
                 if (order.uid !== this.pos.main_order_uid) {
-                    var client = order.get('client') ? order.get('client').name : false;
+                    var client = order.get('client') ?
+                                 order.get('client').name :
+                                 false;
                     var orderwidget = $(QWeb.render('OrderMerge', {
                         widget:this,
                         order:order,
@@ -80,10 +82,10 @@ odoo.define('pos_order_merge.merge', function (require) {
             // back to current order
             this.$('.back').click(function(){
                 self.pos.order_merge_status = false;
-                var order = self.get_order_by_uid(self.pos.main_order_uid);
-                if (order) {
+                var current_order = self.get_order_by_uid(self.pos.main_order_uid);
+                if (current_order) {
                     self.gui.show_screen("products");
-                    self.pos.set_order(order);
+                    self.pos.set_order(current_order);
                 }
             });
         },
@@ -104,7 +106,9 @@ odoo.define('pos_order_merge.merge', function (require) {
             }
 
             var order = this.get_order_by_uid(uid);
-            var client = order.get('client') ? order.get('client').name : false;
+            var client = order.get('client') ?
+                         order.get('client').name :
+                         false;
             $el.replaceWith($(QWeb.render('OrderMerge',{
                 widget: this,
                 order: order,
@@ -160,7 +164,7 @@ odoo.define('pos_order_merge.merge', function (require) {
                     return orders[i];
                 }
             }
-            return undefined;
+            return false;
         },
         change_button: function() {
             if (this.mergeorders.length) {
