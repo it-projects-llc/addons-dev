@@ -11,7 +11,7 @@ Tool to work with apps.odoo.com database via xmlrpc. Usefull for sharing adminis
 Configuration
 =============
 
-To use this module, you to have a password in ``apps.odoo.com`` database.
+To use this module, you need to have a password in ``apps.odoo.com`` database.
 
 * Step 1. Ask support team to set some temporar password on apps.odoo.com database
 * Step 2. Login to https://apps.odoo.com/web in a usual way (via oauth)
