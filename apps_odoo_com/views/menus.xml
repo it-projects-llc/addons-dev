@@ -49,6 +49,11 @@
     parent="tools_folder_menu"
     sequence="10"/>
 
+<menuitem name="Add Repos"
+    id="add_repos_menu"
+    parent="tools_folder_menu"
+    sequence="20"/>
+
 <!-- Settings -->
 <menuitem name="Settings"
     id="settings_folder_menu"

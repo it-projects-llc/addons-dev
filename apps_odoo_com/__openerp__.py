@@ -30,6 +30,7 @@
         "views/res_config_views.xml",
         "views/stats_views.xml",
         "wizards/scan_repo_views.xml",
+        "wizards/add_repos_views.xml",
         "wizards/update_data_views.xml",
     ],
     "demo": [

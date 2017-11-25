@@ -50,6 +50,16 @@ To call ``[Scan Repo]`` button
 * set ``Repository``
 * click ``[Scan Repo]``
 
+Adding batch of Repos
+---------------------
+
+* go to ``Odoo App Store >> Tools >> Add Repos``
+* set ``Version``
+* specify list of repos
+* click ``[Add Repos]``
+* RESULT: it will create and validate the repos. Errors are printed to odoo logs
+
+
 .. Known issues / Roadmap
 .. ======================
 .. 
