@@ -25,7 +25,7 @@ odoo.define('pos_pricelist_absolute_discount.models', function(require){
                 var taxtotal = 0;
                 var taxdetail = {};
                 var product_taxes = this.get_applicable_taxes_for_orderline();
-                var price_unit = this.get_unit_price() - this.get_absolute_discount();
+                var price_unit = this.get_unit_price() - (this.get_absolute_discount() / this.get_quantity());
                 var all_taxes = this.compute_all(product_taxes, price_unit, this.get_quantity(), this.pos.currency.rounding);
                 _(all_taxes.taxes).each(function (tax) {
                     if (tax.price_include) {
