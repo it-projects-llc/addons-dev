@@ -31,6 +31,7 @@
                 <th>Invoiced</th>
                 <th>Unit Price</th>
                 <th>Taxes</th>
+                <th>Discount(%)</th>
                 <th>Subtotal</th>
             </tr>
         </thead>
@@ -45,6 +46,7 @@
             <td><t t-esc='line.qty_invoiced'/></td>
             <td><t t-esc='widget.format_currency(line.total)'/></td>
             <td><t t-esc='line.tax'/></td>
+            <td><t t-esc="line.discount"/></td>
             <td><t t-esc='widget.format_currency(line.subtotal)'/></td>
         </tr>
     </t>
@@ -58,6 +60,7 @@
                 <th>Quantity</th>
                 <th>Unit Price</th>
                 <th>Taxes</th>
+                <th>Discount(%)</th>
                 <th>Amount</th>
             </tr>
         </thead>
@@ -71,6 +74,7 @@
             <td><t t-esc='line.qty'/></td>
             <td><t t-esc='widget.format_currency(line.price_unit)'/></td>
             <td><t t-esc='line.tax'/></td>
+            <td><t t-esc="line.discount"/></td>
             <td><t t-esc='widget.format_currency(line.amount)'/></td>
         </tr>
     </t>
@@ -254,7 +258,7 @@
             <div class='paymentlines-empty'>
                 <div class='total'>
                     <t t-esc="widget.format_currency(widget.get_invoice_residual())"/>            
-  </div>
+                </div>
                 <div class='message'>
                     Please select a payment method. 
                 </div>

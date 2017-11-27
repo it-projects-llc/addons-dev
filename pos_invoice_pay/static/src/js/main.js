@@ -242,7 +242,7 @@ models.PosModel = models.PosModel.extend({
         var result = $.Deferred();
         new Model('account.invoice').
             call('action_invoice_open', [id]).
-            then(function(res) {
+            then(function (res) {
                 if (res) {
                     result.resolve(id);
                 } else {
@@ -260,8 +260,8 @@ models.PosModel = models.PosModel.extend({
             i,
             client = this.get_client(),
             orders_to_mute = _.filter(this.db.get_orders(), function(order) {
-            return order.data.invoice_to_pay;
-        });
+                return order.data.invoice_to_pay;
+            });
         if (orders_to_mute) {
             for(i = 0; orders_to_mute.length > i; i++) {
                 order = orders_to_mute[i];
@@ -289,7 +289,7 @@ models.PosModel = models.PosModel.extend({
     get_sale_order_to_render: function (sale_orders) {
         var client = this.get_client();
         if (client) {
-            sale_orders = _.filter(sale_orders, function(so) {
+            sale_orders = _.filter(sale_orders, function (so) {
                 return so.partner_id[0] === client.id;
             });
             return sale_orders;
@@ -505,10 +505,26 @@ ProductScreenWidget.include({
         var self = this;
         this._super();
         this.$('.fetch-orders').click(function () {
-            self.gui.show_screen('sale_orders_list');
+            self.gui.select_user({
+                'security':     true,
+                'current_user': self.pos.get_cashier(),
+                'title':      _t('Change Cashier'),
+            }).then(function(user){
+                self.pos.set_cashier(user);
+                self.gui.chrome.widget.username.renderElement();
+                self.gui.show_screen('sale_orders_list');
+            });
         });
         this.$('.fetch-invoices').click(function () {
-            self.gui.show_screen('invoices_list');
+            self.gui.select_user({
+                'security':     true,
+                'current_user': self.pos.get_cashier(),
+                'title':      _t('Change Cashier'),
+            }).then(function(user){
+                self.pos.set_cashier(user);
+                self.gui.chrome.widget.username.renderElement();
+                self.gui.show_screen('invoices_list');
+            });
         });
     }
 });
@@ -517,7 +533,6 @@ var InvoicesAndOrdersBaseWidget = ClientListScreenWidget.extend({
     show: function () {
         var self = this;
         this._super();
-
         this.renderElement();
         this.details_visible = false;
         this.old_client = this.pos.get_order().get_client();
@@ -544,12 +559,12 @@ var InvoicesAndOrdersBaseWidget = ClientListScreenWidget.extend({
 
             var query = this.value;
 
-            search_timeout = setTimeout(function(){
+            search_timeout = setTimeout(function () {
                 self._search(query);
-            },70);
+            }, 70);
         });
 
-        this.$('.searchbox .search-clear').click(function(){
+        this.$('.searchbox .search-clear').click(function () {
             self._clear_search();
         });
     },
@@ -620,7 +635,6 @@ var SaleOrdersWidget = InvoicesAndOrdersBaseWidget.extend({
     init: function () {
         this._super.apply(this, arguments);
         this.$listEl = '.sale-order';
-
         this.itemTemplate = 'SaleOrder';
         this.linesHeaderTemplate = 'SaleOrderLinesHeader';
         this.lineTemplate = 'SaleOrderLine';
@@ -976,7 +990,6 @@ var InvoicePayment = PaymentScreenWidget.extend({
             plines = order.get_paymentlines(),
             i,
             sum = 0;
-            
         if (plines.length === 0) {
             this.gui.show_popup('error', {
                 'title': _t('Zero payment amount.'),
@@ -984,7 +997,6 @@ var InvoicePayment = PaymentScreenWidget.extend({
             });
             return false;
         }
-
         sum = _.reduce(plines, function (sum, pline) {
             return sum += pline.get_amount();
         }, 0);
