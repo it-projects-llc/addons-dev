@@ -120,7 +120,7 @@ odoo.define('pos_absolute_discount.models', function(require){
     models.Order = models.Order.extend({
         export_for_printing: function(){
             var receipt = _super_order.export_for_printing.apply(this, arguments);
-            receipt.total_discount = this.get_total_discount() || this.get_total_absolute_discount();
+            receipt.total_discount = this.get_total_discount() + this.get_total_absolute_discount();
             return receipt;
         },
         add_product: function(product, options){
