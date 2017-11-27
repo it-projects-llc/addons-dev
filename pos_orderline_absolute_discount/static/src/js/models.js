@@ -4,7 +4,6 @@ odoo.define('pos_absolute_discount.models', function(require){
     var utils = require('web.utils');
 
     var round_pr = utils.round_precision;
-    var round_di = utils.round_decimals;
 
 
     var _super_orderline = models.Orderline.prototype;
@@ -27,6 +26,8 @@ odoo.define('pos_absolute_discount.models', function(require){
         },
         // sets a absolute discount
         set_absolute_discount: function (discount) {
+            var rounding = this.pos.currency.rounding;
+            discount = round_pr(discount, rounding);
             if (this.get_discount()) {
                 this.set_discount(0);
             }
