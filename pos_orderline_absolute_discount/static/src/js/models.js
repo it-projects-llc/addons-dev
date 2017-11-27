@@ -43,12 +43,12 @@ odoo.define('pos_absolute_discount.models', function(require){
         },
         set_quantity: function(quantity){
             var self = this;
-             _super_orderline.set_quantity.call(this, quantity);
-             var absolute_discount = this.get_absolute_discount();
-             if(quantity !== 'remove' && absolute_discount){
+            var absolute_discount = this.get_absolute_discount() / this.quantity;
+            _super_orderline.set_quantity.call(this, quantity);
+            if(quantity !== 'remove' && absolute_discount){
                 var qty = parseFloat(quantity) || 0;
                 this.set_absolute_discount(absolute_discount * qty);
-             }
+            }
         },
         clone: function(){
             var res = _super_orderline.clone.apply(this, arguments);
