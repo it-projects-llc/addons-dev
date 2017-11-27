@@ -132,7 +132,7 @@ odoo.define('pos_absolute_discount.models', function(require){
         },
         get_total_absolute_discount: function() {
             return round_pr(this.orderlines.reduce((function(sum, orderLine) {
-                return sum + ((orderLine.get_unit_price() - orderLine.get_absolute_discount()) * orderLine.get_quantity());
+                return sum + orderLine.get_absolute_discount();
             }), 0), this.pos.currency.rounding);
         },
     });
