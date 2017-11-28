@@ -104,6 +104,49 @@ odoo.define('pos_absolute_discount.models', function(require){
             }
             return res;
         },
+        get_display_price_without_discount: function() {
+            if (this.pos.config.iface_tax_included) {
+                return this.get_price_with_tax_without_discount();
+            } else {
+                return this.get_price_without_discount();
+            }
+        },
+        // get orderline price without discount
+        get_price_without_discount: function(){
+            var rounding = this.pos.currency.rounding;
+            return round_pr(this.get_unit_price() * this.get_quantity(), rounding);
+        },
+        get_price_with_tax_without_discount: function(){
+            return this.get_all_prices_without_discounts().priceWithTax;
+        },
+        get_all_prices_without_discounts: function(){
+            var price_unit = this.get_unit_price();
+            var taxtotal = 0;
+
+            var product = this.get_product();
+            var taxes_ids = product.taxes_id;
+            var taxes = this.pos.taxes;
+            var taxdetail = {};
+            var product_taxes = [];
+
+            _(taxes_ids).each(function(el){
+                product_taxes.push(_.detect(taxes, function(t){
+                    return t.id === el;
+                }));
+            });
+
+            var all_taxes = this.compute_all(product_taxes, price_unit, this.get_quantity(), this.pos.currency.rounding);
+            _(all_taxes.taxes).each(function(tax) {
+                taxtotal += tax.amount;
+                taxdetail[tax.id] = tax.amount;
+            });
+            return {
+                priceWithTax: all_taxes.total_included,
+                priceWithoutTax: all_taxes.total_excluded,
+                tax: taxtotal,
+                taxDetails: taxdetail
+            }
+        },
     });
     var _super_order = models.Order.prototype;
     models.Order = models.Order.extend({
