@@ -107,9 +107,8 @@ odoo.define('pos_absolute_discount.models', function(require){
         get_display_price_without_discount: function() {
             if (this.pos.config.iface_tax_included) {
                 return this.get_price_with_tax_without_discount();
-            } else {
-                return this.get_price_without_discount();
             }
+            return this.get_price_without_discount();
         },
         // get orderline price without discount
         get_price_without_discount: function(){
@@ -145,7 +144,7 @@ odoo.define('pos_absolute_discount.models', function(require){
                 priceWithoutTax: all_taxes.total_excluded,
                 tax: taxtotal,
                 taxDetails: taxdetail
-            }
+            };
         },
     });
     var _super_order = models.Order.prototype;
