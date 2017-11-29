@@ -31,12 +31,12 @@ models.PosModel = models.PosModel.extend({
             fields: ['name', 'partner_id', 'date_order', 'user_id',
             'amount_total', 'order_line', 'invoice_status'],
             domain:[['invoice_status', '=', 'to invoice'], ['state', '=', 'sale']],
-            loaded: function (self, sale_orders) {
+            loaded: function (that, sale_orders) {
                 var so_ids = _.pluck(sale_orders, 'id');
-                self.prepare_so_data(sale_orders);
-                self.sale_orders = sale_orders;
-                self.db.add_sale_orders(sale_orders);
-                self.get_sale_order_lines(so_ids);
+                that.prepare_so_data(sale_orders);
+                that.sale_orders = sale_orders;
+                that.db.add_sale_orders(sale_orders);
+                that.get_sale_order_lines(so_ids);
             }
         }, {
             model: 'account.invoice',
@@ -44,12 +44,12 @@ models.PosModel = models.PosModel.extend({
             'amount_total', 'user_id', 'residual', 'state', 'amount_untaxed', 'amount_tax'],
             domain: [['state', '=', 'open'],
             ['type','=', 'out_invoice']],
-            loaded: function (self, invoices) {
+            loaded: function (that, invoices) {
                 var invoices_ids = _.pluck(invoices, 'id');
-                self.prepare_invoices_data(invoices);
-                self.invoices = invoices;
-                self.db.add_invoices(invoices);
-                self.get_invoice_lines(invoices_ids);
+                that.prepare_invoices_data(invoices);
+                that.invoices = invoices;
+                that.db.add_invoices(invoices);
+                that.get_invoice_lines(invoices_ids);
             }
         });
         return _super_posmodel.initialize.apply(this, arguments);
