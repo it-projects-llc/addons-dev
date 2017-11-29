@@ -381,7 +381,7 @@ PosDb.include({
         if(sale_order.amount_total){
             str += '|' + sale_order.amount_total;
         }
-        str = '' + String(sale_order.id) + ':' + str.replace(':', '') + '\n';
+        str = '' + String(String(sale_order.id)) + ':' + str.replace(':', '') + '\n';
         return str;
     },
 
@@ -874,16 +874,16 @@ var InvoicePayment = PaymentScreenWidget.extend({
         order.invoice_to_pay.get_due = function (paymentline) {
             var total = self.pos.selected_invoice.residual,
                 due = 0,
-                lines = order.paymentlines.models;
-            if (typeof paymentline !== 'object') {
+                plines = order.paymentlines.models;
+            if (paymentline === void 0) {
                 due = total - order.get_total_paid();
             } else {
                 due = total;
-                for (var i = 0; i < lines.length; i++) {
-                    if (lines[i] === paymentline) {
+                for (var i = 0; i < plines.length; i++) {
+                    if (plines[i] === paymentline) {
                         break;
                     } else {
-                        due -= lines[i].get_amount();
+                        due -= plines[i].get_amount();
                     }
                 }
             }
@@ -893,15 +893,15 @@ var InvoicePayment = PaymentScreenWidget.extend({
         order.invoice_to_pay.get_change = function (paymentline) {
             var due = self.pos.selected_invoice.residual,
                 change = 0,
-                lines = order.paymentlines.models,
+                plines = order.paymentlines.models,
                 i = 0;
-            if (typeof paymentline !== 'object') {
+            if (paymentline === void 0) {
                 change = -due + order.get_total_paid();
             } else {
                 change = -due;
-                for (i = 0; i < lines.length; i++) {
-                    change += lines[i].get_amount();
-                    if (lines[i] === paymentline) {
+                for (i = 0; i < plines.length; i++) {
+                    change += plines[i].get_amount();
+                    if (plines[i] === paymentline) {
                         break;
                     }
                 }
