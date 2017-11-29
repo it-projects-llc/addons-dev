@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
-    "name": """Accounting manager""",
-    "summary": """FACT manager security group that not belong to group_erp_manager but has full access to account settings""",
+    "name": """FACT Manager""",
+    "summary": """FACT manager security group that not belong to group_erp_manager but has full access to account settings, partners, companies and products""",
     "category": "Access",
     # "live_test_url": "",
     "images": [],
