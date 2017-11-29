@@ -95,7 +95,6 @@ class AccountInvoice(models.Model):
             res.append(line)
         return res
 
-    @api.one
     @api.depends('payment_move_line_ids.amount_residual')
     def _get_payment_info_JSON(self):
         if self.payment_move_line_ids:

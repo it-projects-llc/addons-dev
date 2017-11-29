@@ -69,7 +69,7 @@ models.PosModel = models.PosModel.extend({
                     so_id = 0,
                     so = {};
                 for (i = 0; i < max; i++) {
-                    so_id = lines[i].order_id,
+                    so_id = lines[i].order_id;
                     so = self.db.sale_orders_by_id[so_id];
                     if (typeof so !== 'object') {
                         return;
@@ -985,7 +985,7 @@ var InvoicePayment = PaymentScreenWidget.extend({
     order_is_valid: function () {
         var order = this.pos.get_order(),
             plines = order.get_paymentlines(),
-            i,
+            i = 0,
             sum = 0;
         if (plines.length === 0) {
             this.gui.show_popup('error', {
