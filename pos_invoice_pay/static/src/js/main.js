@@ -383,7 +383,7 @@ PosDb.include({
             str += '|' + sale_order.amount_total;
         }
 
-        str = '' + String(id_string) + ':' + str.replace(':', '') + '\n';
+        str = String(sale_order.id) + ':' + str.replace(':', '') + '\n';
         return str;
     },
 
