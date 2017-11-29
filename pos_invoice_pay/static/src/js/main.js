@@ -368,7 +368,8 @@ PosDb.include({
     },
 
     _sale_order_search_string: function (sale_order) {
-        var str = sale_order.name;
+        var str = sale_order.name,
+            id_string = String(sale_order.id);
         if(sale_order.date_order){
             str += '|' + sale_order.date_order;
         }
@@ -381,7 +382,8 @@ PosDb.include({
         if(sale_order.amount_total){
             str += '|' + sale_order.amount_total;
         }
-        str = '' + String(String(sale_order.id)) + ':' + str.replace(':', '') + '\n';
+
+        str = '' + id_string + ':' + str.replace(':', '') + '\n';
         return str;
     },
 
