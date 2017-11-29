@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 class PosOrderLine(models.Model):
     _inherit = "pos.order.line"
 
-    absolute_discount = fields.Float(string='Unit Discount (abs)', default=0.0)
+    absolute_discount = fields.Float(string='Discount per Unit (abs)', default=0.0)
 
     @api.depends('price_unit', 'tax_ids', 'qty', 'discount', 'product_id', 'absolute_discount')
     def _compute_amount_line_all(self):
