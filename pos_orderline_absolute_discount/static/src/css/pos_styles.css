@@ -1,3 +1,11 @@
 .selected-absolute-discount-mode {
     background: #7f82ac!important;
 }
+.pos .pos-right-align {
+    position: relative;
+}
+.pos .pos-new-price {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
