@@ -418,7 +418,8 @@ PosDb.include({
         for (var i = 0; i< this.sale_orders.length; i++) {
             if (this.sale_orders[i].id === updated_so.id) {
                 this.sale_orders.splice(i, 1);
-            } 
+                break;
+            }
         }
         delete this.sale_orders_by_id[updated_so.id];
         if (updated_so.invoice_status === 'To invoice') {
@@ -441,7 +442,7 @@ PosDb.include({
         for (var i = 0; i < this.invoices.length; i++) {
             if (this.invoices[i].id === updated_invoice.id) {
                 this.invoices.splice(i, 1);
-                continue;
+                break;
             }
         }
         if (updated_invoice.state === "Draft" || updated_invoice.state === "Open") {
@@ -470,7 +471,7 @@ PosDb.include({
         if (invoice.amount_total) {
             str += '|' + invoice.amount_total;
         }
-        str = '' + invoice.id + ':' + str.replace(':','') + '\n';
+        str = String(invoice.id) + ':' + str.replace(':','') + '\n';
         return str;
     },
 
