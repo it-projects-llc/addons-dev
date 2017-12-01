@@ -49,9 +49,11 @@
         <t t-jquery="table[class='receipt-orderlines'] t[t-esc*='format_currency']" t-operation="replace">
             <t t-if="!orderline.pos.config.include_discount_in_prices">
                 <t t-esc="widget.format_currency(orderline.get_display_price_without_discount())" />
-                <div class="pos-disc-font pos-new-price">
-                    <t t-esc="widget.format_currency(orderline.get_display_price())" />
-                </div>
+                <t t-if="orderline.get_discount() or orderline.get_absolute_discount()">
+                    <div class="pos-disc-font pos-new-price">
+                        <t t-esc="widget.format_currency(orderline.get_display_price())" />
+                    </div>
+                </t>
             </t>
             <t t-if="orderline.pos.config.include_discount_in_prices">
                 <t t-esc="widget.format_currency(orderline.get_display_price())"/>
