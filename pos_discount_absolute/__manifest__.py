@@ -12,7 +12,7 @@
     "license": "LGPL-3",
 
     "depends": [
-        "pos_discount",
+        "pos_discount_base",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [

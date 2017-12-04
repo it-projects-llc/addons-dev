@@ -7,44 +7,10 @@ odoo.define('pos_discount_absolute', function (require) {
     var PosBaseWidget = require('point_of_sale.BaseWidget');
     var PopupWidget = require('point_of_sale.popups');
     var core = require('web.core');
-    var screens = require('point_of_sale.screens');
+    var screens = require('pos_discount_base.screens');
+    var PosDiscountWidget = require('pos_discount.pos_discount');
     var QWeb = core.qweb;
     var _t = core._t;
-
-    PosBaseWidget.include({
-        init:function(parent,options){
-            var self = this;
-            this._super(parent,options);
-            if (this.gui && this.gui.screen_instances.products && this.gui.screen_instances.products.action_buttons.discount) {
-                var disc_widget = this.gui.screen_instances.products.action_buttons.discount;
-                if ( disc_widget.button_click && !disc_widget.button_click_super){
-                    disc_widget.button_click_super = disc_widget.button_click;
-                }
-                disc_widget.button_click = function(){
-                    // next block allows to get 'confirm' of a super
-                    disc_widget.button_click_super();
-                    disc_widget.confirm_super = self.gui.popup_instances.number.options.confirm;
-                    self.gui.close_popup();
-
-                    this.gui.show_popup('number',{
-                        'title': 'Discount Percentage',
-                        'value': this.pos.config.discount_abs_value,
-                        'confirm': function (val) {
-                            if (self.pos.discount_abs_type){
-                                self.gui.screen_instances.products.order_widget.apply_absolute_discount(val);
-                                self.pos.config.discount_abs_value = val;
-                            } else {
-                                console.log(disc_widget)
-                                self.gui.screen_instances.products.order_widget.remove_abs_discount();
-                                disc_widget.confirm_super(val);
-                                self.gui.screen_instances.products.order_widget.apply_absolute_discount(self.pos.config.discount_abs_value);
-                            }
-                        }
-                    });
-                };
-            };
-        }
-    });
 
     PopupWidget.include({
         show: function (options) {
@@ -82,12 +48,27 @@ odoo.define('pos_discount_absolute', function (require) {
         },
     });
 
-    var DiscountButton = screens.ActionButtonWidget.extend({
-
-
-
-    });
     screens.OrderWidget.include({
+        apply_discount: function(val) {
+            var self = this;
+            if (this.pos.discount_abs_type){
+                this.apply_absolute_discount(val);
+            } else {
+                this._super(val);
+            }
+        },
+        confirm_discount: function(val) {
+            if (this.pos.discount_abs_type){
+                this.apply_absolute_discount(val);
+                this.pos.config.discount_abs_value = val;
+            } else {
+                this.remove_abs_discount();
+                this._super(val);
+                if (this.abs_disc_presence()) {
+                    this.apply_absolute_discount(this.pos.config.discount_abs_value);
+                }
+            }
+        },
         apply_absolute_discount: function(val){
             this.pos.discount_abs_value = val;
             var order = this.pos.get_order();
@@ -97,6 +78,18 @@ odoo.define('pos_discount_absolute', function (require) {
             if (val !== 0){
                 order.add_product(abs_disc_product, { price: discount });
             }
+        },
+        abs_disc_presence: function() {
+            var presence = false;
+            var lines = this.pos.get_order().get_orderlines();
+            var abs_disc_product = this.pos.db.get_product_by_id(this.pos.config.discount_abs_product_id[0]);
+            lines.forEach( function(line){
+                if (line.get_product() === abs_disc_product){
+                    presence = line;
+                    return;
+                }
+            });
+            return presence;
         },
         remove_abs_discount: function(){
             var order = this.pos.get_order();
@@ -146,10 +139,6 @@ odoo.define('pos_discount_absolute', function (require) {
 
     var OrderlineSuper = models.Orderline;
     models.Orderline = models.Orderline.extend({
-        initialize: function(){
-            var self = this;
-            OrderlineSuper.prototype.initialize.apply(this, arguments);
-        },
         set_discount: function(discount){
             if (!this.pos.config.discount_abs_enabled || discount.length >= 2){
                 OrderlineSuper.prototype.set_discount.apply(this, [discount]);
