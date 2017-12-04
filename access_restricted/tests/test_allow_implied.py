@@ -30,6 +30,8 @@ class TestAllowImplied(TransactionCase):
 
         group_allow = self.env.ref('access_restricted.group_allow_add_implied_from_settings')
         demo_user.write({'groups_id': [(4, group_allow.id)]})
+        # !!! True is not false !!!
+        # self.assertFalse(self.env['res.users'].sudo(demo_user.id).has_group('base.group_user'))
 
         # check that now the field is not readonly
         self.assertFalse(test_config_settings.fields_get()['group_user']['readonly'])
