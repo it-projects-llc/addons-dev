@@ -1,0 +1,16 @@
+
+.popup-abs-discount {
+    height: 490px !important;
+}
+.popup-abs-discount .header .button {
+    float: none;
+    display: inline-block;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+.popup-abs-discount .header {
+    width: 260px !important;
+    margin-left: 20px;
+    margin-top: -20px;
+    margin-bottom: 15px;
+}

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <template id="assets" name="pos_abs_discount_assets" inherit_id="point_of_sale.assets">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/pos_discount_absolute/static/src/js/pos_discount_absolute.js"></script>
+            <script type="text/javascript" src="/pos_discount_absolute/static/src/js/test_abs_disc.js"></script>
+        </xpath>
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" href="/pos_discount_absolute/static/src/css/pos.css"/>
+        </xpath>
+    </template>
+        <template id="assets_backend" name="pos_discount_absolute backend_assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/pos_discount_absolute/static/src/js/test_abs_disc.js"></script>
+            </xpath>
+        </template>
+    <record model="ir.ui.view" id="view_pos_config_form_discount">
+        <field name="name">pos.config.form.inherit</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="pos_discount.view_pos_config_form" />
+        <field name="priority" eval="99" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='iface_discount']" position="replace">
+                <field name='iface_discount'/>
+                <field name='discount_abs_enabled'/>
+            </xpath>
+
+            <xpath expr="//field[@name='discount_pc']" position="after">
+                <field name='discount_abs_value' attrs="{'invisible':[('discount_abs_enabled','=', False)]}"/>
+                <field name='discount_abs_product_id' attrs="{'invisible':[('discount_abs_enabled','=', False)], 'required': [('discount_abs_enabled', '=', True)]}" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
