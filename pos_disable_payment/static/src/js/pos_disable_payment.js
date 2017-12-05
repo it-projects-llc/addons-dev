@@ -11,7 +11,7 @@ odoo.define('pos_disable_payment', function(require){
 
     models.load_models({
         model:  'res.users',
-        fields: ['allow_payments','allow_delete_order','allow_discount','allow_edit_price','allow_decrease_amount','allow_delete_order_line','allow_create_order_line'],
+        fields: ['allow_payments','allow_delete_order','allow_discount','allow_edit_price','allow_decrease_amount','allow_delete_order_line','allow_create_order_line','allow_refund'],
         loaded: function(self,users){
             for (var i = 0; i < users.length; i++) {
                 var user = _.find(self.users, function(el){
@@ -33,9 +33,13 @@ odoo.define('pos_disable_payment', function(require){
             PosModelSuper.prototype.initialize.apply(this, arguments);
             var self = this;
             this.ready.then(function () {
-                // At this point this.cashier has no rights settings added by module. 
+                if (!self.cashier){
+                    // it's possible in non-updated odoo that self.cashier if falsy here
+                    return;
+                }
+                // At this point this.cashier has no rights settings added by module.
                 // Reset cashier to fix it
-                var current_cashier = self.users.find(function(user){
+                var current_cashier = _.find(self.users, function(user){
                     return user.id === self.cashier.id;
                 });
                 self.set_cashier(current_cashier);
@@ -172,6 +176,11 @@ odoo.define('pos_disable_payment', function(require){
                 this.$el.find("[data-mode='price']").css('visibility', 'visible');
             }else{
                 this.$el.find("[data-mode='price']").css('visibility', 'hidden');
+            }
+            if (user.allow_refund) {
+                this.$el.find('.numpad-minus').css('visibility', 'visible');
+            }else{
+                this.$el.find('.numpad-minus').css('visibility', 'hidden');
             }
         }
     });

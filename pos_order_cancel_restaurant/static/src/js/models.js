@@ -63,9 +63,9 @@ odoo.define('pos_order_cancel_restaurant.models', function (require) {
             var res = _super_order.computeChanges.apply(this, arguments);
             if (res.cancelled && res.cancelled.length) {
                 res.cancelled.forEach(function(product) {
-                    var line = self.get_exist_cancelled_line(product.line_id);
-                    if (line && line[2].reason) {
-                        product.reason = line[2].reason;
+                    var line = self.get_orderline(product.line_id);
+                    if (line && line.cancelled_line && line.cancelled_line.reason) {
+                        product.reason = line.cancelled_line.reason;
                     }
                 });
             }
@@ -74,17 +74,19 @@ odoo.define('pos_order_cancel_restaurant.models', function (require) {
             }
             return res;
         },
-        save_canceled_order: function(reason) {
-            _super_order.save_canceled_order.apply(this, arguments);
+        destroy_and_upload_as_canceled: function(reason, cancelled_reason_ids) {
+            _super_order.destroy_and_upload_as_canceled.apply(this, arguments);
             this.printChanges();
             this.saveChanges();
+            //  Read more about this trigger in pos_order_cancel module
+            this.trigger('change:sync');
         },
         change_cancelled_quantity: function(line) {
             if (this.pos.config.kitchen_canceled_only) {
                 if (line.was_printed) {
                     _super_order.change_cancelled_quantity.apply(this, arguments);
                 } else {
-                    this.save_canceled_line(false, line);
+                    this.save_canceled_line(line);
                 }
             } else {
                 _super_order.change_cancelled_quantity.apply(this, arguments);
@@ -94,6 +96,18 @@ odoo.define('pos_order_cancel_restaurant.models', function (require) {
 
     var _super_orderline = models.Orderline.prototype;
     models.Orderline = models.Orderline.extend({
+        apply_ms_data: function(data) {
+            if (_super_orderline.apply_ms_data) {
+                _super_orderline.apply_ms_data.apply(this, arguments);
+            }
+            this.was_printed = data.was_printed;
+        },
+        cancel_quantity_changes: function() {
+            _super_orderline.cancel_quantity_changes.apply(this, arguments);
+            if (this.was_printed) {
+                this.set_dirty(false);
+            }
+        },
         export_as_JSON: function() {
             var data = _super_orderline.export_as_JSON.apply(this, arguments);
             data.was_printed = this.was_printed;

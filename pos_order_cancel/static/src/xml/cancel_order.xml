@@ -5,7 +5,12 @@
         <div class="modal-dialog">
             <div class="popup popup-confirm-cancellation">
                 <p class="title"><t t-esc=" widget.options.title || '' " /></p>
-                <textarea rows="1" cols="44" placeholder="Reason"></textarea>
+                <t t-if="widget.pos.config.allow_custom_reason">
+                    <textarea rows="1" cols="44" placeholder="Reason"></textarea>
+                </t>
+                <t t-if="!widget.pos.config.allow_custom_reason">
+                    <textarea rows="1" cols="44" placeholder="Reason" style="display:none;"></textarea>
+                </t>
                 <div class="cancelled-reason">
                     <ul>
                         <t t-if="widget.buttons">
@@ -13,10 +18,10 @@
                                 <span class="reason-row">
                                     <t t-foreach="buttons" t-as="button">
                                         <t t-if="!button.other">
-                                            <li class="reason-col"><div t-attf-id="{{button.id}}" class="reason-button"><t t-esc="button.name"/></div></li>
+                                            <li class="reason-col"><div t-attf-data-id="{{button.id}}" class="reason-button"><t t-esc="button.name"/></div></li>
                                         </t>
                                         <t t-if="button.other">
-                                            <li class="reason-col other"><div id="other" class="reason-button other-reason">Other</div></li>
+                                            <li class="reason-col other"><div data-id="other" class="reason-button other-reason">Other</div></li>
                                         </t>
                                     </t>
                                 </span>
@@ -26,9 +31,11 @@
                     </ul>
                 </div>
                 <div class="footer centered">
+                <t t-if="widget.pos.config.allow_custom_reason">
                     <div class="button cancel">
                         Cancel
                     </div>
+                </t>
                     <div class="button confirm">
                         Ok
                     </div>
@@ -38,7 +45,7 @@
     </t>
 
     <t t-name="CancellationReason">
-        <tr class='reason-line' t-attf-id='{{reason.id}}'>
+        <tr class='reason-line' t-attf-data-id='{{reason.id}}'>
             <td><t t-esc='reason.name' /></td>
         </tr>
     </t>
