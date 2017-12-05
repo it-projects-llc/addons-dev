@@ -1,17 +1,15 @@
-===============
- {MODULE_NAME}
-===============
+==============
+ FACT Manager
+==============
 
-{Put some short introduction first.}
-
-{Then add more detailed description, technical specifications, any other information that could be interested for other developers. Don't forget that Usage instructions is a separated and has to be located in doc/index.rst file.}
+FACT manager security group that not belong to group_erp_manager but has full access to account settings, partners, companies and products
 
 Credits
 =======
 
 Contributors
 ------------
-* `{DEVELOPER_NAME} <https://it-projects.info/team/{DEVELOPER_GITHUB_USERNAME}>`__
+* `Ildar Nasyrov  <https://it-projects.info/team/iledarn>`__
 
 Sponsors
 --------
@@ -21,7 +19,7 @@ Maintainers
 -----------
 * `IT-Projects LLC <https://it-projects.info>`__
 
-      To get a guaranteed support you are kindly requested to purchase the module at `odoo apps store <https://apps.odoo.com/apps/modules/{VERSION}/{TECHNICAL_NAME}/>`__.
+      To get a guaranteed support you are kindly requested to purchase the module at `odoo apps store <https://apps.odoo.com/apps/modules/10.0/accounting_manager/>`__.
 
       Thank you for understanding!
 
@@ -30,12 +28,12 @@ Maintainers
 Further information
 ===================
 
-Demo: http://runbot.it-projects.info/demo/{REPO_NAME}/{BRANCH}
+Demo: http://runbot.it-projects.info/demo/access-addons/10.0
 
-HTML Description: https://apps.odoo.com/apps/modules/{VERSION}/{TECHNICAL_NAME}/
+HTML Description: https://apps.odoo.com/apps/modules/10.0/accounting_manager/
 
 Usage instructions: `<doc/index.rst>`_
 
 Changelog: `<doc/changelog.rst>`_
 
-Tested on Odoo {VERSION} {ODOO_COMMIT_SHA_TO_BE_UPDATED}
+Tested on Odoo 10.0 5f0b7942d551f441aa41e75ee06f2dd163a9c6f6
