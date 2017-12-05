@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="RelDiscProd" model="product.product">
+      <field name="available_in_pos">True</field>
+      <field name="list_price">0</field>
+      <field name="name">Relative Discount</field>
+      <field name="taxes_id"/>
+      <field name="supplier_taxes_id"/>
+    </record>
+    <record id="AbsDiscProd" model="product.product">
+      <field name="available_in_pos">True</field>
+      <field name="list_price">0</field>
+      <field name="name">Absolute Discount</field>
+      <field name="taxes_id"/>
+      <field name="supplier_taxes_id"/>
+    </record>
+
+    <record id="point_of_sale.pos_config_main" model="pos.config">
+        <field name="iface_discount">True</field>
+        <field name="discount_abs_enabled">True</field>
+        <field name='discount_product_id' ref="RelDiscProd"/>
+        <field name='discount_pc'>0</field>
+        <field name="discount_abs_value">0</field>
+        <field name="discount_abs_product_id" ref="AbsDiscProd"/>
+    </record>
+
+</odoo>
