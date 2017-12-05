@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- <data noupdate="1"> -->
+    <record id="default_company_country" model="ir.values">
+      <field name="name">country_id</field>
+      <field name="key">default</field>
+      <field name="key2"></field>
+      <field name="model">res.company</field>
+      <field name="value_unpickle" ref="base.at" />
+    </record>
+  <!-- </data> -->
+</odoo>
