@@ -1002,7 +1002,7 @@ var InvoicePayment = PaymentScreenWidget.extend({
                     'title': _t('Wrong payment amount.'),
                     'body': _t('You can only create positive payments.'),
                 });
-                return false;                
+                return false;
             }
         }
 
