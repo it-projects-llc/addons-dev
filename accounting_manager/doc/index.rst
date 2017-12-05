@@ -1,23 +1,18 @@
-===============
- {MODULE_NAME}
-===============
+==============
+ FACT Manager
+==============
 
 Installation
 ============
-{Instruction about things to do before actual installation}
 
 * `Install <https://odoo-development.readthedocs.io/en/latest/odoo/usage/install-module.html>`__ this module in a usual way
-* {OPTIONAL }`Activate longpolling <https://odoo-development.readthedocs.io/en/latest/admin/longpolling.html>`__ 
-* {Additional notes if any}
 
 Configuration
 =============
 
-{Instruction how to configure the module before start to use it}
-
-* `Activate Developer Mode <https://odoo-development.readthedocs.io/en/latest/odoo/usage/debug-mode.html>`__
-* Open menu ``[[ {Menu} ]] >> {Submenu} >> {Subsubmenu}``
-* Click ``[{Button Name}]``
+* Open menu ``[[ Settings ]] >> Users >> Users``
+* Click ``[Create]`` button to create a new user
+* On the form opened on ``Access Rights`` tab you need only select ``FACT Manager`` - do not configure anything manually here
 
 Usage
 =====
@@ -27,8 +22,3 @@ Usage
 * Open menu ``{Menu} >> {Submenu} >> {Subsubmenu}``
 * Click ``[{Button Name}]``
 * RESULT: {what user gets, how the modules changes default behaviour}
-
-Uninstallation
-==============
-
-{Optional section for uninstallation notes. Delete it if you don't have notes for uninstallation.}
