@@ -1,2 +1,2 @@
 # -*- coding: utf-8 -*-
-import pos_order_report
+from . import pos_order_report

@@ -95,7 +95,7 @@ class ReportSaleDetails(models.AbstractModel):
         orders = self.env['pos.order'].search([
             ('date_order', '>=', date_start),
             ('date_order', '<=', date_stop),
-            ('state', 'in', ['paid','invoiced','done']),
+            ('state', 'in', ['paid', 'invoiced', 'done']),
             ('config_id', 'in', configs.ids)])
 
         user_currency = self.env.user.company_id.currency_id
@@ -128,7 +128,7 @@ class ReportSaleDetails(models.AbstractModel):
                     # end redefined part of original get_sale_details
 
                     for tax in line_taxes['taxes']:
-                        taxes.setdefault(tax['id'], {'name': tax['name'], 'total':0.0})
+                        taxes.setdefault(tax['id'], {'name': tax['name'], 'total': 0.0})
                         taxes[tax['id']]['total'] += tax['amount']
 
         st_line_ids = self.env["account.bank.statement.line"].search([('pos_statement_id', 'in', orders.ids)]).ids
@@ -137,10 +137,10 @@ class ReportSaleDetails(models.AbstractModel):
                 SELECT aj.name, sum(amount) total
                 FROM account_bank_statement_line AS absl,
                      account_bank_statement AS abs,
-                     account_journal AS aj 
+                     account_journal AS aj
                 WHERE absl.statement_id = abs.id
-                    AND abs.journal_id = aj.id 
-                    AND absl.id IN %s 
+                    AND abs.journal_id = aj.id
+                    AND absl.id IN %s
                 GROUP BY aj.name
             """, (tuple(st_line_ids),))
             payments = self.env.cr.dictfetchall()
