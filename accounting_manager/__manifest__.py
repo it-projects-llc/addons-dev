@@ -16,7 +16,7 @@
     # "currency": "EUR",
 
     "depends": [
-        "sale",
+        "sale_management",
         "access_settings_menu",
     ],
     "external_dependencies": {"python": [], "bin": []},
@@ -24,7 +24,7 @@
         'security/accounting_manager_security.xml',
         'security/ir.model.access.csv',
         'views/res_config_view.xml',
-        'data/ir_values_data.xml',
+        # 'data/ir_values_data.xml',
     ],
     "qweb": [
     ],
