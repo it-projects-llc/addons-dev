@@ -18,6 +18,7 @@
     "depends": [
         "sale",
         "access_settings_menu",
+        "base_action_rule",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
@@ -25,6 +26,7 @@
         'security/ir.model.access.csv',
         'views/res_config_view.xml',
         'data/ir_values_data.xml',
+        'data/base_action_rule_data.xml',
     ],
     "qweb": [
     ],

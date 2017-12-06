@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="fact_manager_server_action1" model="ir.actions.server">
+    <field name="name">Append new company to fact manager allowed list</field>
+    <field name="condition">True</field>
+    <field name="type">ir.actions.server</field>
+    <field name="model_id" ref="base.model_res_users"/>
+    <field name="state">code</field>
+    <field name="code">model._update_allowed_companies()</field>
+  </record>
+  <record id="fact_manager_action_rule1" model="base.action.rule">
+    <field name="name">Append new company to fact manager allowed list</field>
+    <field eval="True" name="active"/>
+    <field name="model_id" ref="base.model_res_company"/>
+    <field name="kind">on_create</field>
+    <field name="server_action_ids" eval="[(4, ref('fact_manager_server_action1'))]"/>
+  </record>
+</odoo>
