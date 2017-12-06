@@ -14,21 +14,18 @@ odoo.define('pos_cashbox.open', function (require) {
         on_click: function(){
             var self = this;
             if (this.node.attrs.special === 'open_backend_cashbox'){
-                var config_id = this.view.datarecord.config_id[0];
-                new Model('pos.config').call("search_read", [[['id', '=', config_id]], ["proxy_ip"]]).then(function(res) {
-                    var proxy_ip = res[0].proxy_ip;
-                    if (!proxy_ip) {
-                        return self.show_warning_message(_t('Connection Refused. Please check the connection to PosBox'));
+                var proxy_ip = this.view.datarecord.proxy_ip;
+                if (!proxy_ip) {
+                    return this.show_warning_message(_t('Connection Refused. Please check the IP address to PosBox'));
+                }
+                var url = this.get_full_url(proxy_ip);
+                this.connect(url);
+                this.open_cashbox().done(function(){
+                    if (self.$el.hasClass('o_wow')) {
+                        self.show_wow();
                     }
-                    var url = self.get_full_url(proxy_ip);
-                    self.connect(url);
-                    self.open_cashbox().done(function(){
-                        if (self.$el.hasClass('o_wow')) {
-                            self.show_wow();
-                        }
-                    }).fail(function(){
-                        return self.show_warning_message(_t("Connection Refused. Please check the connection to CashBox"));
-                    });
+                }).fail(function(){
+                    return self.show_warning_message(_t("Connection Refused. Please check the connection to CashBox"));
                 });
             } else {
                 this._super.apply(this, arguments);
@@ -52,7 +49,7 @@ odoo.define('pos_cashbox.open', function (require) {
             return url;
         },
         connect: function(url) {
-            this.connection = new Session(void 0, url, { use_cors: true});
+            this.connection = new Session(undefined, url, { use_cors: true});
         },
         open_cashbox: function(){
             var self = this;
