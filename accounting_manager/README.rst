@@ -19,7 +19,7 @@ Maintainers
 -----------
 * `IT-Projects LLC <https://it-projects.info>`__
 
-      To get a guaranteed support you are kindly requested to purchase the module at `odoo apps store <https://apps.odoo.com/apps/modules/10.0/accounting_manager/>`__.
+      To get a guaranteed support you are kindly requested to purchase the module at `odoo apps store <https://apps.odoo.com/apps/modules/11.0/accounting_manager/>`__.
 
       Thank you for understanding!
 
@@ -28,12 +28,12 @@ Maintainers
 Further information
 ===================
 
-Demo: http://runbot.it-projects.info/demo/access-addons/10.0
+Demo: http://runbot.it-projects.info/demo/access-addons/11.0
 
-HTML Description: https://apps.odoo.com/apps/modules/10.0/accounting_manager/
+HTML Description: https://apps.odoo.com/apps/modules/11.0/accounting_manager/
 
 Usage instructions: `<doc/index.rst>`_
 
 Changelog: `<doc/changelog.rst>`_
 
-Tested on Odoo 10.0 5f0b7942d551f441aa41e75ee06f2dd163a9c6f6
+Tested on Odoo 11.0 cc031bd2264a7fcd8efbc9105902574111859c8b
