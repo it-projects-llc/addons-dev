@@ -35,7 +35,7 @@ odoo.define('pos_absolute_discount.models', function(require){
                 });
                 return this.pos.gui.show_popup('error',{
                     'title': _t("Warning"),
-                    'body': _t("It is not allowed to create a credit by discount: " + discount + self.pos.currency.symbol + '. \n' +
+                    'body': _t("It is not allowed to create a credit by discount: " + discount + self.pos.currency.symbol + '. \r\n' +
                     "The discount value should not be higher than unit price " + self.price + self.pos.currency.symbol),
                 });
             }
