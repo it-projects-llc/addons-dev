@@ -31,7 +31,7 @@ odoo.define('pos_absolute_discount.models', function(require){
             var self = this;
             if (this.price < discount) {
                 this.pos.gui.screen_instances.products.numpad.state.set({
-                    buffer: this.get_absolute_discount_str()
+                    buffer: this.get_absolute_discount_str() || String(0)
                 });
                 return this.pos.gui.show_popup('error',{
                     'title': _t("Warning"),
