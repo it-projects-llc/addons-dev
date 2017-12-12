@@ -38,7 +38,7 @@ odoo.define('pos_cashbox.open', function (require) {
             }});
         },
         get_full_url: function(current_url) {
-            var port = '8069';
+            var port = ':8069';
             var url = current_url;
             if(url.indexOf('//') < 0){
                 url = 'http://' + url;
