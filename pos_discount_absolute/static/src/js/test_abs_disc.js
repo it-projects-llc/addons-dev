@@ -43,6 +43,10 @@ odoo.define('pos_discount_absolute.tour', function (require) {
     }
 
     var steps = [{
+            content: "Switch to table or make dummy action",
+            trigger: '.table:not(.oe_invisible .neworder-button), .order-button.selected',
+            position: "bottom"
+        },{
             content: 'waiting for loading to finish',
             trigger: '.neworder-button > .fa-plus',
         }];
