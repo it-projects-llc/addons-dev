@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- <data noupdate="1"> -->
+    <record id="default_company_country" model="ir.default">
+      <field name="field_id" ref="base.field_res_company_country_id" />
+      <field name="json_value">12</field>
+    </record>
+  <!-- </data> -->
+</odoo>
