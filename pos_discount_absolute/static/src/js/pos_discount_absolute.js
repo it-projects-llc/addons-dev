@@ -62,14 +62,12 @@ odoo.define('pos_discount_absolute', function (require) {
         confirm_discount: function(val) {
             if (this.pos.discount_abs_type){
                 this.apply_absolute_discount(val);
+            } else if (this.abs_disc_presence()) {
+                this.remove_abs_discount();
+                this._super(val);
+                this.apply_absolute_discount(this.pos.discount_abs_value);
             } else {
-                if (this.abs_disc_presence()) {
-                    this.remove_abs_discount();
-                    this._super(val);
-                    this.apply_absolute_discount(this.pos.discount_abs_value);
-                } else {
-                    this._super(val);
-                }
+                this._super(val);
             }
         },
         apply_absolute_discount: function(val){
@@ -120,14 +118,14 @@ odoo.define('pos_discount_absolute', function (require) {
                 ? order.get_total_with_tax()
                 : 0;
             var abs_prod_id = this.pos.config.discount_abs_product_id[0];
-            var abs_disc_prod = this.pos.get_order().get_orderlines().find(function(line){
+            var abs_disc_prod = _.find(this.pos.get_order().get_orderlines(), function(line){
                 return abs_prod_id === line.product.id;
             });
             // taxes_on_discounts is needed to prevent endless cycle caused by negative price due to negative taxes
             if (abs_disc_prod && !this.pos.taxes_on_discounts){
                 var recalc = - abs_disc_prod.price !== (Number(this.pos.discount_abs_value) || 0);
                 if (( total < 0 || (recalc && total > 0)) ){
-                    this.apply_absolute_discount(Math.max(Math.abs(abs_disc_prod.price),this.pos.discount_abs_value || ''))
+                    this.apply_absolute_discount(Math.max(Math.abs(abs_disc_prod.price),this.pos.discount_abs_value || ''));
                 }
                 total = order
                     ? order.get_total_with_tax()
