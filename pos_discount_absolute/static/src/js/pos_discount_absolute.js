@@ -16,7 +16,9 @@ odoo.define('pos_discount_absolute', function (require) {
         show: function (options) {
             var self = this;
             this._super(options);
+            // popup_abs_discount is required to prevent errors on a page loading
             this.popup_abs_discount = false;
+            this.pos.discount_abs_type = false;
             if (this.pos.config.discount_abs_enabled) {
                 self.popup_abs_discount = true;
                 self.events["click .absolute.button"] = "click_absolute_discount";
