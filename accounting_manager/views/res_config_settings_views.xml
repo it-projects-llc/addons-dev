@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="res_config_settings_view_form2" model="ir.ui.view">
+    <field name="name">res.config.settings.view.form.inherit.accounting_manager2</field>
+    <field name="model">res.config.settings</field>
+    <field name="priority" eval="200"/>
+    <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+    <field name="groups_id" eval="[(4, ref('accounting_manager.group_fact_manager'))]"/>
+    <field name="arch" type="xml">
+      <xpath expr="//div[@data-key='sale_management']" position="attributes">
+        <attribute name="groups">base.group_system</attribute>
+      </xpath>
+    </field>
+  </record>
+  <record id="res_config_settings_view_form3" model="ir.ui.view">
+    <field name="name">res.config.settings.view.form.inherit.accounting_manager3</field>
+    <field name="model">res.config.settings</field>
+    <field name="priority" eval="200"/>
+    <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+    <field name="groups_id" eval="[(4, ref('accounting_manager.group_fact_manager'))]"/>
+    <field name="arch" type="xml">
+      <xpath expr="//div[@data-key='general_settings']" position="attributes">
+        <attribute name="groups">base.group_system</attribute>
+      </xpath>
+    </field>
+  </record>
+  <menuitem id="account.menu_account_config" name="Settings" parent="account.menu_finance_configuration" sequence="0" groups="base.group_system,accounting_manager.group_fact_manager"/>
+</odoo>
