@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-extend="Product">
+        <t t-jquery=".product-img" t-operation="replace">
+            <div class="product-img">
+                <img t-att-src='image_url' />
+                <t t-if="!product.to_weight">
+                    <span class="price-tag">
+                        <t t-if="widget.display_price_with_taxes">
+                            <t t-esc="widget.format_currency(product.price_with_taxes,'Product Price')"/>
+                        </t>
+                        <t t-if="!widget.display_price_with_taxes">
+                            <t t-esc="widget.format_currency(product.price,'Product Price')"/>
+                        </t>
+                    </span>
+                </t>
+                <t t-if="product.to_weight">
+                    <span class="price-tag">
+                        <t t-if="widget.display_price_with_taxes">
+                            <t t-esc="widget.format_currency(product.price_with_taxes,'Product Price')+'/Kg'"/>
+                        </t>
+                        <t t-if="!widget.display_price_with_taxes">
+                            <t t-esc="widget.format_currency(product.price,'Product Price')+'/Kg'"/>
+                        </t>
+                    </span>
+                </t>
+            </div>
+        </t>
+    </t>
+    <t t-extend="PosTicket">
+        <t t-jquery="t[t-esc='orderline.get_quantity_str_with_unit()']" t-operation="after">
+            <t t-if="orderline.quantity != 1">
+                <t t-if="orderline.show_old_price">
+                    x<t t-esc="widget.format_pr(orderline.get_unit_display_old_price())" />
+                </t>
+                <t t-if="!orderline.show_old_price">
+                    x<t t-esc="widget.format_pr(orderline.get_display_unit_price())"/>
+                </t>
+            </t>
+        </t>
+        <t t-jquery="table[class='receipt-orderlines'] t[t-esc*='format_currency']" t-operation="replace">
+            <t t-if="orderline.show_old_price">
+                <t t-esc="widget.format_currency(orderline.get_display_old_price())" />
+                <div class="pos-disc-font pos-new-price">
+                    <t t-esc="widget.format_currency(orderline.get_display_price())" />
+                </div>
+            </t>
+            <t t-if="!orderline.show_old_price">
+                <t t-esc="widget.format_currency(orderline.get_display_price())"/>
+            </t>
+        </t>
+    </t>
+    <t t-extend="Orderline">
+        <t t-jquery="span[class*='price']" t-operation="replace">
+            <t t-if="line.show_old_price">
+                <span class="price">
+                    <t t-esc="widget.format_currency(line.get_display_old_price())" />
+                </span>
+            </t>
+            <t t-if="!line.show_old_price">
+                <span class="price">
+                    <t t-esc="widget.format_currency(line.get_display_price())"/>
+                </span>
+            </t>
+        </t>
+        <t t-jquery="li[class*='info'] t[t-esc*='format_currency']" t-operation="replace">
+            <t t-if="line.show_old_price">
+                <t t-esc="widget.format_currency(line.get_unit_display_old_price())" />
+            </t>
+            <t t-if="!line.show_old_price">
+                <t t-esc="widget.format_currency(line.get_unit_display_price(),'Product Price')" />
+            </t>
+        </t>
+        <t t-jquery="t[t-if*='line.get_discount_str()'] li[class='info']" t-operation="append">
+            <t t-if="line.show_old_price">
+                <span class="price">
+                    <t t-esc="widget.format_currency(line.get_display_price())"/>
+                </span>
+            </t>
+        </t>
+    </t>
+    <t t-extend="XmlReceipt">
+        <t t-jquery="t[t-esc='line.price']" t-operation="replace">
+            <t t-if="line.show_old_price">
+                <t t-esc="line.old_price" />
+            </t>
+            <t t-if="!line.show_old_price">
+                <t t-esc="line.price" />
+            </t>
+        </t>
+        <t t-jquery="t[t-if='simple'] t[t-esc='line.price_display']" t-operation="replace">
+            <t t-if="line.show_old_price">
+                <t t-esc="line.old_price_display" />
+            </t>
+            <t t-if="!line.show_old_price">
+                <t t-esc="line.price_display" />
+            </t>
+        </t>
+        <t t-jquery="t[t-if='!simple'] t[t-esc='line.price_display']" t-operation="replace">
+            <t t-if="line.show_old_price">
+                <t t-esc="line.old_price_display" />
+            </t>
+            <t t-if="!line.show_old_price">
+                <t t-esc="line.price_display" />
+            </t>
+        </t>
+        <t t-jquery="t[t-if='!simple'] right" t-operation="append">
+            <t t-if="line.show_old_price">
+                <t t-esc="line.price_display" />
+            </t>
+        </t>
+    </t>
+    <t t-name="PricelistButton">
+        <div class='control-button js_pricelist'>
+            <i class='fa fa-usd' /> Default Pricelist
+        </div>
+    </t>
+</templates>
