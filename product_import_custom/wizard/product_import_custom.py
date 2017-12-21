@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import logging
@@ -67,8 +66,15 @@ class ProductImportCustom(models.TransientModel):
     _name = 'product_import_custom.wizard'
 
 
-    def importData(self, csv_product_template, csv_products):
+    product_url = fields.Char(
+        'Product URL',
+        default=lambda self: self.env['ir.config_parameter'].get_param('product_import_custom.product', ''))
+    product_variant_url = fields.Char(
+        'Product Variant URL',
+        default=lambda self: self.env['ir.config_parameter'].get_param('product_import_custom.product_variant'))
 
+    def _import(self, csv_product_template, csv_products):
+        """Import parsed data"""
     #csv_product_template = {'x_template_code': 301, 'name' : 'Mein Testprodukttemplate', 'pos_categ_id': int(1), 'image' : ''}
     #csv_products = [{'default_code' : 'TEST_VARIANTE1', 'name_additional' : 'TEST_VARIANTEE1', 'price_extra' : 25},
      #               {'default_code' : 'TEST_VARIANTE2', 'name_additional' : 'TEST_VARIANTEE2', 'price_extra' : 10},
@@ -136,9 +142,8 @@ class ProductImportCustom(models.TransientModel):
         #pp.pprint(ppData)
 
 
-
     def execute(self):
-
+        """Load URLs and call _parse_and_import"""
         pp = pprint.PrettyPrinter(indent=4)
 
 
@@ -174,6 +179,9 @@ class ProductImportCustom(models.TransientModel):
         f = open(product_variant_csv, 'w')
         f.write(varianten)
         f.close()
+
+    def _parse_and_import(self, product_file, product_variant_file):
+        """Parse file-like objects (real file or result of urlopen). Doesn't close files!"""
 
         with open(product_csv, 'r') as products:
             artikel = products.read()
@@ -263,7 +271,7 @@ class ProductImportCustom(models.TransientModel):
                 continue
             variants = product.pop('products')
             try:
-                importData(product, variants)
+                self._import_data(product, variants)
             except Exception as e:
                 pp.pprint(e)
             time.sleep(1)
