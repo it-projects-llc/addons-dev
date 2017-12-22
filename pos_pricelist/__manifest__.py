@@ -5,7 +5,7 @@
 
 {
     'name': 'POS Pricelist',
-    'version': '9.0.1.3.0',
+    'version': '10.0.1.0.0',
     'category': 'Point Of Sale',
     'images': [],
     'sequence': 1,
@@ -20,8 +20,7 @@
     'data': [
         "views/pos_pricelist_template.xml",
         "views/point_of_sale_view.xml",
-        "views/product_view.xml",
-        # "report/report_receipt.xml",
+        #"report/report_receipt.xml",
         "security/ir.model.access.csv",
         "security/account_fiscal_position_security.xml",
     ],

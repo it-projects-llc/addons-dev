@@ -5,4 +5,3 @@
 
 from . import account_fiscal_position
 from . import point_of_sale
-from . import product

@@ -3,7 +3,7 @@
 <data>
 
 <template id="report_receipt"
-          inherit_id="point_of_sale.report_receipt"
+          inherit_id="point_of_sale.report_invoice"
           name="Add taxes detail">
     <xpath expr="//div[@class='page']" position="inside">
         <table class="table table-condensed">
