@@ -2,49 +2,55 @@
  Sync products via remote csv (custom module)
 ==============================================
 
-Syncs products periodically with cron. Works only with specific column names. URL source can be customized.
+Syncs products periodically with cron. Works only with specific column names. URL source and credentials are customized.
 
 Requires two csv files with following columns (order is important!):
 
-1. ``product_import_custom.product``
+* ``product_import_custom.product`` ::
 
-   * "primary_key"
-   * "Aktiv"
-   * "Name"
-   * "Kategorie"
-   * "Preis"
-   * "Tax"
-   * "Rabatt"
-   * "Rabattbetrag"
-   * "Visibility"
-   * "Brand"
-   * "Menge"
-   * "Kurzbeschreibung"
-   * "Beschreibung"
-   * "Tag"
-   * "Meta-Schlag"
-   * "intelli_KASSA_CAT"
-   * "Meta-Title"
-   * "TextInStock"
-   * "TextSoldOut"
-   * "URLBilder"
-   * "Bild_löschen"
-   * "Joker2"
-   * "Bestellbar"
-   * "ArtNr"
-   * "show price"
-   * "von"
-   * "bis"
+     0. "primary_key"
+     1. "Aktiv"
+     2. "Name"
+     3. "Kategorie"
+     4. "Preis"
+     5. "Tax"
+     6. "Rabatt"
+     7. "Rabattbetrag"
+     8. "Visibility"
+     9. "Brand"
+     10. "Menge"
+     11. "Kurzbeschreibung"
+     12. "Beschreibung"
+     13. "Tag"
+     14. "Meta-Schlag"
+     15. "intelli_KASSA_CAT"
+     16. "Meta-Title"
+     17. "TextInStock"
+     18. "TextSoldOut"
+     19. "URLBilder"
+     20. "Bild_löschen"
+     21. "Joker2"
+     22. "Bestellbar"
+     23. "ArtNr"
+     24. "show price"
+     25. "von"
+     26. "bis"
 
-2. ``product_import_custom.product_variant``
+* ``product_import_custom.product_variant``::
 
-   * "External ID"
-   * "Internal Reference"
-   * "Point of Sale Category / Datenbank ID"
-   * "Name"
-   * "price"
-   * "Customer Taxes / Datenbank ID"
-   * "primary_key"
+     0. "External ID"
+     1. "Internal Reference"
+     2. "Point of Sale Category / Datenbank ID"
+        TODO: this points directly to POS Category in odoo. It may be a problem on deploying module in a new database
+     3. "Name"
+     4. "price"
+     5. "Customer Taxes / Datenbank ID"
+     6. "primary_key"
+
+Roadmap
+=======
+
+* The module has hardcoded ids from some record (see WTF marks in the source)
 
 Credits
 =======

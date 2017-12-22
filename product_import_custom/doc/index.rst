@@ -14,8 +14,10 @@ Configuration
 * Open menu ``[[ Settings ]] >> Technical >> Parameters >> System Parameters``
 * Update following parameters:
 
-  * ``product_import_custom.product``
-  * ``product_import_custom.product_variant``
+  * ``product_import_custom.product_url``
+  * ``product_import_custom.product_variant_url``
+  * ``product_import_custom.username`` (Remove this parameter if authentication is not needed)
+  * ``product_import_custom.password``
 
 * Open menu ``[[ Settings ]] >> Technical >> Automation >> Scheduled Actions``
 * Open record named ``Sync products via remote csv``
