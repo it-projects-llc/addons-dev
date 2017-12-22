@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+         <record id="ir_config_parameter_product_url" model="ir.config_parameter">
+            <field name="key">product_import_custom.product_url</field>
+            <field name="value">https://</field>
+        </record>
+         <record id="ir_config_parameter_product_variant_url" model="ir.config_parameter">
+            <field name="key">product_import_custom.product_variant_url</field>
+            <field name="value">https://</field>
+        </record>
+         <record id="ir_config_parameter_username" model="ir.config_parameter">
+            <field name="key">product_import_custom.username</field>
+            <field name="value">USERNAME</field>
+        </record>
+         <record id="ir_config_parameter_password" model="ir.config_parameter">
+            <field name="key">product_import_custom.password</field>
+            <field name="value">PASSWORD</field>
+        </record>
+
+    </data>
+</openerp>

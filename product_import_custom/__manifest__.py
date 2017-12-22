@@ -17,10 +17,12 @@
 
     "depends": [
         "product",
+        "point_of_sale",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
         "data/ir_cron.xml",
+        "data/ir_config_parameter.xml",
     ],
     "qweb": [
     ],
