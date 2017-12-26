@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models, _
 import odoo.addons.decimal_precision as dp
+from odoo.exceptions import ValidationError
 
 
 class FleetVehicle(models.Model):
@@ -24,3 +25,9 @@ class FleetVehicle(models.Model):
     fuel_type = fields.Selection(required=True)
     seats = fields.Integer(required=True)
     horsepower = fields.Integer(required=True)
+
+    @api.constrains('horsepower')
+    def _check_horsepower(self):
+        if any(vehicle.horsepower < 2 for vehicle in self):
+            raise ValidationError(_('Error ! Horsepower value should not be less than two.'))
+        return True

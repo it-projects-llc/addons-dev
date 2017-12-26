@@ -1,2 +1,3 @@
 # -*- coding: utf-8 -*-
-import fleet
+from . import fleet
+from . import insurance_broker_car_pricing

@@ -25,7 +25,9 @@
         "data/product.product.csv",
         "data/ir_values_data.xml",
         "security/sales_team_security.xml",
+        'security/ir.model.access.csv',
         "views/fleet_view.xml",
+        "views/insurance_broker_car_pricing_view.xml",
     ],
     "qweb": [
     ],
