@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+    <record id="default_product_type" model="ir.values">
+      <field name="name">type</field>
+      <field name="key">default</field>
+      <field name="key2"></field>
+      <field name="model">product.template</field>
+      <field name="value_unpickle">service</field>
+    </record>
+  </data>
+</odoo>
