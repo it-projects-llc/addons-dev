@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="fleet_vehicle_view_form_inherit_insurance_broker_car_pricing" model="ir.ui.view">
+    <field name="name">fleet.vehicle.form</field>
+    <field name="model">fleet.vehicle</field>
+    <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='tag_ids']" position="attributes">
+        <attribute name="invisible">1</attribute>
+      </xpath>
+      <xpath expr="//label[@for='tag_ids']" position="attributes">
+        <attribute name="invisible">1</attribute>
+      </xpath>
+      <xpath expr="//field[@name='vin_sn']" position="after">
+        <field name="category_id" />
+        <field name="product_attribute_value_id" />
+        <field name="product_id" />
+        <field name="base_price" />
+      </xpath>
+    </field>
+  </record>
+</odoo>

@@ -25,6 +25,7 @@
         "data/product.product.csv",
         "data/ir_values_data.xml",
         "security/sales_team_security.xml",
+        "views/fleet_view.xml",
     ],
     "qweb": [
     ],
