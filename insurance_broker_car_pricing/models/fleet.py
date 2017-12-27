@@ -3,6 +3,7 @@
 from odoo import api, fields, models, _
 import odoo.addons.decimal_precision as dp
 from odoo.exceptions import ValidationError
+from ..wizard.product_finder import _find_insurance_product
 
 
 class FleetVehicle(models.Model):
@@ -31,7 +32,7 @@ class FleetVehicle(models.Model):
     product_attribute_value_id = fields.Many2one('product.attribute.value', 'Fiscal Power',
                                                  domain=lambda self: [('attribute_id', '=', self.env.ref('insurance_broker_car_pricing.product_attribute_fiscal_power').id)],
                                                  compute='_get_fiscal_power', readonly=True)
-    product_id = fields.Many2one('product.product', 'Vehicle Insurance', compute='_find_insurance_product', readonly=True)
+    product_id = fields.Many2one('product.product', 'Vehicle Insurance', compute=_find_insurance_product, readonly=True)
     base_price = fields.Float('Price', related='product_id.lst_price', digits=dp.get_precision('Product Price'), readonly=True)
     fuel_type = fields.Selection(required=True)
     seats = fields.Integer(required=True)
