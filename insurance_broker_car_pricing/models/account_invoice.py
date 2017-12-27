@@ -47,3 +47,8 @@ class AccountInvoiceLine(models.Model):
             vals['end_date'] = date.today() + relativedelta(years=1)
         invline = super(AccountInvoiceLine, self).create(vals)
         return invline
+
+    @api.onchange('vehicle_id')
+    def _onchange_vehicle_id(self):
+        if self.vehicle_id.product_id:
+            self.product_id = self.vehicle_id.product_id
