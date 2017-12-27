@@ -39,6 +39,15 @@ class AccountInvoiceLine(models.Model):
                     _("End Date shouldn't be less than today for invoice line with "
                         "Description '%s'.")
                     % (invline.name))
+            if invline.start_date and invline.end_date:
+                start_date = datetime.strptime(invline.start_date, DF).date()
+                end_date = datetime.strptime(invline.end_date, DF).date() + timedelta(1)
+                reference_date = start_date + relativedelta(years=1)
+                if end_date - start_date > reference_date - start_date:
+                    raise ValidationError(
+                        _("Time period should be less than 1year/12months for invoice line with "
+                            "Description '%s'.")
+                        % (invline.name))
 
     @api.model
     def create(self, vals):
