@@ -9,7 +9,7 @@
         <sheet>
           <group>
             <field name="product_attribute_value_id"/>
-            <field name="active" invisible="1"/>
+            <field name="active"/>
             <field name="fuel_type"/>
             <field name="horsepower_from"/>
             <field name="horsepower_to"/>
@@ -24,7 +24,7 @@
     <field name="arch" type="xml">
       <tree string="Fiscal Power">
         <field name="product_attribute_value_id"/>
-        <field name="active" invisible="1"/>
+        <field name="active"/>
         <field name="fuel_type"/>
         <field name="horsepower_from"/>
         <field name="horsepower_to"/>
