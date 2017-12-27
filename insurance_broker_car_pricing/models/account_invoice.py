@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
+from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
@@ -38,3 +39,11 @@ class AccountInvoiceLine(models.Model):
                     _("End Date shouldn't be less than today for invoice line with "
                         "Description '%s'.")
                     % (invline.name))
+
+    @api.model
+    def create(self, vals):
+        if not vals.get('start_date') and not vals.get('end_date'):
+            vals['start_date'] = date.today() + timedelta(1)
+            vals['end_date'] = date.today() + relativedelta(years=1)
+        invline = super(AccountInvoiceLine, self).create(vals)
+        return invline
