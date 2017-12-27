@@ -112,6 +112,8 @@ odoo.define('pos_pricelist.models', function (require) {
                 var db = this.pos.db;
                 if (partner && partner.property_product_pricelist) {
                     this.default_pricelist_is_active = true;
+                } else {
+                    this.default_pricelist_is_active = false;
                 }
                 var price = this.pos.pricelist_engine.compute_price_all(
                     db, product, partner, qty

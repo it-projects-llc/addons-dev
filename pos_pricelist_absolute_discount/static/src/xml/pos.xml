@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-extend="Orderline">
-        <t t-jquery="t[t-if*='line.get_absolute_discount_str()'] li[class='info']" t-operation="append">
-            <t t-if="line.show_old_price">
-                <span class="price">
-                    <t t-esc="widget.format_currency(line.get_display_price())"/>
-                </span>
-            </t>
-        </t>
-    </t>
+
 </templates>

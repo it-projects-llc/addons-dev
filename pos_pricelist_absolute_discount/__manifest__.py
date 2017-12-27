@@ -22,6 +22,7 @@
     "external_dependencies": {"python": [], "bin": []},
     "data": [
         "views/template.xml",
+        "views/product_view.xml",
     ],
     "qweb": [
         "static/src/xml/pos.xml",

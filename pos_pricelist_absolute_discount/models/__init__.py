@@ -1,2 +1,2 @@
 # -*- coding: utf-8 -*-
-from . import pos_order_model
+from . import product_model
