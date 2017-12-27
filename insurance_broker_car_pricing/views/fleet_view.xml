@@ -34,8 +34,41 @@
         <attribute name="invisible">1</attribute>
       </xpath>
       <xpath expr="//div[@class='oe_kanban_details']" position="inside">
-        <p><field name="category_id"/></p>
-        <p><field name="product_id"/></p>
+        <p>
+          <field name="category_id"/>
+        </p>
+        <p>
+          <field name="product_id"/>
+        </p>
+      </xpath>
+    </field>
+  </record>
+  <record id="fleet_vehicle_view_tree_inherit_insurance_broker_car_pricing" model="ir.ui.view">
+    <field name="name">fleet.vehicle.tree</field>
+    <field name="model">fleet.vehicle</field>
+    <field name="inherit_id" ref="fleet.fleet_vehicle_view_tree"/>
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='driver_id']" position="attributes">
+        <attribute name="invisible">1</attribute>
+      </xpath>
+      <xpath expr="//field[@name='vin_sn']" position="attributes">
+        <attribute name="invisible">1</attribute>
+      </xpath>
+      <xpath expr="//field[@name='acquisition_date']" position="attributes">
+        <attribute name="invisible">1</attribute>
+      </xpath>
+      <xpath expr="//field[@name='odometer']" position="attributes">
+        <attribute name="invisible">1</attribute>
+      </xpath>
+      <xpath expr="//field[@name='odometer_unit']" position="attributes">
+        <attribute name="invisible">1</attribute>
+      </xpath>
+      <xpath expr="//field[@name='model_id']" position="after">
+        <field name="category_id" />
+        <field name="product_attribute_value_id" />
+        <field name="seats" />
+        <field name="product_id" />
+        <field name="base_price" />
       </xpath>
     </field>
   </record>
