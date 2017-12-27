@@ -23,7 +23,7 @@ class FleetVehicle(models.Model):
                                              ('name', '=', str(record.seats))]).product_ids
             fiscal_power_products = record.product_attribute_value_id.product_ids
             products = seats_products & fiscal_power_products
-            products.filtered(lambda r: r.categ_id == record.category_id.id)
+            products.filtered(lambda r: r.categ_id.id == record.category_id.id)
             if products:
                 record.product_id = products[0].id
 
