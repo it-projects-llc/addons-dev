@@ -28,6 +28,7 @@
         'security/ir.model.access.csv',
         "views/fleet_view.xml",
         "views/insurance_broker_car_pricing_view.xml",
+        "views/sale_views.xml",
     ],
     "qweb": [
     ],
