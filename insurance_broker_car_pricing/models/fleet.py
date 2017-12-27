@@ -17,17 +17,6 @@ class FleetVehicle(models.Model):
             if fiscal_power:
                 record.product_attribute_value_id = fiscal_power[0].product_attribute_value_id.id
 
-    def _find_insurance_product(self):
-        for record in self:
-            AttrVal = self.env['product.attribute.value']
-            seats_products = AttrVal.search([('attribute_id', '=', self.env.ref('insurance_broker_car_pricing.product_attribute_seats').id),
-                                             ('name', '=', str(record.seats))]).product_ids
-            fiscal_power_products = record.product_attribute_value_id.product_ids
-            products = seats_products & fiscal_power_products
-            products.filtered(lambda r: r.categ_id.id == record.category_id.id)
-            if products:
-                record.product_id = products[0].id
-
     category_id = fields.Many2one('product.category', 'Category', required=True)
     product_attribute_value_id = fields.Many2one('product.attribute.value', 'Fiscal Power',
                                                  domain=lambda self: [('attribute_id', '=', self.env.ref('insurance_broker_car_pricing.product_attribute_fiscal_power').id)],
