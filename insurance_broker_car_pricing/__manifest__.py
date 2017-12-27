@@ -29,6 +29,7 @@
         "views/fleet_view.xml",
         "views/insurance_broker_car_pricing_view.xml",
         "views/sale_views.xml",
+        "views/account_invoice_view.xml",
     ],
     "qweb": [
     ],
