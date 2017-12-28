@@ -3,7 +3,7 @@ from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 
 
 class AccountInvoice(models.Model):
@@ -54,6 +54,7 @@ class AccountInvoiceLine(models.Model):
         if not vals.get('start_date') and not vals.get('end_date'):
             vals['start_date'] = date.today() + timedelta(1)
             vals['end_date'] = date.today() + relativedelta(years=1)
+            vals['uom_id'] = self.env.ref('insurance_broker_car_pricing.product_uom_year').id
         invline = super(AccountInvoiceLine, self).create(vals)
         return invline
 
