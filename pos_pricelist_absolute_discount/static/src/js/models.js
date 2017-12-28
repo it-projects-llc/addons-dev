@@ -88,7 +88,6 @@ odoo.define('pos_pricelist_absolute_discount.models', function(require){
             var rules = this.get_active_pricelist_items_by_product();
             var type = "percentage";
             if (rules.length) {
-
                 type = rules[0].compute_price;
             }
             return type;
@@ -97,6 +96,11 @@ odoo.define('pos_pricelist_absolute_discount.models', function(require){
             var self = this;
             var order = this.pos.get_order() || this.order;
             var all_rules = order.active_price_list_rules;
+            var partner = order.get_client() || false;
+            // if there is a partner and default_pricelist_is_active is False then we applied the default price list
+            if (partner && !this.default_pricelist_is_active) {
+                all_rules = this.pos.pricelist_engine.get_all_rules_by_pricelist_id(this.pos.config.pricelist_id[0]);
+            }
             return all_rules.filter(function(rule) {
                 return rule.min_quantity <= self.quantity && (rule.product_tmpl_id && rule.product_tmpl_id[0] === self.product.product_tmpl_id);
             });
