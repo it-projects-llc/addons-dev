@@ -61,3 +61,17 @@ class AccountInvoiceLine(models.Model):
     def _onchange_vehicle_id(self):
         if self.vehicle_id.product_id:
             self.product_id = self.vehicle_id.product_id
+
+    @api.onchange('end_date', 'start_date')
+    def _onchange_dates(self):
+        if self.start_date and self.end_date:
+            start_date = datetime.strptime(self.start_date, DF).date()
+            end_date = datetime.strptime(self.end_date, DF).date() + timedelta(1)
+            reference_date = start_date + relativedelta(years=1)
+            if end_date - start_date < reference_date - start_date:
+                months = relativedelta(end_date, start_date).months
+                self.quantity = months
+                self.uom_id = self.env.ref('insurance_broker_car_pricing.product_uom_month').id
+            elif end_date - start_date >= reference_date - start_date:
+                self.quantity = 1
+                self.uom_id = self.env.ref('insurance_broker_car_pricing.product_uom_year').id
