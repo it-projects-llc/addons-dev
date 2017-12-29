@@ -38,6 +38,14 @@ class SaleOrderLine(models.Model):
         soline = super(SaleOrderLine, self).create(vals)
         return soline
 
+    @api.multi
+    def write(self, vals):
+        if not vals.get('start_date') and not vals.get('end_date'):
+            vals['start_date'] = date.today() + timedelta(1)
+            vals['end_date'] = date.today() + relativedelta(years=1)
+            vals['product_uom'] = self.env.ref('insurance_broker_car_pricing.product_uom_year').id
+        return super(SaleOrderLine, self).write(vals)
+
     @api.one
     @api.constrains('start_date', 'end_date')
     def _check_start_end_dates(self):
