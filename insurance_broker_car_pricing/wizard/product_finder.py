@@ -13,7 +13,7 @@ def _find_insurance_product(self):
             products = seats_products & fiscal_power_products
         else:
             products = fiscal_power_products
-        products.filtered(lambda r: r.categ_id.id == record.category_id.id)
+        products = products.filtered(lambda r: r.categ_id == record.category_id)
         if products:
             record.product_id = products[0].id
 
