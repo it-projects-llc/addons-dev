@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="product_finder_view_form" model="ir.ui.view">
+    <field name="name">Product Finder</field>
+    <field name="model">insurance_broker.product_finder</field>
+    <field name="arch" type="xml">
+      <form string="Product Finder">
+        <group>
+          <field name="category_id"/>
+          <field name="product_attribute_value_id"/>
+          <field name="seats"/>
+          <field name="product_id"/>
+          <field name="base_price"/>
+        </group>
+        <!-- <footer> -->
+        <!--   <button name="create_invoices" string="Create and View Invoices" type="object" -->
+        <!--           context="{'open_invoices': True}" class="btn-primary"/> -->
+        <!--   <button name="create_invoices" string="Create Invoices" type="object" -->
+        <!--           class="btn-primary"/> -->
+        <!--   <button string="Cancel" class="btn-default" special="cancel"/> -->
+        <!-- </footer> -->
+      </form>
+    </field>
+  </record>
+  <record id="product_finder_action" model="ir.actions.act_window">
+    <field name="name">Product Finder</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">insurance_broker.product_finder</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    <field name="groups_id" eval="[(4,ref('sales_team.group_sale_salesman'))]"/>
+  </record>
+</odoo>

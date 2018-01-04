@@ -28,6 +28,7 @@
         'security/ir.model.access.csv',
         "views/fleet_view.xml",
         "views/insurance_broker_car_pricing_view.xml",
+        "wizard/product_finder_views.xml",
         "views/sale_views.xml",
         "views/account_invoice_view.xml",
         "views/product_view.xml",
