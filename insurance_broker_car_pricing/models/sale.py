@@ -15,14 +15,20 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
+    vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle')
+
     @api.model
-    def _default_vehicle_id(self):
+    def default_get(self, fields_list):
+        result = super(SaleOrderLine, self).default_get(fields_list)
         order_id = self._context.get('sale_order_id')
         if order_id:
             order = self.env['sale.order'].browse(order_id)
-            return order.vehicle_id.id
+            result['vehicle_id'] = order.vehicle_id.id
+            vehicle = self.env['fleet.vehicle'].browse(order.vehicle_id.id)
+            if vehicle:
+                result['product_id'] = vehicle.product_id.id
 
-    vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', default=_default_vehicle_id)
+        return result
 
     @api.onchange('vehicle_id')
     def _onchange_vehicle_id(self):
