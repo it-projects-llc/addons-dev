@@ -82,3 +82,4 @@ class AccountInvoiceLine(models.Model):
             elif end_date - start_date >= reference_date - start_date:
                 self.quantity = 1
                 self.uom_id = self.env.ref('insurance_broker_car_pricing.product_uom_year').id
+                self.price_unit = self.product_id.lst_price
