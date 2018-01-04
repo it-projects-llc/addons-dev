@@ -15,14 +15,20 @@ class AccountInvoice(models.Model):
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
+    vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle')
+
     @api.model
-    def _default_vehicle_id(self):
+    def default_get(self, fields_list):
+        result = super(AccountInvoiceLine, self).default_get(fields_list)
         invoice_id = self._context.get('default_invoice_id')
         if invoice_id:
             invoice = self.env['account.invoice'].browse(invoice_id)
-            return invoice.vehicle_id.id
+            result['vehicle_id'] = invoice.vehicle_id.id
+            vehicle = self.env['fleet.vehicle'].browse(invoice.vehicle_id.id)
+            if vehicle:
+                result['product_id'] = vehicle.product_id.id
 
-    vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', default=_default_vehicle_id)
+        return result
 
     @api.multi
     @api.constrains('start_date', 'end_date')
