@@ -11,11 +11,27 @@ class SaleOrder(models.Model):
 
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle')
 
+    @api.multi
+    def _prepare_invoice(self):
+        invoice_vals = super(SaleOrder, self)._prepare_invoice()
+        invoice_vals['vehicle_id'] = self.vehicle_id.id
+        return invoice_vals
+
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle')
+
+    @api.multi
+    def _prepare_invoice_line(self, qty):
+        res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
+        res.update({
+            'start_date': self.start_date,
+            'end_date': self.end_date,
+            'vehicle_id': self.vehicle_id.id,
+        })
+        return res
 
     @api.model
     def default_get(self, fields_list):
