@@ -5,6 +5,22 @@
 from odoo import fields, models, api
 from odoo.addons import decimal_precision as dp
 
+
+class ProductCategory(models.Model):
+    _inherit = "product.category"
+
+    @api.multi
+    def name_get(self):
+        fleet_categ_ids =[self.env.ref('insurance_broker_car_pricing.product_category_pool').id, self.env.ref('insurance_broker_car_pricing.product_category_non_pool').id]
+        fleet_categs = self.filtered(lambda r: r.id in fleet_categ_ids)
+        other_categs = self - fleet_categs
+
+        other_list = super(ProductCategory, other_categs).name_get()
+        fleet_list = [(cat.id, cat.name) for cat in fleet_categs]
+
+        return other_list + fleet_list
+
+
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
