@@ -3,7 +3,7 @@
 from odoo import api, fields, models, _
 import odoo.addons.decimal_precision as dp
 from odoo.exceptions import ValidationError
-from ..wizard.product_finder import _find_insurance_product
+from ..wizard.price_finder import _find_insurance_product
 
 
 class FleetVehicle(models.Model):

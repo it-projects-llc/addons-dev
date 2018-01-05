@@ -18,9 +18,9 @@ def _find_insurance_product(self):
             record.product_id = products[0].id
 
 
-class InsuranceBrokerProductFinder(models.TransientModel):
-    _name = "insurance_broker.product_finder"
-    _description = "Product Finder"
+class InsuranceBrokerPriceFinder(models.TransientModel):
+    _name = "insurance_broker.price.finder"
+    _description = "Price Finder"
 
 
     category_id = fields.Many2one('product.category', 'Category', required=True)

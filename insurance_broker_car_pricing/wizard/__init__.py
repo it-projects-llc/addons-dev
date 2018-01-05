@@ -1,2 +1,2 @@
 # -*- coding: utf-8 -*-
-from . import product_finder
+from . import price_finder

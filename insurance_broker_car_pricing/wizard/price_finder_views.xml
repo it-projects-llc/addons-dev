@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <record id="product_finder_view_form" model="ir.ui.view">
-    <field name="name">Product Finder</field>
-    <field name="model">insurance_broker.product_finder</field>
+  <record id="price_finder_view_form" model="ir.ui.view">
+    <field name="name">Price Finder</field>
+    <field name="model">insurance_broker.price.finder</field>
     <field name="arch" type="xml">
-      <form string="Product Finder">
+      <form string="Price Finder">
         <group>
           <field name="category_id"/>
           <field name="product_attribute_value_id"/>
@@ -22,10 +22,10 @@
       </form>
     </field>
   </record>
-  <record id="product_finder_action" model="ir.actions.act_window">
-    <field name="name">Product Finder</field>
+  <record id="price_finder_action" model="ir.actions.act_window">
+    <field name="name">Price Finder</field>
     <field name="type">ir.actions.act_window</field>
-    <field name="res_model">insurance_broker.product_finder</field>
+    <field name="res_model">insurance_broker.price.finder</field>
     <field name="view_type">form</field>
     <field name="view_mode">form</field>
     <field name="target">new</field>
