@@ -7,12 +7,46 @@
     <field name="arch" type="xml">
       <form string="Fiscal Power">
         <sheet>
+          <div class="oe_button_box" name="button_box">
+            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+              <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+            </button>
+          </div>
+          <div class="oe_title">
+            <label for="product_attribute_value_id" class="oe_edit_only"/>
+            <h3>
+              <field name="product_attribute_value_id"/>
+            </h3>
+          </div>
           <group>
-            <field name="product_attribute_value_id"/>
-            <field name="active"/>
-            <field name="fuel_type"/>
-            <field name="horsepower_from"/>
-            <field name="horsepower_to"/>
+            <group>
+              <label for="gasoline" string="Gasoline"/>
+              <div>
+                <field name="gasoline" class="oe_inline"/>
+                <field name="gasoline_horsepower_from" class="oe_inline" style="width:20%% !important; margin  -left:1%% !important; margin -  right:3%% !important;" attrs="{'invisible': [('gasoline', '=', False)]}"/>
+                <field name="gasoline_horsepower_to" class="oe_inline " style="width:20%% !important;" attrs="{'invisible': [('gasoline', '=', False)]}"/>
+              </div>
+              <label for="diesel" string="Diesel"/>
+              <div>
+                <field name="diesel" class="oe_inline"/>
+                <field name="diesel_horsepower_from" class="oe_inline" style="width:20%% !important; margin  -left:1%% !important; margin -  right:3%% !important;" attrs="{'invisible': [('diesel', '=', False)]}"/>
+                <field name="diesel_horsepower_to" class="oe_inline " style="width:20%% !important;" attrs="{'invisible': [('diesel', '=', False)]}"/>
+              </div>
+            </group>
+            <group>
+              <label for="electric" string="Electric"/>
+              <div>
+                <field name="electric" class="oe_inline"/>
+                <field name="electric_horsepower_from" class="oe_inline" style="width:20%% !important; margin  -left:1%% !important; margin -  right:3%% !important;" attrs="{'invisible': [('electric', '=', False)]}"/>
+                <field name="electric_horsepower_to" class="oe_inline " style="width:20%% !important;" attrs="{'invisible': [('electric', '=', False)]}"/>
+              </div>
+              <label for="hybrid" string="Hybrid"/>
+              <div>
+                <field name="hybrid" class="oe_inline"/>
+                <field name="hybrid_horsepower_from" class="oe_inline" style="width:20%% !important; margin  -left:1%% !important; margin -  right:3%% !important;" attrs="{'invisible': [('hybrid', '=', False)]}"/>
+                <field name="hybrid_horsepower_to" class="oe_inline " style="width:20%% !important;" attrs="{'invisible': [('hybrid', '=', False)]}"/>
+              </div>
+            </group>
           </group>
         </sheet>
       </form>
@@ -25,9 +59,6 @@
       <tree string="Fiscal Power">
         <field name="product_attribute_value_id"/>
         <field name="active"/>
-        <field name="fuel_type"/>
-        <field name="horsepower_from"/>
-        <field name="horsepower_to"/>
       </tree>
     </field>
   </record>

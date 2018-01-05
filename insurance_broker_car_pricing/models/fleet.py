@@ -10,10 +10,10 @@ class FleetVehicle(models.Model):
     _inherit = 'fleet.vehicle'
 
     def _get_fiscal_power(self):
-        for record in self:
-            fiscal_power = self.env['insurance_broker.fiscal_power'].search([('fuel_type', '=', record.fuel_type),
-                                                                            ('horsepower_from', '<=', record.horsepower),
-                                                                            ('horsepower_to', '>=', record.horsepower)])
+        for record in self.filtered('fuel_type'):
+            fiscal_power = self.env['insurance_broker.fiscal_power'].search([(record.fuel_type, '=', True),
+                                                                            ('{}_horsepower_from'.format(record.fuel_type), '<=', record.horsepower),
+                                                                            ('{}_horsepower_to'.format(record.fuel_type), '>=', record.horsepower)])
             if fiscal_power:
                 record.product_attribute_value_id = fiscal_power[0].product_attribute_value_id.id
 
