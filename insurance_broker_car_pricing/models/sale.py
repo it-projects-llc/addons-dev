@@ -43,6 +43,9 @@ class SaleOrderLine(models.Model):
             vehicle = self.env['fleet.vehicle'].browse(order.vehicle_id.id)
             if vehicle:
                 result['product_id'] = vehicle.product_id.id
+        result['start_date'] = (date.today() + timedelta(1)).strftime(DF)
+        result['end_date'] = (date.today() + relativedelta(years=1)).strftime(DF)
+        result['uom_id'] = self.env.ref('insurance_broker_car_pricing.product_uom_year').id
 
         return result
 
