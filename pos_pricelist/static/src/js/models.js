@@ -103,6 +103,8 @@ odoo.define('pos_pricelist.models', function (require) {
          * @param options
          */
         initialize: function (attr, options) {
+            var self = this;
+            this.default_pricelist_is_active = true;
             var result = _super_orderline.initialize.apply(this, arguments);
             this.manual_price = false;
             if (this.product !== undefined) {
@@ -110,16 +112,26 @@ odoo.define('pos_pricelist.models', function (require) {
                 var partner = this.order ? this.order.get_client() : null;
                 var product = this.product;
                 var db = this.pos.db;
-                if (partner && partner.property_product_pricelist) {
-                    this.default_pricelist_is_active = true;
+                if (partner && partner.property_product_pricelist[0]) {
+                    if (this.default_pricelist_is_active) {
+                        var price = this.pos.pricelist_engine.compute_price_all(
+                            db, product, partner, qty
+                        );
+                        if (price !== false) {
+                            this.price = price;
+                        }
+                    } else {
+                        this.set_default_pricelist();
+                    }
+
                 } else {
                     this.default_pricelist_is_active = false;
-                }
-                var price = this.pos.pricelist_engine.compute_price_all(
-                    db, product, partner, qty
-                );
-                if (price !== false) {
-                    this.price = price;
+                    var price = this.pos.pricelist_engine.compute_price_all(
+                        db, product, partner, qty
+                    );
+                    if (price !== false) {
+                        this.price = price;
+                    }
                 }
             }
             return result;
@@ -159,6 +171,7 @@ odoo.define('pos_pricelist.models', function (require) {
             var price = this.pos.pricelist_engine.compute_price_all(
                 db, this.product, false, this.quantity
             );
+            this.manual_price = true;
             this.set_unit_price(price);
         },
         /**

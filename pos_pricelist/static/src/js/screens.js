@@ -39,7 +39,7 @@ odoo.define('pos_pricelist.screens', function (require) {
                 var buttons = this.getParent().screens.products.action_buttons;
                 if (buttons && buttons.pricelist && orderLines.length) {
                     orderLines.forEach(function(line){
-                        buttons.pricelist.set_change_pricelist_button(default_pricelist_is_active, line)
+                        buttons.pricelist.set_change_pricelist_button(default_pricelist_is_active, line);
                     });
                 }
             }
@@ -68,6 +68,18 @@ odoo.define('pos_pricelist.screens', function (require) {
                 line.default_pricelist_is_active = status;
             }
         },
+        renderElement: function(){
+            this._super();
+            var self = this;
+            var order = this.pos.get_order();
+            if (order) {
+                var lines = order.get_orderlines();
+                lines.forEach(function(line) {
+                    self.set_change_pricelist_button(line.default_pricelist_is_active, line);
+
+                });
+            }
+        }
     });
 
     screens.define_action_button({
