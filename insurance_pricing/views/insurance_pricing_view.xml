@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <menuitem id="insurance_config_main" name="Insurance" parent="sales_team.menu_sale_config" sequence="10"/>
+  <record id="insurance_pricing_fiscal_power_view_form" model="ir.ui.view">
+    <field name="name">insurance_pricing.fiscal_power.form</field>
+    <field name="model">insurance_pricing.fiscal_power</field>
+    <field name="arch" type="xml">
+      <form string="Fiscal Power">
+        <sheet>
+          <div class="oe_button_box" name="button_box">
+            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+              <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+            </button>
+          </div>
+          <div class="oe_title">
+            <label for="product_attribute_value_id" class="oe_edit_only"/>
+            <h3>
+              <field name="product_attribute_value_id"/>
+            </h3>
+          </div>
+          <group>
+            <group>
+              <label for="gasoline" string="Gasoline"/>
+              <div>
+                <field name="gasoline" class="oe_inline"/>
+                <field name="gasoline_horsepower_from" class="oe_inline" style="width:20%% !important; margin  -left:1%% !important; margin -  right:3%% !important;" attrs="{'invisible': [('gasoline', '=', False)]}"/>
+                <field name="gasoline_horsepower_to" class="oe_inline " style="width:20%% !important;" attrs="{'invisible': [('gasoline', '=', False)]}"/>
+              </div>
+              <label for="diesel" string="Diesel"/>
+              <div>
+                <field name="diesel" class="oe_inline"/>
+                <field name="diesel_horsepower_from" class="oe_inline" style="width:20%% !important; margin  -left:1%% !important; margin -  right:3%% !important;" attrs="{'invisible': [('diesel', '=', False)]}"/>
+                <field name="diesel_horsepower_to" class="oe_inline " style="width:20%% !important;" attrs="{'invisible': [('diesel', '=', False)]}"/>
+              </div>
+            </group>
+            <group>
+              <label for="electric" string="Electric"/>
+              <div>
+                <field name="electric" class="oe_inline"/>
+                <field name="electric_horsepower_from" class="oe_inline" style="width:20%% !important; margin  -left:1%% !important; margin -  right:3%% !important;" attrs="{'invisible': [('electric', '=', False)]}"/>
+                <field name="electric_horsepower_to" class="oe_inline " style="width:20%% !important;" attrs="{'invisible': [('electric', '=', False)]}"/>
+              </div>
+              <label for="hybrid" string="Hybrid"/>
+              <div>
+                <field name="hybrid" class="oe_inline"/>
+                <field name="hybrid_horsepower_from" class="oe_inline" style="width:20%% !important; margin  -left:1%% !important; margin -  right:3%% !important;" attrs="{'invisible': [('hybrid', '=', False)]}"/>
+                <field name="hybrid_horsepower_to" class="oe_inline " style="width:20%% !important;" attrs="{'invisible': [('hybrid', '=', False)]}"/>
+              </div>
+            </group>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id="insurance_pricing_fiscal_power_view_tree" model="ir.ui.view">
+    <field name="name">insurance_pricing.fiscal_power.tree</field>
+    <field name="model">insurance_pricing.fiscal_power</field>
+    <field name="arch" type="xml">
+      <tree string="Fiscal Power">
+        <field name="product_attribute_value_id"/>
+        <field name="active"/>
+      </tree>
+    </field>
+  </record>
+  <record id="insurance_pricing_fiscal_power_action" model="ir.actions.act_window">
+    <field name="name">Fiscal Power</field>
+    <field name="res_model">insurance_pricing.fiscal_power</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+    <field name="help" type="html">
+      <p class="oe_view_nocontent_create">Click to create a new fiscal power.</p>
+    </field>
+  </record>
+  <menuitem action="insurance_pricing_fiscal_power_action" parent="insurance_config_main" id="fiscal_power_menu" sequence="10" groups="sales_team.group_sale_manager"/>
+</odoo>

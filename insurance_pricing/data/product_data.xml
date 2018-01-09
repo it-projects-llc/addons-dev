@@ -1,0 +1,554 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="product_attribute_vehicle_type" model="product.attribute">
+    <field name="name">Vehicle Type</field>
+  </record>
+  <record id="product_attribute_vehicle_type_value_break" model="product.attribute.value">
+    <field name="name">Break</field>
+    <field name="attribute_id" ref="product_attribute_vehicle_type"/>
+  </record>
+  <record id="product_attribute_vehicle_type_value_others1" model="product.attribute.value">
+    <field name="name">Others &lt; 3.5 T</field>
+    <field name="attribute_id" ref="product_attribute_vehicle_type"/>
+  </record>
+  <record id="product_attribute_vehicle_type_value_others2" model="product.attribute.value">
+    <field name="name">Others &gt; 3.5 T</field>
+    <field name="attribute_id" ref="product_attribute_vehicle_type"/>
+  </record>
+  <record id="product_attribute_fiscal_power" model="product.attribute">
+    <field name="name">Fiscal Power</field>
+  </record>
+  <record id="product_attribute_fp_value_fp1" model="product.attribute.value">
+    <field name="name">FP1</field>
+    <field name="attribute_id" ref="product_attribute_fiscal_power"/>
+  </record>
+  <record id="product_attribute_fp_value_fp2" model="product.attribute.value">
+    <field name="name">FP2</field>
+    <field name="attribute_id" ref="product_attribute_fiscal_power"/>
+  </record>
+  <record id="product_attribute_fp_value_fp3" model="product.attribute.value">
+    <field name="name">FP3</field>
+    <field name="attribute_id" ref="product_attribute_fiscal_power"/>
+  </record>
+  <record id="product_attribute_fp_value_fp4" model="product.attribute.value">
+    <field name="name">FP4</field>
+    <field name="attribute_id" ref="product_attribute_fiscal_power"/>
+  </record>
+  <record id="product_attribute_fp_value_fp5" model="product.attribute.value">
+    <field name="name">FP5</field>
+    <field name="attribute_id" ref="product_attribute_fiscal_power"/>
+  </record>
+  <record id="product_attribute_fp_value_fp6" model="product.attribute.value">
+    <field name="name">FP6</field>
+    <field name="attribute_id" ref="product_attribute_fiscal_power"/>
+  </record>
+  <record id="product_attribute_seats" model="product.attribute">
+    <field name="name">Seats</field>
+  </record>
+  <record id="product_attribute_seats_value_3" model="product.attribute.value">
+    <field name="name">3</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_4" model="product.attribute.value">
+    <field name="name">4</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_5" model="product.attribute.value">
+    <field name="name">5</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_6" model="product.attribute.value">
+    <field name="name">6</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_7" model="product.attribute.value">
+    <field name="name">7</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_8" model="product.attribute.value">
+    <field name="name">8</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_9" model="product.attribute.value">
+    <field name="name">9</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_10" model="product.attribute.value">
+    <field name="name">10</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_11" model="product.attribute.value">
+    <field name="name">11</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_12" model="product.attribute.value">
+    <field name="name">12</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_13" model="product.attribute.value">
+    <field name="name">13</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_14" model="product.attribute.value">
+    <field name="name">14</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_15" model="product.attribute.value">
+    <field name="name">15</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_16" model="product.attribute.value">
+    <field name="name">16</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_17" model="product.attribute.value">
+    <field name="name">17</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_18" model="product.attribute.value">
+    <field name="name">18</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_19" model="product.attribute.value">
+    <field name="name">19</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_20" model="product.attribute.value">
+    <field name="name">20</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_21" model="product.attribute.value">
+    <field name="name">21</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_22" model="product.attribute.value">
+    <field name="name">22</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_23" model="product.attribute.value">
+    <field name="name">23</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_24" model="product.attribute.value">
+    <field name="name">24</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_25" model="product.attribute.value">
+    <field name="name">25</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_26" model="product.attribute.value">
+    <field name="name">26</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_27" model="product.attribute.value">
+    <field name="name">27</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_28" model="product.attribute.value">
+    <field name="name">28</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_29" model="product.attribute.value">
+    <field name="name">29</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_30" model="product.attribute.value">
+    <field name="name">30</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_31" model="product.attribute.value">
+    <field name="name">31</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_32" model="product.attribute.value">
+    <field name="name">32</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_33" model="product.attribute.value">
+    <field name="name">33</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_34" model="product.attribute.value">
+    <field name="name">34</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_35" model="product.attribute.value">
+    <field name="name">35</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_36" model="product.attribute.value">
+    <field name="name">36</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_37" model="product.attribute.value">
+    <field name="name">37</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_38" model="product.attribute.value">
+    <field name="name">38</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_39" model="product.attribute.value">
+    <field name="name">39</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_40" model="product.attribute.value">
+    <field name="name">40</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_41" model="product.attribute.value">
+    <field name="name">41</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_42" model="product.attribute.value">
+    <field name="name">42</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_43" model="product.attribute.value">
+    <field name="name">43</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_44" model="product.attribute.value">
+    <field name="name">44</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_seats_value_45" model="product.attribute.value">
+    <field name="name">45</field>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+  </record>
+  <record id="product_attribute_bike" model="product.attribute">
+    <field name="name">Bike</field>
+  </record>
+  <record id="product_attribute_bike_value_mope" model="product.attribute.value">
+    <field name="name">Mope 45cc</field>
+    <field name="attribute_id" ref="product_attribute_bike"/>
+  </record>
+  <record id="product_attribute_bike_value_lt125" model="product.attribute.value">
+    <field name="name">Motorcycle &lt; 125 cc</field>
+    <field name="attribute_id" ref="product_attribute_bike"/>
+  </record>
+  <record id="product_attribute_bike_value_gt125" model="product.attribute.value">
+    <field name="name">Motorcycle &gt; 125 cc</field>
+    <field name="attribute_id" ref="product_attribute_bike"/>
+  </record>
+  <record id="product_attribute_bike_value_side_car" model="product.attribute.value">
+    <field name="name">Side car</field>
+    <field name="attribute_id" ref="product_attribute_bike"/>
+  </record>
+  <data noupdate="1">
+    <record id="product.product_category_all" model="product.category">
+      <field name="type">view</field>
+    </record>
+    <record id="product_category_pool" model="product.category">
+      <field name="parent_id" ref="product.product_category_all"/>
+      <field name="name">Pool</field>
+    </record>
+    <record id="product_category_non_pool" model="product.category">
+      <field name="parent_id" ref="product.product_category_all"/>
+      <field name="name">Non-Pool</field>
+    </record>
+    <record id="product.product_uom_dozen" model="product.uom">
+      <field name="active">False</field>
+    </record>
+    <record id="product.product_uom_kgm" model="product.uom">
+      <field name="active">False</field>
+    </record>
+    <record id="product.product_uom_gram" model="product.uom">
+      <field name="active">False</field>
+    </record>
+    <record id="product.product_uom_hour" model="product.uom">
+      <field name="active">False</field>
+    </record>
+    <record id="product.product_uom_day" model="product.uom">
+      <field name="active">False</field>
+    </record>
+    <record id="product.product_uom_ton" model="product.uom">
+      <field name="active">False</field>
+    </record>
+    <record id="product.product_uom_meter" model="product.uom">
+      <field name="active">False</field>
+    </record>
+    <record id="product.product_uom_km" model="product.uom">
+      <field name="active">False</field>
+    </record>
+    <record id="product.product_uom_cm" model="product.uom">
+      <field name="active">False</field>
+    </record>
+    <record id="product.product_uom_litre" model="product.uom">
+      <field name="active">False</field>
+    </record>
+    <record id="product.product_uom_lb" model="product.uom">
+      <field name="active">False</field>
+    </record>
+    <record id="product.product_uom_oz" model="product.uom">
+      <field name="active">False</field>
+    </record>
+    <record id="product.product_uom_inch" model="product.uom">
+      <field name="active">False</field>
+    </record>
+    <record id="product.product_uom_foot" model="product.uom">
+      <field name="active">False</field>
+    </record>
+    <record id="product.product_uom_mile" model="product.uom">
+      <field name="active">False</field>
+    </record>
+    <record id="product.product_uom_floz" model="product.uom">
+      <field name="active">False</field>
+    </record>
+    <record id="product.product_uom_qt" model="product.uom">
+      <field name="active">False</field>
+    </record>
+    <record id="product.product_uom_gal" model="product.uom">
+      <field name="active">False</field>
+    </record>
+    <record id="product_uom_categ_insurance_time" model="product.uom.categ">
+      <field name="name">Insurance Time</field>
+    </record>
+    <record id="product_uom_year" model="product.uom">
+      <field name="category_id" ref="product_uom_categ_insurance_time"/>
+      <field name="name">Year(s)</field>
+      <field name="rounding" eval="1.0"/>
+    </record>
+    <record id="product_uom_month" model="product.uom">
+      <field name="category_id" ref="product_uom_categ_insurance_time"/>
+      <field name="name">Month(s)</field>
+      <field name="uom_type">smaller</field>
+      <field name="factor" eval="0.08333"/>
+      <field name="rounding" eval="1.0"/>
+    </record>
+  </data>
+  <record id="product_product_cat1_fp1" model="product.product">
+    <field name="name">Assurance Vehicle CAT1</field>
+    <field name="categ_id" ref="product_category_pool"/>
+    <field name="list_price">0.0</field>
+    <field name="type">service</field>
+    <field name="purchase_ok">False</field>
+    <field name="uom_id" ref="product_uom_year"/>
+    <field name="uom_po_id" ref="product_uom_year"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp1')])]"/>
+  </record>
+  <record id="product_product_cat1_fp2" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat1_fp1_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp2')])]"/>
+  </record>
+  <record id="product_product_cat1_fp3" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat1_fp1_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp3')])]"/>
+  </record>
+  <record id="product_product_cat1_fp4" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat1_fp1_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp4')])]"/>
+  </record>
+  <record id="product_product_cat1_fp5" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat1_fp1_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp5')])]"/>
+  </record>
+  <record id="product_product_cat1_fp6" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat1_fp1_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp6')])]"/>
+  </record>
+  <record id="product_cat1_attribute_line_1" model="product.attribute.line">
+    <field name="product_tmpl_id" ref="product_product_cat1_fp1_product_template"/>
+    <field name="attribute_id" ref="product_attribute_fiscal_power"/>
+    <field name="value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp1'), ref('insurance_pricing.product_attribute_fp_value_fp2'), ref('insurance_pricing.product_attribute_fp_value_fp3'), ref('insurance_pricing.product_attribute_fp_value_fp4'), ref('insurance_pricing.product_attribute_fp_value_fp5'), ref('insurance_pricing.product_attribute_fp_value_fp6')])]"/>
+  </record>
+  <record id="product_product_cat2_fp1_break" model="product.product">
+    <field name="name">Assurance Vehicle CAT2</field>
+    <field name="categ_id" ref="product_category_pool"/>
+    <field name="list_price">0.0</field>
+    <field name="type">service</field>
+    <field name="purchase_ok">False</field>
+    <field name="uom_id" ref="product_uom_year"/>
+    <field name="uom_po_id" ref="product_uom_year"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp1'), ref('insurance_pricing.product_attribute_vehicle_type_value_break')])]"/>
+  </record>
+  <record id="product_product_cat2_fp2_break" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp2'), ref('insurance_pricing.product_attribute_vehicle_type_value_break')])]"/>
+  </record>
+  <record id="product_product_cat2_fp3_break" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp3'), ref('insurance_pricing.product_attribute_vehicle_type_value_break')])]"/>
+  </record>
+  <record id="product_product_cat2_fp4_break" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp4'), ref('insurance_pricing.product_attribute_vehicle_type_value_break')])]"/>
+  </record>
+  <record id="product_product_cat2_fp5_break" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp5'), ref('insurance_pricing.product_attribute_vehicle_type_value_break')])]"/>
+  </record>
+  <record id="product_product_cat2_fp6_break" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp5'), ref('insurance_pricing.product_attribute_vehicle_type_value_break')])]"/>
+  </record>
+  <record id="product_product_cat2_fp1_others1" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp1'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1')])]"/>
+  </record>
+  <record id="product_product_cat2_fp2_others1" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp2'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1')])]"/>
+  </record>
+  <record id="product_product_cat2_fp3_others1" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp3'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1')])]"/>
+  </record>
+  <record id="product_product_cat2_fp4_others1" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp4'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1')])]"/>
+  </record>
+  <record id="product_product_cat2_fp5_others1" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp5'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1')])]"/>
+  </record>
+  <record id="product_product_cat2_fp6_others1" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp6'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1')])]"/>
+  </record>
+  <record id="product_product_cat2_fp1_others2" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp1'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+  </record>
+  <record id="product_product_cat2_fp2_others2" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp2'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+  </record>
+  <record id="product_product_cat2_fp3_others2" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp3'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+  </record>
+  <record id="product_product_cat2_fp4_others2" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp4'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+  </record>
+  <record id="product_product_cat2_fp5_others2" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp5'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+  </record>
+  <record id="product_product_cat2_fp6_others2" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp6'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+  </record>
+  <record id="product_cat2_attribute_line_1" model="product.attribute.line">
+    <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
+    <field name="attribute_id" ref="product_attribute_fiscal_power"/>
+    <field name="value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp1'), ref('insurance_pricing.product_attribute_fp_value_fp2'), ref('insurance_pricing.product_attribute_fp_value_fp3'), ref('insurance_pricing.product_attribute_fp_value_fp4'), ref('insurance_pricing.product_attribute_fp_value_fp5'), ref('insurance_pricing.product_attribute_fp_value_fp6')])]"/>
+  </record>
+  <record id="product_cat2_attribute_line_2" model="product.attribute.line">
+    <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
+    <field name="attribute_id" ref="product_attribute_vehicle_type"/>
+    <field name="value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_vehicle_type_value_break'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+  </record>
+  <record id="product_product_cat3_fp1_others1" model="product.product">
+    <field name="name">Assurance Vehicle CAT3</field>
+    <field name="categ_id" ref="product_category_pool"/>
+    <field name="list_price">0.0</field>
+    <field name="type">service</field>
+    <field name="purchase_ok">False</field>
+    <field name="uom_id" ref="product_uom_year"/>
+    <field name="uom_po_id" ref="product_uom_year"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp1'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1')])]"/>
+  </record>
+  <record id="product_product_cat3_fp2_others1" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp2'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1')])]"/>
+  </record>
+  <record id="product_product_cat3_fp3_others1" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp3'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1')])]"/>
+  </record>
+  <record id="product_product_cat3_fp4_others1" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp4'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1')])]"/>
+  </record>
+  <record id="product_product_cat3_fp5_others1" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp5'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1')])]"/>
+  </record>
+  <record id="product_product_cat3_fp6_others1" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp6'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1')])]"/>
+  </record>
+  <record id="product_product_cat3_fp1_others2" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp1'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+  </record>
+  <record id="product_product_cat3_fp2_others2" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp2'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+  </record>
+  <record id="product_product_cat3_fp3_others2" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp3'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+  </record>
+  <record id="product_product_cat3_fp4_others2" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp4'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+  </record>
+  <record id="product_product_cat3_fp5_others2" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp5'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+  </record>
+  <record id="product_product_cat3_fp6_others2" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp6'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+  </record>
+  <record id="product_cat3_attribute_line_1" model="product.attribute.line">
+    <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
+    <field name="attribute_id" ref="product_attribute_fiscal_power"/>
+    <field name="value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp1'), ref('insurance_pricing.product_attribute_fp_value_fp2'), ref('insurance_pricing.product_attribute_fp_value_fp3'), ref('insurance_pricing.product_attribute_fp_value_fp4'), ref('insurance_pricing.product_attribute_fp_value_fp5'), ref('insurance_pricing.product_attribute_fp_value_fp6')])]"/>
+  </record>
+  <record id="product_cat3_attribute_line_2" model="product.attribute.line">
+    <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
+    <field name="attribute_id" ref="product_attribute_vehicle_type"/>
+    <field name="value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_vehicle_type_value_others1'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+  </record>
+  <record id="product_template_cat4" model="product.template" context="{'create_product_product': False}">
+    <field name="name">Assurance Vehicle CAT4</field>
+    <field name="categ_id" ref="product_category_non_pool"/>
+    <field name="list_price">0.0</field>
+    <field name="type">service</field>
+    <field name="purchase_ok">False</field>
+    <field name="uom_id" ref="product_uom_year"/>
+    <field name="uom_po_id" ref="product_uom_year"/>
+  </record>
+  <record id="product_cat4_attribute_line_1" model="product.attribute.line">
+    <field name="product_tmpl_id" ref="product_template_cat4"/>
+    <field name="attribute_id" ref="product_attribute_fiscal_power"/>
+    <field name="value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp1'), ref('insurance_pricing.product_attribute_fp_value_fp2'), ref('insurance_pricing.product_attribute_fp_value_fp3'), ref('insurance_pricing.product_attribute_fp_value_fp4'), ref('insurance_pricing.product_attribute_fp_value_fp5'), ref('insurance_pricing.product_attribute_fp_value_fp6')])]"/>
+  </record>
+  <record id="product_cat4_attribute_line_2" model="product.attribute.line">
+    <field name="product_tmpl_id" ref="product_template_cat4"/>
+    <field name="attribute_id" ref="product_attribute_seats"/>
+    <field name="value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_seats_value_3'), ref('insurance_pricing.product_attribute_seats_value_4'), ref('insurance_pricing.product_attribute_seats_value_5'), ref('insurance_pricing.product_attribute_seats_value_6'), ref('insurance_pricing.product_attribute_seats_value_7'), ref('insurance_pricing.product_attribute_seats_value_8'), ref('insurance_pricing.product_attribute_seats_value_9'), ref('insurance_pricing.product_attribute_seats_value_10'), ref('insurance_pricing.product_attribute_seats_value_11'), ref('insurance_pricing.product_attribute_seats_value_12'), ref('insurance_pricing.product_attribute_seats_value_13'), ref('insurance_pricing.product_attribute_seats_value_14'), ref('insurance_pricing.product_attribute_seats_value_15'), ref('insurance_pricing.product_attribute_seats_value_16'), ref('insurance_pricing.product_attribute_seats_value_17'), ref('insurance_pricing.product_attribute_seats_value_18'), ref('insurance_pricing.product_attribute_seats_value_19'), ref('insurance_pricing.product_attribute_seats_value_20'), ref('insurance_pricing.product_attribute_seats_value_21'), ref('insurance_pricing.product_attribute_seats_value_22'), ref('insurance_pricing.product_attribute_seats_value_23'), ref('insurance_pricing.product_attribute_seats_value_24'), ref('insurance_pricing.product_attribute_seats_value_25'), ref('insurance_pricing.product_attribute_seats_value_26'), ref('insurance_pricing.product_attribute_seats_value_27'), ref('insurance_pricing.product_attribute_seats_value_28'), ref('insurance_pricing.product_attribute_seats_value_29'), ref('insurance_pricing.product_attribute_seats_value_30'), ref('insurance_pricing.product_attribute_seats_value_31'), ref('insurance_pricing.product_attribute_seats_value_32'), ref('insurance_pricing.product_attribute_seats_value_33'), ref('insurance_pricing.product_attribute_seats_value_34'), ref('insurance_pricing.product_attribute_seats_value_35'), ref('insurance_pricing.product_attribute_seats_value_36'), ref('insurance_pricing.product_attribute_seats_value_37'), ref('insurance_pricing.product_attribute_seats_value_38'), ref('insurance_pricing.product_attribute_seats_value_39'), ref('insurance_pricing.product_attribute_seats_value_40'), ref('insurance_pricing.product_attribute_seats_value_41'), ref('insurance_pricing.product_attribute_seats_value_42'), ref('insurance_pricing.product_attribute_seats_value_43'), ref('insurance_pricing.product_attribute_seats_value_44'), ref('insurance_pricing.product_attribute_seats_value_45')])]"/>
+  </record>
+  <record id="product_product_cat5_mope" model="product.product">
+    <field name="name">Assurance Vehicle CAT5</field>
+    <field name="categ_id" ref="product_category_pool"/>
+    <field name="list_price">0.0</field>
+    <field name="type">service</field>
+    <field name="purchase_ok">False</field>
+    <field name="uom_id" ref="product_uom_year"/>
+    <field name="uom_po_id" ref="product_uom_year"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_bike_value_mope')])]"/>
+  </record>
+  <record id="product_product_cat5_moto1" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat5_mope_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_bike_value_lt125')])]"/>
+  </record>
+  <record id="product_product_cat5_moto2" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat5_mope_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_bike_value_gt125')])]"/>
+  </record>
+  <record id="product_product_cat5_side" model="product.product">
+    <field name="product_tmpl_id" ref="product_product_cat5_mope_product_template"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_bike_value_side_car')])]"/>
+  </record>
+  <record id="product_cat5_attribute_line_1" model="product.attribute.line">
+    <field name="product_tmpl_id" ref="product_product_cat5_mope_product_template"/>
+    <field name="attribute_id" ref="product_attribute_bike"/>
+    <field name="value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_bike_value_mope'), ref('insurance_pricing.product_attribute_bike_value_lt125'), ref('insurance_pricing.product_attribute_bike_value_gt125'), ref('insurance_pricing.product_attribute_bike_value_side_car')])]"/>
+  </record>
+</odoo>
