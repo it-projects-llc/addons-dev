@@ -1,0 +1,1186 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* insurance_pricing
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-01-09 16:35+0000\n"
+"PO-Revision-Date: 2018-01-09 16:35+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_10
+msgid "10"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_11
+msgid "11"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_12
+msgid "12"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_13
+msgid "13"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_14
+msgid "14"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_15
+msgid "15"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_16
+msgid "16"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_17
+msgid "17"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_18
+msgid "18"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_19
+msgid "19"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_20
+msgid "20"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_21
+msgid "21"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_22
+msgid "22"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_23
+msgid "23"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_24
+msgid "24"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_25
+msgid "25"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_26
+msgid "26"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_27
+msgid "27"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_28
+msgid "28"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_29
+msgid "29"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_30
+msgid "30"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_31
+msgid "31"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_32
+msgid "32"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_33
+msgid "33"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_34
+msgid "34"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_35
+msgid "35"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_36
+msgid "36"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_37
+msgid "37"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_38
+msgid "38"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_39
+msgid "39"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_40
+msgid "40"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_41
+msgid "41"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_42
+msgid "42"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_43
+msgid "43"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_44
+msgid "44"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_seats_value_45
+msgid "45"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_fiscal_power_active
+msgid "Active"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_product_product_variant_price_extra
+msgid "Add. price /tariff"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.product,name:insurance_pricing.product_product_cat1_fp1
+#: model:product.product,name:insurance_pricing.product_product_cat1_fp2
+#: model:product.product,name:insurance_pricing.product_product_cat1_fp3
+#: model:product.product,name:insurance_pricing.product_product_cat1_fp4
+#: model:product.product,name:insurance_pricing.product_product_cat1_fp5
+#: model:product.product,name:insurance_pricing.product_product_cat1_fp6
+#: model:product.template,name:insurance_pricing.product_product_cat1_fp1_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat1_fp2_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat1_fp3_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat1_fp4_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat1_fp5_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat1_fp6_product_template
+msgid "Assurance Vehicle CAT1"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.product,name:insurance_pricing.product_product_cat2_fp1_break
+#: model:product.product,name:insurance_pricing.product_product_cat2_fp1_others1
+#: model:product.product,name:insurance_pricing.product_product_cat2_fp1_others2
+#: model:product.product,name:insurance_pricing.product_product_cat2_fp2_break
+#: model:product.product,name:insurance_pricing.product_product_cat2_fp2_others1
+#: model:product.product,name:insurance_pricing.product_product_cat2_fp2_others2
+#: model:product.product,name:insurance_pricing.product_product_cat2_fp3_break
+#: model:product.product,name:insurance_pricing.product_product_cat2_fp3_others1
+#: model:product.product,name:insurance_pricing.product_product_cat2_fp3_others2
+#: model:product.product,name:insurance_pricing.product_product_cat2_fp4_break
+#: model:product.product,name:insurance_pricing.product_product_cat2_fp4_others1
+#: model:product.product,name:insurance_pricing.product_product_cat2_fp4_others2
+#: model:product.product,name:insurance_pricing.product_product_cat2_fp5_break
+#: model:product.product,name:insurance_pricing.product_product_cat2_fp5_others1
+#: model:product.product,name:insurance_pricing.product_product_cat2_fp5_others2
+#: model:product.product,name:insurance_pricing.product_product_cat2_fp6_break
+#: model:product.product,name:insurance_pricing.product_product_cat2_fp6_others1
+#: model:product.product,name:insurance_pricing.product_product_cat2_fp6_others2
+#: model:product.template,name:insurance_pricing.product_product_cat2_fp1_break_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat2_fp1_others1_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat2_fp1_others2_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat2_fp2_break_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat2_fp2_others1_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat2_fp2_others2_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat2_fp3_break_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat2_fp3_others1_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat2_fp3_others2_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat2_fp4_break_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat2_fp4_others1_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat2_fp4_others2_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat2_fp5_break_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat2_fp5_others1_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat2_fp5_others2_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat2_fp6_break_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat2_fp6_others1_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat2_fp6_others2_product_template
+msgid "Assurance Vehicle CAT2"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.product,name:insurance_pricing.product_product_cat3_fp1_others1
+#: model:product.product,name:insurance_pricing.product_product_cat3_fp1_others2
+#: model:product.product,name:insurance_pricing.product_product_cat3_fp2_others1
+#: model:product.product,name:insurance_pricing.product_product_cat3_fp2_others2
+#: model:product.product,name:insurance_pricing.product_product_cat3_fp3_others1
+#: model:product.product,name:insurance_pricing.product_product_cat3_fp3_others2
+#: model:product.product,name:insurance_pricing.product_product_cat3_fp4_others1
+#: model:product.product,name:insurance_pricing.product_product_cat3_fp4_others2
+#: model:product.product,name:insurance_pricing.product_product_cat3_fp5_others1
+#: model:product.product,name:insurance_pricing.product_product_cat3_fp5_others2
+#: model:product.product,name:insurance_pricing.product_product_cat3_fp6_others1
+#: model:product.product,name:insurance_pricing.product_product_cat3_fp6_others2
+#: model:product.template,name:insurance_pricing.product_product_cat3_fp1_others1_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat3_fp1_others2_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat3_fp2_others1_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat3_fp2_others2_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat3_fp3_others1_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat3_fp3_others2_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat3_fp4_others1_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat3_fp4_others2_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat3_fp5_others1_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat3_fp5_others2_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat3_fp6_others1_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat3_fp6_others2_product_template
+msgid "Assurance Vehicle CAT3"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.product,name:insurance_pricing.product_product_cat4_100
+#: model:product.product,name:insurance_pricing.product_product_cat4_101
+#: model:product.product,name:insurance_pricing.product_product_cat4_102
+#: model:product.product,name:insurance_pricing.product_product_cat4_103
+#: model:product.product,name:insurance_pricing.product_product_cat4_104
+#: model:product.product,name:insurance_pricing.product_product_cat4_105
+#: model:product.product,name:insurance_pricing.product_product_cat4_106
+#: model:product.product,name:insurance_pricing.product_product_cat4_107
+#: model:product.product,name:insurance_pricing.product_product_cat4_108
+#: model:product.product,name:insurance_pricing.product_product_cat4_109
+#: model:product.product,name:insurance_pricing.product_product_cat4_110
+#: model:product.product,name:insurance_pricing.product_product_cat4_111
+#: model:product.product,name:insurance_pricing.product_product_cat4_112
+#: model:product.product,name:insurance_pricing.product_product_cat4_113
+#: model:product.product,name:insurance_pricing.product_product_cat4_114
+#: model:product.product,name:insurance_pricing.product_product_cat4_115
+#: model:product.product,name:insurance_pricing.product_product_cat4_116
+#: model:product.product,name:insurance_pricing.product_product_cat4_117
+#: model:product.product,name:insurance_pricing.product_product_cat4_118
+#: model:product.product,name:insurance_pricing.product_product_cat4_119
+#: model:product.product,name:insurance_pricing.product_product_cat4_120
+#: model:product.product,name:insurance_pricing.product_product_cat4_121
+#: model:product.product,name:insurance_pricing.product_product_cat4_122
+#: model:product.product,name:insurance_pricing.product_product_cat4_123
+#: model:product.product,name:insurance_pricing.product_product_cat4_124
+#: model:product.product,name:insurance_pricing.product_product_cat4_125
+#: model:product.product,name:insurance_pricing.product_product_cat4_126
+#: model:product.product,name:insurance_pricing.product_product_cat4_127
+#: model:product.product,name:insurance_pricing.product_product_cat4_128
+#: model:product.product,name:insurance_pricing.product_product_cat4_129
+#: model:product.product,name:insurance_pricing.product_product_cat4_130
+#: model:product.product,name:insurance_pricing.product_product_cat4_131
+#: model:product.product,name:insurance_pricing.product_product_cat4_132
+#: model:product.product,name:insurance_pricing.product_product_cat4_133
+#: model:product.product,name:insurance_pricing.product_product_cat4_134
+#: model:product.product,name:insurance_pricing.product_product_cat4_135
+#: model:product.product,name:insurance_pricing.product_product_cat4_136
+#: model:product.product,name:insurance_pricing.product_product_cat4_137
+#: model:product.product,name:insurance_pricing.product_product_cat4_138
+#: model:product.product,name:insurance_pricing.product_product_cat4_139
+#: model:product.product,name:insurance_pricing.product_product_cat4_140
+#: model:product.product,name:insurance_pricing.product_product_cat4_141
+#: model:product.product,name:insurance_pricing.product_product_cat4_142
+#: model:product.product,name:insurance_pricing.product_product_cat4_143
+#: model:product.product,name:insurance_pricing.product_product_cat4_144
+#: model:product.product,name:insurance_pricing.product_product_cat4_145
+#: model:product.product,name:insurance_pricing.product_product_cat4_146
+#: model:product.product,name:insurance_pricing.product_product_cat4_147
+#: model:product.product,name:insurance_pricing.product_product_cat4_148
+#: model:product.product,name:insurance_pricing.product_product_cat4_149
+#: model:product.product,name:insurance_pricing.product_product_cat4_150
+#: model:product.product,name:insurance_pricing.product_product_cat4_151
+#: model:product.product,name:insurance_pricing.product_product_cat4_152
+#: model:product.product,name:insurance_pricing.product_product_cat4_153
+#: model:product.product,name:insurance_pricing.product_product_cat4_154
+#: model:product.product,name:insurance_pricing.product_product_cat4_155
+#: model:product.product,name:insurance_pricing.product_product_cat4_156
+#: model:product.product,name:insurance_pricing.product_product_cat4_157
+#: model:product.product,name:insurance_pricing.product_product_cat4_158
+#: model:product.product,name:insurance_pricing.product_product_cat4_159
+#: model:product.product,name:insurance_pricing.product_product_cat4_160
+#: model:product.product,name:insurance_pricing.product_product_cat4_161
+#: model:product.product,name:insurance_pricing.product_product_cat4_162
+#: model:product.product,name:insurance_pricing.product_product_cat4_163
+#: model:product.product,name:insurance_pricing.product_product_cat4_164
+#: model:product.product,name:insurance_pricing.product_product_cat4_165
+#: model:product.product,name:insurance_pricing.product_product_cat4_166
+#: model:product.product,name:insurance_pricing.product_product_cat4_167
+#: model:product.product,name:insurance_pricing.product_product_cat4_168
+#: model:product.product,name:insurance_pricing.product_product_cat4_169
+#: model:product.product,name:insurance_pricing.product_product_cat4_170
+#: model:product.product,name:insurance_pricing.product_product_cat4_171
+#: model:product.product,name:insurance_pricing.product_product_cat4_172
+#: model:product.product,name:insurance_pricing.product_product_cat4_173
+#: model:product.product,name:insurance_pricing.product_product_cat4_174
+#: model:product.product,name:insurance_pricing.product_product_cat4_175
+#: model:product.product,name:insurance_pricing.product_product_cat4_176
+#: model:product.product,name:insurance_pricing.product_product_cat4_177
+#: model:product.product,name:insurance_pricing.product_product_cat4_178
+#: model:product.product,name:insurance_pricing.product_product_cat4_179
+#: model:product.product,name:insurance_pricing.product_product_cat4_180
+#: model:product.product,name:insurance_pricing.product_product_cat4_181
+#: model:product.product,name:insurance_pricing.product_product_cat4_182
+#: model:product.product,name:insurance_pricing.product_product_cat4_183
+#: model:product.product,name:insurance_pricing.product_product_cat4_184
+#: model:product.product,name:insurance_pricing.product_product_cat4_185
+#: model:product.product,name:insurance_pricing.product_product_cat4_186
+#: model:product.product,name:insurance_pricing.product_product_cat4_187
+#: model:product.product,name:insurance_pricing.product_product_cat4_188
+#: model:product.product,name:insurance_pricing.product_product_cat4_189
+#: model:product.product,name:insurance_pricing.product_product_cat4_190
+#: model:product.product,name:insurance_pricing.product_product_cat4_191
+#: model:product.product,name:insurance_pricing.product_product_cat4_192
+#: model:product.product,name:insurance_pricing.product_product_cat4_193
+#: model:product.product,name:insurance_pricing.product_product_cat4_194
+#: model:product.product,name:insurance_pricing.product_product_cat4_195
+#: model:product.product,name:insurance_pricing.product_product_cat4_196
+#: model:product.product,name:insurance_pricing.product_product_cat4_197
+#: model:product.product,name:insurance_pricing.product_product_cat4_198
+#: model:product.product,name:insurance_pricing.product_product_cat4_199
+#: model:product.product,name:insurance_pricing.product_product_cat4_200
+#: model:product.product,name:insurance_pricing.product_product_cat4_201
+#: model:product.product,name:insurance_pricing.product_product_cat4_202
+#: model:product.product,name:insurance_pricing.product_product_cat4_203
+#: model:product.product,name:insurance_pricing.product_product_cat4_204
+#: model:product.product,name:insurance_pricing.product_product_cat4_205
+#: model:product.product,name:insurance_pricing.product_product_cat4_206
+#: model:product.product,name:insurance_pricing.product_product_cat4_207
+#: model:product.product,name:insurance_pricing.product_product_cat4_208
+#: model:product.product,name:insurance_pricing.product_product_cat4_209
+#: model:product.product,name:insurance_pricing.product_product_cat4_210
+#: model:product.product,name:insurance_pricing.product_product_cat4_211
+#: model:product.product,name:insurance_pricing.product_product_cat4_212
+#: model:product.product,name:insurance_pricing.product_product_cat4_213
+#: model:product.product,name:insurance_pricing.product_product_cat4_214
+#: model:product.product,name:insurance_pricing.product_product_cat4_215
+#: model:product.product,name:insurance_pricing.product_product_cat4_216
+#: model:product.product,name:insurance_pricing.product_product_cat4_217
+#: model:product.product,name:insurance_pricing.product_product_cat4_218
+#: model:product.product,name:insurance_pricing.product_product_cat4_219
+#: model:product.product,name:insurance_pricing.product_product_cat4_220
+#: model:product.product,name:insurance_pricing.product_product_cat4_221
+#: model:product.product,name:insurance_pricing.product_product_cat4_222
+#: model:product.product,name:insurance_pricing.product_product_cat4_223
+#: model:product.product,name:insurance_pricing.product_product_cat4_224
+#: model:product.product,name:insurance_pricing.product_product_cat4_225
+#: model:product.product,name:insurance_pricing.product_product_cat4_226
+#: model:product.product,name:insurance_pricing.product_product_cat4_227
+#: model:product.product,name:insurance_pricing.product_product_cat4_228
+#: model:product.product,name:insurance_pricing.product_product_cat4_229
+#: model:product.product,name:insurance_pricing.product_product_cat4_230
+#: model:product.product,name:insurance_pricing.product_product_cat4_231
+#: model:product.product,name:insurance_pricing.product_product_cat4_232
+#: model:product.product,name:insurance_pricing.product_product_cat4_233
+#: model:product.product,name:insurance_pricing.product_product_cat4_234
+#: model:product.product,name:insurance_pricing.product_product_cat4_235
+#: model:product.product,name:insurance_pricing.product_product_cat4_236
+#: model:product.product,name:insurance_pricing.product_product_cat4_237
+#: model:product.product,name:insurance_pricing.product_product_cat4_238
+#: model:product.product,name:insurance_pricing.product_product_cat4_239
+#: model:product.product,name:insurance_pricing.product_product_cat4_240
+#: model:product.product,name:insurance_pricing.product_product_cat4_241
+#: model:product.product,name:insurance_pricing.product_product_cat4_242
+#: model:product.product,name:insurance_pricing.product_product_cat4_243
+#: model:product.product,name:insurance_pricing.product_product_cat4_244
+#: model:product.product,name:insurance_pricing.product_product_cat4_245
+#: model:product.product,name:insurance_pricing.product_product_cat4_246
+#: model:product.product,name:insurance_pricing.product_product_cat4_247
+#: model:product.product,name:insurance_pricing.product_product_cat4_248
+#: model:product.product,name:insurance_pricing.product_product_cat4_249
+#: model:product.product,name:insurance_pricing.product_product_cat4_250
+#: model:product.product,name:insurance_pricing.product_product_cat4_251
+#: model:product.product,name:insurance_pricing.product_product_cat4_252
+#: model:product.product,name:insurance_pricing.product_product_cat4_253
+#: model:product.product,name:insurance_pricing.product_product_cat4_254
+#: model:product.product,name:insurance_pricing.product_product_cat4_255
+#: model:product.product,name:insurance_pricing.product_product_cat4_256
+#: model:product.product,name:insurance_pricing.product_product_cat4_257
+#: model:product.product,name:insurance_pricing.product_product_cat4_258
+#: model:product.product,name:insurance_pricing.product_product_cat4_259
+#: model:product.product,name:insurance_pricing.product_product_cat4_260
+#: model:product.product,name:insurance_pricing.product_product_cat4_261
+#: model:product.product,name:insurance_pricing.product_product_cat4_262
+#: model:product.product,name:insurance_pricing.product_product_cat4_263
+#: model:product.product,name:insurance_pricing.product_product_cat4_264
+#: model:product.product,name:insurance_pricing.product_product_cat4_265
+#: model:product.product,name:insurance_pricing.product_product_cat4_266
+#: model:product.product,name:insurance_pricing.product_product_cat4_267
+#: model:product.product,name:insurance_pricing.product_product_cat4_268
+#: model:product.product,name:insurance_pricing.product_product_cat4_269
+#: model:product.product,name:insurance_pricing.product_product_cat4_270
+#: model:product.product,name:insurance_pricing.product_product_cat4_271
+#: model:product.product,name:insurance_pricing.product_product_cat4_272
+#: model:product.product,name:insurance_pricing.product_product_cat4_273
+#: model:product.product,name:insurance_pricing.product_product_cat4_274
+#: model:product.product,name:insurance_pricing.product_product_cat4_275
+#: model:product.product,name:insurance_pricing.product_product_cat4_276
+#: model:product.product,name:insurance_pricing.product_product_cat4_277
+#: model:product.product,name:insurance_pricing.product_product_cat4_278
+#: model:product.product,name:insurance_pricing.product_product_cat4_279
+#: model:product.product,name:insurance_pricing.product_product_cat4_280
+#: model:product.product,name:insurance_pricing.product_product_cat4_281
+#: model:product.product,name:insurance_pricing.product_product_cat4_282
+#: model:product.product,name:insurance_pricing.product_product_cat4_283
+#: model:product.product,name:insurance_pricing.product_product_cat4_284
+#: model:product.product,name:insurance_pricing.product_product_cat4_285
+#: model:product.product,name:insurance_pricing.product_product_cat4_286
+#: model:product.product,name:insurance_pricing.product_product_cat4_287
+#: model:product.product,name:insurance_pricing.product_product_cat4_288
+#: model:product.product,name:insurance_pricing.product_product_cat4_289
+#: model:product.product,name:insurance_pricing.product_product_cat4_290
+#: model:product.product,name:insurance_pricing.product_product_cat4_291
+#: model:product.product,name:insurance_pricing.product_product_cat4_292
+#: model:product.product,name:insurance_pricing.product_product_cat4_293
+#: model:product.product,name:insurance_pricing.product_product_cat4_294
+#: model:product.product,name:insurance_pricing.product_product_cat4_295
+#: model:product.product,name:insurance_pricing.product_product_cat4_296
+#: model:product.product,name:insurance_pricing.product_product_cat4_297
+#: model:product.product,name:insurance_pricing.product_product_cat4_298
+#: model:product.product,name:insurance_pricing.product_product_cat4_299
+#: model:product.product,name:insurance_pricing.product_product_cat4_300
+#: model:product.product,name:insurance_pricing.product_product_cat4_301
+#: model:product.product,name:insurance_pricing.product_product_cat4_302
+#: model:product.product,name:insurance_pricing.product_product_cat4_303
+#: model:product.product,name:insurance_pricing.product_product_cat4_304
+#: model:product.product,name:insurance_pricing.product_product_cat4_305
+#: model:product.product,name:insurance_pricing.product_product_cat4_306
+#: model:product.product,name:insurance_pricing.product_product_cat4_307
+#: model:product.product,name:insurance_pricing.product_product_cat4_308
+#: model:product.product,name:insurance_pricing.product_product_cat4_309
+#: model:product.product,name:insurance_pricing.product_product_cat4_310
+#: model:product.product,name:insurance_pricing.product_product_cat4_311
+#: model:product.product,name:insurance_pricing.product_product_cat4_312
+#: model:product.product,name:insurance_pricing.product_product_cat4_313
+#: model:product.product,name:insurance_pricing.product_product_cat4_314
+#: model:product.product,name:insurance_pricing.product_product_cat4_315
+#: model:product.product,name:insurance_pricing.product_product_cat4_316
+#: model:product.product,name:insurance_pricing.product_product_cat4_317
+#: model:product.product,name:insurance_pricing.product_product_cat4_318
+#: model:product.product,name:insurance_pricing.product_product_cat4_319
+#: model:product.product,name:insurance_pricing.product_product_cat4_320
+#: model:product.product,name:insurance_pricing.product_product_cat4_321
+#: model:product.product,name:insurance_pricing.product_product_cat4_322
+#: model:product.product,name:insurance_pricing.product_product_cat4_323
+#: model:product.product,name:insurance_pricing.product_product_cat4_324
+#: model:product.product,name:insurance_pricing.product_product_cat4_325
+#: model:product.product,name:insurance_pricing.product_product_cat4_326
+#: model:product.product,name:insurance_pricing.product_product_cat4_327
+#: model:product.product,name:insurance_pricing.product_product_cat4_328
+#: model:product.product,name:insurance_pricing.product_product_cat4_329
+#: model:product.product,name:insurance_pricing.product_product_cat4_330
+#: model:product.product,name:insurance_pricing.product_product_cat4_331
+#: model:product.product,name:insurance_pricing.product_product_cat4_332
+#: model:product.product,name:insurance_pricing.product_product_cat4_333
+#: model:product.product,name:insurance_pricing.product_product_cat4_334
+#: model:product.product,name:insurance_pricing.product_product_cat4_335
+#: model:product.product,name:insurance_pricing.product_product_cat4_336
+#: model:product.product,name:insurance_pricing.product_product_cat4_337
+#: model:product.product,name:insurance_pricing.product_product_cat4_338
+#: model:product.product,name:insurance_pricing.product_product_cat4_339
+#: model:product.product,name:insurance_pricing.product_product_cat4_82
+#: model:product.product,name:insurance_pricing.product_product_cat4_83
+#: model:product.product,name:insurance_pricing.product_product_cat4_84
+#: model:product.product,name:insurance_pricing.product_product_cat4_85
+#: model:product.product,name:insurance_pricing.product_product_cat4_86
+#: model:product.product,name:insurance_pricing.product_product_cat4_87
+#: model:product.product,name:insurance_pricing.product_product_cat4_88
+#: model:product.product,name:insurance_pricing.product_product_cat4_89
+#: model:product.product,name:insurance_pricing.product_product_cat4_90
+#: model:product.product,name:insurance_pricing.product_product_cat4_91
+#: model:product.product,name:insurance_pricing.product_product_cat4_92
+#: model:product.product,name:insurance_pricing.product_product_cat4_93
+#: model:product.product,name:insurance_pricing.product_product_cat4_94
+#: model:product.product,name:insurance_pricing.product_product_cat4_95
+#: model:product.product,name:insurance_pricing.product_product_cat4_96
+#: model:product.product,name:insurance_pricing.product_product_cat4_97
+#: model:product.product,name:insurance_pricing.product_product_cat4_98
+#: model:product.product,name:insurance_pricing.product_product_cat4_99
+#: model:product.template,name:insurance_pricing.product_product_cat4_100_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_101_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_102_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_103_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_104_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_105_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_106_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_107_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_108_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_109_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_110_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_111_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_112_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_113_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_114_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_115_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_116_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_117_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_118_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_119_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_120_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_121_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_122_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_123_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_124_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_125_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_126_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_127_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_128_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_129_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_130_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_131_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_132_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_133_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_134_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_135_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_136_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_137_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_138_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_139_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_140_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_141_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_142_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_143_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_144_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_145_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_146_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_147_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_148_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_149_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_150_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_151_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_152_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_153_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_154_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_155_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_156_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_157_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_158_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_159_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_160_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_161_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_162_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_163_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_164_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_165_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_166_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_167_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_168_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_169_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_170_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_171_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_172_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_173_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_174_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_175_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_176_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_177_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_178_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_179_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_180_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_181_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_182_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_183_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_184_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_185_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_186_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_187_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_188_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_189_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_190_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_191_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_192_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_193_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_194_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_195_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_196_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_197_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_198_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_199_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_200_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_201_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_202_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_203_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_204_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_205_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_206_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_207_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_208_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_209_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_210_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_211_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_212_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_213_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_214_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_215_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_216_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_217_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_218_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_219_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_220_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_221_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_222_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_223_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_224_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_225_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_226_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_227_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_228_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_229_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_230_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_231_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_232_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_233_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_234_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_235_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_236_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_237_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_238_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_239_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_240_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_241_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_242_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_243_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_244_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_245_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_246_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_247_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_248_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_249_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_250_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_251_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_252_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_253_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_254_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_255_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_256_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_257_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_258_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_259_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_260_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_261_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_262_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_263_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_264_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_265_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_266_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_267_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_268_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_269_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_270_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_271_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_272_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_273_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_274_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_275_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_276_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_277_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_278_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_279_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_280_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_281_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_282_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_283_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_284_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_285_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_286_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_287_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_288_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_289_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_290_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_291_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_292_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_293_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_294_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_295_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_296_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_297_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_298_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_299_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_300_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_301_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_302_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_303_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_304_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_305_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_306_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_307_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_308_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_309_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_310_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_311_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_312_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_313_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_314_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_315_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_316_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_317_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_318_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_319_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_320_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_321_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_322_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_323_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_324_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_325_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_326_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_327_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_328_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_329_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_330_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_331_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_332_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_333_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_334_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_335_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_336_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_337_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_338_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_339_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_82_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_83_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_84_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_85_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_86_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_87_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_88_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_89_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_90_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_91_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_92_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_93_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_94_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_95_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_96_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_97_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_98_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat4_99_product_template
+#: model:product.template,name:insurance_pricing.product_template_cat4
+msgid "Assurance Vehicle CAT4"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.product,name:insurance_pricing.product_product_cat5_mope
+#: model:product.product,name:insurance_pricing.product_product_cat5_moto1
+#: model:product.product,name:insurance_pricing.product_product_cat5_moto2
+#: model:product.product,name:insurance_pricing.product_product_cat5_side
+#: model:product.template,name:insurance_pricing.product_product_cat5_mope_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat5_moto1_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat5_moto2_product_template
+#: model:product.template,name:insurance_pricing.product_product_cat5_side_product_template
+msgid "Assurance Vehicle CAT5"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute,name:insurance_pricing.product_attribute_bike
+msgid "Bike"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_vehicle_type_value_break
+msgid "Break"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_fleet_vehicle_category_id
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_price_finder_category_id
+msgid "Category"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.actions.act_window,help:insurance_pricing.insurance_pricing_fiscal_power_action
+msgid "Click to create a new fiscal power."
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_fiscal_power_create_uid
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_price_finder_create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_fiscal_power_create_date
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_price_finder_create_date
+msgid "Created on"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_fiscal_power_diesel
+#: model:ir.ui.view,arch_db:insurance_pricing.insurance_pricing_fiscal_power_view_form
+msgid "Diesel"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_fiscal_power_display_name
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_price_finder_display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_fiscal_power_electric
+#: model:ir.ui.view,arch_db:insurance_pricing.insurance_pricing_fiscal_power_view_form
+msgid "Electric"
+msgstr ""
+
+#. module: insurance_pricing
+#: code:addons/insurance_pricing/models/sale.py:83
+#, python-format
+msgid "End Date shouldn't be earlier than today for sale order line with Product '%s'."
+msgstr ""
+
+#. module: insurance_pricing
+#: code:addons/insurance_pricing/models/account_invoice.py:48
+#, python-format
+msgid "End Date shouldn't be less than today for invoice line with Description '%s'."
+msgstr ""
+
+#. module: insurance_pricing
+#: code:addons/insurance_pricing/models/fleet.py:33
+#, python-format
+msgid "Error ! Horsepower value should not be less than two."
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_fp_value_fp1
+msgid "FP1"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_fp_value_fp2
+msgid "FP2"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_fp_value_fp3
+msgid "FP3"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_fp_value_fp4
+msgid "FP4"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_fp_value_fp5
+msgid "FP5"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_fp_value_fp6
+msgid "FP6"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.actions.act_window,name:insurance_pricing.insurance_pricing_fiscal_power_action
+#: model:ir.model,name:insurance_pricing.model_insurance_pricing_fiscal_power
+#: model:ir.model.fields,field_description:insurance_pricing.field_fleet_vehicle_product_attribute_value_id
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_fiscal_power_product_attribute_value_id
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_price_finder_product_attribute_value_id
+#: model:ir.ui.menu,name:insurance_pricing.fiscal_power_menu
+#: model:ir.ui.view,arch_db:insurance_pricing.insurance_pricing_fiscal_power_view_form
+#: model:ir.ui.view,arch_db:insurance_pricing.insurance_pricing_fiscal_power_view_tree
+#: model:product.attribute,name:insurance_pricing.product_attribute_fiscal_power
+msgid "Fiscal Power"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_fiscal_power_gasoline
+#: model:ir.ui.view,arch_db:insurance_pricing.insurance_pricing_fiscal_power_view_form
+msgid "Gasoline"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_fiscal_power_diesel_horsepower_from
+msgid "HP Diesel from"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_fiscal_power_diesel_horsepower_to
+msgid "HP Diesel to"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_fiscal_power_electric_horsepower_from
+msgid "HP Electric from"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_fiscal_power_electric_horsepower_to
+msgid "HP Electric to"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_fiscal_power_gasoline_horsepower_from
+msgid "HP Gasoline from"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_fiscal_power_gasoline_horsepower_to
+msgid "HP Gasoline to"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_fiscal_power_hybrid_horsepower_from
+msgid "HP Hybrid from"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_fiscal_power_hybrid_horsepower_to
+msgid "HP Hybrid to"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_fiscal_power_hybrid
+#: model:ir.ui.view,arch_db:insurance_pricing.insurance_pricing_fiscal_power_view_form
+msgid "Hybrid"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_fiscal_power_id
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_price_finder_id
+msgid "ID"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model,name:insurance_pricing.model_fleet_vehicle
+msgid "Information on a vehicle"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.ui.menu,name:insurance_pricing.insurance_config_main
+msgid "Insurance"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.uom.categ,name:insurance_pricing.product_uom_categ_insurance_time
+msgid "Insurance Time"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model,name:insurance_pricing.model_account_invoice
+msgid "Invoice"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model,name:insurance_pricing.model_account_invoice_line
+msgid "Invoice Line"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_fiscal_power___last_update
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_price_finder___last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_fiscal_power_write_uid
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_price_finder_write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_fiscal_power_write_date
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_price_finder_write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.uom,name:insurance_pricing.product_uom_month
+msgid "Month(s)"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_bike_value_mope
+msgid "Mope 45cc"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_bike_value_lt125
+msgid "Motorcycle < 125 cc"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_bike_value_gt125
+msgid "Motorcycle > 125 cc"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.category,name:insurance_pricing.product_category_non_pool
+msgid "Non-Pool"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_vehicle_type_value_others1
+msgid "Others < 3.5 T"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_vehicle_type_value_others2
+msgid "Others > 3.5 T"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.category,name:insurance_pricing.product_category_pool
+msgid "Pool"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_fleet_vehicle_base_price
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_price_finder_base_price
+msgid "Price"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.actions.act_window,name:insurance_pricing.price_finder_action
+#: model:ir.model,name:insurance_pricing.model_insurance_pricing_price_finder
+#: model:ir.ui.menu,name:insurance_pricing.sale_price_finder_menu
+#: model:ir.ui.view,arch_db:insurance_pricing.price_finder_view_form
+msgid "Price Finder"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model,name:insurance_pricing.model_product_product
+msgid "Product"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model,name:insurance_pricing.model_product_category
+msgid "Product Category"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model,name:insurance_pricing.model_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model,name:insurance_pricing.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_price_finder_seats
+#: model:product.attribute,name:insurance_pricing.product_attribute_seats
+msgid "Seats"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute.value,name:insurance_pricing.product_attribute_bike_value_side_car
+msgid "Side car"
+msgstr ""
+
+#. module: insurance_pricing
+#: code:addons/insurance_pricing/models/sale.py:79
+#, python-format
+msgid "Start Date shouldn't be earlier than today for sale order line with Product '%s'."
+msgstr ""
+
+#. module: insurance_pricing
+#: code:addons/insurance_pricing/models/account_invoice.py:43
+#, python-format
+msgid "Start Date shouldn't be less than today for invoice line with Description '%s'."
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,help:insurance_pricing.field_fleet_vehicle_base_price
+#: model:ir.model.fields,help:insurance_pricing.field_insurance_pricing_price_finder_base_price
+msgid "The sale price is managed from the product template. Click on the 'Variant Prices' button to set the extra attribute prices."
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,help:insurance_pricing.field_product_product_variant_price_extra
+msgid "This is the extra price on top of each variant"
+msgstr ""
+
+#. module: insurance_pricing
+#: code:addons/insurance_pricing/models/account_invoice.py:57
+#, python-format
+msgid "Time period should be less than 1year/12months for invoice line with Description '%s'."
+msgstr ""
+
+#. module: insurance_pricing
+#: code:addons/insurance_pricing/models/sale.py:91
+#, python-format
+msgid "Time period should be less than 1year/12months for sale order line with Product '%s'."
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_account_invoice_line_vehicle_id
+#: model:ir.model.fields,field_description:insurance_pricing.field_account_invoice_vehicle_id
+#: model:ir.model.fields,field_description:insurance_pricing.field_sale_order_line_vehicle_id
+#: model:ir.model.fields,field_description:insurance_pricing.field_sale_order_vehicle_id
+msgid "Vehicle"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.model.fields,field_description:insurance_pricing.field_fleet_vehicle_product_id
+#: model:ir.model.fields,field_description:insurance_pricing.field_insurance_pricing_price_finder_product_id
+msgid "Vehicle Insurance"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.attribute,name:insurance_pricing.product_attribute_vehicle_type
+msgid "Vehicle Type"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:ir.ui.menu,name:insurance_pricing.sale_vehicle_menu
+msgid "Vehicles"
+msgstr ""
+
+#. module: insurance_pricing
+#: model:product.uom,name:insurance_pricing.product_uom_year
+msgid "Year(s)"
+msgstr ""
+
