@@ -2,7 +2,7 @@
 <odoo>
   <record id="price_finder_view_form" model="ir.ui.view">
     <field name="name">Price Finder</field>
-    <field name="model">insurance_broker.price.finder</field>
+    <field name="model">insurance_pricing.price.finder</field>
     <field name="arch" type="xml">
       <form string="Price Finder">
         <group>
@@ -25,7 +25,7 @@
   <record id="price_finder_action" model="ir.actions.act_window">
     <field name="name">Price Finder</field>
     <field name="type">ir.actions.act_window</field>
-    <field name="res_model">insurance_broker.price.finder</field>
+    <field name="res_model">insurance_pricing.price.finder</field>
     <field name="view_type">form</field>
     <field name="view_mode">form</field>
     <field name="target">new</field>

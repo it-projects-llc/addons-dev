@@ -19,7 +19,7 @@ def _find_insurance_product(self):
 
 
 class InsuranceBrokerPriceFinder(models.TransientModel):
-    _name = "insurance_broker.price.finder"
+    _name = "insurance_pricing.price.finder"
     _description = "Price Finder"
 
 
