@@ -326,32 +326,32 @@
     <field name="purchase_ok">False</field>
     <field name="uom_id" ref="product_uom_year"/>
     <field name="uom_po_id" ref="product_uom_year"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp1')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp1')])]"/>
   </record>
   <record id="product_product_cat1_fp2" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat1_fp1_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp2')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp2')])]"/>
   </record>
   <record id="product_product_cat1_fp3" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat1_fp1_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp3')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp3')])]"/>
   </record>
   <record id="product_product_cat1_fp4" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat1_fp1_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp4')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp4')])]"/>
   </record>
   <record id="product_product_cat1_fp5" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat1_fp1_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp5')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp5')])]"/>
   </record>
   <record id="product_product_cat1_fp6" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat1_fp1_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp6')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp6')])]"/>
   </record>
   <record id="product_cat1_attribute_line_1" model="product.attribute.line">
     <field name="product_tmpl_id" ref="product_product_cat1_fp1_product_template"/>
     <field name="attribute_id" ref="product_attribute_fiscal_power"/>
-    <field name="value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp1'), ref('insurance_broker_car_pricing.product_attribute_fp_value_fp2'), ref('insurance_broker_car_pricing.product_attribute_fp_value_fp3'), ref('insurance_broker_car_pricing.product_attribute_fp_value_fp4'), ref('insurance_broker_car_pricing.product_attribute_fp_value_fp5'), ref('insurance_broker_car_pricing.product_attribute_fp_value_fp6')])]"/>
+    <field name="value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp1'), ref('insurance_pricing.product_attribute_fp_value_fp2'), ref('insurance_pricing.product_attribute_fp_value_fp3'), ref('insurance_pricing.product_attribute_fp_value_fp4'), ref('insurance_pricing.product_attribute_fp_value_fp5'), ref('insurance_pricing.product_attribute_fp_value_fp6')])]"/>
   </record>
   <record id="product_product_cat2_fp1_break" model="product.product">
     <field name="name">Assurance Vehicle CAT2</field>
@@ -361,85 +361,85 @@
     <field name="purchase_ok">False</field>
     <field name="uom_id" ref="product_uom_year"/>
     <field name="uom_po_id" ref="product_uom_year"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp1'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_break')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp1'), ref('insurance_pricing.product_attribute_vehicle_type_value_break')])]"/>
   </record>
   <record id="product_product_cat2_fp2_break" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp2'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_break')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp2'), ref('insurance_pricing.product_attribute_vehicle_type_value_break')])]"/>
   </record>
   <record id="product_product_cat2_fp3_break" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp3'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_break')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp3'), ref('insurance_pricing.product_attribute_vehicle_type_value_break')])]"/>
   </record>
   <record id="product_product_cat2_fp4_break" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp4'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_break')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp4'), ref('insurance_pricing.product_attribute_vehicle_type_value_break')])]"/>
   </record>
   <record id="product_product_cat2_fp5_break" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp5'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_break')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp5'), ref('insurance_pricing.product_attribute_vehicle_type_value_break')])]"/>
   </record>
   <record id="product_product_cat2_fp6_break" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp5'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_break')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp5'), ref('insurance_pricing.product_attribute_vehicle_type_value_break')])]"/>
   </record>
   <record id="product_product_cat2_fp1_others1" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp1'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others1')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp1'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1')])]"/>
   </record>
   <record id="product_product_cat2_fp2_others1" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp2'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others1')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp2'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1')])]"/>
   </record>
   <record id="product_product_cat2_fp3_others1" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp3'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others1')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp3'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1')])]"/>
   </record>
   <record id="product_product_cat2_fp4_others1" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp4'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others1')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp4'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1')])]"/>
   </record>
   <record id="product_product_cat2_fp5_others1" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp5'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others1')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp5'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1')])]"/>
   </record>
   <record id="product_product_cat2_fp6_others1" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp6'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others1')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp6'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1')])]"/>
   </record>
   <record id="product_product_cat2_fp1_others2" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp1'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp1'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
   </record>
   <record id="product_product_cat2_fp2_others2" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp2'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp2'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
   </record>
   <record id="product_product_cat2_fp3_others2" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp3'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp3'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
   </record>
   <record id="product_product_cat2_fp4_others2" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp4'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp4'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
   </record>
   <record id="product_product_cat2_fp5_others2" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp5'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp5'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
   </record>
   <record id="product_product_cat2_fp6_others2" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp6'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp6'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
   </record>
   <record id="product_cat2_attribute_line_1" model="product.attribute.line">
     <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
     <field name="attribute_id" ref="product_attribute_fiscal_power"/>
-    <field name="value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp1'), ref('insurance_broker_car_pricing.product_attribute_fp_value_fp2'), ref('insurance_broker_car_pricing.product_attribute_fp_value_fp3'), ref('insurance_broker_car_pricing.product_attribute_fp_value_fp4'), ref('insurance_broker_car_pricing.product_attribute_fp_value_fp5'), ref('insurance_broker_car_pricing.product_attribute_fp_value_fp6')])]"/>
+    <field name="value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp1'), ref('insurance_pricing.product_attribute_fp_value_fp2'), ref('insurance_pricing.product_attribute_fp_value_fp3'), ref('insurance_pricing.product_attribute_fp_value_fp4'), ref('insurance_pricing.product_attribute_fp_value_fp5'), ref('insurance_pricing.product_attribute_fp_value_fp6')])]"/>
   </record>
   <record id="product_cat2_attribute_line_2" model="product.attribute.line">
     <field name="product_tmpl_id" ref="product_product_cat2_fp1_break_product_template"/>
     <field name="attribute_id" ref="product_attribute_vehicle_type"/>
-    <field name="value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_break'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others1'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+    <field name="value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_vehicle_type_value_break'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
   </record>
   <record id="product_product_cat3_fp1_others1" model="product.product">
     <field name="name">Assurance Vehicle CAT3</field>
@@ -449,61 +449,61 @@
     <field name="purchase_ok">False</field>
     <field name="uom_id" ref="product_uom_year"/>
     <field name="uom_po_id" ref="product_uom_year"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp1'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others1')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp1'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1')])]"/>
   </record>
   <record id="product_product_cat3_fp2_others1" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp2'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others1')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp2'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1')])]"/>
   </record>
   <record id="product_product_cat3_fp3_others1" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp3'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others1')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp3'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1')])]"/>
   </record>
   <record id="product_product_cat3_fp4_others1" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp4'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others1')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp4'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1')])]"/>
   </record>
   <record id="product_product_cat3_fp5_others1" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp5'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others1')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp5'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1')])]"/>
   </record>
   <record id="product_product_cat3_fp6_others1" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp6'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others1')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp6'), ref('insurance_pricing.product_attribute_vehicle_type_value_others1')])]"/>
   </record>
   <record id="product_product_cat3_fp1_others2" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp1'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp1'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
   </record>
   <record id="product_product_cat3_fp2_others2" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp2'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp2'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
   </record>
   <record id="product_product_cat3_fp3_others2" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp3'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp3'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
   </record>
   <record id="product_product_cat3_fp4_others2" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp4'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp4'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
   </record>
   <record id="product_product_cat3_fp5_others2" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp5'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp5'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
   </record>
   <record id="product_product_cat3_fp6_others2" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp6'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp6'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
   </record>
   <record id="product_cat3_attribute_line_1" model="product.attribute.line">
     <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
     <field name="attribute_id" ref="product_attribute_fiscal_power"/>
-    <field name="value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp1'), ref('insurance_broker_car_pricing.product_attribute_fp_value_fp2'), ref('insurance_broker_car_pricing.product_attribute_fp_value_fp3'), ref('insurance_broker_car_pricing.product_attribute_fp_value_fp4'), ref('insurance_broker_car_pricing.product_attribute_fp_value_fp5'), ref('insurance_broker_car_pricing.product_attribute_fp_value_fp6')])]"/>
+    <field name="value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp1'), ref('insurance_pricing.product_attribute_fp_value_fp2'), ref('insurance_pricing.product_attribute_fp_value_fp3'), ref('insurance_pricing.product_attribute_fp_value_fp4'), ref('insurance_pricing.product_attribute_fp_value_fp5'), ref('insurance_pricing.product_attribute_fp_value_fp6')])]"/>
   </record>
   <record id="product_cat3_attribute_line_2" model="product.attribute.line">
     <field name="product_tmpl_id" ref="product_product_cat3_fp1_others1_product_template"/>
     <field name="attribute_id" ref="product_attribute_vehicle_type"/>
-    <field name="value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others1'), ref('insurance_broker_car_pricing.product_attribute_vehicle_type_value_others2')])]"/>
+    <field name="value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_vehicle_type_value_others1'), ref('insurance_pricing.product_attribute_vehicle_type_value_others2')])]"/>
   </record>
   <record id="product_template_cat4" model="product.template" context="{'create_product_product': False}">
     <field name="name">Assurance Vehicle CAT4</field>
@@ -517,12 +517,12 @@
   <record id="product_cat4_attribute_line_1" model="product.attribute.line">
     <field name="product_tmpl_id" ref="product_template_cat4"/>
     <field name="attribute_id" ref="product_attribute_fiscal_power"/>
-    <field name="value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_fp_value_fp1'), ref('insurance_broker_car_pricing.product_attribute_fp_value_fp2'), ref('insurance_broker_car_pricing.product_attribute_fp_value_fp3'), ref('insurance_broker_car_pricing.product_attribute_fp_value_fp4'), ref('insurance_broker_car_pricing.product_attribute_fp_value_fp5'), ref('insurance_broker_car_pricing.product_attribute_fp_value_fp6')])]"/>
+    <field name="value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_fp_value_fp1'), ref('insurance_pricing.product_attribute_fp_value_fp2'), ref('insurance_pricing.product_attribute_fp_value_fp3'), ref('insurance_pricing.product_attribute_fp_value_fp4'), ref('insurance_pricing.product_attribute_fp_value_fp5'), ref('insurance_pricing.product_attribute_fp_value_fp6')])]"/>
   </record>
   <record id="product_cat4_attribute_line_2" model="product.attribute.line">
     <field name="product_tmpl_id" ref="product_template_cat4"/>
     <field name="attribute_id" ref="product_attribute_seats"/>
-    <field name="value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_seats_value_3'), ref('insurance_broker_car_pricing.product_attribute_seats_value_4'), ref('insurance_broker_car_pricing.product_attribute_seats_value_5'), ref('insurance_broker_car_pricing.product_attribute_seats_value_6'), ref('insurance_broker_car_pricing.product_attribute_seats_value_7'), ref('insurance_broker_car_pricing.product_attribute_seats_value_8'), ref('insurance_broker_car_pricing.product_attribute_seats_value_9'), ref('insurance_broker_car_pricing.product_attribute_seats_value_10'), ref('insurance_broker_car_pricing.product_attribute_seats_value_11'), ref('insurance_broker_car_pricing.product_attribute_seats_value_12'), ref('insurance_broker_car_pricing.product_attribute_seats_value_13'), ref('insurance_broker_car_pricing.product_attribute_seats_value_14'), ref('insurance_broker_car_pricing.product_attribute_seats_value_15'), ref('insurance_broker_car_pricing.product_attribute_seats_value_16'), ref('insurance_broker_car_pricing.product_attribute_seats_value_17'), ref('insurance_broker_car_pricing.product_attribute_seats_value_18'), ref('insurance_broker_car_pricing.product_attribute_seats_value_19'), ref('insurance_broker_car_pricing.product_attribute_seats_value_20'), ref('insurance_broker_car_pricing.product_attribute_seats_value_21'), ref('insurance_broker_car_pricing.product_attribute_seats_value_22'), ref('insurance_broker_car_pricing.product_attribute_seats_value_23'), ref('insurance_broker_car_pricing.product_attribute_seats_value_24'), ref('insurance_broker_car_pricing.product_attribute_seats_value_25'), ref('insurance_broker_car_pricing.product_attribute_seats_value_26'), ref('insurance_broker_car_pricing.product_attribute_seats_value_27'), ref('insurance_broker_car_pricing.product_attribute_seats_value_28'), ref('insurance_broker_car_pricing.product_attribute_seats_value_29'), ref('insurance_broker_car_pricing.product_attribute_seats_value_30'), ref('insurance_broker_car_pricing.product_attribute_seats_value_31'), ref('insurance_broker_car_pricing.product_attribute_seats_value_32'), ref('insurance_broker_car_pricing.product_attribute_seats_value_33'), ref('insurance_broker_car_pricing.product_attribute_seats_value_34'), ref('insurance_broker_car_pricing.product_attribute_seats_value_35'), ref('insurance_broker_car_pricing.product_attribute_seats_value_36'), ref('insurance_broker_car_pricing.product_attribute_seats_value_37'), ref('insurance_broker_car_pricing.product_attribute_seats_value_38'), ref('insurance_broker_car_pricing.product_attribute_seats_value_39'), ref('insurance_broker_car_pricing.product_attribute_seats_value_40'), ref('insurance_broker_car_pricing.product_attribute_seats_value_41'), ref('insurance_broker_car_pricing.product_attribute_seats_value_42'), ref('insurance_broker_car_pricing.product_attribute_seats_value_43'), ref('insurance_broker_car_pricing.product_attribute_seats_value_44'), ref('insurance_broker_car_pricing.product_attribute_seats_value_45')])]"/>
+    <field name="value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_seats_value_3'), ref('insurance_pricing.product_attribute_seats_value_4'), ref('insurance_pricing.product_attribute_seats_value_5'), ref('insurance_pricing.product_attribute_seats_value_6'), ref('insurance_pricing.product_attribute_seats_value_7'), ref('insurance_pricing.product_attribute_seats_value_8'), ref('insurance_pricing.product_attribute_seats_value_9'), ref('insurance_pricing.product_attribute_seats_value_10'), ref('insurance_pricing.product_attribute_seats_value_11'), ref('insurance_pricing.product_attribute_seats_value_12'), ref('insurance_pricing.product_attribute_seats_value_13'), ref('insurance_pricing.product_attribute_seats_value_14'), ref('insurance_pricing.product_attribute_seats_value_15'), ref('insurance_pricing
   </record>
   <record id="product_product_cat5_mope" model="product.product">
     <field name="name">Assurance Vehicle CAT5</field>
@@ -532,23 +532,23 @@
     <field name="purchase_ok">False</field>
     <field name="uom_id" ref="product_uom_year"/>
     <field name="uom_po_id" ref="product_uom_year"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_bike_value_mope')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_bike_value_mope')])]"/>
   </record>
   <record id="product_product_cat5_moto1" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat5_mope_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_bike_value_lt125')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_bike_value_lt125')])]"/>
   </record>
   <record id="product_product_cat5_moto2" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat5_mope_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_bike_value_gt125')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_bike_value_gt125')])]"/>
   </record>
   <record id="product_product_cat5_side" model="product.product">
     <field name="product_tmpl_id" ref="product_product_cat5_mope_product_template"/>
-    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_bike_value_side_car')])]"/>
+    <field name="attribute_value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_bike_value_side_car')])]"/>
   </record>
   <record id="product_cat5_attribute_line_1" model="product.attribute.line">
     <field name="product_tmpl_id" ref="product_product_cat5_mope_product_template"/>
     <field name="attribute_id" ref="product_attribute_bike"/>
-    <field name="value_ids" eval="[(6,0,[ref('insurance_broker_car_pricing.product_attribute_bike_value_mope'), ref('insurance_broker_car_pricing.product_attribute_bike_value_lt125'), ref('insurance_broker_car_pricing.product_attribute_bike_value_gt125'), ref('insurance_broker_car_pricing.product_attribute_bike_value_side_car')])]"/>
+    <field name="value_ids" eval="[(6,0,[ref('insurance_pricing.product_attribute_bike_value_mope'), ref('insurance_pricing.product_attribute_bike_value_lt125'), ref('insurance_pricing.product_attribute_bike_value_gt125'), ref('insurance_pricing.product_attribute_bike_value_side_car')])]"/>
   </record>
 </odoo>

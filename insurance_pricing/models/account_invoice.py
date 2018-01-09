@@ -29,7 +29,7 @@ class AccountInvoiceLine(models.Model):
                 result['product_id'] = vehicle.product_id.id
         result['start_date'] = (date.today() + timedelta(1)).strftime(DF)
         result['end_date'] = (date.today() + relativedelta(years=1)).strftime(DF)
-        result['uom_id'] = self.env.ref('insurance_broker_car_pricing.product_uom_year').id
+        result['uom_id'] = self.env.ref('insurance_pricing.product_uom_year').id
 
         return result
 
@@ -63,7 +63,7 @@ class AccountInvoiceLine(models.Model):
         if not vals.get('start_date') and not vals.get('end_date'):
             vals['start_date'] = date.today() + timedelta(1)
             vals['end_date'] = date.today() + relativedelta(years=1)
-            vals['uom_id'] = self.env.ref('insurance_broker_car_pricing.product_uom_year').id
+            vals['uom_id'] = self.env.ref('insurance_pricing.product_uom_year').id
         invline = super(AccountInvoiceLine, self).create(vals)
         return invline
 
@@ -81,8 +81,8 @@ class AccountInvoiceLine(models.Model):
             if end_date - start_date < reference_date - start_date:
                 months = relativedelta(end_date, start_date).months
                 self.quantity = months
-                self.uom_id = self.env.ref('insurance_broker_car_pricing.product_uom_month').id
+                self.uom_id = self.env.ref('insurance_pricing.product_uom_month').id
             elif end_date - start_date >= reference_date - start_date:
                 self.quantity = 1
-                self.uom_id = self.env.ref('insurance_broker_car_pricing.product_uom_year').id
+                self.uom_id = self.env.ref('insurance_pricing.product_uom_year').id
                 self.price_unit = self.product_id.lst_price

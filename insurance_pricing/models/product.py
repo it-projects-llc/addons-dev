@@ -11,7 +11,7 @@ class ProductCategory(models.Model):
 
     @api.multi
     def name_get(self):
-        fleet_categ_ids =[self.env.ref('insurance_broker_car_pricing.product_category_pool').id, self.env.ref('insurance_broker_car_pricing.product_category_non_pool').id]
+        fleet_categ_ids =[self.env.ref('insurance_pricing.product_category_pool').id, self.env.ref('insurance_pricing.product_category_non_pool').id]
         fleet_categs = self.filtered(lambda r: r.id in fleet_categ_ids)
         other_categs = self - fleet_categs
 

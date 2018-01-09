@@ -19,7 +19,7 @@ class FleetVehicle(models.Model):
 
     category_id = fields.Many2one('product.category', 'Category', required=True)
     product_attribute_value_id = fields.Many2one('product.attribute.value', 'Fiscal Power',
-                                                 domain=lambda self: [('attribute_id', '=', self.env.ref('insurance_broker_car_pricing.product_attribute_fiscal_power').id)],
+                                                 domain=lambda self: [('attribute_id', '=', self.env.ref('insurance_pricing.product_attribute_fiscal_power').id)],
                                                  compute='_get_fiscal_power', readonly=True)
     product_id = fields.Many2one('product.product', 'Vehicle Insurance', compute=_find_insurance_product, readonly=True)
     base_price = fields.Float('Price', related='product_id.lst_price', digits=dp.get_precision('Product Price'), readonly=True)

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-  <record id="fleet_vehicle_view_form_inherit_insurance_broker_car_pricing" model="ir.ui.view">
+  <record id="fleet_vehicle_view_form_inherit_insurance_pricing" model="ir.ui.view">
     <field name="name">fleet.vehicle.form</field>
     <field name="model">fleet.vehicle</field>
     <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
@@ -19,7 +19,7 @@
       </xpath>
     </field>
   </record>
-  <record id="fleet_vehicle_view_kanban_inherit_insurance_broker_car_pricing" model="ir.ui.view">
+  <record id="fleet_vehicle_view_kanban_inherit_insurance_pricing" model="ir.ui.view">
     <field name="name">fleet.vehicle.kanban</field>
     <field name="model">fleet.vehicle</field>
     <field name="inherit_id" ref="fleet.fleet_vehicle_view_kanban"/>
@@ -43,7 +43,7 @@
       </xpath>
     </field>
   </record>
-  <record id="fleet_vehicle_view_tree_inherit_insurance_broker_car_pricing" model="ir.ui.view">
+  <record id="fleet_vehicle_view_tree_inherit_insurance_pricing" model="ir.ui.view">
     <field name="name">fleet.vehicle.tree</field>
     <field name="model">fleet.vehicle</field>
     <field name="inherit_id" ref="fleet.fleet_vehicle_view_tree"/>
