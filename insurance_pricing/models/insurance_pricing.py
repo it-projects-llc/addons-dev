@@ -23,7 +23,7 @@ class FiscalPower(models.Model):
     hybrid_horsepower_from = fields.Integer("HP Hybrid from")
     hybrid_horsepower_to = fields.Integer("HP Hybrid to")
     product_attribute_value_id = fields.Many2one('product.attribute.value', 'Fiscal Power',
-                                                 domain=lambda self: [('attribute_id', '=', self.env.ref('insurance_broker_car_pricing.product_attribute_fiscal_power').id)],
+                                                 domain=lambda self: [('attribute_id', '=', self.env.ref('insurance_pricing_car_pricing.product_attribute_fiscal_power').id)],
                                                  required=True)
 
     # This constraint is not tested yet, but it must work , at the end of the day
