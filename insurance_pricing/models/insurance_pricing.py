@@ -4,7 +4,7 @@ from odoo import api, fields, models, _
 
 
 class FiscalPower(models.Model):
-    _name = 'insurance_broker.fiscal_power'
+    _name = 'insurance_pricing.fiscal_power'
     _description = "Fiscal Power"
     _rec_name = 'product_attribute_value_id'
     _order = "product_attribute_value_id"
