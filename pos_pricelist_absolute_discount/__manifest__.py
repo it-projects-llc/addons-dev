@@ -25,7 +25,6 @@
         "views/product_view.xml",
     ],
     "qweb": [
-        "static/src/xml/pos.xml",
     ],
     "demo": [
     ],
