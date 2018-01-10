@@ -33,8 +33,6 @@ odoo.define('pos_pricelist.screens', function (require) {
                 this.pos.pricelist_engine.update_ticket(partner, orderLines);
                 if (partner && partner.property_product_pricelist[0] !== this.pos.config.pricelist_id[0]) {
                     default_pricelist_is_active = true;
-                } else {
-                    default_pricelist_is_active = false;
                 }
                 var buttons = this.getParent().screens.products.action_buttons;
                 if (buttons && buttons.pricelist && orderLines.length) {
@@ -66,6 +64,7 @@ odoo.define('pos_pricelist.screens', function (require) {
             this.highlight(status);
             if (line) {
                 line.default_pricelist_is_active = status;
+                line.trigger('change', line);
             }
         },
         renderElement: function(){
