@@ -28,27 +28,29 @@ odoo.define('pos_pricelist.screens', function (require) {
                 var currentOrder = this.pos.get('selectedOrder');
                 var orderLines = currentOrder.orderlines.models;
                 var partner = currentOrder.get_client();
+                var default_pricelist_is_active = false;
                 this.pos.pricelist_engine.update_products_ui(partner);
                 this.pos.pricelist_engine.update_ticket(partner, orderLines);
                 if (partner && partner.property_product_pricelist[0] !== this.pos.config.pricelist_id[0]) {
-                    var buttons = this.getParent().screens.products.action_buttons;
-                    if (buttons && buttons.pricelist) {
-                        if (orderLines.length) {
-                            orderLines.forEach(function(line){
-                                buttons.pricelist.set_change_pricelist_button(true, line)
-                            });
-                        }
-                    }
+                    default_pricelist_is_active = true;
+                }
+                var buttons = this.getParent().screens.products.action_buttons;
+                if (buttons && buttons.pricelist && orderLines.length) {
+                    orderLines.forEach(function(line){
+                        buttons.pricelist.set_change_pricelist_button(default_pricelist_is_active, line);
+                    });
                 }
             }
         }
     });
+
     var PricelistButton = screens.ActionButtonWidget.extend({
         template: 'PricelistButton',
         button_click: function() {
             var order = this.pos.get_order();
             var orderline = order.get_selected_orderline();
             if (orderline && orderline.default_pricelist_is_active) {
+                orderline.set_manual_price(true);
                 this.apply_pricelist();
             }
         },
@@ -62,8 +64,21 @@ odoo.define('pos_pricelist.screens', function (require) {
             this.highlight(status);
             if (line) {
                 line.default_pricelist_is_active = status;
+                line.trigger('change', line);
             }
         },
+        renderElement: function(){
+            this._super();
+            var self = this;
+            var order = this.pos.get_order();
+            if (order) {
+                var lines = order.get_orderlines();
+                lines.forEach(function(line) {
+                    self.set_change_pricelist_button(line.default_pricelist_is_active, line);
+
+                });
+            }
+        }
     });
 
     screens.define_action_button({

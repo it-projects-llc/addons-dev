@@ -59,18 +59,17 @@ odoo.define('pos_pricelist.widgets', function (require) {
                 var mode = this.numpad_state.get('mode');
                 if (mode === 'price') {
                     order.get_selected_orderline().set_manual_price(true);
-                    order.get_selected_orderline().set_old_unit_price(val);
                 }
             }
         }
     });
 
-    screens.ActionButtonWidget = screens.ActionButtonWidget.extend({
+    screens.ActionButtonWidget.include({
         selectOrder: function (event) {
             this._super(event);
-            var partner = this.order.get_client() ?
-                          this.order.get_client() :
-                          false;
+            var partner = this.order.get_client()
+                ? this.order.get_client()
+                : false;
             this.pos.pricelist_engine.update_products_ui(partner);
         }
     });

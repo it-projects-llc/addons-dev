@@ -20,36 +20,15 @@ odoo.define('pos_pricelist.models', function (require) {
 
 	var models = require('point_of_sale.models');
 	var screens = require('point_of_sale.screens');
-	var PosDB = require('pos_pricelist.DB');
+
 	var core = require('web.core');
 	var utils = require('web.utils');
 
     var round_pr = utils.round_precision;
     var round_di = utils.round_decimals;
 
-	PosDB = PosDB.extend({
-	    add_products: function (products) {
-	        this._super(products);
-
-	        var pos = posmodel.pricelist_engine.pos;
-		    var order = new models.Order({}, {pos: pos});
-	        for (var id in this.product_by_id) {
-	            if (this.product_by_id.hasOwnProperty(id)) {
-	                var product = this.product_by_id[id];
-	                var orderline = new models.Orderline({}, {
-	                    pos: pos,
-	                    order: order,
-	                    product: product,
-	                    price: product.price
-	                });
-	                var prices = orderline.get_all_prices();
-	                this.product_by_id[id].price_with_taxes
-	                    = prices['priceWithTax'];
-	            }
-	        }
-            order.destroy({'reason': 'abandon'});
-	    }
-	});
+    models.load_fields('product.product',['categ_id','seller_ids','standard_price']);
+    models.load_fields('account.fiscal.position.tax',['display_name','position_id','tax_src_id', 'tax_dest_id']);
 
 	/**
      * Extend the POS model
@@ -61,10 +40,7 @@ odoo.define('pos_pricelist.models', function (require) {
          * @param attributes
          */
         initialize: function (session, attributes) {    
-            var product_model = _.find(this.models, function(model){ return model.model === 'product.product'; });
-            product_model.fields.push('categ_id','seller_ids','standard_price');
             var result = _super_posmodel.initialize.apply(this, arguments);
-            this.db = new PosDB();
             this.pricelist_engine = new models.PricelistEngine({
                 'pos': this,
                 'db': this.db
@@ -105,7 +81,6 @@ odoo.define('pos_pricelist.models', function (require) {
             }
         }
     });
-
     var _super_order = models.Order.prototype;
     models.Order = models.Order.extend({
         select_orderline: function(line){
@@ -117,7 +92,7 @@ odoo.define('pos_pricelist.models', function (require) {
                 this.pos.trigger("change:selectedLine", this.get_selected_orderline());
             }
         },
-    });
+      });
     /**
      * Extend the Order line
      */
@@ -128,8 +103,8 @@ odoo.define('pos_pricelist.models', function (require) {
          * @param options
          */
         initialize: function (attr, options) {
-
-            this.show_old_price = false;
+            var self = this;
+            this.default_pricelist_is_active = true;
             var result = _super_orderline.initialize.apply(this, arguments);
             this.manual_price = false;
             if (this.product !== undefined) {
@@ -137,64 +112,29 @@ odoo.define('pos_pricelist.models', function (require) {
                 var partner = this.order ? this.order.get_client() : null;
                 var product = this.product;
                 var db = this.pos.db;
-                if (!this.old_price) {
-                    this.old_price = product.list_price;
-                }
-                var price = this.pos.pricelist_engine.compute_price_all (
-                    db, product, partner, qty
-                );
-                if (!this.active_pricelist_item && this.order) {
-                    this.active_pricelist_item = this.order.active_pricelist_item;
-                }
-                if (price !== false) {
-                    var current_price = round_di(parseFloat(price) || 0, this.pos.dp['Product Price']);
-                    var price_list_id = false;
-                    if (partner && partner.property_product_pricelist) {
-                        price_list_id = partner.property_product_pricelist[0];
-                        this.default_pricelist_is_active = true;
-                    } else {
-                        price_list_id = this.pos.config.pricelist_id[0];
-                    }
-                    if (this.pos.db.pricelist_by_id[price_list_id].pos_discount_policy === "without_discount") {
-                        var discount_percent = this.calc_discount_percent(this.old_price, current_price);
-                        this.price = this.old_price;
-                        this.show_old_price = true;
-                        if (discount_percent !== false) {
-                            this.set_discount(discount_percent);
+                if (partner && partner.property_product_pricelist[0]) {
+                    if (this.default_pricelist_is_active) {
+                        var price = this.pos.pricelist_engine.compute_price_all(
+                            db, product, partner, qty
+                        );
+                        if (price !== false) {
+                            this.price = price;
                         }
                     } else {
-                        this.price = current_price;
+                        this.set_default_pricelist();
+                    }
+
+                } else {
+                    this.default_pricelist_is_active = false;
+                    var price = this.pos.pricelist_engine.compute_price_all(
+                        db, product, partner, qty
+                    );
+                    if (price !== false) {
+                        this.price = price;
                     }
                 }
             }
             return result;
-        },
-        /**
-         * @param product_price
-         * @param current_price
-         * @returns percent
-         */
-        calc_discount_percent: function(product_price, current_price) {
-            if (this.active_pricelist_item) {
-                if (this.active_pricelist_item['price_discount'] && !this.active_pricelist_item['price_surcharge']) {
-                    return this.active_pricelist_item['price_discount'];
-                } else if (this.active_pricelist_item['percent_price']) {
-                    return this.active_pricelist_item['percent_price'];
-                }
-            }
-            var percent = 0;
-            var rounding = this.pos.currency.rounding;
-
-            if (product_price !== 0) {
-                percent = round_pr(100.0 - (current_price * 100.0) / product_price, rounding);
-            }
-            return percent;
-        },
-        // changes the base old price of the product for this orderline
-        set_old_unit_price: function(price){
-            this.order.assert_editable();
-            this.old_price = round_di(parseFloat(price) || 0, this.pos.dp['Product Price']);
-            this.trigger('change',this);
         },
         /**
          * @param state
@@ -223,21 +163,7 @@ odoo.define('pos_pricelist.models', function (require) {
                the unit price of the previous quantity, to preserve manually
                entered prices as much as possible. */
             if (price !== false && price !== old_price) {
-                var price_list_id = false;
-                if (partner && partner.property_product_pricelist) {
-                    price_list_id = partner.property_product_pricelist[0];
-                } else {
-                    price_list_id = this.pos.config.pricelist_id[0];
-                }
-                if (this.pos.db.pricelist_by_id[price_list_id].pos_discount_policy === "without_discount") {
-                    var discount_percent = this.calc_discount_percent(this.old_price, price);
-                    this.show_old_price = true;
-                    if (discount_percent !== false) {
-                        this.set_discount(discount_percent);
-                    }
-                } else {
-                    this.set_unit_price(price);
-                }
+                this.set_unit_price(price);
             }
         },
         set_default_pricelist: function() {
@@ -245,23 +171,12 @@ odoo.define('pos_pricelist.models', function (require) {
             var price = this.pos.pricelist_engine.compute_price_all(
                 db, this.product, false, this.quantity
             );
-            var default_price_list_id = this.pos.config.pricelist_id[0];
-            if (this.pos.db.pricelist_by_id[default_price_list_id].pos_discount_policy === "without_discount") {
-                var discount_percent = this.calc_discount_percent(this.old_price, price);
-                this.show_old_price = true;
-                if (discount_percent !== false) {
-                    this.set_discount(discount_percent);
-                }
-            } else {
-                this.set_unit_price(price);
-                this.show_old_price = false;
-                this.set_discount(0);
-            }
+            this.manual_price = true;
+            this.set_unit_price(price);
         },
         /**
          * override this method to take fiscal positions in consideration
          * get all price
-         * TODO : find a better way to do it : need some refactoring
          * in the pos standard
          * @returns {{
          *  priceWithTax: *, priceWithoutTax: *, tax: number, taxDetails: {}
@@ -286,9 +201,11 @@ odoo.define('pos_pricelist.models', function (require) {
                 taxtotal += tax.amount;
                 taxdetail[tax.id] = tax.amount;
             });
+
             totalNoTax = round_pr(totalNoTax, this.pos.currency.rounding);
-            res.priceWithTax = all_taxes.total_included;
-            res.priceWithoutTax = all_taxes.total_excluded;
+
+            res.priceWithTax = totalTax;
+            res.priceWithoutTax = totalNoTax;
             res.tax = taxtotal;
             res.taxDetails = taxdetail;
             return res;
@@ -388,69 +305,6 @@ odoo.define('pos_pricelist.models', function (require) {
                 this, arguments
             );
         },
-        get_display_old_price: function(){
-            if (this.pos.config.iface_tax_included) {
-                return this.get_old_price_with_tax();
-            } else {
-                return this.get_old_price();
-            }
-
-        },
-        get_old_price: function(){
-            var rounding = this.pos.currency.rounding;
-            return round_pr(this.get_unit_old_price() * this.get_quantity(), rounding);
-        },
-        get_unit_old_price: function(){
-            var digits = this.pos.dp['Product Price'];
-            return parseFloat(round_di(this.old_price || 0, digits).toFixed(digits));
-        },
-        get_old_price_with_tax: function(){
-            return this.get_all_old_prices().priceWithTax;
-        },
-        get_unit_display_old_price: function(){
-            if (this.pos.config.iface_tax_included) {
-                var quantity = this.quantity;
-                this.quantity = 1.0;
-                var price = this.get_all_old_prices().priceWithTax;
-                this.quantity = quantity;
-                return price;
-            } else {
-                return this.get_unit_old_price();
-            }
-        },
-        get_all_old_prices: function(){
-            var base = this.get_old_price();
-            var totalTax = base;
-            var totalNoTax = base;
-            var taxtotal = 0;
-            var taxdetail = {};
-            var product_taxes = this.get_applicable_taxes_for_orderline();
-            var price_unit = this.get_unit_old_price();
-            var all_taxes = this.compute_all(product_taxes, price_unit, this.get_quantity(), this.pos.currency.rounding);
-            _(all_taxes.taxes).each(function (tax) {
-                if (tax.price_include) {
-                    totalNoTax -= tax.amount;
-                } else {
-                    totalTax += tax.amount;
-                }
-                taxtotal += tax.amount;
-                taxdetail[tax.id] = tax.amount;
-            });
-            totalNoTax = round_pr(totalNoTax, this.pos.currency.rounding);
-            return {
-                "priceWithTax": all_taxes.total_included,
-                "priceWithoutTax": all_taxes.total_excluded,
-                "tax": taxtotal,
-                "taxDetails": taxdetail
-            };
-        },
-        export_for_printing: function(){
-            var res = _super_orderline.export_for_printing.apply(this, arguments);
-            res.show_old_price = this.show_old_price;
-            res.old_price = this.get_unit_display_old_price();
-            res.old_price_display = this.get_display_old_price();
-            return res;
-        },
         export_as_JSON: function() {
             var res = _super_orderline.export_as_JSON.apply(this, arguments);
             res.default_pricelist_is_active = this.default_pricelist_is_active;
@@ -463,12 +317,10 @@ odoo.define('pos_pricelist.models', function (require) {
                     );
             }
             res["tax_ids"] = [[6, false, product_tax_ids]];
-            res.active_pricelist_item = this.active_pricelist_item;
             return res;
         },
         init_from_JSON: function(json) {
             this.default_pricelist_is_active = json.default_pricelist_is_active;
-            this.active_pricelist_item = json.active_pricelist_item;
             _super_orderline.init_from_JSON.call(this, json);
         }
     });
@@ -631,10 +483,6 @@ odoo.define('pos_pricelist.models', function (require) {
                         )
                     }
                 }
-                var order = this.pos.get_order();
-                if (order) {
-                    order.active_pricelist_item = rule;
-                }
                 break;
             }
             return price
@@ -665,15 +513,6 @@ odoo.define('pos_pricelist.models', function (require) {
                     var price = this.compute_price_all(
                         db, product, partner, qty
                     );
-                    var price_list_id = false;
-                    if (partner && partner.property_product_pricelist) {
-                        price_list_id = partner.property_product_pricelist[0];
-                    } else {
-                        price_list_id = this.pos.config.pricelist_id[0];
-                    }
-                    if (price === false || this.pos.db.pricelist_by_id[price_list_id].pos_discount_policy === "without_discount") {
-                        price = product.list_price;
-                    }
                     if (price !== false) {
                         if (this.pos.config.iface_tax_included) {
                             var prices = this.simulate_price(
@@ -714,8 +553,10 @@ odoo.define('pos_pricelist.models', function (require) {
             order.set_client(partner);
             var orderline = new models.Orderline
             ({}, {
-                pos: this.pos, order: order,
-                product: product, price: price
+                pos: this.pos,
+                order: order,
+                product: product,
+                price: price
             });
             orderline.set_quantity(qty);
             // reset the sequence
@@ -738,33 +579,7 @@ odoo.define('pos_pricelist.models', function (require) {
                     db, product, partner, quantity
                 );
                 if (price !== false) {
-                    if (partner) {
-                        if (partner.property_product_pricelist && this.pos.db.pricelist_by_id[partner.property_product_pricelist[0]].pos_discount_policy === "without_discount") {
-                            var discount_percent = line.calc_discount_percent(product.list_price, price);
-                            line.show_old_price = true;
-                            line.price = product.list_price;
-                            if (discount_percent !== false) {
-                                line.set_discount(discount_percent);
-                            }
-                        } else {
-                            line.set_discount(0);
-                            line.show_old_price = false;
-                            line.price = price;
-                        }
-                    } else {
-                        if (this.pos.db.pricelist_by_id[this.pos.config.pricelist_id[0]].pos_discount_policy === "without_discount") {
-                            var discount_percent = line.calc_discount_percent(product.list_price, price);
-                            line.show_old_price = true;
-                            line.price = product.list_price;
-                            if (discount_percent !== false) {
-                                line.set_discount(discount_percent);
-                            }
-                        } else {
-                            line.set_discount(0);
-                            line.show_old_price = false;
-                            line.price = price;
-                        }
-                    }
+                    line.price = price;
                 }
                 line.trigger('change', line);
             }
@@ -791,19 +606,6 @@ odoo.define('pos_pricelist.models', function (require) {
                     res_product_pricelist)[0]
             );
             pos_model.models.splice(++pricelist_index, 0,
-                {
-                    model: 'account.fiscal.position.tax',
-                    fields: ['display_name',
-                        'position_id',
-                        'tax_src_id',
-                        'tax_dest_id'],
-                    domain: null,
-                    loaded: function (self, fiscal_position_taxes) {
-                        self.db.add_fiscal_position_taxes(
-                            fiscal_position_taxes
-                        );
-                    }
-                },
                 {
                     model: 'product.supplierinfo',
                     fields: ['id','delay',
@@ -834,10 +636,7 @@ odoo.define('pos_pricelist.models', function (require) {
                 },
                 {
                     model: 'product.pricelist',
-                    fields: ['display_name',
-                        'name',
-                        'currency_id',
-                        'pos_discount_policy'],
+                    fields: [],
                     domain: null,
                     loaded: function (self, pricelists) {
                         self.db.add_pricelists(pricelists);
@@ -845,26 +644,7 @@ odoo.define('pos_pricelist.models', function (require) {
                 },
                 {
                     model: 'product.pricelist.item',
-                    fields: [
-                        'base',
-                        'base_pricelist_id',
-	                    'pricelist_id',
-                        'categ_id',
-                        'min_quantity',
-                        'applied_on',
-	                    'fixed_price',
-	                    'percent_price',
-                        'price_discount',
-                        'price_max_margin',
-                        'price_min_margin',
-                        'price_round',
-                        'price_surcharge',
-                        'product_id',
-                        'product_tmpl_id',
-                        'sequence',
-                        'date_start',
-                        'date_end'
-                    ],
+                    fields: [],
                     domain: null,
                     loaded: function (self, items) {
                         self.db.add_pricelist_items(items);

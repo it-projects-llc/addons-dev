@@ -20,7 +20,7 @@ odoo.define('pos_pricelist.DB', function (require) {
 
     var PosDB = require('point_of_sale.DB');
 
-    PosDB = PosDB.extend({
+    PosDB.include({
         init: function (options) {
             options = options || {};
             this._super(options);
@@ -35,16 +35,6 @@ odoo.define('pos_pricelist.DB', function (require) {
             this.supplierinfo_by_id = {};
             this.pricelist_partnerinfo_by_id = {};
             this.fiscal_position_tax_by_id = {};
-        },
-        add_fiscal_position_taxes: function (fiscal_position_taxes) {
-            if (!(fiscal_position_taxes instanceof Array)) {
-                fiscal_position_taxes = [fiscal_position_taxes];
-            }
-            var fiscal_position_tax;
-            while (fiscal_position_tax = fiscal_position_taxes.pop()) {
-                this.fiscal_position_tax_by_id[fiscal_position_tax.id]
-                    = fiscal_position_tax;
-            }
         },
         add_supplierinfo: function (supplierinfos) {
             if (!(supplierinfos instanceof Array)) {
@@ -153,6 +143,5 @@ odoo.define('pos_pricelist.DB', function (require) {
             return rules;
         }
     });
-
     return PosDB;
 });

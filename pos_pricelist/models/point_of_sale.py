@@ -57,13 +57,13 @@ class PosOrderLine(models.Model):
             res['taxes'] += taxes['taxes']
         return res
 
-    @api.one
     @api.depends('tax_ids', 'qty', 'price_unit',
                  'product_id', 'discount', 'order_id.partner_id')
     def _amount_line_all(self):
-        taxes = self._compute_taxes()
-        self.price_subtotal = taxes['total_excluded']
-        self.price_subtotal_incl = taxes['total_included']
+        for r in self:
+            taxes = r._compute_taxes()
+            r.price_subtotal = taxes['total_excluded']
+            r.price_subtotal_incl = taxes['total_included']
 
     tax_ids = fields.Many2many(
         'account.tax', 'pline_tax_rel', 'pos_line_id', 'tax_id',
