@@ -78,6 +78,9 @@ odoo.define('pos_pricelist.screens', function (require) {
 
                 });
             }
+        },
+        get_default_pricelist_name: function(){
+            return this.pos.db.pricelist_by_id[this.pos.config.pricelist_id[0]].name;
         }
     });
 
