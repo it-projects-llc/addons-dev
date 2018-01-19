@@ -67,20 +67,28 @@ odoo.define('pos_pricelist.screens', function (require) {
                 line.trigger('change', line);
             }
         },
-        renderElement: function(){
+        renderElement: function(line){
             this._super();
             var self = this;
             var order = this.pos.get_order();
             if (order) {
-                var lines = order.get_orderlines();
-                lines.forEach(function(line) {
-                    self.set_change_pricelist_button(line.default_pricelist_is_active, line);
-
-                });
+                var current_line = line || order.get_selected_orderline();
+                if (current_line) {
+                    self.set_change_pricelist_button(current_line.default_pricelist_is_active, current_line);
+                }
             }
         },
-        get_default_pricelist_name: function(){
-            return this.pos.db.pricelist_by_id[this.pos.config.pricelist_id[0]].name;
+        get_pricelist_name: function(){
+            var order = this.pos.get_order();
+            var pricelist_id = this.pos.config.pricelist_id[0];
+            if (order) {
+                var partner = order.get_client() || false;
+                var line = order.get_selected_orderline();
+                if (line && !line.default_pricelist_is_active && partner.property_product_pricelist) {
+                    pricelist_id = partner.property_product_pricelist[0];
+                }
+            }
+            return this.pos.db.pricelist_by_id[pricelist_id].name;
         }
     });
 

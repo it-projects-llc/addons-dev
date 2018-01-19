@@ -39,7 +39,7 @@
 
     <t t-name="PricelistButton">
         <div class='control-button js_pricelist'>
-            <i class='fa fa-usd' /> Default Pricelist (<t t-esc="widget.get_default_pricelist_name()"/>)
+            <i class='fa fa-usd' /> Default Pricelist (<t t-esc="widget.get_pricelist_name()"/>)
         </div>
     </t>
 
