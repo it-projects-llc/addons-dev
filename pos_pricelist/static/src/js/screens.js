@@ -84,7 +84,7 @@ odoo.define('pos_pricelist.screens', function (require) {
             if (order) {
                 var partner = order.get_client() || false;
                 var line = order.get_selected_orderline();
-                if (line && !line.default_pricelist_is_active && partner.property_product_pricelist) {
+                if (line && line.default_pricelist_is_active && partner.property_product_pricelist) {
                     pricelist_id = partner.property_product_pricelist[0];
                 }
             }
