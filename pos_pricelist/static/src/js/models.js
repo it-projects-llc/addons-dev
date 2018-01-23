@@ -173,6 +173,9 @@ odoo.define('pos_pricelist.models', function (require) {
             );
             this.manual_price = true;
             this.set_unit_price(price);
+            if (this.pos.gui && this.pos.gui.screen_instances.products && this.pos.gui.screen_instances.products.action_buttons.pricelist) {
+                this.pos.gui.screen_instances.products.action_buttons.pricelist.renderElement(this);
+            }
         },
         /**
          * override this method to take fiscal positions in consideration

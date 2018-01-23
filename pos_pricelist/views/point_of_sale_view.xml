@@ -7,9 +7,6 @@
             <field name="model">pos.order</field>
             <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
             <field name="arch" type="xml">
-            	<xpath expr="//field[@name='lines']/tree/field[@name='discount']" position="after">
-            		<field name="tax_ids" widget="many2many_tags"/>
-            	</xpath>
 	            <xpath expr="//notebook/page[2]" position="after">
                     <page string="Taxes">
                         <field name="taxes">

@@ -144,8 +144,8 @@ class PosOrder(models.Model):
             taxes_to_delete.unlink()
 
     @api.multi
-    def action_paid(self):
-        result = super(PosOrder, self).action_paid()
+    def action_pos_order_paid(self):
+        result = super(PosOrder, self).action_pos_order_paid()
         self.compute_tax_detail()
         return result
 
