@@ -26,6 +26,7 @@ odoo.define('pos_pricelist.screens', function (require) {
             this._super();
             if (this.has_client_changed()) {
                 var currentOrder = this.pos.get('selectedOrder');
+                var current_line = currentOrder.get_selected_orderline();
                 var orderLines = currentOrder.orderlines.models;
                 var partner = currentOrder.get_client();
                 var default_pricelist_is_active = false;
@@ -38,6 +39,7 @@ odoo.define('pos_pricelist.screens', function (require) {
                 if (buttons && buttons.pricelist && orderLines.length) {
                     orderLines.forEach(function(line){
                         buttons.pricelist.set_change_pricelist_button(default_pricelist_is_active, line);
+                        buttons.pricelist.renderElement(current_line);
                     });
                 }
             }
