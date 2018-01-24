@@ -18,7 +18,7 @@ odoo.define('pos_cashbox.tour', function(require) {
         trigger: '.o_main_content:has(.loader:hidden)',
         content: 'waiting for loading to finish',
         run: function () {
-            // it's a check
+            // specify empty run method to don't click on trigger
         },
     }
     ]);
