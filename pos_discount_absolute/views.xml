@@ -11,11 +11,12 @@
             <link rel="stylesheet" href="/pos_discount_absolute/static/src/css/pos.css"/>
         </xpath>
     </template>
-        <template id="assets_backend" name="pos_discount_absolute backend_assets" inherit_id="web.assets_backend">
-            <xpath expr="." position="inside">
-                <script type="text/javascript" src="/pos_discount_absolute/static/src/js/test_abs_disc.js"></script>
-            </xpath>
-        </template>
+    <template id="assets_backend" name="pos_discount_absolute backend_assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/pos_discount_absolute/static/src/js/test_abs_disc.js"></script>
+        </xpath>
+    </template>
+
     <record model="ir.ui.view" id="view_pos_config_form_discount">
         <field name="name">pos.config.form.inherit</field>
         <field name="model">pos.config</field>
