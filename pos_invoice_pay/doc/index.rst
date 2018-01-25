@@ -15,20 +15,20 @@ Pay Sale Orders
 
 * Open ``[[Sales]] >> Sale Orders`` menu
 
-  * Click on ``[Create]``
+  * Click ``[Create]``
   * Select a customer
   * Add products
-  * Click on ``[Save]``
-  * Click on ``[Confirm Sale]``
+  * Click ``[Save]``
+  * Click ``[Confirm Sale]``
 
 * Go to ``[[Point of Sale]]`` menu
 * Open POS session
 
-  * Click on ``[Fetch Orders]``
+  * Click ``[Fetch Orders]``
   * Select Sale Order
-  * Click on ``[Create Invoice]``
+  * Click ``[Create Invoice]``
   * Select payment method on Payment screen
-  * Click on ``[Validate]``
+  * Click ``[Validate]``
 
 * Close POS session
 * Open ``[[Invoicing]] >> Sales >> Customer Invoices`` menu
@@ -39,20 +39,20 @@ Pay Invoices
 
 * Open ``[[Invoicing]] >> Sales >> Customer Invoices`` menu
 
-  * Click on ``[Create]``
+  * Click ``[Create]``
   * Select a customer
   * Add products
-  * Click on ``[Save]``
-  * Click on ``[Validate]``
+  * Click ``[Save]``
+  * Click ``[Validate]``
 
 * Go to ``[[Point of Sale]]`` menu
 * Open POS session
 
-  * Click on ``[Fetch Invoices]``
+  * Click ``[Fetch Invoices]``
   * Select the invoice
-  * Click on ``[Create Invoice]``
+  * Click ``[Create Invoice]``
   * Select payment method on Payment screen
-  * Click on ``[Validate]``
+  * Click ``[Validate]``
 
 * Close POS session
 * Open ``[[Invoicing]] >> Sales >> Customer Invoices`` menu
