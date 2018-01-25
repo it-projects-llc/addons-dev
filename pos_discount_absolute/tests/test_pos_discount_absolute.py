@@ -8,7 +8,7 @@ import odoo.tests
 class TestUi(odoo.tests.HttpCase):
 
     def test_pos_discounts(self):
-        self.phantom_js("/pos/web",
-                        "odoo.__DEBUG__.services['web_tour.tour'].run('pos_abs_discount_tour')",
+        self.phantom_js("/web",
+                        "odoo.__DEBUG__.services['web_tour.tour'].run('pos_abs_discount_tour', 300)",
                         "odoo.__DEBUG__.services['web_tour.tour'].tours.pos_abs_discount_tour.ready",
                         login="admin")
