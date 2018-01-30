@@ -4,7 +4,7 @@
     "summary": """The module allows to open the CashBox from Backend""",
     "category": "Point of Sale",
     # "live_test_url": "",
-    "images": [],
+    "images": ['images/pos_cashbox_main.png'],
     "version": "1.0.0",
     "application": False,
 
@@ -12,8 +12,8 @@
     "support": "apps@it-projects.info",
     "website": "https://it-projects.info/team/GabbasovDinar",
     "license": "LGPL-3",
-    # "price": 9.00,
-    # "currency": "EUR",
+    "price": 49.00,
+    "currency": "EUR",
 
     "depends": [
         "point_of_sale",
