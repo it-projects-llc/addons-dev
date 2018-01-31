@@ -19,7 +19,7 @@ odoo.define('pos_discount_absolute', function (require) {
             // popup_abs_discount prevents errors on a page loading and exclude discount stuff rendering in other popups
             this.popup_abs_discount = false;
             this.pos.discount_abs_type = false;
-            if (this.pos.config.discount_abs_enabled && options.title === "Discount Percentage") {
+            if (options.abs_disc) {
                 self.popup_abs_discount = true;
                 self.events["click .absolute.button"] = "click_absolute_discount";
                 self.events["click .percentage.button"] = "click_percentage_discount";
@@ -58,6 +58,13 @@ odoo.define('pos_discount_absolute', function (require) {
             } else {
                 this._super(val);
             }
+        },
+        discount_button_click: function() {
+            var self = this;
+            if (this.pos.config.discount_abs_enabled) {
+                this.discount_options.abs_disc = true;
+            }
+            this._super();
         },
         confirm_discount: function(val) {
             if (this.pos.discount_abs_type){
@@ -152,7 +159,8 @@ odoo.define('pos_discount_absolute', function (require) {
             discount = new_disc.toString();
             OrderlineSuper.prototype.set_discount.apply(this, [discount]);
             var products_widgets = this.pos.gui.screen_instances.products;
-            if (this.pos.config.discount_abs_enabled && products_widgets &&
+            if (this.pos.config.discount_abs_enabled && this.pos.gui.current_screen &&
+                this.pos.gui.current_screen.numpad && products_widgets &&
                 products_widgets.action_buttons && products_widgets.action_buttons.discount){
                 this.order.select_orderline(this);
                 this.pos.gui.current_screen.numpad.state.set({mode: "discount"});
