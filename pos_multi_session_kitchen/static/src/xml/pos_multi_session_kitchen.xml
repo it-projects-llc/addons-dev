@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-extend="Orderline">
+        <t t-jquery=".info-list" t-operation="after">
+            <div class="states-list">
+                <t t-foreach="widget.pos.states" t-as="state">
+                    <t t-if="state.active">
+                        <span class="state active" t-attf-data-id="#{state.id}"><t t-esc='state.name'/></span> <i class='fa fa-angle-right active'/>
+                    </t>
+                    <t t-if="!state.active">
+                        <span class="state" t-attf-data-id="#{state.id}"><t t-esc='state.name'/></span> <i class='fa fa-angle-right'/>
+                    </t>
+                </t>
+            </div>
+            <div class="buttons-list">
+                <t t-foreach="widget.pos.line_buttons" t-as="button">
+                    <button class="line-button" t-attf-data-id="#{button.id}" t-attf-style="background: #{button.background_color}; color: #{button.name_color}"><t t-esc='button.name'/></button>
+                </t>
+            </div>
+        </t>
+    </t>
+
+    <t t-extend="Chrome">
+        <t t-jquery=".pos-logo" t-operation="after">
+            <t t-if="widget.pos.config and widget.pos.config.screen === 'kitchen'">
+                <div class="clock">
+                    <p class="date"></p>
+                    <p class="time"></p>
+                </div>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="KitchenScreenWidget">
+        <div class='kitchen-screen screen'>
+            <div class='screen-content-flexbox'>
+                <div class='window'>
+                    <section class='subwindow collapsed'>
+                        <div class='subwindow-container collapsed'>
+                            <div class='subwindow-container-fix touch-scrollable scrollable-y'>
+                                <!--TODO: use bootstrap styles-->
+                                <table class='kitchen-order-list'>
+                                    <thead>
+                                        <tr>
+                                            <th class="img">Image</th>
+                                            <th>Product</th>
+                                            <th>Quantity </th>
+                                            <th>Time</th>
+                                            <th>Action</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class='order-list-contents'>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="KitchenOrder">
+        <tr class='order' t-attf-data-uid="#{order.uid}">
+            <td colspan="6">
+                <table class='order-list'>
+                    <thead>
+                        <tr>
+                            <th colspan="2"><t t-esc='order.name'/></th>
+                            <th colspan="2">
+                                <t t-if="order.get_client()"><t t-esc='order.get_client().name'/></t>
+                            </th>
+                            <th colspan="2">
+                                <t t-if="order.floor"><t t-esc='order.floor.name'/></t>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class='order-line-list-contents'>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </t>
+
+    <t t-name="KitchenOrderLine">
+        <tr class='line' t-attf-data-uid="#{line.uid}">
+            <td class="img"><img t-att-src="image_url" /> </td>
+            <td><t t-esc='line.product.display_name'/>
+                <ul class="info-list">
+                    <t t-if="line.get_note()">
+                        <li class="info orderline-note">
+                            <i class='fa fa-tag'/><t t-esc="line.get_note()" />
+                        </li>
+                    </t>
+                </ul>
+            </td>
+            <td><span class="qty"><t t-esc='line.quantityStr'/></span></td>
+            <td>00:00</td>
+            <td>
+                <t t-foreach="widget.pos.line_buttons" t-as="button">
+                    <button class="line-button" t-attf-data-id="#{button.id}" t-attf-style="background: #{button.background_color}; color: #{button.name_color}">
+                        <t t-esc='button.name'/>
+                    </button>
+                </t>
+            </td>
+            <td><t t-esc='line.current_state.name'/></td>
+        </tr>
+    </t>
+
+</templates>
