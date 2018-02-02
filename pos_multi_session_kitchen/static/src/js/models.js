@@ -4,6 +4,9 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
     var core = require('web.core');
     var models = require('point_of_sale.models');
     var screens = require('point_of_sale.screens');
+    var pyeval = require('web.pyeval');
+    // use pyeval.py_eval('code')
+
 
     var _t = core._t;
 

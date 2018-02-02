@@ -4,7 +4,7 @@ odoo.define('pos_multi_session_kitchen.chrome', function (require) {
     var chrome = require('point_of_sale.chrome');
     var gui = require('point_of_sale.gui');
 
-    // Add the FloorScreen to the GUI, and set it as the default screen
+    // Add the KitchenScreen to the GUI, set clock to KitchenScreen, and set the KitchenScreen as the default screen
     chrome.Chrome.include({
         init: function() {
             this._super();
@@ -43,18 +43,13 @@ odoo.define('pos_multi_session_kitchen.chrome', function (require) {
             clock.find('.date').html(date);
             clock.find('.time').html(time);
         },
-        build_widgets: function(){
+        build_widgets: function() {
             this._super();
+            // after click the table we need to open kitchen screen with filtration orders by table
             if (this.pos.config.screen === 'kitchen' && !this.pos.config.show_floors_plan) {
                 this.$el.addClass('kitchen');
                 this.gui.set_startup_screen('kitchen');
             }
         }
     });
-
-//    chrome.OrderSelectorWidget.include({
-//        init: function(parent, options) {
-//            this._super(parent, options);
-//        }
-//    });
 });

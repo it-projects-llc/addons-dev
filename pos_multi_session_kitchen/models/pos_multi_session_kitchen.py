@@ -42,4 +42,4 @@ class PosKitchenCategorySettings(models.Model):
 
     name = fields.Char(string="Name")
     button_ids = fields.Many2many("pos.order.line.button", string="Buttons")
-    state_ids = fields.Many2many("pos.order.line.state", string="States", domain=[('type', '=', 'stage')])
+    state_ids = fields.Many2many("pos.order.line.state", string="States")

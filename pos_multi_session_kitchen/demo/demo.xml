@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <!-- POS Kitchen -->
         <record id="demo_pos_kitchen" model="pos.config">
             <field name="name">Kitchen</field>
             <field name="multi_session_id" ref="pos_multi_session.demo_multi_session"/>
@@ -8,6 +9,7 @@
             <field name="cat_ids" eval="[(6, 0, [ref('point_of_sale.fruits_vegetables')])]" />
         </record>
 
+        <!-- DEMO Stages -->
         <record id="demo_stage_draft" model="pos.order.line.state">
             <field name="name">Draft</field>
             <field name="technical_name">draft</field>
@@ -51,7 +53,9 @@
             <field name="sequence">6</field>
         </record>
 
-        <record id="demo_button1" model="pos.order.line.button">
+        <!-- DEMO Buttons -->
+        <!-- TODO: Use new field (js code)-->
+        <record id="demo_button_priority" model="pos.order.line.button">
             <field name="name">Priority</field>
             <field name="background_color">#9394f3</field>
             <field name="name_color">white</field>
@@ -59,7 +63,7 @@
             <field name="show_in_kitchen">False</field>
         </record>
 
-        <record id="demo_button2" model="pos.order.line.button">
+        <record id="demo_button_confirm" model="pos.order.line.button">
             <field name="name">Confirm</field>
             <field name="background_color">#9394f3</field>
             <field name="name_color">white</field>
@@ -68,7 +72,7 @@
             <field name="next_state_id" eval="demo_stage_confirmed" />
         </record>
 
-        <record id="demo_button3" model="pos.order.line.button">
+        <record id="demo_button_delivered" model="pos.order.line.button">
             <field name="name">Delivered</field>
             <field name="background_color">#9394f3</field>
             <field name="name_color">white</field>
@@ -77,7 +81,7 @@
             <field name="next_state_id" eval="demo_stage_delivered" />
         </record>
 
-        <record id="demo_button4" model="pos.order.line.button">
+        <record id="demo_button_cooking" model="pos.order.line.button">
             <field name="name">Cooking</field>
             <field name="background_color">#9394f3</field>
             <field name="name_color">white</field>
@@ -86,7 +90,7 @@
             <field name="next_state_id" eval="demo_stage_cooking" />
         </record>
 
-        <record id="demo_button5" model="pos.order.line.button">
+        <record id="demo_button_done" model="pos.order.line.button">
             <field name="name">Done</field>
             <field name="background_color">#9394f3</field>
             <field name="name_color">white</field>
@@ -95,7 +99,7 @@
             <field name="next_state_id" eval="demo_stage_done" />
         </record>
 
-        <record id="demo_button6" model="pos.order.line.button">
+        <record id="demo_button_cancelled" model="pos.order.line.button">
             <field name="name">Cancelled</field>
             <field name="background_color">#9394f3</field>
             <field name="name_color">white</field>
@@ -104,14 +108,28 @@
             <field name="next_state_id" eval="demo_stage_cancelled" />
         </record>
 
-        <!-- Resource: pos.category -->
-        <!--<record id="point_of_sale.fruits_vegetables" model="pos.category">-->
-            <!--<field name="stage_ids" eval="[(4, ref('pos_multi_session_kitchen.demo_stage_draft')), (4, ref('pos_multi_session_kitchen.demo_stage_confirmed')), (4, ref('pos_multi_session_kitchen.demo_stage_cooking')), (4, ref('pos_multi_session_kitchen.demo_stage_done')), (4, ref('pos_multi_session_kitchen.demo_stage_delivered'))]"/>-->
-        <!--</record>-->
+        <!-- DEMO Settings -->
+        <record id="demo_fruit_settings" model="pos.kitchen.category.settings">
+            <field name="name">Fruits Settings</field>
+            <field name="button_ids" eval="[(4, ref('pos_multi_session_kitchen.demo_button_confirm')), (4, ref('pos_multi_session_kitchen.demo_button_delivered')), (4, ref('pos_multi_session_kitchen.demo_button_cooking')), (4, ref('pos_multi_session_kitchen.demo_button_done'))]"/>
+            <field name="state_ids" eval="[(4, ref('pos_multi_session_kitchen.demo_stage_draft')), (4, ref('pos_multi_session_kitchen.demo_stage_confirmed')), (4, ref('pos_multi_session_kitchen.demo_stage_cooking')), (4, ref('pos_multi_session_kitchen.demo_stage_done')), (4, ref('pos_multi_session_kitchen.demo_stage_delivered'))]"/>
+        </record>
 
-        <!--<record id="point_of_sale.partner_services" model="pos.category">-->
-            <!--<field name="stage_ids" eval="[(4, ref('pos_multi_session_kitchen.demo_stage_draft')), (4, ref('pos_multi_session_kitchen.demo_stage_confirmed')), (4, ref('pos_multi_session_kitchen.demo_stage_done')), (4, ref('pos_multi_session_kitchen.demo_stage_cancelled'))]"/>-->
-        <!--</record>-->
+        <record id="demo_partner_settings" model="pos.kitchen.category.settings">
+            <field name="name">Partner Settings</field>
+            <field name="button_ids">#9394f3</field>
+            <field name="button_ids" eval="[(4, ref('pos_multi_session_kitchen.demo_button_priority')), (4, ref('pos_multi_session_kitchen.demo_button_confirm')), (4, ref('pos_multi_session_kitchen.demo_button_delivered')), (4, ref('pos_multi_session_kitchen.demo_button_done')), (4, ref('pos_multi_session_kitchen.demo_button_cancelled'))]"/>
+            <field name="state_ids" eval="[(4, ref('pos_multi_session_kitchen.demo_stage_draft')), (4, ref('pos_multi_session_kitchen.demo_stage_confirmed')), (4, ref('pos_multi_session_kitchen.demo_stage_done')), (4, ref('pos_multi_session_kitchen.demo_stage_delivered')), (4, ref('pos_multi_session_kitchen.demo_stage_cancelled'))]"/>
+        </record>
+
+        <!-- POS Category -->
+        <record id="point_of_sale.fruits_vegetables" model="pos.category">
+            <field name="settings_id" eval="demo_fruit_settings"/>
+        </record>
+
+        <record id="point_of_sale.partner_services" model="pos.category">
+            <field name="settings_id" eval="demo_partner_settings"/>
+        </record>
 
     </data>
 </odoo>

@@ -9,4 +9,4 @@ _logger = logging.getLogger(__name__)
 class PosCategory(models.Model):
     _inherit = "pos.category"
 
-    settings_id = fields.Many2one("pos.kitchen.category.settings", string='Setting of Category')
+    settings_id = fields.Many2one("pos.kitchen.category.settings", string='Settings')

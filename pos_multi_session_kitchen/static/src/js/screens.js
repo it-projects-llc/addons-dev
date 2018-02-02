@@ -23,7 +23,11 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
             });
         },
         orderline_filtering: function(lines) {
-            return this.filter_on_stages(this.filter_on_category(lines));
+            var filtered_lines = this.filter_on_stages(this.filter_on_category(lines));
+            if (this.pos.config.show_floors_plan) {
+                filtered_lines = this.filter_on_floor(filtered_lines);
+            }
+            return filtered_lines;
         },
         filter_on_stages: function(lines) {
             // filter lines on kitchen stages
@@ -36,6 +40,10 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
             return lines.filter(function(line){
                 return jQuery.inArray(line.product.pos_categ_id[0], kitchen_category_ids) !== -1;
             });
+        },
+        // TODO: filter lines on floor
+        filter_on_floor: function(lines) {
+            return lines;
         },
         rerender_order: function(order, uid) {
             if (!order) {

@@ -24,6 +24,7 @@
         "views/pos_multi_session_kitchen_template.xml",
         "views/pos_config_view.xml",
         "views/pos_category_view.xml",
+        "views/pos_multi_session_kitchen_view.xml",
     ],
     "qweb": [
         "static/src/xml/pos_multi_session_kitchen.xml",
