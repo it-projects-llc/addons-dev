@@ -38,21 +38,8 @@
                     <section class='subwindow collapsed'>
                         <div class='subwindow-container collapsed'>
                             <div class='subwindow-container-fix touch-scrollable scrollable-y'>
-                                <!--TODO: use bootstrap styles-->
-                                <table class='kitchen-order-list'>
-                                    <thead>
-                                        <tr>
-                                            <th class="img">Image</th>
-                                            <th>Product</th>
-                                            <th>Quantity </th>
-                                            <th>Time</th>
-                                            <th>Action</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class='order-list-contents'>
-                                    </tbody>
-                                </table>
+                                <div class="row order-list-contents">
+                                </div>
                             </div>
                         </div>
                     </section>
@@ -62,25 +49,59 @@
     </t>
 
     <t t-name="KitchenOrder">
-        <tr class='order' t-attf-data-uid="#{order.uid}">
-            <td colspan="6">
-                <table class='order-list'>
+        <div class="col-md-6">
+            <div class="order-kitchen">
+                <table class='kitchen-order-list'>
                     <thead>
                         <tr>
-                            <th colspan="2"><t t-esc='order.name'/></th>
-                            <th colspan="2">
-                                <t t-if="order.get_client()"><t t-esc='order.get_client().name'/></t>
-                            </th>
-                            <th colspan="2">
-                                <t t-if="order.floor"><t t-esc='order.floor.name'/></t>
-                            </th>
+                            <th class="img">Image</th>
+                            <th>Product</th>
+                            <th>Quantity </th>
+                            <th>Time</th>
+                            <th>Action</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
-                    <tbody class='order-line-list-contents'>
+                    <tbody class='order-list-contents'>
+                        <tr class='order' t-attf-data-uid="#{order.uid}">
+                            <td colspan="6">
+                                <table class='order-list'>
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2"><t t-esc='order.name'/></th>
+                                            <th colspan="2">
+                                                <t t-if="order.get_client()"><t t-esc='order.get_client().name'/></t>
+                                            </th>
+                                            <th colspan="2">
+                                                <t t-if="order.floor"><t t-esc='order.floor.name'/></t>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class='order-line-list-contents'>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
-            </td>
-        </tr>
+                <t t-if="order.note || order.get_custom_notes()">
+                    <div class="order-note">
+                        <span class="label">Note:</span>
+                        <span class="value">
+                            <t t-esc="order.note" />
+                            <t t-foreach="order.custom_notes" t-as="custom_note">
+                                <t t-if="custom_note_last">
+                                    <t t-esc="custom_note.name"/>
+                                </t>
+                                <t t-if="!custom_note_last">
+                                    <t t-esc="custom_note.name"/>,
+                                </t>
+                            </t>
+                        </span>
+                    </div>
+                </t>
+            </div>
+        </div>
     </t>
 
     <t t-name="KitchenOrderLine">

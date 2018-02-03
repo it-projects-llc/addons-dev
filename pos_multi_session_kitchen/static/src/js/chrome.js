@@ -52,4 +52,6 @@ odoo.define('pos_multi_session_kitchen.chrome', function (require) {
             }
         }
     });
+
+    return chrome;
 });

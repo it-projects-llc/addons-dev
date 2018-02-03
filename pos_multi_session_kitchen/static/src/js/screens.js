@@ -18,15 +18,25 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
         init: function(parent, options) {
             var self = this;
             this._super(parent, options);
+            this.order = this.get_orders();
             this.pos.on('change:kitchen', function(order, uid){
                 self.rerender_order(order, uid);
             });
         },
+        show: function(){
+            var self = this;
+            this._super();
+            if (this.pos.config.show_floors_plan) {
+                // get orders by current table
+                var order = this.get_orders().filter(function(order){
+                    return order.table.id === self.pos.table.id;
+                });
+                this.render_list(order);
+                this.render_floor_button();
+            }
+        },
         orderline_filtering: function(lines) {
             var filtered_lines = this.filter_on_stages(this.filter_on_category(lines));
-            if (this.pos.config.show_floors_plan) {
-                filtered_lines = this.filter_on_floor(filtered_lines);
-            }
             return filtered_lines;
         },
         filter_on_stages: function(lines) {
@@ -41,8 +51,8 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
                 return jQuery.inArray(line.product.pos_categ_id[0], kitchen_category_ids) !== -1;
             });
         },
-        // TODO: filter lines on floor
-        filter_on_floor: function(lines) {
+        // TODO: filter lines on kitchen
+        filter_on_kitchen: function(lines){
             return lines;
         },
         rerender_order: function(order, uid) {
@@ -51,7 +61,8 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
                 this.remove_order(uid);
                 return false;
             }
-            var lines = this.orderline_filtering(order.get_orderlines());
+//            var lines = this.orderline_filtering(order.get_orderlines());
+            var lines = order.get_orderlines();
             var content = this.$el.find('.order[data-uid="'+ uid +'"]');
             if (content.length) {
                 // if the order is exist in kitchen screen, update the order
@@ -62,19 +73,36 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
         },
         render_list: function(orders){
             var self = this;
+            var orders = orders || this.get_orders();
             var contents = this.$el[0].querySelector('.order-list-contents');
             contents.innerHTML = "";
             for(var i = 0, len = Math.min(orders.length,1000); i < len; i++){
                 var order = orders[i];
-                var lines = self.orderline_filtering(order.get_orderlines());
+                var lines = order.get_orderlines();
+//                var lines = self.orderline_filtering(order.get_orderlines());
                 this.append_order(order, lines);
+            }
+        },
+        floor_button_click_handler: function(){
+            this.pos.table = null;
+            this.gui.show_screen('floors');
+            this.chrome.$el.removeClass('kitchen');
+        },
+        render_floor_button: function() {
+            var self = this;
+            if (this.pos.config.show_floors_plan && this.pos.table && this.pos.table.floor) {
+                var content = this.getParent().$('.orders, .floor-button');
+                content.replaceWith(QWeb.render('BackToFloorButton',{table: this.pos.table, floor:this.pos.table.floor}));
+                this.getParent().$('.floor-button').click(function(){
+                    self.floor_button_click_handler();
+                });
             }
         },
         append_order: function(order, lines) {
             var contents = this.$el[0].querySelector('.order-list-contents');
             if (lines && lines.length) {
                 var order_html = QWeb.render('KitchenOrder',{widget: this, order:order});
-                var order_el = document.createElement('tbody');
+                var order_el = document.createElement('div');
                 order_el.innerHTML = order_html;
                 order_el = order_el.childNodes[1];
                 contents.appendChild(order_el);
@@ -95,10 +123,9 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
             return window.location.origin + '/web/image?model=product.product&field=image_small&id='+product.id;
         },
         renderElement: function() {
-            var self = this;
             this._super();
-            this.orders = this.pos.get('orders').models;
-            this.render_list(this.orders);
+            this.render_list();
+            this.render_floor_button();
         },
         render_lines: function(order, lines) {
             // get lines of current order
@@ -131,6 +158,9 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
             var button = line.get_button_by_id(element.data('id'));
             console.log(order, line, button);
         },
+        get_orders: function() {
+            return this.pos.get('orders').models;
+        },
         get_orderline_by_uid: function(uid) {
             var order = this.pos.get_order();
             var orderline = null;
@@ -142,7 +172,7 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
             return orderline;
         },
         get_order_by_uid: function(uid){
-            return this.orders.find(function(order){
+            return this.get_orders().find(function(order){
                 return order.uid === uid;
             });
         }
