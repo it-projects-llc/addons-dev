@@ -14,6 +14,11 @@ Example of usage:
 * Show an event on specific websites only (TODO: add link to the module)
 * Show a product on specific websites only (TODO: add link to the module)
 
+Odoo 12.0+
+==========
+
+We hope this feature will be built-in since Odoo 12.0 at least: https://github.com/odoo/odoo/pull/22743
+
 Credits
 =======
 
