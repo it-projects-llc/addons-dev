@@ -15,7 +15,7 @@ This is a core technical module - no configurations are needed
 Usage
 =====
 
-* If you have models that is accessible through a website (by means of controller methods) - specify this module into the "depends" section of your manifest file
+* If you have a model accessible through a website (by means of controller methods) - specify this module into the "depends" section of your manifest file
 * Now you can create security rules using `website_id` in `domain_force` fields. For example,
 
 ::
