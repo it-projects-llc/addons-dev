@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
-    "name": """Security rules with websites""",
-    "summary": """Create security rules using current website information""",
+    "name": """Multi-website support in Security Rules""",
+    "summary": """Provide access depending on current website""",
     "category": "Access",
     # "live_test_url": "",
     "images": [],
