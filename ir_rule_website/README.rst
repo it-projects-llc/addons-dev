@@ -2,7 +2,7 @@
  Security rules with websites
 ==============================
 
-This is an extension for `Real Multi Website <https://www.odoo.com/apps/modules/11.0/website_multi_company/>`__.
+This is can be used as addition for `Real Multi Website <https://www.odoo.com/apps/modules/11.0/website_multi_company/>`__.
 Now you can create security rules to website-accessible models (Blogs - ``webiste_blog``, Online Events - ``website_event``, etc.) using `website_id` (current website) in your `domain_force` defenitions
 
 Credits
