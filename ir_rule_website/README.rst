@@ -1,9 +1,18 @@
-==============================
- Security rules with websites
-==============================
+=========================================
+ Multi-website support in Security Rules
+=========================================
 
-This is can be used as addition for `Real Multi Website <https://www.odoo.com/apps/modules/11.0/website_multi_company/>`__.
-Now you can create security rules to website-accessible models (Blogs - ``webiste_blog``, Online Events - ``website_event``, etc.) using `website_id` (current website) in your `domain_force` defenitions
+Allows to use ``website_id`` (current website) in ``domain_force`` field of Record Rules (``ir.rule``), e.g.:
+
+* ``[('website_ids', 'in', [website_id])]``
+* ``[('website_id', '=', website_id)]``
+
+
+Example of usage: 
+
+* Show a blog on specific websites only (TODO: add link to the module)
+* Show an event on specific websites only (TODO: add link to the module)
+* Show a product on specific websites only (TODO: add link to the module)
 
 Credits
 =======
@@ -39,3 +48,4 @@ Usage instructions: `<doc/index.rst>`_
 Changelog: `<doc/changelog.rst>`_
 
 Tested on Odoo 11.0 dc61861f90d15797b19f8ebddfb0c8a66d0afa88
+
