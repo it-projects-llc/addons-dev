@@ -4,16 +4,13 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
     var core = require('web.core');
     var models = require('point_of_sale.models');
     var screens = require('point_of_sale.screens');
-    var pyeval = require('web.pyeval');
-    // use pyeval.py_eval('code')
-
 
     var _t = core._t;
 
     // load all line states
     models.load_models({
         model: 'pos.order.line.state',
-        fields: ['name', 'technical_name', 'type', 'sequence', 'show_in_kitchen'],
+        fields: ['name', 'technical_name', 'type', 'sequence', 'show_in_kitchen', 'show_for_waiters'],
         loaded: function(self, states){
             var sorting_states = function(idOne, idTwo){
                 return idOne.sequence - idTwo.sequence;
@@ -27,18 +24,22 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
     // load all line buttons
     models.load_models({
         model: 'pos.order.line.button',
-        domain: function(self){
-            if (self.config.screen === 'kitchen') {
-                return [['show_in_kitchen','=',true]];
-            } else {
-                return [['show_for_waiters','=',true]];
-            }
-        },
-        fields: ['name', 'background_color', 'name_color', 'show_for_waiters', 'show_in_kitchen', 'next_state_id'],
-        loaded: function(self, line_buttons){
-            self.line_buttons = line_buttons;
+        fields: ['name', 'background_color', 'name_color', 'show_for_waiters', 'show_in_kitchen', 'next_state_id', 'condition_code'],
+        loaded: function(self, buttons){
+            self.kitchen_buttons = buttons;
         },
     });
+
+    // load all category settings
+    models.load_models({
+        model: 'pos.kitchen.category.settings',
+        fields: ['name', 'button_ids', 'state_ids'],
+        loaded: function(self, settings){
+            self.category_settings = settings;
+        },
+    });
+
+    models.load_fields('pos.category', ['settings_id']);
 
     var PosModelSuper = models.PosModel;
     models.PosModel = models.PosModel.extend({
@@ -53,10 +54,20 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             }
             this.trigger('change:kitchen', order, data.uid);
         },
-        get_state_by_id: function(id){
-            return this.states.filter(function(state){
+        get_state_by_id: function(id) {
+            return this.states.find(function(state){
                 return state.id === id;
             })
+        },
+        get_kitchen_button_by_id: function(id) {
+            return this.kitchen_buttons.find(function(button){
+                return button.id === id;
+            });
+        },
+        get_category_settings_by_id: function(id) {
+            return this.category_settings.find(function(settings){
+                return settings.id === id;
+            });
         }
     });
 
@@ -65,10 +76,30 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
         initialize: function(){
             var self = this;
             this.states = [];
+            this.kitchen_buttons = [];
             OrderlineSuper.prototype.initialize.apply(this, arguments);
-            if (!this.states || (this.states && !this.states.length)) {
-                this.states = this.pos.states;
-                this.set_state(this.pos.states[0]);
+            if (!this.states.length && !this.kitchen_buttons.length) {
+                this.init_category_data();
+            }
+        },
+        init_category_data: function() {
+            var self = this;
+            var category = this.pos.db.category_by_id[this.product.pos_categ_id[0]];
+            if (category) {
+                var settings = this.pos.get_category_settings_by_id(category.settings_id[0]);
+
+                // init states
+                settings.state_ids.forEach(function(id) {
+                    self.states.push(self.pos.get_state_by_id(id));
+                });
+
+                // set current state (the first state, all states are sorted by sequence field)
+                this.set_state(this.pos.get_state_by_id(settings.state_ids[0]));
+
+                // init buttons
+                settings.button_ids.forEach(function(id) {
+                    self.kitchen_buttons.push(self.pos.get_kitchen_button_by_id(id));
+                });
             }
         },
         export_as_JSON: function() {
@@ -83,17 +114,13 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             OrderlineSuper.prototype.init_from_JSON.call(this, json);
         },
         set_state: function(state) {
-            var index = this.states.indexOf(state);
-            if (index !== -1) {
-                var active_state = this.states.find(function(current_state){
-                    return state.id === current_state.id;
-                });
-
-                if (active_state) {
-                    active_state.active = true;
-                }
-                this.current_state = active_state;
+            var active_state = this.states.find(function(current_state){
+                return state.id === current_state.id;
+            });
+            if (active_state) {
+                active_state.active = true;
             }
+            this.current_state = active_state;
             this.trigger('change', this);
             this.order.trigger('change:sync');
         },
@@ -116,11 +143,6 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             this.current_state = data.current_state;
             this.states = data.states;
             this.trigger('change', this);
-        },
-        get_button_by_id: function(id) {
-            return this.pos.line_buttons.find(function(button){
-                return button.id === id;
-            });
-        },
+        }
     });
 });

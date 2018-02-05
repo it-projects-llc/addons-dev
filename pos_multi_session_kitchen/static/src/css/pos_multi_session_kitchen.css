@@ -60,10 +60,19 @@
     font-size: 8px;
 }
 /* =========== KitchenScreenWidget =========== */
+.pos.kitchen .kitchen-screen {
+    box-sizing: border-box;
+}
+.pos.kitchen .kitchen-screen *,
+.pos.kitchen .kitchen-screen *::before,
+.pos.kitchen .kitchen-screen *::after {
+  box-sizing: inherit;
+}
 .pos.kitchen .kitchen-screen .kitchen-order-list {
     width: 100%;
     text-align: center;
     margin: 0px;
+    flex-grow: 1;
 }
 .pos.kitchen .kitchen-screen .kitchen-order-list .img{
     width: 100px;
@@ -114,6 +123,8 @@
     background: white;
     padding: 15px;
     border-top: 1px solid #87597a;
+    display: flex;
+    flex-direction: column;
 }
 .pos.kitchen .order-note {
     font-size: 20px;

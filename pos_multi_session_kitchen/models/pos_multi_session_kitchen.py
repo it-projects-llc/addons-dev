@@ -14,6 +14,7 @@ class PosOrderLineState(models.Model):
     type = fields.Selection([('stage', 'Stage'), ('tag', 'Tag')], default='stage')
     sequence = fields.Integer("Sequence")
     show_in_kitchen = fields.Boolean("Show State on Kitchen", default=True)
+    show_for_waiters = fields.Boolean("Show the Button for Waiters", default=True)
 
 
 class PosOrderLineButton(models.Model):
@@ -30,11 +31,10 @@ class PosOrderLineButton(models.Model):
     next_state_id = fields.Many2one("pos.order.line.state", string="Next State",
                                     help="Next state to apply on clicking")
 
-    # * condition_code -- js code to check shall button be visible. Following variables can be used:
-    #     * state -- current state
-    #     * product
-    #     * quantity
-    #     * price
+    condition_code = fields.Text(string='JS Code',
+                                 help="The JS code is for check of button (show or hide the button in Orderline)."
+                                      "Following variables can be used: \n\n * state - current state\n"
+                                      "* product\n * quantity\n * price\n")
 
 
 class PosKitchenCategorySettings(models.Model):

@@ -3,6 +3,7 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
     var screens = require('point_of_sale.screens');
     var gui = require('point_of_sale.gui');
     var core = require('web.core');
+    var pyeval = require('web.pyeval');
 
     var QWeb = core.qweb;
     var _t = core._t;
@@ -184,6 +185,47 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
         'condition': function(){
             return this.pos.config.screen === 'kitchen';
         },
+    });
+
+    screens.OrderWidget.include({
+        orderline_change: function(line){
+            this.check_line_buttons(line);
+            this._super(line);
+        },
+        check_line_buttons: function(line) {
+            var self = this;
+            // optional arguments for custom function
+            var state = line.current_state;
+            var product = line.product;
+            var quantity = line.get_quantity();
+            var price = line.price;
+
+            // run the condition code for each button
+            // TODO: don't use the eval function
+            line.kitchen_buttons.forEach(function(button){
+                var code = button.condition_code;
+                if (code) {
+                    eval(code);
+                }
+            });
+        },
+        render_orderline: function(orderline){
+            var self = this;
+            var el = this._super(orderline);
+            $(el).find('.line-button').click(function(event) {
+                self.click_line_buttons(orderline, $(this));
+            });
+            return el;
+        },
+        click_line_buttons: function(orderline, element){
+            var button = this.pos.get_kitchen_button_by_id(element.data('id'));
+            var state = this.pos.get_state_by_id(button.next_state_id[0]);
+
+            // set next state for orderline
+            if (state) {
+                orderline.set_state(state);
+            }
+        }
     });
 
     screens.KitchenScreenWidget = KitchenScreenWidget;

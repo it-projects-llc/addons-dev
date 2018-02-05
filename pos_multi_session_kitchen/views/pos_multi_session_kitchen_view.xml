@@ -48,6 +48,7 @@
                         <field name="show_for_waiters"/>
                         <field name="show_in_kitchen"/>
                         <field name="next_state_id"/>
+                        <field name="condition_code" widget="ace"/>
                     </group>
                 </sheet>
             </form>

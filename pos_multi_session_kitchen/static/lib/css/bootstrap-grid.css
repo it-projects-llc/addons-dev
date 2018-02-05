@@ -12,13 +12,6 @@ html {
   box-sizing: border-box;
   -ms-overflow-style: scrollbar;
 }
-
-*,
-*::before,
-*::after {
-  box-sizing: inherit;
-}
-
 .container {
   width: 100%;
   padding-right: 15px;
