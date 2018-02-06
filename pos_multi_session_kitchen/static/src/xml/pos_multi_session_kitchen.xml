@@ -12,6 +12,9 @@
                     </t>
                 </t>
             </div>
+            <div class="state_timer">
+                <p class="time">00:00:00</p>
+            </div>
             <div class="buttons-list">
                 <t t-foreach="line.kitchen_buttons" t-as="button">
                     <t t-if="button.show_for_waiters">

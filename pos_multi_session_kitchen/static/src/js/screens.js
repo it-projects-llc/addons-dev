@@ -188,6 +188,10 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
     });
 
     screens.OrderWidget.include({
+        orderline_remove: function(line){
+            line.stop_timer();
+            this._super(line);
+        },
         orderline_change: function(line){
             this.check_line_buttons(line);
             this._super(line);
@@ -202,12 +206,12 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
 
             // run the condition code for each button
             // TODO: don't use the eval function
-            line.kitchen_buttons.forEach(function(button){
-                var code = button.condition_code;
-                if (code) {
-                    eval(code);
-                }
-            });
+//            line.kitchen_buttons.forEach(function(button){
+//                var code = button.condition_code;
+//                if (code) {
+//                    eval(code);
+//                }
+//            });
         },
         render_orderline: function(orderline){
             var self = this;
