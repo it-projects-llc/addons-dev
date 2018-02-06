@@ -12,7 +12,11 @@ class TestComputeDomain(TransactionCase):
                               'model_id': self.env.ref('base.model_res_partner').id,
                               'domain_force': "[('parent_id', 'in', [website_id])]"})
         demo_user = self.env.ref('base.group_system')
-        website_id = 1
-        test_domain = ('parent_id', 'in', [website_id])
-        domain = IrRule.sudo(user=demo_user.id).with_context(website_id=website_id)._compute_domain('res.partner')
-        self.assertTrue(test_domain in domain)
+
+        def test_compute_domain(website_id):
+            test_domain = ('parent_id', 'in', [website_id])
+            domain = IrRule.sudo(user=demo_user.id).with_context(website_id=website_id)._compute_domain('res.partner')
+            self.assertTrue(test_domain in domain)
+
+        test_compute_domain(1)
+        test_compute_domain(2)
