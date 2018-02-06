@@ -8,7 +8,7 @@ class TestComputeDomain(TransactionCase):
 
     def setUp(self):
         super(TestComputeDomain, self).setUp()
-        self.demo_user = self.env.ref( 'base.user_demo')
+        self.demo_user = self.env.ref('base.user_demo')
         self.env['ir.rule'].create({'name': 'test ir_rule_website',
                                     'model_id': self.env.ref('base.model_res_partner').id,
                                     'domain_force': "[('parent_id', 'in', [website_id])]"})
