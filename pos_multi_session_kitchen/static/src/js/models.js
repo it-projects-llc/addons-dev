@@ -153,8 +153,12 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             }
         },
         stop_timer: function() {
+            // Set a date and get the milliseconds
+            var date = new Date();
+            var dateMsec = date.getTime();
             clearInterval(this.stateTimer);
             this.current_state.run_timer = false;
+            this.current_state.run_timer_date = dateMsec;
         },
         update_timer: function(run_timer_date) {
             var self = this;
