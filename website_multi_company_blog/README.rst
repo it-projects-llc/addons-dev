@@ -2,7 +2,7 @@
  Multi Website Blog
 ====================
 
-Blocks attempts to see a website blog from websites you didn't specify as available for this blog
+The module blocks an access to a website blog from websites which have not been specified as allowed for this blog.
 
 Credits
 =======
