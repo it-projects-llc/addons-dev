@@ -3,6 +3,9 @@ odoo.define('pos_multi_session_kitchen.chrome', function (require) {
 
     var chrome = require('point_of_sale.chrome');
     var gui = require('point_of_sale.gui');
+    var core = require('web.core');
+
+    var QWeb = core.qweb;
 
     // Add the KitchenScreen to the GUI, set clock to KitchenScreen, and set the KitchenScreen as the default screen
     chrome.Chrome.include({

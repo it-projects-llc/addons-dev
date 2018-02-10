@@ -24,10 +24,6 @@
 }
 
 /* =========== KITCHEN SCREEN ========== */
-/*.pos.kitchen .pos-topheader {
-    background: #875a7b;
-    color: white;
-} */
 .pos.kitchen .order-selector .square {
     display: none;
 }
@@ -68,42 +64,50 @@
 .pos.kitchen .kitchen-screen *::after {
   box-sizing: inherit;
 }
-.pos.kitchen .kitchen-screen .kitchen-order-list {
+.pos.kitchen .kitchen-screen .kitchen-order {
     width: 100%;
     text-align: center;
     margin: 0px;
     flex-grow: 1;
 }
-.pos.kitchen .kitchen-screen .kitchen-order-list .img{
+.pos.kitchen .kitchen-screen .kitchen-order .img{
     width: 100px;
 }
-.pos.kitchen .kitchen-screen .kitchen-order-list thead {
+.pos.kitchen .kitchen-screen .kitchen-order thead {
     font-size: 20px;
     background: white;
 }
-.pos.kitchen .kitchen-screen .kitchen-order-list thead th{
+.pos.kitchen .kitchen-screen .kitchen-order thead th{
     padding-top: 10px;
     padding-bottom: 10px;
     width: calc(100% / 6);
-}
-.pos.kitchen .kitchen-screen .order-list {
-    width: 100%;
-}
-.pos.kitchen .kitchen-screen .order-list thead th{
-    padding-left: 10px;
 }
 .pos.kitchen .kitchen-screen .order-line-list-contents td {
     text-align: center;
     width: calc(100% / 6);
 }
-.pos.kitchen .kitchen-screen .order-list thead {
+.pos.kitchen .kitchen-screen .order-info {
     font-size: 18px;
     color: white;
     background: #875a7b;
     text-align: center;
 }
+.pos.kitchen .kitchen-screen .line {
+    font-size: 16px;
+}
+.pos.kitchen .kitchen-screen .info-list {
+    color: #888;
+    font-weight: normal;
+}
+.pos.kitchen .kitchen-screen .product-display-name {
+    font-weight: bolder;
+}
 .pos.kitchen .kitchen-screen .line-button {
-    font-size: 14px;
+    font-size: 13px;
+    width: 70px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .pos.kitchen .kitchen-screen .line-button:active {
     border: 1px solid #616161;

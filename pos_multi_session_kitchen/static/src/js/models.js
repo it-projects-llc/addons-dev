@@ -131,7 +131,7 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
         },
         start_timer: function() {
             var self = this;
-            if (this.current_state.run_timer) {
+            if (this.current_state && this.current_state.run_timer) {
                 if (this.current_state.run_timer_date) {
                     // stop current timer
                     this.stop_timer();

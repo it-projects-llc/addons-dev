@@ -44,6 +44,7 @@
                         <div class='subwindow-container collapsed'>
                             <div class='subwindow-container-fix touch-scrollable scrollable-y'>
                                 <div class="row order-list-contents">
+
                                 </div>
                             </div>
                         </div>
@@ -54,9 +55,9 @@
     </t>
 
     <t t-name="KitchenOrder">
-        <div class="col-md-6">
+        <div class="order-block col-md-6" t-attf-data-uid="#{order.uid}">
             <div class="order-kitchen">
-                <table class='kitchen-order-list'>
+                <table class='kitchen-order'>
                     <thead>
                         <tr>
                             <th class="img">Image</th>
@@ -66,30 +67,22 @@
                             <th>Action</th>
                             <th>Status</th>
                         </tr>
-                    </thead>
-                    <tbody class='order-list-contents'>
-                        <tr class='order' t-attf-data-uid="#{order.uid}">
-                            <td colspan="6">
-                                <table class='order-list'>
-                                    <thead>
-                                        <tr>
-                                            <th colspan="2"><t t-esc='order.name'/></th>
-                                            <th colspan="2">
-                                                <t t-if="order.get_client()"><t t-esc='order.get_client().name'/></t>
-                                            </th>
-                                            <th colspan="2">
-                                                <t t-if="order.floor"><t t-esc='order.floor.name'/></t>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class='order-line-list-contents'>
-                                    </tbody>
-                                </table>
-                            </td>
+                        <tr class='order-info'>
+                            <th colspan="2"><t t-esc='order.name'/></th>
+                            <th colspan="2">
+                                <t t-if="order.get_client()"><t t-esc='order.get_client().name'/></t>
+                            </th>
+                            <th colspan="2">
+                                <t t-if="order.table"><t t-esc='order.table.floor.name'/></t>
+                            </th>
                         </tr>
+                    </thead>
+                    <tbody class='order-line-list-contents'>
+
                     </tbody>
                 </table>
-                <t t-if="order.note || order.get_custom_notes()">
+
+                <t t-if="order.note || order.custom_notes">
                     <div class="order-note">
                         <span class="label">Note:</span>
                         <span class="value">
@@ -112,24 +105,27 @@
     <t t-name="KitchenOrderLine">
         <tr class='line' t-attf-data-uid="#{line.uid}">
             <td class="img"><img t-att-src="image_url" /> </td>
-            <td><t t-esc='line.product.display_name'/>
-                <ul class="info-list">
-                    <t t-if="line.get_note()">
-                        <li class="info orderline-note">
+            <td class="product-display-name"><t t-esc='line.product.display_name'/>
+                <t t-if="line.get_note() || line.custom_notes">
+                    <ul class="info-list">
+                        <li class="info kitchen-orderline-note">
                             <i class='fa fa-tag'/><t t-esc="line.get_note()" />
+                            <t t-foreach="line.custom_notes" t-as="custom_note">
+                                <i class='fa fa-tag'/><t t-esc="custom_note.name"/>
+                            </t>
                         </li>
-                    </t>
-                </ul>
+                    </ul>
+                </t>
             </td>
             <td><span class="qty"><t t-esc='line.quantityStr'/></span></td>
             <td>00:00</td>
             <td>
-                <t t-foreach="widget.pos.kitchen_buttons" t-as="button">
-                    <button class="line-button" t-attf-data-id="#{button.id}" t-attf-style="background: #{button.background_color}; color: #{button.name_color}">
-                        <t t-if="button.show_in_kitchen">
+                <t t-foreach="line.kitchen_buttons" t-as="button">
+                    <t t-if="button.show_in_kitchen">
+                        <button class="line-button" t-attf-data-id="#{button.id}" t-attf-style="background: #{button.background_color}; color: #{button.name_color}">
                             <t t-esc='button.name'/>
-                        </t>
-                    </button>
+                        </button>
+                    </t>
                 </t>
             </td>
             <td><t t-esc='line.current_state.name'/></td>
