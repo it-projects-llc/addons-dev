@@ -4,15 +4,16 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
     var core = require('web.core');
     var models = require('point_of_sale.models');
     var screens = require('point_of_sale.screens');
+    var session = require('web.session');
 
     var _t = core._t;
 
     // load all line states
     models.load_models({
         model: 'pos.order.line.state',
-        fields: ['name', 'technical_name', 'type', 'sequence', 'show_in_kitchen', 'show_for_waiters'],
+        fields: ['name', 'technical_name', 'type', 'sequence', 'show_in_kitchen', 'show_for_waiters', 'sound_signal'],
         loaded: function(self, res){
-            var sorting_states = function(idOne, idTwo){
+            var sorting_states = function(idOne, idTwo) {
                 return idOne.sequence - idTwo.sequence;
             };
             if (res) {
@@ -101,6 +102,7 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             this.tags = [];
             this.kitchen_buttons = [];
             OrderlineSuper.prototype.initialize.apply(this, arguments);
+
             if (!this.states.length && !this.kitchen_buttons.length) {
                 this.init_category_data();
             }
@@ -285,6 +287,10 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             this.current_state = data.current_state;
             this.states = data.states;
             this.tags = data.tags;
+            if (this.current_state.sound_signal) {
+                var audio = new Audio(session.url("/pos_multi_session_kitchen/static/src/audio/state.wav"));
+                audio.play();
+            }
             this.start_timer();
             this.trigger('change', this);
         }

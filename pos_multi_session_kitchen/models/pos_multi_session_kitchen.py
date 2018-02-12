@@ -15,6 +15,7 @@ class PosOrderLineState(models.Model):
     sequence = fields.Integer("Sequence")
     show_in_kitchen = fields.Boolean("Show State on Kitchen", default=True)
     show_for_waiters = fields.Boolean("Show the Button for Waiters", default=True)
+    sound_signal = fields.Boolean("Sound Signal", help="The sound signal about a state change", default=False)
 
 
 class PosOrderLineButton(models.Model):
