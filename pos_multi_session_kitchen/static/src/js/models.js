@@ -68,7 +68,17 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             return this.category_settings.find(function(settings){
                 return settings.id === id;
             });
-        }
+        },
+        on_removed_order: function(removed_order,index,reason){
+            if (removed_order) {
+                // stop timer and save stop datetime
+                var lines = removed_order.get_orderlines();
+                lines.forEach(function(line) {
+                    line.stop_timer();
+                });
+            }
+            return PosModelSuper.prototype.on_removed_order.apply(this, arguments);
+        },
     });
 
     var OrderlineSuper = models.Orderline;
@@ -158,20 +168,10 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             var dateMsec = date.getTime();
             clearInterval(this.stateTimer);
             this.current_state.run_timer = false;
-            this.current_state.run_timer_date = dateMsec;
+            this.current_state.stop_timer_date = dateMsec;
         },
-        update_timer: function(run_timer_date) {
+        get_formatted_time: function(run_timer_date) {
             var self = this;
-
-            // TODO: make faster
-            // TODO: use remove order function in ms models for checking
-            var orders = this.pos.get('orders').models;
-            var order = orders.find(function(current_order){
-                return self.order.uid === current_order.uid;
-            });
-            if (!order) {
-                this.stop_timer();
-            }
 
             // Set a date and get the milliseconds
             var date = new Date();
@@ -211,8 +211,18 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
                 time = days + ' days ';
             }
             time +=  zeroPadding(hours, 2) + ':' + zeroPadding(minutes, 2) + ':' + zeroPadding(seconds, 2);
-            var state_timer = $(this.node).find(".state_timer");
-            state_timer.find('.time').html(time);
+
+            return time;
+        },
+        update_timer: function(run_timer_date) {
+            var time = this.get_formatted_time(run_timer_date);
+
+            if (this.waiters_timer) {
+                this.waiters_timer.html(time);
+            }
+            if (this.kitchen_timer) {
+                this.kitchen_timer.html(time);
+            }
         },
         apply_ms_data: function(data) {
             // This methods is added for compatibility with module https://www.odoo.com/apps/modules/10.0/pos_multi_session/

@@ -13,7 +13,12 @@
                 </t>
             </div>
             <div class="state_timer">
-                <p class="time">00:00:00</p>
+                <t t-if="!line.current_state || !line.current_state.run_timer_date">
+                    <p class="time">00:00:00</p>
+                </t>
+                <t t-if="line.current_state.run_timer_date">
+                    <p class="time"><t t-esc='line.get_formatted_time(line.current_state.run_timer_date)'/></p>
+                </t>
             </div>
             <div class="buttons-list">
                 <t t-foreach="line.kitchen_buttons" t-as="button">
@@ -118,7 +123,7 @@
                 </t>
             </td>
             <td><span class="qty"><t t-esc='line.quantityStr'/></span></td>
-            <td>00:00</td>
+            <td class="state_timer"><p class="time">00:00:00</p></td>
             <td>
                 <t t-foreach="line.kitchen_buttons" t-as="button">
                     <t t-if="button.show_in_kitchen">

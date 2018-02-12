@@ -145,7 +145,6 @@ odoo.define('pos_multi_session', function(require){
                     return;
                 }
             }
-            var self = this;
             return PosModelSuper.prototype.on_removed_order.apply(this, arguments);
         },
         ms_on_update: function(message, sync_all){

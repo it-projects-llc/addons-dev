@@ -149,6 +149,7 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
                 $(orderline).find('.line-button').click(function(event){
                     self.click_line_button(event, $(this));
                 });
+                line.kitchen_timer = $(orderline).find('.state_timer .time');
                 contents.appendChild(orderline);
             }
         },
@@ -228,6 +229,7 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
             $(el).find('.line-button').click(function(event) {
                 self.click_line_buttons(orderline, $(this));
             });
+            orderline.waiters_timer = $(el).find(".state_timer .time");
             return el;
         },
         click_line_buttons: function(orderline, element){
