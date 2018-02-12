@@ -37,6 +37,7 @@
             <field name="technical_name">done</field>
             <field name="type">state</field>
             <field name="sequence">4</field>
+            <field name="sound_signal">True</field>
         </record>
 
         <record id="demo_state_delivered" model="pos.order.line.state">
