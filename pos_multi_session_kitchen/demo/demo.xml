@@ -9,58 +9,86 @@
             <field name="cat_ids" eval="[(6, 0, [ref('point_of_sale.fruits_vegetables')])]" />
         </record>
 
-        <!-- DEMO Stages -->
-        <record id="demo_stage_draft" model="pos.order.line.state">
+        <!-- DEMO states -->
+        <record id="demo_state_draft" model="pos.order.line.state">
             <field name="name">Draft</field>
             <field name="technical_name">draft</field>
-            <field name="type">stage</field>
+            <field name="type">state</field>
             <field name="sequence">1</field>
             <field name="show_in_kitchen">False</field>
         </record>
 
-        <record id="demo_stage_confirmed" model="pos.order.line.state">
+        <record id="demo_state_confirmed" model="pos.order.line.state">
             <field name="name">Confirmed</field>
             <field name="technical_name">confirmed</field>
-            <field name="type">stage</field>
+            <field name="type">state</field>
             <field name="sequence">2</field>
         </record>
 
-        <record id="demo_stage_cooking" model="pos.order.line.state">
+        <record id="demo_state_cooking" model="pos.order.line.state">
             <field name="name">Cooking</field>
             <field name="technical_name">cooking</field>
-            <field name="type">stage</field>
+            <field name="type">state</field>
             <field name="sequence">3</field>
         </record>
 
-        <record id="demo_stage_done" model="pos.order.line.state">
+        <record id="demo_state_done" model="pos.order.line.state">
             <field name="name">Done</field>
             <field name="technical_name">done</field>
-            <field name="type">stage</field>
+            <field name="type">state</field>
             <field name="sequence">4</field>
         </record>
 
-        <record id="demo_stage_delivered" model="pos.order.line.state">
+        <record id="demo_state_delivered" model="pos.order.line.state">
             <field name="name">Delivered</field>
             <field name="technical_name">delivered</field>
-            <field name="type">stage</field>
+            <field name="type">state</field>
             <field name="sequence">5</field>
+            <field name="show_in_kitchen">False</field>
         </record>
 
-        <record id="demo_stage_cancelled" model="pos.order.line.state">
+        <record id="demo_state_cancelled" model="pos.order.line.state">
             <field name="name">Cancelled</field>
             <field name="technical_name">cancelled</field>
-            <field name="type">stage</field>
+            <field name="type">state</field>
             <field name="sequence">6</field>
+            <field name="show_in_kitchen">False</field>
+        </record>
+
+        <!-- DEMO Tags -->
+        <record id="demo_tag_high_priority" model="pos.order.line.state">
+            <field name="name">High Priority</field>
+            <field name="technical_name">high_priority</field>
+            <field name="type">tag</field>
+            <field name="sequence">1</field>
+            <field name="show_in_kitchen">True</field>
+        </record>
+
+        <record id="demo_tag_medium_priority" model="pos.order.line.state">
+            <field name="name">Medium Priority</field>
+            <field name="technical_name">medium_priority</field>
+            <field name="type">tag</field>
+            <field name="sequence">2</field>
+            <field name="show_in_kitchen">True</field>
         </record>
 
         <!-- DEMO Buttons -->
-        <!-- TODO: Use new field (js code)-->
-        <record id="demo_button_priority" model="pos.order.line.button">
-            <field name="name">Priority</field>
+        <record id="demo_button_high_priority" model="pos.order.line.button">
+            <field name="name">High Priority</field>
             <field name="background_color">#9394f3</field>
             <field name="name_color">white</field>
             <field name="show_for_waiters">True</field>
             <field name="show_in_kitchen">False</field>
+            <field name="next_state_id" eval="demo_tag_high_priority" />
+        </record>
+
+        <record id="demo_button_medium_priority" model="pos.order.line.button">
+            <field name="name">Medium Priority</field>
+            <field name="background_color">#9394f3</field>
+            <field name="name_color">white</field>
+            <field name="show_for_waiters">True</field>
+            <field name="show_in_kitchen">False</field>
+            <field name="next_state_id" eval="demo_tag_medium_priority" />
         </record>
 
         <record id="demo_button_confirm" model="pos.order.line.button">
@@ -69,7 +97,8 @@
             <field name="name_color">white</field>
             <field name="show_for_waiters">True</field>
             <field name="show_in_kitchen">False</field>
-            <field name="next_state_id" eval="demo_stage_confirmed" />
+            <field name="next_state_id" eval="demo_state_confirmed" />
+            <field name="condition_code">state != 'Draft'</field>
         </record>
 
         <record id="demo_button_delivered" model="pos.order.line.button">
@@ -78,7 +107,9 @@
             <field name="name_color">white</field>
             <field name="show_for_waiters">True</field>
             <field name="show_in_kitchen">False</field>
-            <field name="next_state_id" eval="demo_stage_delivered" />
+            <field name="next_state_id" eval="demo_state_delivered" />
+            <field name="condition_code">state != 'Done'</field>
+            <field name="action_close">True</field>
         </record>
 
         <record id="demo_button_cooking" model="pos.order.line.button">
@@ -87,7 +118,8 @@
             <field name="name_color">white</field>
             <field name="show_for_waiters">False</field>
             <field name="show_in_kitchen">True</field>
-            <field name="next_state_id" eval="demo_stage_cooking" />
+            <field name="next_state_id" eval="demo_state_cooking" />
+            <field name="condition_code">state != 'Confirmed'</field>
         </record>
 
         <record id="demo_button_done" model="pos.order.line.button">
@@ -96,7 +128,8 @@
             <field name="name_color">white</field>
             <field name="show_for_waiters">False</field>
             <field name="show_in_kitchen">True</field>
-            <field name="next_state_id" eval="demo_stage_done" />
+            <field name="next_state_id" eval="demo_state_done" />
+            <field name="condition_code">state != 'Cooking'</field>
         </record>
 
         <record id="demo_button_cancelled" model="pos.order.line.button">
@@ -105,21 +138,23 @@
             <field name="name_color">white</field>
             <field name="show_for_waiters">True</field>
             <field name="show_in_kitchen">True</field>
-            <field name="next_state_id" eval="demo_stage_cancelled" />
+            <field name="next_state_id" eval="demo_state_cancelled" />
+            <field name="condition_code">state == 'Cancelled'</field>
+            <field name="action_close">True</field>
         </record>
 
         <!-- DEMO Settings -->
         <record id="demo_fruit_settings" model="pos.kitchen.category.settings">
             <field name="name">Fruits Settings</field>
             <field name="button_ids" eval="[(4, ref('pos_multi_session_kitchen.demo_button_confirm')), (4, ref('pos_multi_session_kitchen.demo_button_delivered')), (4, ref('pos_multi_session_kitchen.demo_button_cooking')), (4, ref('pos_multi_session_kitchen.demo_button_done'))]"/>
-            <field name="state_ids" eval="[(4, ref('pos_multi_session_kitchen.demo_stage_draft')), (4, ref('pos_multi_session_kitchen.demo_stage_confirmed')), (4, ref('pos_multi_session_kitchen.demo_stage_cooking')), (4, ref('pos_multi_session_kitchen.demo_stage_done')), (4, ref('pos_multi_session_kitchen.demo_stage_delivered'))]"/>
+            <field name="state_ids" eval="[(4, ref('pos_multi_session_kitchen.demo_state_draft')), (4, ref('pos_multi_session_kitchen.demo_state_confirmed')), (4, ref('pos_multi_session_kitchen.demo_state_cooking')), (4, ref('pos_multi_session_kitchen.demo_state_done')), (4, ref('pos_multi_session_kitchen.demo_state_delivered'))]"/>
         </record>
 
         <record id="demo_partner_settings" model="pos.kitchen.category.settings">
             <field name="name">Partner Settings</field>
             <field name="button_ids">#9394f3</field>
-            <field name="button_ids" eval="[(4, ref('pos_multi_session_kitchen.demo_button_priority')), (4, ref('pos_multi_session_kitchen.demo_button_confirm')), (4, ref('pos_multi_session_kitchen.demo_button_delivered')), (4, ref('pos_multi_session_kitchen.demo_button_done')), (4, ref('pos_multi_session_kitchen.demo_button_cancelled'))]"/>
-            <field name="state_ids" eval="[(4, ref('pos_multi_session_kitchen.demo_stage_draft')), (4, ref('pos_multi_session_kitchen.demo_stage_confirmed')), (4, ref('pos_multi_session_kitchen.demo_stage_done')), (4, ref('pos_multi_session_kitchen.demo_stage_delivered')), (4, ref('pos_multi_session_kitchen.demo_stage_cancelled'))]"/>
+            <field name="button_ids" eval="[(4, ref('pos_multi_session_kitchen.demo_button_high_priority')), (4, ref('pos_multi_session_kitchen.demo_button_medium_priority')), (4, ref('pos_multi_session_kitchen.demo_button_confirm')), (4, ref('pos_multi_session_kitchen.demo_button_delivered')), (4, ref('pos_multi_session_kitchen.demo_button_done')), (4, ref('pos_multi_session_kitchen.demo_button_cancelled'))]"/>
+            <field name="state_ids" eval="[(4, ref('pos_multi_session_kitchen.demo_state_draft')), (4, ref('pos_multi_session_kitchen.demo_state_confirmed')), (4, ref('pos_multi_session_kitchen.demo_state_done')), (4, ref('pos_multi_session_kitchen.demo_state_delivered')), (4, ref('pos_multi_session_kitchen.demo_state_cancelled'))]"/>
         </record>
 
         <!-- POS Category -->

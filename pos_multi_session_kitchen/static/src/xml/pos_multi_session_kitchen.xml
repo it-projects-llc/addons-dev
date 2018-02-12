@@ -13,16 +13,18 @@
                 </t>
             </div>
             <div class="state_timer">
-                <t t-if="!line.current_state || !line.current_state.run_timer_date">
-                    <p class="time">00:00:00</p>
-                </t>
-                <t t-if="line.current_state.run_timer_date">
-                    <p class="time"><t t-esc='line.get_formatted_time(line.current_state.run_timer_date)'/></p>
+                <t t-if="!line.current_state.action_close">
+                    <t t-if="!line.current_state || !line.current_state.run_timer_date">
+                        <p class="time">00:00:00</p>
+                    </t>
+                    <t t-if="line.current_state.run_timer_date">
+                        <p class="time"><t t-esc='line.get_formatted_time(line.current_state.run_timer_date)'/></p>
+                    </t>
                 </t>
             </div>
             <div class="buttons-list">
                 <t t-foreach="line.kitchen_buttons" t-as="button">
-                    <t t-if="button.show_for_waiters">
+                    <t t-if="button.show_for_waiters and !button.hide and !line.current_state.action_close">
                         <button class="line-button" t-attf-data-id="#{button.id}" t-attf-style="background: #{button.background_color}; color: #{button.name_color}"><t t-esc='button.name'/></button>
                     </t>
                 </t>
@@ -123,13 +125,24 @@
                 </t>
             </td>
             <td><span class="qty"><t t-esc='line.quantityStr'/></span></td>
-            <td class="state_timer"><p class="time">00:00:00</p></td>
+            <td><div class="state_timer">
+                <t t-if="!line.current_state.action_close">
+                    <t t-if="!line.current_state || !line.current_state.run_timer_date">
+                        <p class="time">00:00:00</p>
+                    </t>
+                    <t t-if="line.current_state.run_timer_date">
+                        <p class="time"><t t-esc='line.get_formatted_time(line.current_state.run_timer_date)'/></p>
+                    </t>
+                </t>
+            </div></td>
             <td>
-                <t t-foreach="line.kitchen_buttons" t-as="button">
-                    <t t-if="button.show_in_kitchen">
-                        <button class="line-button" t-attf-data-id="#{button.id}" t-attf-style="background: #{button.background_color}; color: #{button.name_color}">
-                            <t t-esc='button.name'/>
-                        </button>
+                <t t-if="!line.current_state.action_close">
+                    <t t-foreach="line.kitchen_buttons" t-as="button">
+                        <t t-if="button.show_in_kitchen and !button.hide">
+                            <button class="line-button" t-attf-data-id="#{button.id}" t-attf-style="background: #{button.background_color}; color: #{button.name_color}">
+                                <t t-esc='button.name'/>
+                            </button>
+                        </t>
                     </t>
                 </t>
             </td>

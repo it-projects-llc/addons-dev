@@ -11,12 +11,20 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
     models.load_models({
         model: 'pos.order.line.state',
         fields: ['name', 'technical_name', 'type', 'sequence', 'show_in_kitchen', 'show_for_waiters'],
-        loaded: function(self, states){
+        loaded: function(self, res){
             var sorting_states = function(idOne, idTwo){
                 return idOne.sequence - idTwo.sequence;
             };
-            if (states) {
+            if (res) {
+                var states = res.filter(function(state) {
+                    return state.type === 'state';
+                });
                 self.states = states.sort(sorting_states);
+
+                var tags = res.filter(function(tag) {
+                    return tag.type === 'tag';
+                });
+                self.tags = tags.sort(sorting_states);
             }
         },
     });
@@ -24,7 +32,7 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
     // load all line buttons
     models.load_models({
         model: 'pos.order.line.button',
-        fields: ['name', 'background_color', 'name_color', 'show_for_waiters', 'show_in_kitchen', 'next_state_id', 'condition_code'],
+        fields: ['name', 'background_color', 'name_color', 'show_for_waiters', 'show_in_kitchen', 'next_state_id', 'condition_code', 'action_close'],
         loaded: function(self, buttons){
             self.kitchen_buttons = buttons;
         },
@@ -59,6 +67,11 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
                 return state.id === id;
             })
         },
+        get_tag_by_id: function(id) {
+            return this.tags.find(function(tag){
+                return tag.id === id;
+            })
+        },
         get_kitchen_button_by_id: function(id) {
             return this.kitchen_buttons.find(function(button){
                 return button.id === id;
@@ -85,11 +98,19 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
     models.Orderline = models.Orderline.extend({
         initialize: function(){
             this.states = [];
+            this.tags = [];
             this.kitchen_buttons = [];
             OrderlineSuper.prototype.initialize.apply(this, arguments);
             if (!this.states.length && !this.kitchen_buttons.length) {
                 this.init_category_data();
             }
+        },
+        can_be_merged_with: function(orderline){
+            // orderline with a different state cannot be merged
+            if (this.current_state.id !== orderline.current_state.id) {
+                return false;
+            }
+            OrderlineSuper.prototype.can_be_merged_with.apply(this, arguments);
         },
         init_category_data: function() {
             var self = this;
@@ -115,11 +136,13 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             var data = OrderlineSuper.prototype.export_as_JSON.apply(this, arguments);
             data.current_state = this.current_state;
             data.states = this.states;
+            data.tags = this.tags;
             return data;
         },
         init_from_JSON: function(json) {
             this.current_state = json.current_state;
             this.states = json.states;
+            this.tags = json.tags;
             OrderlineSuper.prototype.init_from_JSON.call(this, json);
         },
         set_state: function(state) {
@@ -134,7 +157,24 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             active_state.run_timer = true;
 
             this.current_state = active_state;
+
             this.start_timer();
+
+            this.trigger('change', this);
+            this.order.trigger('change:sync');
+        },
+        set_tag: function(tag) {
+            this.tags.push(tag);
+            this.trigger('change', this);
+            this.order.trigger('change:sync');
+        },
+        action_close: function() {
+            this.stop_timer();
+            this.current_state.stop_timer_date = false;
+            this.current_state.run_timer_date = false;
+
+            // hide timer and buttons
+            this.current_state.action_close = true;
 
             this.trigger('change', this);
             this.order.trigger('change:sync');
@@ -160,6 +200,8 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
                     this.current_state.run_timer_date = dateMsec;
                     this.start_timer();
                 }
+            } else {
+                this.stop_timer();
             }
         },
         stop_timer: function() {
@@ -242,7 +284,7 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             }
             this.current_state = data.current_state;
             this.states = data.states;
-
+            this.tags = data.tags;
             this.start_timer();
             this.trigger('change', this);
         }

@@ -9,8 +9,8 @@
                 <sheet>
                     <group>
                         <field name="name"/>
-                        <field string="States" name="state_ids" widget="many2many_tags"/>
-                        <field string="Buttons" name="button_ids" widget="many2many_tags"/>
+                        <field string="States" name="state_ids"/>
+                        <field string="Buttons" name="button_ids"/>
                     </group>
                 </sheet>
             </form>
@@ -48,7 +48,8 @@
                         <field name="show_for_waiters"/>
                         <field name="show_in_kitchen"/>
                         <field name="next_state_id"/>
-                        <field name="condition_code" widget="ace"/>
+                        <field name="condition_code" widget="ace" options="{'mode': 'python'}"/>
+                        <field name="action_close"/>
                     </group>
                 </sheet>
             </form>

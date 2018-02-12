@@ -37,11 +37,11 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
             }
         },
         orderline_filtering: function(lines) {
-            var filtered_lines = this.filter_on_stages(this.filter_on_category(lines));
+            var filtered_lines = this.filter_on_states(this.filter_on_category(lines));
             return filtered_lines;
         },
-        filter_on_stages: function(lines) {
-            // filter lines on kitchen stages
+        filter_on_states: function(lines) {
+            // filter lines on kitchen states
             return lines.filter(function(line){
                 return line.current_state.show_in_kitchen;
             });
@@ -117,6 +117,10 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
             order.remove();
         },
         update_order: function(order, lines) {
+            if (!lines.length) {
+                this.remove_order(order.uid);
+                return false;
+            }
             var content = this.$el.find('.order-block[data-uid="'+ order.uid +'"]');
             var order_html = QWeb.render('KitchenOrder',{widget: this, order:order});
             content.replaceWith(order_html);
@@ -137,6 +141,7 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
 
             for(var i = 0, len = Math.min(lines.length,1000); i < len; i++){
                 var line = lines[i];
+                this.check_line_buttons(line);
                 var product = line.product;
                 var orderline_html = QWeb.render('KitchenOrderLine',{
                     widget: this,
@@ -153,6 +158,22 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
                 contents.appendChild(orderline);
             }
         },
+        check_line_buttons: function(line) {
+            var self = this;
+            // optional arguments for custom function
+            var state = line.current_state.name;
+            var product = line.product;
+            var quantity = line.get_quantity();
+            var price = line.price;
+
+            // run the condition code for each button
+            line.kitchen_buttons.forEach(function(button){
+                var code = button.condition_code;
+                if (code) {
+                    button.hide = pyeval.py_eval(code, {state:state, product:product, quantity:quantity, price: price});
+                }
+            });
+        },
         click_line_button: function(event, element) {
             var order = this.get_order_by_uid(element.parents('.order-block').data('uid'));
             var line = order.get_orderlines().find(function(line){
@@ -163,7 +184,15 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
 
             // set next state for line
             if (state) {
-                line.set_state(state);
+                if (state.type === 'state') {
+                    line.set_state(state);
+                } else if (state.type === 'tag') {
+                    line.set_tag(state);
+                }
+            }
+
+            if (button.action_close) {
+                line.action_close();
             }
 
             // update order
@@ -202,29 +231,28 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
             line.stop_timer();
             this._super(line);
         },
-        orderline_change: function(line){
-            this.check_line_buttons(line);
-            this._super(line);
-        },
         check_line_buttons: function(line) {
             var self = this;
+            if (!line.kitchen_buttons) {
+                return;
+            }
             // optional arguments for custom function
-            var state = line.current_state;
+            var state = line.current_state.name;
             var product = line.product;
             var quantity = line.get_quantity();
             var price = line.price;
 
             // run the condition code for each button
-            // TODO: don't use the eval function
             line.kitchen_buttons.forEach(function(button){
                 var code = button.condition_code;
                 if (code) {
-                    eval(code);
+                    button.hide = pyeval.py_eval(code, {state:state, product:product, quantity:quantity, price: price});
                 }
             });
         },
         render_orderline: function(orderline){
             var self = this;
+            this.check_line_buttons(orderline);
             var el = this._super(orderline);
             $(el).find('.line-button').click(function(event) {
                 self.click_line_buttons(orderline, $(this));
@@ -239,6 +267,10 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
             // set next state for orderline
             if (state) {
                 orderline.set_state(state);
+            }
+
+            if (button.action_close) {
+                orderline.action_close();
             }
         }
     });
