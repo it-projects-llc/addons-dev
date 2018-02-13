@@ -61,7 +61,6 @@ odoo.define('pos_orders_history', function (require) {
             if (((expense.state === 'post') || (expense.state == 'approve')) && !expense.processed_by_pos) {
                 this.db.expenses.unshift(expense);
                 this.db.expenses_by_id[expense.id] = expense;
-
                 if (!this.db.expenses_by_id[expense.id].expense_lines) {
                     this.db.expenses_by_id[expense.id].expense_lines = [];
                     this.fetch_expense_lines([expense.id]).then(function (res) {
@@ -98,15 +97,12 @@ odoo.define('pos_orders_history', function (require) {
             var sheet_id = 0;
             for (var i = 0; i < lines.length; i++) {
                 sheet_id = lines[i].sheet_id[0];
-
                 var line_ids = _.pluck(this.db.expenses_by_id[sheet_id].expense_lines, 'id');
-
                 if (line_ids.includes(lines[i].id)) {
                     continue;
                 } else {
                     this.db.expenses_by_id[sheet_id].expense_lines.push(lines[i]);
                 }
-
             }
         }
 
@@ -286,7 +282,7 @@ odoo.define('pos_orders_history', function (require) {
             this.gui.show_popup('expenses-popup', {
                 title: _t('Pay Expense'),
                 expense_id: expense.id,
-                body: _t('Pay expense in ' +  expense.total_amount + ' to ' + expense.employee_id[1])
+                body: _t('Pay expense in ' +  this.format_currency(expense.total_amount) + ' to ' + expense.employee_id[1])
             });
         },
 

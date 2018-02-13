@@ -40,7 +40,7 @@
                                             <tr>
                                                 <th>Expense Description</th>
                                                 <th>Employee</th>
-                                                <th>Total</th>
+                                                <th>Total Amount</th>
                                             </tr>
                                         </thead>
                                         <tbody class='expenses-list-contents'>
@@ -70,7 +70,7 @@
                     <th>Expense Date</th>
                     <th>Expense Description</th>
                     <th>Employee</th>
-                    <th>Total Amount</th>
+                    <th>Amount</th>
                 </tr>
             </thead>
             <tbody>

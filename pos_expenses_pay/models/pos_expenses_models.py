@@ -10,7 +10,6 @@ class PosConfig(models.Model):
 
     pay_expenses = fields.Boolean("Pay Expenses", help="Show Expenses in POS", default=True)
 
-
     @api.model
     def notify_expenses_updates(self, ids):
         message = {"updated_expenses": [ids]}
@@ -21,11 +20,13 @@ class HrExpenseSheet(models.Model):
     _inherit = 'hr.expense.sheet'
 
     processed_by_pos = fields.Boolean()
+    cashier = fields.Char()
 
     def process_expense_from_pos(self, cashier):
         if (self.state == 'approve'):
             self.action_sheet_move_create()
         vals = self.get_vals_for_payment(cashier)
+        self.cashier = cashier
         payment = self.env['account.payment'].create(vals)
         payment.post()
 
@@ -57,7 +58,7 @@ class HrExpenseSheet(models.Model):
             'amount': self.total_amount,
             'currency_id': self.currency_id.id,
             'payment_date': date,
-            'communication': cashier
+            'communication': cashier,
         }
 
     def action_updated_expense(self):

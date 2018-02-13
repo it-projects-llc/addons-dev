@@ -24,6 +24,7 @@
     "data": [
         "views/pos_expenses_view.xml",
         "views/pos_expenses_template.xml",
+        "views/report.xml",
         "data/base_action_rule.xml",
     ],
     "qweb": [
