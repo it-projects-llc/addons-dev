@@ -147,8 +147,17 @@ odoo.define('pos_orders_history', function (require) {
     var ExpensesButton = screens.ActionButtonWidget.extend({
         template: 'ExpensesButton',
         button_click: function () {
+            var self = this;
             if (this.pos.db.expenses.length) {
-                this.gui.show_screen('expenses_screen');
+                self.gui.select_user({
+                    'security':     true,
+                    'current_user': self.pos.get_cashier(),
+                    'title':      _t('Change Cashier'),
+                }).then(function(user){
+                    self.pos.set_cashier(user);
+                    self.gui.chrome.widget.username.renderElement();
+                    self.gui.show_screen('expenses_screen');
+                });
             }
         },
     });
@@ -254,6 +263,7 @@ odoo.define('pos_orders_history', function (require) {
         line_select: function (event, $line, id) {
             this.$(".order-line").not($line).removeClass('active');
             this.$(".order-line").not($line).removeClass('highlight');
+            this.$(".line-element-container").addClass('line-element-hidden');            
             if ($line.hasClass('active')) {
                 $line.removeClass('active');
                 $line.removeClass('highlight');
