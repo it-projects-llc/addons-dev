@@ -2,13 +2,14 @@
  POS Expenses Pay
 ==================
 
+Paying HR expenses in POS.
 
 Credits
 =======
 
 Contributors
 ------------
-* Artyom Losev <losev@it-projects.info>
+* `Artyom Losev <https://it-projects.info/team/ArtyomLosev>`__
 
 Sponsors
 --------
@@ -17,6 +18,12 @@ Sponsors
 Maintainers
 -----------
 * `IT-Projects LLC <https://it-projects.info>`__
+
+      To get a guaranteed support you are kindly requested to purchase the module at `odoo apps store <https://apps.odoo.com/apps/modules/{VERSION}/{TECHNICAL_NAME}/>`__.
+
+      Thank you for understanding!
+
+      `IT-Projects Team <https://www.it-projects.info/team>`__
 
 Further information
 ===================

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 {
     "name": """POS Expenses Pay""",
-    "summary": """""",
-    "category": "point_of_sale",
+    "summary": """Paying HR expenses in POS""",
+    "category": "Point of Sale",
     # "live_test_URL": "",
     "images": [],
     "version": "1.0.0",
@@ -10,7 +10,7 @@
 
     "author": "IT-Projects LLC, Artyom Losev",
     "support": "apps@it-projects.info",
-    "website": "apps@it-projects.info",
+    "website": "https://it-projects.info/team/ArtyomLosev",
     "license": "LGPL-3",
     # "price": 50.00,
     # "currency": "EUR",
@@ -36,6 +36,7 @@
     "post_load": None,
     "pre_init_hook": None,
     "post_init_hook": None,
+    "uninstall_hook": None,
 
     "auto_install": False,
     "installable": True,
