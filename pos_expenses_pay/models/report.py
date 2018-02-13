@@ -38,7 +38,7 @@ class ReportSaleDetails(models.AbstractModel):
                     'name': line.name,
                     'partner': line.employee_id.name,
                     'cashier': e.cashier,
-                    'amount': line.total_amount
+                    'amount': line.total_amount*-1
                 }
                 res['expenses'].append(data)
 
