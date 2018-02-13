@@ -38,7 +38,6 @@
                                     <table class='order-list'>
                                         <thead>
                                             <tr>
-                                                <th>Expense date</th>
                                                 <th>Expense Description</th>
                                                 <th>Employee</th>
                                                 <th>Total</th>
@@ -58,11 +57,31 @@
 
     <t t-name="ExpensesList">
         <tr class='order-line' t-att-data-id='order.id'>
-            <td><t t-esc='order.accounting_date' /></td>
             <td><t t-esc='order.name'/></td>
             <td><t t-esc='order.employee_id[1]' /></td>
-            <td><t t-esc='order.total_amount' /></td> 
+            <td><t t-esc='widget.format_currency(order.total_amount)' /></td>
         </tr>
+    </t>
+
+    <t t-name="ExpensesLinesTable">
+        <table>
+            <thead>
+                <tr>
+                    <th>Expense Date</th>
+                    <th>Expense Description</th>
+                    <th>Employee</th>
+                    <th>Total Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr t-foreach="order.expense_lines" t-as="line" class='line-line'>
+                <td><t t-esc='line.date'/></td>
+                <td><t t-esc='line.name'/></td>
+                <td><t t-esc='line.employee_id[1]'/></td>
+                <td><t t-esc='widget.format_currency(line.total_amount)'/></td>
+            </tr>
+            </tbody>
+        </table>
     </t>
 
     <t t-name="ExpensesWidget">

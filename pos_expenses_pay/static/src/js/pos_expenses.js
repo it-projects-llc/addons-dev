@@ -44,6 +44,7 @@ odoo.define('pos_orders_history', function (require) {
 
         update_expenses: function (expense) {
             var i,
+            self = this,
                 max = this.db.expenses.length,
                 expense = expense[0],
                 expenses_to_update = [];
@@ -56,12 +57,24 @@ odoo.define('pos_orders_history', function (require) {
                 }
             }
             delete this.db.expenses_by_id[expense.id];
-
-            if (((expense.state === 'done') || (expense.state == 'approve')) && !expense.processed_by_pos) {
+            var def = $.Deferred();
+            if (((expense.state === 'post') || (expense.state == 'approve')) && !expense.processed_by_pos) {
                 this.db.expenses.unshift(expense);
                 this.db.expenses_by_id[expense.id] = expense;
+
+                if (!this.db.expenses_by_id[expense.id].expense_lines) {
+                    this.db.expenses_by_id[expense.id].expense_lines = [];
+                    this.fetch_expense_lines([expense.id]).then(function (res) {
+                        self.set_expense_lines(res);
+                        def.resolve();
+                    });
+                }
+            } else {
+                def.resolve();
             }
-            this.publish_db_updates(expenses_to_update);        
+            $.when(def).done(function () {
+                self.publish_db_updates(expenses_to_update);
+            });
         },
 
         publish_db_updates: function (ids) {
@@ -71,6 +84,31 @@ odoo.define('pos_orders_history', function (require) {
                 callback.call(context, 'update', ids);
             });
         },
+
+        fetch_expense_lines: function (expense_sheet_ids) {
+            return rpc.query({
+                model: 'hr.expense',
+                method: 'search_read',
+                args: [],
+                domain: [['sheet_id', 'in', expense_sheet_ids]]
+            });
+        },
+
+        set_expense_lines: function (lines) {
+            var sheet_id = 0;
+            for (var i = 0; i < lines.length; i++) {
+                sheet_id = lines[i].sheet_id[0];
+
+                var line_ids = _.pluck(this.db.expenses_by_id[sheet_id].expense_lines, 'id');
+
+                if (line_ids.includes(lines[i].id)) {
+                    continue;
+                } else {
+                    this.db.expenses_by_id[sheet_id].expense_lines.push(lines[i]);
+                }
+
+            }
+        }
 
     });
 
@@ -82,14 +120,22 @@ odoo.define('pos_orders_history', function (require) {
                 ['payment_mode','=','own_account'],
                 ['state', 'in', ['post', 'approve']],
             ];
-            console.log("domain", domain);
             return domain;
         },
 
         loaded: function (self, expenses) {
+            var expense_sheet_ids = [];
             self.db.expenses = expenses;
-            expenses.forEach(function (expense) {
-                self.db.expenses_by_id[expense.id] = expense;                
+
+            self.db.expenses.forEach(function (expense) {
+                self.db.expenses_by_id[expense.id] = expense;
+                self.db.expenses_by_id[expense.id].expense_lines = [];
+            });
+
+            expense_sheet_ids = _.pluck(self.db.expenses, 'id');
+            self.fetch_expense_lines(expense_sheet_ids)
+            .then(function (expense_lines) {
+                self.set_expense_lines(expense_lines);                
             });
         },
     });
@@ -170,19 +216,43 @@ odoo.define('pos_orders_history', function (require) {
             this.hide_select_button();
         },
 
-        render_list: function (orders) {
+        render_list: function (expenses) {
             var self = this,
                 contents = this.$el[0].querySelector('.expenses-list-contents');
             contents.innerHTML = "";
-            for (var i = 0, len = Math.min(orders.length,1000); i < len; i++){
-                var order = orders[i],
-                    orderline = false;
-                var orderline_html = QWeb.render('ExpensesList',{widget: this, order:orders[i]});
-                orderline = document.createElement('tbody');
-                orderline.innerHTML = orderline_html;
-                orderline = orderline.childNodes[1];
-                contents.appendChild(orderline);
+            for (var i = 0, len = Math.min(expenses.length,1000); i < len; i++) {
+                var expense = expenses[i],
+                    expenseline = false;
+                var expenseline_html = QWeb.render('ExpensesList',{widget: this, order:expenses[i]});
+                var lines_table = expenses[i].expense_lines 
+                    ? this.render_lines_table(expenses[i]) 
+                    : document.createElement('tr');
+
+                expenseline = document.createElement('tbody');
+                expenseline.innerHTML = expenseline_html;
+                expenseline = expenseline.childNodes[1];
+
+                contents.appendChild(expenseline);
+                contents.appendChild(lines_table);
             }
+        },
+
+        render_lines_table: function (expense) {
+            var lines_table_html = QWeb.render('ExpensesLinesTable', {widget: this, order:expense});
+            var lines_table = document.createElement('table');
+            lines_table.classList.add('lines-table');
+            lines_table.innerHTML = lines_table_html;
+
+            var $tr = document.createElement('tr');
+            $tr.classList.add('line-element-hidden');
+            $tr.classList.add('line-element-container');
+
+            var $td = document.createElement('td');
+            $td.setAttribute("colspan", 3);
+            
+            $td.appendChild(lines_table);
+            $tr.appendChild($td);
+            return $tr;       
         },
 
         line_select: function (event, $line, id) {
@@ -191,15 +261,25 @@ odoo.define('pos_orders_history', function (require) {
             if ($line.hasClass('active')) {
                 $line.removeClass('active');
                 $line.removeClass('highlight');
-                this.hide_select_button();                
+                this.hide_select_button();
+                this.hide_order_details($line);
                 this.selected_expense = false;
             } else {
                 $line.addClass('active');
                 $line.addClass('highlight');
-                this.show_select_button();                
+                this.show_select_button();
+                this.show_order_details($line);            
                 var y = event.pageY - $line.parent().offset().top;
                 this.selected_expense = this.pos.db.expenses_by_id[id];
             }
+        },
+
+        hide_order_details: function ($line) {
+            $line.next().addClass('line-element-hidden');
+        },
+
+        show_order_details: function ($line) {
+            $line.next().removeClass('line-element-hidden');
         },
 
         process_expense: function (expense) {
@@ -224,7 +304,6 @@ odoo.define('pos_orders_history', function (require) {
                     if (this.gui.current_screen == this) {
                         this.show();                        
                     }
-                    // this.update_list_items(ids);
                     break;
                 default:
                     break;
