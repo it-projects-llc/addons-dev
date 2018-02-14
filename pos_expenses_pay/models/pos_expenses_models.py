@@ -30,7 +30,7 @@ class HrExpenseSheet(models.Model):
         payment = self.env['account.payment'].create(vals)
         payment.post()
 
-        body = (_("A payment of %s %s with the reference <a href='/mail/view?%s'>%s</a> related to your expense %s has been made.") % (payment.amount, payment.currency_id.symbol, url_encode({'model': 'account.payment', 'res_id': payment.id}), payment.name, self.name))
+        body = (_("A payment of %s %s with the reference <a href='/mail/view?%s'>%s</a> related to your expense %s has been made by %s in POS.") % (payment.amount, payment.currency_id.symbol, url_encode({'model': 'account.payment', 'res_id': payment.id}), payment.name, self.name, cashier))
         self.message_post(body=body)
 
         # Reconcile the payment and the expense, i.e. lookup on the payable account move lines
