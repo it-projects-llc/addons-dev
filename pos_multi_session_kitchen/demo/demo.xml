@@ -57,41 +57,36 @@
         </record>
 
         <!-- DEMO Tags -->
-        <record id="demo_tag_high_priority" model="pos.order.line.state">
+        <record id="demo_tag_high_priority" model="pos.order.tag">
             <field name="name">High Priority</field>
             <field name="technical_name">high_priority</field>
-            <field name="type">tag</field>
-            <field name="sequence">1</field>
-            <field name="show_in_kitchen">True</field>
+            <field name="priority">999</field>
         </record>
 
-        <record id="demo_tag_medium_priority" model="pos.order.line.state">
+        <record id="demo_tag_medium_priority" model="pos.order.tag">
             <field name="name">Medium Priority</field>
             <field name="technical_name">medium_priority</field>
-            <field name="type">tag</field>
-            <field name="sequence">2</field>
-            <field name="show_in_kitchen">True</field>
+            <field name="priority">500</field>
         </record>
 
-        <!-- DEMO Buttons -->
-        <record id="demo_button_high_priority" model="pos.order.line.button">
+        <!-- DEMO Order Buttons -->
+        <record id="demo_button_high_priority" model="pos.order.button">
             <field name="name">High Priority</field>
-            <field name="background_color">#9394f3</field>
+            <field name="background_color">black</field>
             <field name="name_color">white</field>
-            <field name="show_for_waiters">True</field>
-            <field name="show_in_kitchen">False</field>
-            <field name="next_state_id" eval="demo_tag_high_priority" />
+            <field name="remove_tag_id" eval="demo_tag_medium_priority" />
+            <field name="next_tag_id" eval="demo_tag_high_priority" />
         </record>
 
-        <record id="demo_button_medium_priority" model="pos.order.line.button">
+        <record id="demo_button_medium_priority" model="pos.order.button">
             <field name="name">Medium Priority</field>
-            <field name="background_color">#9394f3</field>
+            <field name="background_color">black</field>
             <field name="name_color">white</field>
-            <field name="show_for_waiters">True</field>
-            <field name="show_in_kitchen">False</field>
-            <field name="next_state_id" eval="demo_tag_medium_priority" />
+            <field name="remove_tag_id" eval="demo_tag_high_priority" />
+            <field name="next_tag_id" eval="demo_tag_medium_priority" />
         </record>
 
+        <!-- DEMO Line Buttons -->
         <record id="demo_button_confirm" model="pos.order.line.button">
             <field name="name">Confirm</field>
             <field name="background_color">#9394f3</field>
@@ -154,7 +149,7 @@
         <record id="demo_partner_settings" model="pos.kitchen.category.settings">
             <field name="name">Partner Settings</field>
             <field name="button_ids">#9394f3</field>
-            <field name="button_ids" eval="[(4, ref('pos_multi_session_kitchen.demo_button_high_priority')), (4, ref('pos_multi_session_kitchen.demo_button_medium_priority')), (4, ref('pos_multi_session_kitchen.demo_button_confirm')), (4, ref('pos_multi_session_kitchen.demo_button_delivered')), (4, ref('pos_multi_session_kitchen.demo_button_done')), (4, ref('pos_multi_session_kitchen.demo_button_cancelled'))]"/>
+            <field name="button_ids" eval="[(4, ref('pos_multi_session_kitchen.demo_button_confirm')), (4, ref('pos_multi_session_kitchen.demo_button_delivered')), (4, ref('pos_multi_session_kitchen.demo_button_done')), (4, ref('pos_multi_session_kitchen.demo_button_cancelled'))]"/>
             <field name="state_ids" eval="[(4, ref('pos_multi_session_kitchen.demo_state_draft')), (4, ref('pos_multi_session_kitchen.demo_state_confirmed')), (4, ref('pos_multi_session_kitchen.demo_state_done')), (4, ref('pos_multi_session_kitchen.demo_state_delivered')), (4, ref('pos_multi_session_kitchen.demo_state_cancelled'))]"/>
         </record>
 
