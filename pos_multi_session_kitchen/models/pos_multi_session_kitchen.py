@@ -9,10 +9,10 @@ _logger = logging.getLogger(__name__)
 class PosOrderLineState(models.Model):
     _name = "pos.order.line.state"
 
-    name = fields.Char("Display Name")
-    technical_name = fields.Char("Technical Name")
+    name = fields.Char("Display Name", required=True)
+    technical_name = fields.Char("Technical Name", required=True)
     type = fields.Selection([('state', 'State'), ('tag', 'Tag')], default='state')
-    sequence = fields.Integer("Sequence")
+    sequence = fields.Integer("Sequence", default=0)
     show_in_kitchen = fields.Boolean("Show State on Kitchen", default=True)
     show_for_waiters = fields.Boolean("Show the Button for Waiters", default=True)
     sound_signal = fields.Boolean("Sound Signal", help="The sound signal about a state change", default=False)
@@ -21,7 +21,7 @@ class PosOrderLineState(models.Model):
 class PosOrderLineButton(models.Model):
     _name = "pos.order.line.button"
 
-    name = fields.Char("Button Label")
+    name = fields.Char("Button Label", required=True)
     background_color = fields.Char("Button Background Color")
     name_color = fields.Char("Button Name Color")
     show_for_waiters = fields.Boolean("Show the Button for Waiters")
@@ -34,6 +34,26 @@ class PosOrderLineButton(models.Model):
                                       "* product\n * quantity\n * price\n")
     action_close = fields.Boolean(string="Close action",
                                   help="Stop the timer and remove from the kitchen", defaul=False)
+
+
+class PosOrderLineState(models.Model):
+    _name = "pos.order.tag"
+    _order = "priority, technical_name"
+
+    name = fields.Char("Display Name", required=True)
+    technical_name = fields.Char("Technical Name", required=True)
+    sound_signal = fields.Boolean("Sound Signal", help="The sound signal about a tag change", default=False)
+    priority = fields.Integer("Priority", default=5)
+
+
+class PosOrderButton(models.Model):
+    _name = "pos.order.button"
+
+    name = fields.Char("Button Label", required=True)
+    background_color = fields.Char("Button Background Color")
+    name_color = fields.Char("Button Name Color")
+    remove_tag_id = fields.Many2one("pos.order.tag", string="Remove Tag", help="The tag to remove on clicking")
+    next_tag_id = fields.Many2one("pos.order.tag", string="Apply Tag", help="Next tag to apply on clicking")
 
 
 class PosKitchenCategorySettings(models.Model):

@@ -8,6 +8,34 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
 
     var _t = core._t;
 
+//    // load all kitchens
+//    models.load_models({
+//        model: 'pos.config',
+//        fields: ['cat_ids'],
+//        domain: [['screen','=','kitchen']],
+//        loaded: function(self, kitchens){
+//            self.kitchens = kitchens;
+//        },
+//    });
+
+    // load all order tags
+    models.load_models({
+        model: 'pos.order.tag',
+        fields: ['name', 'technical_name', 'sound_signal', 'priority'],
+        loaded: function(self, tags){
+            self.order_tags = tags;
+        },
+    });
+
+    // load all order buttons
+    models.load_models({
+        model: 'pos.order.button',
+        fields: ['name', 'background_color', 'name_color', 'next_tag_id', 'remove_tag_id'],
+        loaded: function(self, buttons){
+            self.order_buttons = buttons;
+        },
+    });
+
     // load all line states
     models.load_models({
         model: 'pos.order.line.state',
@@ -17,15 +45,7 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
                 return idOne.sequence - idTwo.sequence;
             };
             if (res) {
-                var states = res.filter(function(state) {
-                    return state.type === 'state';
-                });
-                self.states = states.sort(sorting_states);
-
-                var tags = res.filter(function(tag) {
-                    return tag.type === 'tag';
-                });
-                self.tags = tags.sort(sorting_states);
+                self.states = res.sort(sorting_states);
             }
         },
     });
@@ -68,11 +88,6 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
                 return state.id === id;
             })
         },
-        get_tag_by_id: function(id) {
-            return this.tags.find(function(tag){
-                return tag.id === id;
-            })
-        },
         get_kitchen_button_by_id: function(id) {
             return this.kitchen_buttons.find(function(button){
                 return button.id === id;
@@ -93,13 +108,50 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             }
             return PosModelSuper.prototype.on_removed_order.apply(this, arguments);
         },
+        get_order_buttons_by_id: function(id){
+            return this.order_buttons.find(function(button){
+                return button.id === id;
+            });
+        },
+        get_order_tags_by_id: function(id){
+            return this.order_tags.find(function(tag) {
+                return tag.id === id;
+            });
+        }
+    });
+
+    var OrderSuper = models.Order;
+    models.Order = models.Order.extend({
+        initialize: function(){
+            this.tags = [];
+            OrderSuper.prototype.initialize.apply(this, arguments);
+        },
+        set_tag: function(tag) {
+            var exist_tag = this.tags.find(function(current_tag) {
+                return current_tag.id === tag.id;
+            });
+            if (exist_tag) {
+                return false;
+            }
+            this.tags.push(tag);
+            this.trigger('change:sync');
+        },
+        remove_tag: function(tag) {
+            var exist_tag = this.tags.find(function(current_tag) {
+                return current_tag.id === tag.id;
+            });
+            if (exist_tag) {
+                var index = this.tags.indexOf(exist_tag);
+                this.tags.splice(index, 1);
+                this.trigger('change:sync');
+            }
+        }
     });
 
     var OrderlineSuper = models.Orderline;
     models.Orderline = models.Orderline.extend({
         initialize: function(){
             this.states = [];
-            this.tags = [];
             this.kitchen_buttons = [];
             OrderlineSuper.prototype.initialize.apply(this, arguments);
 
@@ -138,13 +190,11 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             var data = OrderlineSuper.prototype.export_as_JSON.apply(this, arguments);
             data.current_state = this.current_state;
             data.states = this.states;
-            data.tags = this.tags;
             return data;
         },
         init_from_JSON: function(json) {
             this.current_state = json.current_state;
             this.states = json.states;
-            this.tags = json.tags;
             OrderlineSuper.prototype.init_from_JSON.call(this, json);
         },
         set_state: function(state) {
@@ -162,11 +212,6 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
 
             this.start_timer();
 
-            this.trigger('change', this);
-            this.order.trigger('change:sync');
-        },
-        set_tag: function(tag) {
-            this.tags.push(tag);
             this.trigger('change', this);
             this.order.trigger('change:sync');
         },
@@ -284,13 +329,13 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             if (OrderlineSuper.prototype.apply_ms_data) {
                 OrderlineSuper.prototype.apply_ms_data.apply(this, arguments);
             }
-            this.current_state = data.current_state;
-            this.states = data.states;
-            this.tags = data.tags;
-            if (this.current_state.sound_signal) {
+            if (this.current_state.technical_name !== data.current_state.technical_name && data.current_state.sound_signal) {
                 var audio = new Audio(session.url("/pos_multi_session_kitchen/static/src/audio/state.wav"));
                 audio.play();
             }
+
+            this.current_state = data.current_state;
+            this.states = data.states;
             this.start_timer();
             this.trigger('change', this);
         }

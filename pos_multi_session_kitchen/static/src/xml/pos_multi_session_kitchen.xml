@@ -150,4 +150,12 @@
         </tr>
     </t>
 
+    <t t-name="OrderCustomButtons">
+        <t t-foreach="widget.get_custom_buttons()" t-as="button">
+            <div class='control-button' t-attf-data-id="#{button.id}" t-attf-style="background: #{button.background_color}; color: #{button.name_color}">
+                <i class='fa fa-tag' /> <t t-esc='button.name'/>
+            </div>
+        </t>
+    </t>
+
 </templates>

@@ -184,11 +184,7 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
 
             // set next state for line
             if (state) {
-                if (state.type === 'state') {
-                    line.set_state(state);
-                } else if (state.type === 'tag') {
-                    line.set_tag(state);
-                }
+                line.set_state(state);
             }
 
             if (button.action_close) {
@@ -272,7 +268,58 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
             if (button.action_close) {
                 orderline.action_close();
             }
-        }
+        },
+        update_summary: function(){
+            this._super();
+            // TODO: show or hide button
+        },
+    });
+
+    var OrderCustomButtons = screens.ActionButtonWidget.extend({
+        template: 'OrderCustomButtons',
+        init: function(parent, options) {
+            var self = this;
+            this._super(parent, options);
+            this.buttons = [];
+            this.pos.config.custom_button_ids.forEach(function(id) {
+                self.buttons.push(self.pos.get_order_buttons_by_id(id));
+            });
+            console.log(this.buttons)
+        },
+        renderElement: function(){
+            var self = this;
+            this._super();
+            this.$el.click(function(event){
+                self.custom_button_click($(this));
+            });
+        },
+        custom_button_click: function(el) {
+            var order = this.pos.get_order();
+            var button = this.buttons.find(function(button) {
+                return button.id === el.data('id');
+            });
+
+            if (button.remove_tag_id) {
+                var remove_tag = this.pos.get_order_tags_by_id(button.remove_tag_id[0]);
+                order.remove_tag(remove_tag);
+            }
+
+            if (button.next_tag_id) {
+                var new_tag = this.pos.get_order_tags_by_id(button.next_tag_id[0]);
+                order.set_tag(new_tag);
+            }
+        },
+        get_custom_buttons: function() {
+            return this.buttons;
+        },
+    });
+
+    screens.define_action_button({
+        'name': 'custom_buttons',
+        'widget': OrderCustomButtons,
+        'condition': function(){
+            return this.pos.config.screen === 'waiter';
+        },
     });
 
     screens.KitchenScreenWidget = KitchenScreenWidget;
