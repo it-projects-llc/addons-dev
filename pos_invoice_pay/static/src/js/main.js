@@ -605,6 +605,7 @@ var InvoicesAndOrdersBaseWidget = screens.ClientListScreenWidget.extend({
                     $td.setAttribute("colspan", this.num_columns);
 
                     $tr.classList.add('line-element-hidden');
+                    $tr.classList.add("line-element-container");
 
                     var $table = this.render_lines_table(data[i].lines);
 
@@ -680,12 +681,12 @@ var SaleOrdersWidget = InvoicesAndOrdersBaseWidget.extend({
     select_line: function (event,$line,id) {
         var sale_order = this.pos.db.get_sale_order_by_id(id);
         this.$('.client-list .lowlight').removeClass('lowlight');
+        this.$(".line-element-container").addClass('line-element-hidden');        
         if ( $line.hasClass('highlight') ){
             this.selected_SO = false;
             $line.removeClass('highlight');
             $line.addClass('lowlight');
             $line.next().addClass('line-element-hidden');
-
         }else{
             this.$('.client-list .highlight').removeClass('highlight');
             $line.addClass('highlight');
@@ -788,6 +789,7 @@ var InvoicesWidget = InvoicesAndOrdersBaseWidget.extend({
     select_line: function (event,$line,id) {
         var invoice = this.pos.db.get_invoice_by_id(id);
         this.$('.client-list .lowlight').removeClass('lowlight');
+        this.$(".line-element-container").addClass('line-element-hidden');        
         if ($line.hasClass('highlight')){
             this.selected_invoice = false;
             $line.removeClass('highlight');
