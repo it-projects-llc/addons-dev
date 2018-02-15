@@ -23,7 +23,8 @@
     "data": [
         "data.xml",
         "actions/base_action_rules.xml",
-        "report/report.xml"
+        "report/report.xml",
+        "view.xml"
     ],
     "qweb": [
         'static/src/xml/pos.xml'

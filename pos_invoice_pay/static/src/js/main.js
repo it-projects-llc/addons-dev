@@ -7,18 +7,12 @@ var models = require('point_of_sale.models');
 var PosDb = require('point_of_sale.DB');
 var utils = require('web.utils');
 var bus = require('bus.bus').bus;
-
+var screens = require('point_of_sale.screens');
 var rpc = require('web.rpc');
 
 var QWeb = core.qweb;
 var _t = core._t;
 var round_pr = utils.round_precision;
-
-var ProductScreenWidget = require('point_of_sale.screens').ProductScreenWidget;
-var ClientListScreenWidget = require('point_of_sale.screens').ClientListScreenWidget;
-var PaymentScreenWidget = require('point_of_sale.screens').PaymentScreenWidget;
-var ReceiptScreenWidget = require('point_of_sale.screens').ReceiptScreenWidget;
-
 
 var _super_posmodel = models.PosModel.prototype;
 models.PosModel = models.PosModel.extend({
@@ -211,12 +205,7 @@ models.PosModel = models.PosModel.extend({
         var fields = _.find(this.models, function (model) {
             return model.model === model_name;
         }).fields,
-            domain = [['id', '=', id]]
-
-        // return new Model(model_name).
-        //     query(fields).
-        //     filter([['id', '=', id]]).
-        //     all();
+            domain = [['id', '=', id]];
         return rpc.query({
             model: model_name,
             method: 'search_read',
@@ -514,36 +503,55 @@ PosDb.include({
     }
 });
 
-ProductScreenWidget.include({
-    show: function () {
+var InvoicesButton = screens.ActionButtonWidget.extend({
+    template: 'InvoicesButton',
+    button_click: function () {
         var self = this;
-        this._super();
-        this.$('.fetch-orders').click(function () {
-            self.gui.select_user({
-                'security':     true,
-                'current_user': self.pos.get_cashier(),
-                'title':      _t('Change Cashier'),
-            }).then(function(user){
-                self.pos.set_cashier(user);
-                self.gui.chrome.widget.username.renderElement();
-                self.gui.show_screen('sale_orders_list');
-            });
+        self.gui.select_user({
+            'security':     true,
+            'current_user': self.pos.get_cashier(),
+            'title':      _t('Change Cashier'),
+        }).then(function(user){
+            self.pos.set_cashier(user);
+            self.gui.chrome.widget.username.renderElement();
+            self.gui.show_screen('invoices_list');
         });
-        this.$('.fetch-invoices').click(function () {
-            self.gui.select_user({
-                'security':     true,
-                'current_user': self.pos.get_cashier(),
-                'title':      _t('Change Cashier'),
-            }).then(function(user){
-                self.pos.set_cashier(user);
-                self.gui.chrome.widget.username.renderElement();
-                self.gui.show_screen('invoices_list');
-            });
-        });
-    }
+    },
 });
 
-var InvoicesAndOrdersBaseWidget = ClientListScreenWidget.extend({
+screens.define_action_button({
+    'name': 'invoices_button',
+    'widget': InvoicesButton,
+    'condition': function () {
+        return this.pos.config.show_invoices;
+    },
+});
+
+var SaleOrdersButton = screens.ActionButtonWidget.extend({
+    template: 'SaleOrdersButton',
+    button_click: function () {
+        var self = this;
+        self.gui.select_user({
+            'security':     true,
+            'current_user': self.pos.get_cashier(),
+            'title':      _t('Change Cashier'),
+        }).then(function(user){
+            self.pos.set_cashier(user);
+            self.gui.chrome.widget.username.renderElement();
+            self.gui.show_screen('sale_orders_list');
+        });
+    },
+});
+
+screens.define_action_button({
+'name': 'so_button',
+'widget': SaleOrdersButton,
+'condition': function () {
+    return this.pos.config.show_sale_orders;
+},
+});
+
+var InvoicesAndOrdersBaseWidget = screens.ClientListScreenWidget.extend({
     show: function () {
         var self = this;
         this._super();
@@ -859,7 +867,7 @@ var InvoicesWidget = InvoicesAndOrdersBaseWidget.extend({
 
 gui.define_screen({name:'invoices_list', widget: InvoicesWidget});
 
-var InvoicePayment = PaymentScreenWidget.extend({
+var InvoicePayment = screens.PaymentScreenWidget.extend({
     template: 'InvoicePaymentScreenWidget',
     get_invoice_residual: function () {
         if (this.pos.selected_invoice) {
@@ -1014,25 +1022,13 @@ var InvoicePayment = PaymentScreenWidget.extend({
                 return false;
             }
         }
-
-        // sum = _.reduce(plines, function (accum, pline) {
-        //     accum += pline.get_amount();
-        //     return accum;
-        // }, 0);
-        // if (sum <= 0) {
-        //     this.gui.show_popup('error',{
-        //         'title': _t('Wrong payment amount.'),
-        //         'body': _t('You can not validate the order with zero or negative payment amount.'),
-        //     });
-        //     return false;
-        // }
         return true;
     }
 });
 
 gui.define_screen({name:'invoice_payment', widget: InvoicePayment});
 
-var InvoiceReceiptScreenWidget = ReceiptScreenWidget.extend({
+var InvoiceReceiptScreenWidget = screens.ReceiptScreenWidget.extend({
     template: 'InvoiceReceiptScreenWidget',
     render_receipt: function () {
         var order = this.pos.get_order();
