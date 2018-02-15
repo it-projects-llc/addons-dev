@@ -306,6 +306,13 @@ odoo.define('pos_orders_history', function (require) {
             this.$('.searchbox .search-clear').click(function () {
                 self.clear_search();
             });
+
+            this.$('.next').click(function () {
+                if (!self.selected_order) {
+                    return;
+                }
+                self.edit_order(self.selected_order);
+            });
         },
 
         clear_list_widget: function () {
@@ -460,18 +467,38 @@ odoo.define('pos_orders_history', function (require) {
             if ($line.hasClass('active')) {
                 $line.removeClass('active');
                 $line.removeClass('highlight');
-
+                this.hide_edit_button();                
                 this.hide_order_details($line)
                 this.selected_order = false;
             } else {
                 $line.addClass('active');
                 $line.addClass('highlight');
                 this.show_order_details($line);
+                this.show_edit_button();                
                 var y = event.pageY - $line.parent().offset().top;
                 this.selected_order = this.pos.db.orders_history_by_id[id];
             }
         },
 
+        edit_order: function (order) {
+            var id = order.id,
+                partner_id = order.partner_id[0],
+                partner_id = this.pos.db.get_partner_by_id(partner_id);
+
+            this.gui.show_popup('editorder', {
+                title: order.name,
+                partner: partner_id,
+                order: order
+            });
+        },
+
+        hide_edit_button: function () {
+            this.$('.next').addClass('line-element-hidden');
+        },
+
+        show_edit_button: function () {
+            this.$('.next').removeClass('line-element-hidden');
+        },
 
         hide_order_details: function ($line) {
             $line.next().addClass('line-element-hidden');
@@ -536,6 +563,168 @@ odoo.define('pos_orders_history', function (require) {
     });
 
     gui.define_screen({name:'orders_history_screen', widget: OrdersHistoryScreenWidget});
+
+    var EditOrderPopup = PopupWidget.extend({
+        template: 'EditPopup',
+        init: function (parent, options) {
+            this._super(parent, options);
+            this.screenState = 'main';
+            this.current_partner = false;
+            this.order_id = false;
+            this.partners = this.pos.db.get_partners_sorted();
+        },
+
+        change_screen_state: function (state) {
+            switch (state) {
+                case 'main':
+                    this.template = 'EditPopup';
+                    this.screenState = 'main';
+                    this.partners = this.pos.db.get_partners_sorted();
+                    this.show();
+                    break;
+                case 'partner':
+                    this.template = 'ChoosePartnerPopup';
+                    this.screenState = 'partner';
+                    this.show();
+                    break;
+                case 'journals':
+                    this.template = 'ChooseJournalPopup';
+                    this.screenState = 'journals';
+                    this.show();
+                    break;
+            }
+        },
+
+        set_partner: function (id) {
+            this.current_partner = this.pos.db.get_partner_by_id(id);
+        },
+
+        get_partner_name: function () {
+            if (this.current_partner) {
+                return this.current_partner.name;
+            }
+            if (this.options.partner) {
+                this.current_partner = this.options.partner;
+                return this.options.partner.name;
+
+            }
+            return 'None';
+        },
+
+        get_order_id: function () {
+            this.order_id = this.options.order_id;
+        },
+
+        clear_data: function () {
+            this.current_partner = false;
+            this.order = false;
+        },
+
+        get_order_data: function () {
+            this.order = this.options.order ? this.options.order : this.order;
+            this.order_title = this.options.title ? this.options.title: this.order.name;
+        },
+
+        get_paymentlines: function () {
+            var self = this;
+            return new Model('account.bank.statement.line').
+                query().filter([['id', 'in', this.order.statement_ids]]).all().then(function (res) {
+                    self.paymentlines = res;
+                });
+        },
+
+        show: function (options) {
+            var self = this;
+            options = options || {};
+            this._super(options);
+            this.get_order_data();
+            this.partner_name = this.get_partner_name();
+
+            this.get_paymentlines().then(function () {
+                self.renderElement();
+                
+                self.$('#edit-partner').click(function () {
+                    self.change_screen_state('partner');
+                });
+    
+                self.$('.searchbox input').on('keypress', function(event) {
+                    if (event.keyCode === 13) {
+                        var query = this.value;
+                        self.perform_search(query);
+                    }
+                });
+    
+                self.$('.search-clear').on('click', function () {
+                    self.partners = self.pos.db.get_partners_sorted();
+                    self.show();
+                });
+
+                self.$('.paymentline-item').click(function (event) {
+                    var paymentline_id = parseInt(event.target.getAttribute('id'));
+                    self.paymentline_id = paymentline_id;
+                    new Model('account.journal').query().all().then(function (res) {
+                        self.journals = res;
+                        self.change_screen_state('journals');
+                    });
+                });
+
+                self.$('.journal-item').click(function (event) {
+                    var journal_id = parseInt(event.target.getAttribute('journal_id'));
+                    new Model('account.bank.statement.line').
+                        call('edit_paymentline_from_ui', [[self.paymentline_id], journal_id]).
+                        then(function (res) {
+                            self.change_screen_state('main');                            
+                        });
+                });
+
+
+            });
+
+        },
+
+        perform_search: function (query) {
+            var customers;
+            if (query) {
+                customers = this.pos.db.search_partner(query);
+                this.partners = customers;
+                this.show();
+            } else {
+                this.partners = this.pos.db.get_partners_sorted();
+                this.show();
+            }
+        },
+
+        click_cancel: function () {
+            if (this.screenState === 'main') {
+                this.clear_data();
+                this._super();
+            } else {
+                this.change_screen_state('main');
+            }
+        },
+
+        click_confirm: function () {
+            var self = this,
+                message = {},
+                data = {
+                    partner_id: this.current_partner.id || false
+                };
+            data = JSON.stringify(data);
+            new Model('pos.order').call('edit_pos_order_from_ui', [this.order.id, data])
+            .done(function (res) {
+                    self.clear_data();
+                    self.gui.close_popup();                
+            });
+        },
+
+        click_item: function (event) {
+            var new_partner_id = parseInt(event.target.getAttribute('partner_id'));            
+            this.set_partner(new_partner_id);
+            this.change_screen_state('main');
+        }
+    });
+
+    gui.define_popup({name:'editorder', widget: EditOrderPopup});
 
     return {
         OrdersHistoryScreenWidget: OrdersHistoryScreenWidget,

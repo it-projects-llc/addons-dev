@@ -28,3 +28,18 @@ class PosOrder(models.Model):
     _inherit = 'pos.order'
 
     pos_name = fields.Char(related="config_id.name")
+
+    def edit_pos_order_from_ui(self, data):
+        data = json.loads(data)
+        new_partner_id = data.get('partner_id', False)
+        if new_partner_id:
+            self.partner_id = new_partner_id
+        return self.id
+
+
+class AccountBankStatementLine(models.Model):
+    _inherit = "account.bank.statement.line"
+
+    def edit_paymentline_from_ui(self, journal_id):
+        self.journal_id = journal_id
+        return True

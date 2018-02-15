@@ -214,3 +214,35 @@ tr.order-line {
 body > div.o_main_content > div.o_content > div > div.popups > div:nth-child(13) > div > div:nth-child(2) > span{
     position: relative;
 }
+
+.pos-history-edit-paymentlines-list {
+    text-align: left;
+    overflow-y: scroll;
+    height: 127px;
+}
+
+.pos-history-edit-paymentlines-list .paymentline-item {
+    margin: 10px;
+    background-color: white;
+    border: solid 1px rgba(60,60,60,0.1);
+    height: 30px;
+    padding-left: 10px;
+    padding-top: 5px;
+}
+
+.journal-item {
+    cursor: pointer;
+}
+
+.journal-item:hover {
+    color: #6EC89B;
+}
+
+.paymentline-item {
+    cursor: pointer;
+    font-size: 16px; 
+}
+
+.paymentline-item:hover {
+    color: #6EC89B;
+}

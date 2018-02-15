@@ -33,6 +33,9 @@
                         <span class='search-clear'></span>
                     </span>
                     <span class='searchbox'></span>
+                    <span class='button next line-element-hidden' id="hw_button">
+                        Edit
+                    </span>
                 </section>
                 <section class="full-content">
                     <div class='window'>
@@ -189,6 +192,86 @@
             <td><t t-esc='widget.format_currency(line.price_subtotal)'/></td>
             <td><t t-esc='widget.format_currency(line.price_subtotal_incl)'/></td>
         </tr>
+    </t>
+
+    <t t-name="EditPopup">
+        <div class="modal-dialog">
+            <div class="popup popup-textinput pos_history_edit_popup">
+                <p class="title"><t t-esc=" widget.order_title || '' " /></p>
+
+                <div class="pos_history_edit_container">
+                    <p>Customer: <t t-esc=" widget.partner_name"/></p>
+                    <button class="button confirm" id="edit-partner">Edit</button>
+                </div>
+                <p>Payments</p>
+
+                <div class="pos-history-edit-paymentlines-list">
+                    <t t-foreach="widget.paymentlines || []" t-as="item">
+                        <div class='paymentline-item' t-att-id='item.id'>
+                            <t t-esc='item.name'/>
+                            <t t-esc='item.amount'/>
+                            <t t-esc='item.journal_id[1]'/>
+                        </div>
+                    </t>
+                </div>
+
+                <div class="footer pos-history">
+                    <div class="button confirm">
+                        Ok 
+                    </div>
+                    <div class="button cancel">
+                        Cancel 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ChoosePartnerPopup">
+        <div class="modal-dialog">
+            <div class="popup popup-selection pos_history_partners">
+                <p class="title"><t t-esc=" widget.options.title || 'Select' " /></p>
+                <div>
+                    <span class='searchbox pos_history_partners'>
+                        <input placeholder='Search Customers' />
+                        <span class='search-clear pos_history_partners'></span>
+                    </span>
+                </div>
+                    
+                <div class='selection scrollable-y touch-scrollable'>
+                    <t t-foreach="widget.partners || []" t-as="item">
+                        <div class='selection-item' t-att-partner_id='item.id'>
+                            <t t-esc='item.name'/>
+                        </div>
+                    </t>
+                </div>
+                <div class="footer">
+                    <div class="button cancel">
+                        Cancel 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ChooseJournalPopup">
+        <div class="modal-dialog">
+            <div class="popup popup-selection pos_history_partners">
+                <p class="title"><t t-esc=" widget.options.title || 'Select Journal' " /></p>
+                <div class='selection scrollable-y touch-scrollable'>
+                    <t t-foreach="widget.journals || []" t-as="item">
+                        <div class='journal-item' t-att-journal_id='item.id'>
+                            <t t-esc='item.display_name'/>
+                        </div>
+                    </t>
+                </div>
+                <div class="footer">
+                    <div class="button cancel">
+                        Cancel 
+                    </div>
+                </div>
+            </div>
+        </div>
     </t>
 
 </templates>
