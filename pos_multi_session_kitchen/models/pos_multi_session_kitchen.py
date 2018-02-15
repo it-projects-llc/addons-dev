@@ -42,7 +42,6 @@ class PosOrderLineState(models.Model):
 
     name = fields.Char("Display Name", required=True)
     technical_name = fields.Char("Technical Name", required=True)
-    sound_signal = fields.Boolean("Sound Signal", help="The sound signal about a tag change", default=False)
     priority = fields.Integer("Priority", default=5)
 
 

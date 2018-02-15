@@ -21,7 +21,7 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
     // load all order tags
     models.load_models({
         model: 'pos.order.tag',
-        fields: ['name', 'technical_name', 'sound_signal', 'priority'],
+        fields: ['name', 'technical_name', 'priority'],
         loaded: function(self, tags){
             self.order_tags = tags;
         },

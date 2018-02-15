@@ -40,7 +40,7 @@
         <field name="name">pos.order.line.button.form</field>
         <field name="model">pos.order.line.button</field>
         <field name="arch" type="xml">
-            <form string="State">
+            <form string="Button">
                 <sheet>
                     <group>
                         <field name="name"/>
@@ -51,6 +51,40 @@
                         <field name="next_state_id"/>
                         <field name="condition_code" widget="ace" options="{'mode': 'python'}"/>
                         <field name="action_close"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="pos_order_tag_form_view" model="ir.ui.view">
+        <field name="name">pos.order.tag.form</field>
+        <field name="model">pos.order.tag</field>
+        <field name="arch" type="xml">
+            <form string="Tag">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="technical_name" />
+                        <field name="priority"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="pos_order_button_form_view" model="ir.ui.view">
+        <field name="name">pos.order.button.form</field>
+        <field name="model">pos.order.button</field>
+        <field name="arch" type="xml">
+            <form string="Order button">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="background_color"/>
+                        <field name="name_color"/>
+                        <field name="remove_tag_id"/>
+                        <field name="next_tag_id"/>
                     </group>
                 </sheet>
             </form>
