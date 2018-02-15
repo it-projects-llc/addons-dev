@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
+
+    <t t-extend="OrderWidget">
+        <t t-jquery=".summary" t-operation="before">
+            <div class="order-tags">
+                <t t-foreach="order.get_tags()" t-as="tag">
+                    <span class="tag" t-attf-style="background: #{tag.background_color}; color: #{tag.name_color}">
+                        <t t-esc='tag.name'/>
+                    </span>
+                </t>
+            </div>
+        </t>
+    </t>
+
     <t t-extend="Orderline">
         <t t-jquery=".info-list" t-operation="after">
             <div class="states-list">

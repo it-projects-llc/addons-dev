@@ -1,3 +1,25 @@
+.pos .order .order-tags {
+    text-align: right;
+    margin: 15px;
+}
+.pos .order .order-tags .tag {
+    position: relative;
+    padding: 5px;
+    padding-left: 20px;
+}
+.pos .order .order-tags .tag:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 14px solid;
+    border-color: white;
+    border-right-color: transparent;
+    top: 0%;
+    left: 0%;
+    margin-left: -10px;
+    color: transparent;
+}
 .pos .order .orderline .states-list {
     font-size: 14px;
     color: #939393;

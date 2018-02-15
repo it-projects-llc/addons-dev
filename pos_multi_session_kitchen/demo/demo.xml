@@ -60,7 +60,7 @@
         <record id="demo_tag_high_priority" model="pos.order.tag">
             <field name="name">High Priority</field>
             <field name="technical_name">high_priority</field>
-            <field name="name_color">black</field>
+            <field name="name_color">white</field>
             <field name="background_color">red</field>
             <field name="priority">999</field>
         </record>
@@ -68,7 +68,7 @@
         <record id="demo_tag_medium_priority" model="pos.order.tag">
             <field name="name">Medium Priority</field>
             <field name="technical_name">medium_priority</field>
-            <field name="name_color">gray</field>
+            <field name="name_color">black</field>
             <field name="background_color">yellow</field>
             <field name="priority">500</field>
         </record>

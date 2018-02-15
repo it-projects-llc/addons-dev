@@ -284,7 +284,6 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
             this.pos.config.custom_button_ids.forEach(function(id) {
                 self.buttons.push(self.pos.get_order_buttons_by_id(id));
             });
-            console.log(this.buttons)
         },
         renderElement: function(){
             var self = this;

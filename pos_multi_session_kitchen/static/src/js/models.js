@@ -134,7 +134,9 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
                 return false;
             }
             this.tags.push(tag);
+            this.trigger('change', this);
             this.trigger('change:sync');
+            this.pos.gui.screen_instances.products.order_widget.renderElement(true);
         },
         remove_tag: function(tag) {
             var exist_tag = this.tags.find(function(current_tag) {
@@ -143,8 +145,13 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             if (exist_tag) {
                 var index = this.tags.indexOf(exist_tag);
                 this.tags.splice(index, 1);
+                this.trigger('change', this);
                 this.trigger('change:sync');
+                this.pos.gui.screen_instances.products.order_widget.renderElement(true);
             }
+        },
+        get_tags: function() {
+            return this.tags;
         }
     });
 
