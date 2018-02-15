@@ -66,6 +66,8 @@
                     <group>
                         <field name="name"/>
                         <field name="technical_name" />
+                        <field name="name_color"/>
+                        <field name="background_color"/>
                         <field name="priority"/>
                     </group>
                 </sheet>

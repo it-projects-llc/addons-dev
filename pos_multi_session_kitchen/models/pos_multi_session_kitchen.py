@@ -41,6 +41,8 @@ class PosOrderLineState(models.Model):
     _order = "priority, technical_name"
 
     name = fields.Char("Display Name", required=True)
+    name_color = fields.Char("Tag Name Color")
+    background_color = fields.Char("Tag Background Color")
     technical_name = fields.Char("Technical Name", required=True)
     priority = fields.Integer("Priority", default=5)
 
