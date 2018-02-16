@@ -2,14 +2,14 @@
     text-align: right;
     margin: 15px;
 }
-.pos .order .order-tags .tag {
+.pos .order .order-tags .tag, .pos.kitchen .order-tags .tag {
     position: relative;
     padding: 5px;
     margin-left: 7px;
     padding-left: 15px;
     display: inline-block;
 }
-.pos .order .order-tags .tag:after {
+.pos .order .order-tags .tag:after,  .pos.kitchen .order-tags .tag:after {
     content: '';
     position: absolute;
     width: 0;
@@ -155,6 +155,16 @@
     flex-direction: column;
 }
 .pos.kitchen .order-note {
+    float: left;
+}
+.pos.kitchen .order-tags {
+    float: right;
+}
+.pos.kitchen .order-note {
     font-size: 20px;
+    padding-top: 10px;
+}
+.pos.kitchen .order-tags {
+    font-size: 16px;
     padding-top: 10px;
 }

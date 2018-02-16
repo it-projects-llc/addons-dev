@@ -101,23 +101,31 @@
 
                     </tbody>
                 </table>
-
-                <t t-if="order.note || order.custom_notes">
-                    <div class="order-note">
-                        <span class="label">Note:</span>
-                        <span class="value">
-                            <t t-esc="order.note" />
-                            <t t-foreach="order.custom_notes" t-as="custom_note">
-                                <t t-if="custom_note_last">
-                                    <t t-esc="custom_note.name"/>
+                <div class="order-details">
+                    <t t-if="order.note || order.custom_notes">
+                        <div class="order-note">
+                            <span class="label">Note:</span>
+                            <span class="value">
+                                <t t-esc="order.note" />
+                                <t t-foreach="order.custom_notes" t-as="custom_note">
+                                    <t t-if="custom_note_last">
+                                        <t t-esc="custom_note.name"/>
+                                    </t>
+                                    <t t-if="!custom_note_last">
+                                        <t t-esc="custom_note.name"/>,
+                                    </t>
                                 </t>
-                                <t t-if="!custom_note_last">
-                                    <t t-esc="custom_note.name"/>,
-                                </t>
-                            </t>
-                        </span>
+                            </span>
+                        </div>
+                    </t>
+                    <div t-if="order.get_tags().length" class="order-tags">
+                        <t t-foreach="order.get_tags()" t-as="tag">
+                            <span class="tag" t-attf-style="background: #{tag.background_color}; color: #{tag.name_color}">
+                                <t t-esc='tag.name'/>
+                            </span>
+                        </t>
                     </div>
-                </t>
+                </div>
             </div>
         </div>
     </t>
