@@ -3,7 +3,7 @@
     "name": """POS Absolute and Relative Discounts""",
     "summary": """Provides absolute discounting for Point of Sale""",
     "category": "Point of Sale",
-    "version": "1.0.0",
+    "version": "10.0.1.0.0",
     "application": False,
 
     "author": "IT-Projects LLC, Kolushov Alexandr",
