@@ -150,7 +150,6 @@
     height: 100%;
     background: white;
     padding: 15px;
-    border-top: 1px solid #87597a;
     display: flex;
     flex-direction: column;
 }
@@ -167,4 +166,9 @@
 .pos.kitchen .order-tags {
     font-size: 16px;
     padding-top: 10px;
+}
+@media (min-width: 768px) {
+    .col-md-6 {
+        padding-top: 20px;
+    }
 }
