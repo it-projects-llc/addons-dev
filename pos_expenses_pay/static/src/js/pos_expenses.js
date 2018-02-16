@@ -152,6 +152,11 @@ odoo.define('pos_orders_history', function (require) {
                     self.gui.chrome.widget.username.renderElement();
                     self.gui.show_screen('expenses_screen');
                 });
+            } else {
+                self.gui.show_popup('error', {
+                    'title': _t('No Expenses'),
+                    'body': _t('There are no payable expenses.')
+                });
             }
         },
     });
@@ -329,6 +334,7 @@ odoo.define('pos_orders_history', function (require) {
                 args: [id, cashier.name],
             }).then(function (res) {
                 self.gui.close_popup();
+                self.gui.show_screen('products');                
             }).fail(function (type, error) {
                 self.gui.show_popup('error', {
                     'title': _t(error.message),
