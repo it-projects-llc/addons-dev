@@ -53,9 +53,9 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
             });
         },
         // TODO: filter lines on kitchen
-        filter_on_kitchen: function(lines){
-            return lines;
-        },
+//        filter_on_kitchen: function(lines){
+//            return lines;
+//        },
         rerender_order: function(order, uid) {
             if (!order) {
                 // if the order does not exist, remove the order from the kitchen screen

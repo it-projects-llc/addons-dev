@@ -132,6 +132,7 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
                 return current_tag.id === tag.id;
             });
             if (exist_tag) {
+                this.remove_tag(exist_tag);
                 return false;
             }
             this.tags.push(tag);

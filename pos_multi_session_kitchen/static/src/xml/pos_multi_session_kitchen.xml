@@ -88,7 +88,7 @@
                             <th>Status</th>
                         </tr>
                         <tr class='order-info'>
-                            <th colspan="2"><t t-esc='order.name'/></th>
+                            <th colspan="2">Order №<t t-esc='order.sequence_number'/></th>
                             <th colspan="2">
                                 <t t-if="order.get_client()"><t t-esc='order.get_client().name'/></t>
                             </th>
@@ -98,7 +98,6 @@
                         </tr>
                     </thead>
                     <tbody class='order-line-list-contents'>
-
                     </tbody>
                 </table>
                 <div class="order-details">
