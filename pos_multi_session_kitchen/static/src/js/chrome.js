@@ -52,6 +52,7 @@ odoo.define('pos_multi_session_kitchen.chrome', function (require) {
             if (this.pos.config.screen === 'kitchen' && !this.pos.config.show_floors_plan) {
                 this.$el.addClass('kitchen');
                 this.gui.set_startup_screen('kitchen');
+                this.gui.set_default_screen('kitchen');
             }
         }
     });

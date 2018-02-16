@@ -271,7 +271,7 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
         },
         update_summary: function(){
             this._super();
-            // TODO: show or hide button
+            // TODO: show or hide order buttons
         },
     });
 

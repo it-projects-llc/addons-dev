@@ -134,7 +134,7 @@
         <tr class='line' t-attf-data-uid="#{line.uid}">
             <td class="img"><img t-att-src="image_url" /> </td>
             <td class="product-display-name"><t t-esc='line.product.display_name'/>
-                <t t-if="line.get_note() || line.custom_notes">
+                <t t-if="line.note || line.custom_notes">
                     <ul class="info-list">
                         <li class="info kitchen-orderline-note">
                             <i class='fa fa-tag'/><t t-esc="line.get_note()" />

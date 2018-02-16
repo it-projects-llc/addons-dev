@@ -1,7 +1,6 @@
 odoo.define('pos_multi_session_kitchen.floors', function(require){
 
     var floors = require('pos_restaurant.floors');
-    require('pos_multi_session_restaurant');
     var chrome = require('pos_multi_session_kitchen.chrome');
     var core = require('web.core');
 
