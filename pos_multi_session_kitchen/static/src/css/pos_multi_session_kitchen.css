@@ -5,7 +5,9 @@
 .pos .order .order-tags .tag {
     position: relative;
     padding: 5px;
-    padding-left: 20px;
+    margin-left: 7px;
+    padding-left: 15px;
+    display: inline-block;
 }
 .pos .order .order-tags .tag:after {
     content: '';

@@ -152,6 +152,34 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
         },
         get_tags: function() {
             return this.tags;
+        },
+        export_as_JSON: function() {
+            var data = OrderSuper.prototype.export_as_JSON.apply(this, arguments);
+            data.tags = this.tags;
+            return data;
+        },
+        init_from_JSON: function(json) {
+            this.tags = json.tags;
+            OrderSuper.prototype.init_from_JSON.call(this, json);
+        },
+        apply_ms_data: function(data) {
+            // This methods is added for compatibility with module https://www.odoo.com/apps/modules/10.0/pos_multi_session/
+            /*
+            It is necessary to check the presence of the super method
+            in order to be able to inherit the apply_ms_data
+            without calling require('pos_multi_session')
+            and without adding pos_multi_session in dependencies in the manifest.
+
+            At the time of loading, the super method may not exist. So, if the js file is loaded
+            first among all inherited, then there is no super method and it is not called.
+            If the file is not the first, then the super method is already created by other modules,
+            and we call super method.
+            */
+            if (OrderSuper.prototype.apply_ms_data) {
+                OrderSuper.prototype.apply_ms_data.apply(this, arguments);
+            }
+            this.tags = data.tags;
+            this.pos.gui.screen_instances.products.order_widget.renderElement(true);
         }
     });
 
