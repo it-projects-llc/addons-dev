@@ -49,7 +49,7 @@
 }
 
 /* =========== KITCHEN SCREEN ========== */
-.pos.kitchen .order-selector .square {
+.pos.kitchen .order-selector .square, .pos.kitchen .order-selector .select-order {
     display: none;
 }
 .pos.kitchen .clock {

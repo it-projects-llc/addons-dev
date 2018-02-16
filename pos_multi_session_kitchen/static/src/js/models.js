@@ -124,6 +124,7 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
     models.Order = models.Order.extend({
         initialize: function(){
             this.tags = [];
+            this.priority = 0;
             OrderSuper.prototype.initialize.apply(this, arguments);
         },
         set_tag: function(tag) {
@@ -134,9 +135,12 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
                 return false;
             }
             this.tags.push(tag);
+            this.change_priority();
             this.trigger('change', this);
             this.trigger('change:sync');
-            this.pos.gui.screen_instances.products.order_widget.renderElement(true);
+            if (this.pos.gui.screen_instances.products) {
+                this.pos.gui.screen_instances.products.order_widget.renderElement(true);
+            }
         },
         remove_tag: function(tag) {
             var exist_tag = this.tags.find(function(current_tag) {
@@ -145,21 +149,37 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             if (exist_tag) {
                 var index = this.tags.indexOf(exist_tag);
                 this.tags.splice(index, 1);
+                this.change_priority();
                 this.trigger('change', this);
                 this.trigger('change:sync');
-                this.pos.gui.screen_instances.products.order_widget.renderElement(true);
+                if (this.pos.gui.screen_instances.products) {
+                    this.pos.gui.screen_instances.products.order_widget.renderElement(true);
+                }
             }
         },
+        change_priority: function() {
+            var sum = 0;
+            var tags = this.get_tags();
+            tags.forEach(function(tag) {
+                sum += tag.priority;
+            });
+            this.priority = sum;
+        },
+        get_priority: function() {
+            return this.priority;
+        },
         get_tags: function() {
-            return this.tags;
+            return this.tags || [];
         },
         export_as_JSON: function() {
             var data = OrderSuper.prototype.export_as_JSON.apply(this, arguments);
             data.tags = this.tags;
+            data.priority = this.priority;
             return data;
         },
         init_from_JSON: function(json) {
             this.tags = json.tags;
+            this.priority = json.priority;
             OrderSuper.prototype.init_from_JSON.call(this, json);
         },
         apply_ms_data: function(data) {
@@ -179,7 +199,10 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
                 OrderSuper.prototype.apply_ms_data.apply(this, arguments);
             }
             this.tags = data.tags;
-            this.pos.gui.screen_instances.products.order_widget.renderElement(true);
+            this.priority = data.priority;
+            if (this.pos.gui.screen_instances.products) {
+                this.pos.gui.screen_instances.products.order_widget.renderElement(true);
+            }
         }
     });
 

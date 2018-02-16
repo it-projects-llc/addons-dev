@@ -68,7 +68,7 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
                 // if the order is exist in kitchen screen, update the order
                 this.update_order(order, lines);
             } else {
-                this.append_order(order, lines);
+                this.render_list();
             }
             if (this.pos.table && this.pos.table.floor) {
                 this.render_floor_button();
@@ -77,6 +77,12 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
         render_list: function(orders){
             var self = this;
             var orders = orders || this.get_orders();
+
+            var sort_priority = function(idOne, idTwo) {
+                return idTwo.priority - idOne.priority;
+            };
+            orders = orders.sort(sort_priority);
+
             var contents = this.$el[0].querySelector('.order-list-contents');
             contents.innerHTML = "";
             for(var i = 0, len = Math.min(orders.length,1000); i < len; i++){
@@ -122,6 +128,10 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
                 return false;
             }
             var content = this.$el.find('.order-block[data-uid="'+ order.uid +'"]');
+            if (order.priority !== content.data('priority')) {
+                this.render_list();
+                return;
+            }
             var order_html = QWeb.render('KitchenOrder',{widget: this, order:order});
             content.replaceWith(order_html);
             this.render_lines(order, lines);

@@ -75,7 +75,7 @@
     </t>
 
     <t t-name="KitchenOrder">
-        <div class="order-block col-md-6" t-attf-data-uid="#{order.uid}">
+        <div class="order-block col-md-6" t-attf-data-uid="#{order.uid}" t-attf-data-priority="#{order.get_priority()}">
             <div class="order-kitchen">
                 <table class='kitchen-order'>
                     <thead>
