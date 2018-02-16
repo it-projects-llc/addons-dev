@@ -74,7 +74,7 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
     models.PosModel = models.PosModel.extend({
         ms_on_update: function(message, sync_all) {
             PosModelSuper.prototype.ms_on_update.apply(this, arguments);
-            data = message.data || {};
+            var data = message.data || {};
             var order = false;
             if (data.uid) {
                 order = this.get('orders').find(function(item){
@@ -86,7 +86,7 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
         get_state_by_id: function(id) {
             return this.states.find(function(state){
                 return state.id === id;
-            })
+            });
         },
         get_kitchen_button_by_id: function(id) {
             return this.kitchen_buttons.find(function(button){
@@ -185,8 +185,7 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
         },
         apply_ms_data: function(data) {
             // This methods is added for compatibility with module https://www.odoo.com/apps/modules/10.0/pos_multi_session/
-            /*
-            It is necessary to check the presence of the super method
+            /* It is necessary to check the presence of the super method
             in order to be able to inherit the apply_ms_data
             without calling require('pos_multi_session')
             and without adding pos_multi_session in dependencies in the manifest.
@@ -194,8 +193,7 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             At the time of loading, the super method may not exist. So, if the js file is loaded
             first among all inherited, then there is no super method and it is not called.
             If the file is not the first, then the super method is already created by other modules,
-            and we call super method.
-            */
+            and we call super method. */
             if (OrderSuper.prototype.apply_ms_data) {
                 OrderSuper.prototype.apply_ms_data.apply(this, arguments);
             }
@@ -336,14 +334,14 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             // Calculate how many days the interval contains. Subtract that
             // many days from the interval to determine the remainder.
             var days = Math.floor(interval / msecPerDay );
-            interval = interval - (days * msecPerDay );
+            interval -= (days * msecPerDay );
 
             // Calculate the hours, minutes, and seconds.
             var hours = Math.floor(interval / msecPerHour );
-            interval = interval - (hours * msecPerHour );
+            interval -= (hours * msecPerHour );
 
             var minutes = Math.floor(interval / msecPerMinute );
-            interval = interval - (minutes * msecPerMinute );
+            interval -= (minutes * msecPerMinute );
 
             var seconds = Math.floor(interval / 1000 );
 
@@ -358,7 +356,7 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             if (days !== 0) {
                 time = days + ' days ';
             }
-            time +=  zeroPadding(hours, 2) + ':' + zeroPadding(minutes, 2) + ':' + zeroPadding(seconds, 2);
+            time += zeroPadding(hours, 2) + ':' + zeroPadding(minutes, 2) + ':' + zeroPadding(seconds, 2);
 
             return time;
         },
@@ -374,8 +372,7 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
         },
         apply_ms_data: function(data) {
             // This methods is added for compatibility with module https://www.odoo.com/apps/modules/10.0/pos_multi_session/
-            /*
-            It is necessary to check the presence of the super method
+            /* It is necessary to check the presence of the super method
             in order to be able to inherit the apply_ms_data
             without calling require('pos_multi_session')
             and without adding pos_multi_session in dependencies in the manifest.
@@ -383,8 +380,7 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             At the time of loading, the super method may not exist. So, if the js file is loaded
             first among all inherited, then there is no super method and it is not called.
             If the file is not the first, then the super method is already created by other modules,
-            and we call super method.
-            */
+            and we call super method. */
             if (OrderlineSuper.prototype.apply_ms_data) {
                 OrderlineSuper.prototype.apply_ms_data.apply(this, arguments);
             }

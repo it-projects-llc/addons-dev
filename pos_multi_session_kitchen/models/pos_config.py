@@ -13,7 +13,7 @@ class PosConfig(models.Model):
         ('waiter', 'Waiter')
     ], default='waiter', string='Specify Screen Type', required=True)
     cat_ids = fields.Many2many("pos.category", string="Kitchen Display Product Categories",
-                                    help="The Product categories displayed on the kitchen screen")
+                               help="The Product categories displayed on the kitchen screen")
     show_floors_plan = fields.Boolean("Show Floors Plan", default=False)
     # show_all_kitchen_lines = fields.Boolean("Show All Kitchen Lines", default=False)
     custom_button_ids = fields.Many2many("pos.order.button", string="Custom Buttons")

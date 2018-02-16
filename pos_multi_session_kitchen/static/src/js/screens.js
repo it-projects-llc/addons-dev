@@ -29,8 +29,8 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
             this._super();
             if (this.pos.config.show_floors_plan) {
                 // get orders by current table
-                var order = this.get_orders().filter(function(order){
-                    return order.table.id === self.pos.table.id;
+                var order = this.get_orders().filter(function(current_order){
+                    return current_order.table.id === self.pos.table.id;
                 });
                 this.render_list(order);
                 this.render_floor_button();
@@ -74,9 +74,9 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
                 this.render_floor_button();
             }
         },
-        render_list: function(orders){
+        render_list: function(orders_collection){
             var self = this;
-            var orders = orders || this.get_orders();
+            var orders = orders_collection || this.get_orders();
 
             var sort_priority = function(idOne, idTwo) {
                 return idTwo.priority - idOne.priority;
@@ -186,8 +186,8 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
         },
         click_line_button: function(event, element) {
             var order = this.get_order_by_uid(element.parents('.order-block').data('uid'));
-            var line = order.get_orderlines().find(function(line){
-                return line.uid === element.parents('.line').data('uid');
+            var line = order.get_orderlines().find(function(current_line){
+                return current_line.uid === element.parents('.line').data('uid');
             });
             var button = this.pos.get_kitchen_button_by_id(element.data('id'));
             var state = this.pos.get_state_by_id(button.next_state_id[0]);
@@ -304,8 +304,8 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
         },
         custom_button_click: function(el) {
             var order = this.pos.get_order();
-            var button = this.buttons.find(function(button) {
-                return button.id === el.data('id');
+            var button = this.buttons.find(function(current_button) {
+                return current_button.id === el.data('id');
             });
 
             if (button.remove_tag_id) {
