@@ -233,6 +233,16 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
     });
 
     screens.OrderWidget.include({
+        change_selected_order: function() {
+            this._super();
+            var order = this.pos.get_order();
+            if (order && order.get_selected_orderline()) {
+                this.check_qty_numpad_of_line(order.get_selected_orderline());
+            } else {
+                $('.numpad').find("[data-mode='quantity']").removeClass('disable');
+                $(".pads .number-char").removeClass('disable');
+            }
+        },
         orderline_remove: function(line){
             line.stop_timer();
             this._super(line);
@@ -255,6 +265,21 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
                     button.hide = pyeval.py_eval(code, {state:state, product:product, quantity:quantity, price: price});
                 }
             });
+        },
+        orderline_change: function(line) {
+            this.check_qty_numpad_of_line(line);
+            this._super(line);
+        },
+        check_qty_numpad_of_line: function(line) {
+            var state = this.getParent().numpad.state;
+            var mode = state.get('mode');
+            if (mode === 'quantity' && line.get_active_states().length > 1) {
+                $('.numpad').find("[data-mode='quantity']").addClass('disable');
+                $(".pads .number-char").addClass('disable');
+            } else {
+                $('.numpad').find("[data-mode='quantity']").removeClass('disable');
+                $(".pads .number-char").removeClass('disable');
+            }
         },
         render_orderline: function(orderline){
             var self = this;
@@ -283,6 +308,43 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
             this._super();
             // TODO: show or hide order buttons
         },
+    });
+
+    screens.NumpadWidget.include({
+        clickDeleteLastChar: function() {
+            var self = this;
+            var mode = this.state.get('mode');
+            var order = this.pos.get_order();
+            var current_line = order.get_selected_orderline();
+            if (mode === 'quantity' && current_line.get_active_states().length > 1) {
+                this.gui.show_popup('number', {
+                    'title': _t('Quantity for Cancellation'),
+                    'value': 1,
+                    'confirm': function(value) {
+                        current_line.set_quantity(current_line.quantity - value)
+                    }
+                });
+            } else {
+                return this._super();
+            }
+        },
+        changedMode: function() {
+            var mode = this.state.get('mode');
+            var order = this.pos.get_order();
+            if (order) {
+                var line = order.get_selected_orderline();
+                if (line) {
+                    if (mode === 'quantity' && line.get_active_states().length > 1) {
+                        $('.numpad').find("[data-mode='quantity']").addClass('disable');
+                        $(".pads .number-char").addClass('disable');
+                    } else {
+                        $('.numpad').find("[data-mode='quantity']").removeClass('disable');
+                        $(".pads .number-char").removeClass('disable');
+                    }
+                }
+            }
+            this._super();
+        }
     });
 
     var OrderCustomButtons = screens.ActionButtonWidget.extend({

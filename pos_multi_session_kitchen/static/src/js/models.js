@@ -215,10 +215,11 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             if (!this.states.length && !this.kitchen_buttons.length) {
                 this.init_category_data();
             }
+
         },
         can_be_merged_with: function(orderline){
             // orderline with a different state cannot be merged
-            if (this.current_state.id !== orderline.current_state.id) {
+            if (this.current_state && orderline.current_state && this.current_state.id !== orderline.current_state.id) {
                 return false;
             }
             OrderlineSuper.prototype.can_be_merged_with.apply(this, arguments);
@@ -371,6 +372,11 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             if (this.kitchen_timer) {
                 this.kitchen_timer.html(time);
             }
+        },
+        get_active_states: function(){
+            return this.states.filter(function(state) {
+                return state.active;
+            });
         },
         apply_ms_data: function(data) {
             // This methods is added for compatibility with module https://www.odoo.com/apps/modules/10.0/pos_multi_session/
