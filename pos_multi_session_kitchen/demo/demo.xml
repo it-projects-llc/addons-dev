@@ -152,7 +152,6 @@
 
         <record id="demo_partner_settings" model="pos.kitchen.category.settings">
             <field name="name">Partner Settings</field>
-            <field name="button_ids">#9394f3</field>
             <field name="button_ids" eval="[(4, ref('pos_multi_session_kitchen.demo_button_confirm')), (4, ref('pos_multi_session_kitchen.demo_button_delivered')), (4, ref('pos_multi_session_kitchen.demo_button_done')), (4, ref('pos_multi_session_kitchen.demo_button_cancelled'))]"/>
             <field name="state_ids" eval="[(4, ref('pos_multi_session_kitchen.demo_state_draft')), (4, ref('pos_multi_session_kitchen.demo_state_confirmed')), (4, ref('pos_multi_session_kitchen.demo_state_done')), (4, ref('pos_multi_session_kitchen.demo_state_delivered')), (4, ref('pos_multi_session_kitchen.demo_state_cancelled'))]"/>
         </record>
