@@ -249,7 +249,7 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
         },
         check_line_buttons: function(line) {
             var self = this;
-            if (!line.line_buttons) {
+            if (!line.line_buttons || !line.current_state) {
                 return;
             }
             // optional arguments for custom function

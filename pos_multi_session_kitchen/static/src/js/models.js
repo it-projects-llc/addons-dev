@@ -207,15 +207,13 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
 
     var OrderlineSuper = models.Orderline;
     models.Orderline = models.Orderline.extend({
-        initialize: function(){
+        initialize: function() {
             this.states = [];
             this.line_buttons = [];
             OrderlineSuper.prototype.initialize.apply(this, arguments);
-
             if (!this.states.length && !this.line_buttons.length) {
                 this.init_category_data();
             }
-
         },
         can_be_merged_with: function(orderline){
             // orderline with a different state cannot be merged
@@ -276,15 +274,17 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             this.order.trigger('change:sync');
         },
         action_close: function() {
-            this.stop_timer();
-            this.current_state.stop_timer_date = false;
-            this.current_state.run_timer_date = false;
+            if (this.current_state) {
+                this.stop_timer();
+                this.current_state.stop_timer_date = false;
+                this.current_state.run_timer_date = false;
 
-            // hide timer and buttons
-            this.current_state.action_close = true;
+                // hide timer and buttons
+                this.current_state.action_close = true;
 
-            this.trigger('change', this);
-            this.order.trigger('change:sync');
+                this.trigger('change', this);
+                this.order.trigger('change:sync');
+            }
         },
         start_timer: function() {
             var self = this;
@@ -312,12 +312,14 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             }
         },
         stop_timer: function() {
-            // Set a date and get the milliseconds
-            var date = new Date();
-            var dateMsec = date.getTime();
-            clearInterval(this.stateTimer);
-            this.current_state.run_timer = false;
-            this.current_state.stop_timer_date = dateMsec;
+            if (this.current_state) {
+                // Set a date and get the milliseconds
+                var date = new Date();
+                var dateMsec = date.getTime();
+                clearInterval(this.stateTimer);
+                this.current_state.run_timer = false;
+                this.current_state.stop_timer_date = dateMsec;
+            }
         },
         get_formatted_time: function(run_timer_date) {
             var self = this;
@@ -392,7 +394,7 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             if (OrderlineSuper.prototype.apply_ms_data) {
                 OrderlineSuper.prototype.apply_ms_data.apply(this, arguments);
             }
-            if (this.current_state.technical_name !== data.current_state.technical_name && data.current_state.sound_signal) {
+            if (this.current_state && this.current_state.technical_name !== data.current_state.technical_name && data.current_state.sound_signal) {
                 var audio = new Audio(session.url("/pos_multi_session_kitchen/static/src/audio/state.wav"));
                 audio.play();
             }

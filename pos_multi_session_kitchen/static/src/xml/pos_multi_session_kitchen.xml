@@ -16,7 +16,7 @@
     <t t-extend="Orderline">
         <t t-jquery=".info-list" t-operation="after">
             <div class="states-list">
-                <t t-foreach="line.states" t-as="state">
+                <t t-if="line.states" t-foreach="line.states" t-as="state">
                     <t t-if="state.active and state.show_for_waiters">
                         <span class="state active" t-attf-data-id="#{state.id}"><t t-esc='state.name'/></span> <i class='fa fa-angle-right active'/>
                     </t>
@@ -25,7 +25,7 @@
                     </t>
                 </t>
             </div>
-            <div class="state_timer">
+            <div t-if="line.current_state" class="state_timer">
                 <t t-if="!line.current_state.action_close">
                     <t t-if="!line.current_state || !line.current_state.run_timer_date">
                         <p class="time">00:00:00</p>
