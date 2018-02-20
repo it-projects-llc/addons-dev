@@ -177,7 +177,7 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
             var price = line.price;
 
             // run the condition code for each button
-            line.kitchen_buttons.forEach(function(button){
+            line.line_buttons.forEach(function(button){
                 var code = button.condition_code;
                 if (code) {
                     button.hide = pyeval.py_eval(code, {state:state, product:product, quantity:quantity, price: price});
@@ -249,7 +249,7 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
         },
         check_line_buttons: function(line) {
             var self = this;
-            if (!line.kitchen_buttons) {
+            if (!line.line_buttons) {
                 return;
             }
             // optional arguments for custom function
@@ -259,7 +259,7 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
             var price = line.price;
 
             // run the condition code for each button
-            line.kitchen_buttons.forEach(function(button){
+            line.line_buttons.forEach(function(button){
                 var code = button.condition_code;
                 if (code) {
                     button.hide = pyeval.py_eval(code, {state:state, product:product, quantity:quantity, price: price});

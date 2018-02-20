@@ -36,7 +36,7 @@
                 </t>
             </div>
             <div class="buttons-list">
-                <t t-foreach="line.kitchen_buttons" t-as="button">
+                <t t-foreach="line.line_buttons" t-as="button">
                     <t t-if="button.show_for_waiters and !button.hide and !line.current_state.action_close">
                         <button class="line-button" t-attf-data-id="#{button.id}" t-attf-style="background: #{button.background_color}; color: #{button.name_color}"><t t-esc='button.name'/></button>
                     </t>
@@ -157,7 +157,7 @@
             </div></td>
             <td>
                 <t t-if="!line.current_state.action_close">
-                    <t t-foreach="line.kitchen_buttons" t-as="button">
+                    <t t-foreach="line.line_buttons" t-as="button">
                         <t t-if="button.show_in_kitchen and !button.hide">
                             <button class="line-button" t-attf-data-id="#{button.id}" t-attf-style="background: #{button.background_color}; color: #{button.name_color}">
                                 <t t-esc='button.name'/>

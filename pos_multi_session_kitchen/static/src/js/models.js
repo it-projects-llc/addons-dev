@@ -55,7 +55,7 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
         model: 'pos.order.line.button',
         fields: ['name', 'background_color', 'name_color', 'show_for_waiters', 'show_in_kitchen', 'next_state_id', 'condition_code', 'action_close'],
         loaded: function(self, buttons){
-            self.kitchen_buttons = buttons;
+            self.line_buttons = buttons;
         },
     });
 
@@ -89,7 +89,7 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
             });
         },
         get_kitchen_button_by_id: function(id) {
-            return this.kitchen_buttons.find(function(button){
+            return this.line_buttons.find(function(button){
                 return button.id === id;
             });
         },
@@ -209,10 +209,10 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
     models.Orderline = models.Orderline.extend({
         initialize: function(){
             this.states = [];
-            this.kitchen_buttons = [];
+            this.line_buttons = [];
             OrderlineSuper.prototype.initialize.apply(this, arguments);
 
-            if (!this.states.length && !this.kitchen_buttons.length) {
+            if (!this.states.length && !this.line_buttons.length) {
                 this.init_category_data();
             }
 
@@ -241,7 +241,7 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
 
                     // init buttons
                     settings.button_ids.forEach(function(id) {
-                        self.kitchen_buttons.push(self.pos.get_kitchen_button_by_id(id));
+                        self.line_buttons.push(self.pos.get_kitchen_button_by_id(id));
                     });
                 }
             }
