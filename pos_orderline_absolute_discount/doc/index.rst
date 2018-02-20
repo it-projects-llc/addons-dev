@@ -13,7 +13,7 @@ Usage
 * Go to ``Point of Sale`` menu
 * Open POS session
 * Add a product to order
-* Make double-click on ``[Disc]`` button
+* Make a double-click on ``[Disc]`` button
   (The button turns color to blue)
 * Specify a discount value by using numpad
 * RESULT: see absolute discount for orderline

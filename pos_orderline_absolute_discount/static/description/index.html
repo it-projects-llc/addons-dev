@@ -29,7 +29,7 @@
 			  </li>
 			  <li>
 				<i class="fa fa-check-square-o text-primary"></i>
-				displays absolute discounts on POS reports
+				displays absolute discounts in POS reports
 			  </li>
 			</ul>
 		</div>
@@ -43,20 +43,69 @@
 	<h3 class="oe_slogan">How It Works</h3>
     <div class="oe_span12 text-center">
       <p class="oe_mt32">
- 		<font style="font-size: 120%;">Go to <em>Point of Sale &rarr; Dashboard</em> and open POS session. To activate the absolute discount mode, make double-click on the <b>Disc</b> button. It changes color on blue and you can set absolute discount for orderline now.</font>
+ 		<font style="font-size: 120%;">
+		  Go to <em>Point of Sale &rarr; Configuration &rarr; Point of Sale</em> and open POS configuration form. You can see new option <b>Include Discount in Prices</b>. If unchecked, new discounted price will be displayed under orderline, otherwise the absolute discount will be reduced from orderline price directly. 
+		</font>
       </p>		
     </div>
     <div class="oe_screenshot" align="center">
-      <img style="max-width: 80%" src="blue_disc_button.png"/>
+      <img style="max-width: 80%" src="pos_config_abs_disc.png"/>
     </div>
    </div>
 </section>
 
 <section class="oe_container">
   <div class="oe_row oe_spaced">
+	<h4 class="oe_slogan">Disable "Include Discount in Prices"</h4>
     <div class="oe_span12 text-center">
       <p class="oe_mt32">
- 		<font style="font-size: 120%;">Warning</font>
+ 		<font style="font-size: 120%;">Go to <em>Point of Sale &rarr; Dashboard</em> and open POS session. To activate the absolute discount mode, make a double-click on the <b>Disc</b> button. It changes color on blue and you can set absolute discount for orderline now.</font>
+      </p>		
+    </div>
+    <div class="oe_screenshot" align="center">
+      <img style="max-width: 80%" src="blue_disc_button.png"/>
+    </div>
+	<div class="oe_span12 text-center">
+      <p class="oe_mt32">
+ 		<font style="font-size: 120%;">Receipt</font>
+      </p>		
+    </div>
+    <div class="oe_screenshot" align="center">
+      <img style="max-width: 80%" src="receipt.png"/>
+    </div>
+   </div>
+</section>
+
+<section class="oe_container oe_dark">
+  <div class="oe_row oe_spaced">
+	<h4 class="oe_slogan">Enable "Include Discount in Prices"</h4>
+    <div class="oe_span12 text-center">
+      <p class="oe_mt32">
+ 		<font style="font-size: 120%;">
+		  In this case the absolute discount is reduced from orderline price directly without adding new discounted price (it's similar to built-in percentage discount behavior).  
+		</font>
+      </p>		
+    </div>
+    <div class="oe_screenshot" align="center">
+      <img style="max-width: 80%" src="include_discount.png"/>
+    </div>
+	<div class="oe_span12 text-center">
+      <p class="oe_mt32">
+ 		<font style="font-size: 120%;">Receipt</font>
+      </p>		
+    </div>
+    <div class="oe_screenshot" align="center">
+      <img style="max-width: 80%" src="receipt1.png"/>
+    </div>
+   </div>
+</section>
+
+<section class="oe_container">
+  <div class="oe_row oe_spaced">
+	<h4 class="oe_slogan">Warning</h4>
+    <div class="oe_span12 text-center">
+      <p class="oe_mt32">
+ 		<font style="font-size: 120%;">If the absolute discount value is higher than product unit price, you will see the warning</font>
       </p>		
     </div>
     <div class="oe_screenshot" align="center">
@@ -67,13 +116,14 @@
 
 <section class="oe_container">
   <div class="oe_row oe_spaced">
+	<h4 class="oe_slogan">POS Report</h4>
     <div class="oe_span12 text-center">
       <p class="oe_mt32">
- 		<font style="font-size: 120%;">Receipt</font>
+ 		<font style="font-size: 120%;">The absolute discounts are displayed in POS reports</font>
       </p>		
     </div>
     <div class="oe_screenshot" align="center">
-      <img style="max-width: 80%" src="receipt.png"/>
+      <img style="max-width: 80%" src="abs_disc_report.png"/>
     </div>
    </div>
 </section>
