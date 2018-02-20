@@ -317,11 +317,15 @@ odoo.define('pos_multi_session_kitchen.screens', function(require){
             var order = this.pos.get_order();
             var current_line = order.get_selected_orderline();
             if (mode === 'quantity' && current_line.get_active_states().length > 1) {
+                if (current_line.quantity === 0) {
+                    current_line.set_quantity('remove');
+                    return false;
+                }
                 this.gui.show_popup('number', {
                     'title': _t('Quantity for Cancellation'),
                     'value': 1,
                     'confirm': function(value) {
-                        current_line.set_quantity(current_line.quantity - value)
+                        current_line.set_quantity(current_line.quantity - value);
                     }
                 });
             } else {
