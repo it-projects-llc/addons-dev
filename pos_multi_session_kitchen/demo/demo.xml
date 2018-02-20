@@ -6,7 +6,7 @@
             <field name="name">Kitchen</field>
             <field name="multi_session_id" ref="pos_multi_session.demo_multi_session"/>
             <field name="screen">kitchen</field>
-            <field name="cat_ids" eval="[(6, 0, [ref('point_of_sale.fruits_vegetables')])]" />
+            <field name="cat_ids" eval="[(4, ref('point_of_sale.fruits_vegetables')), (4, ref('point_of_sale.partner_services'))]"/>
         </record>
 
         <!-- DEMO states -->
@@ -152,8 +152,8 @@
 
         <record id="demo_partner_settings" model="pos.kitchen.category.settings">
             <field name="name">Partner Settings</field>
-            <field name="button_ids" eval="[(4, ref('pos_multi_session_kitchen.demo_button_confirm')), (4, ref('pos_multi_session_kitchen.demo_button_delivered')), (4, ref('pos_multi_session_kitchen.demo_button_done')), (4, ref('pos_multi_session_kitchen.demo_button_cancelled'))]"/>
-            <field name="state_ids" eval="[(4, ref('pos_multi_session_kitchen.demo_state_draft')), (4, ref('pos_multi_session_kitchen.demo_state_confirmed')), (4, ref('pos_multi_session_kitchen.demo_state_done')), (4, ref('pos_multi_session_kitchen.demo_state_delivered')), (4, ref('pos_multi_session_kitchen.demo_state_cancelled'))]"/>
+            <field name="button_ids" eval="[(4, ref('pos_multi_session_kitchen.demo_button_confirm')), (4, ref('pos_multi_session_kitchen.demo_button_delivered')), (4, ref('pos_multi_session_kitchen.demo_button_cooking')), (4, ref('pos_multi_session_kitchen.demo_button_done')), (4, ref('pos_multi_session_kitchen.demo_button_cancelled'))]"/>
+            <field name="state_ids" eval="[(4, ref('pos_multi_session_kitchen.demo_state_draft')), (4, ref('pos_multi_session_kitchen.demo_state_confirmed')), (4, ref('pos_multi_session_kitchen.demo_state_cooking')), (4, ref('pos_multi_session_kitchen.demo_state_done')), (4, ref('pos_multi_session_kitchen.demo_state_delivered')), (4, ref('pos_multi_session_kitchen.demo_state_cancelled'))]"/>
         </record>
 
         <!-- POS Category -->

@@ -229,6 +229,7 @@ odoo.define('pos_multi_session_kitchen.models', function(require){
                 if (category) {
                     var settings = this.pos.get_category_settings_by_id(category.settings_id[0]);
 
+                    // TODO: do not copy the states
                     // init states
                     settings.state_ids.forEach(function(id) {
                         self.states.push(Object.assign({}, self.pos.get_state_by_id(id)));
