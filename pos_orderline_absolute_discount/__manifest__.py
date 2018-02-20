@@ -5,14 +5,14 @@
     "category": "Point of Sale",
     "live_test_url": 'http://apps.it-projects.info/shop/product/pos-orderline-absolute-discount?version=10.0',
     "images": ["images/pos-absolute-discount-main.png"],
-    "version": "1.0.0",
+    "version": "10.0.1.0.0",
     "application": False,
 
     "author": "IT-Projects LLC, Dinar Gabbasov",
     "support": "apps@it-projects.info",
     "website": "https://it-projects.info/team/GabbasovDinar",
     "license": "LGPL-3",
-    "price": 45.00,
+    "price": 79.00,
     "currency": "EUR",
 
     "depends": [
