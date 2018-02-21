@@ -122,8 +122,8 @@ models.PosModel = models.PosModel.extend({
     on_notification: function (notification) {
         var invoices_to_update = [];
         var sale_orders_to_update = [];
-        var channel = notification['channel'];
-        var message = notification['id'];
+        var channel = notification.channel;
+        var message = notification.id;
         if (channel === 'pos_invoices') {
             invoices_to_update.push(message);
         }
@@ -663,7 +663,7 @@ var SaleOrdersWidget = InvoicesAndOrdersBaseWidget.extend({
     select_line: function (event,$line,id) {
         var sale_order = this.pos.db.get_sale_order_by_id(id);
         this.$('.client-list .lowlight').removeClass('lowlight');
-        this.$(".line-element-container").addClass('line-element-hidden');        
+        this.$(".line-element-container").addClass('line-element-hidden');
         if ( $line.hasClass('highlight') ){
             this.selected_SO = false;
             $line.removeClass('highlight');
@@ -771,7 +771,7 @@ var InvoicesWidget = InvoicesAndOrdersBaseWidget.extend({
     select_line: function (event,$line,id) {
         var invoice = this.pos.db.get_invoice_by_id(id);
         this.$('.client-list .lowlight').removeClass('lowlight');
-        this.$(".line-element-container").addClass('line-element-hidden');        
+        this.$(".line-element-container").addClass('line-element-hidden');
         if ($line.hasClass('highlight')){
             this.selected_invoice = false;
             $line.removeClass('highlight');
