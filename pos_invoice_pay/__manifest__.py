@@ -18,6 +18,7 @@
         "bus",
         "point_of_sale",
         "sale",
+        "pos_longpolling"
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [

@@ -9,6 +9,7 @@ var utils = require('web.utils');
 var bus = require('bus.bus').bus;
 var screens = require('point_of_sale.screens');
 var rpc = require('web.rpc');
+var longpolling = require('pos_longpolling');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -18,8 +19,6 @@ var _super_posmodel = models.PosModel.prototype;
 models.PosModel = models.PosModel.extend({
     initialize: function (session, attributes) {
         var self = this;
-        this.bus = bus;
-        this.prepare_bus();
         this.models.push(
         {
             model: 'sale.order',
@@ -47,7 +46,9 @@ models.PosModel = models.PosModel.extend({
                 that.get_invoice_lines(invoices_ids);
             }
         });
-        return _super_posmodel.initialize.apply(this, arguments);
+        _super_posmodel.initialize.apply(this, arguments);
+        this.bus.add_channel_callback("pos_sale_orders", this.on_notification, this);
+        this.bus.add_channel_callback("pos_invoices", this.on_notification, this);
     },
 
     get_lines: function (ids, model_name, method_name) {
@@ -76,7 +77,10 @@ models.PosModel = models.PosModel.extend({
                     if (!Object.prototype.hasOwnProperty.call(so, 'lines')) {
                         so.lines = [];
                     }
-                    so.lines.push(lines[i]);
+                    var line_ids = _.pluck(so.lines, 'id');
+                    if (!(line_ids.includes(lines[i].id))) {
+                        so.lines.push(lines[i]);
+                    }
                     def.resolve();
                 }
             }, function (err) {
@@ -105,48 +109,26 @@ models.PosModel = models.PosModel.extend({
                     if (!Object.prototype.hasOwnProperty.call(inv, 'lines')) {
                         inv.lines = [];
                     }
-                    inv.lines.push(lines[i]);
+                    var line_ids = _.pluck(inv.lines, 'id');
+                    if (!(line_ids.includes(lines[i].id))) {
+                        inv.lines.push(lines[i]);
+                    }
                     def.resolve();
                 }
         });
         return def.promise();
     },
 
-    prepare_bus: function () {
-        var self = this;
-        return rpc.query({
-            model: 'pos.order',
-            method: 'send_longpolling_data',
-            args: [],
-        }).then(function (res) {
-            var invoices_channel = JSON.stringify([res.dbname, 'account.invoice', res.uid.toString()]),
-                so_channel = JSON.stringify([res.dbname, 'sale.order', res.uid.toString()]);
-            self.bus.add_channel(invoices_channel);
-            self.bus.add_channel(so_channel);
-            self.bus.on("notification", self, self.on_notification);
-            self.bus.start_polling();
-        });
-    },
-
     on_notification: function (notification) {
-        console.log(notification);
-        var invoices_to_update = [],
-            sale_orders_to_update = [],
-            channel = '',
-            message = '',
-            i = 0;
-        for (i = 0; i < notification.length; i++) {
-            channel = notification[i][0];
-            message = notification[i][1];
-            if (_.isString(channel)) {
-                channel = JSON.parse(channel);
-            }
-            if (Array.isArray(channel) && channel[1] === 'account.invoice') {
-                invoices_to_update.push(message);
-            }
-            if (Array.isArray(channel) && channel[1] === 'sale.order') {
-                sale_orders_to_update.push(message);
-            }
+        var invoices_to_update = [];
+        var sale_orders_to_update = [];
+        var channel = notification['channel'];
+        var message = notification['id'];
+        if (channel === 'pos_invoices') {
+            invoices_to_update.push(message);
+        }
+        if (channel === 'pos_sale_orders') {
+            sale_orders_to_update.push(message);
         }
         if (invoices_to_update.length > 0) {
             this.update_invoices_from_poll(_.unique(invoices_to_update));
@@ -879,13 +861,12 @@ var InvoicePayment = screens.PaymentScreenWidget.extend({
     },
 
     render_paymentlines: function () {
-        var self = this,
-            order = this.pos.get_order(),
-            lines = order.get_paymentlines();
-
+        var self = this;
+        var order = this.pos.get_order();
         if (typeof order !== 'object') {
             return;
         }
+        var lines = order.get_paymentlines();
         if (typeof this.pos.selected_invoice !== 'object') {
             return;
         }
