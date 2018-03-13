@@ -13,7 +13,7 @@ class PosMultiSession(models.Model):
     _inherit = 'pos.multi_session'
 
     tag_ids = fields.Many2many('pos.tag', 'pos_multi_session_tag_rel', 'pos_multi_session_id', 'tag_id',
-                               string='Tags', ondelete="restrict")
+                               string='Available Product Sets', ondelete="restrict")
 
 
 class PosConfig(models.Model):

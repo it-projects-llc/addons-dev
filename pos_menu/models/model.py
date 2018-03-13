@@ -13,7 +13,7 @@ class ProductTemplate(models.Model):
 class PosConfig(models.Model):
     _inherit = 'pos.config'
 
-    tag_ids = fields.Many2many('pos.tag', 'tag_ids_pos_ids_rel', 'pos_id', 'tag_id', string="Tags")
+    tag_ids = fields.Many2many('pos.tag', 'tag_ids_pos_ids_rel', 'pos_id', 'tag_id', string="Available Product Sets")
 
 
 class PosTag(models.Model):
