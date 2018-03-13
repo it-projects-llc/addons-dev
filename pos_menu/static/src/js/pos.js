@@ -11,7 +11,7 @@ odoo.define('pos_menu', function(require) {
             tags.forEach(function(tag){
                 if ($.inArray(self.config.id, tag.pos_ids) !== -1) {
                     self.tags.push(tag);
-                };
+                }
             });
             // add new domain for product
             self.models.forEach(function(model) {
