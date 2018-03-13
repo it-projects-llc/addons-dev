@@ -6,5 +6,11 @@
                 <script type="text/javascript" src="/pos_menu/static/src/js/pos.js"></script>
             </xpath>
         </template>
+
+        <template id="demo_assets_backend" name="pos_menu demo assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/pos_menu/static/src/js/tour.js"></script>
+            </xpath>
+        </template>
     </data>
 </odoo>
