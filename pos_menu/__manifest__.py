@@ -20,6 +20,7 @@
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
+        "security/ir.model.access.csv",
         "views/product_view.xml",
         "views/pos_config_view.xml",
         "views/pos_menu_view.xml",
