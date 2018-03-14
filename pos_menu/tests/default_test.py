@@ -7,7 +7,7 @@ import odoo.tests
 
 
 @odoo.tests.common.at_install(True)
-@odoo.tests.common.post_install(False)
+@odoo.tests.common.post_install(True)
 class TestUi(odoo.tests.HttpCase):
 
     def test_01_pos_is_loaded(self):
