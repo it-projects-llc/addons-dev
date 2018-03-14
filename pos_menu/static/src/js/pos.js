@@ -4,21 +4,22 @@ odoo.define('pos_menu', function(require) {
     models.load_models([{
         model: 'pos.tag',
         field: [],
-        domain: null,
+        domain: function(){
+            return [['pos_ids', 'in', self.posmodel.config.id]];
+        },
         loaded: function(self, tags) {
-            self.tags = [];
-            // save tags of current POS
-            tags.forEach(function(tag){
-                if ($.inArray(self.config.id, tag.pos_ids) !== -1) {
-                    self.tags.push(tag);
-                }
-            });
-            // add new domain for product
-            self.models.forEach(function(model) {
-                if (model.model === "product.product") {
-                    model.domain.push(['tag_ids', 'in', self.config.tag_ids]);
-                }
-            });
+            // save the tags for current POS
+            self.tags = tags;
+
+            // if tag_ids are not specified in the POS Setting then we load all products for the POS
+            // otherwise we add new domain
+            if (self.config.tag_ids && self.config.tag_ids.length) {
+                self.models.forEach(function(model) {
+                    if (model.model === "product.product") {
+                        model.domain.push(['tag_ids', 'in', self.config.tag_ids]);
+                    }
+                });
+            }
         }
     }], {
         'before': 'product.product'

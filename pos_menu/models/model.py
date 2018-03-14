@@ -12,6 +12,19 @@ class PosConfig(models.Model):
     _inherit = 'pos.config'
 
     tag_ids = fields.Many2many('pos.tag', 'tag_ids_pos_ids_rel', 'pos_id', 'tag_id', string="Available Product Sets")
+    current_session_state = fields.Char(search='_search_current_session_state')
+
+    def _search_current_session_state(self, operator, value):
+        ids = map(lambda x: x.id, self.env["pos.config"].search([]))
+        value_ids = map(lambda x: x.config_id.id, self.env["pos.session"].search([('state', '=', value)]))
+        value_ids = list(set(value_ids))
+        if operator == '=':
+            return [('id', 'in', value_ids)]
+        elif operator == '!=':
+            ids = [item for item in ids if item not in value_ids]
+            return [('id', 'in', ids)]
+        else:
+            return [('id', 'in', [])]
 
 
 class PosTag(models.Model):
