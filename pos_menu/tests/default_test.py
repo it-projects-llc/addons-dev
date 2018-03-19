@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 import odoo.tests
 
-# tests of other pos-modules are not compatible with the pos_menu module
-# because some modules for tests use products
-# We need use at_install = True only
-
 
 @odoo.tests.common.at_install(True)
 @odoo.tests.common.post_install(True)
