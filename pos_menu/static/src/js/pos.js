@@ -10,7 +10,6 @@ odoo.define('pos_menu', function(require) {
         loaded: function(self, tags) {
             // save the tags for current POS
             self.tags = tags;
-
             // if tag_ids are not specified in the POS Setting then we load all products for the POS
             // otherwise we add new domain
             if (self.config.tag_ids && self.config.tag_ids.length) {
