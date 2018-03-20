@@ -1,8 +1,8 @@
-==============================
- Unlock POS Screen by Barcode
-==============================
+=================
+ Lock POS Screen
+=================
 
-Users/Cashiers can unlock POS screen by scanning or typing their barcodes only
+Users/Cashiers can unlock POS screen by scanning their barcode or using security PIN
 
 Credits
 =======

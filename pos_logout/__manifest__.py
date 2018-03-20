@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
-    "name": """Unlock POS Screen by Barcode""",
-    "summary": """Users can unlock POS screen by scanning or typing their barcodes only""",
+    "name": """Lock POS Screen""",
+    "summary": """Users/Cashiers can unlock POS screen by scanning their barcode or using security PIN""",
     "category": "Point of Sale",
     "live_test_url": "http://apps.it-projects.info/shop/product/pos-logout?version=11.0",
     "images": ["images/pos_logout_main.png"],
