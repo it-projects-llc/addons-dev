@@ -221,6 +221,7 @@ odoo.define('pos_orders_history', function (require) {
         },
 
         render_list: function (expenses) {
+
             var self = this,
                 contents = this.$el[0].querySelector('.expenses-list-contents');
             contents.innerHTML = "";
@@ -252,7 +253,7 @@ odoo.define('pos_orders_history', function (require) {
             $tr.classList.add('line-element-container');
 
             var $td = document.createElement('td');
-            $td.setAttribute("colspan", 3);
+            $td.setAttribute("colspan", 4);
             $td.appendChild(lines_table);
             $tr.appendChild($td);
             return $tr;
