@@ -1009,6 +1009,13 @@ var InvoicePayment = screens.PaymentScreenWidget.extend({
             }
         }
         return true;
+    },
+    renderElement: function() {
+        this._super();
+        if (this.pos.config.iface_invoicing) {
+            var order = this.pos.get_order();
+            order.set_to_invoice(true);
+        }
     }
 });
 
