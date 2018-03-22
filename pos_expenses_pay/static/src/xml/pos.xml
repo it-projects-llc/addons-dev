@@ -92,7 +92,11 @@
     <t t-name="ExpensesWidget">
         <div class="modal-dialog">
             <div class="popup popup-alert">
-                <p class="title"><t t-esc=" widget.options.title || 'Alert' " /></p>
+                <p class="title">
+                    <t t-esc=" widget.options.title || 'Alert' " />
+                    <br/>
+                    <span style="font-size: 16px"><t t-esc="widget.options.payment_mode" /></span>
+                </p>
                 <p class="body"><t t-esc=" widget.options.body || '' "/></p>
                 <div class="footer">
                     <div class="button confirm">

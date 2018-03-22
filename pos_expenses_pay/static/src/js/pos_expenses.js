@@ -288,8 +288,13 @@ odoo.define('pos_orders_history', function (require) {
         },
 
         process_expense: function (expense) {
+            var payment_mode = _t('Employee (to reimburse)');
+            if (expense.payment_mode === 'company_account') {
+                payment_mode = _t('Company');
+            }
             this.gui.show_popup('expenses-popup', {
                 title: _t('Pay Expense'),
+                payment_mode: payment_mode,
                 expense_id: expense.id,
                 body: _t('Pay expense in ' + this.format_currency(expense.total_amount) + ' to ' + expense.employee_id[1])
             });
