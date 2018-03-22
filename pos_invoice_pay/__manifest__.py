@@ -4,7 +4,7 @@
     "summary": """Paying invoiceable Sales Orders and confirmed Invoies over Point of Sale""",
     "category": "pos",
     "images": [],
-    "version": "1.0.0",
+    "version": "11.0.1.0.0",
     "application": False,
 
     "author": "IT-Projects LLC, Artyom Losev",
@@ -13,12 +13,9 @@
     "license": "LGPL-3",
 
     "depends": [
-        "account",
         "base_automation",
-        "bus",
-        "point_of_sale",
-        "sale",
-        "pos_longpolling"
+        "sale_management",
+        "pos_longpolling",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
