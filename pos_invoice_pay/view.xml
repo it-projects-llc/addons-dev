@@ -16,7 +16,7 @@
                             <div class="o_setting_right_pane">
                                 <label for="show_sale_orders"/>
                                 <div class="text-muted">
-                                    Pay sale orders on customer request
+                                    Fetch and pay sale orders
                                 </div>
                             </div>
                         </div>
@@ -27,7 +27,7 @@
                             <div class="o_setting_right_pane">
                                 <label for="show_invoices"/>
                                 <div class="text-muted">
-                                    Pay invoices on customer request
+                                    Fetch and pay regular invoices
                                 </div>
                             </div>
                         </div>
