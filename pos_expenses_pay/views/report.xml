@@ -25,7 +25,7 @@
                         </tr>
                         <tr>
                             <td colspan="5" class="text-right">
-                                Total: <span t-esc="expenses_total"/>
+                                <strong>Total:</strong> <span t-esc="expenses_total"/>
                             </td>
                         </tr>
                     </tbody>
