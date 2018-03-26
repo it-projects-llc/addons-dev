@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": """Open CashBox from Backend""",
-    "summary": """The module allows to open the CashBox from Backend""",
+    "summary": """The module allows to open Cashbox/Cashdrawer from Backend""",
     "category": "Point of Sale",
     "live_test_url": "http://apps.it-projects.info/shop/product/pos-cashbox?version=10.0",
     "images": ['images/pos_cashbox_main.png'],
@@ -44,6 +44,6 @@
     "demo_url": "pos-cashbox",
     "demo_summary": "The module allows to open the CashBox from Backend",
     "demo_images": [
-        "images/pos-cashbox.png",
+        "images/pos_cashbox_main.png",
     ]
 }
