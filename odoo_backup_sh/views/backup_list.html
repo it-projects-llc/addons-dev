@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Odoo</title>
+  <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css">
+  <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css">
+  <script src="/web/static/lib/jquery/jquery.js" type="text/javascript"></script>
+  <script src="/web/static/lib/bootstrap/js/modal.js"></script>
+  <script src="/web/static/lib/bootstrap/js/tooltip.js"></script>
+  <script src="/web/static/lib/bootstrap/js/dropdown.js"></script>
+</head>
+
+<body class="container">
+  <!-- Database List -->
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3 o_database_list">
+      <div class="text-center">
+        <img src="/web/static/src/img/logo2.png" class="img-responsive center-block"/>
+      </div>
+      <div class="list-group">
+        {% for backup in backup_list %}
+          <div class="list-group-item">
+            {{ backup }}
+          </div>
+        {% endfor %}
+      </div>
+      <div class="text-center">
+        <a href="/web/database/manager">Manage databases</a>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
