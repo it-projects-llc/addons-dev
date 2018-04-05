@@ -1,10 +1,15 @@
-===============
- Backup Service
-===============
+.. image:: https://img.shields.io/badge/license-LGPL--3-blue.png
+   :target: https://www.gnu.org/licenses/lgpl
+   :alt: License: LGPL-3
 
-Backup Service Summary
+================
+ Odoo-backup.sh
+================
 
-{Then add more detailed description, technical specifications, any other information that could be interested for other developers. Don't forget that Usage instructions is a separated and has to be located in doc/index.rst file.}
+The application allows to manage database backups.
+The module is a client part of a system of two modules. Second module (a server part) is called 'odoo_backup_sh_service'.
+The system uses "In-App Purchase" Odoo feature (See details https://www.odoo.com/documentation/11.0/webservices/iap.html).
+Also you can read docs of the server 'odoo_backup_sh_service' module.
 
 Credits
 =======
@@ -20,12 +25,6 @@ Sponsors
 Maintainers
 -----------
 * `IT-Projects LLC <https://it-projects.info>`__
-
-      To get a guaranteed support you are kindly requested to purchase the module at `odoo apps store <https://apps.odoo.com/apps/modules/11.0/odoo_backup_sh/>`__.
-
-      Thank you for understanding!
-
-      `IT-Projects Team <https://www.it-projects.info/team>`__
 
 Further information
 ===================

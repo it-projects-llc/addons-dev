@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
 import jinja2
 import os
@@ -14,6 +16,7 @@ from odoo.addons import web
 path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'views'))
 loader = jinja2.FileSystemLoader(path)
 env = jinja2.Environment(loader=loader, autoescape=True)
+odoo_backup_sh_service_host_name = 'http://odoo_backup_sh_service'
 
 
 class BackupDatabase(web.controllers.main.Database):
@@ -58,7 +61,8 @@ class BackupController(http.Controller):
             'Accept': 'text/plain'
         }
         res = requests.post(
-            'http://odoo_backup_sh_service/web/backup/list', headers=headers, json={'params': {'user_key': user_key}}
+            odoo_backup_sh_service_host_name + '/web/backup/list', headers=headers,
+            json={'params': {'user_key': user_key}}
         ).json()
         # TODO: check incompatible backups
         result = res['result']
