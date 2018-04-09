@@ -1,3 +1,7 @@
+.. image:: https://img.shields.io/badge/license-LGPL--3-blue.png
+   :target: https://www.gnu.org/licenses/lgpl
+   :alt: License: LGPL-3
+
 ============================
  Sale Layout Hidden Section
 ============================
@@ -30,4 +34,4 @@ Usage instructions: `<doc/index.rst>`_
 
 Changelog: `<doc/changelog.rst>`_
 
-Tested on Odoo 10.0 e66e1e2142aa8812149e82cdc5f391aa9599cea6
+Tested on Odoo 11.0 90da0f5a64cda087a3487cfae52d416e314fae6b
