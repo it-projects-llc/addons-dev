@@ -26,7 +26,7 @@
                 <xpath expr="//field[@name='sequence']" position="after">
                     <field name='is_global' />
                 </xpath>
-                 <xpath expr="//tree" position="attributes">
+                <xpath expr="//tree" position="attributes">
                     <attribute name="editable">bottom</attribute>
                 </xpath>
             </field>
