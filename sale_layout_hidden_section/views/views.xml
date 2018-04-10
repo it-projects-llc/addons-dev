@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright 2017 Artyom Losev
+    Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+
+<odoo>
+    <data>
+
+        <record id="view_order_form_new" model="ir.ui.view">
+            <field name="name">sale.order.form.select</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="layout_ids" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree//field[@name='layout_category_id']" position="replace">
+                    <field name="layout_category_id" groups="sale.group_sale_layout"
+                        context="{'default_sale_order_id': id}"
+                        domain="['|', ('is_global', '=', 'True'),('id', 'in', parent.layout_ids)]"
+                        />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="report_configuration_form_new" model="ir.ui.view">
+            <field name="name">report.configuration.form.view_new</field>
+            <field name="model">sale.layout_category</field>
+            <field name="inherit_id" ref="sale.report_configuration_tree_view"/>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='sequence']" position="after">
+                    <field name='is_global' />
+                </xpath>
+                 <xpath expr="//tree" position="attributes">
+                    <attribute name="editable">bottom</attribute>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
