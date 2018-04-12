@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
-# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 import jinja2
 import os
@@ -16,7 +16,8 @@ from odoo.addons import web
 path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'views'))
 loader = jinja2.FileSystemLoader(path)
 env = jinja2.Environment(loader=loader, autoescape=True)
-odoo_backup_sh_service_host_name = 'http://odoo_backup_sh_service'
+BACKUP_SERVICE = 'http://odoo_backup_sh_service'
+BACKUP_SERVICE_PORT = '8069'
 
 
 class BackupDatabase(web.controllers.main.Database):
@@ -56,19 +57,17 @@ class BackupController(http.Controller):
             config.__setitem__('odoo_backup_user_key', user_key)
             config.save()
         headers = {
-            'host': 'odoo-backup.sh',
-            'Content-type': 'application/json',
+            'host': 'odoo-backup.sh' + ':' + BACKUP_SERVICE_PORT,
             'Accept': 'text/plain'
         }
-        res = requests.post(
-            odoo_backup_sh_service_host_name + '/web/backup/list', headers=headers,
-            json={'params': {'user_key': user_key}}
+        redirect_url = request.httprequest.url_root + 'web/database/backup_list'
+        res = requests.get(
+            BACKUP_SERVICE + ':' + BACKUP_SERVICE_PORT + '/web/backup/list', headers=headers,
+            params={'user_key': user_key, 'redirect_url': redirect_url}
         ).json()
-        # TODO: check incompatible backups
-        result = res['result']
-        if result.get('success'):
-            return env.get_template("backup_list.html").render(backup_list=result.get('backup_list'))
+        oauth_url = res.get('oauth_url')
+        if oauth_url:
+            return "<html><head><script>window.location.href = '%s';</script></head></html>" % oauth_url
         else:
-            redirect_url = request.httprequest.url_root + 'web/database/backup_list'
-            url = 'http://%s/web/login?user_key=%s&redirect_url=%s' %(headers['host'], user_key, redirect_url)
-            return "<html><head><script>window.location.href = '%s';</script></head></html>" % url
+            # TODO: check incompatible backups
+            return env.get_template("backup_list.html").render(backup_list=res.get('backup_list'))

@@ -10,6 +10,18 @@ Installation
 Configuration
 =============
 
+* To enable the ability to restore databases from your remote backups in a new odoo instance:
+
+  * Start Odoo with ``--load=web,odoo_backup_sh`` or set the ``server_wide_modules`` option in the Odoo configuration file:
+
+::
+
+  [options]
+  # (...)
+  server_wide_modules = web,odoo_backup_sh
+  # (...)
+
+
 .. todo:: Add the section when interfaces are ready.
 {Instruction how to configure the module before start to use it}
 
