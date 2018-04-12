@@ -26,7 +26,7 @@ Additionally to the cloud provided by **Odoo-backup.sh** it's possible to store 
 * TODO Yandex.Disk
 * TODO ftp
 
-Posibility of using personal cloud *only* can be unblocked by purchasing module `odoo_backup_sh_private <https://apps.odoo.com/apps/modules/11.0/odoo_backup_sh_private/>`_
+Posibility of using personal cloud *only* can be unlocked by purchasing module `odoo_backup_sh_private <https://apps.odoo.com/apps/modules/11.0/odoo_backup_sh_private/>`_
 
 Implementation details
 ======================
