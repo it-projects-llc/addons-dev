@@ -1,8 +1,8 @@
 # Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 {
-    "name": """Purchase Orders from Sale Order""",
-    "summary": """Creates Purchase Orders from Sale Order""",
+    "name": """Create Purchase Order from Sale Order""",
+    "summary": """New option to create Purchase Orders from Sale Order directly""",
     "category": "Warehouse",
     # "live_test_url": "",
     "images": [],
