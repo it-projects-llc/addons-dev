@@ -48,7 +48,7 @@ class BackupDatabase(web.controllers.main.Database):
 
 class BackupController(http.Controller):
 
-    @http.route('/web/database/backup_list', type='http', auth="none")
+    @http.route('/web/database/backups', type='http', auth="none")
     def backup_list(self):
         config._parse_config()
         user_key = config.get('odoo_backup_user_key')
@@ -60,10 +60,10 @@ class BackupController(http.Controller):
             'host': 'odoo-backup.sh' + ':' + BACKUP_SERVICE_PORT,
             'Accept': 'text/plain'
         }
-        redirect_url = request.httprequest.url_root + 'web/database/backup_list'
+        redirect_url = request.httprequest.url_root + 'web/database/backups'
         res = requests.get(
             BACKUP_SERVICE + ':' + BACKUP_SERVICE_PORT + '/web/backup/list', headers=headers,
-            params={'user_key': user_key, 'redirect_url': redirect_url}
+            params={'user_key': user_key, 'redirect': redirect_url}
         ).json()
         oauth_url = res.get('oauth_url')
         if oauth_url:
