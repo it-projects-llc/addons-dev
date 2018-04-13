@@ -2,15 +2,15 @@
    :target: https://www.gnu.org/licenses/lgpl
    :alt: License: LGPL-3
 
-=================================
- Purchase Orders from Sale Order
-=================================
+========================================
+ Create Purchase Orders from Sale Order
+========================================
 
-Creates Purchase Orders from Sale Order
+The module adds the option to create Purchase Order from Sale Order directly
 
-Automatically take data from *Sale Order* and creates *Purchase Order*
-Creates different orders for each vendor, specified in the wizard form.
-Updates existed *Purchase order* if it was created for the same customer, vendor and *Sale Order*
+* Automatically takes data from *Sale Order* and creates *Purchase Order*
+* Creates different orders for each vendor, specified in the wizard form
+* Updates existing *Purchase order* if it was created for the same customer, vendor and *Sale Order*
 
 Credits
 =======
