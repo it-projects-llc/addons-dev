@@ -65,9 +65,9 @@ class BackupController(http.Controller):
             BACKUP_SERVICE + ':' + BACKUP_SERVICE_PORT + '/web/backup/list', headers=headers,
             params={'user_key': user_key, 'redirect': redirect_url}
         ).json()
-        oauth_url = res.get('oauth_url')
-        if oauth_url:
-            return "<html><head><script>window.location.href = '%s';</script></head></html>" % oauth_url
+        auth_link = res.get('auth_link')
+        if auth_link:
+            return "<html><head><script>window.location.href = '%s';</script></head></html>" % auth_link
         else:
             # TODO: check incompatible backups
             return env.get_template("backup_list.html").render(backup_list=res.get('backup_list'))
