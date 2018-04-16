@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
+License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
+<odoo>
+    <template id="report_product_label">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="report.html_container">
+                <div class="page" t-attf-data-label-id="#{o.id}">
+                    <t t-foreach="range(0, o.quantity)" t-as="i">
+                        <t t-set="product" t-value="o.product_id"/>
+                        <t t-set="label" t-value="o.label_id"/>
+                        <t t-if="label">
+                            <t t-raw="product.get_render_qweb(label.id)"></t>
+                        </t>
+                        <t t-if="not label">
+                            <t t-if="product.default_label_id">
+                                <t t-raw="product.get_render_qweb()"></t>
+                            </t>
+                            <t t-if="not product.default_label_id">
+                                <t t-call="product.report_simple_label">
+                                    <t t-set="product" t-value="product"/>
+                                </t>
+                            </t>
+                        </t>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
