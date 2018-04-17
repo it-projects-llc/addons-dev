@@ -12,7 +12,6 @@ The mdoule adds new options on user form (``Point of Sale`` tab):
 
 * ``Allow change Qty for kitchen orders``
 * ``Allow remove kitchen order line``
-  
 
 Credits
 =======
