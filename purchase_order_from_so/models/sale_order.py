@@ -58,7 +58,7 @@ class SaleOrderLinePOfromSO(models.Model):
         # disables 'Not enough inventory' warning popup
         return {}
 
-
+      
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 

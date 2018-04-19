@@ -5,6 +5,7 @@ from odoo import models, fields, api, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import ValidationError
 
+
 class PurchaseOrderWizard(models.TransientModel):
     _name = 'purchase.order.wizard'
     _description = 'Generate Purchase Order from Sale Order'
