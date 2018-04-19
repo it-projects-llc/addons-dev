@@ -7,7 +7,6 @@
 
         <record id="action_po_from_so" model="ir.actions.act_window">
             <field name="name">Generate Purchase order from the Sale Order</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order.wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
@@ -18,8 +17,8 @@
             <field name="name">Purchase Orders</field>
             <field name="res_model">purchase.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
-            <field name="search_view_id" ref="purchase.purchase_order_form"/>
+            <field name="view_mode">tree,form</field>
+            <!--<field name="context">{'search_default_sale_order_id': active_id}</field>-->
             <field name="domain">[('sale_order_id', '=', active_id)]</field>
         </record>
 
@@ -33,13 +32,21 @@
                     <button name="create_purchase_order" type="object" string="Create Purchase Order" class="oe_highlight"/>
                 </xpath>
                 <xpath expr="//button[@name='action_view_invoice']" position="after">
-                    <button class="oe_stat_button" type="action" name="%(purchase_order_from_so.action_purchased_orders)d"
-                        icon="fa-shopping-cart">
+                    <button class="oe_stat_button" type="action"
+                            name="%(purchase_order_from_so.action_purchased_orders)d"
+                            attrs="{'invisible': [('purchased_orders', 'in', [False, None, 0])]}"
+                            icon="fa-shopping-cart">
                         <div class="o_form_field o_stat_info">
                             <field name="purchased_orders"/>
                             <span class="o_stat_text">Purchase Orders</span>
                         </div>
                     </button>
+                </xpath>
+                <xpath expr="//tree/field[@name='currency_id']" position="after">
+                    <field name="virtual_available" invisible="1"/>
+                </xpath>
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="decoration-danger">virtual_available&lt;=0</attribute>
                 </xpath>
             </field>
         </record>
