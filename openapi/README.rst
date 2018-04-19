@@ -9,10 +9,14 @@
 Set up REST API and export Open API (Swagger) specification file for
 integration with whatever you need.
 
-The module handles routes prefixed with ``/api/``. 
+This module impements a ``/api/v1/`` route tree. 
 
 Authentication
 ==============
+
+* Server wide "break glass" through a ``salt`` in the config file
+* Database inference: Database name encoded and appended to the token
+* User authentication through the actual token
 
 As a workaround for multi-db instances, system uses *Basic Authentication* with
 ``db_name:token`` credentials, where ``token`` is a new field in ``res.users``
@@ -21,20 +25,41 @@ model.
 Customization
 =============
 
+TODO
+
+The model already includes configuration for the following models:
+
+  * report
+  * sale.order
+  * sale.order.line
+  * account.invoice
+  * account.invoice.line
+  * res.partner
+  * product.template
+
+TODO: Redefine `ir.model` to load default configuration on load
+
 The module allows to configure
 
 * available models
-* available operations per model (GRUD)
+* available operations per model (CRUD)
+* enable/disable private methods through API
+* method whitelist
+* specification for the following operations
 
-  * For reading:
+  * For reading ONE:
 
-    * field sets
+    * return field sets
+
+  * For reading MULTI:
+
+    * return field sets
 
 .. TODO: add example of usage in API requests
 
   * For creation:
 
-    * default values
+    * Create context (default values & context flags)
 
 .. TODO: add example of usage in API requests
 
