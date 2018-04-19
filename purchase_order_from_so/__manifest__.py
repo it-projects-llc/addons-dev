@@ -19,6 +19,7 @@
     "depends": [
         "sale_management",
         "purchase",
+        "sale_stock",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
