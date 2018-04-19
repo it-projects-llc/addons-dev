@@ -2,10 +2,12 @@
 # Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 from odoo import api, fields, models
+from itertools import groupby
 
 
 class ProductLabelSettings(models.TransientModel):
     _name = "product.label.report.settings"
+    _order = "label_id desc"
 
     def _default_product_label(self):
         return self.product_id.default_label_id
@@ -15,6 +17,16 @@ class ProductLabelSettings(models.TransientModel):
     quantity = fields.Integer("Quantity", default=1)
     label_id = fields.Many2one('product.label', 'Label', help="Select label for the product",
                                default=_default_product_label)
+
+    @api.multi
+    def get_paper_format_groups(self):
+        """Return:
+            list of objects grouped by the label_id
+        """
+        groups = []
+        for k, group in groupby(self, lambda l: l.label_id):
+            groups.append(list(group))
+        return groups
 
 
 class ProductLabelWizard(models.TransientModel):
