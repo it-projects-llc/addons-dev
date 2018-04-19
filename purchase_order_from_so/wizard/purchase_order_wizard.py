@@ -3,7 +3,7 @@
 
 from odoo import models, fields, api, _
 from odoo.addons import decimal_precision as dp
-
+from odoo.exceptions import ValidationError
 
 class PurchaseOrderWizard(models.TransientModel):
     _name = 'purchase.order.wizard'
@@ -22,6 +22,10 @@ class PurchaseOrderWizard(models.TransientModel):
                                     help="Not empty if an origin for purchase order was sale order")
 
     def create_purchase_orders(self):
+        warning = self.check_vendors()
+        if warning:
+            raise ValidationError(warning)
+
         po_env = self.env['purchase.order']
         vendor_ids = map(lambda x: x.partner_id.id, self.order_line_ids)
         for ven in vendor_ids:
@@ -37,7 +41,7 @@ class PurchaseOrderWizard(models.TransientModel):
                 })
             else:
                 p_order = po_env.create({
-                    'name': self.name,
+                    'name': self.env['ir.sequence'].next_by_code('purchase.order') or '/',
                     'date_order': self.date_order,
                     'partner_id': ven,
                     'currency_id': self.currency_id.id,
@@ -45,7 +49,7 @@ class PurchaseOrderWizard(models.TransientModel):
                     'customer_id': self.partner_id.id,
                     'order_line': [(5, 0, 0)],
                 })
-            for line in self.order_line_ids.filtered(lambda l: l.partner_id.id == ven):
+            for line in self.order_line_ids.filtered(lambda l: l.partner_id.id == ven and l.product_qty_to_order > 0):
                 o_line = self.env['purchase.order.line'].create({
                     'name': line.name,
                     'product_qty': line.product_qty_to_order,
@@ -60,20 +64,30 @@ class PurchaseOrderWizard(models.TransientModel):
                     'order_line': [(4, o_line.id)]
                 })
 
+    def check_vendors(self):
+        message = ''
+        for line in self.order_line_ids:
+            if line.product_qty_to_order > 0 and not line.partner_id:
+                message = message + 'Define a Vendor for the line with product "' + line.product_id.name + '"\n'
+        if message:
+            message = 'Vendor is not defined \n' + message
+        return message
+
     def create_po_lines_from_so(self, s_order):
         for line in s_order.order_line:
             product = self.env['product.product'].browse(line.product_id.id)
-            qty_available = product.qty_available
             mto_id = self.env['stock.location.route'].search([('name', 'like', _('Make To Order'))], limit=1).id
             mto_product = mto_id in product.product_tmpl_id.route_ids.ids
             partner_id = False
             vendors = product.product_tmpl_id.seller_ids
             if len(vendors):
                 partner_id = vendors[0].name.id
+            taxes = product.product_tmpl_id.supplier_taxes_id
+            taxes = taxes and [(6, 0, taxes.ids)] or False
             p_line = self.env['purchase.order.line.wizard'].create({
                 'name': line.name,
                 'product_qty_sold': line.product_uom_qty,
-                'product_qty_to_order': max(line.product_uom_qty - qty_available, 0),
+                'product_qty_to_order': max(line.product_uom_qty - product.virtual_available, 0),
                 'date_planned': line.order_id.date_order,
                 'product_uom': line.product_uom.id,
                 'product_id': product.id,
@@ -81,7 +95,7 @@ class PurchaseOrderWizard(models.TransientModel):
                 'partner_id': partner_id,
                 'mto_product': mto_product,
                 'purchase_price': product.standard_price,
-                'taxes_id': line.tax_id.id,
+                'taxes_id': taxes,
             })
             self.order_line_ids += p_line
 
@@ -104,6 +118,7 @@ class PurchaseOrderLineWizard(models.TransientModel):
                                        "Expressed in the default unit of measure of the product.")
     total_price = fields.Float(compute="_compute_total_price", string='Total Price', digits=dp.get_precision('Product Price'))
     taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
+    seller_ids = fields.One2many(related='product_id.product_tmpl_id.seller_ids')
 
     @api.depends('product_qty_to_order', 'purchase_price', 'taxes_id')
     def _compute_total_price(self):

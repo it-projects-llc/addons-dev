@@ -1,7 +1,7 @@
 # Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
-from odoo import models, fields, _
+from odoo import models, fields, api, _
 
 
 class SaleOrder(models.Model):
@@ -36,6 +36,27 @@ class SaleOrder(models.Model):
             'res_id': wizard.id,
             'context': vals,
         }
+
+
+class SaleOrderLinePOfromSO(models.Model):
+    _inherit = 'sale.order.line'
+
+    virtual_available = fields.Float(related='product_id.virtual_available', string='Forecast Quantity',
+                                     help="Forecast quantity (computed as Quantity On Hand "
+                                          "- Outgoing + Incoming)\n"
+                                          "In a context with a single Stock Location, this includes "
+                                          "goods stored in this location, or any of its children.\n"
+                                          "In a context with a single Warehouse, this includes "
+                                          "goods stored in the Stock Location of this Warehouse, or any "
+                                          "of its children.\n"
+                                          "Otherwise, this includes goods stored in any Stock Location "
+                                          "with 'internal' type.")
+
+    @api.onchange('product_id')
+    def _onchange_product_id_check_availability(self):
+        self.virtual_available = self.product_id.virtual_available
+        # disables 'Not enough inventory' warning popup
+        return {}
 
 
 class PurchaseOrder(models.Model):
