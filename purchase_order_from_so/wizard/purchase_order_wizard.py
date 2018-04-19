@@ -29,15 +29,20 @@ class PurchaseOrderWizard(models.TransientModel):
         po_env = self.env['purchase.order']
         vendor_ids = map(lambda x: x.partner_id.id, self.order_line_ids)
         for ven in vendor_ids:
+
+            so_lines = self.order_line_ids.filtered(lambda l: l.partner_id.id == ven and l.product_qty_to_order > 0)
+            if not len(so_lines):
+                continue
+
             p_order = po_env.search([('partner_id', '=', ven),
                                      ('customer_id', '=', self.partner_id.id),
                                      ('sale_order_id', '=', self.sale_order_id.id)])
             if len(p_order):
                 p_order = p_order[0]
                 p_order.write({
-                    'name': self.name,
                     'date_order': self.date_order,
                     'currency_id': self.currency_id.id,
+                    'order_line': [(5, 0, 0)],
                 })
             else:
                 p_order = po_env.create({
@@ -47,9 +52,9 @@ class PurchaseOrderWizard(models.TransientModel):
                     'currency_id': self.currency_id.id,
                     'sale_order_id': self.sale_order_id.id,
                     'customer_id': self.partner_id.id,
-                    'order_line': [(5, 0, 0)],
+                    'order_line': False,
                 })
-            for line in self.order_line_ids.filtered(lambda l: l.partner_id.id == ven and l.product_qty_to_order > 0):
+            for line in so_lines:
                 o_line = self.env['purchase.order.line'].create({
                     'name': line.name,
                     'product_qty': line.product_qty_to_order,
