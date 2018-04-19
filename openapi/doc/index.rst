@@ -23,10 +23,10 @@ via Model's Menu (recommended)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 TODO
-
-* Open menu with data you need to work over API
-* Click button ``[Configure API]`` located near to ``Create
-* Activate and configure operation you need to be available over API.  
+* `Activate Developer Mode <https://odoo-development.readthedocs.io/en/latest/odoo/usage/debug-mode.html>`__
+* Open the developer tools drop down
+* Click menu ``Configure REST API`` located within the dropdown
+* On the form that opens, activate and configure this module for REST API accessability. 
 * Click ``[Apply]``
 
 via Database Structure Menu (only for developers)
@@ -70,6 +70,7 @@ Authentication
   * Set **Allowed Integration**
   * In ``REST API`` tab Click  ``[Generate Access Token]``
   * Copy **Basic Authentication code** to use in any system that support REST API (Open API)
+  * If you want to refresh the token programatically from the connected system, also copy the **Refresh Token**.
 
 Configuration review
 --------------------
@@ -84,7 +85,7 @@ TODO
 * Open menu ``[[ Settings ]] >> Dashboard``
 * In *REST API* section you can see Quantity of Models available via API
 * Click button ``[Manage]`` to check or edit configuration
-* Click link ``Download OpenAPI (Swagger)`` to get Specification file. Follow
+* Click link ``Publish OpenAPI (Swagger)``. A ``swagger.json`` will be made available under ``/api/v1/swagger.json``
   documentation of the tool / system you use on how to apply the Specification
   file there. Some examples are presented below.
 
@@ -96,3 +97,5 @@ Allows to review API
 * Open http://editor.swagger.io/
 * Click menu ``File >> Import File`` 
 * RESULT: You can see specification for API
+* You can auto-generate SDKs in over 40 languages, there.
+* Or even download server stups in over 20 frameworks, that iplement the API.
