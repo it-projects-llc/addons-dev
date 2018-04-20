@@ -17,7 +17,6 @@ class SaleOrder(models.Model):
         view = self.env.ref('purchase_order_from_so.purchase_order_wizard_form')
         vals = {
             'partner_id': self.partner_id.id,
-            'date_order': self.date_order,
             'currency_id': self.currency_id.id,
             'company_id': self.company_id.id,
             'sale_order_id': self.id,

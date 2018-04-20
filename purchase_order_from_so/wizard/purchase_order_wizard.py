@@ -4,6 +4,8 @@
 from odoo import models, fields, api, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import ValidationError
+from datetime import datetime, timedelta
+
 
 class PurchaseOrderWizard(models.TransientModel):
     _name = 'purchase.order.wizard'
@@ -11,7 +13,7 @@ class PurchaseOrderWizard(models.TransientModel):
 
     partner_id = fields.Many2one('res.partner', string='Customer', required=True, change_default=True)
     name = fields.Char('Order Reference', required=True, index=True, copy=False, default='New')
-    date_order = fields.Datetime('Order Date', required=True, index=True, copy=False, default=fields.Datetime.now,
+    date_order = fields.Datetime('Order Date', index=True, copy=False, default=fields.Datetime.now,
                                  help="Depicts the date where the Quotation should be validated and converted into a purchase order.")
     currency_id = fields.Many2one('res.currency', 'Currency', required=True,
                                   default=lambda self: self.env.user.company_id.currency_id.id)
@@ -54,6 +56,7 @@ class PurchaseOrderWizard(models.TransientModel):
                     'customer_id': self.partner_id.id,
                     'order_line': False,
                 })
+
             for line in so_lines:
                 o_line = self.env['purchase.order.line'].create({
                     'name': line.name,
@@ -93,7 +96,6 @@ class PurchaseOrderWizard(models.TransientModel):
                 'name': line.name,
                 'product_qty_sold': line.product_uom_qty,
                 'product_qty_to_order': max(line.product_uom_qty - product.virtual_available, 0),
-                'date_planned': line.order_id.date_order,
                 'product_uom': line.product_uom.id,
                 'product_id': product.id,
                 'order_id': self.id,
@@ -112,7 +114,7 @@ class PurchaseOrderLineWizard(models.TransientModel):
     name = fields.Text(string='Description', required=True)
     product_qty_sold = fields.Float(string='Quantity Sold', digits=dp.get_precision('Product Unit of Measure'), required=True)
     product_qty_to_order = fields.Float(string='Quantity to Order', digits=dp.get_precision('Product Unit of Measure'))
-    date_planned = fields.Datetime(string='Order Date', required=True, index=True)
+    date_planned = fields.Datetime(compute="_compute_date_planned", string='Scheduled Date', index=True)
     product_uom = fields.Many2one('product.uom', string='Product Unit of Measure', required=True)
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, required=True)
     partner_id = fields.Many2one('res.partner', string='Vendor')
@@ -124,6 +126,17 @@ class PurchaseOrderLineWizard(models.TransientModel):
     total_price = fields.Float(compute="_compute_total_price", string='Total Price', digits=dp.get_precision('Product Price'))
     taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
     seller_ids = fields.One2many(related='product_id.product_tmpl_id.seller_ids')
+
+    @api.depends('partner_id', 'product_id', 'product_id.product_tmpl_id')
+    def _compute_date_planned(self):
+        for line in self:
+            product_template = line.product_id.product_tmpl_id
+            line.date_planned = datetime.now() + timedelta(days=max(
+                0,
+                product_template.sale_delay,
+                self.env['product.supplierinfo'].search([('product_tmpl_id', '=', product_template.id),
+                                                         ('name', '=', line.partner_id.id)]).delay,
+            ))
 
     @api.depends('product_qty_to_order', 'purchase_price', 'taxes_id')
     def _compute_total_price(self):
