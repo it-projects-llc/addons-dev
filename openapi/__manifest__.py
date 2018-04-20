@@ -18,11 +18,14 @@
     # "currency": "EUR",
 
     "depends": [
+        "web_settings_dashboard",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
+        "views/assets.xml",
     ],
     "qweb": [
+        "static/src/xml/dashboard.xml"
     ],
     "demo": [
     ],
