@@ -3,6 +3,8 @@
 
 from odoo import models, fields, api, _
 from odoo.addons import decimal_precision as dp
+from odoo.exceptions import ValidationError
+from datetime import datetime, timedelta
 
 
 class PurchaseOrderWizard(models.TransientModel):
@@ -11,7 +13,7 @@ class PurchaseOrderWizard(models.TransientModel):
 
     partner_id = fields.Many2one('res.partner', string='Customer', required=True, change_default=True)
     name = fields.Char('Order Reference', required=True, index=True, copy=False, default='New')
-    date_order = fields.Datetime('Order Date', required=True, index=True, copy=False, default=fields.Datetime.now,
+    date_order = fields.Datetime('Order Date', index=True, copy=False, default=fields.Datetime.now,
                                  help="Depicts the date where the Quotation should be validated and converted into a purchase order.")
     currency_id = fields.Many2one('res.currency', 'Currency', required=True,
                                   default=lambda self: self.env.user.company_id.currency_id.id)
@@ -22,30 +24,40 @@ class PurchaseOrderWizard(models.TransientModel):
                                     help="Not empty if an origin for purchase order was sale order")
 
     def create_purchase_orders(self):
+        warning = self.check_vendors()
+        if warning:
+            raise ValidationError(warning)
+
         po_env = self.env['purchase.order']
         vendor_ids = map(lambda x: x.partner_id.id, self.order_line_ids)
         for ven in vendor_ids:
+
+            so_lines = self.order_line_ids.filtered(lambda l: l.partner_id.id == ven and l.product_qty_to_order > 0)
+            if not len(so_lines):
+                continue
+
             p_order = po_env.search([('partner_id', '=', ven),
                                      ('customer_id', '=', self.partner_id.id),
                                      ('sale_order_id', '=', self.sale_order_id.id)])
             if len(p_order):
                 p_order = p_order[0]
                 p_order.write({
-                    'name': self.name,
                     'date_order': self.date_order,
                     'currency_id': self.currency_id.id,
+                    'order_line': [(5, 0, 0)],
                 })
             else:
                 p_order = po_env.create({
-                    'name': self.name,
+                    'name': self.env['ir.sequence'].next_by_code('purchase.order') or '/',
                     'date_order': self.date_order,
                     'partner_id': ven,
                     'currency_id': self.currency_id.id,
                     'sale_order_id': self.sale_order_id.id,
                     'customer_id': self.partner_id.id,
-                    'order_line': [(5, 0, 0)],
+                    'order_line': False,
                 })
-            for line in self.order_line_ids.filtered(lambda l: l.partner_id.id == ven):
+
+            for line in so_lines:
                 o_line = self.env['purchase.order.line'].create({
                     'name': line.name,
                     'product_qty': line.product_qty_to_order,
@@ -60,28 +72,37 @@ class PurchaseOrderWizard(models.TransientModel):
                     'order_line': [(4, o_line.id)]
                 })
 
+    def check_vendors(self):
+        message = ''
+        for line in self.order_line_ids:
+            if line.product_qty_to_order > 0 and not line.partner_id:
+                message = message + 'Define a Vendor for the line with product "' + line.product_id.name + '"\n'
+        if message:
+            message = 'Vendor is not defined \n' + message
+        return message
+
     def create_po_lines_from_so(self, s_order):
         for line in s_order.order_line:
             product = self.env['product.product'].browse(line.product_id.id)
-            qty_available = product.qty_available
             mto_id = self.env['stock.location.route'].search([('name', 'like', _('Make To Order'))], limit=1).id
             mto_product = mto_id in product.product_tmpl_id.route_ids.ids
             partner_id = False
             vendors = product.product_tmpl_id.seller_ids
             if len(vendors):
                 partner_id = vendors[0].name.id
+            taxes = product.product_tmpl_id.supplier_taxes_id
+            taxes = taxes and [(6, 0, taxes.ids)] or False
             p_line = self.env['purchase.order.line.wizard'].create({
                 'name': line.name,
                 'product_qty_sold': line.product_uom_qty,
-                'product_qty_to_order': max(line.product_uom_qty - qty_available, 0),
-                'date_planned': line.order_id.date_order,
+                'product_qty_to_order': max(line.product_uom_qty - product.virtual_available, 0),
                 'product_uom': line.product_uom.id,
                 'product_id': product.id,
                 'order_id': self.id,
                 'partner_id': partner_id,
                 'mto_product': mto_product,
                 'purchase_price': product.standard_price,
-                'taxes_id': line.tax_id.id,
+                'taxes_id': taxes,
             })
             self.order_line_ids += p_line
 
@@ -93,7 +114,7 @@ class PurchaseOrderLineWizard(models.TransientModel):
     name = fields.Text(string='Description', required=True)
     product_qty_sold = fields.Float(string='Quantity Sold', digits=dp.get_precision('Product Unit of Measure'), required=True)
     product_qty_to_order = fields.Float(string='Quantity to Order', digits=dp.get_precision('Product Unit of Measure'))
-    date_planned = fields.Datetime(string='Order Date', required=True, index=True)
+    date_planned = fields.Datetime(compute="_compute_date_planned", string='Scheduled Date', index=True)
     product_uom = fields.Many2one('product.uom', string='Product Unit of Measure', required=True)
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, required=True)
     partner_id = fields.Many2one('res.partner', string='Vendor')
@@ -104,6 +125,18 @@ class PurchaseOrderLineWizard(models.TransientModel):
                                        "Expressed in the default unit of measure of the product.")
     total_price = fields.Float(compute="_compute_total_price", string='Total Price', digits=dp.get_precision('Product Price'))
     taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
+    seller_ids = fields.One2many(related='product_id.product_tmpl_id.seller_ids')
+
+    @api.depends('partner_id', 'product_id', 'product_id.product_tmpl_id')
+    def _compute_date_planned(self):
+        for line in self:
+            product_template = line.product_id.product_tmpl_id
+            line.date_planned = datetime.now() + timedelta(days=max(
+                0,
+                product_template.sale_delay,
+                self.env['product.supplierinfo'].search([('product_tmpl_id', '=', product_template.id),
+                                                         ('name', '=', line.partner_id.id)]).delay,
+            ))
 
     @api.depends('product_qty_to_order', 'purchase_price', 'taxes_id')
     def _compute_total_price(self):
