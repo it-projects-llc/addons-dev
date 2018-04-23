@@ -28,7 +28,7 @@ class Access(models.Model):
         domain="[('resource', '=', model)]")
     create_context_ids = fields.Many2many(
         'openapi.access.create.context',
-        'Creation Context Presets',
+        string='Creation Context Presets',
         help="Can be used to pass default values or custom context",
         domain="[('model_id', '=', model_id)]",
         context="{'default_model_id': model_id}",

@@ -7,4 +7,4 @@ from odoo import models, fields
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
-    namespace_ids = fields.Many2many('openapi.namespace', 'Allowed Integrations')
+    namespace_ids = fields.Many2many('openapi.namespace', string='Allowed Integrations')
