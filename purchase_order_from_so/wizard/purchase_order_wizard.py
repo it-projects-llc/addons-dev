@@ -88,21 +88,25 @@ class PurchaseOrderWizard(models.TransientModel):
             mto_product = mto_id in product.product_tmpl_id.route_ids.ids
             partner_id = False
             vendors = product.product_tmpl_id.seller_ids
+            seller_ids = False
             if len(vendors):
                 partner_id = vendors[0].name.id
+                purchase_price = vendors[0].price
+                seller_ids = [(6, 0, vendors.mapped('name').ids)]
             taxes = product.product_tmpl_id.supplier_taxes_id
             taxes = taxes and [(6, 0, taxes.ids)] or False
             p_line = self.env['purchase.order.line.wizard'].create({
                 'name': line.name,
                 'product_qty_sold': line.product_uom_qty,
-                'product_qty_to_order': max(line.product_uom_qty - product.virtual_available, 0),
+                'product_qty_to_order': max(line.product_uom_qty - max(product.virtual_available, 0), 0),
                 'product_uom': line.product_uom.id,
                 'product_id': product.id,
                 'order_id': self.id,
                 'partner_id': partner_id,
                 'mto_product': mto_product,
-                'purchase_price': product.standard_price,
+                'purchase_price': purchase_price,
                 'taxes_id': taxes,
+                'seller_ids': seller_ids,
             })
             self.order_line_ids += p_line
 
@@ -123,9 +127,9 @@ class PurchaseOrderLineWizard(models.TransientModel):
     purchase_price = fields.Float('Unit Cost', digits=dp.get_precision('Product Price'),
                                   help="Cost used for stock valuation. Also used as a base price for pricelists. "
                                        "Expressed in the default unit of measure of the product.")
-    total_price = fields.Float(compute="_compute_total_price", string='Total Price', digits=dp.get_precision('Product Price'))
     taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
-    seller_ids = fields.One2many(related='product_id.product_tmpl_id.seller_ids')
+    total_price = fields.Float(compute="_compute_total_price", string='Total Price', digits=dp.get_precision('Product Price'))
+    seller_ids = fields.Many2many('res.partner', string='Possible Vendors')
 
     @api.depends('partner_id', 'product_id', 'product_id.product_tmpl_id')
     def _compute_date_planned(self):
@@ -138,10 +142,34 @@ class PurchaseOrderLineWizard(models.TransientModel):
                                                          ('name', '=', line.partner_id.id)]).delay,
             ))
 
-    @api.depends('product_qty_to_order', 'purchase_price', 'taxes_id')
+    @api.depends('partner_id', 'product_id')
+    def _compute_purchase_price(self):
+        for line in self:
+            if line.partner_id:
+                line.update({
+                    'purchase_price': self.env['product.supplierinfo'].search([
+                        ('product_tmpl_id', '=', line.product_id.product_tmpl_id.id),
+                        ('name', '=', line.partner_id.id)
+                    ]).price,
+                })
+
+    @api.depends('product_qty_to_order', 'purchase_price', 'taxes_id', 'partner_id')
     def _compute_total_price(self):
         for line in self:
             taxes = line.taxes_id.compute_all(line.purchase_price, line.order_id.currency_id, line.product_qty_to_order, product=line.product_id, partner=line.order_id.partner_id)
             line.update({
                 'total_price': taxes['total_included'],
             })
+
+    @api.onchange('partner_id')
+    def _onchange_partner(self):
+        if self.partner_id:
+            purchase_price = self.partner_id and self.env['product.supplierinfo'].search([
+                ('product_tmpl_id', '=', self.product_id.product_tmpl_id.id),
+                ('name', '=', self.partner_id.id)
+            ]).price
+        else:
+            purchase_price = self.product_id.standard_price
+        self.update({
+            'purchase_price': purchase_price,
+        })
