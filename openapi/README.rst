@@ -46,11 +46,13 @@ Credits
 
 Contributors
 ------------
-* ` <https://it-projects.info/team/yelizariev>`__
+* `Ivan Yelizariev <https://it-projects.info/team/yelizariev>`__
+* `David Arnold <dar@xoe.solutions>`__
 
 Sponsors
 --------
 * `IT-Projects LLC <https://it-projects.info>`__
+* `XOE Solutions <https://xoe.solutions>`__
 
 Maintainers
 -----------
