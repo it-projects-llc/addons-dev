@@ -18,17 +18,20 @@
     # "currency": "EUR",
 
     "depends": [
+        "web_tour",
         "web_settings_dashboard",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
+        "security/ir.model.access.csv",
         "views/assets.xml",
-    ],
-    "qweb": [
-        "static/src/xml/dashboard.xml"
     ],
     "demo": [
         "views/assets_demo.xml",
+        "views/tour_views.xml",
+    ],
+    "qweb": [
+        "static/src/xml/dashboard.xml"
     ],
 
     "post_load": None,
