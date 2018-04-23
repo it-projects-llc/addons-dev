@@ -20,7 +20,7 @@ class Namespace(models.Model):
         ('disabled', 'Disabled'),
         ('info', 'Short'),
         ('debug', 'Full'),
-    ], 'Log Requests', default='info')
+    ], 'Log Requests', default='disabled')
 
     log_response = fields.Selection([
         ('disabled', 'Disabled'),
