@@ -2,7 +2,7 @@
  POS Orders History
 ====================
 
-The module displays all paid orders in POS interface
+The module allows to display all paid orders in POS interface
 
 Credits
 =======
