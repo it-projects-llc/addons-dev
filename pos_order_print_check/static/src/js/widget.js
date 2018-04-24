@@ -19,7 +19,7 @@ odoo.define('pos_order_print_check.widget', function (require) {
                     if (self.pos.config.use_proxy && pos_box.status !== 'connected') {
                         self.pos.gui.show_popup('error',{
                             'title': _t('Error: Could not Print Orders'),
-                            'body': _t('No connection with PosBox.'),
+                            'body': _t('No connection to PosBox.'),
                         });
                         return false;
                     }
