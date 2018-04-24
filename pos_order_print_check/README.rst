@@ -2,11 +2,11 @@
    :target: https://www.gnu.org/licenses/lgpl
    :alt: License: LGPL-3
 
-=======================
- POS Order Print Check
-=======================
+=========================
+ Check PosBox Connection
+=========================
 
-Check the connection with PosBox before printing orders in Kitchen
+Check the connection to PosBox before printing kitchen orders
 
 Credits
 =======
