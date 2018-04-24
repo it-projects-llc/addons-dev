@@ -1,6 +1,6 @@
-=================
- POS Order Print
-=================
+=========================
+ Check PosBox Connection
+=========================
 
 Installation
 ============
@@ -11,7 +11,7 @@ Configuration
 =============
 
 * Open menu ``[[ Point Of Sale ]] >> Configuration >> Point of Sale``
-* Select POS Config
+* Open POS Config form
 * Click ``[Edit]``
 * Specify ``PosBox`` settings
 * Click ``[Save]``
@@ -20,6 +20,6 @@ Usage
 =====
 
 * Open session of ``Point of Sale``
-* Add some Products
+* Add some Products to cart
 * Click ``[Order]``
-* RESULT: if no connection with PosBox, you will see a warning message
+* RESULT: if no connection to PosBox, you will see the warning message
