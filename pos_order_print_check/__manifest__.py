@@ -2,8 +2,8 @@
 # Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 {
-    "name": """POS Order Print""",
-    "summary": """""",
+    "name": """Check PosBox Connection""",
+    "summary": """Check the connection to PosBox before printing kitchen orders""",
     "category": "Point of Sale",
     # "live_test_url": "",
     "images": [],
