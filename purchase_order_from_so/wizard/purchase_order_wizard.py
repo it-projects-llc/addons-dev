@@ -91,9 +91,11 @@ class PurchaseOrderWizard(models.TransientModel):
             vendors = product.product_tmpl_id.seller_ids.filtered(
                 lambda s: s.min_qty <= product_qty_to_order and self.check_date_availability(s))
             seller_ids = False
+            purchase_price = product.standard_price,
             if len(vendors):
                 supplier_id = vendors[0].id
                 seller_ids = [(6, 0, vendors.ids)]
+                purchase_price = vendors[0].price
             taxes = product.product_tmpl_id.supplier_taxes_id
             taxes = taxes and [(6, 0, taxes.ids)] or False
             p_line = self.env['purchase.order.line.wizard'].create({
@@ -104,6 +106,7 @@ class PurchaseOrderWizard(models.TransientModel):
                 'product_id': product.id,
                 'order_id': self.id,
                 'supplier_id': supplier_id,
+                'purchase_price': purchase_price,
                 'mto_product': mto_product,
                 'taxes_id': taxes,
                 'seller_ids': seller_ids,
@@ -147,15 +150,6 @@ class PurchaseOrderLineWizard(models.TransientModel):
                 line.product_id.product_tmpl_id.sale_delay,
             ))
 
-    @api.onchange('supplier_id')
-    @api.depends('supplier_id', 'product_id')
-    def _compute_purchase_price(self):
-        for line in self:
-            if line.supplier_id:
-                line.update({
-                    'purchase_price': self.supplier_id and self.supplier_id.price or self.product_id.standard_price,
-                })
-
     @api.depends('product_qty_to_order', 'purchase_price', 'taxes_id', 'partner_id')
     def _compute_total_price(self):
         for line in self:
@@ -167,3 +161,13 @@ class PurchaseOrderLineWizard(models.TransientModel):
     def _onchange_qty_to_order(self):
         self.seller_ids = self.product_id.product_tmpl_id.seller_ids.filtered(
             lambda s: s.min_qty <= self.product_qty_to_order and self.order_id.check_date_availability(s))
+
+    @api.onchange('supplier_id')
+    def _onchange_purchase_price(self):
+        for line in self:
+            price = line.product_id.standard_price
+            if line.supplier_id:
+                price = line.supplier_id.price
+            line.update({
+                'purchase_price': price,
+            })
