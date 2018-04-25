@@ -40,7 +40,7 @@ class SaleOrder(models.Model):
 class SaleOrderLinePOfromSO(models.Model):
     _inherit = 'sale.order.line'
 
-    virtual_available = fields.Float(related='product_id.virtual_available', string='Forecast Quantity',
+    forecasted_qty = fields.Float(related='product_id.virtual_available', string='Forecast Quantity',
                                      help="Forecast quantity (computed as Quantity On Hand "
                                           "- Outgoing + Incoming)\n"
                                           "In a context with a single Stock Location, this includes "
@@ -51,9 +51,12 @@ class SaleOrderLinePOfromSO(models.Model):
                                           "Otherwise, this includes goods stored in any Stock Location "
                                           "with 'internal' type.")
 
+    @api.onchange('product_uom_qty')
+    def _onchange_product_uom_qty(self):
+        self.forecasted_qty = self.product_id.virtual_available - self.product_uom_qty
+
     @api.onchange('product_id')
     def _onchange_product_id_check_availability(self):
-        self.virtual_available = self.product_id.virtual_available
         # disables 'Not enough inventory' warning popup
         return {}
 

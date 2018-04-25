@@ -66,7 +66,7 @@ class PurchaseOrderWizard(models.TransientModel):
                     'product_uom': line.product_uom.id,
                     'product_id': line.product_id.id,
                     'price_unit': line.purchase_price,
-                    'taxes_id': line.taxes_id.ids,
+                    'taxes_id': [(6, 0, line.taxes_id.ids)],
                 })
                 p_order.write({
                     'order_line': [(4, o_line.id)]
@@ -86,25 +86,25 @@ class PurchaseOrderWizard(models.TransientModel):
             product = self.env['product.product'].browse(line.product_id.id)
             mto_id = self.env['stock.location.route'].search([('name', 'like', _('Make To Order'))], limit=1).id
             mto_product = mto_id in product.product_tmpl_id.route_ids.ids
-            partner_id = False
-            vendors = product.product_tmpl_id.seller_ids
+            supplier_id = False
+            product_qty_to_order = max(line.product_uom_qty - max(product.virtual_available, 0), 0)
+            vendors = product.product_tmpl_id.seller_ids.filtered(lambda s: s.min_qty <= product_qty_to_order and
+                                                                  s.date_start <= s_order.date_order <= s.date_end)
             seller_ids = False
             if len(vendors):
-                partner_id = vendors[0].name.id
-                purchase_price = vendors[0].price
-                seller_ids = [(6, 0, vendors.mapped('name').ids)]
+                supplier_id = vendors[0].id
+                seller_ids = [(6, 0, vendors.ids)]
             taxes = product.product_tmpl_id.supplier_taxes_id
             taxes = taxes and [(6, 0, taxes.ids)] or False
             p_line = self.env['purchase.order.line.wizard'].create({
                 'name': line.name,
                 'product_qty_sold': line.product_uom_qty,
-                'product_qty_to_order': max(line.product_uom_qty - max(product.virtual_available, 0), 0),
+                'product_qty_to_order': product_qty_to_order,
                 'product_uom': line.product_uom.id,
                 'product_id': product.id,
                 'order_id': self.id,
-                'partner_id': partner_id,
+                'supplier_id': supplier_id,
                 'mto_product': mto_product,
-                'purchase_price': purchase_price,
                 'taxes_id': taxes,
                 'seller_ids': seller_ids,
             })
@@ -121,7 +121,8 @@ class PurchaseOrderLineWizard(models.TransientModel):
     date_planned = fields.Datetime(compute="_compute_date_planned", string='Scheduled Date', index=True)
     product_uom = fields.Many2one('product.uom', string='Product Unit of Measure', required=True)
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, required=True)
-    partner_id = fields.Many2one('res.partner', string='Vendor')
+    partner_id = fields.Many2one('res.partner', related="supplier_id.name", string='Vendor')
+    supplier_id = fields.Many2one('product.supplierinfo', string='Vendor/Supplier')
     order_id = fields.Many2one('purchase.order.wizard', string='Order Reference', index=True, required=True, ondelete='cascade')
     mto_product = fields.Boolean(string="MTO", help="Make To Order product")
     purchase_price = fields.Float('Unit Cost', digits=dp.get_precision('Product Price'),
@@ -129,47 +130,37 @@ class PurchaseOrderLineWizard(models.TransientModel):
                                        "Expressed in the default unit of measure of the product.")
     taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
     total_price = fields.Float(compute="_compute_total_price", string='Total Price', digits=dp.get_precision('Product Price'))
-    seller_ids = fields.Many2many('res.partner', string='Possible Vendors')
+    seller_ids = fields.Many2many('product.supplierinfo', string='Possible Vendors')
+    date_start = fields.Date('Start Date', related="supplier_id.date_start", help="Start date for this vendor price")
+    date_end = fields.Date('End Date', related="supplier_id.date_end", help="End date for this vendor price")
 
-    @api.depends('partner_id', 'product_id', 'product_id.product_tmpl_id')
+    @api.depends('supplier_id', 'product_id', 'product_id.product_tmpl_id')
     def _compute_date_planned(self):
         for line in self:
-            product_template = line.product_id.product_tmpl_id
             line.date_planned = datetime.now() + timedelta(days=max(
                 0,
-                product_template.sale_delay,
-                self.env['product.supplierinfo'].search([('product_tmpl_id', '=', product_template.id),
-                                                         ('name', '=', line.partner_id.id)]).delay,
+                self.supplier_id.delay,
+                line.product_id.product_tmpl_id.sale_delay,
             ))
 
-    @api.depends('partner_id', 'product_id')
+    @api.onchange('supplier_id')
+    @api.depends('supplier_id', 'product_id')
     def _compute_purchase_price(self):
         for line in self:
-            if line.partner_id:
+            if line.supplier_id:
                 line.update({
-                    'purchase_price': self.env['product.supplierinfo'].search([
-                        ('product_tmpl_id', '=', line.product_id.product_tmpl_id.id),
-                        ('name', '=', line.partner_id.id)
-                    ]).price,
+                    'purchase_price': self.supplier_id and self.supplier_id.price or self.product_id.standard_price,
                 })
 
     @api.depends('product_qty_to_order', 'purchase_price', 'taxes_id', 'partner_id')
     def _compute_total_price(self):
         for line in self:
-            taxes = line.taxes_id.compute_all(line.purchase_price, line.order_id.currency_id, line.product_qty_to_order, product=line.product_id, partner=line.order_id.partner_id)
             line.update({
-                'total_price': taxes['total_included'],
+                'total_price': self.purchase_price * self.product_qty_to_order,
             })
 
-    @api.onchange('partner_id')
-    def _onchange_partner(self):
-        if self.partner_id:
-            purchase_price = self.partner_id and self.env['product.supplierinfo'].search([
-                ('product_tmpl_id', '=', self.product_id.product_tmpl_id.id),
-                ('name', '=', self.partner_id.id)
-            ]).price
-        else:
-            purchase_price = self.product_id.standard_price
-        self.update({
-            'purchase_price': purchase_price,
-        })
+    @api.onchange('product_qty_to_order')
+    def _onchange_qty_to_order(self):
+        self.seller_ids = self.product_id.product_tmpl_id.seller_ids.filtered(
+            lambda s: s.min_qty <= self.product_qty_to_order and (not (s.date_start and s.date_end) or
+                      (s.date_start <= self.order_id.date_order and s.date_end >= self.order_id.date_order)))

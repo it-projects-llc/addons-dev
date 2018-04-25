@@ -13,12 +13,35 @@
             <field name="target">new</field>
         </record>
 
+        <record id="purchase_order_tree_wo_create" model="ir.ui.view">
+            <field name="name">purchase.order.wo.create.tree</field>
+            <field name="model">purchase.order</field>
+            <field name="arch" type="xml">
+                <tree string="Purchase Order" create="false"
+                      decoration-bf="message_unread==True" decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')">
+                    <field name="message_unread" invisible="1"/>
+                    <field name="name" string="Reference"/>
+                    <field name="date_order" />
+                    <field name="partner_id"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                    <field name="date_planned" invisible="context.get('quotation_only', False)"/>
+                    <field name="origin"/>
+                    <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary"/>
+                    <field name="amount_total" sum="Total amount" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="state"/>
+                    <field name="customer_id"/>
+                    <field name="invoice_status" invisible="not context.get('show_purchase', True)"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="action_purchased_orders" model="ir.actions.act_window">
             <field name="name">Purchase Orders</field>
             <field name="res_model">purchase.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <!--<field name="context">{'search_default_sale_order_id': active_id}</field>-->
+            <field name="view_id" ref="purchase_order_from_so.purchase_order_tree_wo_create"/>
             <field name="domain">[('sale_order_id', '=', active_id)]</field>
         </record>
 
@@ -43,10 +66,10 @@
                     </button>
                 </xpath>
                 <xpath expr="//tree/field[@name='currency_id']" position="after">
-                    <field name="virtual_available" invisible="1"/>
+                    <field name="forecasted_qty" invisible="1"/>
                 </xpath>
                 <xpath expr="//tree" position="attributes">
-                    <attribute name="decoration-danger">virtual_available&lt;=0</attribute>
+                    <attribute name="decoration-danger">forecasted_qty&lt;0</attribute>
                 </xpath>
             </field>
         </record>
