@@ -91,11 +91,11 @@ class PurchaseOrderWizard(models.TransientModel):
             vendors = product.product_tmpl_id.seller_ids.filtered(
                 lambda s: s.min_qty <= product_qty_to_order and self.check_date_availability(s))
             seller_ids = False
-            purchase_price = product.standard_price,
+            purchase_price = product.standard_price
             if len(vendors):
                 supplier_id = vendors[0].id
-                seller_ids = [(6, 0, vendors.ids)]
                 purchase_price = vendors[0].price
+                seller_ids = [(6, 0, vendors.ids)]
             taxes = product.product_tmpl_id.supplier_taxes_id
             taxes = taxes and [(6, 0, taxes.ids)] or False
             p_line = self.env['purchase.order.line.wizard'].create({
@@ -146,7 +146,7 @@ class PurchaseOrderLineWizard(models.TransientModel):
         for line in self:
             line.date_planned = datetime.now() + timedelta(days=max(
                 0,
-                self.supplier_id.delay,
+                line.supplier_id.delay,
                 line.product_id.product_tmpl_id.sale_delay,
             ))
 
@@ -154,7 +154,7 @@ class PurchaseOrderLineWizard(models.TransientModel):
     def _compute_total_price(self):
         for line in self:
             line.update({
-                'total_price': self.purchase_price * self.product_qty_to_order,
+                'total_price': line.purchase_price * line.product_qty_to_order,
             })
 
     @api.onchange('product_qty_to_order')

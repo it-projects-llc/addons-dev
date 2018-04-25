@@ -43,10 +43,7 @@
                                     <field name="seller_ids" invisible="1"/>
                                     <field name="date_start" invisible="1"/>
                                     <field name="date_end" invisible="1"/>
-                                    <field name="supplier_id" domain="[('id','in', seller_ids),
-                                                                       ('min_qty','&lt;=', product_qty_to_order),]"/>
-                                                                       <!--(context_today().strftime('%Y-%m-%d'), '&gt;=', date_start),-->
-                                                                       <!--(context_today().strftime('%Y-%m-%d'), '&lt;=', date_end)]"/>-->
+                                    <field name="supplier_id" domain="[('id','in', seller_ids)]"/>
                                     <field name="purchase_price"/>
                                     <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]" context="{'default_type_tax_use': 'purchase'}" options="{'no_create': True}"/>
                                     <field name="total_price" readonly="1"/>
