@@ -286,9 +286,13 @@ odoo.define('pos_orders_history', function (require) {
                 self.change_filter('table', $(this));
             });
 
-            this.$('.order-list-contents').delegate('.order-line', 'click', function (event) {
+            this.$('.order-list-contents').delegate('.order-line td', 'click', function (event) {
                 event.stopImmediatePropagation();
-                self.line_select(event, $(this), parseInt($(this).data('id')));
+                if ($(this).hasClass('actions')) {
+                    return false;
+                }
+                var parent = $(this).parent()
+                self.line_select(event, parent, parseInt(parent.data('id')));
             });
 
             var search_timeout = null;
