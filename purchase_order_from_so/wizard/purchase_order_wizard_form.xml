@@ -27,6 +27,9 @@
                             <field name="sale_order_id" invisible="1"/>
                         </group>
                     </group>
+                    <p>
+                        Red color indicates the lines from which orders will be created
+                    </p>
                     <notebook>
                         <page string="Products">
                             <field name="order_line_ids">
@@ -38,7 +41,9 @@
                                     <field name="product_uom"/>
                                     <field name="product_qty_to_order"/>
                                     <field name="seller_ids" invisible="1"/>
-                                    <field name="partner_id" domain="[('id','in', seller_ids)]"/>
+                                    <field name="date_start" invisible="1"/>
+                                    <field name="date_end" invisible="1"/>
+                                    <field name="supplier_id" domain="[('id','in', seller_ids)]"/>
                                     <field name="purchase_price"/>
                                     <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]" context="{'default_type_tax_use': 'purchase'}" options="{'no_create': True}"/>
                                     <field name="total_price" readonly="1"/>
