@@ -136,7 +136,7 @@ class PurchaseOrderLineWizard(models.TransientModel):
                                   help="Cost used for stock valuation. Also used as a base price for pricelists. "
                                        "Expressed in the default unit of measure of the product.")
     taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
-    total_price = fields.Float(compute="_compute_total_price", string='Total Price', digits=dp.get_precision('Product Price'))
+    total_price = fields.Float(compute="_compute_total_price", string='Total Net Price', digits=dp.get_precision('Product Price'))
     seller_ids = fields.Many2many('product.supplierinfo', string='Possible Vendors')
     date_start = fields.Date('Start Date', related="supplier_id.date_start", help="Start date for this vendor price")
     date_end = fields.Date('End Date', related="supplier_id.date_end", help="End date for this vendor price")
