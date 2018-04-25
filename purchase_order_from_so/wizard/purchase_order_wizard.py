@@ -88,8 +88,8 @@ class PurchaseOrderWizard(models.TransientModel):
             mto_product = mto_id in product.product_tmpl_id.route_ids.ids
             supplier_id = False
             product_qty_to_order = max(line.product_uom_qty - max(product.virtual_available, 0), 0)
-            vendors = product.product_tmpl_id.seller_ids.filtered(lambda s: s.min_qty <= product_qty_to_order and
-                                                                  s.date_start <= s_order.date_order <= s.date_end)
+            vendors = product.product_tmpl_id.seller_ids.filtered(
+                lambda s: s.min_qty <= product_qty_to_order and self.check_date_availability(s))
             seller_ids = False
             if len(vendors):
                 supplier_id = vendors[0].id
@@ -109,6 +109,10 @@ class PurchaseOrderWizard(models.TransientModel):
                 'seller_ids': seller_ids,
             })
             self.order_line_ids += p_line
+
+    def check_date_availability(self, vendor):
+        return (not vendor.date_end or self.date_order <= vendor.date_end) and \
+                (not vendor.date_start or vendor.date_start <= self.date_order)
 
 
 class PurchaseOrderLineWizard(models.TransientModel):
@@ -162,5 +166,4 @@ class PurchaseOrderLineWizard(models.TransientModel):
     @api.onchange('product_qty_to_order')
     def _onchange_qty_to_order(self):
         self.seller_ids = self.product_id.product_tmpl_id.seller_ids.filtered(
-            lambda s: s.min_qty <= self.product_qty_to_order and (not (s.date_start and s.date_end) or
-                      (s.date_start <= self.order_id.date_order and s.date_end >= self.order_id.date_order)))
+            lambda s: s.min_qty <= self.product_qty_to_order and self.order_id.check_date_availability(s))
