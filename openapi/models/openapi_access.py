@@ -9,13 +9,39 @@ class Access(models.Model):
     _description = 'Access via API '
 
     active = fields.Boolean('Active', default=True)
-    namespace_id = fields.Many2one('openapi.namespace', 'Integration', required=True)
+    namespace_id = fields.Many2one(
+        'openapi.namespace',
+        'Integration',
+        required=True)
     model_id = fields.Many2one('ir.model', 'Model', required=True)
     model = fields.Char(related='model_id.model')
     api_create = fields.Boolean('Create via API', default=False)
     api_read = fields.Boolean('Read via API', default=False)
     api_update = fields.Boolean('Update via API', default=False)
     api_delete = fields.Boolean('Delete via API', default=False)
+    # Options for Public methods:
+    # * all forbidden
+    # * all allowed
+    # * some are allowed
+    api_public_methods = fields.Boolean(
+        'Call Public methods via API',
+        default=False,
+    )
+    public_methods = fields.Text(
+        'Restrict Public methods',
+        help='Allowed public methods besides basic ones. '
+        'Public methods are ones that don\'t start with underscore). '
+        'Format: one method per line. '
+        'When empty -- all public methods are not allowed')
+    # Options for Private methods
+    # * all forbidden
+    # * some are allowed
+    private_methods = fields.Text(
+        'Allow Private methods',
+        help='Allowed private methods. '
+        'Private methods are ones that start with undescore. '
+        'Format: one method per line. '
+        'When empty -- private methods are not allowed')
     read_one_id = fields.Many2one(
         'ir.exports',
         'Read One Fields',
