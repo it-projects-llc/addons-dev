@@ -124,6 +124,8 @@ class PurchaseOrderLineWizard(models.TransientModel):
 
     name = fields.Text(string='Description', required=True)
     product_qty_sold = fields.Float(string='Quantity Sold', digits=dp.get_precision('Product Unit of Measure'), required=True)
+    forecasted_qty = fields.Float(compute="_compute_forecasted_qty", string='Forecasted Quantity',
+                                  digits=dp.get_precision('Product Unit of Measure'))
     product_qty_to_order = fields.Float(string='Quantity to Order', digits=dp.get_precision('Product Unit of Measure'))
     date_planned = fields.Datetime(compute="_compute_date_planned", string='Scheduled Date', index=True)
     product_uom = fields.Many2one('product.uom', string='Product Unit of Measure', required=True)
@@ -155,6 +157,14 @@ class PurchaseOrderLineWizard(models.TransientModel):
         for line in self:
             line.update({
                 'total_price': line.purchase_price * line.product_qty_to_order,
+            })
+
+    @api.onchange('product_qty_to_order')
+    @api.depends('product_qty_to_order')
+    def _compute_forecasted_qty(self):
+        for line in self:
+            line.update({
+                'forecasted_qty': line.product_id.virtual_available - line.product_qty_sold,
             })
 
     @api.onchange('product_qty_to_order')

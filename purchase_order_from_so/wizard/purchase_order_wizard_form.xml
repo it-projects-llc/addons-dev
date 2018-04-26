@@ -27,17 +27,25 @@
                             <field name="sale_order_id" invisible="1"/>
                         </group>
                     </group>
-                    <p>
-                        Red color indicates the lines from which orders will be created
-                    </p>
+                    <font color="grey">
+                        <p>
+                            This wizard will create one purchase order for each customer/supplier.
+                            <br/>
+                            Products highlighted in red indicate a negative forecast for the product.
+                            <br/>
+                            The computation of the quantity to order is based on the current quantity forecasted.
+                        </p>
+                    </font>
                     <notebook>
                         <page string="Products">
                             <field name="order_line_ids">
-                                <tree string="Purchase Order Lines" editable="bottom" decoration-danger="product_qty_to_order&gt;0">
+                                <tree string="Purchase Order Lines" editable="bottom"
+                                      decoration-danger="forecasted_qty&lt;0">
                                     <field name="product_id" readonly="1"/>
                                     <field name="name"/>
                                     <field name="date_planned"/>
                                     <field name="product_qty_sold" readonly="1"/>
+                                    <field name="forecasted_qty" invisible="1"/>
                                     <field name="product_uom"/>
                                     <field name="product_qty_to_order"/>
                                     <field name="seller_ids" invisible="1"/>

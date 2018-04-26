@@ -40,16 +40,8 @@ class SaleOrder(models.Model):
 class SaleOrderLinePOfromSO(models.Model):
     _inherit = 'sale.order.line'
 
-    forecasted_qty = fields.Float(related='product_id.virtual_available', string='Forecast Quantity',
-                                     help="Forecast quantity (computed as Quantity On Hand "
-                                          "- Outgoing + Incoming)\n"
-                                          "In a context with a single Stock Location, this includes "
-                                          "goods stored in this location, or any of its children.\n"
-                                          "In a context with a single Warehouse, this includes "
-                                          "goods stored in the Stock Location of this Warehouse, or any "
-                                          "of its children.\n"
-                                          "Otherwise, this includes goods stored in any Stock Location "
-                                          "with 'internal' type.")
+    forecasted_qty = fields.Float(string='Forecast Quantity', help="Forecast quantity (computed as Quantity On Hand "
+                                                                   "- Outgoing + Incoming - Qty for sale")
 
     @api.onchange('product_uom_qty')
     def _onchange_product_uom_qty(self):
