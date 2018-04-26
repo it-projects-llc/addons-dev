@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Copyright 2018 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+import urllib
+
 from odoo import models, fields, api
 
 
@@ -39,3 +41,19 @@ class Namespace(models.Model):
                                               ' (%s)' % record.description
                                               if record.description else ''))
                 for record in self]
+
+    @api.model
+    def _fix_name(self, vals):
+        if 'name' in vals:
+            vals['name'] = urllib.quote_plus(vals['name'].lower())
+        return vals
+
+    @api.model
+    def create(self, vals):
+        vals = self._fix_name(vals)
+        return super(Namespace, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        vals = self._fix_name(vals)
+        return super(Namespace, self).write(vals)
