@@ -40,13 +40,21 @@ class SaleOrder(models.Model):
 class SaleOrderLinePOfromSO(models.Model):
     _inherit = 'sale.order.line'
 
-    no_forecasted_qty = fields.Boolean(compute="_compute_no_forecasted_qty", string='Positive Forecast',
+    def new(self, values={}, ref=None):
+        product = self.env['product.product'].browse(values['product_id'])
+        line = super(SaleOrderLinePOfromSO, self).new(values, ref)
+        if product:
+            line.no_forecasted_qty = product.type == 'product' and \
+                                     product.virtual_available - values['product_uom_qty'] < 0
+        return line
+
+    no_forecasted_qty = fields.Boolean(default="True", string='Positive Forecast',
                                        help="Forecasted quantity is not positive")
 
     @api.onchange('product_uom_qty')
     @api.depends('product_uom_qty')
-    def _compute_no_forecasted_qty(self):
-        for line in self:
+    def _onchange_no_forecasted_qty(self):
+        for line in self.filtered(lambda l: l.state == 'draft'):
             line.update({
                 'no_forecasted_qty': line.product_id.type == 'product' and
                                      line.product_id.virtual_available - line.product_uom_qty < 0
