@@ -16,15 +16,6 @@ Installation
 Configuration
 =============
 
-Authentication
---------------
-
-* Open menu ``[[ Settings ]] >> Users >> Users``
-* Select a user that will be used for iteracting over API
-* In ``REST API`` tab Click  ``[Generate Access Token]``
-* Copy **Basic Authentication code** to use in any system that support REST API (Open API)
-
-
 Activating and customization
 ----------------------------
 
@@ -41,39 +32,49 @@ TODO
 via Database Structure Menu (only for developers)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+* Open menu ``[[ Settings ]] >> Dashboard``
+* In *REST API* section click ``[Add Integration]``
 
-* `Activate Developer Mode <https://odoo-development.readthedocs.io/en/latest/odoo/usage/debug-mode.html>`__
-* Open menu ``[[ Settings ]] >> Technical >> Database Structure >> Models``
-* Open model you need
-* Switch to ``REST API`` tab
-* Set some of operations and configuration for them:
+  * Specify **Name** for integration, e.g. ``test``
+  * Set **Log responses** **Full**
+  * Click ``[Save]``
 
-  * **[x] Create via API**
+* Click smart-button ``Accessable models``
+* Click ``[Create]``
 
-    * Set Default Values
+  * Set **Model**, for example *res.users*
+  * Configure allowed operations
 
-    * TODO: put this in the form view::
+    * **[x] Create via API**
 
-        Format for default values is
-        * one-line per field, 
-        * FIELD:VALUE
-        * use slash for subfields, e.g. order_line/product_uom_qty
+      * Set **Creation Context Presets**, for example
 
-  * **[x] Read via API**
+        * **Name**: ``brussels``
+        * **Context**: ``{'default_tz':'Europe/Brussels', 'default_lang':'fr_BE'}``
 
-    * Set one or several *Fields Set* -- list of fields that can be used on
-      requests for reading, for example ``short``, ``full``, ``for_magento``,
-      etc.
-    
-    * TODO: put this in the form view::
+    * **[x] Read via API**
 
-          Format for Fields Set is 
+      * Set **Read One Fields** -- fields to return on reading one record
+      * Set **Read Many Fields** -- fields to return on reading multiple records
 
-          * one-line per field, 
-          * use slash for subfields, e.g. order_line/product_uom_qty
+    * **[x] Update via API**
+    * **[x] Delete via API**
 
-  * **[x] Update via API**
-  * **[x] Delete via API**
+Authentication
+--------------
+
+* Open menu ``[[ Settings ]] >> Users >> Users``
+* Select a user that will be used for iteracting over API
+* In ``REST API`` tab:
+
+  * Set **Allowed Integration**
+  * In ``REST API`` tab Click  ``[Generate Access Token]``
+  * Copy **Basic Authentication code** to use in any system that support REST API (Open API)
+
+Configuration review
+--------------------
+
+All settings are available under menu ``[[ Settings ]] >> REST API`` (Available in `Developer Mode <https://odoo-development.readthedocs.io/en/latest/odoo/usage/debug-mode.html>`__)
 
 Usage
 =====
