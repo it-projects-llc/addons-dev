@@ -4,6 +4,9 @@ odoo.define('pos_order_print_check.chrome', function (require) {
     "use strict";
 
     var chrome = require('point_of_sale.chrome');
+    var core = require('web.core');
+    var _t = core._t;
+
 
     chrome.Chrome.include({
         init: function() {
@@ -23,6 +26,7 @@ odoo.define('pos_order_print_check.chrome', function (require) {
             this._super(parent,options);
             var self = this;
             this.order_print_quantity = 0;
+            this.show_warning_message = true;
             this.pos.on('change:qty_print_orders', function(){
                 self.change_quantity_print_orders();
             });
@@ -35,6 +39,16 @@ odoo.define('pos_order_print_check.chrome', function (require) {
             if (this.order_print_quantity !== sum) {
                 this.order_print_quantity = sum;
                 this.renderElement();
+                if (this.show_warning_message ) {
+                    this.pos.gui.show_popup('error',{
+                        'title': _t('Warning'),
+                        'body': _t('No connection to PosBox. The orders will be printed once the connection is restored'),
+                    });
+                    this.show_warning_message = false;
+                }
+                if (this.order_print_quantity === 0) {
+                    this.show_warning_message = true;
+                }
             }
         }
     });
