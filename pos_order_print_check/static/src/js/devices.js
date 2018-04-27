@@ -12,7 +12,7 @@ odoo.define('pos_order_print_check.devices', function (require) {
                 this.pos.trigger('change:qty_print_orders');
                 status = status.newValue;
                 if(status.status === 'connected' && status.status !== this.old_status) {
-                    // if the PosBox in connected then send all orders to printing
+                    // if connection to PosBox is restored, send all orders to print
                     this.pos.printers.forEach(function(printer) {
                         if (printer.receipt_queue.length) {
                             printer.print();
