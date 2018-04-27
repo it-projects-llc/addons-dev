@@ -39,13 +39,13 @@
                     <notebook>
                         <page string="Products">
                             <field name="order_line_ids">
-                                <tree string="Purchase Order Lines" editable="bottom"
-                                      decoration-danger="forecasted_qty&lt;0">
+                                <tree string="Purchase Order Lines" editable="bottom" create="false"
+                                      decoration-danger="no_forecasted_qty">
                                     <field name="product_id" readonly="1"/>
                                     <field name="name"/>
                                     <field name="date_planned"/>
                                     <field name="product_qty_sold" readonly="1"/>
-                                    <field name="forecasted_qty" invisible="1"/>
+                                    <field name="no_forecasted_qty" invisible="1"/>
                                     <field name="product_uom"/>
                                     <field name="product_qty_to_order"/>
                                     <field name="seller_ids" invisible="1"/>

@@ -40,12 +40,17 @@ class SaleOrder(models.Model):
 class SaleOrderLinePOfromSO(models.Model):
     _inherit = 'sale.order.line'
 
-    forecasted_qty = fields.Float(string='Forecast Quantity', help="Forecast quantity (computed as Quantity On Hand "
-                                                                   "- Outgoing + Incoming - Qty for sale")
+    no_forecasted_qty = fields.Boolean(compute="_compute_no_forecasted_qty", string='Positive Forecast',
+                                       help="Forecasted quantity is not positive")
 
     @api.onchange('product_uom_qty')
-    def _onchange_product_uom_qty(self):
-        self.forecasted_qty = self.product_id.virtual_available - self.product_uom_qty
+    @api.depends('product_uom_qty')
+    def _compute_no_forecasted_qty(self):
+        for line in self:
+            line.update({
+                'no_forecasted_qty': line.product_id.type == 'product' and
+                                     line.product_id.virtual_available - line.product_uom_qty < 0
+            })
 
     @api.onchange('product_id')
     def _onchange_product_id_check_availability(self):

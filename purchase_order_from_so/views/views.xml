@@ -66,10 +66,10 @@
                     </button>
                 </xpath>
                 <xpath expr="//tree/field[@name='currency_id']" position="after">
-                    <field name="forecasted_qty" invisible="1"/>
+                    <field name="no_forecasted_qty" invisible="1"/>
                 </xpath>
                 <xpath expr="//tree" position="attributes">
-                    <attribute name="decoration-danger">forecasted_qty&lt;0</attribute>
+                    <attribute name="decoration-danger">no_forecasted_qty</attribute>
                 </xpath>
             </field>
         </record>
