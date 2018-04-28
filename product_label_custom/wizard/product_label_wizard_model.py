@@ -34,11 +34,23 @@ class ProductLabelWizard(models.TransientModel):
     _description = "Product Label wizard"
 
     def _default_product_ids(self):
-        product_ids = self._context.get('active_model') == 'product.template' and self._context.get('active_ids') or []
-        return [
-            (0, 0, {'product_id': product.id, 'quantity': 1, 'label_id': product.default_label_id})
-            for product in self.env['product.template'].browse(product_ids)
-        ]
+        res = []
+        model = self._context.get('active_model')
+        if self._context.get('active_ids'):
+            if model == 'product.template':
+                product_ids = self._context.get('active_ids')
+                res = [
+                    (0, 0, {'product_id': product.id, 'quantity': 1, 'label_id': product.default_label_id})
+                    for product in self.env['product.template'].browse(product_ids)
+                ]
+
+            if model == 'purchase.order':
+                order_ids = self._context.get('active_ids')
+                res = [
+                    (0, 0, {'product_id': order_line.product_id.product_tmpl_id.id, 'quantity': order_line.product_qty, 'label_id': order_line.product_id.product_tmpl_id.default_label_id})
+                    for order_line in self.env['purchase.order.line'].search([('order_id', 'in', order_ids)])
+                ]
+        return res
 
     settings_ids = fields.One2many('product.label.report.settings', 'product_wizard_id',
                                    string="Product Label",  default=_default_product_ids)
