@@ -19,6 +19,7 @@
 
     "depends": [
         "product",
+        "purchase",
         "report",
     ],
     "external_dependencies": {"python": [], "bin": []},
