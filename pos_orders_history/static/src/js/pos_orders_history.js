@@ -111,6 +111,25 @@ odoo.define('pos_orders_history', function (require) {
         },
     });
 
+    var _super_order_model = models.Order.prototype;
+    models.Order = models.Order.extend({
+        set_mode: function(mode) {
+            this.mode = mode;
+        },
+        get_mode: function() {
+            return this.mode;
+        },
+        export_as_JSON: function() {
+            var data = _super_order_model.export_as_JSON.apply(this, arguments);
+            data.mode = this.mode;
+            return data;
+        },
+        init_from_JSON: function(json) {
+            this.mode = json.mode;
+            _super_order_model.init_from_JSON.call(this, json);
+        }
+    });
+
     models.load_models({
         model: 'pos.order',
         fields: [],
