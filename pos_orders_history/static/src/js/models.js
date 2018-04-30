@@ -135,11 +135,18 @@ odoo.define('pos_orders_history.models', function (require) {
             }
             self.update_orders_history(orders);
 
-            order_ids = _.pluck(orders, 'id');
-            new Model('pos.order.line').call('search_read', [[['order_id', 'in', order_ids]]])
-            .then(function (lines) {
-                self.update_orders_history_lines(lines);
-            });
+            self.order_ids = _.pluck(orders, 'id');
+        },
+    });
+
+    models.load_models({
+        model: 'pos.order.line',
+        fields: [],
+        domain: function(self) {
+            return [['order_id', 'in', self.order_ids]]
+        },
+        loaded: function (self, lines) {
+            self.update_orders_history_lines(lines);
         },
     });
 
