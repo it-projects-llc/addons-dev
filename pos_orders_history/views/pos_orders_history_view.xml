@@ -15,6 +15,9 @@
                         <field name="current_day_orders_only" attrs="{'invisible' : [('orders_history', '=', False)]}"/>
                         <field name="show_cancelled_orders" attrs="{'invisible' : [('orders_history', '=', False)]}"/>
                         <field name="show_posted_orders" attrs="{'invisible' : [('orders_history', '=', False)]}"/>
+                        <field name="show_barcode_in_receipt" attrs="{'invisible' : [('orders_history', '=', False)]}"/>
+                    </group>
+                    <group>
                     </group>
                 </group>
             </xpath>
