@@ -1,18 +1,16 @@
 /* Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
  * License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). */
-odoo.define('pos_orders_history_return', function (require) {
+odoo.define('pos_orders_history_return.screens', function (require) {
     "use strict";
 
     var core = require('web.core');
-    var OrdersHistoryScreenWidget = require('pos_orders_history').OrdersHistoryScreenWidget;
-    var gui = require('point_of_sale.gui');
-    var screens = require('point_of_sale.screens');
-    var models = require('point_of_sale.models');
+    var screens = require('pos_orders_history.screens');
+    var models = require('pos_orders_history.models');
     var QWeb = core.qweb;
     var _t = core._t;
 
 
-    OrdersHistoryScreenWidget.include({
+    screens.OrdersHistoryScreenWidget.include({
         show: function () {
             var self = this;
             this._super();
@@ -98,4 +96,6 @@ odoo.define('pos_orders_history_return', function (require) {
             return cached;
         },
     });
+
+    return screens;
 });

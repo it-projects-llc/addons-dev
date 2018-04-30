@@ -2,7 +2,8 @@
  * License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). */
 odoo.define('pos_orders_history_return.models', function (require) {
     "use strict";
-    var models = require('point_of_sale.models');
+
+    var models = require('pos_orders_history.models');
 
     var _super_pos_model = models.PosModel.prototype;
     models.PosModel = models.PosModel.extend({
