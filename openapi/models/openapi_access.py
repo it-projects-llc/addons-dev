@@ -32,7 +32,7 @@ class Access(models.Model):
         help='Allowed public methods besides basic ones. '
         'Public methods are ones that don\'t start with underscore). '
         'Format: one method per line. '
-        'When empty -- all public methods are not allowed')
+        'When empty -- all public methods are allowed')
     # Options for Private methods
     # * all forbidden
     # * some are allowed
@@ -76,7 +76,7 @@ class AccessCreateContext(models.Model):
     _name = 'openapi.access.create.context'
     _description = 'Context on creating via API '
 
-    name = fields.Char('Name')
+    name = fields.Char('Name', required=True)
     description = fields.Char('Description')
     model_id = fields.Many2one('ir.model', 'Model', required=True)
-    context = fields.Text('Context')
+    context = fields.Text('Context', required=True)

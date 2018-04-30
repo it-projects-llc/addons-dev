@@ -29,6 +29,7 @@
     "demo": [
         "views/assets_demo.xml",
         "views/tour_views.xml",
+        "data/openapi_demo.xml",
     ],
     "qweb": [
         "static/src/xml/dashboard.xml"
