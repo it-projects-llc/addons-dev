@@ -27,6 +27,23 @@ odoo.define('pos_orders_history_return.screens', function (require) {
         click_return_order_by_id: function(id) {
             var self = this;
             var order = self.pos.db.orders_history_by_id[id];
+            var uid = order.pos_reference.split(' ')[1];
+            var split_sequence_number = uid.split('-');
+            var sequence_number = split_sequence_number[split_sequence_number.length - 1];
+
+            var orders = this.pos.get('orders').models;
+            var exist_order = orders.find(function(o) {
+                return o.uid === uid && Number(o.sequence_number) === Number(sequence_number);
+            });
+
+            if (exist_order) {
+                this.pos.gui.show_popup('error',{
+                    'title': _t('Warning'),
+                    'body': _t('You have an unfinished return of the order. Please complete the return of the order and try again.'),
+                });
+                return false;
+            }
+
             var lines = [];
             order.lines.forEach(function(line_id) {
                 lines.push(self.pos.db.line_by_id[line_id]);
@@ -38,10 +55,6 @@ odoo.define('pos_orders_history_return.screens', function (require) {
             });
             if (products.length > 0) {
                 // create new order for return
-                var uid = order.pos_reference.split(' ')[1];
-                var split_sequence_number = uid.split('-');
-                var sequence_number = split_sequence_number[split_sequence_number.length - 1];
-
                 var json = _.extend({}, order);
                 json.uid = uid;
                 json.sequence_number = Number(sequence_number);
@@ -69,11 +82,38 @@ odoo.define('pos_orders_history_return.screens', function (require) {
             var self = this;
             var order = this.pos.get_order();
             if (order.get_mode() === "return") {
+                var returned_orders = this.pos.get_returned_orders_by_pos_reference(order.name);
+                // add exist products
                 var products = [];
+//                if (returned_orders && returned_orders.length) {
+//                    returned_orders.forEach(function(o) {
+//                        o.lines.forEach(function(line_id) {
+//                            var line = self.pos.db.line_by_id[line_id];
+//                            var product = self.pos.db.get_product_by_id(line.product_id[0]);
+//                            var exist_product = products.find(function(r){
+//                                return r.id === product.id;
+//                            });
+//                            if (exist_product) {
+//                                exist_product.max_return_qty += line.qty;
+//                            } else {
+//                                product.max_return_qty = line.qty;
+//                                products.push(product);
+//                            }
+//                        });
+//                    });
+//                }
+                // update max qty for current return order
                 order.return_lines.forEach(function(line) {
                     var product = self.pos.db.get_product_by_id(line.product_id[0]);
-                    product.max_return_qty = line.qty;
-                    products.push(product);
+                    var exist_product = products.find(function(r){
+                        return r.id === product.id;
+                    });
+                    if (exist_product) {
+                        exist_product.max_return_qty += line.qty;
+                    } else {
+                        product.max_return_qty = line.qty;
+                        products.push(product);
+                    }
                 });
                 this.product_list_widget.set_product_list(products);
             }

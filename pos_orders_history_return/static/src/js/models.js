@@ -18,6 +18,12 @@ odoo.define('pos_orders_history_return.models', function (require) {
             }
             _super_pos_model.update_orders_history.call(this, orders);
         },
+        get_returned_orders_by_pos_reference: function(reference) {
+            var all_orders = this.db.pos_orders_history;
+            return all_orders.filter(function(order){
+                return order.returned_order && order.pos_reference === reference;
+            });
+        }
     });
 
     var _super_order = models.Order.prototype;
