@@ -306,6 +306,7 @@ odoo.define('pos_orders_history.screens', function (require) {
 
     screens.ScreenWidget.include({
         barcode_product_action: function(code) {
+            // TODO: Check it
             var order = this.pos.db.get_sorted_orders_history(1000).find(function(order) {
                 var pos_reference = order.pos_reference.split(' ')[1].replace(/\-/g, '');
                 return pos_reference === code.code;
@@ -329,6 +330,7 @@ odoo.define('pos_orders_history.screens', function (require) {
         render_receipt: function() {
             this._super();
             if (this.pos.config.show_barcode_in_receipt) {
+                // TODO: Check it
                 var order = this.pos.get_order();
                 var receipt_reference = order.uid;
                 this.$el.find('#barcode').JsBarcode(receipt_reference);
