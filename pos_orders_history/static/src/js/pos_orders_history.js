@@ -133,19 +133,16 @@ odoo.define('pos_orders_history', function (require) {
     models.load_models({
         model: 'pos.order',
         fields: [],
-        domain: function(self){
-            var domain = [['state','=','paid']];
+        domain: function(self) {
+            var state = ['paid'];
             if (self.config.show_cancelled_orders) {
-                domain.push(['state','=','cancel']);
+                state.push('cancel');
             }
-            if (domain.length === 2) {
-                domain.unshift('|');
-            } else if (domain.length === 3) {
-                domain.unshift('|','|');
+            if (self.config.show_posted_orders) {
+                state.push('done');
             }
-            return domain;
+            return [['state','in',state]]
         },
-
         loaded: function (self, orders) {
             var order_ids = [];
             if (self.config.current_day_orders_only) {
