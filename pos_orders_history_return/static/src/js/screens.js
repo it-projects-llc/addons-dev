@@ -85,23 +85,23 @@ odoo.define('pos_orders_history_return.screens', function (require) {
                 var returned_orders = this.pos.get_returned_orders_by_pos_reference(order.name);
                 // add exist products
                 var products = [];
-//                if (returned_orders && returned_orders.length) {
-//                    returned_orders.forEach(function(o) {
-//                        o.lines.forEach(function(line_id) {
-//                            var line = self.pos.db.line_by_id[line_id];
-//                            var product = self.pos.db.get_product_by_id(line.product_id[0]);
-//                            var exist_product = products.find(function(r){
-//                                return r.id === product.id;
-//                            });
-//                            if (exist_product) {
-//                                exist_product.max_return_qty += line.qty;
-//                            } else {
-//                                product.max_return_qty = line.qty;
-//                                products.push(product);
-//                            }
-//                        });
-//                    });
-//                }
+                if (returned_orders && returned_orders.length) {
+                    returned_orders.forEach(function(o) {
+                        o.lines.forEach(function(line_id) {
+                            var line = self.pos.db.line_by_id[line_id];
+                            var product = self.pos.db.get_product_by_id(line.product_id[0]);
+                            var exist_product = products.find(function(r){
+                                return r.id === product.id;
+                            });
+                            if (exist_product) {
+                                exist_product.max_return_qty += line.qty;
+                            } else {
+                                product.max_return_qty = line.qty;
+                                products.push(product);
+                            }
+                        });
+                    });
+                }
                 // update max qty for current return order
                 order.return_lines.forEach(function(line) {
                     var product = self.pos.db.get_product_by_id(line.product_id[0]);
@@ -128,7 +128,7 @@ odoo.define('pos_orders_history_return.screens', function (require) {
             if (el.length) {
                 el.remove();
             }
-            if (order.get_mode() === "return" && product.max_return_qty) {
+            if (order.get_mode() === "return" && typeof product.max_return_qty !== 'undefined') {
                 var current_return_qty = order.get_current_product_return_qty(product);
                 var qty = product.max_return_qty - current_return_qty;
                 $(cached).find('.product-img').append('<div class="max-return-qty">' + qty + '</div>');
