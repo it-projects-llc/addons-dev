@@ -98,16 +98,4 @@ odoo.define('pos_orders_history_return', function (require) {
             return cached;
         },
     });
-
-    screens.ReceiptScreenWidget.include({
-        render_receipt: function() {
-            this._super();
-            var order = this.pos.get_order();
-            var receipt_reference = order.uid.replace(/\-/g, '');
-            this.$el.find('#barcode').JsBarcode(receipt_reference);
-            this.$el.find('#barcode').css({
-                "width": "100%"
-            });
-        },
-    });
 });
