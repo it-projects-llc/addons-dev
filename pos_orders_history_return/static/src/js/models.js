@@ -24,7 +24,7 @@ odoo.define('pos_orders_history_return.models', function (require) {
     models.Order = models.Order.extend({
         add_product: function(product, options) {
             options = options || {};
-            if (this.mode === "return") {
+            if (this.get_mode() === "return") {
                 var current_return_qty = this.get_current_product_return_qty(product);
                 var quantity = 1;
                 if(options.quantity !== undefined) {
@@ -73,7 +73,7 @@ odoo.define('pos_orders_history_return.models', function (require) {
         set_quantity: function(quantity) {
             var order = this.pos.get_order();
             var old_quantity = String(quantity);
-            if (order && order.mode === "return" && quantity !== "remove") {
+            if (order && order.get_mode() === "return" && quantity !== "remove") {
                 var current_return_qty = this.order.get_current_product_return_qty(this.product);
                 if (this.quantity) {
                     current_return_qty = current_return_qty + this.quantity;

@@ -68,7 +68,7 @@ odoo.define('pos_orders_history_return.screens', function (require) {
             this._super();
             var self = this;
             var order = this.pos.get_order();
-            if (order.mode === "return") {
+            if (order.get_mode() === "return") {
                 var products = [];
                 order.return_lines.forEach(function(line) {
                     var product = self.pos.db.get_product_by_id(line.product_id[0]);
@@ -88,7 +88,7 @@ odoo.define('pos_orders_history_return.screens', function (require) {
             if (el.length) {
                 el.remove();
             }
-            if (order.mode === "return" && product.max_return_qty) {
+            if (order.get_mode() === "return" && product.max_return_qty) {
                 var current_return_qty = order.get_current_product_return_qty(product);
                 var qty = product.max_return_qty - current_return_qty;
                 $(cached).find('.product-img').append('<div class="max-return-qty">' + qty + '</div>');
