@@ -24,6 +24,14 @@ odoo.define('pos_orders_history_return.screens', function (require) {
                 });
             }
         },
+        render_list: function(orders) {
+            if (!this.config.show_returned_orders) {
+                orders = orders.filter(function(order) {
+                    return order.returned_order !== true;
+                });
+            }
+            this._super(orders);
+        },
         click_return_order_by_id: function(id) {
             var self = this;
             var order = self.pos.db.orders_history_by_id[id];
