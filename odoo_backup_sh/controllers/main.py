@@ -7,6 +7,14 @@ import os
 import requests
 import random
 import string
+
+try:
+    import configparser as ConfigParser
+except ImportError:
+    import ConfigParser
+
+import werkzeug.utils
+
 import odoo
 from odoo import http
 from odoo.http import request
@@ -16,8 +24,7 @@ from odoo.addons import web
 path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'views'))
 loader = jinja2.FileSystemLoader(path)
 env = jinja2.Environment(loader=loader, autoescape=True)
-BACKUP_SERVICE = 'http://odoo_backup_sh_service'
-BACKUP_SERVICE_PORT = '8069'
+BACKUP_SERVICE_ENDPOINT = 'http://odoo-backup.sh:8069'
 
 
 class BackupDatabase(web.controllers.main.Database):
@@ -48,26 +55,31 @@ class BackupDatabase(web.controllers.main.Database):
 
 class BackupController(http.Controller):
 
-    @http.route('/web/database/backups', type='http', auth="none")
-    def backup_list(self):
-        config._parse_config()
-        user_key = config.get('odoo_backup_user_key')
+    def backup_service_request(self, redirect=None):
+        if not redirect:
+            redirect = request.httprequest.url
+        p = ConfigParser.RawConfigParser()
+        p.read([config.rcfile])
+        user_key = None
+        for (name, value) in p.items('options'):
+            if name == 'odoo_backup_user_key':
+                user_key = value
+                break
         if user_key is None:
             user_key = ''.join(random.choice(string.hexdigits) for _ in range(30))
             config.__setitem__('odoo_backup_user_key', user_key)
             config.save()
-        headers = {
-            'host': 'odoo-backup.sh' + ':' + BACKUP_SERVICE_PORT,
-            'Accept': 'text/plain'
-        }
-        redirect_url = request.httprequest.url_root + 'web/database/backups'
-        res = requests.get(
-            BACKUP_SERVICE + ':' + BACKUP_SERVICE_PORT + '/web/backup/list', headers=headers,
-            params={'user_key': user_key, 'redirect': redirect_url}
+        return requests.get(
+            BACKUP_SERVICE_ENDPOINT + '/web/backup/list',
+            params={'user_key': user_key, 'redirect': redirect}
         ).json()
-        auth_link = res.get('auth_link')
+
+    @http.route('/web/database/backups', type='http', auth="none")
+    def backup_list(self):
+        response = self.backup_service_request()
+        auth_link = response.get('auth_link')
         if auth_link:
             return "<html><head><script>window.location.href = '%s';</script></head></html>" % auth_link
         else:
             # TODO: check incompatible backups
-            return env.get_template("backup_list.html").render(backup_list=res.get('backup_list'))
+            return env.get_template("backup_list.html").render(backup_list=response.get('backup_list'))

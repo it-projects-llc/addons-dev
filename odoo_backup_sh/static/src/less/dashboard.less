@@ -1,0 +1,48 @@
+// Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
+// License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+
+.o_dashboards {
+    background-color: #ececec;
+
+    .o_backup_dashboard {
+        background-color: #ececec;
+
+        .o_dashboard_common {
+
+            .o_box {
+                display: flex;
+                flex-flow: row wrap;
+                justify-content: flex-start;
+                > .o_box_item {
+                    @media (max-width: @screen-sm-min) {
+                        flex: 1 1 200px;
+                        display: block !important;
+                    }
+                    @media (min-width: @screen-sm-min) {
+                        flex: 0 0 16.6%;
+                    }
+                }
+            }
+
+            .o_inner_box {
+                padding-top: 10px;
+                text-align: center;
+                border: 1px solid @odoo-view-background-color;
+                height: 80px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+
+                &.o_primary {
+                    background-color: @odoo-brand-primary;
+                    color: white;
+
+                    &:hover {
+                        background-color: darken(@odoo-brand-primary, 10%);
+                    }
+                }
+
+            }
+        }
+    }
+}
