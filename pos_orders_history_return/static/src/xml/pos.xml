@@ -11,10 +11,16 @@
         </t>
     </t>
 
+    <t t-extend="OrdersHistoryScreenWidget">
+        <t t-jquery=".button.back" t-operation="after">
+            <span class="button return-no-receipt">No Receipt</span>
+        </t>
+    </t>
+
     <t t-extend="ProductCategoriesWidget">
         <t t-jquery=".breadcrumbs" t-operation="append">
             <t t-set="order" t-value="widget.pos.get_order()"/>
-            <t t-if="order and order.get_mode() === 'return'">
+            <t t-if="order and (order.get_mode() === 'return' || order.get_mode() === 'return_without_receipt')">
                 <span class="breadcrumb">
                     <span class="breadcrumb-order">
                         <t t-esc="order.name"/>
@@ -24,7 +30,7 @@
         </t>
         <t t-jquery="t[t-if*='widget.subcategories.length > 0'] .categories" t-operation="replace">
             <t t-set="order" t-value="widget.pos.get_order()"/>
-            <t t-if="order and order.get_mode() !== 'return'">
+            <t t-if="order and order.get_mode() !== 'return' and order.get_mode() !== 'return_without_receipt'">
                 <div class="categories">
                     <div class="category-list-scroller touch-scrollable">
                         <div class="category-list">

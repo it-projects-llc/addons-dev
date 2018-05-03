@@ -2,6 +2,9 @@
    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).*/
 
 /*OrdersHistoryScreenWidget*/
+.pos .return-no-receipt {
+    left: 150px;
+}
 .pos .breadcrumb-order {
     font-size: 18px;
     padding-right: 10px;

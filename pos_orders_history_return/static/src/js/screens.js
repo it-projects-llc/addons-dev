@@ -24,6 +24,19 @@ odoo.define('pos_orders_history_return.screens', function (require) {
                 });
             }
         },
+        renderElement: function() {
+            this._super();
+            var self = this;
+            this.$('.button.return-no-receipt').click(function (e) {
+                var options = _.extend({pos: self.pos}, {});
+                var order = new models.Order({}, options);
+                order.set_mode("return_without_receipt");
+                order.return_lines = [];
+                self.pos.get('orders').add(order);
+                self.pos.gui.back();
+                self.pos.set_order(order);
+            });
+        },
         render_list: function(orders) {
             if (!this.pos.config.show_returned_orders) {
                 orders = orders.filter(function(order) {
@@ -110,7 +123,7 @@ odoo.define('pos_orders_history_return.screens', function (require) {
             this._super();
             var self = this;
             var order = this.pos.get_order();
-            if (order.get_mode() === "return") {
+            if (order.get_mode() === "return" || order.get_mode() === "return_without_receipt") {
                 var returned_orders = this.pos.get_returned_orders_by_pos_reference(order.name);
                 // add exist products
                 var products = [];
@@ -144,7 +157,9 @@ odoo.define('pos_orders_history_return.screens', function (require) {
                         products.push(product);
                     }
                 });
-                this.product_list_widget.set_product_list(products);
+                if (products.length) {
+                    this.product_list_widget.set_product_list(products);
+                }
             }
         }
     });

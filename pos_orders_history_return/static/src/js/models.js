@@ -48,6 +48,9 @@ odoo.define('pos_orders_history_return.models', function (require) {
             return qty;
         },
         change_return_product_limit: function(product) {
+            if (this.get_mode() === "return_without_receipt") {
+                return;
+            }
             var el = $('span[data-product-id="'+product.id+'"] .max-return-qty');
             var qty = this.get_current_product_return_qty(product);
             el.html(product.max_return_qty - qty);
@@ -68,16 +71,20 @@ odoo.define('pos_orders_history_return.models', function (require) {
         set_quantity: function(quantity) {
             var order = this.pos.get_order();
             var old_quantity = String(quantity);
-            if (order && order.get_mode() === "return" && quantity !== "remove") {
-                var current_return_qty = this.order.get_current_product_return_qty(this.product);
-                if (this.quantity) {
-                    current_return_qty = current_return_qty + this.quantity;
-                }
-                if (quantity) {
-                    if (current_return_qty + Number(quantity) <= this.product.max_return_qty) {
-                        quantity = -quantity;
-                    } else {
-                        return;
+            if (order && (order.get_mode() === "return" || order.get_mode() === "return_without_receipt") && quantity !== "remove") {
+                if (order.get_mode() === "return_without_receipt" && quantity > 0) {
+                    quantity = -quantity;
+                } else {
+                    var current_return_qty = this.order.get_current_product_return_qty(this.product);
+                    if (this.quantity) {
+                        current_return_qty = current_return_qty + this.quantity;
+                    }
+                    if (quantity) {
+                        if (current_return_qty + Number(quantity) <= this.product.max_return_qty) {
+                            quantity = -quantity;
+                        } else {
+                            return;
+                        }
                     }
                 }
                 _super_orderline.set_quantity.call(this, quantity);
