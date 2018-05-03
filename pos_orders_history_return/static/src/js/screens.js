@@ -123,7 +123,7 @@ odoo.define('pos_orders_history_return.screens', function (require) {
             this._super();
             var self = this;
             var order = this.pos.get_order();
-            if (order.get_mode() === "return" || order.get_mode() === "return_without_receipt") {
+            if (order && (order.get_mode() === "return" || order.get_mode() === "return_without_receipt")) {
                 var returned_orders = this.pos.get_returned_orders_by_pos_reference(order.name);
                 // add exist products
                 var products = [];
@@ -172,7 +172,7 @@ odoo.define('pos_orders_history_return.screens', function (require) {
             if (el.length) {
                 el.remove();
             }
-            if (order.get_mode() === "return" && typeof product.max_return_qty !== 'undefined') {
+            if (order && order.get_mode() === "return" && typeof product.max_return_qty !== 'undefined') {
                 var current_return_qty = order.get_current_product_return_qty(product);
                 var qty = product.max_return_qty - current_return_qty;
                 $(cached).find('.product-img').append('<div class="max-return-qty">' + qty + '</div>');

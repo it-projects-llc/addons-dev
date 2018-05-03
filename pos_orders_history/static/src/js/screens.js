@@ -309,7 +309,7 @@ odoo.define('pos_orders_history.screens', function (require) {
             // TODO: Check it
             var order = this.pos.db.get_sorted_orders_history(1000).find(function(order) {
                 var pos_reference = order.pos_reference.split(' ')[1].replace(/\-/g, '');
-                return pos_reference === code.code;
+                return pos_reference === code.code.replace(/\-/g, '');
             });
             var screen_name = this.gui.get_current_screen();
             if (order && screen_name === "orders_history_screen") {
@@ -333,10 +333,31 @@ odoo.define('pos_orders_history.screens', function (require) {
                 // TODO: Check it
                 var order = this.pos.get_order();
                 var receipt_reference = order.uid;
-                this.$el.find('#barcode').JsBarcode(receipt_reference);
+//                var receipt_reference = order.uid.replace(/\-/g, '');
+                this.$el.find('#barcode').JsBarcode(receipt_reference, {format: "code128"});
                 this.$el.find('#barcode').css({
                     "width": "100%"
                 });
+            }
+        },
+        print_xml: function() {
+            if (this.pos.config.show_barcode_in_receipt) {
+                var env = {
+                    widget:  this,
+                    pos: this.pos,
+                    order: this.pos.get_order(),
+                    receipt: this.pos.get_order().export_for_printing(),
+                    paymentlines: this.pos.get_order().get_paymentlines()
+                };
+                var receipt = QWeb.render('XmlReceipt',env);
+                var barcode = this.$el.find('#barcode').parent().html();
+                receipt = receipt.split('<img id="barcode"/>');
+                receipt[0] = receipt[0] + barcode + '</img>';
+                receipt = receipt.join('');
+                this.pos.proxy.print_receipt(receipt);
+                this.pos.get_order()._printed = true;
+            } else {
+                this._super();
             }
         },
     });
