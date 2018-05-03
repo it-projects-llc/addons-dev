@@ -25,7 +25,7 @@ odoo.define('pos_orders_history_return.screens', function (require) {
             }
         },
         render_list: function(orders) {
-            if (!this.config.show_returned_orders) {
+            if (!this.pos.config.show_returned_orders) {
                 orders = orders.filter(function(order) {
                     return order.returned_order !== true;
                 });
@@ -56,11 +56,32 @@ odoo.define('pos_orders_history_return.screens', function (require) {
             order.lines.forEach(function(line_id) {
                 lines.push(self.pos.db.line_by_id[line_id]);
             });
+
             var products = [];
+            var current_products_qty_sum = 0;
             lines.forEach(function(line) {
                 var product = self.pos.db.get_product_by_id(line.product_id[0]);
+                current_products_qty_sum +=line.qty;
                 products.push(product);
             });
+
+            var returned_orders = this.pos.get_returned_orders_by_pos_reference(order.pos_reference);
+            var exist_products_qty_sum = 0;
+            returned_orders.forEach(function(o) {
+                o.lines.forEach(function(line_id) {
+                    var line = self.pos.db.line_by_id[line_id];
+                    exist_products_qty_sum +=line.qty;
+                });
+            });
+
+            if (exist_products_qty_sum + current_products_qty_sum <= 0) {
+                this.pos.gui.show_popup('error',{
+                    'title': _t('Error'),
+                    'body': _t('All products have been returned.'),
+                });
+                return false;
+            }
+
             if (products.length > 0) {
                 // create new order for return
                 var json = _.extend({}, order);
