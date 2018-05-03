@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 # Copyright 2018 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
-from odoo import models, fields, api
+import urllib
+import inspect
+
+from odoo import models, fields, api, _
+from odo.expressions import ValidationError
 
 
 class Access(models.Model):
@@ -60,6 +64,36 @@ class Access(models.Model):
         context="{'default_model_id': model_id}",
     )
 
+    @api.model
+    def _get_method_list(self):
+        return {m[0] for m in inspect.getmembers(self.env[self.model], predicate=inspect.ismethod)}
+
+    @api.depends('public_methods')
+    def check_public_methods(self):
+        for access in self:
+            if not access.check_public_methods:
+                continue
+            for line in access.check_public_methods.split('\n'):
+                if line.startswith('_'):
+                    ValidationError(_(
+                        'Private method (starting with "_" listed in public methods whitelist'))
+                if line not in self._get_method_list():
+                    ValidationError(_(
+                        'Method %r is not part of the model\'s method list:\n %r') % (
+                        line, self._get_method_list()))
+
+    @api.depends('private_methods')
+    def check_private_methods(self):
+        for access in self:
+            for line in access.check_public_methods.split('\n'):
+                if not line.startswith('_'):
+                    ValidationError(_(
+                        'Public method (not starting with "_" listed in private methods whitelist'))
+                if line not in self._get_method_list():
+                    ValidationError(_(
+                        'Method %r is not part of the model\'s method list:\n %r') % (
+                        line, self._get_method_list()))
+
     _sql_constraints = [
         ('namespace_model_uniq',
          'unique (namespace_id, model_id)',
@@ -80,3 +114,26 @@ class AccessCreateContext(models.Model):
     description = fields.Char('Description')
     model_id = fields.Many2one('ir.model', 'Model', required=True)
     context = fields.Text('Context', required=True)
+
+
+    _sql_constraints = [
+        ('context_model_name_uniq',
+         'unique (name, model_id)',
+         'There is already a context with the same name for this Model')
+    ]
+
+    @api.model
+    def _fix_name(self, vals):
+        if 'name' in vals:
+            vals['name'] = urllib.quote_plus(vals['name'].lower())
+        return vals
+
+    @api.model
+    def create(self, vals):
+        vals = self._fix_name(vals)
+        return super(AccessCreateContext, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        vals = self._fix_name(vals)
+        return super(AccessCreateContext, self).write(vals)
