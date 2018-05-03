@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
+License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+-->
+<templates id="template" xml:space="preserve">
+
+    <t t-name="odoo_backup_sh.BackupDashboardMain">
+        <div class="o_dashboards">
+            <div class="container-fluid o_backup_dashboard">
+                <t t-call="odoo_backup_sh.dashboard_header"/>
+                <div id="o_backup_dashboard_content"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="odoo_backup_sh.dashboard_header">
+        <div class="row o_dashboard_common">
+            <div class="o_box">
+                <a href="#" class="o_box_item o_dashboard_action_update_info" name="odoo_backup_sh.odoo_backup_sh_backup_action" title="Update backups information.">
+                    <div class="o_inner_box o_primary">
+                        <i class="fa fa-refresh fa-3x"/><br/>
+                        Update Info
+                    </div>
+                </a>
+                <a href="#" class="o_box_item o_dashboard_action_make_backup" name="odoo_backup_sh.odoo_backup_sh_backup_action" title="Make new backup.">
+                    <div class="o_inner_box o_primary">
+                        <i class="fa fa-save fa-3x"/><br/>
+                        Make Backup
+                    </div>
+                </a>
+                <a href="#" class="o_box_item o_dashboard_action_up_balance" name="odoo_backup_sh.odoo_backup_sh_backup_action" title="Up to the balance.">
+                    <div class="o_inner_box o_primary">
+                        <span id="insufficient_credit_notice" class="hide">
+                            Funds are insufficient for<br/>
+                            the next subscription fee!
+                        </span>
+                        <i class="fa fa-money fa-3x" id="up_to_the_balance_text"/><br/>
+                        Up to the Balance<br/>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </t>
+
+</templates>

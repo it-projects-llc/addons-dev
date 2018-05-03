@@ -21,8 +21,11 @@
         'iap',
     ],
     "external_dependencies": {"python": [], "bin": []},
-    "data": [],
-    "qweb": [],
+    "data": [
+        'views/odoo_backup_sh_templates.xml',
+        'views/odoo_backup_sh_views.xml',
+    ],
+    'qweb': ['static/src/xml/dashboard.xml'],
     "demo": [],
 
     "post_load": None,

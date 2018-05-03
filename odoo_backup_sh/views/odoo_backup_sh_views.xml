@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
+License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+-->
+<odoo>
+
+    <record id="backup_dashboard" model="ir.actions.client">
+        <field name="name">Dashboard</field>
+        <field name="tag">backup_dashboard</field>
+    </record>
+
+    <record id="ir_actions_server_backup_dashboard" model="ir.actions.server">
+        <field name="name">Backups: Dashboard</field>
+        <field name="model_id" ref="odoo_backup_sh.model_odoo_backup_sh_dashboard"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_dashboard_redirect()</field>
+    </record>
+
+    <record id='odoo_backup_sh_backup_form' model='ir.ui.view'>
+        <field name="name">odoo_backup_sh.backup.form</field>
+        <field name="model">odoo_backup_sh.backup</field>
+        <field name="arch" type="xml">
+            <form string="Backup">
+                <sheet>
+                    <group>
+                        <field name="backup_name" />
+                        <field name="date_upload" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id='odoo_backup_sh_backup_tree' model='ir.ui.view'>
+        <field name="name">odoo_backup_sh.backup.tree</field>
+        <field name="model">odoo_backup_sh.backup</field>
+        <field name="arch" type="xml">
+            <tree string="Backups">
+                <field name="backup_name" />
+                <field name="date_upload" />
+            </tree>
+        </field>
+    </record>
+
+    <record id='odoo_backup_sh_backup_action' model='ir.actions.act_window'>
+        <field name="name">Backups</field>
+        <field name="res_model">odoo_backup_sh.backup</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="Backups" id="menu_backup_root" sequence="100" web_icon="odoo_backup_sh,static/description/icon.png"/>
+    <menuitem name="Dashboard" action="ir_actions_server_backup_dashboard" parent="menu_backup_root"
+              id="menu_dashboard" sequence="1"/>
+    <menuitem name="Backups" parent="menu_backup_root" id="menu_backups" sequence="10"/>
+    <menuitem name="Configuration" parent="menu_backup_root" id="menu_config" sequence="100"/>
+    <menuitem action="odoo_backup_sh_backup_action" parent="menu_backups" id="backups_menu" sequence="1"/>
+
+</odoo>
