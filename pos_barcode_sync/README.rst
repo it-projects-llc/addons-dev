@@ -1,11 +1,11 @@
 ================================
- Barcode synchronization in POS
+ Barcode Synchronization in POS
 ================================
 
 Instantly updates partner data via longpolling connection in opened POSes if partner barcode was changed in the backend.
 
 Odoo updates partner data on opening the client list, this module updates partner data in POSes instantly after partner barcode was modified.
-So if for choosing clients you use only barcodes it helps to keep barcode data updated without opening the client list.
+So if you use only barcodes to choose clients, it helps to keep barcode data updated without opening the client list.
 
 Roadmap
 =======
@@ -14,7 +14,7 @@ TODO:
 -----
 
 * Cashier Barcodes
-* Location barcodes
+* Location Barcodes
 * Product Barcodes
 
 Credits
