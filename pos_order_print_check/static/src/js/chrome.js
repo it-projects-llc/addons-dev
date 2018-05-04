@@ -48,9 +48,43 @@ odoo.define('pos_order_print_check.chrome', function (require) {
                 }
                 if (this.order_print_quantity === 0) {
                     this.show_warning_message = true;
+                    $(window).off('beforeunload', this.unload);
+                } else {
+                    this.unloader();
                 }
             }
+        },
+        unloader: function(){
+            var self = this;
+            $(window).on('beforeunload', self.unload);
+            $('a').on('click', function(){
+                self.resetUnload();
+            });
+            $(document).on('submit', 'form', function(){o.resetUnload});
+            $(document).on('keydown', function(event){
+                if((event.ctrlKey && event.keyCode == 116) || event.keyCode == 116){
+                    self.resetUnload();
+                }
+            });
+        },
+        unload: function(evt){
+            var message = _t("The changes you have made will not be saved.");
+            if (typeof evt == "undefined") {
+                evt = window.event;
+            }
+            if (evt) {
+                evt.returnValue = message;
+            }
+            return message;
+        },
+        resetUnload: function() {
+            var self = this;
+            $(window).off('beforeunload', self.unload);
+            setTimeout(function(){
+                $(window).on('beforeunload', self.unload);
+            }, 2000);
         }
     });
+
     return chrome;
 });
