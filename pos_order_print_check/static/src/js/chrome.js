@@ -39,6 +39,10 @@ odoo.define('pos_order_print_check.chrome', function (require) {
             if (this.order_print_quantity !== sum) {
                 this.order_print_quantity = sum;
                 this.renderElement();
+                // if use the pos_mobile module
+                if (this.pos.is_mobile) {
+                    $($('.pos-rightheader .oe_status')[0]).css({'margin-right': '70px'});
+                }
                 if (this.show_warning_message ) {
                     this.pos.gui.show_popup('error',{
                         'title': _t('Warning'),
