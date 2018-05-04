@@ -30,6 +30,7 @@ odoo.define('pos_orders_history_return.screens', function (require) {
             this.$('.button.return-no-receipt').click(function (e) {
                 var options = _.extend({pos: self.pos}, {});
                 var order = new models.Order({}, options);
+                order.temporary = true;
                 order.set_mode("return_without_receipt");
                 order.return_lines = [];
                 self.pos.get('orders').add(order);
@@ -107,7 +108,7 @@ odoo.define('pos_orders_history_return.screens', function (require) {
 
                 var options = _.extend({pos: this.pos}, {json: json});
                 order = new models.Order({}, options);
-
+                order.temporary = true;
                 this.pos.get('orders').add(order);
                 this.pos.gui.back();
                 this.pos.set_order(order);
