@@ -8,11 +8,11 @@ import werkzeug
 import odoo
 from odoo import http, api, fields, models
 from odoo.http import request
-from odoo.addons.odoo_backup_sh.controllers.main import BackupController, BACKUP_SERVICE_ENDPOINT
+from ..controllers.main import BackupController, BACKUP_SERVICE_ENDPOINT
 from odoo.addons.iap import jsonrpc, InsufficientCreditError
 
 
-class Dashboard(models.Model):
+class Dashboard(models.AbstractModel):
     _name = 'odoo_backup_sh.dashboard'
     _description = 'Backup Dashboard'
 
@@ -31,6 +31,7 @@ class Backup(models.Model):
     @api.model
     def update_info(self, redirect):
         response = BackupController().backup_service_request(redirect=redirect)
+        # TODO: save new backups list
         if 'auth_link' not in response:
             credit_url = self.check_insufficient_credit(credit=10)
             if credit_url:
@@ -41,6 +42,9 @@ class Backup(models.Model):
     def make_backup(self, name=None, backup_format='zip'):
         if name is None:
             name = self.env.cr.dbname
+        # TODO: make dump
+        # TODO: get url to upload
+        # TODO: upload
         # ts = datetime.datetime.utcnow().strftime("%Y-%m-%d_%H-%M-%S")
         # filename = "%s_%s.%s" % (name, ts, backup_format)
         # dump_stream = odoo.service.db.dump_db(name, None, backup_format)

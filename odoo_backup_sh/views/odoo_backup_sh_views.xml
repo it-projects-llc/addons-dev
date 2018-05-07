@@ -36,7 +36,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
         <field name="name">odoo_backup_sh.backup.tree</field>
         <field name="model">odoo_backup_sh.backup</field>
         <field name="arch" type="xml">
-            <tree string="Backups">
+            <tree>
                 <field name="backup_name" />
                 <field name="date_upload" />
             </tree>

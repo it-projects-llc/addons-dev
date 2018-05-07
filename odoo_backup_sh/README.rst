@@ -11,7 +11,7 @@ The application allows managing database backups via a cloud, without a need to 
 In-App Purchase
 ===============
 
-The service **Odoo-backup.sh** provides a way to store backups in a cloud. Payments for the service is managed by propietary module, which implements `In-App Purchase <https://www.odoo.com/documentation/11.0/webservices/iap.html>`_ -- payments platform provided by *Odoo S.A.*.
+The service **Odoo-backup.sh** provides a way to store backups in a cloud. Payments for the service is managed by propietary module, which implements `In-App Purchase <https://www.odoo.com/documentation/11.0/webservices/iap.html>`__ -- payments platform provided by *Odoo S.A.*.
 
 Personal cloud
 ==============

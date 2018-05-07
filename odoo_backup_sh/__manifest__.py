@@ -22,6 +22,7 @@
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
+        'security/ir.model.access.csv',
         'views/odoo_backup_sh_templates.xml',
         'views/odoo_backup_sh_views.xml',
     ],

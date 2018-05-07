@@ -55,7 +55,10 @@ class BackupDatabase(web.controllers.main.Database):
 
 class BackupController(http.Controller):
 
-    def backup_service_request(self, redirect=None):
+    def load_backup_list_from_service(self, redirect=None):
+        """
+        :return: dictionary with backups if the user logged on odoo-backup.sh else dictionary with auth_link
+        """
         if not redirect:
             redirect = request.httprequest.url
         p = ConfigParser.RawConfigParser()
