@@ -40,20 +40,25 @@ class SaleOrder(models.Model):
 class SaleOrderLinePOfromSO(models.Model):
     _inherit = 'sale.order.line'
 
-    forecasted_qty = fields.Float(related='product_id.virtual_available', string='Forecast Quantity',
-                                     help="Forecast quantity (computed as Quantity On Hand "
-                                          "- Outgoing + Incoming)\n"
-                                          "In a context with a single Stock Location, this includes "
-                                          "goods stored in this location, or any of its children.\n"
-                                          "In a context with a single Warehouse, this includes "
-                                          "goods stored in the Stock Location of this Warehouse, or any "
-                                          "of its children.\n"
-                                          "Otherwise, this includes goods stored in any Stock Location "
-                                          "with 'internal' type.")
+    def new(self, values={}, ref=None):
+        product = self.env['product.product'].browse(values['product_id'])
+        line = super(SaleOrderLinePOfromSO, self).new(values, ref)
+        if product:
+            line.no_forecasted_qty = product.type == 'product' and \
+                                     product.virtual_available - values['product_uom_qty'] < 0
+        return line
+
+    no_forecasted_qty = fields.Boolean(default="True", string='Positive Forecast',
+                                       help="Forecasted quantity is not positive")
 
     @api.onchange('product_uom_qty')
-    def _onchange_product_uom_qty(self):
-        self.forecasted_qty = self.product_id.virtual_available - self.product_uom_qty
+    @api.depends('product_uom_qty')
+    def _onchange_no_forecasted_qty(self):
+        for line in self.filtered(lambda l: l.state == 'draft'):
+            line.update({
+                'no_forecasted_qty': line.product_id.type == 'product' and
+                                     line.product_id.virtual_available - line.product_uom_qty < 0
+            })
 
     @api.onchange('product_id')
     def _onchange_product_id_check_availability(self):
