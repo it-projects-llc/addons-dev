@@ -3,11 +3,8 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 import json
-import werkzeug
 
-import odoo
-from odoo import http, api, fields, models
-from odoo.http import request
+from odoo import api, fields, models
 from ..controllers.main import BackupController, BACKUP_SERVICE_ENDPOINT
 from odoo.addons.iap import jsonrpc, InsufficientCreditError
 

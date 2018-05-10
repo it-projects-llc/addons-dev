@@ -17,6 +17,11 @@ odoo.define("odoo_backup_sh.tour", function (require) {
                 trigger: '.o_app[data-menu-xmlid="odoo_backup_sh.menu_backup_root"], .oe_menu_toggler[data-menu-xmlid="odoo_backup_sh.menu_backup_root"]',
                 content: _t('Want a better way to <b>manage your databases backups</b>? <i>It starts here.</i>'),
                 position: "bottom",
+            },
+            {
+                // This step have been added to ensure the page was loaded
+                trigger: '.o_dashboard_action_update_info',
+                run: function () {},
             }
         ]);
 });
