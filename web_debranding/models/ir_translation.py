@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 import re
 
 from odoo import api
 from odoo import models
 from odoo import tools
 
-from .ir_config_parameter import PARAMS
+from .ir_config_parameter import get_debranding_parameters_env
 
 
 def debrand_documentation_links(source, new_documentation_website):
@@ -22,13 +21,7 @@ def debrand(env, source, is_code=False):
     if not source or not re.search(r'\bodoo\b', source, re.IGNORECASE):
         return source
 
-    # get_debranding_parameters may not be available yet on database creation
-    if env and hasattr(env['ir.config_parameter'], 'get_debranding_parameters'):
-        params = env['ir.config_parameter'].get_debranding_parameters()
-    else:
-        # use default values
-        params = dict(PARAMS)
-
+    params = get_debranding_parameters_env(env)
     new_name = params.get('web_debranding.new_name')
     new_website = params.get('web_debranding.new_website')
     new_documentation_website = params.get('web_debranding.new_documentation_website')
@@ -48,7 +41,9 @@ def debrand(env, source, is_code=False):
     # https://github.com/odoo/odoo/blob/11.0/addons/web/views/webclient_templates.xml#L260
     # odoo[
     # https://github.com/odoo/odoo/blob/11.0/addons/web_editor/views/iframe.xml#L43-L44
-    source = re.sub(r'\odoo(?!\.\S|\s?=|\w|\[)\b', new_name, source, flags=re.IGNORECASE)
+    # SMTH.odoo
+    # https://github.com/odoo/odoo/blob/11.0/addons/web_editor/views/iframe.xml#L43
+    source = re.sub(r'\b(?<!\.)odoo(?!\.\S|\s?=|\w|\[)\b', new_name, source, flags=re.IGNORECASE)
 
     return source
 
