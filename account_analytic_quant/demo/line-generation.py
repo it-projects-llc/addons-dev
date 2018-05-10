@@ -61,7 +61,7 @@ def lines():
         date = random_date(alpha)
         a, p, t = random_project_task(alpha)
         u = random_user()
-        print 'line{i},name{i},{amount},{date},{a},{t},{p},u{u}'.format(
+        print 'line{i},Timesheet expense {i},{amount},{date},{a},{t},{p},u{u}'.format(
             i=i, amount=amount, date=date, a=a, p=p, t=t, u=u
         )
 
@@ -75,7 +75,7 @@ def lines():
     for analytic, delta, amount in PERIODIC_PAYMENTS:
         for i in range(3):
             date = format_date(delta + i*30)
-            print 'line_periodic_expense_{a}_{i},name{i},{amount},{date},{a},,,'.format(
+            print 'line_periodic_expense_{a}_{i},Periodic expense {i},{amount},{date},{a},,,'.format(
                 i=i, amount=amount, date=date, a=a,
             )
 
@@ -86,7 +86,7 @@ def lines():
         p = 'p%i' % p_id
         amount = random_normal(10, 20333, 4000, 2000)
         date = format_date(round(MAX_DAYS * i / INCOME_NUM))
-        print 'line_income_{i},name{i},{amount},{date},{a},,{p},'.format(
+        print 'line_income_{i},income {i},{amount},{date},{a},,{p},'.format(
             i=i, amount=amount, date=date, a=a, p=p, t='', u=''
         )
 
