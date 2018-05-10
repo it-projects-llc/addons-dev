@@ -19,11 +19,18 @@
 
     "depends": [
         "analytic",
+        "hr_timesheet",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
     ],
     "demo": [
+        "demo/res.users.csv",
+        "demo/account.analytic.account.csv",
+        "demo/project.project.csv",
+        "demo/project.task.csv",
+        "demo/account.analytic.line.csv",
+#        "demo/account.analytic.line.link.csv",
     ],
     "qweb": [
     ],

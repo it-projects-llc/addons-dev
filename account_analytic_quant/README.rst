@@ -20,7 +20,7 @@ are distributed in containers.
 
 Built-in model ``account.analytic.line`` has additional fields:
 
-* ``linked_line_ids`` specifies weighted link to analytic records of opposite
+* ``link_ids`` specifies weighted link to analytic records of opposite
   type (i.e. an expense has links to incomes only and vice versa)
 * ``date_start``, ``date_end`` -- interval of income/expense accumulation (e.g. 1 month for montly rent fee)
 
@@ -33,6 +33,11 @@ How *quants* are distributed:
   quants' interval. Quants are distributed proportionally to size of found
   contaiers
 * At the last stage, we are trying to find cointainers with the closest date
+
+Roadmap
+=======
+
+* ``hr_timesheet`` dependency can be taken out to new module ``account_analytic_quants_hr_timesheet``
 
 Credits
 =======
