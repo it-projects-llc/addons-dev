@@ -1,3 +1,23 @@
+`1.0.24`
+--------
+
+- FIX: Save\Create button didn't react in ``Point of Sale`` records
+
+`1.0.23`
+--------
+
+- FIX: Debranding problems after introducing new features
+
+`1.0.22`
+--------
+
+- FIX: method create didn't work via xmlrpc (e.g. on using Mail Composer)
+
+`1.0.21`
+--------
+
+- FIX: In some cases, default parameters were used instead of custom ones
+
 `1.0.20`
 --------
 
