@@ -46,4 +46,61 @@
         </t>
     </t>
 
+    <t t-extend="ClientLine">
+        <t t-jquery="tr.client-line" t-operation="replace">
+            <tr class='client-line' t-att-data-id='partner.id'>
+                <td><t t-esc='partner.name' /></td>
+                <td><t t-esc='partner.phonetic_name' /></td>
+                <td><t t-esc='partner.id' /></td>
+                <td><t t-esc='partner.phone or partner.mobile or ""' /></td>
+            </tr>
+        </t>
+    </t>
+
+    <t t-name="HistoryLine">
+        <t t-jquery="tr.client-line" t-operation="replace">
+            <tr>
+                <td><t t-esc='line.receipt_id' /></td>
+                <td><t t-esc='line.date' /></td>
+                <td><t t-esc='line.status' /></td>
+                <td><t t-esc='line.fin_date' /></td>
+            </tr>
+        </t>
+    </t>
+
+    <t t-extend="ClientListScreenWidget">
+        <t t-jquery="table.client-list thead" t-operation="replace">
+            <thead id="clientlist_head">
+                <tr>
+                    <th>Name</th>
+                    <th>Phonetic Name</th>
+                    <th>Customer ID</th>
+                    <th>Phone</th>
+                </tr>
+            </thead>
+            <thead id="historylist_head">
+                <tr>
+                    <th>Receipt ID</th>
+                    <th>Date</th>
+                    <th>Payment Status</th>
+                    <th>Finish Date</th>
+                </tr>
+            </thead>
+        </t>
+    </t>
+
+    <t t-extend="ClientDetails">
+        <t t-jquery="section" t-operation="append">
+            <div class="notebook-list">
+                <span id="show_clients" class="notebook-button">
+                    Customer List
+                </span>
+                <span id="show_history" class="notebook-button">
+                    Transaction History
+                </span>
+            </div>
+        </t>
+    </t>
+
+
 </templates>

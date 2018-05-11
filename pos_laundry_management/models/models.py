@@ -4,8 +4,13 @@
 
 # import logging
 # from odoo import api
-# from odoo import fields
-# from odoo import models
+from odoo import fields
+from odoo import models
 #
 # _logger = logging.getLogger(__name__)
-#
+
+
+class ResPartner(models.Model):
+    _inherit = 'res.partner'
+
+    phonetic_name = fields.Char('Customer Phonetic Name', default="default")
