@@ -57,12 +57,9 @@ class AnalyticLine(models.Model):
         for this in self:
             field_this, field_that = this._link_fields()
 
-            _logger.debug("cached links after editing: %s", this.line_ids)
-
             existing = Link.search([
                 (field_this, '=', this.id),
             ]).mapped(field_that)
-            _logger.debug("existing links: %s", existing)
 
             # create new
             for that in (this.line_ids - existing):
@@ -73,5 +70,9 @@ class AnalyticLine(models.Model):
 
             # delete removed
             dangling = (existing - this.line_ids)
-            _logger.debug("Remove links: %s", dangling)
-            dangling.unlink()
+            links = Link.search([
+                (field_this, '=', this.id),
+                (field_that, 'in', dangling.ids),
+            ])
+            _logger.debug("Remove links: %s", links)
+            links.unlink()

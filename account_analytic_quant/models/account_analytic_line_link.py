@@ -6,8 +6,8 @@ from odoo import models, fields
 class AnalyticLink(models.Model):
     _name = 'account.analytic.line.link'
 
-    income_id = fields.Many2one('account.analytic.line', 'Income')
-    expense_id = fields.Many2one('account.analytic.line', 'Expense')
+    income_id = fields.Many2one('account.analytic.line', 'Income', ondelete='cascade')
+    expense_id = fields.Many2one('account.analytic.line', 'Expense', ondelete='cascade')
     weight = fields.Integer('Weight', default=1)
 
     def name_get(self):
