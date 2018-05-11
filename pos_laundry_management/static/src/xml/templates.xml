@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2015-2016 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
+
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="PackLotLinePopupWidget">
+        <t t-jquery=".packlot-lines" t-operation="replace">
+            <div class='packlot-lines'>
+                <t t-if="widget.options.pack_lot_lines">
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <th>UoM</th>
+                            <th>Price</th>
+                            <th>Barcode</th>
+                            <th>TAG</th>
+                        </tr>
+                        <t t-set="focus_lot_line" t-value="widget.focus_model || widget.options.pack_lot_lines.get_empty_model()"/>
+                        <t t-foreach='widget.options.pack_lot_lines.models' t-as='lot_line'>
+                            <t t-set="product" t-value="lot_line.order_line.product"/>
+                            <tr>
+                                <th><t t-esc="product.display_name"/></th>
+                                <th><t t-esc="product.uom_id[1]"/></th>
+                                <th><t t-esc="product.price"/></th>
+                                <th>
+                                    <input type="text" t-att-cid="lot_line.cid"
+                                    t-att-value="lot_line.get('lot_name')"
+                                    t-att-autofocus="lot_line === focus_lot_line ? 'autofocus': undefined"
+                                    class="popup-input packlot-line-input"
+                                    placeholder="Serial/Lot Number"/>
+                                </th>
+                                <th><input type="text" t-att-cid="lot_line.cid"
+                                    t-att-value="lot_line.get('lot_name')"
+                                    t-att-autofocus="lot_line === focus_lot_line ? 'autofocus': undefined"
+                                    class="popup-input packlot-line-input"
+                                    placeholder="TAG"/></th>
+                                <th>
+                                    <i class="oe_link_icon remove-lot fa fa-trash-o"></i>
+                                </th>
+                            </tr>
+                        </t>
+                    </table>
+                </t>
+            </div>
+        </t>
+    </t>
+
+</templates>
