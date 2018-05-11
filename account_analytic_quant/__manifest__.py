@@ -24,6 +24,7 @@
     "external_dependencies": {"python": [], "bin": []},
     "data": [
         "views/account_analytic_line.xml",
+        "views/account_analytic_line_link.xml",
     ],
     "demo": [
         "demo/res.users.csv",
