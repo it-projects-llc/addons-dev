@@ -14,7 +14,9 @@ Usage
 * Open menu ``[[ Accounting ]] >> Adviser >> Analytic Entries``
 * For existing records Specify values for following fields:
 
-  * **Linked Records** -- related analytic records of opposite type
+  * **Linked Records** -- related analytic records of opposite type. To set
+    Weight of the links, save the record first, then click edit again -- you can
+    set the weight and *Weights of the Links* tab
   * **Date Start**, **Date End** -- interval of income/expense accumulation.
 
 

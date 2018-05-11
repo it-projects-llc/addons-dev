@@ -20,7 +20,7 @@ are distributed in containers.
 
 Built-in model ``account.analytic.line`` has additional fields:
 
-* ``link_ids`` specifies weighted link to analytic records of opposite
+* ``line_ids`` specifies weighted link to analytic records of opposite
   type (i.e. an expense has links to incomes only and vice versa)
 * ``date_start``, ``date_end`` -- interval of income/expense accumulation (e.g. 1 month for montly rent fee)
 
