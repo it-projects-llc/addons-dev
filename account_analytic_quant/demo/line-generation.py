@@ -52,7 +52,7 @@ def random_user():
 
 
 def lines():
-    print 'id,name,amount,date,account_id/id,task_id/id,project_id/id,user_id/id'
+    print 'id,name,amount,date,date_start,date_end,account_id/id,task_id/id,project_id/id,user_id/id'
 
     # timesheet expenses
     for i in range(1, TIMESHEET_NUM+1):
@@ -61,8 +61,10 @@ def lines():
         date = random_date(alpha)
         a, p, t = random_project_task(alpha)
         u = random_user()
-        print 'line{i},Timesheet expense {i},{amount},{date},{a},{t},{p},u{u}'.format(
-            i=i, amount=amount, date=date, a=a, p=p, t=t, u=u
+        print 'line{i},Timesheet expense {i},{amount},{date},{date_start},{date_end},{a},{t},{p},u{u}'.format(
+            i=i, amount=amount, date=date, a=a, p=p, t=t, u=u,
+            date_start=date,
+            date_end=date,
         )
 
     # periodic payments
@@ -75,8 +77,12 @@ def lines():
     for analytic, delta, amount in PERIODIC_PAYMENTS:
         for i in range(3):
             date = format_date(delta + i*30)
-            print 'line_periodic_expense_{a}_{i},Periodic expense {i},{amount},{date},{a},,,'.format(
-                i=i, amount=amount, date=date, a=a,
+            date_start = format_date(delta + i*30 - 30)
+            date_end = date
+            print 'line_periodic_expense_{a}_{i},Periodic expense {i},{amount},{date},{date_start},{date_end},{a},,,'.format(
+                i=i, amount=amount, date=date, a=analytic,
+                date_start=date_start,
+                date_end=date_end,
             )
 
     # income
@@ -85,9 +91,14 @@ def lines():
         a = 'a%i' % p_id
         p = 'p%i' % p_id
         amount = random_normal(10, 20333, 4000, 2000)
-        date = format_date(round(MAX_DAYS * i / INCOME_NUM))
-        print 'line_income_{i},income {i},{amount},{date},{a},,{p},'.format(
-            i=i, amount=amount, date=date, a=a, p=p, t='', u=''
+        day = round(MAX_DAYS * i / INCOME_NUM)
+        date = format_date(day)
+        date_start = format_date(day - random_normal(5, 25, 15, 5))
+        date_end = date
+        print 'line_income_{i},income {i},{amount},{date},{date_start},{date_end},{a},,{p},'.format(
+            i=i, amount=amount, date=date, a=a, p=p, t='', u='',
+            date_start=date_start,
+            date_end=date_end,
         )
 
 

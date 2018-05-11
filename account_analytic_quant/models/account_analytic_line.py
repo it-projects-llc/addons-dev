@@ -30,6 +30,8 @@ class AnalyticLine(models.Model):
         'account.analytic.line.link',
         'income_id',
     )
+    date_start = fields.Date('Start', help='Accumulation interval')
+    date_end = fields.Date('End', help='Accumulation interval')
 
     @api.depends('amount')
     def _compute_is_expense(self):
