@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2018 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+<odoo>
+    <record model="ir.ui.view" id="analytic_quant_search_view">
+        <field name="name">account.analytic.quant.search</field>
+        <field name="model">account.analytic.quant</field>
+        <field name="arch" type="xml">
+            <search>
+                <!-- TODO -->
+            </search>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="analytic_quant_tree_view">
+        <field name="name">account.analytic.quant.tree</field>
+        <field name="model">account.analytic.quant</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="type"/>
+                <field name="amount"/>
+                <field name="project_id"/>
+                <field name="task_id"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="analytic_quant_form_view">
+        <field name="name">account.analytic.quant.form</field>
+        <field name="model">account.analytic.quant</field>
+        <field name="arch" type="xml">
+            <form string="Analytic Quant">
+                <group>
+                    <group>
+                        <field name="type"/>
+                        <field name="amount"/>
+                        <field name="currency_id" groups="base.group_multi_currency"/>
+                        <field name="line_id"/>
+                        <field name="project_id"/>
+                        <field name="task_id"/>
+                    </group>
+                    <group string="Coverage">
+                        <field name="income_id"/>
+                        <field name="income_project_id"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="analytic_quant_action" model="ir.actions.act_window">
+        <field name="name">Analytic Quants</field>
+        <field name="res_model">account.analytic.quant</field>
+        <field name="view_type">form</field>
+    </record>
+
+    <menuitem
+        name="Analytic Quants"
+        parent="account.menu_finance_entries"
+        action="analytic_quant_action"
+        id="analytic_quant_menu"
+        sequence="50"
+        groups="base.group_no_one"/>
+
+</odoo>

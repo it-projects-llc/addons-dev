@@ -25,6 +25,8 @@
     "data": [
         "views/account_analytic_line.xml",
         "views/account_analytic_line_link.xml",
+        "views/account_analytic_quant.xml",
+        "wizard/account_analytic_quant_generator_views.xml",
     ],
     "demo": [
         "demo/res.users.csv",
