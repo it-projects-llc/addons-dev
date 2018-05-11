@@ -35,6 +35,7 @@
         "demo/project.task.csv",
         "demo/account.analytic.line.csv",
 #        "demo/account.analytic.line.link.csv",
+        "demo/generate.xml",
     ],
     "qweb": [
     ],

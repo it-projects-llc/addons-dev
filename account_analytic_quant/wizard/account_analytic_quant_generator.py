@@ -20,4 +20,5 @@ class Generator(models.TransientModel):
 
     def apply(self):
         self.ensure_one()
+        _logger.debug('Start quant generation')
         # TODO
