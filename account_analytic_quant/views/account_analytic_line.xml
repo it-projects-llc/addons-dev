@@ -18,13 +18,13 @@
                         <field name="line_ids" domain="[('is_expense', '=', not is_expense)]"/>
                     </page>
                     <page string="Weight of the Links">
-                        <field name="expense_link_ids" attrs="{'invisible': [('is_expense', '=', False)]}">
+                        <field name="link_income_ids" attrs="{'invisible': [('is_expense', '=', False)]}">
                             <tree editable="bottom">
                                 <field name="weight"/>
                                 <field name="income_id"/>
                             </tree>
                         </field>
-                        <field name="income_link_ids" attrs="{'invisible': [('is_expense', '=', True)]}">
+                        <field name="link_expense_ids" attrs="{'invisible': [('is_expense', '=', True)]}">
                             <tree editable="bottom">
                                 <field name="weight"/>
                                 <field name="expense_id"/>

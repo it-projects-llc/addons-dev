@@ -22,11 +22,11 @@ class AnalyticLine(models.Model):
         store=True,
         compute='_compute_is_expense'
     )
-    expense_link_ids = fields.One2many(
+    link_income_ids = fields.One2many(
         'account.analytic.line.link',
         'expense_id',
     )
-    income_link_ids = fields.One2many(
+    link_expense_ids = fields.One2many(
         'account.analytic.line.link',
         'income_id',
     )

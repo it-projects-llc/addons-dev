@@ -16,6 +16,11 @@ class AnalyticLink(models.Model):
         ondelete='cascade')
     weight = fields.Integer('Weight', default=1)
 
+    _sql_constraints = [
+        ('weight_positive', 'weight > 0', 'Weight must be positive!'),
+    ]
+
+
     def name_get(self):
         return [
             (r.id, '%s <> %s' % (r.income_id.name, r.expense_id.name))

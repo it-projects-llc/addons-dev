@@ -27,7 +27,7 @@ Built-in model ``account.analytic.line`` has additional fields:
 
 How *quants* are distributed:
 
-* Beggining from the oldest expenses, distirbuted quants to corresponding
+* Beggining from the oldest expenses, distirbute quants to corresponding
   containers proportionally to link weight
 * At next stage, we are trying to destribute quants to containers that belong to
   quants' interval. Quants are distributed proportionally to size of found

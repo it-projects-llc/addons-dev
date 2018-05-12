@@ -6,19 +6,18 @@ from odoo import models, fields, api
 class AnalyticQuant(models.Model):
     _name = 'account.analytic.quant'
 
+    generation = fields.Integer(index=True)
     type = fields.Selection([
         ('income', 'Income'),
         ('expense', 'Expense'),
         ('expense_uncovered', 'Uncovered Expense'),
-        ('expense_nonlinked', 'Nonlinked Expense'),
-    ], string='Quant Type', help="""
+    ], string='Quant Type', index=True, help="""
 * Uncovered Expense - is an expense that is not covereted by linked to it incomes
-* Nonlinked Expense - is an expense that is not linked to any income
     """)
     profitability = fields.Selection([
         ('covered', 'Profitable'),
         ('oncovered', 'Unprofitable'),
-    ], compute='_compute_profitability', store=True)
+    ], compute='_compute_profitability', store=True, index=True)
     amount = fields.Monetary('Amount')
     currency_id = fields.Many2one(
         'res.currency', 'Currency', required=True,
@@ -27,6 +26,7 @@ class AnalyticQuant(models.Model):
     income_id = fields.Many2one(
         'account.analytic.line',
         'Income',
+        index=True,
         help="""The income this Quant is attached to.
         For income quant: reference to itself"""
     )
@@ -35,11 +35,13 @@ class AnalyticQuant(models.Model):
         'Income Project',
         related='income_id.project_id',
         readonly=True,
+        index=True,
     )
 
     line_id = fields.Many2one(
         'account.analytic.line',
-        'Analytic Line'
+        'Analytic Line',
+        help='Original Analytic Line the quant is made from',
     )
     task_id = fields.Many2one(
         'project.task',
@@ -57,5 +59,7 @@ class AnalyticQuant(models.Model):
     @api.depends('type')
     def _compute_profitability(self):
         for r in self:
+            if not r.type:
+                continue
             r.profitability = 'covered' if r.type in ['income', 'expense'] \
                               else 'uncovered'
