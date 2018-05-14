@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- MRP Production form view -->
+    <record id="view_mrp_view_from" model="ir.ui.view">
+        <field name="name">mrp.production.form</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="create">false</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_mark_done']" position="replace">
+                <button name="button_mark_done" attrs="{'invisible': [('check_to_done', '=', False)]}" string="Done" type="object" class="oe_highlight"/>
+            </xpath>
+            <xpath expr="//button[@name='action_assign']" position="replace">
+            </xpath>
+            <xpath expr="//button[@name='button_plan']" position="replace">
+            </xpath>
+            <xpath expr="//button[@name='button_unreserve']" position="replace">
+            </xpath>
+            <xpath expr="//button[@name='button_scrap']" position="replace">
+            </xpath>
+            <xpath expr="//button[@name='post_inventory']" position="replace">
+            </xpath>
+            <xpath expr="//button[@name='open_produce_product']" position="replace">
+                <button name="open_produce_product" attrs="{'invisible': ['|', ('check_to_done', '=', True), ('state', 'not in', ('confirmed'))]}" string="Waiting Delivery" type="object" class="oe_highlight"/>
+            </xpath>
+            <xpath expr="//button[@name='action_cancel']" position="before">
+                <button name="confirmed_order" string="Confirmed" type="object" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ['planned'])]}" context="{'type_view': 'form'}"/>
+            </xpath>
+            <xpath expr="//button[@name='action_cancel']" position="replace">
+                <button name="action_cancel" type="object" string="Cancel" attrs="{'invisible': [('state', 'in', ('done','cancel'))]}"/>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="replace">
+                <field name="state" widget="statusbar" statusbar_visible="cancel,done"/>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="replace">
+                <field name="name" invisible="1"/>
+                <field name="product_barcode" placeholder="Product deposit barcode"/>
+            </xpath>
+            <xpath expr="//group/group[1]" position="replace">
+                <group>
+                    <field name="has_moves" invisible="1"/>
+                    <field name="check_to_done" invisible="1"/>
+                    <field name="product_id" attrs="{'readonly': [('has_moves', '=', True)]}" domain="[('bom_ids', '!=', False)]"/>
+                    <field name="product_tmpl_id" invisible="1"/>
+                    <field name="product_qty" attrs="{'readonly': [('has_moves', '=', True)]}" invisible="1"/>
+                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom" attrs="{'readonly': [('state', 'in', 'done')]}" invisible="1"/>
+                    <field name="bom_id" invisible="1" attrs="{'readonly': [('state','=',['cancel','done'])]}"/>
+                    <field name="routing_id" invisible="1"/>
+                    <field name="tag"/>
+                    <field name="partner_id" domain="[('customer','=',True)]"/>
+                    <label for="street" string="Address"/>
+                    <div class="o_address_format">
+                        <field name="street" placeholder="Street..." class="o_address_street"/>
+                        <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                        <field name="city" placeholder="City" class="o_address_city"/>
+                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
+                        <field name="zip_no" placeholder="ZIP" class="o_address_zip"/>
+                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                    </div>
+                    <field name="pricelist_id"/>
+                    <field name="phone"/>
+                    <field name="phone2"/>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='date_planned_start']" position="replace">
+                <field name="date_planned_start" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="before">
+                <field name="date"/>
+                <field name="finishing_date"/>
+                <field name="done_date"/>
+                <field name="delivery_date"/>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="replace">
+                <field name="user_id" string="Sales person"/>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="replace">
+                <field name="origin" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='company_id']" position="replace">
+                <field name="company_id" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="note"/>
+                <field name="receipt_barcode"/>
+                <field name="availability" invisible="1"/>
+            </xpath>
+            <xpath expr="//notebook" position="replace">
+                <notebook>
+                    <page string="Warehouse">
+                        <field name="warehouse_ids">
+                            <tree editable="bottom">
+                                <field name="lot_stock_id" string="Location"/>
+                                <field name="barcode"/>
+                                <field name="lot_stock_id" string="Location #"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- MRP Production tree view for Manufacturing Orders menu -->
+    <record id="view_mrp_manufacturing_tree" model="ir.ui.view">
+        <field name="name">mrp.production.tree</field>
+        <field name="model">mrp.production</field>
+        <field name="arch" type="xml">
+            <tree string="Manufacturing Orders">
+                <field name="date"/>
+                <field name="receipt_barcode" string="Receipt barcode"/>
+                <field name="product_barcode" string="Product deposit barcode"/>
+                <field name="tag"/>
+                <field name="finishing_date"/>
+                <field name="partner_id" string="Customer name"/>
+                <field name="product_id" string="Product name"/>
+                <button class="oe_highlight" name="confirmed_order" string="Confirm" type="object" context="{'type_view': 'tree'}" style="text-color:blue;"/>
+                <field name="state" string="Status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mrp_production_start_action" model="ir.actions.act_window">
+        <field name="name">Manufacturing Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="context">{}</field>
+        <field name="domain">[('state', '=', 'planned')]</field>
+    </record>
+
+    <record id="act_open_start_view_tree" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="mrp_production_start_action"/>
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_mrp_manufacturing_tree"/>
+    </record>
+
+    <!-- MRP Production tree view for Confirmed Orders menu -->
+    <record id="view_mrp_confirm_tree" model="ir.ui.view">
+        <field name="name">mrp.production.tree</field>
+        <field name="model">mrp.production</field>
+        <field name="arch" type="xml">
+            <tree string="Confirmed Orders" create="false">
+                <field name="date"/>
+                <field name="receipt_barcode" string="Receipt barcode"/>
+                <field name="product_barcode" string="Product deposit barcode"/>
+                <field name="tag"/>
+                <field name="finishing_date"/>
+                <field name="partner_id" string="Customer name"/>
+                <field name="product_id" string="Product name"/>
+                <field name="done_date"/>
+                <field name="state" string="Status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mrp_production_confirm_action" model="ir.actions.act_window">
+        <field name="name">Confirmed Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="context">{}</field>
+        <field name="domain">[('state', '=', 'confirmed')]</field>
+    </record>
+
+    <record id="act_open_confirm_view_tree" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="mrp_production_confirm_action"/>
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_mrp_confirm_tree"/>
+    </record>
+
+    <!-- MRP Production tree view for Waiting Delivery list menu -->
+    <record id="view_mrp_waiting_tree" model="ir.ui.view">
+        <field name="name">mrp.production.tree</field>
+        <field name="model">mrp.production</field>
+        <field name="arch" type="xml">
+            <tree string="Waiting Delivery list" create="false">
+                <field name="message_needaction" invisible="1"/>
+                <field name="date"/>
+                <field name="receipt_barcode" string="Receipt barcode"/>
+                <field name="product_barcode" string="Product deposit barcode"/>
+                <field name="tag"/>
+                <field name="finishing_date"/>
+                <field name="partner_id" string="Customer name"/>
+                <field name="product_id" string="Product name"/>
+                <field name="done_date"/>
+                <field name="delivery_date"/>
+                <field name="pricelist_id"/>
+                <field name="state" string="Status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mrp_production_waiting_action" model="ir.actions.act_window">
+        <field name="name">Waiting Delivery list</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="context">{}</field>
+        <field name="domain">[('state', '=', 'progress')]</field>
+    </record>
+
+    <record id="act_open_waiting_view_tree" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="mrp_production_waiting_action"/>
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_mrp_waiting_tree"/>
+    </record>
+
+</odoo>

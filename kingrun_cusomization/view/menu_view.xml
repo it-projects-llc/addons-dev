@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <menuitem id="mrp.menu_mrp_root"
+        name="Maintenance"
+        sequence="24"/>
+
+    <menuitem id="mrp.menu_mrp_manufacturing"
+        name="Manufacturing"
+        parent="mrp.menu_mrp_root"/>
+
+    <menuitem id="menu_mrp_config"
+        name="Settings"
+        parent="mrp.menu_mrp_root"
+        sequence="10"
+        action="mrp.action_mrp_configuration"
+        groups="base.group_system"/>
+
+    <menuitem action="kingrun_cusomization.mrp_production_confirm_action"
+        id="menu_confirmed_order_action"
+        name="Confirmed Orders"
+        parent="mrp.menu_mrp_manufacturing"
+        sequence="2"/>
+
+    <menuitem action="kingrun_cusomization.mrp_production_waiting_action"
+        id="menu_waiting_action"
+        name="Waiting Delivery list"
+        parent="mrp.menu_mrp_manufacturing"
+        sequence="3"/>
+
+    <menuitem action="kingrun_cusomization.mrp_production_start_action"
+        id="mrp.menu_mrp_production_action"
+        name="Manufacturing Orders"
+        parent="mrp.menu_mrp_manufacturing"
+        sequence="1"/>
+
+</odoo>

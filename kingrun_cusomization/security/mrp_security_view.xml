@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record model="ir.ui.menu" id="mrp.menu_mrp_dashboard">
+            <field name="action" eval="False"/>
+        </record>
+
+        <record model="ir.ui.menu" id="mrp.menu_mrp_workorder_todo">
+            <field name="action" eval="False"/>
+        </record>
+
+        <record model="ir.ui.menu" id="mrp.menu_mrp_unbuild">
+            <field name="action" eval="False"/>
+        </record>
+
+        <record model="ir.ui.menu" id="mrp.menu_mrp_scrap">
+            <field name="action" eval="False"/>
+        </record>
+
+        <record model="ir.ui.menu" id="mrp.mrp_message_menu">
+            <field name="action" eval="False"/>
+        </record>
+
+        <record model="ir.ui.menu" id="mrp.menu_mrp_traceability">
+            <field name="action" eval="False"/>
+        </record>
+
+        <record model="ir.ui.menu" id="mrp.menu_mrp_production_report">
+            <field name="action" eval="False"/>
+        </record>
+
+        <record model="ir.ui.menu" id="mrp.menu_mrp_work_order_report">
+            <field name="action" eval="False"/>
+        </record>
+
+        <record model="ir.ui.menu" id="mrp.menu_mrp_workcenter_productivity_report">
+            <field name="action" eval="False"/>
+        </record>
+
+        <record model="ir.ui.menu" id="mrp.menu_mrp_product_form">
+            <field name="action" eval="False"/>
+        </record>
+
+        <record model="ir.ui.menu" id="mrp.menu_mrp_routing_action">
+            <field name="action" eval="False"/>
+        </record>
+
+        <record model="ir.ui.menu" id="mrp.menu_mrp_bom_form_action">
+            <field name="action" eval="False"/>
+        </record>
+
+        <record model="ir.ui.menu" id="mrp.menu_view_resource_search_mrp">
+            <field name="action" eval="False"/>
+        </record>
+
+        <record model="ir.ui.menu" id="mrp.menu_mrp_config">
+            <field name="action" eval="False"/>
+        </record>
+
+        <record model="ir.ui.menu" id="mrp.menu_mrp_workcenter_productivity_loss">
+            <field name="action" eval="False"/>
+        </record>
+
+        <record model="ir.ui.menu" id="mrp.menu_view_resource_calendar_search_mrp">
+            <field name="action" eval="False"/>
+        </record>
+
+        <record model="ir.ui.menu" id="mrp.menu_view_resource_calendar_leaves_search_mrp">
+            <field name="action" eval="False"/>
+        </record>
+
+    </data>
+</odoo>
