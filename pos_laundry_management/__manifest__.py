@@ -18,8 +18,8 @@
     # "currency": "EUR",
 
     "depends": [
-        "stock",
         "pos_pricelist",
+        "kingrun_cusomization",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [

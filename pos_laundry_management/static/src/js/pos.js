@@ -18,8 +18,51 @@ odoo.define('pos_laundry_management.pos', function (require) {
 
     models.load_fields('res.partner','phonetic_name');
 
-    screens.NumpadWidget.include({
+        var _super_posmodel = models.PosModel.prototype;
+    models.PosModel = models.PosModel.extend({
+        reload_history: function(partner_ids, limit, options){
+            /**
+             @param {Array} partner
+             @param {Number} limit
+             @param {Object} options
+               * "shadow" - set true to load in background (i.e. without blocking the screen). Default is True
+             **/
+            var self = this;
+            limit = limit || 0;
+            options = options || {};
 
+            if (typeof options.shadow === "undefined"){
+                options.shadow = true;
+            }
+
+            var def = $.when();
+
+            return def.then(function(){
+                var request_finished = $.Deferred();
+
+                self._load_history(partner_ids, limit, options).then(function (data) {
+                    self._on_load_history(data);
+                }).always(function(){
+                    request_finished.resolve();
+                }).fail(function () {
+                    self.reload_history(partner_ids, 0, {"postpone": 4000, "shadow": false});
+                });
+                return request_finished;
+            });
+
+        },
+        _load_history: function(partner_ids, limit, options){
+            return new Model('mrp.production').call('load_history', [partner_ids], {'limit': limit}, {'shadow': options.shadow});
+        },
+        _on_load_history: function(hist){
+            var self = this;
+            _.each(_.keys(hist), function(pid){
+                self.db.get_partner_by_id(pid).history = hist[pid].history;
+            });
+        },
+    });
+
+    screens.NumpadWidget.include({
         clickAppendNewChar: function(event) {
             if (this.pos.get_order().selected_orderline.has_product_lot) {
                 var pack_lot_lines_length =  this.pos.get_order().selected_orderline.compute_lot_lines().length;
@@ -81,7 +124,7 @@ odoo.define('pos_laundry_management.pos', function (require) {
                     history_button.addClass('highlight');
                     thead_client.hide();
                     thead_history.show();
-                    self.render_history(self.pos.db.get_partner_by_id(8));
+                    self.render_history(self.new_client);
                 }
             });
             console.log('dfsdfsdf')
@@ -89,31 +132,27 @@ odoo.define('pos_laundry_management.pos', function (require) {
 
         render_history: function(partner) {
             var self = this;
+            partner = partner || self.new_client || self.old_client;
+            this.render_history_list(partner.history);
+            var history = this.pos.reload_history(partner.id);
+            history.then(function(){
+                self.render_history_list(partner.history);
+            });
+        },
+        render_history_list: function(history_lines) {
             var contents = this.$el[0].querySelector('.client-list-contents');
             contents.innerHTML = "";
-            var lines = [
-                {
-                    'receipt_id': 1,
-                    'date': 2,
-                    'status': 3,
-                    'fin_date': 4,
-                },
-                {
-                    'receipt_id': 1,
-                    'date': 2,
-                    'status': 3,
-                    'fin_date': 4,
+            if (history_lines && history_lines.length) {
+                for (var y = 0; y < history_lines.length; y++) {
+                    var history_line_html = QWeb.render('HistoryLine', {
+                        line: history_lines[y],
+                        widget: self,
+                    });
+                    var history_line = document.createElement('tbody');
+                    history_line.innerHTML = history_line_html;
+                    history_line = history_line.childNodes[1];
+                    contents.appendChild(history_line);
                 }
-            ]
-            for (var y = 0; y < lines.length; y++) {
-                var history_line_html = QWeb.render('HistoryLine', {
-                    line: lines[y],
-                    widget: self,
-                });
-                var history_line = document.createElement('tbody');
-                history_line.innerHTML = history_line_html;
-                history_line = history_line.childNodes[1];
-                contents.appendChild(history_line);
             }
         },
 

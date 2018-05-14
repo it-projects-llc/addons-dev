@@ -1,12 +1,13 @@
 .notebook-list{
     font-size: 20px;
-    margin: 0px 1px -18px -16px;
+    margin: 0px 1px -11px -16px;
+    padding-top: 25px;
 }
 
 .notebook-button{
     margin: 0px 1px 0px 0px;
     line-height: 32px;
-    padding: 3px 13px;
+    padding: 10px 13px;
     border: solid 0px !important;
     background: rgb(224,224,224);
 }
@@ -14,7 +15,7 @@
 .notebook-button.highlight{
     margin: 0px 1px 0px 0px;
     line-height: 32px;
-    padding: 3px 13px;
+    padding: 10px 13px;
     background: #6EC89B !important;
     border: solid 0px #64AF8A !important;
     color: white !important;

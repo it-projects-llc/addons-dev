@@ -14,7 +14,7 @@
                             <th>UoM</th>
                             <th>Price</th>
                             <th>Barcode</th>
-                            <th>TAG</th>
+                            <th>Tag</th>
                         </tr>
                         <t t-set="focus_lot_line" t-value="widget.focus_model || widget.options.pack_lot_lines.get_empty_model()"/>
                         <t t-foreach='widget.options.pack_lot_lines.models' t-as='lot_line'>
@@ -60,21 +60,21 @@
     <t t-name="HistoryLine">
         <t t-jquery="tr.client-line" t-operation="replace">
             <tr>
-                <td><t t-esc='line.receipt_id' /></td>
-                <td><t t-esc='line.date' /></td>
-                <td><t t-esc='line.status' /></td>
-                <td><t t-esc='line.fin_date' /></td>
+                <td><t t-esc='line.origin || "" '/></td>
+                <td><t t-esc='line.date || ""' /></td>
+                <td><t t-esc='line.state' /></td>
+                <td><t t-esc='line.finishing_date || ""' /></td>
             </tr>
         </t>
     </t>
 
     <t t-extend="ClientListScreenWidget">
         <t t-jquery="table.client-list thead" t-operation="replace">
-            <thead id="clientlist_head">
+            <thead id="clientlist_head" style="display: none;">
                 <tr>
                     <th>Name</th>
                     <th>Phonetic Name</th>
-                    <th>Customer ID</th>
+                    <th>ID</th>
                     <th>Phone</th>
                 </tr>
             </thead>
