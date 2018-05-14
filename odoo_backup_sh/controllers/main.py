@@ -77,7 +77,7 @@ class BackupController(http.Controller):
 
     @http.route('/web/database/backups', type='http', auth="none")
     def backup_list(self):
-        response = self.backup_service_request()
+        response = self.load_backup_list_from_service()
         auth_link = response.get('auth_link')
         if auth_link:
             return "<html><head><script>window.location.href = '%s';</script></head></html>" % auth_link

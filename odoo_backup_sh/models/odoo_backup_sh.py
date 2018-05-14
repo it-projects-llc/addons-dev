@@ -27,7 +27,7 @@ class Backup(models.Model):
 
     @api.model
     def update_info(self, redirect):
-        response = BackupController().backup_service_request(redirect=redirect)
+        response = BackupController().load_backup_list_from_service(redirect=redirect)
         # TODO: save new backups list
         if 'auth_link' not in response:
             credit_url = self.check_insufficient_credit(credit=10)

@@ -19,9 +19,10 @@ odoo.define("odoo_backup_sh.tour", function (require) {
                 position: "bottom",
             },
             {
-                // This step have been added to ensure the page was loaded
                 trigger: '.o_dashboard_action_update_info',
-                run: function () {},
+                content: _t('Let\'s update information about your backups.'),
+                position: "bottom",
             }
-        ]);
+        ]
+    );
 });
