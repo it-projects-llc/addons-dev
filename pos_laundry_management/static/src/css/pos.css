@@ -32,12 +32,3 @@
 .tree-view-receipt p {
     font-weight: normal;
 }
-
-.column-view-receipt th {
-    width: 50%;
-    text-align: right;
-}
-.column-view-receipt p {
-    font-weight: normal;
-    text-align: left;
-}

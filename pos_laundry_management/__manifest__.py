@@ -3,7 +3,7 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 {
     "name": """Laundry/Dry Cleaning Managment""",
-    "summary": """{SHORT_DESCRIPTION_OF_THE_MODULE}""",
+    "summary": """Allows manage laundry/dry cleaning managment""",
     "category": "Point of Sale",
     # "live_test_url": "",
     "images": [],

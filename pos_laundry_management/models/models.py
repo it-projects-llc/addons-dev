@@ -35,7 +35,6 @@ class MRPProduction(models.Model):
                  * finishing_date
         """
         fields = [
-            # 'pos_reference',
             'date',
             'receipt_barcode',
             'state',
