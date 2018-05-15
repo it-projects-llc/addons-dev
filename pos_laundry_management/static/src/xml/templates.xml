@@ -10,19 +10,25 @@
                 <t t-if="widget.options.pack_lot_lines">
                     <table>
                         <tr>
-                            <th>Name</th>
-                            <th>UoM</th>
-                            <th>Price</th>
-                            <th>Barcode</th>
-                            <th>Tag</th>
+                            <th width="20%">Name</th>
+                            <th width="15%">UoM</th>
+                            <th width="15%">Price</th>
+                            <th width="25%">Barcode</th>
+                            <th width="25%">Tag</th>
                         </tr>
                         <t t-set="focus_lot_line" t-value="widget.focus_model || widget.options.pack_lot_lines.get_empty_model()"/>
                         <t t-foreach='widget.options.pack_lot_lines.models' t-as='lot_line'>
                             <t t-set="product" t-value="lot_line.order_line.product"/>
                             <tr class="table-row">
-                                <th><t t-esc="product.display_name"/></th>
-                                <th><t t-esc="product.uom_id[1]"/></th>
-                                <th><t t-esc="product.price"/></th>
+                                <th>
+                                    <t t-esc="product.display_name"/>
+                                </th>
+                                <th>
+                                    <t t-esc="product.uom_id[1]"/>
+                                </th>
+                                <th>
+                                    <t t-esc="product.price"/>
+                                </th>
                                 <th>
                                     <input type="text" t-att-cid="lot_line.cid"
                                     t-att-value="lot_line.get('lot_name')"
@@ -30,12 +36,15 @@
                                     class="popup-input packlot-line-input barcode-input"
                                     placeholder="Barcode"/>
                                 </th>
-                                <th><input type="text" t-att-cid="lot_line.cid"
+                                <th>
+                                    <input type="text" t-att-cid="lot_line.cid"
                                     t-att-value="lot_line.get('tag')"
                                     t-att-autofocus="lot_line === focus_lot_line ? 'autofocus': undefined"
                                     class="popup-input packlot-line-input tag-input"
-                                    placeholder="Tag"/></th>
+                                    placeholder="Tag"/>
+                                </th>
                                 <th>
+                                    <i t-att-cid="lot_line.cid" class="hidden"></i>
                                     <i class="oe_link_icon remove-lot fa fa-trash-o"></i>
                                 </th>
                             </tr>
