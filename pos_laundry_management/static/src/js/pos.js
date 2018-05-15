@@ -64,15 +64,16 @@ odoo.define('pos_laundry_management.pos', function (require) {
 
     screens.NumpadWidget.include({
         clickAppendNewChar: function(event) {
-            if (this.pos.get_order().selected_orderline.has_product_lot) {
-                var pack_lot_lines_length =  this.pos.get_order().selected_orderline.compute_lot_lines().length;
+            var orderline = this.pos.get_order().selected_orderline;
+            if (orderline && orderline.has_product_lot) {
+                var pack_lot_lines_length =  orderline.compute_lot_lines().length;
                 var newChar = 0;
                 newChar = Math.max(event.currentTarget.innerText || event.currentTarget.textContent,
                                    pack_lot_lines_length);
                 var res = this.state.appendNewChar(newChar);
                 this.pos.gui.show_popup('packlotline', {
                     'title': _t('Lot/Serial Number(s) Required'),
-                    'pack_lot_lines': this.pos.get_order().selected_orderline.compute_lot_lines(),
+                    'pack_lot_lines': orderline.compute_lot_lines(),
                     'order': this.pos.get_order()
                 });
                 return res;
@@ -82,10 +83,11 @@ odoo.define('pos_laundry_management.pos', function (require) {
 
         clickDeleteLastChar: function() {
             var res = this._super.apply(this, arguments);
-            if (this.pos.get_order().selected_orderline.has_product_lot) {
+            var orderline = this.pos.get_order().selected_orderline;
+            if (orderline && orderline.has_product_lot) {
                 this.pos.gui.show_popup('packlotline', {
                     'title': _t('Lot/Serial Number(s) Required'),
-                    'pack_lot_lines': this.pos.get_order().selected_orderline.compute_lot_lines(),
+                    'pack_lot_lines': orderline.compute_lot_lines(),
                     'order': this.pos.get_order()
                 });
                 return undefined;
@@ -143,7 +145,7 @@ odoo.define('pos_laundry_management.pos', function (require) {
             var contents = this.$el[0].querySelector('.client-list-contents');
             contents.innerHTML = "";
             if (history_lines && history_lines.length) {
-                for (var y = 0; y < history_lines.length; y++) {
+                for (var y = history_lines.length - 1; y >= 0; y--) {
                     var history_line_html = QWeb.render('HistoryLine', {
                         line: history_lines[y],
                         widget: self,
@@ -156,6 +158,46 @@ odoo.define('pos_laundry_management.pos', function (require) {
             }
         },
 
+    });
+
+    gui.Gui.prototype.popup_classes.filter(function(el) {
+        return el.name === 'packlotline';
+    })[0].widget.include({
+        click_confirm: function(){
+            var pack_lot_lines = this.options.pack_lot_lines;
+            this.$('.table-row').each(function(index, el){
+                var cid = $(el).find('.barcode-input').attr('cid'),
+                    lot_name = $(el).find('.barcode-input').val(),
+                    tag = $(el).find('.tag-input').val();
+                var pack_line = pack_lot_lines.get({cid: cid});
+                pack_line.set_lot_name(lot_name);
+                pack_line.set_tag(tag);
+            });
+            pack_lot_lines.remove_empty_model();
+            pack_lot_lines.set_quantity_by_lot();
+            this.options.order.save_to_db();
+            this.gui.close_popup();
+        },
+    });
+
+    var PacklotlineSuper = models.Packlotline;
+    models.Packlotline = models.Packlotline.extend({
+        export_as_JSON: function() {
+            var res = PacklotlineSuper.prototype.export_as_JSON.apply(this, arguments);
+            res.tag = this.get_tag();
+            return res;
+        },
+        set_tag: function(name){
+            this.set({tag : _.str.trim(name) || null});
+        },
+        get_tag: function(){
+            return this.get('tag');
+        },
+        init_from_JSON: function(json) {
+            this.order_line = json.order_line;
+            this.set_lot_name(json.lot_name);
+            this.set_tag(json.tag);
+        },
     });
 
 });

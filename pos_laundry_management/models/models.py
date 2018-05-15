@@ -16,6 +16,12 @@ class ResPartner(models.Model):
 class MRPProduction(models.Model):
     _inherit = 'mrp.production'
 
+    # redefined field with the new attribute required=True
+    bom_id = fields.Many2one(
+        'mrp.bom', 'Bill of Material', required=True,
+        readonly=True, states={'confirmed': [('readonly', False)]},
+        help="Bill of Materials allow you to define the list of required raw materials to make a finished product.")
+
     @api.multi
     def load_history(self, limit=0):
         """
@@ -24,14 +30,14 @@ class MRPProduction(models.Model):
              * partner_id: partner identification
              * history: list of dictionaries
                  * date
-                 * origin
+                 * receipt_barcode
                  * state
                  * finishing_date
         """
         fields = [
             # 'pos_reference',
-            'origin',
             'date',
+            'receipt_barcode',
             'state',
             'finishing_date',
         ]
@@ -47,3 +53,38 @@ class MRPProduction(models.Model):
             )
             data[partner_id]['history'] = records
         return data
+
+
+class PosOrder(models.Model):
+    _inherit = 'pos.order'
+
+    @api.model
+    def create_from_ui(self, orders):
+        order_ids = super(PosOrder, self).create_from_ui(orders)
+        for order in self.browse(order_ids):
+            for line in order.lines:
+                product = line.product_id
+                if product.bom_ids and line.pack_lot_ids:
+                    for lot in line.pack_lot_ids:
+                        partner_id = order.partner_id and order.partner_id.id or False
+                        production = self.env['mrp.production'].create({
+                            'product_id': product.id,
+                            'product_qty': line.qty,
+                            'bom_id': product.bom_ids[0].id,
+                            'product_uom_id': product.uom_id.id,
+                            'product_barcode': lot.lot_name,
+                            'tag': lot.tag,
+                            'origin': order.name,
+                            'receipt_barcode': order.pos_reference,
+                            'partner_id': partner_id,
+                            'date': fields.Datetime.now(),
+                        })
+                        if partner_id:
+                            production._onchange_partner_id()
+        return order_ids
+
+
+class PosOrderLineLot(models.Model):
+    _inherit = "pos.pack.operation.lot"
+
+    tag = fields.Char('Tag')
