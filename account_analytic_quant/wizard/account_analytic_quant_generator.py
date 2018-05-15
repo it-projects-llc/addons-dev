@@ -185,4 +185,63 @@ class Generator(models.TransientModel):
 
 
         # STAGE: distribute quants to income with closest date
-        # STOPHERE
+        for expense in search_expense_lines([]):
+            # expense is negative!
+            expense_amount = expense_remaining(expense)
+
+            if float_is_zero(expense):
+                ready_expenses.add(expense.id)
+
+            select = 'id'
+            order = ''
+            where = 'is_expense=FALSE'
+            select_params = []
+            where_params = []
+            if expense.date_start and expense.date_end:
+                # use undated income at the end
+                select += ',IF date_start AND date_end THEN least(date_start - %s, %s - date_end) ELSE 100333000 as days_delta;'
+                select_params.append(expense.date_end)
+                select_params.append(expense.date_start)
+
+                # only income outside of expenses are left -- so filter out other ones
+                where += 'AND (date_start > %s OR %s > date_end)'
+                where_params.append(expense.date_end)
+                where_params.append(expense.date_start)
+
+                order = 'ORDER BY days_delta'
+
+            request = '%s FROM account_analytic_line WHERE %s %s' % (select, where, order)
+            self.env.cr.execute(request, select_params + where_params)
+            ids = [row['id'] for row in self._cr.fetchall()]
+
+            income_lines = self.env['account.analytic.line'].browse(ids)
+
+            if not income_lines:
+                # no more incomes left
+                break
+
+            available_income = income_remaining(income_lines)
+
+            total_income = sum([amount for id, amount
+                                in available_income.items()])
+
+            if float_is_zero(total_income):
+                # no more incomes left
+                break
+
+            assert total_income > 0
+
+            if abs(expense_amount) <= total_income:
+                ready_expenses.add(expense.id)
+
+            portion = min(abs(expense_amount), total_income) / total_income
+
+            for income_id, income_amount in available_income.items():
+                Quant.create({
+                    'amount': -1 * portion * income_amount,
+                    'type': 'expense_uncovered',
+                    'income_id': income_id,
+                    'line_id': expense.id,
+                    'generation': generation,
+                })
+
