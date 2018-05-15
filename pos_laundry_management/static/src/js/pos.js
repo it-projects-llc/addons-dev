@@ -129,7 +129,6 @@ odoo.define('pos_laundry_management.pos', function (require) {
                     self.render_history(self.new_client);
                 }
             });
-            console.log('dfsdfsdf')
         },
 
         render_history: function(partner) {
@@ -142,6 +141,7 @@ odoo.define('pos_laundry_management.pos', function (require) {
             });
         },
         render_history_list: function(history_lines) {
+            var self = this;
             var contents = this.$el[0].querySelector('.client-list-contents');
             contents.innerHTML = "";
             if (history_lines && history_lines.length) {
@@ -156,6 +156,16 @@ odoo.define('pos_laundry_management.pos', function (require) {
                     contents.appendChild(history_line);
                 }
             }
+            this.$el.find('.receipt_barcode').off().on('click', function(data){
+                var partner = self.new_client || self.old_client;
+                var hl_id = data.currentTarget.getAttribute('hl_id');
+                var history_line = _.find(partner.history, function(hl){
+                    return hl.id == hl_id;
+                });
+                self.pos.gui.show_popup('receipt_data', {
+                    'history_line':  history_line,
+                });
+            });
         },
 
     });
@@ -199,5 +209,10 @@ odoo.define('pos_laundry_management.pos', function (require) {
             this.set_tag(json.tag);
         },
     });
+
+    var ReceiptDataPopupWidget = PopupWidget.extend({
+        template: 'ReceiptDataPopupWidget',
+    });
+    gui.define_popup({name:'receipt_data', widget: ReceiptDataPopupWidget});
 
 });

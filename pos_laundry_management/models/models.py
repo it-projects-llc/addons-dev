@@ -10,7 +10,7 @@ from odoo import models
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    phonetic_name = fields.Char('Customer Phonetic Name')
+    phonetic_name = fields.Char('Phonetic Name')
 
 
 class MRPProduction(models.Model):
@@ -40,6 +40,9 @@ class MRPProduction(models.Model):
             'receipt_barcode',
             'state',
             'finishing_date',
+            'product_id',
+            'product_barcode',
+            'tag',
         ]
         data = dict((id, {'history': [],
                           'partner_id': id,

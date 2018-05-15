@@ -44,8 +44,8 @@
                                     placeholder="Tag"/>
                                 </th>
                                 <th>
-                                    <i t-att-cid="lot_line.cid" class="hidden"></i>
-                                    <i class="oe_link_icon remove-lot fa fa-trash-o"></i>
+                                    <i t-att-cid="lot_line.cid" class="hidden"/>
+                                    <i class="oe_link_icon remove-lot fa fa-trash-o"/>
                                 </th>
                             </tr>
                         </t>
@@ -69,7 +69,9 @@
     <t t-name="HistoryLine">
         <t t-jquery="tr.client-line" t-operation="replace">
             <tr>
-                <td><t t-esc='line.receipt_barcode || "" '/></td>
+                <td class="receipt_barcode" t-att-hl_id="line.id">
+                    <t t-esc='line.receipt_barcode || "" '/>
+                </td>
                 <td><t t-esc='line.date || ""' /></td>
                 <td><t t-esc='line.state' /></td>
                 <td><t t-esc='line.finishing_date || ""' /></td>
@@ -109,6 +111,34 @@
                 </span>
             </div>
         </t>
+    </t>
+
+    <t t-name="ReceiptDataPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-confirm">
+                <p class="title"><t t-esc="_t('Receipt Data')" /></p>
+                <t t-set="hl" t-value="widget.options.history_line || {}"/>
+                <div class="body">
+                    <table class="tree-view-receipt">
+                        <tr>
+                            <th>Product</th>
+                            <th>Barcode</th>
+                            <th>Tag</th>
+                        </tr>
+                        <tr>
+                            <th><p><t t-esc=" hl.product_id &amp;&amp; hl.product_id[1] || '' " /></p></th>
+                            <th><p><t t-esc=" hl.product_barcode || '' " /></p></th>
+                            <th><p><t t-esc=" hl.tag || '' " /></p></th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="footer">
+                    <div class="button cancel">
+                        Ok
+                    </div>
+                </div>
+            </div>
+        </div>
     </t>
 
 </templates>
