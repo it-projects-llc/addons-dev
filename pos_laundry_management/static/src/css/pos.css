@@ -1,0 +1,34 @@
+.notebook-list{
+    font-size: 20px;
+    margin: 0px 1px -11px -16px;
+    padding-top: 25px;
+}
+
+.notebook-button{
+    margin: 0px 1px 0px 0px;
+    line-height: 32px;
+    padding: 10px 13px;
+    border: solid 0px !important;
+    background: rgb(224,224,224);
+}
+
+.notebook-button.highlight{
+    margin: 0px 1px 0px 0px;
+    line-height: 32px;
+    padding: 10px 13px;
+    background: #6EC89B !important;
+    border: solid 0px #64AF8A !important;
+    color: white !important;
+}
+
+.pos .clientlist-screen .client-details {
+    padding: 16px 0px 16px 16px !important;
+    border-bottom: solid 5px rgb(110,200,155);
+}
+
+.tree-view-receipt th {
+    width: 33%;
+}
+.tree-view-receipt p {
+    font-weight: normal;
+}

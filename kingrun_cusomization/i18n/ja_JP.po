@@ -1,0 +1,268 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#   * kingrun_cusomization
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-05-09 13:07+0000\n"
+"PO-Revision-Date: 2018-05-09 13:07+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: kingrun_cusomization
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_view_from
+msgid "Address"
+msgstr "アドレス"
+
+#. module: kingrun_cusomization
+#: model:ir.model.fields,field_description:kingrun_cusomization.field_stock_warehouse_barcode
+msgid "Barcode"
+msgstr "バーコード"
+
+#. module: kingrun_cusomization
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_view_from
+msgid "Cancel"
+msgstr "取消"
+
+#. module: kingrun_cusomization
+#: model:ir.model.fields,field_description:kingrun_cusomization.field_mrp_production_city
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_view_from
+msgid "City"
+msgstr "市区町村"
+
+#. module: kingrun_cusomization
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_manufacturing_tree
+msgid "Confirm"
+msgstr "確認"
+
+#. module: kingrun_cusomization
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_view_from
+msgid "Confirmed"
+msgstr "確認済"
+
+#. module: kingrun_cusomization
+#: model:ir.actions.act_window,name:kingrun_cusomization.mrp_production_confirm_action
+#: model:ir.ui.menu,name:kingrun_cusomization.menu_confirmed_order_action
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_confirm_tree
+msgid "Confirmed Orders"
+msgstr "Confirmed Orders"
+
+#. module: kingrun_cusomization
+#: model:ir.model.fields,field_description:kingrun_cusomization.field_mrp_production_country_id
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_view_from
+msgid "Country"
+msgstr "国"
+
+#. module: kingrun_cusomization
+#: model:ir.model.fields,field_description:kingrun_cusomization.field_mrp_production_partner_id
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_confirm_tree
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_manufacturing_tree
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_waiting_tree
+msgid "Customer name"
+msgstr "Customer name"
+
+#. module: kingrun_cusomization
+#: model:ir.model.fields,field_description:kingrun_cusomization.field_mrp_production_date
+msgid "Date"
+msgstr "日付"
+
+#. module: kingrun_cusomization
+#: model:ir.model.fields,field_description:kingrun_cusomization.field_mrp_production_delivery_date
+msgid "Delivery Date"
+msgstr "Delivery Date"
+
+#. module: kingrun_cusomization
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_view_from
+msgid "Done"
+msgstr "完了"
+
+#. module: kingrun_cusomization
+#: model:ir.model.fields,field_description:kingrun_cusomization.field_mrp_production_done_date
+msgid "Done Date"
+msgstr "Done Date"
+
+#. module: kingrun_cusomization
+#: model:ir.model.fields,field_description:kingrun_cusomization.field_mrp_production_finishing_date
+msgid "Finishing Date"
+msgstr "Finishing Date"
+
+#. module: kingrun_cusomization
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_view_from
+msgid "Location"
+msgstr "ロケーション"
+
+#. module: kingrun_cusomization
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_view_from
+msgid "Location #"
+msgstr "Location #"
+
+#. module: kingrun_cusomization
+#: model:ir.model,name:kingrun_cusomization.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "Manufacturing Order"
+
+#. module: kingrun_cusomization
+#: model:ir.actions.act_window,name:kingrun_cusomization.mrp_production_start_action
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_manufacturing_tree
+msgid "Manufacturing Orders"
+msgstr "製造オーダ"
+
+#. module: kingrun_cusomization
+#: model:ir.model.fields,field_description:kingrun_cusomization.field_mrp_production_note
+msgid "Note"
+msgstr "ノート"
+
+#. module: kingrun_cusomization
+#: model:ir.model.fields,field_description:kingrun_cusomization.field_mrp_production_pricelist_id
+msgid "Price list"
+msgstr "Price list"
+
+#. module: kingrun_cusomization
+#: model:ir.model.fields,field_description:kingrun_cusomization.field_mrp_production_product_barcode
+msgid "Product barcode"
+msgstr "Product barcode"
+
+#. module: kingrun_cusomization
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_confirm_tree
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_manufacturing_tree
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_view_from
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_waiting_tree
+msgid "Product deposit barcode"
+msgstr "Product deposit barcode"
+
+#. module: kingrun_cusomization
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_confirm_tree
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_manufacturing_tree
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_waiting_tree
+msgid "Product name"
+msgstr "Product name"
+
+#. module: kingrun_cusomization
+#: model:ir.model.fields,field_description:kingrun_cusomization.field_mrp_production_receipt_barcode
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_confirm_tree
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_manufacturing_tree
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_waiting_tree
+msgid "Receipt barcode"
+msgstr "Receipt barcode"
+
+#. module: kingrun_cusomization
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_view_from
+msgid "Sales person"
+msgstr "Sales person"
+
+#. module: kingrun_cusomization
+#: model:ir.ui.menu,name:kingrun_cusomization.menu_mrp_config
+msgid "Settings"
+msgstr "管理設定"
+
+#. module: kingrun_cusomization
+#: model:ir.model.fields,field_description:kingrun_cusomization.field_mrp_production_state_id
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_view_from
+msgid "State"
+msgstr "都道府県・州"
+
+#. module: kingrun_cusomization
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_confirm_tree
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_manufacturing_tree
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_waiting_tree
+msgid "Status"
+msgstr "ステータス"
+
+#. module: kingrun_cusomization
+#: model:ir.model.fields,field_description:kingrun_cusomization.field_mrp_production_street
+msgid "Street"
+msgstr "町名番地"
+
+#. module: kingrun_cusomization
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_view_from
+msgid "Street 2..."
+msgstr "町名番地2…"
+
+#. module: kingrun_cusomization
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_view_from
+msgid "Street..."
+msgstr "町名番地…"
+
+#. module: kingrun_cusomization
+#: model:ir.model.fields,field_description:kingrun_cusomization.field_mrp_production_street2
+msgid "Street2"
+msgstr "町名番地2"
+
+#. module: kingrun_cusomization
+#: model:ir.model.fields,field_description:kingrun_cusomization.field_mrp_production_phone
+msgid "Telphone1"
+msgstr "Telphone1"
+
+#. module: kingrun_cusomization
+#: model:ir.model.fields,field_description:kingrun_cusomization.field_mrp_production_phone2
+msgid "Telphone2"
+msgstr "Telphone2"
+
+#. module: kingrun_cusomization
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_view_from
+msgid "Waiting Delivery"
+msgstr "Waiting Delivery"
+
+#. module: kingrun_cusomization
+#: model:ir.actions.act_window,name:kingrun_cusomization.mrp_production_waiting_action
+#: model:ir.ui.menu,name:kingrun_cusomization.menu_waiting_action
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_waiting_tree
+msgid "Waiting Delivery list"
+msgstr "Waiting Delivery list"
+
+#. module: kingrun_cusomization
+#: model:ir.model,name:kingrun_cusomization.model_stock_warehouse
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_view_from
+msgid "Warehouse"
+msgstr "倉庫"
+
+#. module: kingrun_cusomization
+#: model:ir.model.fields,field_description:kingrun_cusomization.field_mrp_production_warehouse_ids
+msgid "Warehouse ids"
+msgstr "Warehouse ids"
+
+#. module: kingrun_cusomization
+#: model:ir.ui.view,arch_db:kingrun_cusomization.view_mrp_view_from
+msgid "ZIP"
+msgstr "郵便番号"
+
+#. module: kingrun_cusomization
+#: model:ir.model.fields,field_description:kingrun_cusomization.field_mrp_production_zip_no
+msgid "Zip"
+msgstr "郵便番号"
+
+#. module: kingrun_cusomization
+#: model:ir.model.fields,field_description:kingrun_cusomization.field_mrp_production_tag
+msgid "tag #"
+msgstr "tag #"
+
+#. module: kingrun_cusomization
+#: model:ir.ui.menu,name:mrp.menu_mrp_root
+msgid "Maintenance"
+msgstr "Maintenance"
+
+#. module: kingrun_cusomization
+#: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
+msgid "Manufacturing"
+msgstr "Manufacturing"
+
+#. module: kingrun_cusomization
+#: selection:mrp.production,state:0
+msgid "Started"
+msgstr "Started"
+
+#. module: kingrun_cusomization
+#: selection:mrp.production,state:0
+msgid "Waiting Delivery"
+msgstr "Waiting Delivery"
+
+#. module: kingrun_cusomization
+#: selection:mrp.production,state:0
+msgid "Cancel"
+msgstr "Cancel"

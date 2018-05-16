@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2015-2016 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
+
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="PackLotLinePopupWidget">
+        <t t-jquery=".packlot-lines" t-operation="replace">
+            <div class='packlot-lines'>
+                <t t-if="widget.options.pack_lot_lines">
+                    <table>
+                        <tr>
+                            <th width="20%">Name</th>
+                            <th width="15%">UoM</th>
+                            <th width="15%">Price</th>
+                            <th width="25%">Barcode</th>
+                            <th width="25%">Tag</th>
+                        </tr>
+                        <t t-set="focus_lot_line" t-value="widget.focus_model || widget.options.pack_lot_lines.get_empty_model()"/>
+                        <t t-foreach='widget.options.pack_lot_lines.models' t-as='lot_line'>
+                            <t t-set="product" t-value="lot_line.order_line.product"/>
+                            <tr class="table-row">
+                                <th>
+                                    <t t-esc="product.display_name"/>
+                                </th>
+                                <th>
+                                    <t t-esc="product.uom_id[1]"/>
+                                </th>
+                                <th>
+                                    <t t-esc="product.price"/>
+                                </th>
+                                <th>
+                                    <input type="text" t-att-cid="lot_line.cid"
+                                    t-att-value="lot_line.get('lot_name')"
+                                    t-att-autofocus="lot_line === focus_lot_line ? 'autofocus': undefined"
+                                    class="popup-input packlot-line-input barcode-input"
+                                    placeholder="Barcode"/>
+                                </th>
+                                <th>
+                                    <input type="text" t-att-cid="lot_line.cid"
+                                    t-att-value="lot_line.get('tag')"
+                                    t-att-autofocus="lot_line === focus_lot_line ? 'autofocus': undefined"
+                                    class="popup-input packlot-line-input tag-input"
+                                    placeholder="Tag"/>
+                                </th>
+                                <th>
+                                    <i t-att-cid="lot_line.cid" class="hidden"/>
+                                    <i class="oe_link_icon remove-lot fa fa-trash-o"/>
+                                </th>
+                            </tr>
+                        </t>
+                    </table>
+                </t>
+            </div>
+        </t>
+    </t>
+
+    <t t-extend="ClientLine">
+        <t t-jquery="tr.client-line" t-operation="replace">
+            <tr class='client-line' t-att-data-id='partner.id'>
+                <td><t t-esc='partner.name' /></td>
+                <td><t t-esc='partner.phonetic_name' /></td>
+                <td><t t-esc='partner.id' /></td>
+                <td><t t-esc='partner.phone or partner.mobile or ""' /></td>
+            </tr>
+        </t>
+    </t>
+
+    <t t-name="HistoryLine">
+        <t t-jquery="tr.client-line" t-operation="replace">
+            <tr>
+                <td class="receipt_barcode" t-att-hl_id="line.id">
+                    <t t-esc='line.receipt_barcode || "" '/>
+                </td>
+                <td><t t-esc='line.date || ""' /></td>
+                <td><t t-esc='line.state' /></td>
+                <td><t t-esc='line.finishing_date || ""' /></td>
+            </tr>
+        </t>
+    </t>
+
+    <t t-extend="ClientListScreenWidget">
+        <t t-jquery="table.client-list thead" t-operation="replace">
+            <thead id="clientlist_head" style="display: none;">
+                <tr>
+                    <th>Name</th>
+                    <th>Phonetic Name</th>
+                    <th>ID</th>
+                    <th>Phone</th>
+                </tr>
+            </thead>
+            <thead id="historylist_head">
+                <tr>
+                    <th>Receipt ID</th>
+                    <th>Date</th>
+                    <th>Payment Status</th>
+                    <th>Finish Date</th>
+                </tr>
+            </thead>
+        </t>
+    </t>
+
+    <t t-extend="ClientDetails">
+        <t t-jquery="section" t-operation="append">
+            <div class="notebook-list">
+                <span id="show_clients" class="notebook-button">
+                    Customer List
+                </span>
+                <span id="show_history" class="notebook-button">
+                    Transaction History
+                </span>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="ReceiptDataPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-confirm">
+                <p class="title"><t t-esc="_t('Receipt Data')" /></p>
+                <t t-set="hl" t-value="widget.options.history_line || {}"/>
+                <div class="body">
+                    <table class="tree-view-receipt">
+                        <tr>
+                            <th>Product</th>
+                            <th>Barcode</th>
+                            <th>Tag</th>
+                        </tr>
+                        <tr>
+                            <th><p><t t-esc=" hl.product_id &amp;&amp; hl.product_id[1] || '' " /></p></th>
+                            <th><p><t t-esc=" hl.product_barcode || '' " /></p></th>
+                            <th><p><t t-esc=" hl.tag || '' " /></p></th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="footer">
+                    <div class="button cancel">
+                        Ok
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>
