@@ -8,6 +8,8 @@
         <field name="arch" type="xml">
             <form string="Generator">
                 <group>
+                    <field name="name"/>
+                    <field name="date"/>
                     <field name="quant_amount"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
                 </group>

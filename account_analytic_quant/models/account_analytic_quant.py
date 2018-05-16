@@ -6,7 +6,7 @@ from odoo import models, fields, api
 class AnalyticQuant(models.Model):
     _name = 'account.analytic.quant'
 
-    generation = fields.Integer(index=True)
+    generation = fields.Integer('Generation', index=True)
     type = fields.Selection([
         ('income', 'Income'),
         ('expense', 'Expense'),
@@ -16,7 +16,7 @@ class AnalyticQuant(models.Model):
     """)
     profitability = fields.Selection([
         ('covered', 'Profitable'),
-        ('oncovered', 'Unprofitable'),
+        ('uncovered', 'Unprofitable'),
     ], compute='_compute_profitability', store=True, index=True)
     amount = fields.Monetary('Amount')
     currency_id = fields.Many2one(

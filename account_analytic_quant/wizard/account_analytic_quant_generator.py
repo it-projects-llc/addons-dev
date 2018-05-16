@@ -1,12 +1,19 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 # Copyright 2018 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 import logging
+import datetime
 
-from odoo import models, fields, api
+
+from odoo import models, fields
 from odoo.tools import float_is_zero
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 
 
 _logger = logging.getLogger(__name__)
+
+
+def date(s):
+    return datetime.datetime.strptime(s, DATE_FORMAT)
 
 
 class Generator(models.TransientModel):
@@ -16,19 +23,27 @@ class Generator(models.TransientModel):
         'Quant size',
         required=True,
     )
-    date = fields.Date(
-        'Starting Date',
-    )
     currency_id = fields.Many2one(
-        'res.currency', 'Currency', required=True,
-        default=lambda self: self.env.user.company_id.currency_id.id)
+        'res.currency',
+        'Currency',
+        required=True,
+        default=lambda self: self.env.user.company_id.currency_id.id,
+    )
+    date = fields.Date(
+       'Starting Date',
+    )
+    name = fields.Char(
+        'Name',
+        help='This name will be used for Generation filter'
+    )
 
     def apply(self):
         self.ensure_one()
-        _logger.debug('Start quant generation')
 
         Quant = self.env['account.analytic.quant']
-        generation = Quant.search(limit=1, order='generation desc').generation or 0
+        generation = Quant.search([], limit=1, order='generation desc').generation or 0
+        generation += 1
+        _logger.debug('Start quant generation %s', generation)
 
         def search_quants(extra_domain):
             return Quant.search(
@@ -52,7 +67,6 @@ class Generator(models.TransientModel):
                 [('is_expense', '=', True),
                  ('id', 'not in', list(ready_expenses))])
 
-
         def _remaining(lines, quant_field, sign):
             res = dict([
                 (line.id, line.amount)
@@ -62,7 +76,7 @@ class Generator(models.TransientModel):
                 (quant_field, 'in', lines.ids)
             ])
             for q in quants:
-                res[q.id] += sign * q.amount
+                res[getattr(q, quant_field).id] += sign * q.amount
 
             return res
 
@@ -87,7 +101,7 @@ class Generator(models.TransientModel):
         # STAGE distribute quants to corresponding incomes proportionally to
         # link weight
         for expense in search_expense_lines([
-                ('line_id.link_income_ids', '!=', False)
+                ('link_income_ids', '!=', False)
         ]):
             total_weight = sum(
                 expense.link_income_ids.mapped('weight')
@@ -98,7 +112,7 @@ class Generator(models.TransientModel):
             total_income = sum([amount for id, amount
                                 in available_income.items()])
 
-            if float_is_zero(total_income):
+            if float_is_zero(total_income, precision_rounding=self.currency_id.rounding):
                 # no space to distribute
                 continue
 
@@ -128,13 +142,13 @@ class Generator(models.TransientModel):
             # expense is negative!
             expense_amount = expense_remaining(expense)
 
-            if float_is_zero(expense):
+            if float_is_zero(expense_amount, precision_rounding=self.currency_id.rounding):
                 ready_expenses.add(expense.id)
 
             domain = [('is_expense', '=', False)]
             if expense.date_start and expense.date_end:
                 domain += [
-                    ('date_start', '<', expense.date_end)
+                    ('date_start', '<', expense.date_end),
                     ('date_end', '>', expense.date_start)
                 ]
 
@@ -145,25 +159,27 @@ class Generator(models.TransientModel):
                 continue
 
             available_income = income_remaining(income_lines)
-            for income in income_lines:
-                delta = None
-                if expense.date_start < income.date_start:
-                    delta = expense.date_end - income.date_start
-                elif expense.date_end > income.date_end:
-                    delta = expense.date_start - income.date_end
-                else:
-                    # expense is inside the income
-                    continue
-                # "1+" is needed. For example if date_start = date_end -- we
-                # consider it as 1 day)
-                income_days = 1 + (income.date_start - income.date_end).days
-                intersection_days = 1 + delta.days
-                available_income[income.id] *= intersection_days / income_days
+            if expense.date_start and expense.date_end:
+                for income in income_lines:
+                    delta = None
+                    if date(expense.date_start) < date(income.date_start):
+                        delta = date(expense.date_end) - date(income.date_start)
+                    elif expense.date_end > income.date_end:
+                        delta = date(income.date_end) - date(expense.date_start)
+                    else:
+                        # expense is inside the income
+                        continue
+                    # "1+" is needed. For example if date_start = date_end -- we
+                    # consider it as 1 day)
+                    income_days = 1 + (date(income.date_end) - date(income.date_start)).days
+                    intersection_days = 1 + delta.days
+
+                    available_income[income.id] *= intersection_days / income_days
 
             total_income = sum([amount for id, amount
                                 in available_income.items()])
 
-            if float_is_zero(total_income):
+            if float_is_zero(total_income, precision_rounding=self.currency_id.rounding):
                 # no space to distribute
                 continue
 
@@ -189,7 +205,7 @@ class Generator(models.TransientModel):
             # expense is negative!
             expense_amount = expense_remaining(expense)
 
-            if float_is_zero(expense):
+            if float_is_zero(expense_amount, precision_rounding=self.currency_id.rounding):
                 ready_expenses.add(expense.id)
 
             select = 'id'
@@ -199,20 +215,21 @@ class Generator(models.TransientModel):
             where_params = []
             if expense.date_start and expense.date_end:
                 # use undated income at the end
-                select += ',IF date_start AND date_end THEN least(date_start - %s, %s - date_end) ELSE 100333000 as days_delta;'
+                select += ",CASE WHEN date_start IS NOT NULL AND date_end IS NOT NULL THEN least(date_start - %s, %s - date_end) ELSE interval '100333000 days' END AS days_delta"
                 select_params.append(expense.date_end)
                 select_params.append(expense.date_start)
 
                 # only income outside of expenses are left -- so filter out other ones
-                where += 'AND (date_start > %s OR %s > date_end)'
+                where += ' AND (date_start > %s OR %s > date_end)'
                 where_params.append(expense.date_end)
                 where_params.append(expense.date_start)
 
                 order = 'ORDER BY days_delta'
 
-            request = '%s FROM account_analytic_line WHERE %s %s' % (select, where, order)
-            self.env.cr.execute(request, select_params + where_params)
-            ids = [row['id'] for row in self._cr.fetchall()]
+            request = 'SELECT %s FROM account_analytic_line WHERE %s %s' % (select, where, order)
+            request_params = [date(d) for d in select_params + where_params]
+            self.env.cr.execute(request, request_params)
+            ids = [row[0] for row in self._cr.fetchall()]
 
             income_lines = self.env['account.analytic.line'].browse(ids)
 
@@ -225,7 +242,7 @@ class Generator(models.TransientModel):
             total_income = sum([amount for id, amount
                                 in available_income.items()])
 
-            if float_is_zero(total_income):
+            if float_is_zero(total_income, precision_rounding=self.currency_id.rounding):
                 # no more incomes left
                 break
 
