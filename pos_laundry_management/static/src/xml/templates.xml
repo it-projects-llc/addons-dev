@@ -59,7 +59,7 @@
         <t t-jquery="tr.client-line" t-operation="replace">
             <tr class='client-line' t-att-data-id='partner.id'>
                 <td><t t-esc='partner.name' /></td>
-                <td><t t-esc='partner.phonetic_name' /></td>
+                <td><t t-esc='partner.phonetic_name || ""' /></td>
                 <td><t t-esc='partner.id' /></td>
                 <td><t t-esc='partner.phone or partner.mobile or ""' /></td>
             </tr>
@@ -81,7 +81,7 @@
 
     <t t-extend="ClientListScreenWidget">
         <t t-jquery="table.client-list thead" t-operation="replace">
-            <thead id="clientlist_head" style="display: none;">
+            <thead id="clientlist_head">
                 <tr>
                     <th>Name</th>
                     <th>Phonetic Name</th>
@@ -89,7 +89,7 @@
                     <th>Phone</th>
                 </tr>
             </thead>
-            <thead id="historylist_head">
+            <thead id="historylist_head" style="display: none;">
                 <tr>
                     <th>Receipt ID</th>
                     <th>Date</th>
