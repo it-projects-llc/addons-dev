@@ -212,7 +212,7 @@ odoo.define('pos_laundry_management.pos', function (require) {
             _.each(lots, function(lot){
                 el = $('input.tag-input[cid='+ lot.cid +']');
                 el.removeClass('tag-warn');
-                if (!Number(el.val())) {
+                if (!Number(el.val()) && el.val() !== '') {
                     res.push(lot.cid)
                 }
             });
