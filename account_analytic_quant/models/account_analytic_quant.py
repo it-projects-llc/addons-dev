@@ -6,7 +6,7 @@ from odoo import models, fields, api
 class AnalyticQuant(models.Model):
     _name = 'account.analytic.quant'
 
-    generation = fields.Integer('Generation', index=True)
+    generation = fields.Char('Generation', index=True)
     type = fields.Selection([
         ('income', 'Income'),
         ('expense', 'Expense'),
@@ -19,6 +19,12 @@ class AnalyticQuant(models.Model):
         ('uncovered', 'Unprofitable'),
     ], compute='_compute_profitability', store=True, index=True)
     amount = fields.Monetary('Amount')
+    abs_amount = fields.Monetary(
+        'Absolute Amount',
+        compute='_compute_abs_amount',
+        store=True,
+        help="Makes Expense amount positive"
+    )
     currency_id = fields.Many2one(
         'res.currency', 'Currency', required=True,
         default=lambda self: self.env.user.company_id.currency_id.id)
@@ -48,13 +54,19 @@ class AnalyticQuant(models.Model):
     quant_expense_ids = fields.One2many(
         'account.analytic.quant',
         'quant_income_id',
-        help='Expenses attached to current income',
+        help='Expenses attached to current income. Includes current the income too.',
     )
 
     line_id = fields.Many2one(
         'account.analytic.line',
         'Analytic Line',
         help='Original Analytic Line the quant is made from',
+    )
+    date = fields.Date(
+        'Date',
+        related='line_id.date',
+        store=True,
+        readonly=True,
     )
     task_id = fields.Many2one(
         'project.task',
@@ -70,6 +82,11 @@ class AnalyticQuant(models.Model):
         store=True,
         readonly=True,
     )
+
+    @api.depends('amount')
+    def _compute_abs_amount(self):
+        for r in self:
+            r.abs_amount = abs(r.amount)
 
     @api.depends('type')
     def _compute_profitability(self):

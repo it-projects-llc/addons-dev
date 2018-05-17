@@ -2,6 +2,7 @@
 # Copyright 2018 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 import logging
 import datetime
+import uuid
 
 
 from odoo import models, fields
@@ -41,9 +42,8 @@ class Generator(models.TransientModel):
         self.ensure_one()
 
         Quant = self.env['account.analytic.quant']
-        generation = Quant.search([], limit=1, order='generation desc').generation or 0
-        generation += 1
-        generation_name = '%s #%i' % (self.name or 'Generation', generation)
+        generation = uuid.uuid4().hex
+        generation_name = '%s #%s' % (self.name or 'Generation', generation[:5])
         _logger.info('Start quant generation: %s', generation_name)
 
         # New filter for Quants
@@ -57,7 +57,7 @@ class Generator(models.TransientModel):
         filter = self.env['ir.filters'].create({
             'name': generation_name,
             'is_default': True,
-            'domain': "[('generation', '=', %i)]" % generation,
+            'domain': "[('generation', '=', '%s')]" % generation,
             'model_id': 'account.analytic.quant',
             'action_id': self.env.ref('account_analytic_quant.analytic_quant_action').id,
         })
@@ -92,6 +92,7 @@ class Generator(models.TransientModel):
                 for line in lines
             ])
             quants = search_quants([
+                ('type', '!=', 'income'),
                 (quant_field, 'in', lines.ids)
             ])
             for q in quants:
@@ -143,10 +144,13 @@ class Generator(models.TransientModel):
             portion = min(abs(expense.amount), total_income) / total_weight
 
             for link_income in expense.link_income_ids:
+                amount = portion * link_income.weight
+                income = link_income.income_id
+                amount = min(amount, available_income[income.id])
                 Quant.create({
-                    'amount': -1 * portion * link_income.weight,
+                    'amount': -1 * amount,
                     'type': 'expense',
-                    'income_id': link_income.income_id.id,
+                    'income_id': income.id,
                     'line_id': expense.id,
                     'generation': generation,
                 })
