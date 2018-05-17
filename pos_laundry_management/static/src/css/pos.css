@@ -1,7 +1,8 @@
 .notebook-list{
     font-size: 20px;
-    margin: 0px 1px -11px -16px;
-    padding-top: 25px;
+    margin: 10px 1px 0px 0px;
+    padding-bottom: 5px;
+    border-bottom: solid 5px rgb(110,200,155) !important;
 }
 
 .notebook-button{
@@ -49,4 +50,15 @@
 
 .popup-packlot {
     width: 800px !important;
+}
+
+.pos .clientlist-screen .client-details {
+    padding: 16px 0px 16px 16px !important;
+    border-bottom: solid 0px rgb(110,200,155) !important;
+}
+
+.receipt-button{
+    cursor:pointer;
+    color:blue;
+    text-decoration:underline;
 }

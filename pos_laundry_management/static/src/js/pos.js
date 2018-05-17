@@ -102,10 +102,9 @@ odoo.define('pos_laundry_management.pos', function (require) {
         return el.name === 'clientlist';
     })[0].widget.include({
 
-        display_client_details: function(visibility,partner,clickpos){
+        render_list: function(partners){
+            this._super(partners);
             var self = this;
-            this._super(visibility,partner,clickpos);
-
             var client_button = this.$el.find('#show_clients');
             var history_button = this.$el.find('#show_history');
             var thead_client = this.$el.find('#clientlist_head');
@@ -131,14 +130,25 @@ odoo.define('pos_laundry_management.pos', function (require) {
                 }
             });
         },
-
         render_history: function(partner) {
             var self = this;
-            partner = partner || self.new_client || self.old_client;
-            this.render_history_list(partner.history);
-            var history = this.pos.reload_history(partner.id);
-            history.then(function(){
-                self.render_history_list(partner.history);
+            var history = [];
+            var partners = []
+            if (partner){
+                this.render_history_list(partner.history);
+                partners = [partner]
+            } else {
+                partners = this.pos.db.get_partners_sorted(1000);
+            }
+            var partner_ids = _.map(partners, function(partner){
+                return partner.id;
+            });
+            var on_history_load = this.pos.reload_history(partner_ids);
+            on_history_load.then(function(){
+                history = _.flatten(_.map(partners, function(partner){
+                    return partner.history;
+                }));
+                self.render_history_list(history);
             });
         },
         render_history_list: function(history_lines) {
@@ -157,8 +167,8 @@ odoo.define('pos_laundry_management.pos', function (require) {
                     contents.appendChild(history_line);
                 }
             }
-            this.$el.find('.receipt_barcode').off().on('click', function(data){
-                var partner = self.new_client || self.old_client;
+            this.$el.find('.receipt_barcode.receipt-button').off().on('click', function(data){
+                var partner = self.new_client || self.pos.db.get_partner_by_id(data.currentTarget.getAttribute('p_id'));
                 var hl_id = data.currentTarget.getAttribute('hl_id');
                 var history_line = _.find(partner.history, function(hl){
                     return hl.id == hl_id;

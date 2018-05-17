@@ -39,6 +39,7 @@ class MRPProduction(models.Model):
                  * warehouse_ids
                     * complete_name
                  * state
+                 * partner_id
         """
         fields = [
             'date',
@@ -50,6 +51,7 @@ class MRPProduction(models.Model):
             'tag',
             'warehouse_ids',
             'state',
+            'partner_id',
         ]
         data = dict((id, {'history': [],
                           'partner_id': id,
@@ -57,7 +59,7 @@ class MRPProduction(models.Model):
 
         for partner_id in self.ids:
             records = self.env['mrp.production'].search_read(
-                domain=[('partner_id', 'in', self.ids)],
+                domain=[('partner_id', '=', partner_id)],
                 fields=fields,
                 limit=limit,
             )
