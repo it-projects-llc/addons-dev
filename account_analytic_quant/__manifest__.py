@@ -27,6 +27,7 @@
         "views/account_analytic_line_link.xml",
         "views/account_analytic_quant.xml",
         "wizard/account_analytic_quant_generator_views.xml",
+        "security/ir.model.access.csv",
     ],
     "demo": [
         "demo/res.users.csv",

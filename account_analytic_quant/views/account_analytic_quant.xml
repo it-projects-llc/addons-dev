@@ -38,6 +38,17 @@
             </tree>
         </field>
     </record>
+    <record id="analytic_quant_graph_view" model="ir.ui.view">
+        <field name="name">account.analytic.quant.graph</field>
+        <field name="model">account.analytic.quant</field>
+        <field name="arch" type="xml">
+            <graph string="Analytic Quants">
+                <field name="project_id" type="row"/>
+                <field name="amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="analytic_quant_form_view">
         <field name="name">account.analytic.quant.form</field>
         <field name="model">account.analytic.quant</field>
@@ -72,6 +83,7 @@
     <record id="analytic_quant_action" model="ir.actions.act_window">
         <field name="name">Analytic Quants</field>
         <field name="res_model">account.analytic.quant</field>
+        <field name="view_mode">tree,form,graph,pivot</field>
         <field name="view_type">form</field>
     </record>
 
