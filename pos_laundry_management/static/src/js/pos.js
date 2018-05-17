@@ -102,22 +102,26 @@ odoo.define('pos_laundry_management.pos', function (require) {
         return el.name === 'clientlist';
     })[0].widget.include({
 
-        render_list: function(partners){
-            this._super(partners);
+        renderElement: function(){
             var self = this;
+            this._super();
             var client_button = this.$el.find('#show_clients');
             var history_button = this.$el.find('#show_history');
             var thead_client = this.$el.find('#clientlist_head');
             var thead_history = this.$el.find('#historylist_head');
+            var new_client = this.$el.find('.button.new-customer')
             client_button.addClass('highlight');
             thead_history.hide();
+            this.view_mode = 'show_clients';
             client_button.off().on('click', function(){
                 if (!client_button.hasClass('highlight')){
                     history_button.removeClass('highlight');
                     client_button.addClass('highlight');
                     thead_history.hide();
                     thead_client.show();
-                    self.render_list(self.pos.db.get_partners_sorted(1000))
+                    new_client.show();
+                    self.view_mode = 'show_clients';
+                    self.render_list(self.pos.db.get_partners_sorted(1000));
                 }
             });
             history_button.off().on('click', function(){
@@ -126,14 +130,35 @@ odoo.define('pos_laundry_management.pos', function (require) {
                     history_button.addClass('highlight');
                     thead_client.hide();
                     thead_history.show();
+                    new_client.hide();
+                    self.view_mode = 'show_history';
                     self.render_history(self.new_client);
                 }
             });
         },
+        perform_search: function(query, associate_result) {
+            var self = this;
+            if (this.view_mode === 'show_history') {
+                var res = []
+                if (this.new_client) {
+                    res = this.new_client.history;
+                } else {
+                    res = _.flatten(_.map(this.pos.db.get_partners_sorted(1000), function(partner){
+                        return partner.history;
+                    }));
+                }
+                res = _.filter(res, function(line){
+                   return line.receipt_barcode && line.receipt_barcode.includes(query);
+                });
+                this.render_history_list(res);
+                return;
+            }
+            this._super(query, associate_result);
+        },
         render_history: function(partner) {
             var self = this;
             var history = [];
-            var partners = []
+            var partners = [];
             if (partner){
                 this.render_history_list(partner.history);
                 partners = [partner]
