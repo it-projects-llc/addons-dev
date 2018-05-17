@@ -79,7 +79,7 @@ def lines():
             date = format_date(delta + i*30)
             date_start = format_date(delta + i*30 - 30)
             date_end = date
-            print 'line_periodic_expense_{a}_{i},Periodic expense {i},{amount},{date},{date_start},{date_end},{a},,,'.format(
+            print 'line_periodic_expense_{a}_{i},Periodic expense {i}: {amount},{amount},{date},{date_start},{date_end},{a},,,'.format(
                 i=i, amount=amount, date=date, a=analytic,
                 date_start=date_start,
                 date_end=date_end,

@@ -7,7 +7,20 @@
         <field name="model">account.analytic.quant</field>
         <field name="arch" type="xml">
             <search>
-                <!-- TODO -->
+                <field name="line_id"
+                       string="Analyze Expense"
+                       filter_domain="['|', '&amp;', ('line_id.is_expense', '=', True), ('line_id', 'ilike', self), ('quant_expense_ids.line_id', 'ilike', self)]"
+                       />
+                <filter string="Income" domain="[('type', '=', 'income')]"/>
+                <filter string="Covered Expenses" domain="[('type', '=', 'expense')]"/>
+                <filter string="Uncovered Expenses" domain="[('type', '=', 'expense_uncovered')]"/>
+                <group>
+                    <filter string="Profitability" domain="[]" context="{'group_by': 'profitability'}"/>
+                    <filter string="Income" domain="[]" context="{'group_by': 'income_id'}"/>
+                    <filter string="Income Project" domain="[]" context="{'group_by': 'income_project_id'}"/>
+                    <filter string="Original Project" domain="[]" context="{'group_by': 'project_id'}"/>
+                    <filter string="Generation" domain="[]" context="{'group_by': 'generation'}"/>
+                </group>
             </search>
         </field>
     </record>
@@ -20,6 +33,8 @@
                 <field name="amount"/>
                 <field name="project_id"/>
                 <field name="task_id"/>
+                <field name="income_project_id"/>
+                <field name="income_id"/>
             </tree>
         </field>
     </record>
@@ -41,7 +56,15 @@
                         <field name="income_id"/>
                         <field name="income_project_id"/>
                     </group>
+                    <group>
+                        <field name="generation"/>
+                    </group>
+                    <group name="Quant links">
+                        <field name="quant_expense_ids" attrs="{'invisible': [('type', '!=', 'income')]}"/>
+                        <field name="quant_income_id" attrs="{'invisible': [('type', '=', 'income')]}"/>
+                    </group>
                 </group>
+
             </form>
         </field>
     </record>
@@ -58,6 +81,6 @@
         action="analytic_quant_action"
         id="analytic_quant_menu"
         sequence="50"
-        groups="base.group_no_one"/>
+        />
 
 </odoo>

@@ -23,6 +23,9 @@ class AnalyticQuant(models.Model):
         'res.currency', 'Currency', required=True,
         default=lambda self: self.env.user.company_id.currency_id.id)
 
+    # this cannot be related='quant_income_id.line_id', because for incomes we have:
+    # * income_id is equal to line_id
+    # * quant_income_id is False (otherwise the income appears in quant_expense_ids)
     income_id = fields.Many2one(
         'account.analytic.line',
         'Income',
@@ -35,7 +38,17 @@ class AnalyticQuant(models.Model):
         'Income Project',
         related='income_id.project_id',
         readonly=True,
+        store=True,
         index=True,
+    )
+
+    quant_income_id = fields.Many2one(
+        'account.analytic.quant'
+    )
+    quant_expense_ids = fields.One2many(
+        'account.analytic.quant',
+        'quant_income_id',
+        help='Expenses attached to current income',
     )
 
     line_id = fields.Many2one(
@@ -47,12 +60,14 @@ class AnalyticQuant(models.Model):
         'project.task',
         'Task',
         related='line_id.task_id',
+        store=True,
         readonly=True,
     )
     project_id = fields.Many2one(
         'project.project',
         'Project',
         related='line_id.project_id',
+        store=True,
         readonly=True,
     )
 

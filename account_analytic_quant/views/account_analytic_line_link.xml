@@ -49,6 +49,6 @@
         action="analytic_link_action"
         id="analytic_link_menu"
         sequence="45"
-        groups="base.group_no_one"/>
+        />
 
 </odoo>

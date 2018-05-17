@@ -5,6 +5,7 @@
 
     <record id="demo_generate" model="account.analytic.quant.generator">
         <field name="quant_amount" eval="50"/>
+        <field name="name">Demo</field>
     </record>
 
     <function

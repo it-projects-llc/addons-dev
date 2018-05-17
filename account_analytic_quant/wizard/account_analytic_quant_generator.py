@@ -43,7 +43,25 @@ class Generator(models.TransientModel):
         Quant = self.env['account.analytic.quant']
         generation = Quant.search([], limit=1, order='generation desc').generation or 0
         generation += 1
-        _logger.debug('Start quant generation %s', generation)
+        generation_name = '%s #%i' % (self.name or 'Generation', generation)
+        _logger.info('Start quant generation: %s', generation_name)
+
+        # New filter for Quants
+        # remove previous default value
+        self.env['ir.filters'].search([
+            ('model_id', '=', 'account.analytic.quant'),
+            ('is_default', '=', True),
+            ('user_id', '=', False),
+        ]).unlink()
+
+        filter = self.env['ir.filters'].create({
+            'name': generation_name,
+            'is_default': True,
+            'domain': "[('generation', '=', %i)]" % generation,
+            'model_id': 'account.analytic.quant',
+            'action_id': self.env.ref('account_analytic_quant.analytic_quant_action').id,
+        })
+        filter.user_id = None
 
         def search_quants(extra_domain):
             return Quant.search(
@@ -65,6 +83,7 @@ class Generator(models.TransientModel):
             return search_lines(
                 extra_domain +
                 [('is_expense', '=', True),
+                 ('amount', '!=', 0),
                  ('id', 'not in', list(ready_expenses))])
 
         def _remaining(lines, quant_field, sign):
@@ -262,3 +281,9 @@ class Generator(models.TransientModel):
                     'generation': generation,
                 })
 
+        # FINAL STAGE: fill quant_income_id
+        for expense in search_quants([('type', '!=', 'income')]):
+            if not expense.income_id:
+                continue
+            income = search_quants([('line_id', '=', expense.income_id.id)])
+            expense.quant_income_id = income.id
