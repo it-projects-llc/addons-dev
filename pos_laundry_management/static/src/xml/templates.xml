@@ -4,17 +4,19 @@
 
 <templates id="template" xml:space="preserve">
 
-    <t t-extend="PackLotLinePopupWidget">
-        <t t-jquery=".packlot-lines" t-operation="replace">
-            <div class='packlot-lines'>
+    <t t-name="PackLotLinePopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-text popup-packlot">
+                <p class="title"><t t-esc=" widget.options.title || '' " /></p>
+                <div class='packlot-lines'>
                 <t t-if="widget.options.pack_lot_lines">
                     <table>
                         <tr>
-                            <th width="20%">Name</th>
+                            <th width="18%">Name</th>
                             <th width="10%">UoM</th>
                             <th width="10%">Price</th>
-                            <th width="30%">Barcode</th>
-                            <th width="30%">Tag</th>
+                            <th width="31%">Barcode</th>
+                            <th width="31%">Tag</th>
                         </tr>
                         <t t-set="focus_lot_line" t-value="widget.focus_model || widget.options.pack_lot_lines.get_empty_model()"/>
                         <t t-foreach='widget.options.pack_lot_lines.models' t-as='lot_line'>
@@ -52,7 +54,16 @@
                     </table>
                 </t>
             </div>
-        </t>
+                <div class="footer">
+                    <div class="button confirm">
+                        Ok
+                    </div>
+                    <div class="button cancel">
+                        Cancel
+                    </div>
+                </div>
+            </div>
+        </div>
     </t>
 
     <t t-extend="ClientLine">

@@ -46,3 +46,7 @@
     overflow: scroll;
     height: 310px;
 }
+
+.popup-packlot {
+    width: 800px !important;
+}
