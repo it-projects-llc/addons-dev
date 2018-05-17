@@ -27,7 +27,8 @@
 }
 
 .tree-view-receipt th {
-    width: 33%;
+    vertical-align: top;
+    width: 18%;
 }
 .tree-view-receipt p {
     font-weight: normal;
@@ -35,4 +36,13 @@
 
 .tag-warn {
     background-color: #ffdddd!important;
+}
+
+.popup-receipt {
+    width: 800px !important;
+    padding-bottom: 55px;
+}
+.popup-receipt .body {
+    overflow: scroll;
+    height: 310px;
 }

@@ -115,7 +115,7 @@
 
     <t t-name="ReceiptDataPopupWidget">
         <div class="modal-dialog">
-            <div class="popup popup-confirm">
+            <div class="popup popup-confirm popup-receipt">
                 <p class="title"><t t-esc="_t('Receipt Data')" /></p>
                 <t t-set="hl" t-value="widget.options.history_line || {}"/>
                 <div class="body">
@@ -124,11 +124,30 @@
                             <th>Product</th>
                             <th>Barcode</th>
                             <th>Tag</th>
+                            <th>Location</th>
+                            <th>Location#</th>
+                            <th>Delivery</th>
                         </tr>
                         <tr>
+                            <t t-set="whs" t-value="hl.warehouse_ids"/>
                             <th><p><t t-esc=" hl.product_id &amp;&amp; hl.product_id[1] || '' " /></p></th>
                             <th><p><t t-esc=" hl.product_barcode || '' " /></p></th>
                             <th><p><t t-esc=" hl.tag || '' " /></p></th>
+                            <th>
+                                <t t-if="whs &amp;&amp; whs.length">
+                                    <t t-foreach="whs" t-as='wh'>
+                                        <p><t t-esc=" wh || '' " /></p>
+                                    </t>
+                                </t>
+                            </th>
+                            <th>
+                                <t t-if="whs &amp;&amp; whs.length">
+                                    <t t-foreach="whs" t-as='wh'>
+                                        <p><t t-esc=" wh || '' " /></p>
+                                    </t>
+                                </t>
+                            </th>
+                            <th><p><t t-esc=" hl.state || '' " /></p></th>
                         </tr>
                     </table>
                 </div>
