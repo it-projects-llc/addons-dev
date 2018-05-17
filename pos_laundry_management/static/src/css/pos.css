@@ -32,3 +32,7 @@
 .tree-view-receipt p {
     font-weight: normal;
 }
+
+.tag-warn {
+    background-color: #ffdddd!important;
+}

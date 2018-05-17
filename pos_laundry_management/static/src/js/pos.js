@@ -176,6 +176,11 @@ odoo.define('pos_laundry_management.pos', function (require) {
     })[0].widget.include({
         click_confirm: function(){
             var pack_lot_lines = this.options.pack_lot_lines;
+            var not_int_tags = this.check_tag_correctness(pack_lot_lines.models);
+            if (not_int_tags && not_int_tags.length){
+                this.show_warns(not_int_tags);
+                return;
+            }
             this.$('.table-row').each(function(index, el){
                 var cid = $(el).find('.barcode-input').attr('cid'),
                     lot_name = $(el).find('.barcode-input').val(),
@@ -188,9 +193,27 @@ odoo.define('pos_laundry_management.pos', function (require) {
             pack_lot_lines.set_quantity_by_lot();
             var numpad_state = this.pos.gui.screen_instances.products.numpad.state;
             numpad_state.set({'buffer': pack_lot_lines.models.length || ''});
-//            numpad_state.state.attributes.buffer = pack_lot_lines.models.length;
             this.options.order.save_to_db();
             this.gui.close_popup();
+        },
+        check_tag_correctness: function(lots) {
+            var el = false;
+            var res = [];
+            _.each(lots, function(lot){
+                el = $('input.tag-input[cid='+ lot.cid +']');
+                el.removeClass('tag-warn');
+                if (!Number(el.val())) {
+                    res.push(lot.cid)
+                }
+            });
+            return res;
+        },
+        show_warns: function(cids) {
+            var el = false;
+            _.each(cids, function(c){
+                el = $('input.tag-input[cid='+ c +']');
+                el.addClass('tag-warn');
+            });
         },
     });
 
