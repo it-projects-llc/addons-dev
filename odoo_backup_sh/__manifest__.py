@@ -27,7 +27,9 @@
         'views/odoo_backup_sh_views.xml',
     ],
     'qweb': ['static/src/xml/dashboard.xml'],
-    "demo": [],
+    "demo": [
+        'demo/odoo_backup_sh_demo.xml',
+    ],
 
     "post_load": None,
     "pre_init_hook": None,

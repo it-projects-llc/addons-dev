@@ -20,6 +20,8 @@
                     }
                     @media (min-width: @screen-sm-min) {
                         flex: 0 0 16.6%;
+                        display: inline-block;  // it's necessary for a correct passing of tests with PhantomJS,
+                                                // otherwise it can be deleted.
                     }
                 }
             }

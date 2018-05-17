@@ -11,6 +11,7 @@ except ImportError:
     from mock import patch
 
 
+# The test run after installation of all modules in an installation set.
 @odoo.tests.common.at_install(False)
 @odoo.tests.common.post_install(True)
 class TestUi(odoo.tests.HttpCase):
@@ -18,18 +19,27 @@ class TestUi(odoo.tests.HttpCase):
     def setUp(self):
         super(TestUi, self).setUp()
 
-        def odoo_backup_sh_response(self, redirect=None):
-            return {'credit_url': 'http://odoo.com'}
+        def patch_load_backup_list_from_service(redirect=None):
+            return {'backup_list': ['01.01.2018 - backup1', '02.01.2018 - backup2']}
+            # TODO: check alternative way with backup list
 
-        self.patcher = patch(
+        def patch_check_insufficient_credit(credit):
+            return 'https://iap.odoo.com/iap/1/credit...'
+
+        self.patcher1 = patch(
             'odoo.addons.odoo_backup_sh.controllers.main.BackupController.load_backup_list_from_service',
-            wraps=odoo_backup_sh_response)
-        self.patcher.start()
+            wraps=patch_load_backup_list_from_service)
+        self.patcher2 = patch(
+            'odoo.addons.odoo_backup_sh.models.odoo_backup_sh.Backup.check_insufficient_credit',
+            wraps=patch_check_insufficient_credit)
+        self.patcher1.start()
+        self.patcher2.start()
 
     def test_01_odoo_backup_sh_tour(self):
-        self.phantom_js('/', "odoo.__DEBUG__.services['web_tour.tour'].run('odoo_backup_sh_tour')",
+        self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('odoo_backup_sh_tour')",
                         "odoo.__DEBUG__.services['web_tour.tour'].tours.odoo_backup_sh_tour.ready", login="admin")
 
     def tearDown(self):
-        self.patcher.stop()
+        self.patcher1.stop()
+        self.patcher2.stop()
         super(TestUi, self).tearDown()

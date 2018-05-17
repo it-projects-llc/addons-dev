@@ -8,15 +8,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
     <template id="assets_backend" inherit_id="web.assets_backend" name="odoo_backup_sh assets">
         <xpath expr="." position="inside">
             <link rel="stylesheet" href="/odoo_backup_sh/static/src/less/dashboard.less"/>
-        </xpath>
-        <xpath expr="//script[last()]" position="after">
             <script type="text/javascript" src="/odoo_backup_sh/static/src/js/dashboard.js"/>
-        </xpath>
-    </template>
-
-    <template id="assets_common" name="tour" inherit_id="web.assets_common">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/odoo_backup_sh/static/src/js/tour.js"></script>
         </xpath>
     </template>
 

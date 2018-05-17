@@ -19,7 +19,6 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
     o_dashboard_action_update_info: function (ev) {
         ev.preventDefault();
         var self = this;
-        var $action = $(ev.currentTarget);
         this._rpc({
             model: 'odoo_backup_sh.backup',
             method: 'update_info',

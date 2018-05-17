@@ -36,7 +36,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                             the next subscription fee!
                         </span>
                         <i class="fa fa-money fa-3x" id="up_to_the_balance_text"/><br/>
-                        Up to the Balance<br/>
+                        Go to Balance<br/>
                     </div>
                 </a>
             </div>
