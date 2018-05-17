@@ -11,8 +11,7 @@ except ImportError:
     from mock import patch
 
 
-# The test run after installation of all modules in an installation set.
-@odoo.tests.common.at_install(False)
+@odoo.tests.common.at_install(True)
 @odoo.tests.common.post_install(True)
 class TestUi(odoo.tests.HttpCase):
 
@@ -21,7 +20,7 @@ class TestUi(odoo.tests.HttpCase):
 
         def patch_load_backup_list_from_service(redirect=None):
             return {'backup_list': ['01.01.2018 - backup1', '02.01.2018 - backup2']}
-            # TODO: check alternative way with backup list
+            # TODO: check a case with rendering list of backups in dashboard
 
         def patch_check_insufficient_credit(credit):
             return 'https://iap.odoo.com/iap/1/credit...'

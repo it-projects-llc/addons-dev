@@ -28,7 +28,7 @@
     ],
     'qweb': ['static/src/xml/dashboard.xml'],
     "demo": [
-        'demo/odoo_backup_sh_demo.xml',
+        'demo/tour_views.xml',
     ],
 
     "post_load": None,
