@@ -65,26 +65,27 @@ odoo.define('pos_laundry_management.pos', function (require) {
     screens.NumpadWidget.include({
         clickAppendNewChar: function(event) {
             var orderline = this.pos.get_order().selected_orderline;
+            var newChar = event.currentTarget.innerText || event.currentTarget.textContent
+            if (0 === +this.state.get('buffer') && +newChar >= orderline.quantity) {
+                this.state.set({
+                    buffer: orderline.quantity
+                });
+            } else {
+                var res = this._super.apply(this, arguments);
+            }
             if (orderline && orderline.has_product_lot) {
-                var pack_lot_lines_length =  orderline.compute_lot_lines().length;
-                var newChar = 0;
-                newChar = Math.max(event.currentTarget.innerText || event.currentTarget.textContent,
-                                   pack_lot_lines_length);
-                var res = this.state.appendNewChar(newChar);
                 this.pos.gui.show_popup('packlotline', {
                     'title': _t('Lot/Serial Number(s) Required'),
                     'pack_lot_lines': orderline.compute_lot_lines(),
                     'order': this.pos.get_order()
                 });
-                return res;
             }
-            return this._super.apply(this, arguments);
+            return res;
         },
 
         clickDeleteLastChar: function() {
-            var res = this._super.apply(this, arguments);
             var orderline = this.pos.get_order().selected_orderline;
-            if (orderline && orderline.has_product_lot) {
+            if (orderline && orderline.has_product_lot && this.state.get('buffer') !== '') {
                 this.pos.gui.show_popup('packlotline', {
                     'title': _t('Lot/Serial Number(s) Required'),
                     'pack_lot_lines': orderline.compute_lot_lines(),
@@ -101,23 +102,26 @@ odoo.define('pos_laundry_management.pos', function (require) {
         return el.name === 'clientlist';
     })[0].widget.include({
 
-        display_client_details: function(visibility,partner,clickpos){
+        renderElement: function(){
             var self = this;
-            this._super(visibility,partner,clickpos);
-
+            this._super();
             var client_button = this.$el.find('#show_clients');
             var history_button = this.$el.find('#show_history');
             var thead_client = this.$el.find('#clientlist_head');
             var thead_history = this.$el.find('#historylist_head');
+            var new_client = this.$el.find('.button.new-customer')
             client_button.addClass('highlight');
             thead_history.hide();
+            this.view_mode = 'show_clients';
             client_button.off().on('click', function(){
                 if (!client_button.hasClass('highlight')){
                     history_button.removeClass('highlight');
                     client_button.addClass('highlight');
                     thead_history.hide();
                     thead_client.show();
-                    self.render_list(self.pos.db.get_partners_sorted(1000))
+                    new_client.show();
+                    self.view_mode = 'show_clients';
+                    self.render_list(self.pos.db.get_partners_sorted(1000));
                 }
             });
             history_button.off().on('click', function(){
@@ -126,18 +130,50 @@ odoo.define('pos_laundry_management.pos', function (require) {
                     history_button.addClass('highlight');
                     thead_client.hide();
                     thead_history.show();
+                    new_client.hide();
+                    self.view_mode = 'show_history';
                     self.render_history(self.new_client);
                 }
             });
         },
-
+        perform_search: function(query, associate_result) {
+            var self = this;
+            if (this.view_mode === 'show_history') {
+                var res = []
+                if (this.new_client) {
+                    res = this.new_client.history;
+                } else {
+                    res = _.flatten(_.map(this.pos.db.get_partners_sorted(1000), function(partner){
+                        return partner.history;
+                    }));
+                }
+                res = _.filter(res, function(line){
+                   return line.receipt_barcode && line.receipt_barcode.includes(query);
+                });
+                this.render_history_list(res);
+                return;
+            }
+            this._super(query, associate_result);
+        },
         render_history: function(partner) {
             var self = this;
-            partner = partner || self.new_client || self.old_client;
-            this.render_history_list(partner.history);
-            var history = this.pos.reload_history(partner.id);
-            history.then(function(){
-                self.render_history_list(partner.history);
+            var history = [];
+            var partners = [];
+            if (partner){
+                this.render_history_list(partner.history);
+                partners = [partner]
+            } else {
+                partners = this.pos.db.get_partners_sorted(1000);
+            }
+            var partner_ids = _.map(partners, function(partner){
+                return partner.id;
+            });
+            var on_history_load = this.pos.reload_history(partner_ids);
+            on_history_load.then(function(){
+                history = _.flatten(_.map(partners, function(partner){
+                    return partner.history;
+                }));
+                self.render_history_list(history);
             });
         },
         render_history_list: function(history_lines) {
@@ -156,8 +192,8 @@ odoo.define('pos_laundry_management.pos', function (require) {
                     contents.appendChild(history_line);
                 }
             }
-            this.$el.find('.receipt_barcode').off().on('click', function(data){
-                var partner = self.new_client || self.old_client;
+            this.$el.find('.receipt_barcode.receipt-button').off().on('click', function(data){
+                var partner = self.new_client || self.pos.db.get_partner_by_id(data.currentTarget.getAttribute('p_id'));
                 var hl_id = data.currentTarget.getAttribute('hl_id');
                 var history_line = _.find(partner.history, function(hl){
                     return hl.id == hl_id;
@@ -175,6 +211,11 @@ odoo.define('pos_laundry_management.pos', function (require) {
     })[0].widget.include({
         click_confirm: function(){
             var pack_lot_lines = this.options.pack_lot_lines;
+            var not_int_tags = this.check_tag_correctness(pack_lot_lines.models);
+            if (not_int_tags && not_int_tags.length){
+                this.show_warns(not_int_tags);
+                return;
+            }
             this.$('.table-row').each(function(index, el){
                 var cid = $(el).find('.barcode-input').attr('cid'),
                     lot_name = $(el).find('.barcode-input').val(),
@@ -185,8 +226,29 @@ odoo.define('pos_laundry_management.pos', function (require) {
             });
             pack_lot_lines.remove_empty_model();
             pack_lot_lines.set_quantity_by_lot();
+            var numpad_state = this.pos.gui.screen_instances.products.numpad.state;
+            numpad_state.set({'buffer': pack_lot_lines.models.length || ''});
             this.options.order.save_to_db();
             this.gui.close_popup();
+        },
+        check_tag_correctness: function(lots) {
+            var el = false;
+            var res = [];
+            _.each(lots, function(lot){
+                el = $('input.tag-input[cid='+ lot.cid +']');
+                el.removeClass('tag-warn');
+                if (!Number(el.val()) && el.val() !== '') {
+                    res.push(lot.cid)
+                }
+            });
+            return res;
+        },
+        show_warns: function(cids) {
+            var el = false;
+            _.each(cids, function(c){
+                el = $('input.tag-input[cid='+ c +']');
+                el.addClass('tag-warn');
+            });
         },
     });
 

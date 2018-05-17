@@ -33,6 +33,13 @@ class MRPProduction(models.Model):
                  * receipt_barcode
                  * state
                  * finishing_date
+                 * product_id
+                 * product_barcode
+                 * product tag
+                 * warehouse_ids
+                    * complete_name
+                 * state
+                 * partner_id
         """
         fields = [
             'date',
@@ -42,6 +49,9 @@ class MRPProduction(models.Model):
             'product_id',
             'product_barcode',
             'tag',
+            'warehouse_ids',
+            'state',
+            'partner_id',
         ]
         data = dict((id, {'history': [],
                           'partner_id': id,
@@ -49,11 +59,16 @@ class MRPProduction(models.Model):
 
         for partner_id in self.ids:
             records = self.env['mrp.production'].search_read(
-                domain=[('partner_id', 'in', self.ids)],
+                domain=[('partner_id', '=', partner_id)],
                 fields=fields,
                 limit=limit,
             )
             data[partner_id]['history'] = records
+            for line in data[partner_id]['history']:
+                whs = []
+                for wh in line['warehouse_ids']:
+                    whs.append(self.env["stock.warehouse"].browse(wh).lot_stock_id)
+                line['warehouse_ids'] = map(lambda w: w.complete_name, whs)
         return data
 
 
@@ -89,4 +104,4 @@ class PosOrder(models.Model):
 class PosOrderLineLot(models.Model):
     _inherit = "pos.pack.operation.lot"
 
-    tag = fields.Char('Tag')
+    tag = fields.Integer('Tag')

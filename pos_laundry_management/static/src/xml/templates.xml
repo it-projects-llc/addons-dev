@@ -4,17 +4,19 @@
 
 <templates id="template" xml:space="preserve">
 
-    <t t-extend="PackLotLinePopupWidget">
-        <t t-jquery=".packlot-lines" t-operation="replace">
-            <div class='packlot-lines'>
+    <t t-name="PackLotLinePopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-text popup-packlot">
+                <p class="title"><t t-esc=" widget.options.title || '' " /></p>
+                <div class='packlot-lines'>
                 <t t-if="widget.options.pack_lot_lines">
                     <table>
                         <tr>
-                            <th width="20%">Name</th>
-                            <th width="15%">UoM</th>
-                            <th width="15%">Price</th>
-                            <th width="25%">Barcode</th>
-                            <th width="25%">Tag</th>
+                            <th width="18%">Name</th>
+                            <th width="10%">UoM</th>
+                            <th width="10%">Price</th>
+                            <th width="31%">Barcode</th>
+                            <th width="31%">Tag</th>
                         </tr>
                         <t t-set="focus_lot_line" t-value="widget.focus_model || widget.options.pack_lot_lines.get_empty_model()"/>
                         <t t-foreach='widget.options.pack_lot_lines.models' t-as='lot_line'>
@@ -52,7 +54,16 @@
                     </table>
                 </t>
             </div>
-        </t>
+                <div class="footer">
+                    <div class="button confirm">
+                        Ok
+                    </div>
+                    <div class="button cancel">
+                        Cancel
+                    </div>
+                </div>
+            </div>
+        </div>
     </t>
 
     <t t-extend="ClientLine">
@@ -69,7 +80,7 @@
     <t t-name="HistoryLine">
         <t t-jquery="tr.client-line" t-operation="replace">
             <tr>
-                <td class="receipt_barcode" t-att-hl_id="line.id">
+                <td class="receipt_barcode receipt-button" t-att-hl_id="line.id" t-att-p_id="line.partner_id[0]">
                     <t t-esc='line.receipt_barcode || "" '/>
                 </td>
                 <td><t t-esc='line.date || ""' /></td>
@@ -80,6 +91,10 @@
     </t>
 
     <t t-extend="ClientListScreenWidget">
+        <t t-jquery="input[placeholder='Search Customers']" t-operation="replace">
+            <input placeholder='Search' />
+        </t>
+
         <t t-jquery="table.client-list thead" t-operation="replace">
             <thead id="clientlist_head">
                 <tr>
@@ -93,15 +108,15 @@
                 <tr>
                     <th>Receipt ID</th>
                     <th>Date</th>
-                    <th>Payment Status</th>
+                    <th>Maintenance Status</th>
                     <th>Finish Date</th>
                 </tr>
             </thead>
         </t>
     </t>
 
-    <t t-extend="ClientDetails">
-        <t t-jquery="section" t-operation="append">
+    <t t-extend="ClientListScreenWidget">
+        <t t-jquery="table.client-list" t-operation="before">
             <div class="notebook-list">
                 <span id="show_clients" class="notebook-button">
                     Customer List
@@ -115,7 +130,7 @@
 
     <t t-name="ReceiptDataPopupWidget">
         <div class="modal-dialog">
-            <div class="popup popup-confirm">
+            <div class="popup popup-confirm popup-receipt">
                 <p class="title"><t t-esc="_t('Receipt Data')" /></p>
                 <t t-set="hl" t-value="widget.options.history_line || {}"/>
                 <div class="body">
@@ -124,11 +139,30 @@
                             <th>Product</th>
                             <th>Barcode</th>
                             <th>Tag</th>
+                            <th>Location</th>
+                            <th>Location#</th>
+                            <th>Delivery</th>
                         </tr>
                         <tr>
+                            <t t-set="whs" t-value="hl.warehouse_ids"/>
                             <th><p><t t-esc=" hl.product_id &amp;&amp; hl.product_id[1] || '' " /></p></th>
                             <th><p><t t-esc=" hl.product_barcode || '' " /></p></th>
                             <th><p><t t-esc=" hl.tag || '' " /></p></th>
+                            <th>
+                                <t t-if="whs &amp;&amp; whs.length">
+                                    <t t-foreach="whs" t-as='wh'>
+                                        <p><t t-esc=" wh || '' " /></p>
+                                    </t>
+                                </t>
+                            </th>
+                            <th>
+                                <t t-if="whs &amp;&amp; whs.length">
+                                    <t t-foreach="whs" t-as='wh'>
+                                        <p><t t-esc=" wh || '' " /></p>
+                                    </t>
+                                </t>
+                            </th>
+                            <th><p><t t-esc=" hl.state || '' " /></p></th>
                         </tr>
                     </table>
                 </div>
