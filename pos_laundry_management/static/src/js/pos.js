@@ -65,26 +65,27 @@ odoo.define('pos_laundry_management.pos', function (require) {
     screens.NumpadWidget.include({
         clickAppendNewChar: function(event) {
             var orderline = this.pos.get_order().selected_orderline;
+            var newChar = event.currentTarget.innerText || event.currentTarget.textContent
+            if (0 === +this.state.get('buffer') && +newChar >= orderline.quantity) {
+                this.state.set({
+                    buffer: orderline.quantity
+                });
+            } else {
+                var res = this._super.apply(this, arguments);
+            }
             if (orderline && orderline.has_product_lot) {
-                var pack_lot_lines_length =  orderline.compute_lot_lines().length;
-                var newChar = 0;
-                newChar = Math.max(event.currentTarget.innerText || event.currentTarget.textContent,
-                                   pack_lot_lines_length);
-                var res = this.state.appendNewChar(newChar);
                 this.pos.gui.show_popup('packlotline', {
                     'title': _t('Lot/Serial Number(s) Required'),
                     'pack_lot_lines': orderline.compute_lot_lines(),
                     'order': this.pos.get_order()
                 });
-                return res;
             }
-            return this._super.apply(this, arguments);
+            return res;
         },
 
         clickDeleteLastChar: function() {
-            var res = this._super.apply(this, arguments);
             var orderline = this.pos.get_order().selected_orderline;
-            if (orderline && orderline.has_product_lot) {
+            if (orderline && orderline.has_product_lot && this.state.get('buffer') !== '') {
                 this.pos.gui.show_popup('packlotline', {
                     'title': _t('Lot/Serial Number(s) Required'),
                     'pack_lot_lines': orderline.compute_lot_lines(),
@@ -185,6 +186,9 @@ odoo.define('pos_laundry_management.pos', function (require) {
             });
             pack_lot_lines.remove_empty_model();
             pack_lot_lines.set_quantity_by_lot();
+            var numpad_state = this.pos.gui.screen_instances.products.numpad.state;
+            numpad_state.set({'buffer': pack_lot_lines.models.length || ''});
+//            numpad_state.state.attributes.buffer = pack_lot_lines.models.length;
             this.options.order.save_to_db();
             this.gui.close_popup();
         },

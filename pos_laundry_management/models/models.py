@@ -89,4 +89,4 @@ class PosOrder(models.Model):
 class PosOrderLineLot(models.Model):
     _inherit = "pos.pack.operation.lot"
 
-    tag = fields.Char('Tag')
+    tag = fields.Integer('Tag')

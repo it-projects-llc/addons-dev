@@ -11,10 +11,10 @@
                     <table>
                         <tr>
                             <th width="20%">Name</th>
-                            <th width="15%">UoM</th>
-                            <th width="15%">Price</th>
-                            <th width="25%">Barcode</th>
-                            <th width="25%">Tag</th>
+                            <th width="10%">UoM</th>
+                            <th width="10%">Price</th>
+                            <th width="30%">Barcode</th>
+                            <th width="30%">Tag</th>
                         </tr>
                         <t t-set="focus_lot_line" t-value="widget.focus_model || widget.options.pack_lot_lines.get_empty_model()"/>
                         <t t-foreach='widget.options.pack_lot_lines.models' t-as='lot_line'>
@@ -93,7 +93,7 @@
                 <tr>
                     <th>Receipt ID</th>
                     <th>Date</th>
-                    <th>Payment Status</th>
+                    <th>Maintenance Status</th>
                     <th>Finish Date</th>
                 </tr>
             </thead>
