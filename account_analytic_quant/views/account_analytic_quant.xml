@@ -11,6 +11,13 @@
                        string="Analyze Expense"
                        filter_domain="['|', '&amp;', ('line_id.is_expense', '=', True), ('line_id', 'ilike', self), ('quant_expense_ids.line_id', 'ilike', self)]"
                        />
+                <field name="user_id"
+                       string="Analyze User"
+                       filter_domain="['|', ('user_id', 'ilike', self), ('quant_expense_ids.user_id', 'ilike', self)]"
+                       />
+                <field name="project_id" string="Project"/>
+                <field name="income_project_id" string="Income Project"/>
+
                 <filter string="Income" domain="[('type', '=', 'income')]"/>
                 <filter string="Covered Expenses" domain="[('type', '=', 'expense')]"/>
                 <filter string="Uncovered Expenses" domain="[('type', '=', 'expense_uncovered')]"/>

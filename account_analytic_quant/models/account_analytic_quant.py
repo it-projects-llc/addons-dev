@@ -62,6 +62,13 @@ class AnalyticQuant(models.Model):
         'Analytic Line',
         help='Original Analytic Line the quant is made from',
     )
+    user_id = fields.Many2one(
+        'res.users',
+        string='User',
+        related='line_id.user_id',
+        store=True,
+        readonly=True,
+    )
     date = fields.Date(
         'Date',
         related='line_id.date',

@@ -15,7 +15,17 @@
                 <notebook>
                     <page string="Linked Records">
                         <field name="is_expense" invisible="1"/>
-                        <field name="line_ids" domain="[('is_expense', '=', not is_expense)]"/>
+                        <field name="line_ids" domain="[('is_expense', '=', not is_expense)]">
+                            <tree>
+                                <field name="date"/>
+                                <field name="name"/>
+                                <field name="account_id"/>
+                                <field name="task_id"/>
+                                <field name="user_id"/>
+                                <field name="unit_amount"/>
+                                <field name="amount"/>
+                            </tree>
+                        </field>
                     </page>
                     <page string="Weight of the Links">
                         <field name="link_income_ids" attrs="{'invisible': [('is_expense', '=', False)]}">

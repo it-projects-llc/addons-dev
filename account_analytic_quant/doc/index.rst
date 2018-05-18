@@ -10,7 +10,6 @@ Installation
 Usage
 =====
 
-* `Activate Developer Mode <https://odoo-development.readthedocs.io/en/latest/odoo/usage/debug-mode.html>`__
 * Open menu ``[[ Accounting ]] >> Adviser >> Analytic Entries``
 * For existing records Specify values for following fields:
 
@@ -22,9 +21,10 @@ Usage
 
 * Open Wizard via menu ``[[ Accounting ]] >> Adviser >> Generate Analytic Quants``
 
-  * Set some filters if needed
+  * Set **Starting Date** filter and **Quant Size**
   * Click ``[Generate]``
 
 * Open menu ``[[ Accounting ]] >> Adviser >> Analytic Quants``
+* Reload web page to apply filter for latest Generation
 
 * RESULT: You can analyze Expenses / Incomes
