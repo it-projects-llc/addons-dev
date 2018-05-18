@@ -8,7 +8,7 @@ odoo.define('pos_laundry_management.pos', function (require) {
     var screens = require('point_of_sale.screens');
     var core = require('web.core');
     var gui = require('point_of_sale.gui');
-    var utils = require('web.utils');
+    var devices = require('point_of_sale.devices');
     var Model = require('web.DataModel');
     var PopupWidget = require('point_of_sale.popups');
 
@@ -59,6 +59,15 @@ odoo.define('pos_laundry_management.pos', function (require) {
             _.each(_.keys(hist), function(pid){
                 self.db.get_partner_by_id(pid).history = hist[pid].history;
             });
+        },
+        lot_barcode_callback: function(res){
+            var self = this;
+            var popup = this.gui.current_popup
+            if (popup && popup.template === "PackLotLinePopupWidget") {
+                var el = popup.$el.find('.barcode-input:text');
+                el = el.filter(function() { return $(this).val() == ""; }).first();
+                el.val(res.code);
+            }
         },
     });
 
@@ -321,4 +330,25 @@ odoo.define('pos_laundry_management.pos', function (require) {
     });
     gui.define_popup({name:'receipt_data', widget: ReceiptDataPopupWidget});
 
+    devices.BarcodeReader.include({
+        init: function (attributes) {
+            this._super(attributes);
+            this.set_action_callback('lot', _.bind(this.pos.lot_barcode_callback, this.pos));
+        },
+
+        scan: function(code){
+            if (!code) {
+                return;
+            }
+            var parsed_result = this.barcode_parser.parse_barcode(code);
+            var popup = this.pos.gui.current_popup;
+            if (parsed_result.type === 'lot' && popup && popup.template === "PackLotLinePopupWidget") {
+                if (this.action_callback[parsed_result.type]) {
+                    return this.action_callback[parsed_result.type](parsed_result);
+                }
+                return this.action_callback_stack[0]['lot'](parsed_result)
+            }
+            return this._super(code);
+        },
+    });
 });
