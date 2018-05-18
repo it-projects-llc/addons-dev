@@ -21,9 +21,15 @@
         'iap',
     ],
     "external_dependencies": {"python": [], "bin": []},
-    "data": [],
-    "qweb": [],
-    "demo": [],
+    "data": [
+        'security/ir.model.access.csv',
+        'views/odoo_backup_sh_templates.xml',
+        'views/odoo_backup_sh_views.xml',
+    ],
+    'qweb': ['static/src/xml/dashboard.xml'],
+    "demo": [
+        'demo/tour_views.xml',
+    ],
 
     "post_load": None,
     "pre_init_hook": None,
