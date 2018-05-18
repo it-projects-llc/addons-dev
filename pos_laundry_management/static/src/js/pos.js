@@ -52,7 +52,7 @@ odoo.define('pos_laundry_management.pos', function (require) {
 
         },
         _load_history: function(partner_ids, limit, options){
-            return new Model('mrp.production').call('load_history', [partner_ids], {'limit': limit}, {'shadow': options.shadow});
+            return new Model('res.partner').call('load_history', [partner_ids], {'limit': limit}, {'shadow': options.shadow});
         },
         _on_load_history: function(hist){
             var self = this;
@@ -242,7 +242,7 @@ odoo.define('pos_laundry_management.pos', function (require) {
             var res = [];
             _.each(lots, function(lot){
                 el = $('input.tag-input[cid='+ lot.cid +']');
-                el.removeClass('tag-warn');
+                el.removeClass('warning');
                 if (!Number(el.val()) && el.val() !== '') {
                     res.push(lot.cid)
                 }
@@ -253,7 +253,7 @@ odoo.define('pos_laundry_management.pos', function (require) {
             var el = false;
             _.each(cids, function(c){
                 el = $('input.tag-input[cid='+ c +']');
-                el.addClass('tag-warn');
+                el.addClass('warning');
             });
         },
     });
@@ -280,6 +280,44 @@ odoo.define('pos_laundry_management.pos', function (require) {
 
     var ReceiptDataPopupWidget = PopupWidget.extend({
         template: 'ReceiptDataPopupWidget',
+        show: function(options){
+            var self = this;
+            this._super(options);
+            var line = options.history_line,
+                state = line.state;
+            if (state && state !== 'cancel') {
+                var state_changer = this.$el.find('.button.state_changer');
+                var state_cancel = this.$el.find('.button.state_cancel');
+                state_changer.off().on('click', function(){
+                    var new_state = (state === 'planned' || state === 'confirmed')
+                        ? 'cancel'
+                        : state === 'progress'
+                            ? 'done'
+                            : 'progress';
+                    self._change_state(line.id, new_state).then(function(data){
+                        self._on_changing_status(data[0], line);
+                    });
+                });
+                state_cancel.off().on('click', function(){
+                    self._change_state(line.id, 'cancel').then(function(data){
+                        self._on_changing_status(data[0], line);
+                    });
+                });
+            }
+        },
+        _change_state: function(mrp_id, state){
+            return new Model('mrp.production').call('set_state', [mrp_id], {'new_state': state});
+        },
+        _on_changing_status: function(data, line){
+            this.pos._on_load_history(data);
+            this.gui.current_screen.render_history();
+            this.close();
+            this.pos.gui.show_popup('receipt_data', {
+                'history_line':  _.find(this.pos.db.get_partner_by_id(line.partner_id[0]).history, function(l){
+                    return l.id === line.id;
+                }),
+            });
+        },
     });
     gui.define_popup({name:'receipt_data', widget: ReceiptDataPopupWidget});
 

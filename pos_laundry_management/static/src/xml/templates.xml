@@ -162,7 +162,33 @@
                                     </t>
                                 </t>
                             </th>
-                            <th><p><t t-esc=" hl.state || '' " /></p></th>
+                            <th>
+                                <t t-if="hl.state == 'planned'">
+                                    <p>Started</p>
+                                </t>
+                                <t t-if="hl.state == 'confirmed'">
+                                    <p>Confirmed</p>
+                                </t>
+                                <t t-if="hl.state == 'done'">
+                                    <p>Done</p>
+                                    <!--<div class="button state_changer" style="background-color: #c8c8c8!important;">-->
+                                    <div class="button state_changer" style="background-color: #ff0000b8!important;">
+                                        Waiting Delivery
+                                    </div>
+                                </t>
+                                <t t-if="hl.state == 'progress'">
+                                    <p>Waiting Delivery</p>
+                                    <div class="button state_changer" style="background-color: blue; color: white;">
+                                        Done
+                                    </div>
+                                </t>
+                                <t t-if="hl.state != 'cancel'">
+                                    <div class="button state_cancel" style="background-color: #c8c8c8!important;">
+                                        Cancel
+                                    </div>
+                                </t>
+                                <t t-else=""><p>Cancel</p></t>
+                            </th>
                         </tr>
                     </table>
                 </div>
