@@ -1,0 +1,233 @@
+id,name,amount,date,date_start,date_end,account_id/id,task_id/id,project_id/id,user_id/id
+line1,Timesheet expense 1,-67,2017-01-03,2017-01-03,2017-01-03,a1,t11,p1,u4
+line2,Timesheet expense 2,-79,2017-01-12,2017-01-12,2017-01-12,a1,t11,p1,u2
+line3,Timesheet expense 3,-101,2017-01-11,2017-01-11,2017-01-11,a1,t11,p1,u3
+line4,Timesheet expense 4,-146,2017-01-05,2017-01-05,2017-01-05,a1,t11,p1,u4
+line5,Timesheet expense 5,-61,2017-01-04,2017-01-04,2017-01-04,a2,t22,p2,u4
+line6,Timesheet expense 6,-16,2017-01-02,2017-01-02,2017-01-02,a2,t25,p2,u2
+line7,Timesheet expense 7,-52,2017-01-10,2017-01-10,2017-01-10,a2,t21,p2,u2
+line8,Timesheet expense 8,-36,2017-01-02,2017-01-02,2017-01-02,a1,t11,p1,u1
+line9,Timesheet expense 9,-58,2017-01-05,2017-01-05,2017-01-05,a1,t13,p1,u3
+line10,Timesheet expense 10,-119,2017-01-06,2017-01-06,2017-01-06,a1,t12,p1,u2
+line11,Timesheet expense 11,-148,2017-01-11,2017-01-11,2017-01-11,a1,t12,p1,u1
+line12,Timesheet expense 12,-136,2017-01-02,2017-01-02,2017-01-02,a1,t11,p1,u4
+line13,Timesheet expense 13,-74,2017-01-10,2017-01-10,2017-01-10,a1,t11,p1,u3
+line14,Timesheet expense 14,-69,2017-01-04,2017-01-04,2017-01-04,a3,t32,p3,u4
+line15,Timesheet expense 15,-60,2017-01-05,2017-01-05,2017-01-05,a1,t11,p1,u1
+line16,Timesheet expense 16,-57,2017-01-07,2017-01-07,2017-01-07,a1,t12,p1,u3
+line17,Timesheet expense 17,-207,2017-01-03,2017-01-03,2017-01-03,a3,t32,p3,u2
+line18,Timesheet expense 18,-40,2017-01-05,2017-01-05,2017-01-05,a2,t23,p2,u4
+line19,Timesheet expense 19,-85,2017-01-12,2017-01-12,2017-01-12,a2,t21,p2,u1
+line20,Timesheet expense 20,-103,2017-01-05,2017-01-05,2017-01-05,a2,t24,p2,u1
+line21,Timesheet expense 21,-73,2017-01-03,2017-01-03,2017-01-03,a2,t22,p2,u1
+line22,Timesheet expense 22,-146,2017-01-06,2017-01-06,2017-01-06,a1,t14,p1,u2
+line23,Timesheet expense 23,-110,2017-01-03,2017-01-03,2017-01-03,a1,t12,p1,u1
+line24,Timesheet expense 24,-51,2017-01-03,2017-01-03,2017-01-03,a1,t15,p1,u4
+line25,Timesheet expense 25,-146,2017-01-07,2017-01-07,2017-01-07,a1,t11,p1,u1
+line26,Timesheet expense 26,-127,2017-01-03,2017-01-03,2017-01-03,a1,t11,p1,u4
+line27,Timesheet expense 27,-81,2017-01-02,2017-01-02,2017-01-02,a1,t11,p1,u2
+line28,Timesheet expense 28,-129,2017-01-03,2017-01-03,2017-01-03,a1,t14,p1,u2
+line29,Timesheet expense 29,-32,2017-01-02,2017-01-02,2017-01-02,a1,t11,p1,u3
+line30,Timesheet expense 30,-94,2017-01-03,2017-01-03,2017-01-03,a2,t25,p2,u1
+line31,Timesheet expense 31,-118,2017-01-05,2017-01-05,2017-01-05,a1,t11,p1,u3
+line32,Timesheet expense 32,-22,2017-01-02,2017-01-02,2017-01-02,a2,t21,p2,u1
+line33,Timesheet expense 33,-150,2017-01-02,2017-01-02,2017-01-02,a1,t14,p1,u1
+line34,Timesheet expense 34,-40,2017-01-02,2017-01-02,2017-01-02,a1,t11,p1,u3
+line35,Timesheet expense 35,-114,2017-01-02,2017-01-02,2017-01-02,a2,t22,p2,u4
+line36,Timesheet expense 36,-142,2017-01-03,2017-01-03,2017-01-03,a1,t11,p1,u2
+line37,Timesheet expense 37,-144,2017-01-03,2017-01-03,2017-01-03,a2,t21,p2,u1
+line38,Timesheet expense 38,-128,2017-01-07,2017-01-07,2017-01-07,a1,t12,p1,u1
+line39,Timesheet expense 39,-102,2017-01-10,2017-01-10,2017-01-10,a2,t22,p2,u1
+line40,Timesheet expense 40,-99,2017-01-05,2017-01-05,2017-01-05,a1,t11,p1,u4
+line41,Timesheet expense 41,-155,2017-01-05,2017-01-05,2017-01-05,a1,t11,p1,u1
+line42,Timesheet expense 42,-136,2017-01-02,2017-01-02,2017-01-02,a1,t11,p1,u4
+line43,Timesheet expense 43,-137,2017-01-08,2017-01-08,2017-01-08,a1,t15,p1,u2
+line44,Timesheet expense 44,-81,2017-01-03,2017-01-03,2017-01-03,a3,t33,p3,u3
+line45,Timesheet expense 45,-115,2017-01-05,2017-01-05,2017-01-05,a1,t12,p1,u4
+line46,Timesheet expense 46,-227,2017-01-04,2017-01-04,2017-01-04,a1,t11,p1,u4
+line47,Timesheet expense 47,-173,2017-01-04,2017-01-04,2017-01-04,a1,t12,p1,u3
+line48,Timesheet expense 48,-100,2017-01-05,2017-01-05,2017-01-05,a2,t23,p2,u4
+line49,Timesheet expense 49,-78,2017-01-06,2017-01-06,2017-01-06,a1,t14,p1,u2
+line50,Timesheet expense 50,-15,2017-01-05,2017-01-05,2017-01-05,a2,t23,p2,u2
+line51,Timesheet expense 51,-55,2017-01-09,2017-01-09,2017-01-09,a2,t21,p2,u1
+line52,Timesheet expense 52,-16,2017-01-02,2017-01-02,2017-01-02,a1,t11,p1,u3
+line53,Timesheet expense 53,-115,2017-01-05,2017-01-05,2017-01-05,a1,t12,p1,u1
+line54,Timesheet expense 54,-64,2017-01-06,2017-01-06,2017-01-06,a3,t31,p3,u2
+line55,Timesheet expense 55,-90,2017-01-06,2017-01-06,2017-01-06,a1,t14,p1,u1
+line56,Timesheet expense 56,-142,2017-01-09,2017-01-09,2017-01-09,a1,t11,p1,u4
+line57,Timesheet expense 57,-94,2017-01-10,2017-01-10,2017-01-10,a1,t11,p1,u4
+line58,Timesheet expense 58,-90,2017-01-02,2017-01-02,2017-01-02,a2,t23,p2,u1
+line59,Timesheet expense 59,-159,2017-01-09,2017-01-09,2017-01-09,a1,t13,p1,u3
+line60,Timesheet expense 60,-84,2017-01-02,2017-01-02,2017-01-02,a1,t12,p1,u2
+line61,Timesheet expense 61,-142,2017-01-04,2017-01-04,2017-01-04,a1,t12,p1,u1
+line62,Timesheet expense 62,-35,2017-01-06,2017-01-06,2017-01-06,a1,t14,p1,u4
+line63,Timesheet expense 63,-32,2017-01-06,2017-01-06,2017-01-06,a1,t11,p1,u3
+line64,Timesheet expense 64,-139,2017-01-10,2017-01-10,2017-01-10,a2,t21,p2,u1
+line65,Timesheet expense 65,-117,2017-01-11,2017-01-11,2017-01-11,a1,t11,p1,u4
+line66,Timesheet expense 66,-146,2017-01-06,2017-01-06,2017-01-06,a2,t25,p2,u2
+line67,Timesheet expense 67,-103,2017-01-06,2017-01-06,2017-01-06,a1,t11,p1,u1
+line68,Timesheet expense 68,-15,2017-01-03,2017-01-03,2017-01-03,a1,t13,p1,u1
+line69,Timesheet expense 69,-181,2017-01-05,2017-01-05,2017-01-05,a1,t11,p1,u3
+line70,Timesheet expense 70,-103,2017-01-03,2017-01-03,2017-01-03,a1,t11,p1,u3
+line71,Timesheet expense 71,-142,2017-01-02,2017-01-02,2017-01-02,a1,t11,p1,u1
+line72,Timesheet expense 72,-99,2017-01-03,2017-01-03,2017-01-03,a3,t31,p3,u4
+line73,Timesheet expense 73,-24,2017-01-03,2017-01-03,2017-01-03,a1,t11,p1,u4
+line74,Timesheet expense 74,-108,2017-01-04,2017-01-04,2017-01-04,a1,t12,p1,u2
+line75,Timesheet expense 75,-101,2017-01-03,2017-01-03,2017-01-03,a1,t12,p1,u4
+line76,Timesheet expense 76,-141,2017-01-05,2017-01-05,2017-01-05,a1,t12,p1,u2
+line77,Timesheet expense 77,-22,2017-01-06,2017-01-06,2017-01-06,a2,t23,p2,u4
+line78,Timesheet expense 78,-116,2017-01-11,2017-01-11,2017-01-11,a1,t11,p1,u1
+line79,Timesheet expense 79,-169,2017-01-03,2017-01-03,2017-01-03,a1,t11,p1,u3
+line80,Timesheet expense 80,-68,2017-01-02,2017-01-02,2017-01-02,a1,t12,p1,u3
+line81,Timesheet expense 81,-125,2017-01-05,2017-01-05,2017-01-05,a2,t23,p2,u2
+line82,Timesheet expense 82,-101,2017-01-02,2017-01-02,2017-01-02,a2,t21,p2,u4
+line83,Timesheet expense 83,-69,2017-01-06,2017-01-06,2017-01-06,a2,t22,p2,u2
+line84,Timesheet expense 84,-75,2017-01-02,2017-01-02,2017-01-02,a1,t14,p1,u2
+line85,Timesheet expense 85,-50,2017-01-07,2017-01-07,2017-01-07,a1,t11,p1,u3
+line86,Timesheet expense 86,-107,2017-01-13,2017-01-13,2017-01-13,a3,t34,p3,u1
+line87,Timesheet expense 87,-123,2017-01-09,2017-01-09,2017-01-09,a1,t12,p1,u1
+line88,Timesheet expense 88,-110,2017-01-09,2017-01-09,2017-01-09,a1,t12,p1,u4
+line89,Timesheet expense 89,-107,2017-01-05,2017-01-05,2017-01-05,a1,t13,p1,u2
+line90,Timesheet expense 90,-124,2017-01-02,2017-01-02,2017-01-02,a1,t14,p1,u2
+line91,Timesheet expense 91,-88,2017-01-06,2017-01-06,2017-01-06,a1,t11,p1,u3
+line92,Timesheet expense 92,-215,2017-01-05,2017-01-05,2017-01-05,a1,t11,p1,u1
+line93,Timesheet expense 93,-123,2017-01-04,2017-01-04,2017-01-04,a1,t12,p1,u3
+line94,Timesheet expense 94,-200,2017-01-06,2017-01-06,2017-01-06,a1,t13,p1,u4
+line95,Timesheet expense 95,-165,2017-01-02,2017-01-02,2017-01-02,a1,t11,p1,u3
+line96,Timesheet expense 96,-82,2017-01-02,2017-01-02,2017-01-02,a1,t13,p1,u2
+line97,Timesheet expense 97,-156,2017-01-02,2017-01-02,2017-01-02,a1,t11,p1,u3
+line98,Timesheet expense 98,-68,2017-01-04,2017-01-04,2017-01-04,a2,t21,p2,u2
+line99,Timesheet expense 99,-112,2017-01-11,2017-01-11,2017-01-11,a1,t11,p1,u3
+line100,Timesheet expense 100,-92,2017-01-02,2017-01-02,2017-01-02,a2,t21,p2,u1
+line101,Timesheet expense 101,-89,2017-01-06,2017-01-06,2017-01-06,a1,t11,p1,u4
+line102,Timesheet expense 102,-191,2017-01-04,2017-01-04,2017-01-04,a1,t11,p1,u2
+line103,Timesheet expense 103,-90,2017-01-09,2017-01-09,2017-01-09,a1,t13,p1,u1
+line104,Timesheet expense 104,-123,2017-01-03,2017-01-03,2017-01-03,a2,t23,p2,u3
+line105,Timesheet expense 105,-66,2017-01-04,2017-01-04,2017-01-04,a1,t11,p1,u4
+line106,Timesheet expense 106,-114,2017-01-03,2017-01-03,2017-01-03,a1,t11,p1,u2
+line107,Timesheet expense 107,-134,2017-01-02,2017-01-02,2017-01-02,a1,t11,p1,u1
+line108,Timesheet expense 108,-86,2017-01-04,2017-01-04,2017-01-04,a1,t11,p1,u2
+line109,Timesheet expense 109,-60,2017-01-03,2017-01-03,2017-01-03,a1,t11,p1,u3
+line110,Timesheet expense 110,-85,2017-01-06,2017-01-06,2017-01-06,a1,t12,p1,u2
+line111,Timesheet expense 111,-115,2017-01-05,2017-01-05,2017-01-05,a1,t12,p1,u4
+line112,Timesheet expense 112,-157,2017-01-08,2017-01-08,2017-01-08,a1,t11,p1,u1
+line113,Timesheet expense 113,-141,2017-01-03,2017-01-03,2017-01-03,a2,t21,p2,u3
+line114,Timesheet expense 114,-43,2017-01-12,2017-01-12,2017-01-12,a1,t12,p1,u4
+line115,Timesheet expense 115,-103,2017-01-06,2017-01-06,2017-01-06,a2,t24,p2,u4
+line116,Timesheet expense 116,-15,2017-01-02,2017-01-02,2017-01-02,a2,t21,p2,u1
+line117,Timesheet expense 117,-26,2017-01-06,2017-01-06,2017-01-06,a2,t21,p2,u3
+line118,Timesheet expense 118,-78,2017-01-08,2017-01-08,2017-01-08,a1,t12,p1,u1
+line119,Timesheet expense 119,-30,2017-01-03,2017-01-03,2017-01-03,a2,t22,p2,u1
+line120,Timesheet expense 120,-43,2017-01-06,2017-01-06,2017-01-06,a2,t21,p2,u2
+line121,Timesheet expense 121,-42,2017-01-04,2017-01-04,2017-01-04,a3,t31,p3,u3
+line122,Timesheet expense 122,-91,2017-01-04,2017-01-04,2017-01-04,a1,t11,p1,u1
+line123,Timesheet expense 123,-81,2017-01-04,2017-01-04,2017-01-04,a1,t11,p1,u2
+line124,Timesheet expense 124,-66,2017-01-07,2017-01-07,2017-01-07,a2,t22,p2,u3
+line125,Timesheet expense 125,-90,2017-01-08,2017-01-08,2017-01-08,a1,t13,p1,u2
+line126,Timesheet expense 126,-54,2017-01-05,2017-01-05,2017-01-05,a1,t12,p1,u2
+line127,Timesheet expense 127,-15,2017-01-09,2017-01-09,2017-01-09,a2,t21,p2,u2
+line128,Timesheet expense 128,-21,2017-01-08,2017-01-08,2017-01-08,a1,t12,p1,u1
+line129,Timesheet expense 129,-206,2017-01-02,2017-01-02,2017-01-02,a1,t11,p1,u3
+line130,Timesheet expense 130,-35,2017-01-06,2017-01-06,2017-01-06,a1,t12,p1,u1
+line131,Timesheet expense 131,-88,2017-01-06,2017-01-06,2017-01-06,a2,t23,p2,u1
+line132,Timesheet expense 132,-190,2017-01-04,2017-01-04,2017-01-04,a2,t22,p2,u1
+line133,Timesheet expense 133,-77,2017-01-12,2017-01-12,2017-01-12,a1,t11,p1,u1
+line134,Timesheet expense 134,-92,2017-01-09,2017-01-09,2017-01-09,a2,t22,p2,u2
+line135,Timesheet expense 135,-127,2017-01-05,2017-01-05,2017-01-05,a1,t12,p1,u2
+line136,Timesheet expense 136,-54,2017-01-05,2017-01-05,2017-01-05,a1,t11,p1,u2
+line137,Timesheet expense 137,-196,2017-01-08,2017-01-08,2017-01-08,a2,t21,p2,u1
+line138,Timesheet expense 138,-132,2017-01-02,2017-01-02,2017-01-02,a1,t12,p1,u4
+line139,Timesheet expense 139,-10,2017-01-02,2017-01-02,2017-01-02,a2,t22,p2,u4
+line140,Timesheet expense 140,-109,2017-01-04,2017-01-04,2017-01-04,a1,t12,p1,u4
+line141,Timesheet expense 141,-86,2017-01-05,2017-01-05,2017-01-05,a1,t11,p1,u2
+line142,Timesheet expense 142,-71,2017-01-03,2017-01-03,2017-01-03,a1,t11,p1,u1
+line143,Timesheet expense 143,-67,2017-01-06,2017-01-06,2017-01-06,a2,t21,p2,u3
+line144,Timesheet expense 144,-151,2017-01-06,2017-01-06,2017-01-06,a1,t13,p1,u1
+line145,Timesheet expense 145,-102,2017-01-09,2017-01-09,2017-01-09,a1,t14,p1,u3
+line146,Timesheet expense 146,-124,2017-01-02,2017-01-02,2017-01-02,a1,t12,p1,u1
+line147,Timesheet expense 147,-134,2017-01-02,2017-01-02,2017-01-02,a1,t12,p1,u1
+line148,Timesheet expense 148,-129,2017-01-03,2017-01-03,2017-01-03,a1,t11,p1,u3
+line149,Timesheet expense 149,-142,2017-01-09,2017-01-09,2017-01-09,a1,t13,p1,u1
+line150,Timesheet expense 150,-175,2017-01-03,2017-01-03,2017-01-03,a1,t15,p1,u3
+line151,Timesheet expense 151,-85,2017-01-11,2017-01-11,2017-01-11,a1,t12,p1,u2
+line152,Timesheet expense 152,-45,2017-01-05,2017-01-05,2017-01-05,a2,t22,p2,u2
+line153,Timesheet expense 153,-68,2017-01-03,2017-01-03,2017-01-03,a1,t12,p1,u2
+line154,Timesheet expense 154,-62,2017-01-06,2017-01-06,2017-01-06,a1,t11,p1,u4
+line155,Timesheet expense 155,-62,2017-01-03,2017-01-03,2017-01-03,a2,t21,p2,u2
+line156,Timesheet expense 156,-107,2017-01-11,2017-01-11,2017-01-11,a1,t15,p1,u4
+line157,Timesheet expense 157,-90,2017-01-11,2017-01-11,2017-01-11,a1,t11,p1,u2
+line158,Timesheet expense 158,-131,2017-01-02,2017-01-02,2017-01-02,a1,t11,p1,u3
+line159,Timesheet expense 159,-141,2017-01-03,2017-01-03,2017-01-03,a1,t12,p1,u4
+line160,Timesheet expense 160,-67,2017-01-04,2017-01-04,2017-01-04,a1,t11,p1,u2
+line161,Timesheet expense 161,-115,2017-01-04,2017-01-04,2017-01-04,a2,t21,p2,u3
+line162,Timesheet expense 162,-164,2017-01-07,2017-01-07,2017-01-07,a4,t41,p4,u3
+line163,Timesheet expense 163,-57,2017-01-07,2017-01-07,2017-01-07,a1,t11,p1,u4
+line164,Timesheet expense 164,-179,2017-01-02,2017-01-02,2017-01-02,a3,t33,p3,u2
+line165,Timesheet expense 165,-137,2017-01-02,2017-01-02,2017-01-02,a2,t21,p2,u3
+line166,Timesheet expense 166,-41,2017-01-09,2017-01-09,2017-01-09,a2,t21,p2,u4
+line167,Timesheet expense 167,-211,2017-01-02,2017-01-02,2017-01-02,a1,t11,p1,u4
+line168,Timesheet expense 168,-181,2017-01-03,2017-01-03,2017-01-03,a1,t15,p1,u2
+line169,Timesheet expense 169,-12,2017-01-06,2017-01-06,2017-01-06,a2,t22,p2,u2
+line170,Timesheet expense 170,-44,2017-01-07,2017-01-07,2017-01-07,a1,t11,p1,u3
+line171,Timesheet expense 171,-44,2017-01-07,2017-01-07,2017-01-07,a3,t32,p3,u1
+line172,Timesheet expense 172,-102,2017-01-04,2017-01-04,2017-01-04,a1,t13,p1,u3
+line173,Timesheet expense 173,-50,2017-01-03,2017-01-03,2017-01-03,a1,t14,p1,u3
+line174,Timesheet expense 174,-146,2017-01-06,2017-01-06,2017-01-06,a1,t11,p1,u2
+line175,Timesheet expense 175,-80,2017-01-04,2017-01-04,2017-01-04,a1,t11,p1,u4
+line176,Timesheet expense 176,-74,2017-01-02,2017-01-02,2017-01-02,a1,t11,p1,u1
+line177,Timesheet expense 177,-208,2017-01-02,2017-01-02,2017-01-02,a2,t21,p2,u3
+line178,Timesheet expense 178,-140,2017-01-02,2017-01-02,2017-01-02,a1,t12,p1,u4
+line179,Timesheet expense 179,-98,2017-01-02,2017-01-02,2017-01-02,a1,t11,p1,u4
+line180,Timesheet expense 180,-16,2017-01-08,2017-01-08,2017-01-08,a1,t13,p1,u2
+line181,Timesheet expense 181,-171,2017-01-04,2017-01-04,2017-01-04,a2,t21,p2,u1
+line182,Timesheet expense 182,-113,2017-01-04,2017-01-04,2017-01-04,a1,t11,p1,u2
+line183,Timesheet expense 183,-55,2017-01-04,2017-01-04,2017-01-04,a2,t21,p2,u2
+line184,Timesheet expense 184,-143,2017-01-04,2017-01-04,2017-01-04,a1,t12,p1,u2
+line185,Timesheet expense 185,-71,2017-01-02,2017-01-02,2017-01-02,a1,t11,p1,u3
+line186,Timesheet expense 186,-106,2017-01-03,2017-01-03,2017-01-03,a2,t21,p2,u1
+line187,Timesheet expense 187,-10,2017-01-10,2017-01-10,2017-01-10,a1,t11,p1,u2
+line188,Timesheet expense 188,-97,2017-01-08,2017-01-08,2017-01-08,a1,t13,p1,u4
+line189,Timesheet expense 189,-61,2017-01-07,2017-01-07,2017-01-07,a1,t13,p1,u1
+line190,Timesheet expense 190,-141,2017-01-02,2017-01-02,2017-01-02,a2,t21,p2,u3
+line191,Timesheet expense 191,-111,2017-01-05,2017-01-05,2017-01-05,a1,t12,p1,u2
+line192,Timesheet expense 192,-132,2017-01-07,2017-01-07,2017-01-07,a1,t12,p1,u1
+line193,Timesheet expense 193,-40,2017-01-05,2017-01-05,2017-01-05,a1,t13,p1,u4
+line194,Timesheet expense 194,-101,2017-01-02,2017-01-02,2017-01-02,a1,t11,p1,u4
+line195,Timesheet expense 195,-57,2017-01-09,2017-01-09,2017-01-09,a1,t12,p1,u4
+line196,Timesheet expense 196,-18,2017-01-09,2017-01-09,2017-01-09,a1,t11,p1,u3
+line197,Timesheet expense 197,-84,2017-01-04,2017-01-04,2017-01-04,a1,t15,p1,u4
+line198,Timesheet expense 198,-108,2017-01-03,2017-01-03,2017-01-03,a3,t32,p3,u2
+line199,Timesheet expense 199,-147,2017-01-02,2017-01-02,2017-01-02,a1,t11,p1,u1
+line200,Timesheet expense 200,-128,2017-04-11,2017-04-11,2017-04-11,a4,t43,p4,u1
+line_periodic_expense_ae1_0,Periodic expense 0: -2900,-2900,2017-01-01,2016-12-02,2017-01-01,ae1,,,
+line_periodic_expense_ae1_1,Periodic expense 1: -2900,-2900,2017-01-31,2017-01-01,2017-01-31,ae1,,,
+line_periodic_expense_ae1_2,Periodic expense 2: -2900,-2900,2017-03-02,2017-01-31,2017-03-02,ae1,,,
+line_periodic_expense_ae2_0,Periodic expense 0: -3800,-3800,2017-01-08,2016-12-09,2017-01-08,ae2,,,
+line_periodic_expense_ae2_1,Periodic expense 1: -3800,-3800,2017-02-07,2017-01-08,2017-02-07,ae2,,,
+line_periodic_expense_ae2_2,Periodic expense 2: -3800,-3800,2017-03-09,2017-02-07,2017-03-09,ae2,,,
+line_periodic_expense_ae3_0,Periodic expense 0: -6800,-6800,2017-01-08,2016-12-09,2017-01-08,ae3,,,
+line_periodic_expense_ae3_1,Periodic expense 1: -6800,-6800,2017-02-07,2017-01-08,2017-02-07,ae3,,,
+line_periodic_expense_ae3_2,Periodic expense 2: -6800,-6800,2017-03-09,2017-02-07,2017-03-09,ae3,,,
+line_periodic_expense_ae4_0,Periodic expense 0: -300,-300,2017-01-06,2016-12-07,2017-01-06,ae4,,,
+line_periodic_expense_ae4_1,Periodic expense 1: -300,-300,2017-02-05,2017-01-06,2017-02-05,ae4,,,
+line_periodic_expense_ae4_2,Periodic expense 2: -300,-300,2017-03-07,2017-02-05,2017-03-07,ae4,,,
+line_income_1,income 1,607,2017-01-06,2016-12-16,2017-01-06,a1,,p1,
+line_income_2,income 2,4602,2017-01-11,2016-12-20,2017-01-11,a3,,p3,
+line_income_3,income 3,4128,2017-01-16,2016-12-26,2017-01-16,a4,,p4,
+line_income_4,income 4,3810,2017-01-21,2017-01-04,2017-01-21,a4,,p4,
+line_income_5,income 5,5184,2017-01-26,2017-01-11,2017-01-26,a1,,p1,
+line_income_6,income 6,5856,2017-01-31,2017-01-06,2017-01-31,a1,,p1,
+line_income_7,income 7,3993,2017-02-05,2017-01-22,2017-02-05,a1,,p1,
+line_income_8,income 8,3726,2017-02-10,2017-01-25,2017-02-10,a4,,p4,
+line_income_9,income 9,3794,2017-02-15,2017-02-07,2017-02-15,a3,,p3,
+line_income_10,income 10,3344,2017-02-20,2017-02-05,2017-02-20,a4,,p4,
+line_income_11,income 11,792,2017-02-25,2017-02-11,2017-02-25,a2,,p2,
+line_income_12,income 12,2042,2017-03-02,2017-02-17,2017-03-02,a1,,p1,
+line_income_13,income 13,4508,2017-03-07,2017-02-25,2017-03-07,a2,,p2,
+line_income_14,income 14,1755,2017-03-12,2017-02-25,2017-03-12,a2,,p2,
+line_income_15,income 15,653,2017-03-17,2017-02-25,2017-03-17,a1,,p1,
+line_income_16,income 16,3382,2017-03-22,2017-03-08,2017-03-22,a1,,p1,
+line_income_17,income 17,4557,2017-03-27,2017-03-22,2017-03-27,a2,,p2,
+line_income_18,income 18,4553,2017-04-01,2017-03-16,2017-04-01,a2,,p2,
+line_income_19,income 19,3828,2017-04-06,2017-03-31,2017-04-06,a3,,p3,
+line_income_20,income 20,2779,2017-04-11,2017-03-25,2017-04-11,a3,,p3,

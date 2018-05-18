@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2018 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+<odoo>
+    <record model="ir.ui.view" id="analytic_quant_search_view">
+        <field name="name">account.analytic.quant.search</field>
+        <field name="model">account.analytic.quant</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="line_id"
+                       string="Analyze Expense"
+                       filter_domain="['|', '&amp;', ('line_id.is_expense', '=', True), ('line_id', 'ilike', self), ('quant_expense_ids.line_id', 'ilike', self)]"
+                       />
+                <field name="user_id"
+                       string="Analyze User"
+                       filter_domain="['|', ('user_id', 'ilike', self), ('quant_expense_ids.user_id', 'ilike', self)]"
+                       />
+                <field name="project_id" string="Project"/>
+                <field name="income_project_id" string="Income Project"/>
+
+                <filter string="Income" domain="[('type', '=', 'income')]"/>
+                <filter string="Covered Expenses" domain="[('type', '=', 'expense')]"/>
+                <filter string="Uncovered Expenses" domain="[('type', '=', 'expense_uncovered')]"/>
+                <filter string="Not linked Expenses" domain="[('type', '=', 'expense_not_linked')]"/>
+                <group>
+                    <filter string="Quant Type" domain="[]" context="{'group_by': 'type'}"/>
+                    <filter string="Profitability" domain="[]" context="{'group_by': 'profitability'}"/>
+                    <filter string="Income" domain="[]" context="{'group_by': 'income_id'}"/>
+                    <filter string="Income Project" domain="[]" context="{'group_by': 'income_project_id'}"/>
+                    <filter string="Project" domain="[]" context="{'group_by': 'project_id'}"/>
+                    <filter string="Task" domain="[]" context="{'group_by': 'task_id'}"/>
+
+                    <filter string="Year" domain="[]" context="{'group_by': 'date:year'}"/>
+                    <filter string="Month" domain="[]" context="{'group_by': 'date:month'}"/>
+                    <filter string="Week" domain="[]" context="{'group_by': 'date:week'}"/>
+                    <filter string="Day" domain="[]" context="{'group_by': 'date:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="analytic_quant_tree_view">
+        <field name="name">account.analytic.quant.tree</field>
+        <field name="model">account.analytic.quant</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="type"/>
+                <field name="amount"/>
+                <field name="project_id"/>
+                <field name="task_id"/>
+                <field name="income_project_id"/>
+                <field name="income_id"/>
+            </tree>
+        </field>
+    </record>
+    <record id="analytic_quant_graph_view" model="ir.ui.view">
+        <field name="name">account.analytic.quant.graph</field>
+        <field name="model">account.analytic.quant</field>
+        <field name="arch" type="xml">
+            <graph string="Analytic Quants">
+                <field name="project_id" type="row"/>
+                <field name="abs_amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="analytic_quant_form_view">
+        <field name="name">account.analytic.quant.form</field>
+        <field name="model">account.analytic.quant</field>
+        <field name="arch" type="xml">
+            <form string="Analytic Quant">
+                <group>
+                    <group>
+                        <field name="type"/>
+                        <field name="amount"/>
+                        <field name="currency_id" groups="base.group_multi_currency"/>
+                        <field name="line_id"/>
+                        <field name="project_id"/>
+                        <field name="task_id"/>
+                    </group>
+                    <group string="Coverage">
+                        <field name="income_id"/>
+                        <field name="income_project_id"/>
+                    </group>
+                    <group>
+                        <field name="generation"/>
+                    </group>
+                    <group name="Quant links">
+                        <field name="quant_expense_ids" attrs="{'invisible': [('type', '!=', 'income')]}"/>
+                        <field name="quant_income_id" attrs="{'invisible': [('type', '=', 'income')]}"/>
+                    </group>
+                </group>
+
+            </form>
+        </field>
+    </record>
+
+    <record id="analytic_quant_action" model="ir.actions.act_window">
+        <field name="name">Analytic Quants</field>
+        <field name="res_model">account.analytic.quant</field>
+        <field name="view_mode">tree,form,graph,pivot</field>
+        <field name="view_type">form</field>
+    </record>
+
+    <menuitem
+        name="Analytic Quants"
+        parent="account.menu_finance_entries"
+        action="analytic_quant_action"
+        id="analytic_quant_menu"
+        sequence="50"
+        />
+
+</odoo>

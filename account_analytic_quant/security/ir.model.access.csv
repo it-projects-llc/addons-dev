@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_account_analytic_line_link_edit,access_account_analytic_line_link,model_account_analytic_line_link,account.group_account_invoice,1,1,1,1
+access_account_analytic_line_link,access_account_analytic_line_link,model_account_analytic_line_link,,1,0,0,0
+access_account_analytic_quant,access_account_analytic_quant,model_account_analytic_quant,,1,0,0,0

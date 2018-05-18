@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2018 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+<odoo>
+    <record id="view_account_analytic_line_form" model="ir.ui.view">
+        <field name="name">account.analytic.line.form</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date']" position="after">
+                <field name="date_start"/>
+                <field name="date_end"/>
+            </xpath>
+            <xpath expr="//sheet">
+                <notebook>
+                    <page string="Linked Records">
+                        <field name="is_expense" invisible="1"/>
+                        <field name="line_ids" domain="[('is_expense', '=', not is_expense)]">
+                            <tree>
+                                <field name="date"/>
+                                <field name="name"/>
+                                <field name="account_id"/>
+                                <field name="task_id"/>
+                                <field name="user_id"/>
+                                <field name="unit_amount"/>
+                                <field name="amount"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Weight of the Links">
+                        <field name="link_income_ids" attrs="{'invisible': [('is_expense', '=', False)]}">
+                            <tree editable="bottom">
+                                <field name="weight"/>
+                                <field name="income_id"/>
+                            </tree>
+                        </field>
+                        <field name="link_expense_ids" attrs="{'invisible': [('is_expense', '=', True)]}">
+                            <tree editable="bottom">
+                                <field name="weight"/>
+                                <field name="expense_id"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+</odoo>

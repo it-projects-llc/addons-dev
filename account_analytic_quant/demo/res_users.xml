@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2018 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+<odoo>
+
+    <!-- grant Adviser access to Administrator -->
+    <record id="base.user_root" model="res.users">
+        <field name="groups_id" eval="[(4, ref('account.group_account_manager')),(4, ref('account.group_account_user')),(4, ref('analytic.group_analytic_accounting'))]"/>
+    </record>
+
+</odoo>
