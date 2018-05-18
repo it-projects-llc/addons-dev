@@ -20,6 +20,7 @@
     "depends": [
         "pos_pricelist",
         "kingrun_cusomization",
+        "pos_orders_history_return",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
