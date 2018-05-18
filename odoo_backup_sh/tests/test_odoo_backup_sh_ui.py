@@ -2,6 +2,7 @@
 # Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
+from odoo.api import Environment
 import odoo.tests
 try:
     from unittest.mock import patch
@@ -33,6 +34,15 @@ class TestUi(odoo.tests.HttpCase):
         self.patcher2.start()
 
     def test_01_odoo_backup_sh_tour(self):
+        # needed because tests are run before the module is marked as
+        # installed. In js web will only load qweb coming from modules
+        # that are returned by the backend in module_boot. Without
+        # this you end up with js, css but no qweb.
+        cr = self.registry.cursor()
+        assert cr == self.registry.test_cr
+        env = Environment(cr, self.uid, {})
+        env['ir.module.module'].search([('name', '=', 'odoo_backup_sh')], limit=1).state = 'installed'
+        cr.release()
         self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('odoo_backup_sh_tour')",
                         "odoo.__DEBUG__.services['web_tour.tour'].tours.odoo_backup_sh_tour.ready", login="admin")
 
