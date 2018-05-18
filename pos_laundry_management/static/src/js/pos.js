@@ -65,33 +65,39 @@ odoo.define('pos_laundry_management.pos', function (require) {
     screens.NumpadWidget.include({
         clickAppendNewChar: function(event) {
             var orderline = this.pos.get_order().selected_orderline;
-            var newChar = event.currentTarget.innerText || event.currentTarget.textContent
-            if (0 === +this.state.get('buffer') && +newChar >= orderline.quantity) {
-                this.state.set({
-                    buffer: orderline.quantity
-                });
-            } else {
-                var res = this._super.apply(this, arguments);
+            if (this.state.get('mode') === "quantity" && orderline) {
+                var newChar = event.currentTarget.innerText || event.currentTarget.textContent
+                var res = undefined;
+                if (0 === +this.state.get('buffer') && +newChar <= orderline.quantity) {
+                    this.state.set({
+                        buffer: orderline.quantity
+                    });
+                } else {
+                    res = this._super.apply(this, arguments);
+                }
+                if (orderline && orderline.has_product_lot) {
+                    this.pos.gui.show_popup('packlotline', {
+                        'title': _t('Lot/Serial Number(s) Required'),
+                        'pack_lot_lines': orderline.compute_lot_lines(),
+                        'order': this.pos.get_order()
+                    });
+                }
+                return res;
             }
-            if (orderline && orderline.has_product_lot) {
-                this.pos.gui.show_popup('packlotline', {
-                    'title': _t('Lot/Serial Number(s) Required'),
-                    'pack_lot_lines': orderline.compute_lot_lines(),
-                    'order': this.pos.get_order()
-                });
-            }
-            return res;
+            return this._super.apply(this, arguments);
         },
 
         clickDeleteLastChar: function() {
             var orderline = this.pos.get_order().selected_orderline;
-            if (orderline && orderline.has_product_lot && this.state.get('buffer') !== '') {
-                this.pos.gui.show_popup('packlotline', {
-                    'title': _t('Lot/Serial Number(s) Required'),
-                    'pack_lot_lines': orderline.compute_lot_lines(),
-                    'order': this.pos.get_order()
-                });
-                return undefined;
+            if (this.state.get('mode') === "quantity" && orderline) {
+                if (orderline && orderline.has_product_lot && this.state.get('buffer') !== '') {
+                    this.pos.gui.show_popup('packlotline', {
+                        'title': _t('Lot/Serial Number(s) Required'),
+                        'pack_lot_lines': orderline.compute_lot_lines(),
+                        'order': this.pos.get_order()
+                    });
+                    return undefined;
+                }
             }
             return this._super.apply(this, arguments);
         },
