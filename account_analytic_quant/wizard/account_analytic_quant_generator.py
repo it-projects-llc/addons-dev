@@ -31,7 +31,7 @@ class Generator(models.TransientModel):
         default=lambda self: self.env.user.company_id.currency_id.id,
     )
     date = fields.Date(
-       'Starting Date',
+        'Starting Date',
     )
     name = fields.Char(
         'Name',
@@ -205,7 +205,7 @@ class Generator(models.TransientModel):
 
                     available_income[income.id] *= intersection_days / income_days
 
-            total_income = sum([amount for id, amount
+            total_income = sum([a for id, a
                                 in available_income.items()])
 
             if float_is_zero(total_income, precision_rounding=self.currency_id.rounding):
@@ -227,7 +227,6 @@ class Generator(models.TransientModel):
                     'line_id': expense.id,
                     'generation': generation,
                 })
-
 
         # STAGE: distribute quants to income with closest date
         for expense in search_expense_lines([]):

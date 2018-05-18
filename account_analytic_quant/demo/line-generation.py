@@ -23,7 +23,6 @@ def random_amount(alpha):
     return -random_normal(10, 300, 100, 50)
 
 
-
 def rand_sq():
     return random.random() * random.random()
 
