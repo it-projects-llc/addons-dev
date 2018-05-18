@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright 2018 IT-Projects LLC <https://it-projects.info/> - All Rights Reserved.
-# Unauthorized copying of this file, via any medium, is strictly prohibited.
-# Proprietary and confidential.
-# Written by Stanislav Krotov <https://www.it-projects.info/team/ufaks>, April 2018
+# Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 import odoo.tests
 try:
