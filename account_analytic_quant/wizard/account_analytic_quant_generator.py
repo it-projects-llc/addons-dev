@@ -42,14 +42,14 @@ class Generator(models.TransientModel):
     def apply(self):
         self.ensure_one()
 
-        Quant = self.env['account.analytic.quant']
+        Quant = self.env['account.analytic.quant'].sudo()
         generation = uuid.uuid4().hex
         generation_name = '%s #%s' % (self.name or 'Generation', generation[:5])
         _logger.info('Start quant generation: %s', generation_name)
 
         # New filter for Quants
         # remove previous default value
-        self.env['ir.filters'].search([
+        self.env['ir.filters'].sudo().search([
             ('model_id', '=', 'account.analytic.quant'),
             ('is_default', '=', True),
             ('user_id', '=', False),
