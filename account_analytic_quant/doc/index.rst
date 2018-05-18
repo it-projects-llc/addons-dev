@@ -29,4 +29,5 @@ Usage
 * Open menu ``[[ Accounting ]] >> Adviser >> Analytic Quants``
 * Reload web page to apply filter for latest Generation
 
-* RESULT: You can analyze Expenses / Incomes
+* RESULT: You can analyze Expenses / Incomes. Note: quants from previous
+  generations are not removed. You always need to use *Generation filter*

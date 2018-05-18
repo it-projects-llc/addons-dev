@@ -35,7 +35,7 @@ class Generator(models.TransientModel):
         'Starting Date',
     )
     name = fields.Char(
-        'Name',
+        'Generation Name',
         help='This name will be used for Generation filter'
     )
 
