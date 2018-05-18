@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 # Copyright 2018 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 import logging
@@ -135,7 +136,7 @@ class Generator(models.TransientModel):
             available_income = income_remaining(
                 expense.link_income_ids.mapped('income_id')
             )
-            total_income = sum([amount for id, amount
+            total_income = sum([a for id, a
                                 in available_income.items()])
 
             if float_is_zero(total_income, precision_rounding=self.currency_id.rounding):
@@ -267,7 +268,7 @@ class Generator(models.TransientModel):
 
             available_income = income_remaining(income_lines)
 
-            total_income = sum([amount for id, amount
+            total_income = sum([a for id, a
                                 in available_income.items()])
 
             if float_is_zero(total_income, precision_rounding=self.currency_id.rounding):
