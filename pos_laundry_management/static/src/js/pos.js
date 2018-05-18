@@ -8,7 +8,7 @@ odoo.define('pos_laundry_management.pos', function (require) {
     var screens = require('point_of_sale.screens');
     var core = require('web.core');
     var gui = require('point_of_sale.gui');
-    var utils = require('web.utils');
+    var devices = require('point_of_sale.devices');
     var Model = require('web.DataModel');
     var PopupWidget = require('point_of_sale.popups');
 
@@ -52,13 +52,22 @@ odoo.define('pos_laundry_management.pos', function (require) {
 
         },
         _load_history: function(partner_ids, limit, options){
-            return new Model('mrp.production').call('load_history', [partner_ids], {'limit': limit}, {'shadow': options.shadow});
+            return new Model('res.partner').call('load_history', [partner_ids], {'limit': limit}, {'shadow': options.shadow});
         },
         _on_load_history: function(hist){
             var self = this;
             _.each(_.keys(hist), function(pid){
                 self.db.get_partner_by_id(pid).history = hist[pid].history;
             });
+        },
+        lot_barcode_callback: function(res){
+            var self = this;
+            var popup = this.gui.current_popup
+            if (popup && popup.template === "PackLotLinePopupWidget") {
+                var el = popup.$el.find('.barcode-input:text');
+                el = el.filter(function() { return $(this).val() == ""; }).first();
+                el.val(res.code);
+            }
         },
     });
 
@@ -115,7 +124,8 @@ odoo.define('pos_laundry_management.pos', function (require) {
             var history_button = this.$el.find('#show_history');
             var thead_client = this.$el.find('#clientlist_head');
             var thead_history = this.$el.find('#historylist_head');
-            var new_client = this.$el.find('.button.new-customer')
+            var new_client = this.$el.find('.button.new-customer');
+            var set_client = this.$el.find('.button.next.highlight');
             client_button.addClass('highlight');
             thead_history.hide();
             this.view_mode = 'show_clients';
@@ -126,6 +136,7 @@ odoo.define('pos_laundry_management.pos', function (require) {
                     thead_history.hide();
                     thead_client.show();
                     new_client.show();
+                    set_client.show();
                     self.view_mode = 'show_clients';
                     self.render_list(self.pos.db.get_partners_sorted(1000));
                 }
@@ -137,6 +148,7 @@ odoo.define('pos_laundry_management.pos', function (require) {
                     thead_client.hide();
                     thead_history.show();
                     new_client.hide();
+                    set_client.hide();
                     self.view_mode = 'show_history';
                     self.render_history(self.new_client);
                 }
@@ -242,7 +254,7 @@ odoo.define('pos_laundry_management.pos', function (require) {
             var res = [];
             _.each(lots, function(lot){
                 el = $('input.tag-input[cid='+ lot.cid +']');
-                el.removeClass('tag-warn');
+                el.removeClass('warning');
                 if (!Number(el.val()) && el.val() !== '') {
                     res.push(lot.cid)
                 }
@@ -253,7 +265,7 @@ odoo.define('pos_laundry_management.pos', function (require) {
             var el = false;
             _.each(cids, function(c){
                 el = $('input.tag-input[cid='+ c +']');
-                el.addClass('tag-warn');
+                el.addClass('warning');
             });
         },
     });
@@ -280,7 +292,66 @@ odoo.define('pos_laundry_management.pos', function (require) {
 
     var ReceiptDataPopupWidget = PopupWidget.extend({
         template: 'ReceiptDataPopupWidget',
+        show: function(options){
+            var self = this;
+            this._super(options);
+            var line = options.history_line,
+                state = line.state;
+            if (state && state !== 'cancel') {
+                var state_changer = this.$el.find('.button.state_changer');
+                var state_cancel = this.$el.find('.button.state_cancel');
+                state_changer.off().on('click', function(){
+                    var new_state = (state === 'planned' || state === 'confirmed')
+                        ? 'cancel'
+                        : state === 'progress'
+                            ? 'done'
+                            : 'progress';
+                    self._change_state(line.id, new_state).then(function(data){
+                        self._on_changing_status(data[0], line);
+                    });
+                });
+                state_cancel.off().on('click', function(){
+                    self._change_state(line.id, 'cancel').then(function(data){
+                        self._on_changing_status(data[0], line);
+                    });
+                });
+            }
+        },
+        _change_state: function(mrp_id, state){
+            return new Model('mrp.production').call('set_state', [mrp_id], {'new_state': state});
+        },
+        _on_changing_status: function(data, line){
+            this.pos._on_load_history(data);
+            this.gui.current_screen.render_history();
+            this.close();
+            this.pos.gui.show_popup('receipt_data', {
+                'history_line':  _.find(this.pos.db.get_partner_by_id(line.partner_id[0]).history, function(l){
+                    return l.id === line.id;
+                }),
+            });
+        },
     });
     gui.define_popup({name:'receipt_data', widget: ReceiptDataPopupWidget});
 
+    devices.BarcodeReader.include({
+        init: function (attributes) {
+            this._super(attributes);
+            this.set_action_callback('lot', _.bind(this.pos.lot_barcode_callback, this.pos));
+        },
+
+        scan: function(code){
+            if (!code) {
+                return;
+            }
+            var parsed_result = this.barcode_parser.parse_barcode(code);
+            var popup = this.pos.gui.current_popup;
+            if (parsed_result.type === 'lot' && popup && popup.template === "PackLotLinePopupWidget") {
+                if (this.action_callback[parsed_result.type]) {
+                    return this.action_callback[parsed_result.type](parsed_result);
+                }
+                return this.action_callback_stack[0]['lot'](parsed_result)
+            }
+            return this._super(code);
+        },
+    });
 });

@@ -12,16 +12,6 @@ class ResPartner(models.Model):
 
     phonetic_name = fields.Char('Phonetic Name')
 
-
-class MRPProduction(models.Model):
-    _inherit = 'mrp.production'
-
-    # redefined field with the new attribute required=True
-    bom_id = fields.Many2one(
-        'mrp.bom', 'Bill of Material', required=True,
-        readonly=True, states={'confirmed': [('readonly', False)]},
-        help="Bill of Materials allow you to define the list of required raw materials to make a finished product.")
-
     @api.multi
     def load_history(self, limit=0):
         """
@@ -56,7 +46,6 @@ class MRPProduction(models.Model):
         data = dict((id, {'history': [],
                           'partner_id': id,
                           }) for id in self.ids)
-
         for partner_id in self.ids:
             records = self.env['mrp.production'].search_read(
                 domain=[('partner_id', '=', partner_id)],
@@ -70,6 +59,23 @@ class MRPProduction(models.Model):
                     whs.append(self.env["stock.warehouse"].browse(wh).lot_stock_id)
                 line['warehouse_ids'] = map(lambda w: w.complete_name, whs)
         return data
+
+
+class MRPProduction(models.Model):
+    _inherit = 'mrp.production'
+
+    # redefined field with the new attribute required=True
+    bom_id = fields.Many2one(
+        'mrp.bom', 'Bill of Material', required=True,
+        readonly=True, states={'confirmed': [('readonly', False)]},
+        help="Bill of Materials allow you to define the list of required raw materials to make a finished product.")
+
+    @api.one
+    def set_state(self, new_state):
+        self.write({
+            'state': new_state,
+        })
+        return self.env['res.partner'].browse(self.partner_id.id).load_history(None)
 
 
 class PosOrder(models.Model):
