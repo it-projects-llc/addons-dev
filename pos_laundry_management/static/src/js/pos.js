@@ -124,7 +124,8 @@ odoo.define('pos_laundry_management.pos', function (require) {
             var history_button = this.$el.find('#show_history');
             var thead_client = this.$el.find('#clientlist_head');
             var thead_history = this.$el.find('#historylist_head');
-            var new_client = this.$el.find('.button.new-customer')
+            var new_client = this.$el.find('.button.new-customer');
+            var set_client = this.$el.find('.button.next.highlight');
             client_button.addClass('highlight');
             thead_history.hide();
             this.view_mode = 'show_clients';
@@ -135,6 +136,7 @@ odoo.define('pos_laundry_management.pos', function (require) {
                     thead_history.hide();
                     thead_client.show();
                     new_client.show();
+                    set_client.show();
                     self.view_mode = 'show_clients';
                     self.render_list(self.pos.db.get_partners_sorted(1000));
                 }
@@ -146,6 +148,7 @@ odoo.define('pos_laundry_management.pos', function (require) {
                     thead_client.hide();
                     thead_history.show();
                     new_client.hide();
+                    set_client.hide();
                     self.view_mode = 'show_history';
                     self.render_history(self.new_client);
                 }
