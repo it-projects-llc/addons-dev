@@ -163,15 +163,8 @@
                                 </t>
                             </th>
                             <th>
-                                <t t-if="hl.state == 'planned'">
-                                    <p>Started</p>
-                                </t>
-                                <t t-if="hl.state == 'confirmed'">
-                                    <p>Confirmed</p>
-                                </t>
                                 <t t-if="hl.state == 'done'">
                                     <p>Done</p>
-                                    <!--<div class="button state_changer" style="background-color: #c8c8c8!important;">-->
                                     <div class="button state_changer" style="background-color: #ff0000b8!important;">
                                         Waiting Delivery
                                     </div>
@@ -187,7 +180,7 @@
                                         Cancel
                                     </div>
                                 </t>
-                                <t t-else=""><p>Cancel</p></t>
+                                <t t-else=""><p>Canceled</p></t>
                             </th>
                         </tr>
                     </table>
