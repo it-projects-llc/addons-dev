@@ -84,7 +84,13 @@
                     <t t-esc='line.receipt_barcode || "" '/>
                 </td>
                 <td><t t-esc='line.date || ""' /></td>
-                <td><t t-esc='line.state' /></td>
+                <td>
+                    <t t-if="line.state == 'planned'">Started</t>
+                    <t t-if="line.state == 'confirmed'">Confirmed</t>
+                    <t t-if="line.state == 'progress'">Waiting Delivery</t>
+                    <t t-if="line.state == 'cancel'">Canceled</t>
+                    <t t-if="line.state == 'done'">Done</t>
+                </td>
                 <td><t t-esc='line.finishing_date || ""' /></td>
             </tr>
         </t>
