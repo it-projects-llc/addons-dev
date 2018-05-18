@@ -5,7 +5,7 @@
     "name": """Income-Expense Analysis""",
     "summary": """Split incomes in quants and distribute them among expenses""",
     "category": "Accounting",
-    # "live_test_url": "",
+    "live_test_url": "http://apps.it-projects.info/shop/product/account_analytic_quant?version=10.0",
     "images": [],
     "version": "10.0.1.0.0",
     "application": False,
@@ -49,4 +49,15 @@
 
     "auto_install": False,
     "installable": True,
+
+    "demo_title": "Income-Expense Analysis",
+    "demo_addons": [
+    ],
+    "demo_addons_hidden": [
+    ],
+    "demo_url": "account_analytic_quant",
+    "demo_summary": "Split incomes in quants and distribute them among expenses",
+    "demo_images": [
+        "static/description/icon.png",
+    ]
 }

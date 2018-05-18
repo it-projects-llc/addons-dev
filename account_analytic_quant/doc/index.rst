@@ -10,8 +10,8 @@ Installation
 Usage
 =====
 
-+* `Activate Developer Mode <https://odoo-development.readthedocs.io/en/latest/odoo/usage/debug-mode.html>`__
-* If you don't have access level **Accounting & Finance:**	*Adviser*, set it in ``[[ Settings ]] >> Users >> Users``.
+* `Activate Developer Mode <https://odoo-development.readthedocs.io/en/latest/odoo/usage/debug-mode.html>`__
+* If you don't have access level **Accounting & Finance:**	*Adviser* and ``[x] Analytic Accounting``, set it in ``[[ Settings ]] >> Users >> Users``.
 * Open menu ``[[ Accounting ]] >> Adviser >> Analytic Entries``.
 * For existing records Specify values for following fields:
 
