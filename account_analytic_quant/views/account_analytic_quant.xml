@@ -21,9 +21,10 @@
                 <filter string="Income" domain="[('type', '=', 'income')]"/>
                 <filter string="Covered Expenses" domain="[('type', '=', 'expense')]"/>
                 <filter string="Uncovered Expenses" domain="[('type', '=', 'expense_uncovered')]"/>
+                <filter string="Not linked Expenses" domain="[('type', '=', 'expense_not_linked')]"/>
                 <group>
+                    <filter string="Quant Type" domain="[]" context="{'group_by': 'type'}"/>
                     <filter string="Profitability" domain="[]" context="{'group_by': 'profitability'}"/>
-                    <filter string="Income Type" domain="[]" context="{'group_by': 'type'}"/>
                     <filter string="Income" domain="[]" context="{'group_by': 'income_id'}"/>
                     <filter string="Income Project" domain="[]" context="{'group_by': 'income_project_id'}"/>
                     <filter string="Project" domain="[]" context="{'group_by': 'project_id'}"/>

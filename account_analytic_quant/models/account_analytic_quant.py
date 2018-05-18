@@ -11,6 +11,7 @@ class AnalyticQuant(models.Model):
         ('income', 'Income'),
         ('expense', 'Expense'),
         ('expense_uncovered', 'Uncovered Expense'),
+        ('expense_not_linked', 'Not linked Expense'),
     ], string='Quant Type', index=True, help="""
 * Uncovered Expense - is an expense that is not covereted by linked to it incomes
     """)

@@ -18,6 +18,7 @@ class AnalyticLink(models.Model):
 
     _sql_constraints = [
         ('weight_positive', 'check(weight > 0)', 'Weight must be positive!'),
+        ('unique_link', 'unique(income_id, expense_id)', 'Such link already exists!'),
     ]
 
     def name_get(self):

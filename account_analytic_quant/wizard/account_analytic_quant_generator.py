@@ -106,6 +106,12 @@ class Generator(models.TransientModel):
         def expense_remaining(expense_line):
             return _remaining(expense_line, 'line_id', -1)[expense_line.id]
 
+        def expense_uncovered(line_expense):
+            if line_expense.link_income_ids:
+                return 'expense_uncovered'
+            else:
+                return 'expense_not_linked'
+
         # STAGE: Create quant for incomes
         for line in search_lines([('is_expense', '=', False)]):
             # No need to split incomes
@@ -216,7 +222,7 @@ class Generator(models.TransientModel):
             for income_id, income_amount in available_income.items():
                 Quant.create({
                     'amount': -1 * portion * income_amount,
-                    'type': 'expense_uncovered',
+                    'type': expense_uncovered(expense),
                     'income_id': income_id,
                     'line_id': expense.id,
                     'generation': generation,
@@ -279,7 +285,7 @@ class Generator(models.TransientModel):
             for income_id, income_amount in available_income.items():
                 Quant.create({
                     'amount': -1 * portion * income_amount,
-                    'type': 'expense_uncovered',
+                    'type': expense_uncovered(expense),
                     'income_id': income_id,
                     'line_id': expense.id,
                     'generation': generation,

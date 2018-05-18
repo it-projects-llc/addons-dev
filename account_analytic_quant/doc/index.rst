@@ -10,7 +10,9 @@ Installation
 Usage
 =====
 
-* Open menu ``[[ Accounting ]] >> Adviser >> Analytic Entries``
++* `Activate Developer Mode <https://odoo-development.readthedocs.io/en/latest/odoo/usage/debug-mode.html>`__
+* If you don't have access level **Accounting & Finance:**	*Adviser*, set it in ``[[ Settings ]] >> Users >> Users``.
+* Open menu ``[[ Accounting ]] >> Adviser >> Analytic Entries``.
 * For existing records Specify values for following fields:
 
   * **Linked Records** -- related analytic records of opposite type. To set
