@@ -121,6 +121,11 @@ odoo.define('pos_laundry_management.pos', function (require) {
         renderElement: function(){
             var self = this;
             this._super();
+            var client_details_section = this.$el.find('section.subwindow.collapsed');
+            var notebook_html = QWeb.render('NotebookList',{widget: this});
+            var section = document.createElement('section');
+            section.innerHTML = notebook_html;
+            client_details_section.append(section);
             var client_button = this.$el.find('#show_clients');
             var history_button = this.$el.find('#show_history');
             var thead_client = this.$el.find('#clientlist_head');

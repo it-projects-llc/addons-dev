@@ -121,8 +121,8 @@
         </t>
     </t>
 
-    <t t-extend="ClientListScreenWidget">
-        <t t-jquery="table.client-list" t-operation="before">
+    <t t-name="NotebookList">
+        <section class="subwindow">
             <div class="notebook-list">
                 <span id="show_clients" class="notebook-button">
                     Customer List
@@ -131,7 +131,7 @@
                     Transaction History
                 </span>
             </div>
-        </t>
+        </section>
     </t>
 
     <t t-name="ReceiptDataPopupWidget">
