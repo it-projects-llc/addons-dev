@@ -11,6 +11,7 @@ odoo.define('pos_laundry_management.pos', function (require) {
     var devices = require('point_of_sale.devices');
     var Model = require('web.DataModel');
     var PopupWidget = require('point_of_sale.popups');
+    var OrderHistoryScreen = require('pos_orders_history.screens').OrdersHistoryScreenWidget;
 
     var QWeb = core.qweb;
     var _t = core._t;
@@ -354,4 +355,30 @@ odoo.define('pos_laundry_management.pos', function (require) {
             return this._super(code);
         },
     });
+
+    OrderHistoryScreen.include({
+        show: function () {
+            var self = this;
+            this._super();
+            this.$el.find('tr.order-line .actions .sup_delivery').off().on('click', function (e) {
+                var parent = $(this).parents('.order-line');
+                var id = parseInt(parent.data('id'));
+                self.line_select(e, parent, parseInt(parent.data('id')));
+                var sub_delivery_th = parent.next().find('th.sub-delivery');
+                var sub_deliveries = parent.next().find('.sub-delivery .state_changer');
+                sub_delivery_th.show();
+                sub_deliveries.parent('td').show();
+                sub_deliveries.on('click', function(e){
+                    self._change_order_delivery_states(id, parseInt($(this).parent('td').attr('pid')), 'done');
+                });
+            });
+        },
+        _change_order_delivery_states: function(order_id, product_id, state) {
+            return new Model('pos.order').call('change_order_delivery_states',
+                                               [order_id],
+                                               {'product_id': product_id,
+                                                'new_state': state,});
+        },
+    });
+
 });

@@ -200,4 +200,25 @@
         </div>
     </t>
 
+
+    <t t-extend="OrderHistory">
+        <t t-jquery=".actions.oe_hidden" t-operation="append">
+            <span class="button sup_delivery">Delivery</span>
+        </t>
+    </t>
+
+    <t t-extend="LineHistory">
+        <t t-jquery="tr" t-operation="append">
+            <td class="sub-delivery" style="display: none;" t-att-pid="line.product_id[0]">
+                <span class="button state_changer">Delivery1</span>
+            </td>
+        </t>
+    </t>
+
+    <t t-extend="LinesHeader">
+        <t t-jquery="tr" t-operation="append">
+            <th class="sub-delivery"  style="display: none;"></th>
+        </t>
+    </t>
+
 </templates>

@@ -70,12 +70,16 @@ class MRPProduction(models.Model):
         readonly=True, states={'confirmed': [('readonly', False)]},
         help="Bill of Materials allow you to define the list of required raw materials to make a finished product.")
 
-    @api.one
+    @api.multi
     def set_state(self, new_state):
-        self.write({
-            'state': new_state,
-        })
-        return self.env['res.partner'].browse(self.partner_id.id).load_history(None)
+        res = {}
+        for prod in self:
+            prod.write({
+                'state': new_state,
+            })
+            partner = prod.partner_id
+            res[partner.id] = partner.load_history(None)
+        return res
 
 
 class PosOrder(models.Model):
@@ -105,6 +109,12 @@ class PosOrder(models.Model):
                         if partner_id:
                             production._onchange_partner_id()
         return order_ids
+
+    @api.one
+    def change_order_delivery_states(self, product_id, new_state):
+        mrps = self.env['mrp.production'].search([('receipt_barcode', '=', self.pos_reference),
+                                                  ('product_id', '=', product_id)])
+        return mrps.set_state(new_state)
 
 
 class PosOrderLineLot(models.Model):
