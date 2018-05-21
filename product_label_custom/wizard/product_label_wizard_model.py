@@ -56,6 +56,12 @@ class ProductLabelWizard(models.TransientModel):
                     (0, 0, {'product_id': order_line.product_id.product_tmpl_id.id, 'quantity': order_line.product_qty, 'label_id': order_line.product_id.product_tmpl_id.default_label_id, 'purchase_id': order_line.order_id})
                     for order_line in self.env['purchase.order.line'].search([('order_id', 'in', order_ids)])
                 ]
+            elif model == 'stock.picking':
+                picking_ids = self._context.get('active_ids')
+                res = [
+                    (0, 0, {'product_id': picking_move.product_id.product_tmpl_id.id, 'quantity': picking_move.product_uom_qty, 'label_id': picking_move.product_id.product_tmpl_id.default_label_id})
+                    for picking_move in self.env['stock.move'].search([('picking_id', 'in', picking_ids)])
+                ]
         return res
 
     settings_ids = fields.One2many('product.label.report.settings', 'product_wizard_id',

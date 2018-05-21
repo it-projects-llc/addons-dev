@@ -42,6 +42,14 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
         view_type="form" view_mode="form"
         target="new"/>
 
+    <act_window id="product_labels_stock_picking_wizard_action"
+        name="Custom Product Labels"
+        src_model="stock.picking"
+        res_model="product.label.wizard"
+        key2="client_action_multi"
+        view_type="form" view_mode="form"
+        target="new"/>
+
     <act_window id="product_product_labels_purchase_wizard_action"
         name="Custom Product Labels"
         src_model="product.product"
