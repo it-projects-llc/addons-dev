@@ -380,6 +380,7 @@ odoo.define('pos_laundry_management.pos', function (require) {
                     var sub_delivery_th = parent.next().find('th.sub-delivery');
                     var sub_deliveries = parent.next().find('.sub-delivery .state_changer');
                     var sub_deliveries_td = sub_deliveries.parent('td');
+                    sub_deliveries.hide();
                     sub_delivery_th.show();
                     sub_deliveries_td.show();
                     var mrp_order = _.filter(self.pos.db.get_partner_by_id(cid).history, function(hl){
@@ -402,7 +403,7 @@ odoo.define('pos_laundry_management.pos', function (require) {
                     });
                     sub_dev_show_button.children().filter('.state_done').hide()
                     var seb_dev_done = sub_deliveries_td.filter(function(sd){
-                        var pid = parseInt($(this).parent('td').attr('pid'));
+                        var pid = parseInt($(this).attr('pid'));
                         var check = self.check_for_delivery1_displaying(mrp_order, pid);
                         return check && check === 'done';
                     });
