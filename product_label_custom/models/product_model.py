@@ -12,13 +12,10 @@ class ProductTemplate(models.Model):
     default_label_id = fields.Many2one('product.label', 'Default Label', help="Select label for the current product")
 
     @api.model
-    def get_render_qweb(self, label_id):
-        if not label_id:
-            template = self.default_label_id.qweb_template
-        else:
-            template = self.env['product.label'].browse(label_id).qweb_template
+    def get_render_qweb(self, label, purchase):
+        template = self.env['product.label'].browse(label.id).qweb_template
         dom = etree.fromstring(template)
-        html = QWeb().render(dom, {'product': self})
+        html = QWeb().render(dom, {'product': self, 'purchase': purchase or None})
         return html
 
 

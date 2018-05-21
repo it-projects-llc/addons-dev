@@ -17,6 +17,7 @@ class ProductLabelSettings(models.TransientModel):
     quantity = fields.Integer("Quantity", default=1)
     label_id = fields.Many2one('product.label', 'Label', help="Select label for the product",
                                default=_default_product_label)
+    purchase_id = fields.Many2one('purchase.order')
 
     @api.multi
     def get_paper_format_groups(self):
@@ -52,7 +53,7 @@ class ProductLabelWizard(models.TransientModel):
             elif model == 'purchase.order':
                 order_ids = self._context.get('active_ids')
                 res = [
-                    (0, 0, {'product_id': order_line.product_id.product_tmpl_id.id, 'quantity': order_line.product_qty, 'label_id': order_line.product_id.product_tmpl_id.default_label_id})
+                    (0, 0, {'product_id': order_line.product_id.product_tmpl_id.id, 'quantity': order_line.product_qty, 'label_id': order_line.product_id.product_tmpl_id.default_label_id, 'purchase_id': order_line.order_id})
                     for order_line in self.env['purchase.order.line'].search([('order_id', 'in', order_ids)])
                 ]
         return res

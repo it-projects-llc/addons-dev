@@ -11,8 +11,9 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
                         <t t-foreach="range(0, o.quantity)" t-as="i">
                             <t t-set="product" t-value="o.product_id"/>
                             <t t-set="label" t-value="o.label_id"/>
+                            <t t-set="purchase" t-value="o.purchase_id"/>
                             <t t-if="label">
-                                <t t-raw="product.get_render_qweb(label.id)"></t>
+                                <t t-raw="product.get_render_qweb(label, purchase)"></t>
                             </t>
                         </t>
                     </t>

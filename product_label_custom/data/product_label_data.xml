@@ -18,6 +18,13 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
                                     <strong t-field="product.name"/>
                                 </td>
                             </tr>
+                            <t t-if="purchase">
+                                <tr style="width: 3in;">
+                                    <td style="border: 2px solid black;width: 2.63in;" colspan="2" class="col-xs-8 danger">
+                                        <strong t-field="purchase.date_order"/>
+                                    </td>
+                                </tr>
+                            </t>
                         </thead>
                         <tbody>
                             <tr style="width: 1in;">
