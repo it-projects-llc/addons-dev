@@ -25,7 +25,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
     </record>
 
 
-    <act_window id="product_labels_wizard_action"
+    <act_window id="product_template_labels_wizard_action"
         name="Custom Product Labels"
         src_model="product.template"
         res_model="product.label.wizard"
@@ -36,6 +36,14 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
     <act_window id="product_labels_purchase_wizard_action"
         name="Custom Product Labels"
         src_model="purchase.order"
+        res_model="product.label.wizard"
+        key2="client_action_multi"
+        view_type="form" view_mode="form"
+        target="new"/>
+
+    <act_window id="product_product_labels_purchase_wizard_action"
+        name="Custom Product Labels"
+        src_model="product.product"
         res_model="product.label.wizard"
         key2="client_action_multi"
         view_type="form" view_mode="form"
