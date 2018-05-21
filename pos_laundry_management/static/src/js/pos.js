@@ -199,6 +199,7 @@ odoo.define('pos_laundry_management.pos', function (require) {
                 }));
                 self.render_history_list(history);
             });
+            return on_history_load;
         },
         render_history_list: function(history_lines) {
             var self = this;
@@ -312,13 +313,13 @@ odoo.define('pos_laundry_management.pos', function (require) {
                         : state === 'progress'
                             ? 'done'
                             : 'progress';
-                    self._change_state(line.id, new_state).then(function(data){
-                        self._on_changing_status(data[0], line);
+                    self._change_state(line.id, new_state).then(function(){
+                        self._on_changing_status(line);
                     });
                 });
                 state_cancel.off().on('click', function(){
-                    self._change_state(line.id, 'cancel').then(function(data){
-                        self._on_changing_status(data[0], line);
+                    self._change_state(line.id, 'cancel').then(function(){
+                        self._on_changing_status(line);
                     });
                 });
             }
@@ -326,14 +327,17 @@ odoo.define('pos_laundry_management.pos', function (require) {
         _change_state: function(mrp_id, state){
             return new Model('mrp.production').call('set_state', [mrp_id], {'new_state': state});
         },
-        _on_changing_status: function(data, line){
-            this.pos._on_load_history(data);
-            this.gui.current_screen.render_history();
-            this.close();
-            this.pos.gui.show_popup('receipt_data', {
-                'history_line':  _.find(this.pos.db.get_partner_by_id(line.partner_id[0]).history, function(l){
-                    return l.id === line.id;
-                }),
+        _on_changing_status: function(line){
+            var self = this;
+            // render_history includes history reloading, and also returns deferred object showing that response was processed
+            this.gui.current_screen.render_history(this.gui.current_screen.new_client).then(function(){
+                self.close();
+                var line_new = _.find(self.pos.db.get_partner_by_id(line.partner_id[0]).history, function(l){
+                        return l.id === line.id;
+                    });
+                self.pos.gui.show_popup('receipt_data', {
+                    'history_line':  line_new,
+                });
             });
         },
     });
@@ -367,23 +371,71 @@ odoo.define('pos_laundry_management.pos', function (require) {
             this._super();
             this.$el.find('tr.order-line .actions .sup_delivery').off().on('click', function (e) {
                 var parent = $(this).parents('.order-line');
-                var id = parseInt(parent.data('id'));
-                self.line_select(e, parent, parseInt(parent.data('id')));
-                var sub_delivery_th = parent.next().find('th.sub-delivery');
-                var sub_deliveries = parent.next().find('.sub-delivery .state_changer');
-                sub_delivery_th.show();
-                sub_deliveries.parent('td').show();
-                sub_deliveries.on('click', function(e){
-                    self._change_order_delivery_states(id, parseInt($(this).parent('td').attr('pid')), 'done');
+                var oid = parseInt(parent.data('id'));
+                var cid = parseInt($(this).attr('cid'));
+                var reloaded_history = self.pos.reload_history(cid);
+                var this_el = $(this);
+                reloaded_history.then(function(){
+                    self.line_select(e, parent, oid);
+                    var sub_delivery_th = parent.next().find('th.sub-delivery');
+                    var sub_deliveries = parent.next().find('.sub-delivery .state_changer');
+                    var sub_deliveries_td = sub_deliveries.parent('td');
+                    sub_delivery_th.show();
+                    sub_deliveries_td.show();
+                    var mrp_order = _.filter(self.pos.db.get_partner_by_id(cid).history, function(hl){
+                        return hl.order_id == oid;
+                    });
+                    // add on click action only for mrp products with status 'progress'
+                    var sub_dev_show_button = sub_deliveries_td.filter(function(sd){
+                        var pid = parseInt($(this).attr('pid'));
+                        var check = self.check_for_delivery1_displaying(mrp_order, pid);
+                        return check && check === 'progress';
+                    });
+                    sub_dev_show_button.children().filter('.button').show().off().on('click', function(e){
+                        var pid = parseInt($(this).parent('td').attr('pid'));
+                        self._change_product_delivery_states(oid, pid, 'done').then(function(data){
+                            if(data[0] && data[0].length) {
+                                self.$el.find('td.sub-delivery[pid=' + pid + '] span.button').hide()
+                                self.$el.find('td.sub-delivery[pid=' + pid + '] span.state_done').show()
+                            }
+                        });
+                    });
+                    sub_dev_show_button.children().filter('.state_done').hide()
+                    var seb_dev_done = sub_deliveries_td.filter(function(sd){
+                        var pid = parseInt($(this).parent('td').attr('pid'));
+                        var check = self.check_for_delivery1_displaying(mrp_order, pid);
+                        return check && check === 'done';
+                    });
+                    seb_dev_done.children().filter('.state_done').show();
+                    seb_dev_done.children().filter('.button').hide().off();
                 });
             });
         },
-        _change_order_delivery_states: function(order_id, product_id, state) {
-            return new Model('pos.order').call('change_order_delivery_states',
+        _change_product_delivery_states: function(order_id, product_id, state) {
+            return new Model('pos.order').call('change_product_delivery_states',
                                                [order_id],
                                                {'product_id': product_id,
                                                 'new_state': state,});
         },
+        check_for_delivery1_displaying: function(history_lines, product_id){
+            var prod_lines = _.filter(history_lines, function(hl){
+                return hl.product_id[0] == product_id;
+            });
+            if (!prod_lines.length){
+                return false;
+            }
+            var states = _.map(prod_lines, function(pl){
+                return pl.state;
+            });
+            if (_.intersection(states, ['cancel', 'planned', 'confirmed']).length){
+                return false;
+            }
+            if (_.intersection(states, ['progress']).length){
+                return 'progress';
+            } else {
+                return 'done';
+            }
+        }
     });
 
 });

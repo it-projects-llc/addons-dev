@@ -203,14 +203,19 @@
 
     <t t-extend="OrderHistory">
         <t t-jquery=".actions.oe_hidden" t-operation="append">
-            <span class="button sup_delivery">Delivery</span>
+            <span class="button sup_delivery"
+                  t-att-cid="order.partner_id[0]">Delivery</span>
         </t>
     </t>
 
     <t t-extend="LineHistory">
         <t t-jquery="tr" t-operation="append">
-            <td class="sub-delivery" style="display: none;" t-att-pid="line.product_id[0]">
-                <span class="button state_changer">Delivery1</span>
+            <td class="sub-delivery" style="display: none;"
+                t-att-pid="line.product_id[0]">
+                <span class="button state_changer"
+                      style="display: none;">Delivery1</span>
+                <span class="state_changer state_done"
+                      style="display: none;">Done</span>
             </td>
         </t>
     </t>

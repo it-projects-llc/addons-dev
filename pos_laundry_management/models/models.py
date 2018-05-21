@@ -30,6 +30,7 @@ class ResPartner(models.Model):
                     * complete_name
                  * state
                  * partner_id
+                 * order_id
         """
         fields = [
             'date',
@@ -58,6 +59,7 @@ class ResPartner(models.Model):
                 for wh in line['warehouse_ids']:
                     whs.append(self.env["stock.warehouse"].browse(wh).lot_stock_id)
                 line['warehouse_ids'] = map(lambda w: w.complete_name, whs)
+                line['order_id'] = self.env['pos.order'].search([('pos_reference', '=', line['receipt_barcode'])]).id
         return data
 
 
@@ -72,11 +74,16 @@ class MRPProduction(models.Model):
 
     @api.multi
     def set_state(self, new_state):
-        res = {}
         for prod in self:
             prod.write({
                 'state': new_state,
             })
+
+    @api.multi
+    def set_state_reload_history(self, new_state):
+        res = {}
+        self.set_state(new_state)
+        for prod in self:
             partner = prod.partner_id
             res[partner.id] = partner.load_history(None)
         return res
@@ -111,10 +118,11 @@ class PosOrder(models.Model):
         return order_ids
 
     @api.one
-    def change_order_delivery_states(self, product_id, new_state):
+    def change_product_delivery_states(self, product_id, new_state):
         mrps = self.env['mrp.production'].search([('receipt_barcode', '=', self.pos_reference),
                                                   ('product_id', '=', product_id)])
-        return mrps.set_state(new_state)
+        mrps.set_state(new_state)
+        return mrps.ids
 
 
 class PosOrderLineLot(models.Model):
