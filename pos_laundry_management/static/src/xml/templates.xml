@@ -121,8 +121,8 @@
         </t>
     </t>
 
-    <t t-extend="ClientListScreenWidget">
-        <t t-jquery="table.client-list" t-operation="before">
+    <t t-name="NotebookList">
+        <section class="subwindow">
             <div class="notebook-list">
                 <span id="show_clients" class="notebook-button">
                     Customer List
@@ -131,7 +131,7 @@
                     Transaction History
                 </span>
             </div>
-        </t>
+        </section>
     </t>
 
     <t t-name="ReceiptDataPopupWidget">
@@ -198,6 +198,32 @@
                 </div>
             </div>
         </div>
+    </t>
+
+
+    <t t-extend="OrderHistory">
+        <t t-jquery=".actions.oe_hidden" t-operation="append">
+            <span class="button sup_delivery"
+                  t-att-cid="order.partner_id[0]">Delivery</span>
+        </t>
+    </t>
+
+    <t t-extend="LineHistory">
+        <t t-jquery="tr" t-operation="append">
+            <td class="sub-delivery" style="display: none;"
+                t-att-pid="line.product_id[0]">
+                <span class="button state_changer"
+                      style="display: none;">Delivery1</span>
+                <span class="state_changer state_done"
+                      style="display: none;">Done</span>
+            </td>
+        </t>
+    </t>
+
+    <t t-extend="LinesHeader">
+        <t t-jquery="tr" t-operation="append">
+            <th class="sub-delivery"  style="display: none;"></th>
+        </t>
     </t>
 
 </templates>

@@ -62,3 +62,11 @@
     color:blue;
     text-decoration:underline;
 }
+
+.sub-delivery .button.state_changer {
+    border: 1px solid #cecece;
+    background-color: #e6e6e6;
+    padding: 5px;
+    margin-right: 5px;
+    color: #555555;
+}
