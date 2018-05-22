@@ -8,8 +8,8 @@
                 <form string="Tag">
                     <sheet>
                         <group>
-                            <field name="name"/>
-                            <field name="product_ids" widget="many2many_tags"/>
+                            <field name="name" required="1"/>
+                            <field name="product_ids" widget="many2many_tags" required="1"/>
                             <field name="pos_ids" widget="many2many_tags"/>
                         </group>
                     </sheet>
