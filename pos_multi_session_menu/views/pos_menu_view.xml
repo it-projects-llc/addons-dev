@@ -26,5 +26,19 @@
             </field>
         </record>
 
+        <record id="pos_tag_tree_view" model="ir.ui.view">
+            <field name="name">pos.tag.tree</field>
+            <field name="model">pos.tag</field>
+            <field name="inherit_id" ref="pos_menu.pos_tag_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='pos_ids']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='product_ids']" position="after">
+                    <field name="pos_multi_session_ids" widget="many2many_tags"/>
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </odoo>
