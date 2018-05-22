@@ -10,10 +10,17 @@ Installation
 Usage
 =====
 
-* Open menu ``Point of Sale >> Products``
-* Click a ``Product`` in Kanaban view
-* Go to ``Sales`` tab
-* Click ``[Edit]``
-* Create new ``tag`` for product
-    - Specify the tag ``Name``
-    - Specify POSes for the current tag
+* Open menu ``Point of Sale >> Configuration >> Product Sets``
+* Click ``[Create]``
+* Specify the fields
+  
+  * Name
+  * Products
+
+* Click ``[Save]``
+* Open menu ``Point of Sale >> Configuration >> Point of Sale``
+* Open POS config form
+* Select the set in <b>Available Product Sets</b>
+* Open POS session
+
+RESULT: you will see the products specified for selected set(s) only
