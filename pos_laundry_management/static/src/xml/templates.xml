@@ -137,7 +137,7 @@
     <t t-name="ReceiptDataPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-confirm popup-receipt">
-                <p class="title"><t t-esc="_t('Receipt Data')" /></p>
+                <p class="title">Receipt Data</p>
                 <t t-set="hl" t-value="widget.options.history_line || {}"/>
                 <div class="body">
                     <table class="tree-view-receipt">
