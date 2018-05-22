@@ -1,0 +1,257 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* pos_laundry_management
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-05-22 14:49+0000\n"
+"PO-Revision-Date: 2018-05-22 14:49+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:18
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:39
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:146
+#, python-format
+msgid "Barcode"
+msgstr "Barcode"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:61
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:185
+#, python-format
+msgid "Cancel"
+msgstr "Cancel"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:91
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:189
+#, python-format
+msgid "Canceled"
+msgstr "Canceled"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:89
+#, python-format
+msgid "Confirmed"
+msgstr "Confirmed"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:127
+#, python-format
+msgid "Customer List"
+msgstr "Customer List"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:116
+#, python-format
+msgid "Date"
+msgstr "Date"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:150
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:207
+#, python-format
+msgid "Delivery"
+msgstr "Delivery"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:216
+#, python-format
+msgid "Delivery1"
+msgstr "Delivery1"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:92
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:173
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:180
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:218
+#, python-format
+msgid "Done"
+msgstr "Done"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:118
+#, python-format
+msgid "Finish Date"
+msgstr "Finish Date"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:109
+#, python-format
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:148
+#, python-format
+msgid "Location"
+msgstr "Location"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:149
+#, python-format
+msgid "Location#"
+msgstr "Location#"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/js/pos.js:90
+#: code:addons/pos_laundry_management/static/src/js/pos.js:105
+#, python-format
+msgid "Lot/Serial Number(s) Required"
+msgstr "Lot/Serial Number(s) Required"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:117
+#, python-format
+msgid "Maintenance Status"
+msgstr "Maintenance Status"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:15
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:107
+#, python-format
+msgid "Name"
+msgstr "Name"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:58
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:195
+#, python-format
+msgid "Ok"
+msgstr "Ok"
+
+#. module: pos_laundry_management
+#: model:ir.model,name:pos_laundry_management.model_res_partner
+msgid "Partner"
+msgstr "取引先"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:110
+#, python-format
+msgid "Phone"
+msgstr "Phone"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:108
+#: model:ir.model.fields,field_description:pos_laundry_management.field_res_partner_phonetic_name
+#: model:ir.model.fields,field_description:pos_laundry_management.field_res_users_phonetic_name
+#, python-format
+msgid "Phonetic Name"
+msgstr "Phonetic Name"
+
+#. module: pos_laundry_management
+#: model:ir.model,name:pos_laundry_management.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "POSオーダ"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:17
+#, python-format
+msgid "Price"
+msgstr "Price"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:145
+#, python-format
+msgid "Product"
+msgstr "Product"
+
+#. module: pos_laundry_management
+#: model:ir.model,name:pos_laundry_management.model_mrp_production
+msgid "Production"
+msgstr "製造"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:140
+#, python-format
+msgid "Receipt Data"
+msgstr "Receipt Data"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:115
+#, python-format
+msgid "Receipt ID"
+msgstr "Receipt ID"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:101
+#, python-format
+msgid "Search"
+msgstr "Search"
+
+#. module: pos_laundry_management
+#: model:ir.model,name:pos_laundry_management.model_pos_pack_operation_lot
+msgid "Specify product lot/serial number in pos order line"
+msgstr "Specify product lot/serial number in pos order line"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:88
+#, python-format
+msgid "Started"
+msgstr "Started"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:19
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:46
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:147
+#: model:ir.model.fields,field_description:pos_laundry_management.field_pos_pack_operation_lot_tag
+#, python-format
+msgid "Tag"
+msgstr "Tag"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:130
+#, python-format
+msgid "Transaction History"
+msgstr "Transaction History"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:16
+#, python-format
+msgid "UoM"
+msgstr "UoM"
+
+#. module: pos_laundry_management
+#. openerp-web
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:90
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:174
+#: code:addons/pos_laundry_management/static/src/xml/templates.xml:179
+#, python-format
+msgid "Waiting Delivery"
+msgstr "Waiting Delivery"
