@@ -11,8 +11,9 @@ Usage
 =====
 
 * Open menu ``Point of Sale >> Multi-sessions``
-* Select a ``Multi Session`` or create new
+* Open the existing ``Multi Session`` record or create new one
 * Click ``[Edit]``
-* Create new ``tag`` for Multi Session
-    - Specify the tag ``Name``
-    - Specify Products for the current tag
+* Select a set(s) in <b>Available Product Sets</b>
+* Click ``[Save]``
+
+RESULT: the sets selected are used on all POSes which use this multi session parameter
