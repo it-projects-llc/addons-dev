@@ -20,7 +20,7 @@
         <field name="name">pos.tag.tree</field>
         <field name="model">pos.tag</field>
         <field name="arch" type="xml">
-            <tree string="Product Sets">
+            <tree>
                 <field name="name"/>
                 <field name="product_ids"/>
                 <field name="pos_ids"/>
