@@ -79,20 +79,22 @@
 
     <t t-name="HistoryLine">
         <t t-jquery="tr.client-line" t-operation="replace">
-            <tr>
-                <td class="receipt_barcode receipt-button" t-att-hl_id="line.id" t-att-p_id="line.partner_id[0]">
-                    <t t-esc='line.receipt_barcode || "" '/>
-                </td>
-                <td><t t-esc='line.date || ""' /></td>
-                <td>
-                    <t t-if="line.state == 'planned'">Started</t>
-                    <t t-if="line.state == 'confirmed'">Confirmed</t>
-                    <t t-if="line.state == 'progress'">Waiting Delivery</t>
-                    <t t-if="line.state == 'cancel'">Canceled</t>
-                    <t t-if="line.state == 'done'">Done</t>
-                </td>
-                <td><t t-esc='line.finishing_date || ""' /></td>
-            </tr>
+            <t t-if="line">
+                <tr>
+                    <td class="receipt_barcode receipt-button" t-att-hl_id="line.id" t-att-p_id="line.partner_id[0]">
+                        <t t-esc='line.receipt_barcode || "" '/>
+                    </td>
+                    <td><t t-esc='line.date || ""' /></td>
+                    <td>
+                        <t t-if="line.state == 'planned'">Started</t>
+                        <t t-if="line.state == 'confirmed'">Confirmed</t>
+                        <t t-if="line.state == 'progress'">Waiting Delivery</t>
+                        <t t-if="line.state == 'cancel'">Canceled</t>
+                        <t t-if="line.state == 'done'">Done</t>
+                    </td>
+                    <td><t t-esc='line.finishing_date || ""' /></td>
+                </tr>
+            </t>
         </t>
     </t>
 
@@ -170,23 +172,20 @@
                             </th>
                             <th>
                                 <t t-if="hl.state == 'done'">
-                                    <p>Done</p>
-                                    <div class="button state_changer" style="background-color: #ff0000b8!important;">
-                                        Waiting Delivery
-                                    </div>
-                                </t>
-                                <t t-if="hl.state == 'progress'">
-                                    <p>Waiting Delivery</p>
                                     <div class="button state_changer" style="background-color: blue; color: white;">
                                         Done
                                     </div>
                                 </t>
-                                <t t-if="hl.state != 'cancel'">
+                                <t t-if="hl.state == 'progress'">
+                                    <div class="button state_changer" style="background-color: #ff0000b8!important;">
+                                        Waiting Delivery
+                                    </div>
+                                </t>
+                                <t t-if="hl.state == 'cancel'">
                                     <div class="button state_cancel" style="background-color: #c8c8c8!important;">
                                         Cancel
                                     </div>
                                 </t>
-                                <t t-else=""><p>Canceled</p></t>
                             </th>
                         </tr>
                     </table>

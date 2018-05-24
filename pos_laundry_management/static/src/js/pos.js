@@ -304,25 +304,19 @@ odoo.define('pos_laundry_management.pos', function (require) {
             this._super(options);
             var line = options.history_line,
                 state = line.state;
-            if (state && state !== 'cancel') {
+            if (state && !_.intersection(['cancel', 'planned', 'confirmed'], [state]).length) {
                 var state_changer = this.$el.find('.button.state_changer');
-                var state_cancel = this.$el.find('.button.state_cancel');
                 state_changer.off().on('click', function(){
-                    var new_state = (state === 'planned' || state === 'confirmed')
-                        ? 'cancel'
-                        : state === 'progress'
-                            ? 'done'
-                            : 'progress';
+                    var new_state = state === 'progress'
+                        ? 'done'
+                        : 'progress';
                     self._change_state(line.id, new_state).then(function(){
                         self._on_changing_status(line);
                     });
                 });
-                state_cancel.off().on('click', function(){
-                    self._change_state(line.id, 'cancel').then(function(){
-                        self._on_changing_status(line);
-                    });
-                });
             }
+            var state_cancel = this.$el.find('.button.state_cancel');
+            state_cancel.off();
         },
         _change_state: function(mrp_id, state){
             return new Model('mrp.production').call('set_state', [mrp_id], {'new_state': state});
