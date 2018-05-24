@@ -79,20 +79,22 @@
 
     <t t-name="HistoryLine">
         <t t-jquery="tr.client-line" t-operation="replace">
-            <tr>
-                <td class="receipt_barcode receipt-button" t-att-hl_id="line.id" t-att-p_id="line.partner_id[0]">
-                    <t t-esc='line.receipt_barcode || "" '/>
-                </td>
-                <td><t t-esc='line.date || ""' /></td>
-                <td>
-                    <t t-if="line.state == 'planned'">Started</t>
-                    <t t-if="line.state == 'confirmed'">Confirmed</t>
-                    <t t-if="line.state == 'progress'">Waiting Delivery</t>
-                    <t t-if="line.state == 'cancel'">Canceled</t>
-                    <t t-if="line.state == 'done'">Done</t>
-                </td>
-                <td><t t-esc='line.finishing_date || ""' /></td>
-            </tr>
+            <t t-if="line">
+                <tr>
+                    <td class="receipt_barcode receipt-button" t-att-hl_id="line.id" t-att-p_id="line.partner_id[0]">
+                        <t t-esc='line.receipt_barcode || "" '/>
+                    </td>
+                    <td><t t-esc='line.date || ""' /></td>
+                    <td>
+                        <t t-if="line.state == 'planned'">Started</t>
+                        <t t-if="line.state == 'confirmed'">Confirmed</t>
+                        <t t-if="line.state == 'progress'">Waiting Delivery</t>
+                        <t t-if="line.state == 'cancel'">Canceled</t>
+                        <t t-if="line.state == 'done'">Done</t>
+                    </td>
+                    <td><t t-esc='line.finishing_date || ""' /></td>
+                </tr>
+            </t>
         </t>
     </t>
 

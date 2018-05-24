@@ -83,7 +83,7 @@
     margin-right:10px;
     font-size:   14px;
     font-weight: bold;
-    cursor: pointer;
+    cursor: unset;
     border: solid 1px rgba(60,60,60,0.1);
     color: #555555;
     background: rgba(0,0,0,0.05);
