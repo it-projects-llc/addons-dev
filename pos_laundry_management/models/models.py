@@ -108,6 +108,7 @@ class PosOrder(models.Model):
                             'product_uom_id': product.uom_id.id,
                             'product_barcode': lot.lot_name,
                             'tag': lot.tag,
+                            'note': lot.note,
                             'origin': order.name,
                             'receipt_barcode': order.pos_reference,
                             'partner_id': partner_id,
@@ -129,3 +130,4 @@ class PosOrderLineLot(models.Model):
     _inherit = "pos.pack.operation.lot"
 
     tag = fields.Integer('Tag')
+    note = fields.Char('Note')

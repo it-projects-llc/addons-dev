@@ -49,7 +49,11 @@
 }
 
 .popup-packlot {
-    width: 800px !important;
+    width: 900px !important;
+}
+
+.popup-packlot input{
+    width: 95% !important;
 }
 
 .pos .clientlist-screen .client-details {
