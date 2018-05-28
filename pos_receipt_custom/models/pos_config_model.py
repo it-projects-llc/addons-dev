@@ -8,4 +8,4 @@ from odoo import fields, models
 class PosConfig(models.Model):
     _inherit = 'pos.config'
 
-    show_second_product_name_in_receipt = fields.Boolean(string="Show Second Product Name", default=False)
+    show_second_product_name_in_receipt = fields.Boolean(string="Display Second Product Name", default=False)
