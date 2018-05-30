@@ -18,6 +18,10 @@ odoo.define('pos_order_receipt_custom', function (require) {
 
     var _super_order = models.Order.prototype;
     models.Order = models.Order.extend({
+        initialize: function (session, attributes) {
+            this.first_order_printing = true;
+            return _super_order.initialize.apply(this, arguments);
+        },
         get_receipt_template_by_id: function(id) {
             return this.pos.receipt_formats.find(function(receipt){
                 return receipt.id === id;
@@ -66,6 +70,16 @@ odoo.define('pos_order_receipt_custom', function (require) {
             } else {
                 _super_order.print_order_receipt.apply(this,arguments);
             }
+            this.first_order_printing = false;
+        },
+        export_as_JSON: function(){
+            var json = _super_order.export_as_JSON.call(this);
+            json.first_order_printing = this.first_order_printing;
+            return json;
+        },
+        init_from_JSON: function(json) {
+            _super_order.init_from_JSON.apply(this,arguments);
+            this.first_order_printing = json.first_order_printing;
         },
     });
 });

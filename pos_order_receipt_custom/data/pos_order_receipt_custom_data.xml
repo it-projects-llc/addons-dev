@@ -58,7 +58,12 @@
                 </t>
             </t>
             <t t-if="changes.new.length > 0">
-                <h1>===New order===</h1>
+                <t t-if="changes.order.first_order_printing">
+                    <h1>===New order===</h1>
+                </t>
+                <t t-if="!changes.order.first_order_printing">
+                    <h1>===Add order===</h1>
+                </t>
                 <t t-if="changes.floor || changes.table">
                     <br />
                     <h3><t t-esc="changes.floor" /> / <t t-esc="changes.table"/></h3>
