@@ -16,6 +16,36 @@ odoo.define('pos_order_receipt_custom', function (require) {
 
     models.load_fields('restaurant.printer',['receipt_format_id']);
 
+    var _super_posmodel = models.PosModel.prototype;
+    models.PosModel = models.PosModel.extend({
+        // changes the current table.
+        set_table: function(table) {
+            var self = this;
+            if (table && this.order_to_transfer_to_different_table && !this.order_to_transfer_to_different_table.first_order_printing) {
+                var old_table = this.order_to_transfer_to_different_table.table;
+                var new_table = table;
+
+                // FIXME: table data
+                var changes = {
+                    'changes_table': {
+                        'new_table': new_table,
+                        'old_table': old_table,
+                    },
+                    'new': [],
+                    'cancelled': [],
+                    'new_all': [],
+                    'cancelled_all': [],
+                };
+
+                // print transfer info to all printers
+                this.printers.forEach(function(printer){
+                    self.order_to_transfer_to_different_table.print_order_receipt(printer, changes);
+                });
+            }
+            _super_posmodel.set_table.apply(this, arguments);
+        },
+    });
+
     var _super_order = models.Order.prototype;
     models.Order = models.Order.extend({
         initialize: function (session, attributes) {
@@ -42,7 +72,7 @@ odoo.define('pos_order_receipt_custom', function (require) {
             return Qweb.render(template_name, options);
         },
         print_order_receipt: function(printer, changes) {
-            if (printer.config.receipt_format_id && (changes['new'].length > 0 || changes['cancelled'].length > 0)) {
+            if (printer.config.receipt_format_id && (changes['new'].length > 0 || changes['cancelled'].length > 0 || changes.changes_table)) {
                 // all order data
                 changes.order = this.export_as_JSON();
                 changes.waiter = this.pos.get_cashier();

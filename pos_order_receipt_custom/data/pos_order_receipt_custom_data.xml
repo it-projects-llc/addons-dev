@@ -15,6 +15,11 @@
             value-thousands-separator=''
             value-autoint='on'
         >
+            <t t-if="changes.changes_table">
+                <h1>===Transfer order===</h1>
+                <br />
+                <h3><t t-esc="changes.changes_table.old_table.floor" /> / <t t-esc="changes.changes_table.old_table.table"/> >>> <t t-esc="changes.changes_table.new_table.floor" /> / <t t-esc="changes.changes_table.new_table.table"/></h3>
+            </t>
             <t t-if="changes.cancelled.length > 0">
                 <div color='red'>
                     <h1>===Canceled order===</h1>
