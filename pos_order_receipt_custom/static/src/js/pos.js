@@ -39,6 +39,26 @@ odoo.define('pos_order_receipt_custom', function (require) {
         },
         print_order_receipt: function(printer, changes) {
             if (printer.config.receipt_format_id && (changes['new'].length > 0 || changes['cancelled'].length > 0)) {
+                // all order data
+                changes.order = this.export_as_JSON();
+                changes.waiter = this.pos.get_cashier();
+
+                var d = new Date();
+                var date = d.getDate();
+                //January is 0
+                var month = d.getMonth() + 1;
+                var year = d.getFullYear();
+
+                if (date < 10) {
+                    date = '0' + date;
+                }
+
+                if (month < 10) {
+                    month = '0' + month;
+                }
+                changes.date = {'date': date, 'month': month, 'year':year};
+                changes.printer = {'name': printer.config.name};
+
                 var receipt_template = this.get_receipt_template_by_id(printer.config.receipt_format_id[0]);
                 var template = $.parseXML(receipt_template.qweb_template).children[0];
                 var receipt = this.render_custom_qweb(template, {changes:changes, widget:this});
