@@ -53,8 +53,8 @@
             </t>
             <t t-if="changes.new.length > 0">
                 <t t-if="changes.cancelled.length > 0">
-                    <!-- cut paper -->
-                    <cut/>
+                    <!-- cut paper (uncomment if necessary) -->
+                    <!-- <cut/> -->
                 </t>
             </t>
             <t t-if="changes.new.length > 0">
