@@ -30,6 +30,12 @@ odoo.define('pos_restaurant.print_method', function (require) {
                 }, ms);
                 return d.promise();
             }
+
+            // This check is required for compatibility with the module https://www.odoo.com/apps/modules/10.0/pos_order_receipt_custom/
+            if (changes.changes_table && self.print_custom_receipt) {
+                self.print_custom_receipt(printer, changes);
+            }
+
             if ( changes.new.length > 0 || changes.cancelled.length > 0) {
                 if (printer.config.printer_method_name === 'separate_receipt') {
 
