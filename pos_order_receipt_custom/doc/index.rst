@@ -11,12 +11,11 @@ Usage
 =====
 
 * Open menu ``[[ Point of Sale ]]>> Configuration >> Order Printers``
-* Click ``Create``
-* Open a Printer
-* Specify ``Printing Template`` or create new
-* RESULT: Printing the Order Receipt in new receipt format
+* Click ``Create`` or edit existing one
+* Select ``Print Template`` or create new one
+* RESULT: The Order Receipt has been printed in the format selected
 
 Note
 ====
 
-Custom Qweb name of order receipt template (``t-name``) must be unique.
+Custom Qweb name for order receipt template (``t-name``) must be unique.
