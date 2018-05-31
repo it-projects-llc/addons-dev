@@ -102,8 +102,8 @@ odoo.define('pos_order_receipt_custom', function (require) {
                 this.print_custom_receipt(printer, changes);
             } else {
                 _super_order.print_order_receipt.apply(this,arguments);
+                this.first_order_printing = false;
             }
-            this.first_order_printing = false;
         },
         print_custom_receipt: function(printer, changes) {
             // all order data
@@ -142,6 +142,7 @@ odoo.define('pos_order_receipt_custom', function (require) {
             var template = $.parseXML(receipt_template.qweb_template).children[0];
             var receipt = this.render_custom_qweb(template, {changes:changes, widget:this});
             printer.print(receipt);
+            this.first_order_printing = false;
         },
         export_as_JSON: function(){
             var json = _super_order.export_as_JSON.call(this);
