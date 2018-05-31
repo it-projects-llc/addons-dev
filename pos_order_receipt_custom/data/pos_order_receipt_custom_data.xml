@@ -23,7 +23,7 @@
                 <div>==============================================</div>
                 <br />
                 <t t-foreach="changes.products" t-as="change">
-                    <div size="double-height">
+                    <div size="double-height" t-if="!change.order">
                         <line>
                             <left><t t-esc="change.name_wrapped[0]" /></left>
                             <right><t t-esc="change.qty" /></right>
@@ -37,6 +37,12 @@
                         </t>
                         <!--For compatibility with the https://www.odoo.com/apps/modules/10.0/pos_order_note/ module-->
                         <t t-if="change.custom_notes">
+                            <t t-if="!change.note">
+                                <line>
+                                    <left>Note</left>
+                                    <right></right>
+                                </line>
+                            </t>
                             <t t-foreach="change.custom_notes" t-as="custom_note">
                                 <line>
                                     <left></left>
@@ -47,6 +53,29 @@
                     </div>
                     <br/>
                 </t>
+                <!--For compatibility with the https://www.odoo.com/apps/modules/10.0/pos_order_note/ module-->
+                <div size="double-height">
+                    <t t-if="changes.order_note">
+                        <line>
+                            <left>Order Note</left>
+                            <right>--- <t t-esc="changes.order_note" /></right>
+                        </line>
+                    </t>
+                    <t t-if="changes.order_custom_notes">
+                        <t t-if="!changes.order_note">
+                            <line>
+                                <left>Order Note</left>
+                                <right></right>
+                            </line>
+                        </t>
+                        <t t-foreach="changes.order_custom_notes" t-as="custom_note">
+                            <line>
+                                <left></left>
+                                <right>--- <t t-esc="custom_note.name" /></right>
+                            </line>
+                        </t>
+                    </t>
+                </div>
                 <br />
                 <div>==============================================</div>
                 <br />
@@ -73,7 +102,7 @@
                     <div>==============================================</div>
                     <br />
                     <t t-foreach="changes.cancelled" t-as="change">
-                        <div size="double-height">
+                        <div size="double-height" t-if="!change.order">
                             <line>
                                 <left><t t-esc="change.name_wrapped[0]" /></left>
                                 <right><t t-esc="change.qty" /></right>
@@ -87,6 +116,12 @@
                             </t>
                             <!--For compatibility with the https://www.odoo.com/apps/modules/10.0/pos_order_note/ module-->
                             <t t-if="change.custom_notes">
+                                <t t-if="!change.note">
+                                    <line>
+                                        <left>Note</left>
+                                        <right></right>
+                                    </line>
+                                </t>
                                 <t t-foreach="change.custom_notes" t-as="custom_note">
                                     <line>
                                         <left></left>
@@ -97,6 +132,29 @@
                         </div>
                         <br/>
                     </t>
+                    <!--For compatibility with the https://www.odoo.com/apps/modules/10.0/pos_order_note/ module-->
+                    <div size="double-height">
+                        <t t-if="changes.old_order_note">
+                            <line>
+                                <left>Order Note</left>
+                                <right>--- <t t-esc="changes.old_order_note" /></right>
+                            </line>
+                        </t>
+                        <t t-if="changes.old_order_custom_notes">
+                            <t t-if="!changes.old_order_note">
+                                <line>
+                                    <left>Order Note</left>
+                                    <right></right>
+                                </line>
+                            </t>
+                            <t t-foreach="changes.old_order_custom_notes" t-as="custom_note">
+                                <line>
+                                    <left></left>
+                                    <right>--- <t t-esc="custom_note.name" /></right>
+                                </line>
+                            </t>
+                        </t>
+                    </div>
                     <br />
                     <div>==============================================</div>
                     <br />
@@ -107,6 +165,8 @@
                     <div><t t-esc="changes.name" /></div>
                 </div>
             </t>
+            <br />
+            <br />
             <t t-if="changes.new.length > 0">
                 <t t-if="changes.cancelled.length > 0">
                     <!-- cut paper (uncomment if necessary) -->
@@ -128,7 +188,7 @@
                 <div>==============================================</div>
                 <br />
                 <t t-foreach="changes.new" t-as="change">
-                    <div size="double-height">
+                    <div size="double-height" t-if="!change.order">
                         <line>
                             <left><t t-esc="change.name_wrapped[0]" /></left>
                             <right><t t-esc="change.qty" /></right>
@@ -142,6 +202,12 @@
                         </t>
                         <!--For compatibility with the https://www.odoo.com/apps/modules/10.0/pos_order_note/ module-->
                         <t t-if="change.custom_notes">
+                            <t t-if="!change.note">
+                                <line>
+                                    <left>Note</left>
+                                    <right></right>
+                                </line>
+                            </t>
                             <t t-foreach="change.custom_notes" t-as="custom_note">
                                 <line>
                                     <left></left>
@@ -152,6 +218,29 @@
                     </div>
                     <br/>
                 </t>
+                <!--For compatibility with the https://www.odoo.com/apps/modules/10.0/pos_order_note/ module-->
+                <div size="double-height">
+                    <t t-if="changes.order_note">
+                        <line>
+                            <left>Order Note</left>
+                            <right>--- <t t-esc="changes.order_note" /></right>
+                        </line>
+                    </t>
+                    <t t-if="changes.order_custom_notes">
+                        <t t-if="!changes.order_note">
+                            <line>
+                                <left>Order Note</left>
+                                <right></right>
+                            </line>
+                        </t>
+                        <t t-foreach="changes.order_custom_notes" t-as="custom_note">
+                            <line>
+                                <left></left>
+                                <right>--- <t t-esc="custom_note.name" /></right>
+                            </line>
+                        </t>
+                    </t>
+                </div>
                 <br />
                 <div>==============================================</div>
                 <br />
