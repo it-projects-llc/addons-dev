@@ -16,3 +16,10 @@ class RestaurantPrinter(models.Model):
     _inherit = 'restaurant.printer'
 
     receipt_format_id = fields.Many2one('pos.order_receipt', string='Printing Template')
+
+
+class PosConfig(models.Model):
+    _inherit = 'pos.config'
+
+    print_transfer_info_in_kitchen = fields.Boolean(string='Print Transfer of Order in the Kitchen',
+                                                    help='Print transfer info of an order in the kitchen', default=True)

@@ -21,28 +21,49 @@ odoo.define('pos_order_receipt_custom', function (require) {
         // changes the current table.
         set_table: function(table) {
             var self = this;
-            if (table && this.order_to_transfer_to_different_table && !this.order_to_transfer_to_different_table.first_order_printing) {
+            if (table && this.order_to_transfer_to_different_table && !this.order_to_transfer_to_different_table.first_order_printing && this.config.print_transfer_info_in_kitchen) {
                 var old_table = this.order_to_transfer_to_different_table.table;
                 var new_table = table;
 
-                // FIXME: table data
                 var changes = {
-                    'changes_table': {
-                        'new_table': new_table,
-                        'old_table': old_table,
-                    },
+                    'changes_table': true,
+                    'old_table': old_table,
+                    'new_table': new_table,
                     'new': [],
                     'cancelled': [],
                     'new_all': [],
                     'cancelled_all': [],
                 };
 
-                // print transfer info to all printers
-                this.printers.forEach(function(printer){
-                    self.order_to_transfer_to_different_table.print_order_receipt(printer, changes);
+                this.printers.forEach(function(printer) {
+                    var products = self.get_order_product_list_of_printer(printer, self.order_to_transfer_to_different_table);
+                    if (products && products.length) {
+                        changes.products = products;
+                        self.order_to_transfer_to_different_table.print_order_receipt(printer, changes);
+                    }
                 });
             }
             _super_posmodel.set_table.apply(this, arguments);
+        },
+        get_order_product_list_of_printer: function(printer, order) {
+            var orderlines = order.get_orderlines();
+            var lines = orderlines.filter(function(line) {
+                if (_.contains(printer.config.product_categories_ids, line.product.pos_categ_id[0]) && line.mp_dirty === false) {
+                    return true;
+                }
+            });
+            var products = [];
+            lines.forEach(function(line) {
+                products.push({
+                    'id':       line.product.id,
+                    'name':     line.product.display_name,
+                    'name_wrapped': line.generate_wrapped_product_name(),
+                    'note':     line.note,
+                    'qty':      line.quantity,
+                    'line_id':  line.id,
+                });
+            });
+            return products;
         },
     });
 
