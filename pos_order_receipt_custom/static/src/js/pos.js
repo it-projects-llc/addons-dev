@@ -99,46 +99,49 @@ odoo.define('pos_order_receipt_custom', function (require) {
         },
         print_order_receipt: function(printer, changes) {
             if (printer.config.receipt_format_id && (changes['new'].length > 0 || changes['cancelled'].length > 0 || changes.changes_table)) {
-                // all order data
-                changes.order = this.export_as_JSON();
-                changes.waiter = this.pos.get_cashier();
-
-                var d = new Date();
-                var date = d.getDate();
-                //January is 0
-                var month = d.getMonth() + 1;
-                var year = d.getFullYear();
-
-                if (date < 10) {
-                    date = '0' + date;
-                }
-
-                if (month < 10) {
-                    month = '0' + month;
-                }
-
-                if (!changes.time) {
-                    var hours   = '' + d.getHours();
-                        hours   = hours.length < 2 ? ('0' + hours) : hours;
-                    var minutes = '' + d.getMinutes();
-                        minutes = minutes.length < 2 ? ('0' + minutes) : minutes;
-                    changes.time = {
-                        'hours':   hours,
-                        'minutes': minutes,
-                    };
-                }
-
-                changes.date = {'date': date, 'month': month, 'year':year};
-                changes.printer = {'name': printer.config.name};
-
-                var receipt_template = this.get_receipt_template_by_id(printer.config.receipt_format_id[0]);
-                var template = $.parseXML(receipt_template.qweb_template).children[0];
-                var receipt = this.render_custom_qweb(template, {changes:changes, widget:this});
-                printer.print(receipt);
+                this.print_custom_receipt(printer, changes);
             } else {
                 _super_order.print_order_receipt.apply(this,arguments);
             }
             this.first_order_printing = false;
+        },
+        print_custom_receipt: function(printer, changes) {
+            // all order data
+            changes.order = this.export_as_JSON();
+            changes.waiter = this.pos.get_cashier();
+
+            var d = new Date();
+            var date = d.getDate();
+            //January is 0
+            var month = d.getMonth() + 1;
+            var year = d.getFullYear();
+
+            if (date < 10) {
+                date = '0' + date;
+            }
+
+            if (month < 10) {
+                month = '0' + month;
+            }
+
+            if (!changes.time) {
+                var hours   = '' + d.getHours();
+                    hours   = hours.length < 2 ? ('0' + hours) : hours;
+                var minutes = '' + d.getMinutes();
+                    minutes = minutes.length < 2 ? ('0' + minutes) : minutes;
+                changes.time = {
+                    'hours':   hours,
+                    'minutes': minutes,
+                };
+            }
+
+            changes.date = {'date': date, 'month': month, 'year':year};
+            changes.printer = {'name': printer.config.name};
+
+            var receipt_template = this.get_receipt_template_by_id(printer.config.receipt_format_id[0]);
+            var template = $.parseXML(receipt_template.qweb_template).children[0];
+            var receipt = this.render_custom_qweb(template, {changes:changes, widget:this});
+            printer.print(receipt);
         },
         export_as_JSON: function(){
             var json = _super_order.export_as_JSON.call(this);
