@@ -24,24 +24,26 @@ odoo.define('pos_order_receipt_custom', function (require) {
             if (table && this.order_to_transfer_to_different_table && !this.order_to_transfer_to_different_table.first_order_printing && this.config.print_transfer_info_in_kitchen) {
                 var old_table = this.order_to_transfer_to_different_table.table;
                 var new_table = table;
+                if (old_table.id !== new_table.id) {
+                    var changes = {
+                        'changes_table': true,
+                        'old_table': old_table,
+                        'new_table': new_table,
+                        'name': this.order_to_transfer_to_different_table.name,
+                        'new': [],
+                        'cancelled': [],
+                        'new_all': [],
+                        'cancelled_all': [],
+                    };
 
-                var changes = {
-                    'changes_table': true,
-                    'old_table': old_table,
-                    'new_table': new_table,
-                    'new': [],
-                    'cancelled': [],
-                    'new_all': [],
-                    'cancelled_all': [],
-                };
-
-                this.printers.forEach(function(printer) {
-                    var products = self.get_order_product_list_of_printer(printer, self.order_to_transfer_to_different_table);
-                    if (products && products.length) {
-                        changes.products = products;
-                        self.order_to_transfer_to_different_table.print_order_receipt(printer, changes);
-                    }
-                });
+                    this.printers.forEach(function(printer) {
+                        var products = self.get_order_product_list_of_printer(printer, self.order_to_transfer_to_different_table);
+                        if (products && products.length) {
+                            changes.products = products;
+                            self.order_to_transfer_to_different_table.print_order_receipt(printer, changes);
+                        }
+                    });
+                }
             }
             _super_posmodel.set_table.apply(this, arguments);
         },
@@ -111,6 +113,18 @@ odoo.define('pos_order_receipt_custom', function (require) {
                 if (month < 10) {
                     month = '0' + month;
                 }
+
+                if (!changes.time) {
+                    var hours   = '' + d.getHours();
+                        hours   = hours.length < 2 ? ('0' + hours) : hours;
+                    var minutes = '' + d.getMinutes();
+                        minutes = minutes.length < 2 ? ('0' + minutes) : minutes;
+                    changes.time = {
+                        'hours':   hours,
+                        'minutes': minutes,
+                    };
+                }
+
                 changes.date = {'date': date, 'month': month, 'year':year};
                 changes.printer = {'name': printer.config.name};
 
