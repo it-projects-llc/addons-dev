@@ -35,6 +35,15 @@
                                 <right>--- <t t-esc="change.note" /></right>
                             </line>
                         </t>
+                        <!--For compatibility with the https://www.odoo.com/apps/modules/10.0/pos_order_note/ module-->
+                        <t t-if="change.custom_notes">
+                            <t t-foreach="change.custom_notes" t-as="custom_note">
+                                <line>
+                                    <left></left>
+                                    <right>--- <t t-esc="custom_note.name" /></right>
+                                </line>
+                            </t>
+                        </t>
                     </div>
                     <br/>
                 </t>
@@ -75,6 +84,15 @@
                                     <left>Note</left>
                                     <right>--- <t t-esc="change.note" /></right>
                                 </line>
+                            </t>
+                            <!--For compatibility with the https://www.odoo.com/apps/modules/10.0/pos_order_note/ module-->
+                            <t t-if="change.custom_notes">
+                                <t t-foreach="change.custom_notes" t-as="custom_note">
+                                    <line>
+                                        <left></left>
+                                        <right>--- <t t-esc="custom_note.name" /></right>
+                                    </line>
+                                </t>
                             </t>
                         </div>
                         <br/>
@@ -121,6 +139,15 @@
                                 <left>Note</left>
                                 <right>--- <t t-esc="change.note" /></right>
                             </line>
+                        </t>
+                        <!--For compatibility with the https://www.odoo.com/apps/modules/10.0/pos_order_note/ module-->
+                        <t t-if="change.custom_notes">
+                            <t t-foreach="change.custom_notes" t-as="custom_note">
+                                <line>
+                                    <left></left>
+                                    <right>--- <t t-esc="custom_note.name" /></right>
+                                </line>
+                            </t>
                         </t>
                     </div>
                     <br/>
