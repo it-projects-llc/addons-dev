@@ -39,6 +39,11 @@ odoo.define('pos_order_receipt_custom', function (require) {
                         'cancelled_all': [],
                     };
 
+                    // For compatibility with the https://www.odoo.com/apps/modules/10.0/pos_order_note/ module
+                    changes.order_note = this.order_to_transfer_to_different_table.note;
+                    changes.order_custom_notes = this.order_to_transfer_to_different_table.custom_notes;
+
+
                     this.printers.forEach(function(printer) {
                         var products = self.get_order_product_list_of_printer(printer, self.order_to_transfer_to_different_table);
                         if (products && products.length) {
@@ -64,6 +69,7 @@ odoo.define('pos_order_receipt_custom', function (require) {
                     'name':     line.product.display_name,
                     'name_wrapped': line.generate_wrapped_product_name(),
                     'note':     line.note,
+                    'custom_notes': line.custom_notes,
                     'qty':      line.quantity,
                     'line_id':  line.id,
                 });
