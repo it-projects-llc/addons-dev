@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="report_saledetails" inherit_id="point_of_sale.report_saledetails">
+    <xpath expr="//div[hasclass('text-center')]" position="after">
+        <table>
+            <tbody>
+                <tr>
+                    <td>Printed by: <t t-esc="user_name" /></td>
+                    <td>Number of Orders: <t t-esc="order_num" /></td>
+                    <td>Point of Sale: <t t-esc="pos_names" /></td>
+                </tr>
+            </tbody>
+        </table>
+    </xpath>
+
+    <xpath expr="//h3[contains(.,'Products')]" position="replace"></xpath>
+    <xpath expr="//table[hasclass('table','table-condensed')][1]" position="replace"></xpath>
+
+    <xpath expr="//table[hasclass('table','table-condensed')][1]/thead/tr" position="inside">
+        <th>Number of Payments</th>
+    </xpath>
+    <xpath expr="//table[hasclass('table','table-condensed')][1]/tbody/tr" position="inside">
+        <td><t t-esc="payment['pay_num']" /></td>
+    </xpath>
+
+    <xpath expr="//div[hasclass('page')]/strong" position="after">
+        <h3>Sales by Cashier</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Number of Sales</th>
+                    <th>Total Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach='cashiers' t-as='cashier'>
+                    <td><t t-esc="cashier['name']" /></td>
+                    <td><t t-esc="cashier['sale_num']" /></td>
+                    <td><t t-esc="cashier['total']" /></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br/>
+
+        <h3>Returns</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Order Ref</th>
+                    <th>Product</th>
+                    <th>Customer</th>
+                    <th>Cashier</th>
+                    <th>Quantity</th>
+                    <th>Total Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach='returns' t-as='ret'>
+                    <td><t t-esc="ret['po_name']" /></td>
+                    <td><t t-esc="ret['product_name']" /></td>
+                    <td><t t-esc="ret['customer']" /></td>
+                    <td><t t-esc="ret['cashier']" /></td>
+                    <td><t t-esc="ret['qty']" /></td>
+                    <td><t t-esc="ret['total']" /></td>
+                </tr>
+            </tbody>
+        </table>
+    </xpath>
+
+</template>
+
+</odoo>
