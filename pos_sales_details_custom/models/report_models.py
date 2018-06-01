@@ -74,15 +74,38 @@ class ReportSaleDetails(models.AbstractModel):
         cash_res = []
         for conf in configs:
             for session in conf.session_ids:
-                line_in = session.cash_register_id.cashbox_start_id.cashbox_lines_ids
-                line_out = session.cash_register_id.cashbox_end_id.cashbox_lines_ids
-                cash_res += [{
-                    'number': line_out.number,
-                    'coin_in': line_in.coin_value,
-                    'subtotal_in': line_in.subtotal,
-                    'coin_out': line_out.coin_value,
-                    'subtotal_out': line_out.subtotal,
-                }]
+                lines_in = session.cash_register_id.cashbox_start_id.cashbox_lines_ids
+                lines_out = session.cash_register_id.cashbox_end_id.cashbox_lines_ids
+                lines_out_numbers = [l.number for l in lines_out]
+                lines_out_used = []
+                for line in lines_in:
+                    in_array = 0
+                    try:
+                        in_array = lines_out_numbers.index(line.number)
+                        cash_res += [{
+                            'number': line.number,
+                            'coin_in': line.coin_value,
+                            'subtotal_in': line.subtotal,
+                            'coin_out': lines_out[in_array].coin_value,
+                            'subtotal_out': lines_out[in_array].subtotal,
+                        }]
+                        lines_out_used += [lines_out[in_array]]
+                    except:
+                        cash_res += [{
+                            'number': line.number,
+                            'coin_in': line.coin_value,
+                            'subtotal_in': line.subtotal,
+                            'coin_out': 0,
+                            'subtotal_out': 0,
+                        }]
+                for i in list(set(lines_out) - set(lines_out_used)):
+                    cash_res += [{
+                        'number': i.number,
+                        'coin_in': 0,
+                        'subtotal_in': 0,
+                        'coin_out': i.coin_value,
+                        'subtotal_out': i.subtotal,
+                    }]
 
         result['put_in_out'] = cash_res
 
