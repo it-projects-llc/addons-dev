@@ -68,6 +68,38 @@
                 </tr>
             </tbody>
         </table>
+
+        <br/>
+
+        <h3>Cash Control</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Coins/Bill</th>
+                    <th>Starting#</th>
+                    <th>Starting Value</th>
+                    <th>Closing#</th>
+                    <th>Closing Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach='put_in_out' t-as='put'>
+                    <td><t t-esc="put['number']" /></td>
+                    <td><t t-esc="put['coin_in']" /></td>
+                    <td><t t-esc="put['subtotal_in']" /></td>
+                    <td><t t-esc="put['coin_out']" /></td>
+                    <td><t t-esc="put['subtotal_out']" /></td>
+                </tr>
+                <tr>
+                    <td>Total Amount</td>
+                    <td/>
+                    <td>SMTH</td>
+                    <td/>
+                    <td>SMTH</td>
+                </tr>
+            </tbody>
+        </table>
+
     </xpath>
 
 </template>

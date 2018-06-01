@@ -23,7 +23,6 @@ class ReportSaleDetails(models.AbstractModel):
             'pay_num': sum([p['pay_num'] for p in result['payments']] + [0]),
         }
         result['payments'] += [payment_total]
-        # wdb.set_trace()
         result['cashiers'] = []
 
         self.env.cr.execute("""
@@ -71,7 +70,24 @@ class ReportSaleDetails(models.AbstractModel):
             prod['customer'] = line.order_id.partner_id.name or ''
             prod['total'] = line.price_subtotal
 
+        wdb.set_trace()
+        cash_res = []
+        for conf in configs:
+            for session in conf.session_ids:
+                line_in = session.cash_register_id.cashbox_start_id.cashbox_lines_ids
+                line_out = session.cash_register_id.cashbox_end_id.cashbox_lines_ids
+                cash_res += [{
+                    'number': line_out.number,
+                    'coin_in': line_in.coin_value,
+                    'subtotal_in': line_in.subtotal,
+                    'coin_out': line_out.coin_value,
+                    'subtotal_out': line_out.subtotal,
+                }]
+
+        result['put_in_out'] = cash_res
+
         print('--------------------5')
         print(result)
         print('--------------------5')
+
         return result
