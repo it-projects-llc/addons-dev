@@ -4,7 +4,6 @@
 from odoo import models, fields, api
 from datetime import datetime, timedelta
 from odoo.addons.point_of_sale.wizard.pos_box import PosBox
-import wdb
 
 
 class ReportSaleDetails(models.AbstractModel):
@@ -118,7 +117,6 @@ class ReportSaleDetails(models.AbstractModel):
                     'amount': rec.put_type == 'in' and rec.amount or -rec.amount,
                     'datetime': rec.datetime
                 }]
-        wdb.set_trace()
         # result['closing'] = []
         # for ps in pos_session_ids:
         #     put_inout = ps.pos_cash_box_ids and sum([(cb.put_type == 'in' and cb.amount or -cb.amount) for cb in ps.pos_cash_box_ids]) or 0
