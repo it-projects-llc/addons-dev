@@ -1,4 +1,9 @@
+# Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+
 from odoo import models, fields, api
+from datetime import datetime, timedelta
+from odoo.addons.point_of_sale.wizard.pos_box import PosBox
 import wdb
 
 
@@ -70,8 +75,7 @@ class ReportSaleDetails(models.AbstractModel):
             prod['customer'] = line.order_id.partner_id.name or ''
             prod['total'] = line.price_subtotal
 
-        wdb.set_trace()
-        cash_res = []
+        result['cash_control'] = []
         for conf in configs:
             for session in conf.session_ids:
                 lines_in = session.cash_register_id.cashbox_start_id.cashbox_lines_ids
@@ -79,10 +83,9 @@ class ReportSaleDetails(models.AbstractModel):
                 lines_out_numbers = [l.number for l in lines_out]
                 lines_out_used = []
                 for line in lines_in:
-                    in_array = 0
-                    try:
+                    if line.number in lines_out_numbers:
                         in_array = lines_out_numbers.index(line.number)
-                        cash_res += [{
+                        result['cash_control'] += [{
                             'number': line.number,
                             'coin_in': line.coin_value,
                             'subtotal_in': line.subtotal,
@@ -90,8 +93,8 @@ class ReportSaleDetails(models.AbstractModel):
                             'subtotal_out': lines_out[in_array].subtotal,
                         }]
                         lines_out_used += [lines_out[in_array]]
-                    except:
-                        cash_res += [{
+                    else:
+                        result['cash_control'] += [{
                             'number': line.number,
                             'coin_in': line.coin_value,
                             'subtotal_in': line.subtotal,
@@ -99,7 +102,7 @@ class ReportSaleDetails(models.AbstractModel):
                             'subtotal_out': 0,
                         }]
                 for i in list(set(lines_out) - set(lines_out_used)):
-                    cash_res += [{
+                    result['cash_control'] += [{
                         'number': i.number,
                         'coin_in': 0,
                         'subtotal_in': 0,
@@ -107,10 +110,104 @@ class ReportSaleDetails(models.AbstractModel):
                         'subtotal_out': i.subtotal,
                     }]
 
-        result['put_in_out'] = cash_res
+        result['put_in_out'] = []
+        for ps in pos_session_ids:
+            for rec in ps.pos_cash_box_ids:
+                result['put_in_out'] += [{
+                    'name': rec.name,
+                    'amount': rec.put_type == 'in' and rec.amount or -rec.amount,
+                    'datetime': rec.datetime
+                }]
+        wdb.set_trace()
+        # result['closing'] = []
+        # for ps in pos_session_ids:
+        #     put_inout = ps.pos_cash_box_ids and sum([(cb.put_type == 'in' and cb.amount or -cb.amount) for cb in ps.pos_cash_box_ids]) or 0
+        #     theor_end = ps.cash_register_balance_start + ps.cash_register_total_entry_encoding + put_inout
+        #     result['closing'] += [{
+        #         'theoretical_closing_balance': theor_end,
+        #         'closing_difference': ps.cash_register_difference,
+        #         'real_closing_balance': ps.cash_register_difference + theor_end,
+        #     }]
 
-        print('--------------------5')
+        result['closing'] = []
+        for ps in pos_session_ids:
+            put_inout = ps.pos_cash_box_ids and sum([(cb.put_type == 'in' and cb.amount or -cb.amount) for cb in ps.pos_cash_box_ids]) or 0
+            theor_end = ps.cash_register_balance_start + ps.cash_register_total_entry_encoding + put_inout
+            result['closing'] += [{
+                'theoretical_closing_balance': theor_end,
+                'closing_difference': ps.cash_register_difference,
+                'real_closing_balance': ps.cash_register_difference + theor_end,
+            }]
+
+        put_inout = 0
+        for ps in pos_session_ids:
+            put_inout += ps.pos_cash_box_ids and sum(
+                [(cb.put_type == 'in' and cb.amount or -cb.amount) for cb in ps.pos_cash_box_ids]) or 0
+        result['theoretical_closing_balance'] = put_inout
+        result['closing_difference'] = sum([ps.cash_register_difference for ps in pos_session_ids] + [0])
+        result['real_closing_balance'] = result['closing_difference'] + result['theoretical_closing_balance']
+        result['date'] = datetime.now().strftime('%y.%m.%d')
+
+        print('-------------------------------')
         print(result)
-        print('--------------------5')
-
+        print('-------------------------------')
         return result
+
+
+class PosSession(models.Model):
+    _inherit = 'pos.session'
+
+    pos_cash_box_ids = fields.One2many('pos.cash.box', 'session_id')
+
+
+class CashBoxOut(models.Model):
+    _name = 'pos.cash.box'
+
+    name = fields.Char(string='Reason', required=True)
+    amount = fields.Float(string='Amount', digits=0, required=True)
+    datetime = fields.Datetime(string='Date', required=True)
+    session_id = fields.Many2one('pos.session', string='POS Session')
+    put_type = fields.Selection([
+        ('in', 'Put in'),
+        ('out', 'Put out')
+        ], string='Type')
+
+
+class PosBoxIn(PosBox):
+    _inherit = 'cash.box.in'
+
+    @api.multi
+    def _run(self, records):
+        res = super(PosBoxIn, self)._run(records)
+        active_model = self.env.context.get('active_model', False)
+        active_ids = self.env.context.get('active_ids', [])
+        if active_model == 'pos.session' and active_ids:
+            for rec in self:
+                self.env['pos.cash.box'].create({
+                    'name': rec.name,
+                    'amount': rec.amount,
+                    'session_id': active_ids[0],
+                    'put_type': 'in',
+                    'datetime': datetime.now(),
+                })
+        return res
+
+
+class PosBoxOut(PosBox):
+    _inherit = 'cash.box.out'
+
+    @api.multi
+    def _run(self, records):
+        res = super(PosBoxOut, self)._run(records)
+        active_model = self.env.context.get('active_model', False)
+        active_ids = self.env.context.get('active_ids', [])
+        if active_model == 'pos.session' and active_ids:
+            for rec in self:
+                self.env['pos.cash.box'].create({
+                    'name': rec.name,
+                    'amount': rec.amount,
+                    'session_id': active_ids[0],
+                    'put_type': 'out',
+                    'datetime': datetime.now(),
+                })
+        return res

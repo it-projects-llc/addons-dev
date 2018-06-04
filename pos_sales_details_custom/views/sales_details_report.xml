@@ -69,6 +69,8 @@
             </tbody>
         </table>
 
+        <h3>Theoretical Closing Balance: <t t-esc="theoretical_closing_balance" /></h3>
+
         <br/>
 
         <h3>Cash Control</h3>
@@ -83,12 +85,12 @@
                 </tr>
             </thead>
             <tbody>
-                <tr t-foreach='put_in_out' t-as='put'>
-                    <td><t t-esc="put['number']" /></td>
-                    <td><t t-esc="put['coin_in']" /></td>
-                    <td><t t-esc="put['subtotal_in']" /></td>
-                    <td><t t-esc="put['coin_out']" /></td>
-                    <td><t t-esc="put['subtotal_out']" /></td>
+                <tr t-foreach='cash_control' t-as='val'>
+                    <td><t t-esc="val['number']" /></td>
+                    <td><t t-esc="val['coin_in']" /></td>
+                    <td><t t-esc="val['subtotal_in']" /></td>
+                    <td><t t-esc="val['coin_out']" /></td>
+                    <td><t t-esc="val['subtotal_out']" /></td>
                 </tr>
                 <tr>
                     <td>Total Amount</td>
@@ -100,6 +102,47 @@
             </tbody>
         </table>
 
+        <h3>Put Money In / Take Money Out</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Datetime</th>
+                    <th>Amount</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach='put_in_out' t-as='put'>
+                    <td><t t-esc="put['datetime']" /></td>
+                    <td><t t-esc="put['amount']" /></td>
+                    <td><t t-esc="put['name']" /></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!--<h3>Put Money In / Take Money Out</h3>-->
+        <!--<table>-->
+            <!--<thead>-->
+                <!--<tr>-->
+                    <!--<th>Theoretical Closing Balance:</th>-->
+                    <!--<th>Real Closing Balance</th>-->
+                    <!--<th>Difference</th>-->
+                <!--</tr>-->
+            <!--</thead>-->
+            <!--<tbody>-->
+                <!--<tr t-foreach='closing' t-as='val'>-->
+                    <!--<td><t t-esc="val['theoretical_closing_balance']" /></td>-->
+                    <!--<td><t t-esc="val['closing_difference']" /></td>-->
+                    <!--<td><t t-esc="val['real_closing_balance']" /></td>-->
+                <!--</tr>-->
+            <!--</tbody>-->
+        <!--</table>-->
+
+        <h3>Theoretical Closing Balance: <t t-esc="theoretical_closing_balance" /></h3>
+        <h3>Real Closing Balance: <t t-esc="real_closing_balance" /></h3>
+        <h3>Difference: <t t-esc="closing_difference" /></h3>
+
+        <h5 style="text-align: right;">___________________ <t t-esc="date"/></h5>
     </xpath>
 
 </template>
