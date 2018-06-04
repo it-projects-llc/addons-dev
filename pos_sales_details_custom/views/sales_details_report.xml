@@ -3,7 +3,7 @@
 
 <template id="report_saledetails" inherit_id="point_of_sale.report_saledetails">
     <xpath expr="//div[hasclass('text-center')]" position="after">
-        <table>
+        <table  class="table table-condensed">
             <tbody>
                 <tr>
                     <td>Printed by: <t t-esc="user_name" /></td>
@@ -24,9 +24,12 @@
         <td><t t-esc="payment['pay_num']" /></td>
     </xpath>
 
-    <xpath expr="//div[hasclass('page')]/strong" position="after">
+    <!--<xpath expr="//div[hasclass('page')]/strong" position="inside">-->
+    <!--</xpath>-->
+
+    <xpath expr="//div[hasclass('page')]/table[position()=3]" position="before">
         <h3>Sales by Cashier</h3>
-        <table>
+        <table  class="table table-condensed">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -46,7 +49,7 @@
         <br/>
 
         <h3>Returns</h3>
-        <table>
+        <table  class="table table-condensed">
             <thead>
                 <tr>
                     <th>Order Ref</th>
@@ -69,12 +72,36 @@
             </tbody>
         </table>
 
+        <br/>
+    </xpath>
+
+    <!--The module depends on pos_invoice_pay-->
+    <xpath expr="//div[hasclass('page')]/table[last()]" position="after">
+
+        <h3>Put Money In / Take Money Out</h3>
+        <table  class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>Datetime</th>
+                    <th>Amount</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach='put_in_out' t-as='put'>
+                    <td><t t-esc="put['datetime']" /></td>
+                    <td><t t-esc="put['amount']" /></td>
+                    <td><t t-esc="put['name']" /></td>
+                </tr>
+            </tbody>
+        </table>
+
         <h3>Theoretical Closing Balance: <t t-esc="theoretical_closing_balance" /></h3>
 
         <br/>
 
         <h3>Cash Control</h3>
-        <table>
+        <table  class="table table-condensed">
             <thead>
                 <tr>
                     <th>Coins/Bill</th>
@@ -95,30 +122,14 @@
                 <tr>
                     <td>Total Amount</td>
                     <td/>
-                    <td>SMTH</td>
+                    <td><t t-esc="sum([val['subtotal_in'] for val in cash_control] + [0])"/></td>
                     <td/>
-                    <td>SMTH</td>
+                    <td><t t-esc="sum([val['subtotal_out'] for val in cash_control] + [0])"/></td>
                 </tr>
             </tbody>
         </table>
 
-        <h3>Put Money In / Take Money Out</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Datetime</th>
-                    <th>Amount</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr t-foreach='put_in_out' t-as='put'>
-                    <td><t t-esc="put['datetime']" /></td>
-                    <td><t t-esc="put['amount']" /></td>
-                    <td><t t-esc="put['name']" /></td>
-                </tr>
-            </tbody>
-        </table>
+        <br/>
 
         <!--<h3>Put Money In / Take Money Out</h3>-->
         <!--<table>-->
