@@ -99,12 +99,14 @@ class ReportSaleDetails(models.AbstractModel):
                 [(cb.put_type == 'in' and cb.amount or -cb.amount) for cb in ps.pos_cash_box_ids]) or 0
         result['theoretical_closing_balance'] = put_inout
         result['closing_difference'] = sum([ps.cash_register_difference for ps in pos_session_ids] + [0])
-        result['real_closing_balance'] = result['closing_difference'] + result['theoretical_closing_balance'] - \
-                                         result['expenses_total']
+        result['real_closing_balance'] = result['closing_difference'] + result['theoretical_closing_balance'] - result['expenses_total']
         result['date'] = datetime.now().strftime('%y.%m.%d')
 
         result['cashiers'] = []
         result['returns'] = []
+        print('===============================')
+        print(result)
+        print('===============================')
         if not pos_orders.ids:
             return result
 

@@ -2,8 +2,8 @@
 <odoo>
 
 <template id="report_saledetails" inherit_id="point_of_sale.report_saledetails">
-    <xpath expr="//div[hasclass('text-center')]" position="after">
-        <table  class="table table-condensed">
+    <xpath expr="//div[hasclass('text-center')]" position="inside">
+        <table  class="table">
             <tbody>
                 <tr>
                     <td>Printed by: <t t-esc="user_name" /></td>
@@ -23,9 +23,6 @@
     <xpath expr="//table[hasclass('table','table-condensed')][1]/tbody/tr" position="inside">
         <td><t t-esc="('pay_num' in payment) and payment['pay_num'] or 0" /></td>
     </xpath>
-
-    <!--<xpath expr="//div[hasclass('page')]/strong" position="inside">-->
-    <!--</xpath>-->
 
     <xpath expr="//div[hasclass('page')]/table[position()=3]" position="before">
         <h3>Sales by Cashier</h3>
@@ -77,6 +74,7 @@
 
     <!--The module depends on pos_invoice_pay-->
     <xpath expr="//div[hasclass('page')]/table[last()]" position="after">
+        <br/>
 
         <h3>Put Money In / Take Money Out</h3>
         <table  class="table table-condensed">
@@ -96,7 +94,7 @@
             </tbody>
         </table>
 
-        <h3>Theoretical Closing Balance: <t t-esc="theoretical_closing_balance" /></h3>
+        <h4>Theoretical Closing Balance: <t t-esc="theoretical_closing_balance" /></h4>
 
         <br/>
 
@@ -149,10 +147,12 @@
             <!--</tbody>-->
         <!--</table>-->
 
-        <h3>Theoretical Closing Balance: <t t-esc="theoretical_closing_balance" /></h3>
-        <h3>Real Closing Balance: <t t-esc="real_closing_balance" /></h3>
-        <h3>Difference: <t t-esc="closing_difference" /></h3>
+        <h4>Theoretical Closing Balance: <t t-esc="theoretical_closing_balance" /></h4>
+        <h4>Real Closing Balance: <t t-esc="real_closing_balance" /></h4>
+        <h4>Difference: <t t-esc="closing_difference" /></h4>
 
+    </xpath>
+    <xpath expr="//div[hasclass('page')]/strong" position="after">
         <h5 style="text-align: right;">___________________ <t t-esc="date"/></h5>
     </xpath>
 
