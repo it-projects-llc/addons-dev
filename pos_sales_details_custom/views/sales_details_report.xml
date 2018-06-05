@@ -21,7 +21,7 @@
         <th>Number of Payments</th>
     </xpath>
     <xpath expr="//table[hasclass('table','table-condensed')][1]/tbody/tr" position="inside">
-        <td><t t-esc="payment['pay_num']" /></td>
+        <td><t t-esc="('pay_num' in payment) and payment['pay_num'] or 0" /></td>
     </xpath>
 
     <!--<xpath expr="//div[hasclass('page')]/strong" position="inside">-->
