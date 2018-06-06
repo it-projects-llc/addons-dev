@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 from odoo import api, models, fields
 
 SO_CHANNEL = 'pos_sale_orders'
 INV_CHANNEL = 'pos_invoices'
+
 
 class PosOrder(models.Model):
     _inherit = 'pos.order'
