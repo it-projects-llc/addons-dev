@@ -95,7 +95,7 @@ odoo.define('pos_orders_history', function (require) {
             for (var i = 0; i < lines.length; i++) {
                 sheet_id = lines[i].sheet_id[0];
                 var line_ids = _.pluck(this.db.expenses_by_id[sheet_id].expense_lines, 'id');
-                if (!(line_ids.includes(lines[i].id))) {
+                if (!_.contains(line_ids, lines[i].id)) {
                     this.db.expenses_by_id[sheet_id].expense_lines.push(lines[i]);
                 }
             }
