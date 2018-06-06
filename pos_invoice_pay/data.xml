@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
         <template id="assets_backend" name="pos_invoice_pay" inherit_id="point_of_sale.assets">
             <xpath expr="." position="inside">
                 <link rel="stylesheet" href="/pos_invoice_pay/static/src/css/styles.css"/>
@@ -8,5 +7,4 @@
             </xpath>
         </template>
         
-    </data>
 </odoo>

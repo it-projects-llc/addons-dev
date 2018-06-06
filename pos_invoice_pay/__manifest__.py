@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     "name": """POS Invoice Pay""",
     "summary": """Paying invoiceable Sales Orders and confirmed Invoies over Point of Sale""",
