@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<!-- Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
+
+<odoo>
+    <record id="simple_pos_ticket" model="pos.custom_ticket">
+        <field name="name">Simple POS Ticket</field>
+        <field name="qweb_template"><![CDATA[<t t-name="SimplePosTicket">
+        <div class="pos-sale-ticket" style="line-height: 18px;">
+
+            <div class="pos-center-align"><t t-esc="order.formatted_validation_date"/> <t t-esc="order.name"/></div>
+            <br />
+            <t t-esc="widget.pos.company.name"/> (Receipt)<br />
+            <table>
+                <colgroup>
+                    <col width='60%' />
+                    <col width='40%' />
+                </colgroup>
+                <tr>
+                    <td>Waiter: <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name"/></td>
+                    <td>Table: <t t-esc="widget.pos.table.name"/></td>
+                </tr>
+                <tr>
+                    <td>Casher: <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name"/></td>
+                    <td>Guest: <t t-esc="order.customer_count"/></td>
+                </tr>
+            </table>
+            Time: <t t-esc="display_time.date"/> <t t-esc="display_time.time"/><br />
+            <t t-if="receipt.header">
+                <div class="pos-center-align">===========================================</div>
+                <div style='text-align:center'>
+                    <t t-esc="receipt.header" />
+                </div>
+                <div class="pos-center-align">===========================================</div>
+            </t>
+            <t t-if="!receipt.header">
+                <div class="pos-center-align">===========================================</div>
+            </t>
+            <table class='receipt-orderlines'>
+                <colgroup>
+                    <col width='50%' />
+                    <col width='25%' />
+                    <col width='25%' />
+                </colgroup>
+                <tr t-foreach="orderlines" t-as="orderline" style="line-height: initial;">
+                    <td style="padding: 2px 0;">
+                        <t t-esc="orderline.get_product().display_name"/>
+                         <t t-if="orderline.get_discount() > 0">
+                            <div class="pos-disc-font">
+                                With a <t t-esc="orderline.get_discount()"/>% discount
+                            </div>
+                        </t>
+                    </td>
+                    <td style="padding: 2px 0;" class="pos-right-align">
+                        <t t-esc="orderline.get_quantity_str_with_unit()"/>
+                    </td>
+                    <td style="padding: 2px 0;" class="pos-right-align">
+                        <t t-esc="widget.format_currency(orderline.get_display_price())"/>
+                    </td>
+                </tr>
+            </table>
+            <div class="pos-center-align">===========================================</div>
+            <table class='receipt-total'>
+                <tr>
+                    <td>Subtotal:</td>
+                    <td class="pos-right-align">
+                        <t t-esc="widget.format_currency(order.get_total_without_tax())"/>
+                    </td>
+                </tr>
+                <t t-foreach="order.get_tax_details()" t-as="taxdetail">
+                    <tr>
+                        <td><t t-esc="taxdetail.name" /></td>
+                        <td class="pos-right-align">
+                            <t t-esc="widget.format_currency(taxdetail.amount)" />
+                        </td>
+                    </tr>
+                </t>
+                <tr class="emph" style="font-weight:bold;">
+                    <td>Total:</td>
+                    <td class="pos-right-align">
+                        <t t-esc="widget.format_currency(order.get_total_with_tax())"/>
+                    </td>
+                </tr>
+                <tr>
+                    <t t-if="order.discount_program_name">
+                        <td>Discount Program:</td>
+                        <td class="pos-right-align">
+                            <t t-esc="order.discount_program_name"/>
+                        </td>
+                    </t>
+                </tr>
+                <tr>
+                    <t t-if="order.get_total_discount() > 0">
+                        <td>Discount Total:</td>
+                        <td class="pos-right-align">
+                            <t t-esc="widget.format_currency(order.get_total_discount())"/>
+                        </td>
+                    </t>
+                </tr>
+            </table>
+            <table class='receipt-paymentlines'>
+                <t t-foreach="paymentlines" t-as="line">
+                  <tr>
+                      <td>
+                          <t t-esc="line.name"/>
+                      </td>
+                      <td class="pos-right-align">
+                          <t t-esc="widget.format_currency(line.get_amount())"/>
+                      </td>
+                  </tr>
+                </t>
+            </table>
+            <table class='receipt-change'>
+                <tr><td>Change:</td><td class="pos-right-align">
+                    <t t-esc="widget.format_currency(order.get_change())"/>
+                    </td></tr>
+            </table>
+            <br/>
+            <t t-if="receipt.footer">
+                <div style='text-align:center'>
+                    <t t-esc="receipt.footer" />
+                </div>
+            </t>
+        </div>
+    </t>]]>
+        </field>
+    </record>
+</odoo>

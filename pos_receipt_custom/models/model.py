@@ -1,0 +1,37 @@
+# Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+
+# -*- coding: utf-8 -*-
+from odoo import fields, models
+
+
+class PosCustomTicket(models.Model):
+    _name = "pos.custom_ticket"
+
+    name = fields.Char('Name')
+    qweb_template = fields.Text('Qweb')
+
+
+class PosXMLTicket(models.Model):
+    _name = "pos.xml_receipt"
+
+    name = fields.Char('Name')
+    qweb_template = fields.Text('Qweb')
+
+
+class PosConfig(models.Model):
+    _inherit = 'pos.config'
+
+    show_second_product_name_in_receipt = fields.Boolean(string="Display Second Product Name", default=False)
+
+    custom_ticket = fields.Boolean(string="Custom", defaut=False)
+    custom_ticket_id = fields.Many2one("pos.custom_ticket", string="Custom Template")
+
+    custom_xml_receipt = fields.Boolean(string="Custom PosBox Receipt", defaut=False)
+    custom_xml_receipt_id = fields.Many2one("pos.xml_receipt", string="Custom PosBox Receipt Template")
+
+
+class ProductTemplate(models.Model):
+    _inherit = "product.template"
+
+    second_product_name = fields.Char(string="Second Product Name")
