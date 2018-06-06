@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <template id="pos_expense_pay_report" inherit_id="point_of_sale.report_saledetails">
-            <xpath expr="//div[hasclass('page')]/table[position()=3]" position="after">
+            <xpath expr="//div[hasclass('page')]" position="inside">
                 <br/>
                 <h3>Expenses</h3>
                 <table class="table table-condensed">
