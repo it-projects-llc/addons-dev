@@ -73,33 +73,17 @@ class ReportSaleDetails(models.AbstractModel):
                     'datetime': rec.datetime
                 }]
 
-        # result['closing'] = []
-        # for ps in pos_session_ids:
-        #     put_inout = ps.pos_cash_box_ids and sum([(cb.put_type == 'in' and cb.amount or -cb.amount) for cb in ps.pos_cash_box_ids]) or 0
-        #     theor_end = ps.cash_register_balance_start + ps.cash_register_total_entry_encoding + put_inout
-        #     result['closing'] += [{
-        #         'theoretical_closing_balance': theor_end,
-        #         'closing_difference': ps.cash_register_difference,
-        #         'real_closing_balance': ps.cash_register_difference + theor_end,
-        #     }]
-
-        result['closing'] = []
-        for ps in pos_session_ids:
-            put_inout = ps.pos_cash_box_ids and sum([(cb.put_type == 'in' and cb.amount or -cb.amount) for cb in ps.pos_cash_box_ids]) or 0
-            theor_end = ps.cash_register_balance_start + ps.cash_register_total_entry_encoding + put_inout
-            result['closing'] += [{
-                'theoretical_closing_balance': theor_end,
-                'closing_difference': ps.cash_register_difference,
-                'real_closing_balance': ps.cash_register_difference + theor_end,
-            }]
-
+        result['closing_difference'] = result['real_closing_balance'] = result['theoretical_closing_balance'] = 0
         put_inout = 0
         for ps in pos_session_ids:
             put_inout += ps.pos_cash_box_ids and sum(
                 [(cb.put_type == 'in' and cb.amount or -cb.amount) for cb in ps.pos_cash_box_ids]) or 0
-        result['theoretical_closing_balance'] = put_inout
-        result['closing_difference'] = sum([ps.cash_register_difference for ps in pos_session_ids] + [0])
-        result['real_closing_balance'] = result['closing_difference'] + result['theoretical_closing_balance'] - result['expenses_total']
+        for ps in pos_session_ids:
+            result['real_closing_balance'] += ps.cash_register_balance_end
+            result['theoretical_closing_balance'] += ps.cash_register_balance_end
+        result['theoretical_closing_balance'] += (put_inout - result['expenses_total'] + result['total_invoices'])
+        result['closing_difference'] = result['theoretical_closing_balance'] - result['real_closing_balance']
+
         result['date'] = datetime.now().strftime('%y.%m.%d')
 
         result['cashiers'] = []

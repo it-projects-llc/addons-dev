@@ -24,7 +24,7 @@
         <td><t t-esc="('pay_num' in payment) and payment['pay_num'] or 0" /></td>
     </xpath>
 
-    <xpath expr="//div[hasclass('page')]/table[position()=3]" position="before">
+    <xpath expr="//div[hasclass('page')]/strong" position="after">
         <h3>Sales by Cashier</h3>
         <table  class="table table-condensed">
             <thead>
@@ -73,7 +73,7 @@
     </xpath>
 
     <!--The module depends on pos_invoice_pay-->
-    <xpath expr="//div[hasclass('page')]/table[last()]" position="after">
+    <xpath expr="//div[hasclass('page')]" position="inside">
         <br/>
 
         <h3>Put Money In / Take Money Out</h3>
@@ -152,7 +152,7 @@
         <h4>Difference: <t t-esc="closing_difference" /></h4>
 
     </xpath>
-    <xpath expr="//div[hasclass('page')]/strong" position="after">
+    <xpath expr="//div[hasclass('page')]" position="inside">
         <h5 style="text-align: right;">___________________ <t t-esc="date"/></h5>
     </xpath>
 
