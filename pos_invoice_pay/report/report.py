@@ -52,6 +52,6 @@ class ReportSaleDetails(models.AbstractModel):
                 unique.append(p.invoice_ids.id)
                 total += amount
         user_currency = self.env.user.company_id.currency_id
-        res['total_paid'] = user_currency.round(total)
+        res['total_invoices'] = user_currency.round(total)
 
         return res
