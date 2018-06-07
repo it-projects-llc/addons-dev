@@ -11,7 +11,7 @@ The application allows managing database backups via a cloud, without a need to 
 In-App Purchase
 ===============
 
-The service **Odoo-backup.sh** provides a way to store backups in a cloud. Payments for the service is managed by propietary module, which implements `In-App Purchase <https://www.odoo.com/documentation/11.0/webservices/iap.html>`__ -- payments platform provided by *Odoo S.A.*.
+The service **Odoo-backup.sh** provides a way to store backups in a cloud. Payments for the service is managed by proprietary module, which implements `In-App Purchase <https://www.odoo.com/documentation/11.0/webservices/iap.html>`__ -- payments platform provided by *Odoo S.A.*.
 
 Personal cloud
 ==============
@@ -34,17 +34,26 @@ Implementation details
 /web/database/backups
 ---------------------
 
-It's a new page in *database manager*, that allows to see list of available backups that can be restored. The process of receiving backup list is as following:
+It's a new page in *database manager*, that allows to see list of available backups that can be restored. Below is process of receiving backup list. Click on the ``Restore via Odoo-backup.sh`` consists the following operations:
 
-* *Browser* sends request to ``/web/database/backups``
-* *Odoo instance* sends request to ``odoo-backup.sh/web/backup/list`` with ``user_key`` from odoo config file (it's generated automatically if it's not set).
-* ``odoo-backup.sh`` **either** returns backup list and then browser shows backup list, **or** ``odoo-backup.sh`` doesn't recognise ``user_key`` and starts process of authentication via ``odoo.com`` as auth provider:
+* If there are not amazon S3 credentials in the config file, the module makes requests to get them:
 
-  * ``odoo-backup.sh/web/backup/list`` returns a link to redirect browser
-  * *Browser* recieves from *Odoo instance* an html page that only redirects *User* to a technical page page in ``odoo-backup.sh``, which finally redirects *User* to ``odoo.com`` website
-  * *User* enters his login-password and redirects back to a technical page in ``odoo-backup.sh`` from where he is redirected again to ``/web/database/backups`` page and the process starts again, but this time  ``odoo-backup.sh`` recognise ``user_key``
-  
+  * *Browser* sends request to ``/web/database/backups``
+  * *Odoo instance* sends request to ``odoo-backup.sh/get_cloud`` with ``user_key`` from odoo config file (it's generated automatically if it's not set).
+  * ``odoo-backup.sh`` **either** returns amazon S3 credentials with which the module can use to send request independently, **or** ``odoo-backup.sh`` doesn't recognise ``user_key`` and starts process of authentication via ``odoo.com`` as auth provider:
 
+    * ``odoo-backup.sh/web/backup/list`` returns a link to redirect to odoo.com authentication page
+    * *User* enters his login-password and redirects back to ``/web/database/backups`` page and the process starts again, but this time ``odoo-backup.sh`` recognise ``user_key`` and return amazon credentials
+
+* If amazon S3 credentials are in the config file, the module makes request to AWS S3 to get list of users backups and then renders it.
+
+Dashboard menu item in the Backups section
+------------------------------------------
+
+It's a page where an user can watch detail information about his backups which are remote stored. Also he can make backup of any his database. This backup will be sent to AWS S3 for storing. Moreover the user can create autobackup settings. The settings say to the module at what point of time, from which databases to create backupsn and max number of backups of database must be store.
+
+* If there are not amazon S3 credentials in the system parameters, only one button ``Sign in`` are available in the Dashboard. The process of receive credentials is similar to that described above.
+* If amazon S3 credentials are in the system parameters, all functions are available for the user.
 
 Credits
 =======
