@@ -51,7 +51,7 @@
                                 (<t t-esc="second_product_name"/>)
                             </t>
                         </t>
-                         <t t-if="orderline.get_discount() > 0">
+                         <t t-if="orderline.get_discount() > 0 and widget.pos.config.show_discount_in_receipt">
                             <div class="pos-disc-font">
                                 With a <t t-esc="orderline.get_discount()"/>% discount
                             </div>

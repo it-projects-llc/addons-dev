@@ -20,6 +20,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='receipt_header']" position="before">
                 <field name="show_second_product_name_in_receipt"/>
+                <field name="show_discount_in_receipt"/>
                 <field name="custom_ticket"/>
                 <field name="custom_ticket_id" attrs="{'invisible' : [('custom_ticket', '=', False)],'required': [('custom_ticket', '=', True)]}"/>
             </xpath>

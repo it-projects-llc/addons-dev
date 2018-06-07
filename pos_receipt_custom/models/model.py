@@ -23,6 +23,9 @@ class PosConfig(models.Model):
     _inherit = 'pos.config'
 
     show_second_product_name_in_receipt = fields.Boolean(string="Display Second Product Name", default=False)
+    show_discount_in_receipt = fields.Boolean(string="Display discount on the ticket", default=True,
+                                                        help="Check box if you want to display the discount"
+                                                             "of the orderline on the ticket")
 
     custom_ticket = fields.Boolean(string="Custom", defaut=False)
     custom_ticket_id = fields.Many2one("pos.custom_ticket", string="Custom Template")
