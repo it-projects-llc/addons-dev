@@ -45,6 +45,10 @@
                 <tr t-foreach="orderlines" t-as="orderline" style="line-height: initial;">
                     <td style="padding: 2px 0;">
                         <t t-esc="orderline.get_product().display_name"/>
+                        <t t-if="widget.pos.config.show_second_product_name_in_receipt">
+                            <t t-set="second_product_name" t-value="orderline.get_product().second_product_name"/>
+                            (<t t-esc="second_product_name"/>)
+                        </t>
                          <t t-if="orderline.get_discount() > 0">
                             <div class="pos-disc-font">
                                 With a <t t-esc="orderline.get_discount()"/>% discount
@@ -116,11 +120,15 @@
                     </td></tr>
             </table>
             <br/>
-            <t t-if="receipt.footer">
-                <div style='text-align:center'>
-                    <t t-esc="receipt.footer" />
+            <div style="padding-left: 10px;">
+                <div class="receipt-phone">
+                    Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
                 </div>
-            </t>
+                Address: <t t-esc="widget.pos.company.city || ''"/> <t t-esc="widget.pos.company.street || ''"/><br />
+                <t t-if="receipt.footer">
+                    <t t-esc="receipt.footer" />
+                </t>
+            </div>
         </div>
     </t>]]>
         </field>

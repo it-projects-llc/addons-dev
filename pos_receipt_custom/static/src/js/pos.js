@@ -16,7 +16,8 @@ odoo.define('pos_receipt_custom', function(require){
         },
     });
 
-    models.load_fields('product.product',['second_product_name']);
+    models.load_fields('product.product', ['second_product_name']);
+    models.load_fields('res.company', ['street', 'city']);
 
     var _super_posmodel = models.PosModel.prototype;
     models.PosModel = models.PosModel.extend({
