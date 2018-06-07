@@ -81,12 +81,6 @@
                         </td>
                     </tr>
                 </t>
-                <tr class="emph" style="font-weight:bold;">
-                    <td>Total:</td>
-                    <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.get_total_with_tax())"/>
-                    </td>
-                </tr>
                 <tr>
                     <t t-if="order.discount_program_name">
                         <td>Discount Program:</td>
@@ -103,19 +97,60 @@
                         </td>
                     </t>
                 </tr>
+                <tr class="emph" style="font-weight:bold; font-size: 18px;">
+                    <td>Total:</td>
+                    <td class="pos-right-align">
+                        <t t-esc="widget.format_currency(order.get_total_with_tax())"/>
+                    </td>
+                </tr>
             </table>
             <table class='receipt-paymentlines'>
                 <t t-foreach="paymentlines" t-as="line">
-                  <tr>
-                      <td>
-                          <t t-esc="line.name"/>
-                      </td>
-                      <td class="pos-right-align">
-                          <t t-esc="widget.format_currency(line.get_amount())"/>
-                      </td>
-                  </tr>
+                    <tr>
+                        <td>
+                            <t t-esc="line.name"/>
+                        </td>
+                        <td class="pos-right-align">
+                            <t t-esc="widget.format_currency(line.get_amount())"/>
+                        </td>
+                    </tr>
                 </t>
             </table>
+
+            <t t-set="partner" t-value="order.get_client()"/>
+            <t t-if="receipt.debt_before or receipt.debt_after or (partner and partner.debt)">
+                <t t-set="debt_sign" t-value="receipt.debt_type=='debt' and 1 or -1"/>
+                <table>
+                    <t t-if="receipt.debt_type=='debt'">
+                        <tr>
+                            <td>
+                                Debts Total:
+                            </td>
+                            <td class="pos-right-align">
+                                <t t-esc='widget.format_currency(debt_sign * receipt.debt_after)'/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Max Debts Balance:
+                            </td>
+                            <td class="pos-right-align">
+                                <t t-esc='widget.format_currency(debt_sign * (partner.debt_limit - debt_sign * receipt.debt_after))'/>
+                            </td>
+                        </tr>
+                    </t>
+                    <t t-if="receipt.debt_type=='credit'">
+                        <tr>
+                            <td>
+                                Credits Balance:
+                            </td>
+                            <td class="pos-right-align">
+                                <t t-esc='widget.format_currency(debt_sign * receipt.debt_after)'/>
+                            </td>
+                        </tr>
+                    </t>
+                </table>
+            </t>
             <table class='receipt-change'>
                 <tr><td>Change:</td><td class="pos-right-align">
                     <t t-esc="widget.format_currency(order.get_change())"/>
