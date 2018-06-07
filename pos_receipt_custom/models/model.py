@@ -5,33 +5,35 @@
 from odoo import fields, models
 
 
-class PosCustomTicket(models.Model):
-    _name = "pos.custom_ticket"
+class PosCustomReceipt(models.Model):
+    _name = "pos.custom_receipt"
 
     name = fields.Char('Name')
-    qweb_template = fields.Text('Qweb')
-
-
-class PosXMLTicket(models.Model):
-    _name = "pos.xml_receipt"
-
-    name = fields.Char('Name')
+    is_ticket = fields.Boolean('is Ticket?')
     qweb_template = fields.Text('Qweb')
 
 
 class PosConfig(models.Model):
     _inherit = 'pos.config'
 
+    def _get_custom_ticket_id_domain(self):
+        return [('is_ticket', '=', True)]
+
+    def _get_custom_xml_receipt_id_domain(self):
+        return [('is_ticket', '=', False)]
+
     show_second_product_name_in_receipt = fields.Boolean(string="Display Second Product Name", default=False)
     show_discount_in_receipt = fields.Boolean(string="Display discount on the ticket", default=True,
-                                                        help="Check box if you want to display the discount"
-                                                             "of the orderline on the ticket")
+                                              help="Check box if you want to display the discount "
+                                                   "of the orderline on the ticket")
 
     custom_ticket = fields.Boolean(string="Custom", defaut=False)
-    custom_ticket_id = fields.Many2one("pos.custom_ticket", string="Custom Template")
+    custom_ticket_id = fields.Many2one("pos.custom_receipt", string="Custom Template",
+                                       domain=lambda self: self._get_custom_ticket_id_domain())
 
     custom_xml_receipt = fields.Boolean(string="Custom PosBox Receipt", defaut=False)
-    custom_xml_receipt_id = fields.Many2one("pos.xml_receipt", string="Custom PosBox Receipt Template")
+    custom_xml_receipt_id = fields.Many2one("pos.custom_receipt", string="Custom PosBox Receipt Template",
+                                            domain=lambda self: self._get_custom_xml_receipt_id_domain())
 
 
 class ProductTemplate(models.Model):

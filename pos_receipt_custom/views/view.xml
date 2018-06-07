@@ -31,29 +31,15 @@
         </field>
     </record>
 
-    <record id="pos_custom_ticket_form_view" model="ir.ui.view">
-        <field name="name">pos.custom_ticket.view.form</field>
-        <field name="model">pos.custom_ticket</field>
+    <record id="pos_custom_receipt_form_view" model="ir.ui.view">
+        <field name="name">pos.custom_receipt.view.form</field>
+        <field name="model">pos.custom_receipt</field>
         <field name="arch" type="xml">
-            <form string="Custom Ticket">
+            <form string="Custom Receipt">
                 <sheet>
                     <group>
                         <field name="name"/>
-                        <field name="qweb_template" widget="ace" options="{'mode': 'xml'}"/>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <record id="pos_xml_receipt_form_view" model="ir.ui.view">
-        <field name="name">pos.xml_receipt.view.form</field>
-        <field name="model">pos.xml_receipt</field>
-        <field name="arch" type="xml">
-            <form string="XML Receipt">
-                <sheet>
-                    <group>
-                        <field name="name"/>
+                        <field name="is_ticket"/>
                         <field name="qweb_template" widget="ace" options="{'mode': 'xml'}"/>
                     </group>
                 </sheet>

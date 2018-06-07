@@ -9,10 +9,10 @@ odoo.define('pos_receipt_custom', function(require){
     var Qweb = core.qweb;
 
     models.load_models({
-        model: 'pos.custom_ticket',
-        fields: ['qweb_template'],
+        model: 'pos.custom_receipt',
+        fields: ['name','qweb_template', 'is_ticket'],
         loaded: function(self, templates) {
-            self.custom_ticket_templates = templates;
+            self.custom_receipt_templates = templates;
         },
     });
 
@@ -83,27 +83,29 @@ odoo.define('pos_receipt_custom', function(require){
             Qweb.compiled_templates[template_name] = tcompiled;
             return Qweb.render(template_name, options);
         },
-        get_ticket_template_by_id: function(id) {
-            return this.pos.custom_ticket_templates.find(function(ticket){
-                return ticket.id === id;
+        get_receipt_template_by_id: function(id, is_ticket) {
+            return this.pos.custom_receipt_templates.find(function(receipt){
+                return receipt.id === id && receipt.is_ticket === is_ticket;
             });
         },
         render_receipt: function(){
             if (this.pos.config.custom_ticket) {
 
-                var open_time = this.pos.table.open_time;
-                var payment_time = this.pos.get_current_datetime();
+                if (this.pos.table) {
+                    var open_time = this.pos.table.open_time;
+                    var payment_time = this.pos.get_current_datetime();
 
-                var display_time = {time: open_time.time + "-" + payment_time.time};
+                    var display_time = {time: open_time.time + "-" + payment_time.time};
 
-                if (open_time.date === payment_time.date) {
-                    display_time.date = open_time.date;
-                } else {
-                    display_time.date = open_time.date + "-" + payment_time.date;
+                    if (open_time.date === payment_time.date) {
+                        display_time.date = open_time.date;
+                    } else {
+                        display_time.date = open_time.date + "-" + payment_time.date;
+                    }
                 }
 
                 var order = this.pos.get_order();
-                var ticket_template = this.get_ticket_template_by_id(this.pos.config.custom_ticket_id[0]);
+                var ticket_template = this.get_receipt_template_by_id(this.pos.config.custom_ticket_id[0], true);
                 var template = $.parseXML(ticket_template.qweb_template).children[0];
                 var ticket = this.custom_qweb_render(template, {
                     widget: this,
@@ -111,9 +113,43 @@ odoo.define('pos_receipt_custom', function(require){
                     receipt: order.export_for_printing(),
                     orderlines: order.get_orderlines(),
                     paymentlines: order.get_paymentlines(),
-                    display_time: display_time,
+                    display_time: display_time || false,
                 });
                 this.$('.pos-receipt-container').html(ticket);
+            } else {
+                this._super();
+            }
+        },
+        print_xml: function() {
+            if (this.pos.config.custom_xml_receipt) {
+
+                if (this.pos.table) {
+                    var open_time = this.pos.table.open_time;
+                    var payment_time = this.pos.get_current_datetime();
+
+                    var display_time = {time: open_time.time + "-" + payment_time.time};
+
+                    if (open_time.date === payment_time.date) {
+                        display_time.date = open_time.date;
+                    } else {
+                        display_time.date = open_time.date + "-" + payment_time.date;
+                    }
+                }
+
+                var env = {
+                    widget:  this,
+                    pos: this.pos,
+                    order: this.pos.get_order(),
+                    receipt: this.pos.get_order().export_for_printing(),
+                    paymentlines: this.pos.get_order().get_paymentlines(),
+                    display_time: display_time || false,
+                };
+
+                var receipt_template = this.get_receipt_template_by_id(this.pos.config.custom_xml_receipt_id[0], false);
+                var template = $.parseXML(receipt_template.qweb_template).children[0];
+                var receipt = this.custom_qweb_render(template, env);
+                this.pos.proxy.print_receipt(receipt);
+                this.pos.get_order()._printed = true;
             } else {
                 this._super();
             }
