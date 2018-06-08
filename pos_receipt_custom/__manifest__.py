@@ -24,6 +24,8 @@
     "data": [
         "views/view.xml",
         "views/template.xml",
+        "security/ir.model.access.csv",
+        "data/data.xml",
     ],
     "demo": [
     ],

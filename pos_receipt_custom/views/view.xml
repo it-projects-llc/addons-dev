@@ -20,7 +20,31 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='receipt_header']" position="before">
                 <field name="show_second_product_name_in_receipt"/>
+                <field name="show_discount_in_receipt"/>
+                <field name="custom_ticket"/>
+                <field name="custom_ticket_id" attrs="{'invisible' : [('custom_ticket', '=', False)],'required': [('custom_ticket', '=', True)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='iface_print_via_proxy']" position="after">
+                <field name="custom_xml_receipt" attrs="{'invisible' : [('iface_print_via_proxy', '=', False)]}"/>
+                <field name="custom_xml_receipt_id" attrs="{'invisible' : ['|',('custom_xml_receipt', '=', False),('iface_print_via_proxy', '=', False)],'required': [('custom_xml_receipt', '=', True),('iface_print_via_proxy', '=', True)]}"/>
             </xpath>
         </field>
     </record>
+
+    <record id="pos_custom_receipt_form_view" model="ir.ui.view">
+        <field name="name">pos.custom_receipt.view.form</field>
+        <field name="model">pos.custom_receipt</field>
+        <field name="arch" type="xml">
+            <form string="Custom Receipt">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="type" required="1"/>
+                        <field name="qweb_template" widget="ace" options="{'mode': 'xml'}"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
 </odoo>
