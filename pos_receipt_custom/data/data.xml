@@ -217,7 +217,7 @@
         <field name="name">Simple POS Receipt</field>
         <field name="type">receipt</field>
         <field name="qweb_template"><![CDATA[<t t-name="SimpleXmlReceipt">
-        <receipt align='center' width='40' value-thousands-separator='' >
+        <receipt align='center' width='45' value-thousands-separator='' >
 
             <!-- HEADER -->
 
@@ -260,6 +260,9 @@
                 <t t-if='!receipt.header_xml and receipt.header'>
                     <div>==============================================</div>
                     <div><t t-esc='receipt.header' /></div>
+                    <div>==============================================</div>
+                </t>
+                <t t-if='!receipt.header_xml and !receipt.header'>
                     <div>==============================================</div>
                 </t>
             </div>
