@@ -81,13 +81,12 @@ class ReportSaleDetails(models.AbstractModel):
             result['real_closing_balance'] += ps.cash_register_balance_end_real
             result['cash_register_balance_end'] += ps.cash_register_balance_end
 
-        user_currency = active_user.company_id.currency_id
-        result['real_closing_balance'] = user_currency.round(result['real_closing_balance'])
-        result['cash_register_balance_end'] = user_currency.round(result['cash_register_balance_end'])
-        result['theoretical_closing_balance'] = user_currency.round(result['cash_register_balance_end'] + put_inout +
-                                                                    result['expenses_total'] + result['total_invoices'])
+        result['real_closing_balance'] = result['real_closing_balance']
+        result['cash_register_balance_end'] = result['cash_register_balance_end']
+        result['theoretical_closing_balance'] = (result['cash_register_balance_end'] + put_inout +
+                                                 result['expenses_total'] + result['total_invoices'])
         result['closing_difference'] = result['cash_register_balance_end'] - result['real_closing_balance']
-        result['date'] = datetime.now().strftime('%y.%m.%d')
+        result['date'] = datetime.now().strftime('%y/%m/%d')
 
         result['cashiers'] = result['returns'] = []
 
@@ -107,7 +106,7 @@ class ReportSaleDetails(models.AbstractModel):
             result['cashiers'] += [{
                 'name': user.name,
                 'sale_num': len(orders),
-                'total': user_currency.round(sum([o.amount_total for o in orders]))
+                'total': sum([o.amount_total for o in orders])
             }]
 
         self.env.cr.execute("""
@@ -137,6 +136,6 @@ class ReportSaleDetails(models.AbstractModel):
         for prod in result['returns']:
             line = self.env['pos.order.line'].browse(prod['line_id'])
             prod['customer'] = line.order_id.partner_id.name or ''
-            prod['total'] = user_currency.round(line.price_subtotal)
+            prod['total'] = line.price_subtotal
 
         return result

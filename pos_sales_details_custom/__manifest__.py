@@ -2,7 +2,7 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 {
     "name": """Custom Sales Details""",
-    "summary": """{SHORT_DESCRIPTION_OF_THE_MODULE}""",
+    "summary": """The module customises **Sales Details** report""",
     "category": "Point of Sale",
     # "live_test_url": "",
     "images": [],

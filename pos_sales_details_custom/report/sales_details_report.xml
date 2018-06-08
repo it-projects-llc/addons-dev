@@ -41,7 +41,7 @@
                 <tr t-foreach='cashiers' t-as='cashier'>
                     <td><t t-esc="cashier['name']" /></td>
                     <td><t t-esc="cashier['sale_num']" /></td>
-                    <td><t t-esc="cashier['total']" /></td>
+                    <td><t t-esc="cashier['total']" t-options="{'widget': 'float', 'precision': currency_precision}"/></td>
                 </tr>
             </tbody>
         </table>
@@ -67,7 +67,7 @@
                     <td><t t-esc="ret['customer']" /></td>
                     <td><t t-esc="ret['cashier']" /></td>
                     <td><t t-esc="ret['qty']" /></td>
-                    <td><t t-esc="ret['total']" /></td>
+                    <td><t t-esc="ret['total']" t-options="{'widget': 'float', 'precision': currency_precision}" /></td>
                 </tr>
             </tbody>
         </table>
@@ -97,7 +97,7 @@
             </tbody>
         </table>
 
-        <h4>Theoretical Closing Balance: <t t-esc="theoretical_closing_balance" /></h4>
+        <h4>Theoretical Closing Balance: <t t-esc="theoretical_closing_balance" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
 
         <br/>
 
@@ -150,9 +150,9 @@
             <!--</tbody>-->
         <!--</table>-->
 
-        <h4>Theoretical Closing Balance: <t t-esc="cash_register_balance_end" /></h4>
-        <h4>Real Closing Balance: <t t-esc="real_closing_balance" /></h4>
-        <h4>Difference: <t t-esc="closing_difference" /></h4>
+        <h4>Theoretical Closing Balance: <t t-esc="cash_register_balance_end" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
+        <h4>Real Closing Balance: <t t-esc="real_closing_balance" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
+        <h4>Difference: <t t-esc="closing_difference" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
 
     </xpath>
     <xpath expr="//div[hasclass('page')]" position="inside">
