@@ -13,7 +13,7 @@
 
             <div class="pos-center-align"><t t-esc="order.formatted_validation_date"/> <t t-esc="order.name"/></div>
             <br />
-            <t t-esc="widget.pos.company.name"/> (Receipt)<br />
+            <t t-esc="widget.pos.company.name"/> (<t t-esc="order.get_receipt_type()"/>)<br />
             <table>
                 <colgroup>
                     <col width='60%' />
@@ -236,7 +236,7 @@
                 <br />
                 <line>
                     <left><t t-esc='receipt.company.name' /></left>
-                    <right>(Receipt)</right>
+                    <right>(<t t-esc="order.get_receipt_type()"/>)</right>
                 </line>
                 <line>
                     <left>Waiter: <t t-esc='receipt.cashier' /></left>

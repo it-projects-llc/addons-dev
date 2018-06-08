@@ -5,6 +5,8 @@ odoo.define('pos_receipt_custom.models', function(require){
 
     var models = require('point_of_sale.models');
     var core = require('web.core');
+
+    var _t = core._t;
     var Qweb = core.qweb;
 
     models.load_models({
@@ -78,6 +80,12 @@ odoo.define('pos_receipt_custom.models', function(require){
                 return receipt.id === id && receipt.type === type;
             });
         },
+        get_receipt_type: function(type){
+            return this.receipt_type || _t("Receipt");
+        },
+        set_receipt_type: function(type) {
+            this.receipt_type = type;
+        }
     });
 
     var _super_orderline = models.Orderline.prototype;
