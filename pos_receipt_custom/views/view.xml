@@ -39,7 +39,7 @@
                 <sheet>
                     <group>
                         <field name="name"/>
-                        <field name="is_ticket"/>
+                        <field name="type" required="1"/>
                         <field name="qweb_template" widget="ace" options="{'mode': 'xml'}"/>
                     </group>
                 </sheet>

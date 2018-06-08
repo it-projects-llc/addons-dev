@@ -9,7 +9,7 @@ class PosCustomReceipt(models.Model):
     _name = "pos.custom_receipt"
 
     name = fields.Char('Name')
-    is_ticket = fields.Boolean('is Ticket?')
+    type = fields.Selection(string="Type", selection=[('receipt', 'Receipt'), ('ticket', 'Ticket')])
     qweb_template = fields.Text('Qweb')
 
 
@@ -17,10 +17,10 @@ class PosConfig(models.Model):
     _inherit = 'pos.config'
 
     def _get_custom_ticket_id_domain(self):
-        return [('is_ticket', '=', True)]
+        return [('type', '=', 'ticket')]
 
     def _get_custom_xml_receipt_id_domain(self):
-        return [('is_ticket', '=', False)]
+        return [('type', '=', 'receipt')]
 
     show_second_product_name_in_receipt = fields.Boolean(string="Display Second Product Name", default=False)
     show_discount_in_receipt = fields.Boolean(string="Display discount on the ticket", default=True,

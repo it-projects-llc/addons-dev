@@ -10,7 +10,7 @@ odoo.define('pos_receipt_custom', function(require){
 
     models.load_models({
         model: 'pos.custom_receipt',
-        fields: ['name','qweb_template', 'is_ticket'],
+        fields: ['name','qweb_template', 'type'],
         loaded: function(self, templates) {
             self.custom_receipt_templates = templates;
         },
@@ -83,9 +83,9 @@ odoo.define('pos_receipt_custom', function(require){
             Qweb.compiled_templates[template_name] = tcompiled;
             return Qweb.render(template_name, options);
         },
-        get_receipt_template_by_id: function(id, is_ticket) {
+        get_receipt_template_by_id: function(id, type) {
             return this.pos.custom_receipt_templates.find(function(receipt){
-                return receipt.id === id && receipt.is_ticket === is_ticket;
+                return receipt.id === id && receipt.type === type;
             });
         },
         render_receipt: function(){
@@ -105,7 +105,7 @@ odoo.define('pos_receipt_custom', function(require){
                 }
 
                 var order = this.pos.get_order();
-                var ticket_template = this.get_receipt_template_by_id(this.pos.config.custom_ticket_id[0], true);
+                var ticket_template = this.get_receipt_template_by_id(this.pos.config.custom_ticket_id[0], 'ticket');
                 var template = $.parseXML(ticket_template.qweb_template).children[0];
                 var ticket = this.custom_qweb_render(template, {
                     widget: this,
@@ -145,7 +145,7 @@ odoo.define('pos_receipt_custom', function(require){
                     display_time: display_time || false,
                 };
 
-                var receipt_template = this.get_receipt_template_by_id(this.pos.config.custom_xml_receipt_id[0], false);
+                var receipt_template = this.get_receipt_template_by_id(this.pos.config.custom_xml_receipt_id[0], 'receipt');
                 var template = $.parseXML(receipt_template.qweb_template).children[0];
                 var receipt = this.custom_qweb_render(template, env);
                 this.pos.proxy.print_receipt(receipt);

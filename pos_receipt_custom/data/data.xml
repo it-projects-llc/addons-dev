@@ -5,7 +5,7 @@
 <odoo>
     <record id="simple_pos_ticket" model="pos.custom_receipt">
         <field name="name">Simple POS Ticket</field>
-        <field name="is_ticket">True</field>
+        <field name="type">ticket</field>
         <field name="qweb_template"><![CDATA[<t t-name="SimplePosTicket">
         <div class="pos-sale-ticket" style="line-height: 18px;">
 
@@ -176,7 +176,7 @@
 
         <record id="simple_pos_receipt" model="pos.custom_receipt">
         <field name="name">Simple POS Receipt</field>
-        <field name="is_ticket">False</field>
+        <field name="type">receipt</field>
         <field name="qweb_template"><![CDATA[<t t-name="SimpleXmlReceipt">
         <receipt align='center' width='40' value-thousands-separator='' >
             <t t-if='receipt.company.logo'>
