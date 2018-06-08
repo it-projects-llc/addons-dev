@@ -61,15 +61,15 @@ odoo.define('pos_receipt_custom.models', function(require){
     models.Order = models.Order.extend({
         custom_qweb_render: function(template, options) {
             var code = Qweb.compile(template), tcompiled;
+            var template_name = $(template).attr('t-name');
             try {
                 tcompiled = new Function(['dict'], code);
             } catch (error) {
-                Qweb.tools.exception("Error evaluating template: " + error, { template: name });
+                Qweb.tools.exception("Error evaluating template: " + error, { template: template_name });
             }
             if (!tcompiled) {
-                Qweb.tools.exception("Error evaluating template: (IE?)" + error, { template: name });
+                Qweb.tools.exception("Error evaluating template: (IE?)" + error, { template: template_name });
             }
-            var template_name = $(template).attr('t-name')
             Qweb.compiled_templates[template_name] = tcompiled;
             return Qweb.render(template_name, options);
         },
