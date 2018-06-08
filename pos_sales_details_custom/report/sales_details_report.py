@@ -34,11 +34,11 @@ class ReportSaleDetails(models.AbstractModel):
             for session in conf.session_ids:
                 lines_in = session.cash_register_id.cashbox_start_id.cashbox_lines_ids
                 lines_out = session.cash_register_id.cashbox_end_id.cashbox_lines_ids
-                lines_out_numbers = [l.number for l in lines_out]
+                lines_out_values = [l.coin_value for l in lines_out]
                 lines_out_used = []
                 for line in lines_in:
-                    if line.number in lines_out_numbers:
-                        in_array = lines_out_numbers.index(line.number)
+                    if line.coin_value in lines_out_values:
+                        in_array = lines_out_values.index(line.coin_value)
                         result['cash_control'] += [{
                             'number': line.number,
                             'coin_in': line.coin_value,
@@ -81,8 +81,11 @@ class ReportSaleDetails(models.AbstractModel):
             result['real_closing_balance'] += ps.cash_register_balance_end_real
             result['cash_register_balance_end'] += ps.cash_register_balance_end
 
-        result['theoretical_closing_balance'] = (result['cash_register_balance_end'] + put_inout
-                                                 + result['expenses_total'] + result['total_invoices'])
+        user_currency = active_user.company_id.currency_id
+        result['real_closing_balance'] = user_currency.round(result['real_closing_balance'])
+        result['cash_register_balance_end'] = user_currency.round(result['cash_register_balance_end'])
+        result['theoretical_closing_balance'] = user_currency.round(result['cash_register_balance_end'] + put_inout +
+                                                                    result['expenses_total'] + result['total_invoices'])
         result['closing_difference'] = result['cash_register_balance_end'] - result['real_closing_balance']
         result['date'] = datetime.now().strftime('%y.%m.%d')
 
@@ -90,8 +93,6 @@ class ReportSaleDetails(models.AbstractModel):
 
         if not pos_orders.ids:
             return result
-
-        user_currency = active_user.company_id.currency_id
 
         self.env.cr.execute("""
             SELECT DISTINCT po.user_id
@@ -138,7 +139,4 @@ class ReportSaleDetails(models.AbstractModel):
             prod['customer'] = line.order_id.partner_id.name or ''
             prod['total'] = user_currency.round(line.price_subtotal)
 
-        print('-------------------------------')
-        print(result)
-        print('-------------------------------')
         return result
