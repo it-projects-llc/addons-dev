@@ -3,7 +3,6 @@
 
 from odoo import models, api
 from datetime import datetime
-# import wdb
 
 
 class ReportSaleDetails(models.AbstractModel):
@@ -12,12 +11,13 @@ class ReportSaleDetails(models.AbstractModel):
     @api.model
     def get_sale_details(self, date_start=False, date_stop=False, configs=False):
         result = super(ReportSaleDetails, self).get_sale_details(date_start, date_stop, configs)
-        result['user_name'] = self.env['res.users'].browse(self.env.context['uid']).name
+        active_user = self.env['res.users'].browse(self.env.context['uid'])
         pos_session_ids = self.env['pos.session'].search([('config_id', 'in', configs.ids)])
         pos_session_refs = [p_s.name for p_s in pos_session_ids]
-        result['pos_names'] = ', '.join([pos.name for pos in configs])
         pos_orders = self.env['pos.order'].search([('session_id', 'in', pos_session_ids.ids)])
-        # wdb.set_trace()
+
+        result['user_name'] = active_user.name
+        result['pos_names'] = ', '.join([pos.name for pos in configs])
         result['order_num'] = len(pos_orders)
         for pay in result['payments']:
             pay['pay_num'] = len(self.env['account.bank.statement.line'].search([('journal_id.name', '=', 'Cash'),
@@ -73,26 +73,25 @@ class ReportSaleDetails(models.AbstractModel):
                     'datetime': rec.datetime
                 }]
 
-        result['closing_difference'] = result['real_closing_balance'] = result['theoretical_closing_balance'] = 0
+        result['closing_difference'] = result['real_closing_balance'] = result['cash_register_balance_end'] = 0
         put_inout = 0
         for ps in pos_session_ids:
             put_inout += ps.pos_cash_box_ids and sum(
                 [(cb.put_type == 'in' and cb.amount or -cb.amount) for cb in ps.pos_cash_box_ids]) or 0
-        for ps in pos_session_ids:
-            result['real_closing_balance'] += ps.cash_register_balance_end
-            result['theoretical_closing_balance'] += ps.cash_register_balance_end
-        result['theoretical_closing_balance'] += (put_inout - result['expenses_total'] + result['total_invoices'])
-        result['closing_difference'] = result['theoretical_closing_balance'] - result['real_closing_balance']
+            result['real_closing_balance'] += ps.cash_register_balance_end_real
+            result['cash_register_balance_end'] += ps.cash_register_balance_end
 
+        result['theoretical_closing_balance'] = (result['cash_register_balance_end'] + put_inout
+                                                 + result['expenses_total'] + result['total_invoices'])
+        result['closing_difference'] = result['cash_register_balance_end'] - result['real_closing_balance']
         result['date'] = datetime.now().strftime('%y.%m.%d')
 
-        result['cashiers'] = []
-        result['returns'] = []
-        print('===============================')
-        print(result)
-        print('===============================')
+        result['cashiers'] = result['returns'] = []
+
         if not pos_orders.ids:
             return result
+
+        user_currency = active_user.company_id.currency_id
 
         self.env.cr.execute("""
             SELECT DISTINCT po.user_id
@@ -107,7 +106,7 @@ class ReportSaleDetails(models.AbstractModel):
             result['cashiers'] += [{
                 'name': user.name,
                 'sale_num': len(orders),
-                'total': sum([o.amount_total for o in orders])
+                'total': user_currency.round(sum([o.amount_total for o in orders]))
             }]
 
         self.env.cr.execute("""
@@ -137,7 +136,7 @@ class ReportSaleDetails(models.AbstractModel):
         for prod in result['returns']:
             line = self.env['pos.order.line'].browse(prod['line_id'])
             prod['customer'] = line.order_id.partner_id.name or ''
-            prod['total'] = line.price_subtotal
+            prod['total'] = user_currency.round(line.price_subtotal)
 
         print('-------------------------------')
         print(result)

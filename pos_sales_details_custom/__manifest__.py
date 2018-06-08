@@ -22,7 +22,7 @@
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
-        "views/sales_details_report.xml",
+        "report/sales_details_report.xml",
     ],
     "demo": [
     ],

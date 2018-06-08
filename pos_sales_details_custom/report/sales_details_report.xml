@@ -118,7 +118,7 @@
                     <td><t t-esc="val['subtotal_out']" /></td>
                 </tr>
                 <tr>
-                    <td>Total Amount</td>
+                    <td><strong>Total Amount:</strong></td>
                     <td/>
                     <td><t t-esc="sum([val['subtotal_in'] for val in cash_control] + [0])"/></td>
                     <td/>
@@ -147,7 +147,7 @@
             <!--</tbody>-->
         <!--</table>-->
 
-        <h4>Theoretical Closing Balance: <t t-esc="theoretical_closing_balance" /></h4>
+        <h4>Theoretical Closing Balance: <t t-esc="cash_register_balance_end" /></h4>
         <h4>Real Closing Balance: <t t-esc="real_closing_balance" /></h4>
         <h4>Difference: <t t-esc="closing_difference" /></h4>
 
