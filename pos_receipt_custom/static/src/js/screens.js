@@ -69,7 +69,8 @@ odoo.define('pos_receipt_custom.screens', function(require){
                 var template = $.parseXML(receipt_template.qweb_template).children[0];
                 var receipt = order.custom_qweb_render(template, env);
                 this.pos.proxy.print_receipt(receipt);
-                this.pos.get_order()._printed = true;
+                order._printed = true;
+                order.set_receipt_type(false);
             } else {
                 this._super();
             }
