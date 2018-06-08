@@ -26,7 +26,7 @@
                             <td><t t-esc="inv['amount']"/></td>
                         </tr>
                         <tr>
-                            <td colspan="5" class="text-right">
+                            <td colspan="6" class="text-right">
                                 <strong>Total:</strong> <t t-esc="total_invoices"/>
                             </td>
                         </tr>
