@@ -3,8 +3,9 @@
      License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
 
 <odoo>
-    <record id="simple_kitchen_receipt" model="pos.order_receipt">
+    <record id="simple_kitchen_receipt" model="pos.custom_receipt">
         <field name="name">Simple Kitchen Receipt</field>
+        <field name="type">order_receipt</field>
         <field name="qweb_template">
             <![CDATA[<t t-name="SimpleKitchenReceipt">
         <receipt

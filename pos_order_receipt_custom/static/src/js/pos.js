@@ -10,14 +10,14 @@ odoo.define('pos_order_receipt_custom', function (require) {
     var Qweb = core.qweb;
 
     models.load_models({
-        model: 'pos.order_receipt',
+        model: 'pos.custom_receipt',
         fields: ['qweb_template'],
         loaded: function(self, receipt_formats){
             self.receipt_formats = receipt_formats;
         },
     });
 
-    models.load_fields('restaurant.printer',['receipt_format_id']);
+    models.load_fields('restaurant.printer',['custom_order_receipt', 'custom_order_receipt_id']);
 
     var _super_posmodel = models.PosModel.prototype;
     models.PosModel = models.PosModel.extend({
@@ -104,7 +104,7 @@ odoo.define('pos_order_receipt_custom', function (require) {
             return Qweb.render(template_name, options);
         },
         print_order_receipt: function(printer, changes) {
-            if (printer.config.receipt_format_id && (changes['new'].length > 0 || changes['cancelled'].length > 0 || changes.changes_table)) {
+            if (printer.config.custom_order_receipt && (changes['new'].length > 0 || changes['cancelled'].length > 0 || changes.changes_table)) {
                 this.print_custom_receipt(printer, changes);
             } else {
                 _super_order.print_order_receipt.apply(this,arguments);
@@ -144,7 +144,7 @@ odoo.define('pos_order_receipt_custom', function (require) {
             changes.date = {'date': date, 'month': month, 'year':year};
             changes.printer = {'name': printer.config.name};
 
-            var receipt_template = this.get_receipt_template_by_id(printer.config.receipt_format_id[0]);
+            var receipt_template = this.get_receipt_template_by_id(printer.config.custom_order_receipt_id[0]);
             var template = $.parseXML(receipt_template.qweb_template).children[0];
             var receipt = this.render_custom_qweb(template, {changes:changes, widget:this});
             printer.print(receipt);
