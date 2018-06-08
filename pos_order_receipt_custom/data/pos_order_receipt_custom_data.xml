@@ -134,12 +134,17 @@
                                     </line>
                                 </t>
                             </t>
-                            <t t-if="changes.reason">
-                                <pre>Reason: <t t-esc="changes.reason" /></pre>
+                            <t t-if="change.reason and !changes.reason">
+                                <pre align='left'>    Reason: <t t-esc="change.reason" /></pre>
                             </t>
                         </div>
                         <br/>
                     </t>
+                    <div size="double-height">
+                        <t t-if="changes.reason">
+                            <pre align='left'>    Reason: <t t-esc="changes.reason" /></pre>
+                        </t>
+                    </div>
                     <!--For compatibility with the https://www.odoo.com/apps/modules/10.0/pos_order_note/ module-->
                     <div size="double-height">
                         <t t-if="changes.old_order_note">
