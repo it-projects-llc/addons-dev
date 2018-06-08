@@ -118,7 +118,7 @@ odoo.define('pos_order_receipt_custom.models', function (require) {
             changes.date = {'date': date, 'month': month, 'year':year};
             changes.printer = {'name': printer.config.name};
 
-            var receipt_template = this.get_receipt_template_by_id(printer.config.custom_order_receipt_id[0]);
+            var receipt_template = this.get_receipt_template_by_id(printer.config.custom_order_receipt_id[0], 'order_receipt');
             var template = $.parseXML(receipt_template.qweb_template).children[0];
             var receipt = this.custom_qweb_render(template, {changes:changes, widget:this});
             printer.print(receipt);
