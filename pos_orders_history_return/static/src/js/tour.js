@@ -1,4 +1,4 @@
-odoo.define('pos_orders_history_reprint.tour', function(require) {
+odoo.define('pos_orders_history_return.tour', function(require) {
     "use strict";
 
     var tour = require('web_tour.tour');
@@ -94,10 +94,10 @@ odoo.define('pos_orders_history_reprint.tour', function(require) {
         }];
     }
 
-    function reprint_order() {
+    function return_order() {
         return [{
-            trigger: '.button.reprint',
-            content: "reprint selected order",
+            trigger: '.order-line:first .button.return',
+            content: "return selected order",
         }];
     }
 
@@ -133,7 +133,15 @@ odoo.define('pos_orders_history_reprint.tour', function(require) {
 
     steps = steps.concat(orders_history());
 
-    steps = steps.concat(reprint_order());
+    steps = steps.concat(return_order());
+
+    steps = steps.concat(add_product_to_order('Peaches'));
+
+    steps = steps.concat(goto_payment_screen_and_select_payment_method());
+
+    steps = steps.concat(generate_payment_screen_keypad_steps("0"));
+
+    steps = steps.concat(finish_order());
 
     steps = steps.concat([{
         trigger: ".header-button",
@@ -145,9 +153,9 @@ odoo.define('pos_orders_history_reprint.tour', function(require) {
         content: "wait until backend is opened",
         trigger: '.o_app[data-menu-xmlid="point_of_sale.menu_point_root"], .oe_menu_toggler[data-menu-xmlid="point_of_sale.menu_point_root"]',
         run: function () {
-//             no need to click on trigger
+            // no need to click on trigger
         },
     }]);
 
-    tour.register('pos_orders_history_reprint_tour', {test: true, url: '/web' }, steps);
+    tour.register('pos_orders_history_return_tour', {test: true, url: '/web' }, steps);
 });

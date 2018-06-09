@@ -11,10 +11,10 @@ class TestUi(odoo.tests.HttpCase):
             '/web',
 
             "odoo.__DEBUG__.services['web_tour.tour']"
-            ".run('pos_orders_history_reprint_tour')",
+            ".run('pos_orders_history_return_tour')",
 
             "odoo.__DEBUG__.services['web_tour.tour']"
-            ".tours.pos_orders_history_reprint_tour.ready",
+            ".tours.pos_orders_history_return_tour.ready",
 
             login="admin",
             timeout=240,
