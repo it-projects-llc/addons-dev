@@ -29,7 +29,7 @@
                     <div size="double-height" t-if="!change.order">
                         <line>
                             <left><t t-esc="change.name_wrapped[0]" /></left>
-                            <right><t t-esc="change.qty" /></right>
+                            <right><t t-esc="change.qty" /> <t t-esc='widget.get_orderline(change.line_id).get_unit().name'/></right>
                         </line>
                         <t t-call="NameWrapped"/>
                         <t t-if="change.note">
@@ -110,7 +110,7 @@
                         <div size="double-height" t-if="!change.order">
                             <line>
                                 <left><t t-esc="change.name_wrapped[0]" /></left>
-                                <right><t t-esc="change.qty" /></right>
+                                <right><t t-esc="change.qty" /> <t t-esc='widget.get_orderline(change.line_id).get_unit().name'/></right>
                             </line>
                             <t t-call="NameWrapped"/>
                             <t t-if="change.note">
@@ -206,7 +206,7 @@
                     <div size="double-height" t-if="!change.order">
                         <line>
                             <left><t t-esc="change.name_wrapped[0]" /></left>
-                            <right><t t-esc="change.qty" /></right>
+                            <right><t t-esc="change.qty" /> <t t-esc='widget.get_orderline(change.line_id).get_unit().name'/></right>
                         </line>
                         <t t-call="NameWrapped"/>
                         <t t-if="change.note">
