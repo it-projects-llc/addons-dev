@@ -19,6 +19,7 @@
     "data": [
         "security/ir.model.access.csv",
         "views/template.xml",
+        "views/view.xml",
     ],
     "qweb": [
         "static/src/xml/main.xml"
