@@ -6,6 +6,7 @@ Installation
 ============
 
 * `Install <https://odoo-development.readthedocs.io/en/latest/odoo/usage/install-module.html>`__ this module in a usual way
+* `Activate longpolling <https://odoo-development.readthedocs.io/en/latest/admin/longpolling.html>`__
 
 Configuration
 =============
