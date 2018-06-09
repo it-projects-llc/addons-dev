@@ -23,11 +23,11 @@ class ReportSaleDetails(models.AbstractModel):
             pay['pay_num'] = len(self.env['account.bank.statement.line'].search([('journal_id.name', '=', 'Cash'),
                                                                                  ('ref', 'in', pos_session_refs)]))
 
-        result['payments'] += [{
+        result['payments_total'] = {
             'name': 'Total',
             'total': sum([p['total'] for p in result['payments']] + [0]),
             'pay_num': sum([p['pay_num'] for p in result['payments']] + [0]),
-        }]
+        }
 
         result['cash_control'] = []
         for conf in configs:

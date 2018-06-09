@@ -9,9 +9,9 @@
         <table  class="table">
             <tbody>
                 <tr>
-                    <td>Printed by: <t t-esc="user_name" /></td>
-                    <td>Number of Orders: <t t-esc="order_num" /></td>
-                    <td>Point of Sale: <t t-esc="pos_names" /></td>
+                    <td><strong>Printed by: </strong><t t-esc="user_name" /></td>
+                    <td><strong>Number of Orders: </strong><t t-esc="order_num" /></td>
+                    <td><strong>Point of Sale: </strong><t t-esc="pos_names" /></td>
                 </tr>
             </tbody>
         </table>
@@ -26,8 +26,17 @@
     <xpath expr="//table[hasclass('table','table-condensed')][1]/tbody/tr" position="inside">
         <td><t t-esc="('pay_num' in payment) and payment['pay_num'] or 0" /></td>
     </xpath>
+    <xpath expr="//table[hasclass('table','table-condensed')][1]/tbody" position="inside">
+        <tr>
+            <td><strong><t t-esc="payments_total['name']" /></strong></td>
+            <td><t t-esc="payments_total['total']" t-options="{'widget': 'float', 'precision': currency_precision}"/></td>
+            <td><t t-esc="payments_total['pay_num']"/></td>
+        </tr>
+    </xpath>
 
     <xpath expr="//div[hasclass('page')]/strong" position="after">
+        <br/><br/>
+
         <h3>Sales by Cashier</h3>
         <table  class="table table-condensed">
             <thead>
@@ -97,7 +106,9 @@
             </tbody>
         </table>
 
-        <h4>Theoretical Closing Balance: <t t-esc="theoretical_closing_balance" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
+        <br/>
+
+        <h4><strong>Theoretical Closing Balance: </strong><t t-esc="theoretical_closing_balance" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
 
         <br/>
 
@@ -150,9 +161,9 @@
             <!--</tbody>-->
         <!--</table>-->
 
-        <h4>Theoretical Closing Balance: <t t-esc="cash_register_balance_end" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
-        <h4>Real Closing Balance: <t t-esc="real_closing_balance" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
-        <h4>Difference: <t t-esc="closing_difference" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
+        <h4><strong>Theoretical Closing Balance: </strong><t t-esc="cash_register_balance_end" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
+        <h4><strong>Real Closing Balance: </strong><t t-esc="real_closing_balance" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
+        <h4><strong>Difference: </strong><t t-esc="closing_difference" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
 
     </xpath>
     <xpath expr="//div[hasclass('page')]" position="inside">
