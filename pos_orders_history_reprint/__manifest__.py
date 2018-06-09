@@ -30,6 +30,7 @@
     "demo": [
     ],
     "qweb": [
+        "static/src/xml/main.xml",
     ],
 
     "post_load": None,
