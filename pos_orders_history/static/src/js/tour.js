@@ -72,8 +72,15 @@ odoo.define('pos_orders_history.tour', function(require) {
                 // it's a check
             },
         }, {
-            trigger: '.button.next:visible',
-            content: "next order",
+            content: "Switch to table or make dummy action",
+            trigger: '.table:not(.oe_invisible .neworder-button), .order-button.selected',
+            run: function () {
+                // it's a check
+            },
+        },{
+            content: "Switch to table or make dummy action",
+            trigger: '.table:not(.oe_invisible .neworder-button), .order-button.selected',
+            position: "bottom"
         }];
     }
 
@@ -82,10 +89,10 @@ odoo.define('pos_orders_history.tour', function(require) {
             trigger: '.control-button.orders-history',
             content: "open orders history screen",
         }, {
-            trigger: ".order-line:first",
+            trigger: ".order-line td:first",
             content: "open fist order",
         }, {
-            trigger: ".order-line:first .line-line:contains('Peaches')",
+            trigger: ".line-element-container:first .line-line:contains('Peaches')",
             run: function () {
                 // it's a check
             },
@@ -134,7 +141,7 @@ odoo.define('pos_orders_history.tour', function(require) {
         content: "wait until backend is opened",
         trigger: '.o_app[data-menu-xmlid="point_of_sale.menu_point_root"], .oe_menu_toggler[data-menu-xmlid="point_of_sale.menu_point_root"]',
         run: function () {
-            // no need to click on trigger
+//             no need to click on trigger
         },
     }]);
 
