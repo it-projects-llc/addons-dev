@@ -13,7 +13,7 @@ DATABASE_SECRET_KEY = 'database.secret'
 class IrConfigParameter(models.Model):
     _inherit = 'ir.config_parameter'
 
-    value = fields.Text(company_dependent=True)
+    value = fields.Text(company_dependent=True, website_dependent=True)
 
     @api.model
     def create(self, vals):
