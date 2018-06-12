@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- # Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).-->
+
+<odoo>
+
+<template id="report_saledetails" inherit_id="point_of_sale.report_saledetails">
+    <xpath expr="//div[hasclass('text-center')]" position="inside">
+        <table  class="table">
+            <tbody>
+                <tr>
+                    <td><strong>Printed by: </strong><t t-esc="user_name" /></td>
+                    <td><strong>Number of Orders: </strong><t t-esc="order_num" /></td>
+                    <td><strong>Point of Sale: </strong><t t-esc="pos_names" /></td>
+                </tr>
+            </tbody>
+        </table>
+    </xpath>
+
+    <xpath expr="//h3[contains(.,'Products')]" position="replace"></xpath>
+    <xpath expr="//table[hasclass('table','table-condensed')][1]" position="replace"></xpath>
+
+    <xpath expr="//table[hasclass('table','table-condensed')][1]/thead/tr" position="inside">
+        <th>Number of Payments</th>
+    </xpath>
+    <xpath expr="//table[hasclass('table','table-condensed')][1]/tbody/tr" position="inside">
+        <td><t t-esc="('pay_num' in payment) and payment['pay_num'] or 0" /></td>
+    </xpath>
+    <xpath expr="//table[hasclass('table','table-condensed')][1]/tbody" position="inside">
+        <tr>
+            <td><strong><t t-esc="payments_total['name']" /></strong></td>
+            <td><t t-esc="payments_total['total']" t-options="{'widget': 'float', 'precision': currency_precision}"/></td>
+            <td><t t-esc="payments_total['pay_num']"/></td>
+        </tr>
+    </xpath>
+
+    <xpath expr="//div[hasclass('page')]/strong" position="after">
+        <br/><br/>
+
+        <h3>Sales by Cashier</h3>
+        <table  class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Number of Sales</th>
+                    <th>Total Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach='cashiers' t-as='cashier'>
+                    <td><t t-esc="cashier['name']" /></td>
+                    <td><t t-esc="cashier['sale_num']" /></td>
+                    <td><t t-esc="cashier['total']" t-options="{'widget': 'float', 'precision': currency_precision}"/></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br/>
+
+        <h3>Returns</h3>
+        <table  class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>Order Ref</th>
+                    <th>Product</th>
+                    <th>Customer</th>
+                    <th>Cashier</th>
+                    <th>Quantity</th>
+                    <th>Total Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach='returns' t-as='ret'>
+                    <td><t t-esc="ret['po_name']" /></td>
+                    <td><t t-esc="ret['product_name']" /></td>
+                    <td><t t-esc="ret['customer']" /></td>
+                    <td><t t-esc="ret['cashier']" /></td>
+                    <td><t t-esc="ret['qty']" /></td>
+                    <td><t t-esc="ret['total']" t-options="{'widget': 'float', 'precision': currency_precision}" /></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br/>
+    </xpath>
+
+    <!--The module depends on pos_invoice_pay-->
+    <xpath expr="//div[hasclass('page')]" position="inside">
+        <br/>
+
+        <h3>Put Money In / Take Money Out</h3>
+        <table  class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>Datetime</th>
+                    <th>Amount</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach='put_in_out' t-as='put'>
+                    <td><t t-esc="put['datetime']" /></td>
+                    <td><t t-esc="put['amount']" /></td>
+                    <td><t t-esc="put['name']" /></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br/>
+
+        <h4><strong>Theoretical Closing Balance: </strong><t t-esc="theoretical_closing_balance" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
+
+        <br/>
+
+        <h3>Cash Control</h3>
+        <table  class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>Coins/Bill</th>
+                    <th>Starting#</th>
+                    <th>Starting Value</th>
+                    <th>Closing#</th>
+                    <th>Closing Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach='cash_control' t-as='val'>
+                    <td><t t-esc="val['number']" /></td>
+                    <td><t t-esc="val['coin_in']" /></td>
+                    <td><t t-esc="val['subtotal_in']" /></td>
+                    <td><t t-esc="val['coin_out']" /></td>
+                    <td><t t-esc="val['subtotal_out']" /></td>
+                </tr>
+                <tr>
+                    <td><strong>Total Amount:</strong></td>
+                    <td/>
+                    <td><t t-esc="sum([val['subtotal_in'] for val in cash_control] + [0])"/></td>
+                    <td/>
+                    <td><t t-esc="sum([val['subtotal_out'] for val in cash_control] + [0])"/></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br/>
+
+        <!--<h3>Put Money In / Take Money Out</h3>-->
+        <!--<table>-->
+            <!--<thead>-->
+                <!--<tr>-->
+                    <!--<th>Theoretical Closing Balance:</th>-->
+                    <!--<th>Real Closing Balance</th>-->
+                    <!--<th>Difference</th>-->
+                <!--</tr>-->
+            <!--</thead>-->
+            <!--<tbody>-->
+                <!--<tr t-foreach='closing' t-as='val'>-->
+                    <!--<td><t t-esc="val['theoretical_closing_balance']" /></td>-->
+                    <!--<td><t t-esc="val['closing_difference']" /></td>-->
+                    <!--<td><t t-esc="val['real_closing_balance']" /></td>-->
+                <!--</tr>-->
+            <!--</tbody>-->
+        <!--</table>-->
+
+        <h4><strong>Theoretical Closing Balance: </strong><t t-esc="cash_register_balance_end" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
+        <h4><strong>Real Closing Balance: </strong><t t-esc="real_closing_balance" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
+        <h4><strong>Difference: </strong><t t-esc="closing_difference" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
+
+    </xpath>
+    <xpath expr="//div[hasclass('page')]" position="inside">
+        <h5 style="text-align: right;">___________________ <t t-esc="date"/></h5>
+    </xpath>
+
+</template>
+
+</odoo>
