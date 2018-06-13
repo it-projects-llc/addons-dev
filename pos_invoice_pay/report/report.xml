@@ -6,9 +6,9 @@
 
 <odoo>
         <template id="pos_invoice_pay_report" inherit_id="point_of_sale.report_saledetails">
-            <xpath expr="//div[hasclass('page')]/table[position()=3]" position="after">
+            <xpath expr="//div[hasclass('page')]/strong" position="after">
                 <br/>
-
+                <br/>
                 <h3>Paid Orders/Invoices</h3>
                 <table  class="table table-condensed">
                     <thead>

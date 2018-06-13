@@ -12,7 +12,7 @@ class ReportSaleDetails(models.AbstractModel):
 
     @api.model
     def get_sale_details(self, date_start=False, date_stop=False, configs=False):
-        res = super(ReportSaleDetails, self).get_sale_details(date_start=False, date_stop=False, configs=False)
+        res = super(ReportSaleDetails, self).get_sale_details(date_start, date_stop, configs)
 
         if date_start:
             date_start = fields.Datetime.from_string(date_start)
