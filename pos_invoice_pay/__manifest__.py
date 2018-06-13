@@ -1,3 +1,7 @@
+# Copyright 2018 Artyom Losev
+# Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+
 {
     "name": """POS Invoice Pay""",
     "summary": """Paying invoiceable Sales Orders and confirmed Invoies over Point of Sale""",
