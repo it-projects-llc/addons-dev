@@ -13,6 +13,7 @@
                             <th>Sales Order(origin)</th>
                             <th>Customer</th>
                             <th>Cashier</th>
+                            <th>Payment Method</th>
                             <th>Amount Total</th>
                             <th>Paid</th>
                         </tr>
@@ -23,8 +24,14 @@
                             <td><t t-esc="inv['so_origin']" /></td>
                             <td><t t-esc="inv['customer']" /></td>
                             <td><t t-esc="inv['cashier']" /></td>
+                            <td><t t-esc="inv['payment_method']" /></td>
                             <td><t t-esc="inv['amount_total']" /></td>
                             <td><t t-esc="inv['amount']"/></td>
+                        </tr>
+                        <tr>
+                            <td colspan="7" class="text-right">
+                                <strong>Total:</strong> <t t-esc="total_invoices"/>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
