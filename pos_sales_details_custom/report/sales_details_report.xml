@@ -78,6 +78,11 @@
                     <td><t t-esc="ret['qty']" /></td>
                     <td><t t-esc="ret['total']" t-options="{'widget': 'float', 'precision': currency_precision}" /></td>
                 </tr>
+                <tr>
+                    <td colspan="6" class="text-right">
+                        <strong>Total:</strong> <t t-esc="returns_total" t-options="{'widget': 'float', 'precision': currency_precision}" />
+                    </td>
+                </tr>
             </tbody>
         </table>
 
@@ -100,8 +105,14 @@
             <tbody>
                 <tr t-foreach='put_in_out' t-as='put'>
                     <td><t t-esc="put['datetime']" /></td>
-                    <td><t t-esc="put['amount']" /></td>
                     <td><t t-esc="put['name']" /></td>
+                    <td><t t-esc="put['amount']" /></td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="text-right">
+                        <strong>Total:</strong> <t t-esc="put_in_out_total" t-options="{'widget': 'float', 'precision': currency_precision}" />
+                    </td>
+                    <td/>
                 </tr>
             </tbody>
         </table>
@@ -142,24 +153,6 @@
         </table>
 
         <br/>
-
-        <!--<h3>Put Money In / Take Money Out</h3>-->
-        <!--<table>-->
-            <!--<thead>-->
-                <!--<tr>-->
-                    <!--<th>Theoretical Closing Balance:</th>-->
-                    <!--<th>Real Closing Balance</th>-->
-                    <!--<th>Difference</th>-->
-                <!--</tr>-->
-            <!--</thead>-->
-            <!--<tbody>-->
-                <!--<tr t-foreach='closing' t-as='val'>-->
-                    <!--<td><t t-esc="val['theoretical_closing_balance']" /></td>-->
-                    <!--<td><t t-esc="val['closing_difference']" /></td>-->
-                    <!--<td><t t-esc="val['real_closing_balance']" /></td>-->
-                <!--</tr>-->
-            <!--</tbody>-->
-        <!--</table>-->
 
         <h4><strong>Theoretical Closing Balance: </strong><t t-esc="cash_register_balance_end" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
         <h4><strong>Real Closing Balance: </strong><t t-esc="real_closing_balance" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
