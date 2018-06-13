@@ -136,6 +136,6 @@ class ReportSaleDetails(models.AbstractModel):
         for prod in result['returns']:
             line = self.env['pos.order.line'].browse(prod['line_id'])
             prod['customer'] = line.order_id.partner_id.name or ''
-            prod['total'] = line.price_subtotal
+            prod['total'] = line.price_subtotal_incl
 
         return result
