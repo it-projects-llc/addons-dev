@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
+
+<odoo>
+
+    <!-- /shop/product product page -->
+    <template id="product" inherit_id="website_sale.product">
+        <xpath expr='//*[@id="product_details"]/h1[@t-field="product.name"]' position="after">
+            <div class="row website-datetimepicker">
+                <div class="col-md-5 checkin">
+                    <input type='text' class="form-control " id='datetimepicker-checkin' placeholder="Check In"/>
+                </div>
+                <div class="col-md-2 arrow"><i class="fa fa-long-arrow-right"/></div>
+                <div class="col-md-5 checkout">
+                    <input type='text' class="form-control" id='datetimepicker-checkout' placeholder="Check Out"/>
+                </div>
+                <script type="text/javascript">
+                    $(function () {
+                        $('#datetimepicker-checkin').datetimepicker({
+                            disabledDates: [
+                                moment("06/25/2018"),
+                                new Date(2018, 6, 21),
+                                "06/22/2018 00:53"
+                            ]
+                        });
+                        $('#datetimepicker-checkout').datetimepicker({
+                            useCurrent: false,
+                        });
+                        $("#datetimepicker-checkin").on("dp.change", function (e) {
+                            $('#datetimepicker-checkout').data("DateTimePicker").minDate(e.date);
+                        });
+                        $("#datetimepicker-checkout").on("dp.change", function (e) {
+                            $('#datetimepicker-checkin').data("DateTimePicker").maxDate(e.date);
+                        });
+                    });
+                </script>
+            </div>
+
+        </xpath>
+        <xpath expr='//t[@t-set="head"]' position="inside">
+            <!-- Momentjs -->
+            <script type="text/javascript" src="/website_sale_calendar/static/lib/js/moment.js"></script>
+            <!-- Bootstrap Date-Picker Plugin -->
+            <script type="text/javascript" src="/website_sale_calendar/static/lib/js/bootstrap-datetimepicker.js"></script>
+            <link rel="stylesheet" href="/website_sale_calendar/static/lib/css/bootstrap-datetimepicker.css"/>
+            <link rel="stylesheet" href="/website_sale_calendar/static/lib/css/bootstrap-datetimepicker-standalone.css"/>
+            <link rel="stylesheet" href="/website_sale_calendar/static/src/css/website-sale-datetimepicker.css"/>
+        </xpath>
+    </template>
+
+</odoo>
