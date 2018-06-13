@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Copyright 2018 Artyom Losev
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).-->
+
 <odoo>
-    <data>
 
         <record id="invoice_update_pos_action" model="base.automation">
             <field name="name">Update Invoices</field>
@@ -24,5 +26,4 @@
             <field name="active" eval="True"/>
         </record>
 
-    </data>
 </odoo>
