@@ -18,14 +18,16 @@
                 <script type="text/javascript">
                     $(function () {
                         $('#datetimepicker-checkin').datetimepicker({
+                            format: 'DD/MM/YYYY',
                             disabledDates: [
                                 moment("06/25/2018"),
                                 new Date(2018, 6, 21),
-                                "06/22/2018 00:53"
+                                "06/22/2018"
                             ]
                         });
                         $('#datetimepicker-checkout').datetimepicker({
                             useCurrent: false,
+                            format: 'DD/MM/YYYY',
                         });
                         $("#datetimepicker-checkin").on("dp.change", function (e) {
                             $('#datetimepicker-checkout').data("DateTimePicker").minDate(e.date);
