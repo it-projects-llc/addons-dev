@@ -72,24 +72,25 @@ class ReportSaleDetails(models.AbstractModel):
                     'amount': rec.put_type == 'in' and rec.amount or -rec.amount,
                     'datetime': rec.datetime
                 }]
+        result['put_in_out_total'] = sum([l['amount'] for l in result['put_in_out']] + [0])
 
-        result['closing_difference'] = result['real_closing_balance'] = result['cash_register_balance_end'] = 0
+        result['closing_difference'] = result['real_closing_balance'] = result['cash_register_balance_end'] = result['opening_balance'] = 0
         put_inout = 0
         for ps in pos_session_ids:
             put_inout += ps.pos_cash_box_ids and sum(
                 [(cb.put_type == 'in' and cb.amount or -cb.amount) for cb in ps.pos_cash_box_ids]) or 0
             result['real_closing_balance'] += ps.cash_register_balance_end_real
             result['cash_register_balance_end'] += ps.cash_register_balance_end
+            result['opening_balance'] += ps.cash_register_balance_start
 
         result['real_closing_balance'] = result['real_closing_balance']
-        result['cash_register_balance_end'] = result['cash_register_balance_end']
         result['theoretical_closing_balance'] = (result['cash_register_balance_end'] + put_inout +
-                                                 result['expenses_total'] + result['total_invoices'])
+                                                 result['expenses_total'] + result['total_invoices_cash'])
         result['closing_difference'] = result['cash_register_balance_end'] - result['real_closing_balance']
         result['date'] = datetime.now().strftime('%y/%m/%d')
 
+        result['returns_total'] = 0
         result['cashiers'] = result['returns'] = []
-
         if not pos_orders.ids:
             return result
 
@@ -136,6 +137,8 @@ class ReportSaleDetails(models.AbstractModel):
         for prod in result['returns']:
             line = self.env['pos.order.line'].browse(prod['line_id'])
             prod['customer'] = line.order_id.partner_id.name or ''
-            prod['total'] = line.price_subtotal
+            prod['total'] = line.price_subtotal_incl
+
+        result['returns_total'] = sum([l['total'] for l in result['returns']] + [0])
 
         return result
