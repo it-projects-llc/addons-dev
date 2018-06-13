@@ -1,0 +1,25 @@
+/* Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
+ * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). */
+
+.website-datetimepicker .arrow {
+    font-size: 23px;
+    color: #ccc;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+.website-datetimepicker .checkin {
+    padding-right: 0;
+}
+.website-datetimepicker .checkin input {
+    border-radius: 0;
+    border-right: 0;
+    padding-right: 0;
+}
+.website-datetimepicker .checkout {
+    padding-left: 0;
+}
+.website-datetimepicker .checkout input {
+    border-radius: 0;
+    border-left: 0;
+    padding-left: 0;
+}
