@@ -27,7 +27,7 @@
                 <br />
                 <t t-foreach="changes.products" t-as="change">
                     <div size="double-height" t-if="!change.order">
-                        <line>
+                        <line line-ratio='0.6'>
                             <left><t t-esc="change.name_wrapped[0]" /></left>
                             <right><t t-esc="change.qty" /> <t t-esc="change.unit" /></right>
                         </line>
@@ -143,7 +143,7 @@
                     <br />
                     <t t-foreach="changes.cancelled" t-as="change">
                         <div size="double-height" t-if="!change.order">
-                            <line>
+                            <line line-ratio='0.6'>
                                 <left><t t-esc="change.name_wrapped[0]" /></left>
                                 <right><t t-esc="change.qty" /> <t t-esc="change.unit" /></right>
                             </line>
@@ -275,7 +275,7 @@
                 <br />
                 <t t-foreach="changes.new" t-as="change">
                     <div size="double-height" t-if="!change.order">
-                        <line>
+                        <line line-ratio='0.6'>
                             <left><t t-esc="change.name_wrapped[0]" /></left>
                             <right><t t-esc="change.qty" /> <t t-esc="change.unit" /></right>
                         </line>
