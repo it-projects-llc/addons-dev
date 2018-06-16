@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--# Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).-->
+
+<odoo>
+
+    <record model="ir.ui.view" id="res_partner_form_ro">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="category_id" position="after">
+                <field name="gender" widget="radio"/>
+                <field name="identification_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="res_users_form_view" model="ir.ui.view">
+        <field name="name">res.users.form.view</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form" />
+        <field name="arch" type="xml">
+            <notebook position="before">
+                <group>
+                    <field name="gender" widget="radio"/>
+                    <field name="identification_id" />
+                </group>
+            </notebook>
+        </field>
+    </record>
+
+</odoo>
