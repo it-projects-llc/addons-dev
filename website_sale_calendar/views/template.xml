@@ -18,7 +18,7 @@
                 <script type="text/javascript">
                     $(function () {
                         $('#datetimepicker-checkin').datetimepicker({
-                            format: 'DD/MM/YYYY',
+                            format: 'YYYY/MM/DD',
                             disabledDates: [
                                 moment("06/25/2018"),
                                 new Date(2018, 6, 21),
@@ -27,7 +27,7 @@
                         });
                         $('#datetimepicker-checkout').datetimepicker({
                             useCurrent: false,
-                            format: 'DD/MM/YYYY',
+                            format: 'YYYY/MM/DD',
                         });
                         $("#datetimepicker-checkin").on("dp.change", function (e) {
                             $('#datetimepicker-checkout').data("DateTimePicker").minDate(e.date);
@@ -53,6 +53,20 @@
 
     <!-- cart lines -->
     <template id="cart_lines" inherit_id="website_sale.cart_lines">
+        <xpath expr='//*[@t-foreach="line.name.splitlines()[1:]"]/..' position="after">
+            <div t-if="line.checkin and line.checkout" class="checkin-checkout-datetime"><t t-esc="line.checkin"/> to <t t-esc="line.checkout"/></div>
+        </xpath>
+    </template>
+
+    <!-- payment -->
+    <template id="payment" inherit_id="website_sale.payment">
+        <xpath expr='//*[@t-foreach="line.name.splitlines()[1:]"]/..' position="after">
+            <div t-if="line.checkin and line.checkout" class="checkin-checkout-datetime"><t t-esc="line.checkin"/> to <t t-esc="line.checkout"/></div>
+        </xpath>
+    </template>
+
+    <!-- confirmation -->
+    <template id="confirmation" inherit_id="website_sale.confirmation">
         <xpath expr='//*[@t-foreach="line.name.splitlines()[1:]"]/..' position="after">
             <div t-if="line.checkin and line.checkout" class="checkin-checkout-datetime"><t t-esc="line.checkin"/> to <t t-esc="line.checkout"/></div>
         </xpath>
