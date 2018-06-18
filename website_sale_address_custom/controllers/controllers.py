@@ -5,7 +5,7 @@
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo import http
 from odoo.http import request
-
+import wdb
 
 class WebsiteSaleExtended(WebsiteSale):
 
@@ -20,13 +20,28 @@ class WebsiteSaleExtended(WebsiteSale):
             'genders': [('male', 'Male'), ('female', 'Female')],
             'identification_id': partner and partner.identification_id,
         })
+        # address_super.qcontext
+        # wdb.set_trace()
         return address_super
 
     @http.route()
     def checkout(self, **post):
+        # wdb.set_trace()
         checkout_super = super(WebsiteSaleExtended, self).checkout(**post)
+
         return checkout_super
 
     def _get_mandatory_fields(self):
         fields_super = super(WebsiteSaleExtended, self)._get_mandatory_fields()
         return fields_super + ["gender"]
+
+    def _checkout_form_save(self, mode, checkout, all_values):
+        checkout_super = super(WebsiteSaleExtended, self)._checkout_form_save(mode, checkout, all_values)
+
+        wdb.set_trace()
+        partner = request.env['res.partner'].browse(int(all_values['partner_id']))
+        partner.write({
+            'gender': all_values['gender'],
+            # 'identification_id': all_values['identification_id'],
+        })
+        return checkout_super

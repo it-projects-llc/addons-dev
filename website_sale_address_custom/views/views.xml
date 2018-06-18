@@ -37,9 +37,11 @@
             <div class="clearfix" />
 
             <div t-attf-class="form-group #{error.get('identification_id') and 'has-error' or ''} col-md-12 div_identification">
+                <script type="text/javascript" src="/website_sale_address_custom/static/src/js/file_upload.js"></script>
                 <label class="control-label" for="gender">Identification</label>
                 <input type="file" class="form-control o_website_form_input"
-                       name="identification_id" t-att-value="identification_id and identification_id['website_url']"/>
+                       name="identification_id" t-att-value="identification_id and identification_id['website_url']"
+                       onchange="console.log('-----------------');"/>
             </div>
         </xpath>
 
