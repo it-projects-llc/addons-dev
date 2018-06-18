@@ -5,7 +5,7 @@
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo import http
 from odoo.http import request
-import wdb
+# import wdb
 
 class WebsiteSaleExtended(WebsiteSale):
 
