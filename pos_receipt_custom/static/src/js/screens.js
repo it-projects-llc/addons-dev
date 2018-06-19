@@ -73,8 +73,18 @@ odoo.define('pos_receipt_custom.screens', function(require){
         print_xml: function() {
             if (this.pos.config.custom_xml_receipt) {
                 var order = this.pos.get_order();
-                this.pos.proxy.print_receipt(this.get_custom_receipt());
+                var receipt = this.get_custom_receipt();
+                this.pos.proxy.print_receipt(receipt);
                 order._printed = true;
+
+                // for compatibility with pos_orders_history_reprint
+                if (this.save_order_xml) {
+                    var template = $.parseXML(receipt).children[0];
+                    $(template).find(".receipt-type").html("(Supplement)");
+                    receipt = template.outerHTML;
+                    this.save_order_xml(order, receipt);
+                }
+
                 order.set_receipt_type(false);
             } else {
                 this._super();
