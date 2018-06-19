@@ -19,6 +19,7 @@
 
     "depends": [
         "website_sale_checkout_store",
+        "document",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [

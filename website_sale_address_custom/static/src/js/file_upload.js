@@ -6,27 +6,39 @@ odoo.define('website_sale_address_custom', function (require) {
 
     var Model = require('web.Model');
 
-//    upload_file = function(e){
-//        return new Model('res.partner').call('upload_file', [data]);
-//    }
     $(document).ready(function () {
         if(window.location.href.indexOf("address") > -1) {
-           alert("your url contains the name franky");
-        }
-        var input = $('input[type="file"]')[0]
-        input.addEventListener('change', function(ev){
-            var data = false;
-            if(input.files.length){
-                var reader = new FileReader();
-                reader.readAsDataURL(input.files[0]);
-                reader.onload = function(e){
-                    data = {'file': e.target.result};
+            var $input = $('input[type="file"]')[0],
+                $selection = $('select[name="identification_id_select"]'),
+                reader = new FileReader(),
+                data = false,
+                res = false;
+            reader.onload = function(e){
+                res = e.target.result
+                data = {
+                    'file': res,
+                    'uid': $input.getAttribute('uid'),
+                    'type': res.substring(0, res.indexOf(',')),
+                    'data': res.substring(res.indexOf(',') + 1, res.length),
+                    'name': $input.files[0].name,
+                };
+                new Model('res.partner').call('upload_file', [data]);
+                data = false;
+            }
+            $input.addEventListener('change', function(ev){
+                if($input.files.length){
+                    reader.readAsDataURL($input.files[0]);
                 }
-            }
-            if (data) {
-                alert('dasdsa');
-            }
-        });
+                if (this.value){
+                    $selection.val('');
+                }
+            });
+            $selection.on('change', function(e){
+                if (this.value){
+                    $input.value = '';
+                }
+            });
+        }
     });
 
 
