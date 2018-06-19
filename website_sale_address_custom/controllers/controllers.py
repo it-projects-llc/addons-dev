@@ -13,8 +13,7 @@ class WebsiteSaleExtended(WebsiteSale):
     def address(self, **kw):
         address_super = super(WebsiteSaleExtended, self).address(**kw)
         partner_ID = 'partner_id' in address_super.qcontext and address_super.qcontext['partner_id']
-        partner = partner_ID > 0 and request.env['res.partner'].browse(partner_ID)
-
+        partner = partner_ID > 0 and request.env['res.partner'].sudo().browse(partner_ID)
         identification = partner and partner.identification_id
         attachments = partner and request.env['ir.attachment'].search([('res_id', '=', partner_ID),
                                                                        ('res_model', '=', "res.partner")]) or []
@@ -42,13 +41,15 @@ class WebsiteSaleExtended(WebsiteSale):
         checkout_super = super(WebsiteSaleExtended, self)._checkout_form_save(mode, checkout, all_values)
 
 
-        partner = request.env['res.partner'].browse(int(all_values['partner_id']))
+        partner = request.env['res.partner'].browse(checkout_super)
         uploaded = request.env['ir.attachment'].search([('datas_fname', '=', all_values['identification_id']),
                                                         ('res_id', '=', partner.id),
                                                         ('res_model', '=', "res.partner")]) or []
-        identification = len(uploaded) and uploaded[0].id or \
-                         all_values['identification_id_select'] and int(all_values['identification_id_select'])
-        partner.write({
+        identification = len(uploaded) and uploaded[0].id or 'identification_id_select' in all_values and \
+                                                             all_values['identification_id_select'] and \
+                                                             int(all_values['identification_id_select'])
+
+        partner.sudo().write({
             'gender': all_values['gender'],
             'identification_id': identification
         })
