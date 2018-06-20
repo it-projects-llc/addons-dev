@@ -12,22 +12,40 @@ class ReportSaleDetails(models.AbstractModel):
     def get_sale_details(self, date_start=False, date_stop=False, configs=False):
         result = super(ReportSaleDetails, self).get_sale_details(date_start, date_stop, configs)
         active_user = self.env['res.users'].browse(self.env.context['uid'])
-        pos_session_ids = self.env['pos.session'].search([('config_id', 'in', configs.ids)])
+        pos_session_ids = self.env['pos.session'].search([('config_id', 'in', configs.ids), '|',
+                                                          ('start_at', '<', date_stop),
+                                                          ('stop_at', '>', date_start)])
         pos_session_refs = [p_s.name for p_s in pos_session_ids]
-        pos_orders = self.env['pos.order'].search([('session_id', 'in', pos_session_ids.ids)])
-
+        all_session_pos_orders = self.env['pos.order'].search([('session_id', 'in', pos_session_ids.ids)])
+        pos_orders = self.env['pos.order'].search([('session_id', 'in', pos_session_ids.ids),
+                                                   ('date_order', '<', date_stop),
+                                                   ('date_order', '>', date_start)])
         result['user_name'] = active_user.name
         result['pos_names'] = ', '.join([pos.name for pos in configs])
         result['order_num'] = len(pos_orders)
+
+        all_payments = self.env['account.bank.statement.line'].search([('ref', 'in', pos_session_refs),
+                                                                       ('pos_statement_id', 'not in', all_session_pos_orders.ids)])
         for pay in result['payments']:
-            pay['pay_num'] = len(self.env['account.bank.statement.line'].search([('journal_id.name', '=', 'Cash'),
-                                                                                 ('ref', 'in', pos_session_refs)]))
+            journal_name = pay['name']
+            pay['pay_num'] = len(all_payments.filtered(lambda r: r.journal_id.name == journal_name))
 
         result['payments_total'] = {
             'name': 'Total',
             'total': sum([p['total'] for p in result['payments']] + [0]),
             'pay_num': sum([p['pay_num'] for p in result['payments']] + [0]),
         }
+
+        result['card_payments'] = []
+        for p in all_payments.filtered(lambda r: r.journal_id.name != 'Cash'):
+            result['card_payments'] += [{
+                'ref': p.ref,
+                'datetime': p.statement_id.date_done,
+                'journal': p.journal_id.name,
+                'cashier': p.pos_statement_id.user_id.name,
+                'amount': p.amount,
+            }]
+        result['card_payments_total'] = sum([p['amount'] for p in result['card_payments']] + [0])
 
         result['cash_control'] = []
         for conf in configs:
