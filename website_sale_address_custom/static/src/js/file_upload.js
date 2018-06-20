@@ -10,21 +10,18 @@ odoo.define('website_sale_address_custom', function (require) {
         if(window.location.href.indexOf("address") > -1) {
             var $input = $('input[type="file"]')[0],
                 $selection = $('select[name="identification_id_select"]'),
+                $file = $('input[name="identification_file"'),
                 reader = new FileReader(),
                 data = false,
                 res = false;
+
             reader.onload = function(e){
                 res = e.target.result
-                data = {
-                    'file': res,
-                    'uid': $input.getAttribute('uid'),
-                    'type': res.substring(0, res.indexOf(',')),
-                    'data': res.substring(res.indexOf(',') + 1, res.length),
-                    'name': $input.files[0].name,
-                };
-                new Model('res.partner').call('upload_file', [data]);
+                data = res.substring(res.indexOf(',') + 1, res.length);
+                $file.val(data);
                 data = false;
             }
+
             $input.addEventListener('change', function(ev){
                 if($input.files.length){
                     reader.readAsDataURL($input.files[0]);
@@ -33,13 +30,13 @@ odoo.define('website_sale_address_custom', function (require) {
                     $selection.val('');
                 }
             });
+
             $selection.on('change', function(e){
                 if (this.value){
                     $input.value = '';
+                    $file.val('');
                 }
             });
         }
     });
-
-
 });
