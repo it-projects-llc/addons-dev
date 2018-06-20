@@ -1,7 +1,7 @@
 # Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 {
-    "name": """Custom Sales Details""",
+    "name": """Custom POS Report""",
     "summary": """The module customises **Sales Details** report""",
     "category": "Point of Sale",
     # "live_test_url": "",

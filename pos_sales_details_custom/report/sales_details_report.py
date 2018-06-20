@@ -16,7 +16,6 @@ class ReportSaleDetails(models.AbstractModel):
                                                           ('start_at', '<', date_stop),
                                                           ('stop_at', '>', date_start)])
         pos_session_refs = [p_s.name for p_s in pos_session_ids]
-        all_session_pos_orders = self.env['pos.order'].search([('session_id', 'in', pos_session_ids.ids)])
         pos_orders = self.env['pos.order'].search([('session_id', 'in', pos_session_ids.ids),
                                                    ('date_order', '<', date_stop),
                                                    ('date_order', '>', date_start)])
@@ -25,7 +24,8 @@ class ReportSaleDetails(models.AbstractModel):
         result['order_num'] = len(pos_orders)
 
         all_payments = self.env['account.bank.statement.line'].search([('ref', 'in', pos_session_refs),
-                                                                       ('pos_statement_id', 'not in', all_session_pos_orders.ids)])
+                                                                       ('statement_id.date_done', '>=', date_start),
+                                                                       ('statement_id.date_done', '<=', date_stop)])
         for pay in result['payments']:
             journal_name = pay['name']
             pay['pay_num'] = len(all_payments.filtered(lambda r: r.journal_id.name == journal_name))
@@ -85,11 +85,12 @@ class ReportSaleDetails(models.AbstractModel):
         result['put_in_out'] = []
         for ps in pos_session_ids:
             for rec in ps.pos_cash_box_ids:
-                result['put_in_out'] += [{
-                    'name': rec.name,
-                    'amount': rec.put_type == 'in' and rec.amount or -rec.amount,
-                    'datetime': rec.datetime
-                }]
+                if rec.datetime <= date_stop and rec.datetime >= date_start:
+                    result['put_in_out'] += [{
+                        'name': rec.name,
+                        'amount': rec.put_type == 'in' and rec.amount or -rec.amount,
+                        'datetime': rec.datetime
+                    }]
         result['put_in_out_total'] = sum([l['amount'] for l in result['put_in_out']] + [0])
 
         result['closing_difference'] = result['real_closing_balance'] = result['cash_register_balance_end'] = result['opening_balance'] = 0
