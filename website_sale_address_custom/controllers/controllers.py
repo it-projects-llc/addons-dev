@@ -19,8 +19,7 @@ class WebsiteSaleExtended(WebsiteSale):
         attachments = partner and request.env['ir.attachment'].sudo().search([('res_id', '=', partner_ID),
                                                                               ('res_model', '=', "res.partner")]) or []
 
-        import wdb
-        wdb.set_trace()
+
         address_super.qcontext.update({
             'gender': partner and partner.gender,
             'genders': [('male', 'Male'), ('female', 'Female')],
@@ -73,6 +72,5 @@ class WebsiteSaleExtended(WebsiteSale):
             'gender': all_values['gender'],
             'identification_id': partner.identification_id.id
         })
-        import wdb
-        wdb.set_trace()
+
         return checkout_super

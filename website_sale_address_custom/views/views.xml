@@ -59,39 +59,59 @@
             </div>
         </xpath>
 
+        <xpath expr="(//input[@name='company_name'])/.." position="replace"></xpath>
+        <xpath expr="(//select[@name='country_id'])/.." position="replace"></xpath>
+        <xpath expr="(//select[@name='state_id'])/.." position="replace"></xpath>
         <xpath expr="(//input[@name='street'])/.." position="replace"></xpath>
         <xpath expr="(//input[@name='zip'])/.." position="replace"></xpath>
         <xpath expr="(//input[@name='city'])/.." position="replace"></xpath>
-        <xpath expr="(//input[@name='zip'])/.." position="replace"></xpath>
-        <xpath expr="(//input[@name='company_name'])/.." position="replace"></xpath>
+        <xpath expr="(//input[@name='zip'])/.." position="replace">
 
-        <xpath expr="(//select[@name='state_id'])/.." position="after">
-
-            <div class="clearfix" />
-            <t t-set='zip_city' t-value='country and [x for x in country.get_address_fields() if x in ["zip", "city"]] or ["city", "zip"]'/>
-
-            <t t-if="'zip' in zip_city and zip_city.index('zip') &gt; zip_city.index('city')">
-                <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''} col-sm-4 div_zip" ship="1">
-                    <label class="control-label label-optional" for="zip">Zip Code</label>
-                    <input type="text" name="zip" class="form-control" t-att-value="'zip' in checkout and checkout['zip']" />
+            <div class="col-md-6">
+                <div t-attf-class="form-group #{error.get('country_id') and 'has-error' or ''} div_country">
+                    <label class="control-label" for="country_id">Country</label>
+                    <select id="country_id" name="country_id" class="form-control">
+                        <option value="">Country...</option>
+                        <t t-foreach="countries" t-as="c">
+                            <option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
+                                <t t-esc="c.name" />
+                            </option>
+                        </t>
+                    </select>
                 </div>
-            </t>
-            <t t-if="'zip' in zip_city and zip_city.index('zip') &lt; zip_city.index('city')">
-                <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''} col-sm-4 div_zip" ship="1">
-                    <label class="control-label label-optional" for="zip">Zip Code</label>
-                    <input type="text" name="zip" class="form-control" t-att-value="'zip' in checkout and checkout['zip']" />
-                </div>
-            </t>
 
-            <div t-attf-class="form-group #{error.get('city') and 'has-error' or ''} col-sm-8 div_city" ship="1">
-                <label class="control-label" for="city">City</label>
-                <input type="text" name="city" class="form-control" t-att-value="'city' in checkout and checkout['city']" />
+                <div t-attf-class="form-group #{error.get('state_id') and 'has-error' or ''} div_state" t-att-style="(not country or not country.state_ids) and 'display: none'">
+                    <label class="control-label" for="state_id">State / Province</label>
+                    <select name="state_id" class="form-control" data-init="1">
+                        <option value="">State / Province...</option>
+                        <t t-foreach="country and country.state_ids or []" t-as="s">
+                            <option t-att-value="s.id" t-att-selected="s.id == ('state_id' in checkout and country and checkout['state_id'] != '' and int(checkout['state_id']))">
+                                <t t-esc="s.name" />
+                            </option>
+                        </t>
+                    </select>
+                </div>
             </div>
+
+            <div class="col-md-6">
+                <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''} div_zip">
+                    <label class="control-label label-optional" for="zip">Zip Code</label>
+                    <input type="text" name="zip" class="form-control" t-att-value="'zip' in checkout and checkout['zip']" />
+                </div>
+
+                <div t-attf-class="form-group #{error.get('city') and 'has-error' or ''} div_city">
+                    <label class="control-label" for="city">City</label>
+                    <input type="text" name="city" class="form-control" t-att-value="'city' in checkout and checkout['city']" />
+                </div>
+            </div>
+
             <div class="clearfix" />
-            <div t-attf-class="form-group #{error.get('street') and 'has-error' or ''} col-md-12 div_street" ship="1">
+
+            <div t-attf-class="form-group #{error.get('street') and 'has-error' or ''} col-md-12 div_street">
                 <label class="control-label" for="street">Street <span class="hidden-xs"> and Number</span></label>
                 <input type="text" name="street" class="form-control" t-att-value="'street' in checkout and checkout['street']" />
             </div>
+
         </xpath>
 
     </template>

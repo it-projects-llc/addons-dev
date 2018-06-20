@@ -37,6 +37,8 @@ odoo.define('website_sale_address_custom', function (require) {
                     $file.val('');
                 }
             });
+
+            $(".div_zip").after($(".div_city"));
         }
     });
 });
