@@ -41,38 +41,23 @@ odoo.define('pos_orders_history_reprint.screens', function (require) {
         show: function () {
             var self = this;
             this._super();
-            this.$('.button.reprint').addClass('line-element-hidden');
-
-            this.$('.button.reprint').unbind().click(function (e) {
-                self.reprint_order();
-            });
-        },
-        reprint_order: function () {
-            if (!this.selected_order) {
-                return;
+            if (this.pos.config.reprint_orders) {
+                this.$('.actions.oe_hidden').removeClass('oe_hidden');
+                this.$('.button.reprint').unbind('click');
+                this.$('.button.reprint').click(function (e) {
+                    var parent = $(this).parents('.order-line');
+                    var id = parseInt(parent.data('id'));
+                    self.click_reprint_order(id);
+                });
             }
-            this.gui.show_screen('reprint_receipt');
         },
-        clear_selected_order: function () {
-            this.selected_order = false;
+        click_reprint_order: function (id) {
+            this.gui.show_screen('reprint_receipt', {order_id: id});
         },
-
-        line_select: function (event, $line, id) {
-            this._super(event, $line, id);
-            if ($line.hasClass('active')) {
-                this.$('.button.reprint').removeClass('line-element-hidden');
-            } else {
-                this.$('.button.reprint').addClass('line-element-hidden');
-            }
-        }
     });
 
     screens.ReprintReceiptScreenWidget = screens.ReceiptScreenWidget.extend({
         template: 'ReprintReceiptScreenWidget',
-        init: function (options) {
-            this._super(options);
-            this.orders_history_screen = this.gui.screen_instances.orders_history_screen;
-        },
         show: function () {
             var self = this;
             this._super();
@@ -100,7 +85,8 @@ odoo.define('pos_orders_history_reprint.screens', function (require) {
             this.gui.show_screen('orders_history_screen');
         },
         get_order: function () {
-            return this.orders_history_screen.selected_order;
+            var order_id = this.gui.get_current_screen_param('order_id');
+            return this.pos.db.orders_history_by_id[order_id];
         },
         get_orderlines: function (order) {
             var self = this,

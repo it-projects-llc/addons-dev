@@ -3,9 +3,9 @@
      License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
 <templates id="template" xml:space="preserve">
 
-    <t t-extend="OrdersHistoryScreenWidget">
-        <t t-jquery=".button.back" t-operation="after">
-            <span class="button reprint">Reprint</span>
+    <t t-extend="OrderHistory">
+        <t t-jquery=".actions.oe_hidden" t-operation="append">
+            <span class="button reprint"><i class="fa fa-print "></i> Reprint</span>
         </t>
     </t>
 
