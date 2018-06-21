@@ -112,6 +112,7 @@ odoo.define('pos_orders_history_reprint.screens', function (require) {
         },
         render_receipt: function () {
             var order = this.get_order();
+
             var ticket = this.pos.get_receipt_by_order_reference_and_type(order.pos_reference, 'ticket');
             if (ticket) {
                 this.$('.pos-receipt-container').html(ticket.receipt);
