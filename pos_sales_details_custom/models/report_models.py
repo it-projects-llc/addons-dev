@@ -63,3 +63,9 @@ class PosBoxOut(PosBox):
                     'datetime': datetime.now(),
                 })
         return res
+
+
+class AccountBankStatementLine(models.Model):
+    _inherit = "account.bank.statement.line"
+
+    datetime = fields.Datetime(required=True, string="Start date", default=datetime.now())

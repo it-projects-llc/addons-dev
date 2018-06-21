@@ -24,11 +24,11 @@ class ReportSaleDetails(models.AbstractModel):
         result['order_num'] = len(pos_orders)
 
         all_payments = self.env['account.bank.statement.line'].search([('ref', 'in', pos_session_refs),
-                                                                       ('statement_id.date_done', '>=', date_start),
-                                                                       ('statement_id.date_done', '<=', date_stop)])
+                                                                       ('datetime', '>=', date_start),
+                                                                       ('datetime', '<=', date_stop)])
         for pay in result['payments']:
-            journal_name = pay['name']
-            pay['pay_num'] = len(all_payments.filtered(lambda r: r.journal_id.name == journal_name))
+            journal = self.env['account.journal'].search([('name', '=', pay['name'])], limit=1)
+            pay['pay_num'] = len(all_payments.filtered(lambda r: r.journal_id.type == journal.type))
 
         result['payments_total'] = {
             'name': 'Total',
@@ -37,7 +37,7 @@ class ReportSaleDetails(models.AbstractModel):
         }
 
         result['card_payments'] = []
-        for p in all_payments.filtered(lambda r: r.journal_id.name != 'Cash'):
+        for p in all_payments.filtered(lambda r: r.journal_id.type != 'cash'):
             result['card_payments'] += [{
                 'ref': p.ref,
                 'datetime': p.statement_id.date_done,
@@ -46,6 +46,7 @@ class ReportSaleDetails(models.AbstractModel):
                 'amount': p.amount,
             }]
         result['card_payments_total'] = sum([p['amount'] for p in result['card_payments']] + [0])
+
 
         result['cash_control'] = []
         for conf in configs:

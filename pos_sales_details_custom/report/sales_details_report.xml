@@ -154,6 +154,13 @@
 
         <br/>
 
+        <h4><strong>Opening Balance: </strong><t t-esc="opening_balance" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
+        <h4><strong>Theoretical Closing Balance: </strong><t t-esc="cash_register_balance_end" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
+        <h4><strong>Real Closing Balance: </strong><t t-esc="real_closing_balance" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
+        <h4><strong>Difference: </strong><t t-esc="closing_difference" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
+
+        <br/>
+
         <h3>Card Transactions</h3>
         <table  class="table table-condensed">
             <thead>
@@ -182,13 +189,10 @@
         </table>
 
         <br/>
-
-        <h4><strong>Opening Balance: </strong><t t-esc="opening_balance" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
-        <h4><strong>Theoretical Closing Balance: </strong><t t-esc="cash_register_balance_end" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
-        <h4><strong>Real Closing Balance: </strong><t t-esc="real_closing_balance" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
-        <h4><strong>Difference: </strong><t t-esc="closing_difference" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
+        <br/>
 
     </xpath>
+
     <xpath expr="//div[hasclass('page')]" position="inside">
         <h5 style="text-align: right;">___________________ <t t-esc="date"/></h5>
     </xpath>
