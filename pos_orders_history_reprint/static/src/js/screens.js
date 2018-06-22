@@ -140,9 +140,9 @@ odoo.define('pos_orders_history_reprint.screens', function (require) {
         render_receipt: function (ticket) {
             var self = this;
             var order = this.get_order();
+            // remove old html
+            this.$('.pos-receipt-container').html("");
             if (ticket) {
-                // remove old html
-                this.$('.pos-receipt-container').html("");
                 // add new html
                 this.$('.pos-receipt-container').html(ticket.receipt);
                 if (this.pos.config.show_barcode_in_receipt) {
