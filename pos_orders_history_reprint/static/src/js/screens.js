@@ -84,21 +84,47 @@ odoo.define('pos_orders_history_reprint.screens', function (require) {
             var order_id = this.gui.get_current_screen_param('order_id');
             return this.pos.db.orders_history_by_id[order_id];
         },
-        print_xml: function () {
+        print_xml: function (receipt) {
+            var self = this;
             this.show_popup = false;
             var order = this.get_order();
-            var receipt = this.pos.get_receipt_by_order_reference_and_type(order.pos_reference, 'xml');
             if (receipt) {
                 receipt = receipt.receipt;
                 if (this.pos.config.show_barcode_in_receipt) {
                     var barcode = this.$el.find('#barcode').parent().html();
+                    if (!barcode) {
+                        var receipt_reference = order.pos_reference.split(" ")[1];
+                        var el = document.createElement('div');
+                        $(el).append("<img id='barcode'></img>");
+                        $(el).find('#barcode').JsBarcode(receipt_reference, {format: "code128"});
+                        $(el).find('#barcode').css({
+                            "width": "100%"
+                        });
+                        barcode = $(el).find('#barcode').parent().html();
+                    }
                     receipt = receipt.split('<img id="barcode"/>');
                     receipt[0] = receipt[0] + barcode + '</img>';
                     receipt = receipt.join('');
                 }
                 this.pos.proxy.print_receipt(receipt);
             } else {
-                this.show_popup = true;
+                if (self.pos.config.show_posted_orders && order.state === "done") {
+                    new Model('pos.xml_receipt').call('search_read', [[['pos_reference', '=', order.pos_reference],['receipt_type', '=', 'xml']]]).then(function(receipt) {
+                        if (receipt && receipt.length) {
+                            self.print_xml(receipt[0]);
+                        } else {
+                            self.show_popup = true;
+                            self.click_next();
+                        }
+                    });
+                } else {
+                    var receipt = this.pos.get_receipt_by_order_reference_and_type(order.pos_reference, 'xml');
+                    if (receipt) {
+                        this.print_xml(receipt);
+                    } else {
+                        this.show_popup = true;
+                    }
+                }
             }
         },
         click_next: function() {
@@ -110,11 +136,13 @@ odoo.define('pos_orders_history_reprint.screens', function (require) {
                 });
             }
         },
-        render_receipt: function () {
+        render_receipt: function (ticket) {
+            var self = this;
             var order = this.get_order();
-
-            var ticket = this.pos.get_receipt_by_order_reference_and_type(order.pos_reference, 'ticket');
             if (ticket) {
+                // remove old html
+                this.$('.pos-receipt-container').html("");
+                // add new html
                 this.$('.pos-receipt-container').html(ticket.receipt);
                 if (this.pos.config.show_barcode_in_receipt) {
                     // reference without 'Order'
@@ -125,10 +153,28 @@ odoo.define('pos_orders_history_reprint.screens', function (require) {
                     });
                 }
             } else {
-                this.gui.show_popup('error',{
-                    'title': _t('No Ticket.'),
-                    'body': _t('There is no Ticket for the order.'),
-                });
+                if (self.pos.config.show_posted_orders && order.state === "done") {
+                    new Model('pos.xml_receipt').call('search_read', [[['pos_reference', '=', order.pos_reference],['receipt_type', '=', 'ticket']]]).then(function(ticket) {
+                        if (ticket && ticket.length) {
+                            self.render_receipt(ticket[0]);
+                        } else {
+                            self.gui.show_popup('error',{
+                                'title': _t('No Ticket.'),
+                                'body': _t('There is no Ticket for the order.'),
+                            });
+                        }
+                    });
+                } else {
+                    var ticket = this.pos.get_receipt_by_order_reference_and_type(order.pos_reference, 'ticket');
+                    if (ticket) {
+                        self.render_receipt(ticket);
+                    } else {
+                        this.gui.show_popup('error',{
+                            'title': _t('No Ticket.'),
+                            'body': _t('There is no Ticket for the order.'),
+                        });
+                    }
+                }
             }
         }
     });
