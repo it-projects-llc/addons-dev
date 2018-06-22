@@ -123,6 +123,7 @@ odoo.define('pos_orders_history_reprint.screens', function (require) {
                         this.print_xml(receipt);
                     } else {
                         this.show_popup = true;
+                        self.click_next();
                     }
                 }
             }
