@@ -17,21 +17,16 @@ class TestUi(odoo.tests.HttpCase):
     def setUp(self):
         super(TestUi, self).setUp()
 
-        def patch_load_backup_list_from_service(redirect=None):
-            return {'backup_list': ['01.01.2018 - backup1', '02.01.2018 - backup2']}
-            # TODO: check a case with rendering list of backups in dashboard
-
-        def patch_check_insufficient_credit(credit):
-            return 'https://iap.odoo.com/iap/1/credit...'
+        def patch_update_info(redirect=None):
+            return {
+                'backup_list': ['database_1|2018-06-20_10-44-43', 'database_2|2018-06-20_10-47-13'],
+                'credit_url': 'https://iap.odoo.com/iap/1/credit...',
+            }
 
         self.patcher1 = patch(
-            'odoo.addons.odoo_backup_sh.controllers.main.BackupController.load_backup_list_from_service',
-            wraps=patch_load_backup_list_from_service)
-        self.patcher2 = patch(
-            'odoo.addons.odoo_backup_sh.models.odoo_backup_sh.Backup.check_insufficient_credit',
-            wraps=patch_check_insufficient_credit)
+            'odoo.addons.odoo_backup_sh.controllers.main.BackupController.update_info',
+            wraps=patch_update_info)
         self.patcher1.start()
-        self.patcher2.start()
 
     def test_01_odoo_backup_sh_tour(self):
         # needed because tests are run before the module is marked as
@@ -48,5 +43,4 @@ class TestUi(odoo.tests.HttpCase):
 
     def tearDown(self):
         self.patcher1.stop()
-        self.patcher2.stop()
         super(TestUi, self).tearDown()
