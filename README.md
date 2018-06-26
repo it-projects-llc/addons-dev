@@ -102,6 +102,10 @@ https://github.com/it-projects-llc/addons-dev/pull/178
 
     # create branch
     git checkout -b 11.0-some-feature addons-dev/misc-addons-11.0-some_feature
+    
+    # Sync with upstream
+    git fetch upstream
+    git rebase upstream/11.0
 
     # push to your fork of target repo
     git push origin 11.0-some-feature
