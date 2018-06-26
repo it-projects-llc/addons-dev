@@ -137,6 +137,9 @@ odoo.define('pos_orders_history_reprint.screens', function (require) {
                 });
             }
         },
+        print_web: function() {
+            window.print();
+        },
         render_receipt: function (ticket) {
             var self = this;
             var order = this.get_order();
