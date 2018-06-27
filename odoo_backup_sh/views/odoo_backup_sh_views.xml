@@ -24,7 +24,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
             <form string="Backup">
                 <sheet>
                     <group>
-                        <field name="backup_name" />
+                        <field name="database" />
                         <field name="date_upload" />
                     </group>
                 </sheet>
@@ -37,7 +37,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
         <field name="model">odoo_backup_sh.backup</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="backup_name" />
+                <field name="database" />
                 <field name="date_upload" />
             </tree>
         </field>
@@ -51,7 +51,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
     </record>
 
     <menuitem name="Backups" id="menu_backup_root" sequence="100" web_icon="odoo_backup_sh,static/description/icon.png"/>
-    <menuitem name="Dashboard" action="ir_actions_server_backup_dashboard" parent="menu_backup_root"
+    <menuitem name="Dashboard" action="odoo_backup_sh.ir_actions_server_backup_dashboard" parent="menu_backup_root"
               id="menu_dashboard" sequence="1"/>
     <menuitem name="Backups" parent="menu_backup_root" id="menu_backups" sequence="10"/>
     <menuitem name="Configuration" parent="menu_backup_root" id="menu_config" sequence="100"/>
