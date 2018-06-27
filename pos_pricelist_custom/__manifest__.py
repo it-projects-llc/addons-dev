@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 {
@@ -18,16 +17,17 @@
     # "currency": "EUR",
 
     "depends": [
-        "pos_pricelist",
+        "point_of_sale",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
         "views/pos_pricelist_custom_template.xml",
+        "views/pos_pricelist_custom_view.xml",
     ],
     "demo": [
     ],
     "qweb": [
-        # "static/src/xml/pos.xml",
+        "static/src/xml/pos.xml",
     ],
 
     "post_load": None,

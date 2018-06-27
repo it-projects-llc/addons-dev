@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
+
+<odoo>
+    <record model="ir.ui.view" id="pos_config_view_form">
+        <field name="name">pos.config.form.view.inherit</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='pricelist_setting']//div[hasclass('content-group')]" position="inside">
+                <div class="row">
+                    <label for="show_orderline_default_pricelist" class="col-md-3 o_light_label"/>
+                    <field name="show_orderline_default_pricelist"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

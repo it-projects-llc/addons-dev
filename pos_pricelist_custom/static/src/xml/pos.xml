@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
+
+<templates id="template" xml:space="preserve">
+
+    <t t-name="PricelistButton">
+        <div class='control-button js_orderline_pricelist'>
+            <i class='fa fa-usd' /> Default Pricelist (Active: <t t-esc="widget.get_pricelist_name()"/>)
+        </div>
+    </t>
+
+</templates>

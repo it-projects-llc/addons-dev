@@ -8,4 +8,12 @@
             <script type="text/javascript" src="/pos_pricelist_custom/static/src/js/tour.js"></script>
         </xpath>
     </template>
+
+    <template id="assets_backend" name="pos_pricelist_custom_assets" inherit_id="point_of_sale.assets">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/pos_pricelist_custom/static/src/js/screens.js"></script>
+            <script type="text/javascript" src="/pos_pricelist_custom/static/src/js/models.js"></script>
+        </xpath>
+    </template>
+
 </odoo>
