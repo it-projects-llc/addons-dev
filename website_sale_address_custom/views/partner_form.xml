@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--# Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).-->
+
+<odoo>
+
+    <record model="ir.ui.view" id="res_partner_form_ro">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="category_id" position="after">
+                <field name="gender" widget="radio"/>
+                <field name="identification_id" invisible="1"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--# Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).-->
+
+<odoo>
+
+    <template id="address" name="my_checkout" inherit_id="website_sale.address">
+
+        <xpath expr="(//input[@name='company_name'])/.." position="replace"/>
+        <xpath expr="(//select[@name='country_id'])/.." position="replace"/>
+        <xpath expr="(//select[@name='state_id'])/.." position="replace"/>
+        <xpath expr="(//input[@name='street'])/.." position="replace"/>
+        <xpath expr="(//input[@name='zip'])/.." position="replace"/>
+        <xpath expr="(//input[@name='city'])/.." position="replace"/>
+        <xpath expr="(//input[@name='zip'])/.." position="replace"/>
+
+        <xpath expr="//input[@name='phone']/.." position="before">
+            <t t-if="mode[1] != 'billing'">
+                <div t-attf-class="form-group #{error.get('email') and 'has-error' or ''} col-md-6" id="div_email">
+                    <label class="control-label" for="email">Email</label>
+                    <input type="email" name="email" class="form-control" t-att-value="'email' in checkout and checkout['email']"/>
+                </div>
+            </t>
+        </xpath>
+
+        <xpath expr="//input[@name='phone']/.." position="after">
+            <div class="clearfix"/>
+
+            <div t-attf-class="form-group #{error.get('gender') and 'has-error' or ''} col-md-12 div_gender">
+                <label class="control-label" for="gender">Gender</label>
+                <div class="input-group">
+                    <label class="radio-inline">
+                      <input type="radio" name="gender" value="male" t-att-checked="gender == 'male'"/>
+                        Male
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" name="gender" value="female" t-att-checked="gender == 'female'"/>
+                        Female
+                    </label>
+                </div>
+            </div>
+
+            <div class="clearfix"/>
+
+            <div t-attf-class="form-group #{error.get('identification_id') and 'has-error' or ''} col-md-6 div_identification">
+                <script type="text/javascript" src="/website_sale_address_custom/static/src/js/file_upload.js"/>
+                <label class="control-label" for="gender">Identification</label>
+                <input type="file" class="form-control o_website_form_input" t-att-uid="partner_id" name="identification_id" t-att-value="identification_id and identification_id['website_url']"/>
+            </div>
+            <t t-if="len(attachments)&gt;0">
+                <div t-attf-class="form-group #{error.get('identification_id_select') and 'has-error' or ''} col-md-6 div_identification_select">
+                    <label class="control-label"/>
+                    <select name="identification_id_select" class="form-control" data-init="1">
+                        <t t-foreach="attachments" t-as="att">
+                            <option t-att-value="att.id" t-att-selected="att.id == identification_id.id">
+                                <t t-esc="att.name"/>
+                            </option>
+                        </t>
+                    </select>
+                </div>
+            </t>
+
+            <div class="clearfix"/>
+
+            <div class="col-md-6">
+                <div t-attf-class="form-group #{error.get('country_id') and 'has-error' or ''} div_country">
+                    <label class="control-label" for="country_id">Country</label>
+                    <select id="country_id" name="country_id" class="form-control">
+                        <option value="">Country...</option>
+                        <t t-foreach="countries" t-as="c">
+                            <option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
+                                <t t-esc="c.name"/>
+                            </option>
+                        </t>
+                    </select>
+                </div>
+
+                <div t-attf-class="form-group #{error.get('state_id') and 'has-error' or ''} div_state" t-att-style="(not country or not country.state_ids) and 'display: none'">
+                    <label class="control-label" for="state_id">State / Province</label>
+                    <select name="state_id" class="form-control" data-init="1">
+                        <option value="">State / Province...</option>
+                        <t t-foreach="country and country.state_ids or []" t-as="s">
+                            <option t-att-value="s.id" t-att-selected="s.id == ('state_id' in checkout and country and checkout['state_id'] != '' and int(checkout['state_id']))">
+                                <t t-esc="s.name"/>
+                            </option>
+                        </t>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''} div_zip">
+                    <label class="control-label label-optional" for="zip">Zip Code</label>
+                    <input type="text" name="zip" class="form-control" t-att-value="'zip' in checkout and checkout['zip']"/>
+                </div>
+
+                <div t-attf-class="form-group #{error.get('city') and 'has-error' or ''} div_city">
+                    <label class="control-label" for="city">City</label>
+                    <input type="text" name="city" class="form-control" t-att-value="'city' in checkout and checkout['city']"/>
+                </div>
+            </div>
+
+            <div class="clearfix"/>
+
+            <div t-attf-class="form-group #{error.get('street') and 'has-error' or ''} col-md-12 div_street">
+                <label class="control-label" for="street">Street <span class="hidden-xs"> and Number</span></label>
+                <input type="text" name="street" class="form-control" t-att-value="'street' in checkout and checkout['street']"/>
+            </div>
+
+            <input type="hidden" name="identification_file"/>
+
+        </xpath>
+
+    </template>
+
+</odoo>
