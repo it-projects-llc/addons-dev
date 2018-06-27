@@ -3,7 +3,7 @@
    :alt: License: LGPL-3
 
 ============================
- Website Sale Customisation
+ Website Sale Customization
 ============================
 
 The module customizes the address form for eCommerce
@@ -25,7 +25,7 @@ Maintainers
 
       To get a guaranteed support
       you are kindly requested to purchase the module 
-      at `odoo apps store <https://apps.odoo.com/apps/modules/11.0/wesbsite_sale_address_custom/>`__.
+      at `odoo apps store <https://apps.odoo.com/apps/modules/10.0/wesbsite_sale_address_custom/>`__.
 
       Thank you for understanding!
 
@@ -42,6 +42,6 @@ Usage instructions: `<doc/index.rst>`_
 
 Changelog: `<doc/changelog.rst>`_
 
-Notifications on updates: `via Atom <https://github.com/it-projects-llc/website-addons/commits/11.0/wesbsite_sale_address_custom.atom>`_, `by Email <https://blogtrottr.com/?subscribe=https://github.com/it-projects-llc/website-addons/commits/11.0/wesbsite_sale_address_custom.atom>`_
+Notifications on updates: `via Atom <https://github.com/it-projects-llc/website-addons/commits/11.0/wesbsite_sale_address_custom.atom>`_, `by Email <https://blogtrottr.com/?subscribe=https://github.com/it-projects-llc/website-addons/commits/10.0/wesbsite_sale_address_custom.atom>`_
 
 Tested on Odoo 10.0 475027b9889c0701f8fe5e0373a40663f6a831e1
