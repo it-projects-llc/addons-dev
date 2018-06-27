@@ -12,7 +12,7 @@ class ReportSaleDetails(models.AbstractModel):
     def get_sale_details(self, date_start=False, date_stop=False, configs=False):
         result = super(ReportSaleDetails, self).get_sale_details(date_start, date_stop, configs)
         active_user = self.env['res.users'].browse(self.env.context['uid'])
-        pos_session_ids = self.env['pos.session'].search([('config_id', 'in', configs.ids), '|',
+        pos_session_ids = self.env['pos.session'].search([('config_id', 'in', configs.ids),
                                                           ('start_at', '<', date_stop),
                                                           ('stop_at', '>', date_start)])
         pos_session_refs = [p_s.name for p_s in pos_session_ids]
@@ -26,9 +26,20 @@ class ReportSaleDetails(models.AbstractModel):
         all_payments = self.env['account.bank.statement.line'].search([('ref', 'in', pos_session_refs),
                                                                        ('datetime', '>=', date_start),
                                                                        ('datetime', '<=', date_stop)])
-        for pay in result['payments']:
-            journal = self.env['account.journal'].search([('name', '=', pay['name'])], limit=1)
-            pay['pay_num'] = len(all_payments.filtered(lambda r: r.journal_id.type == journal.type))
+
+        for pay in all_payments:
+            journal = self.env['account.journal'].search([('name', '=', pay.journal_id.name)], limit=1)
+            key = 0
+            for i in result['payments']:
+                if i['name'] == journal.name:
+                    i['pay_num'] = 'pay_num' in i and i['pay_num'] + 1 or 1
+                    i['total'] += pay.amount
+                    key = 1
+            if not key:
+                result['payments'] += [{'name': journal.name,
+                                        'total': pay.amount,
+                                        'pay_num': 1,
+                                        }]
 
         result['payments_total'] = {
             'name': 'Total',
@@ -49,39 +60,38 @@ class ReportSaleDetails(models.AbstractModel):
 
 
         result['cash_control'] = []
-        for conf in configs:
-            for session in conf.session_ids:
-                lines_in = session.cash_register_id.cashbox_start_id.cashbox_lines_ids
-                lines_out = session.cash_register_id.cashbox_end_id.cashbox_lines_ids
-                lines_out_values = [l.coin_value for l in lines_out]
-                lines_out_used = []
-                for line in lines_in:
-                    if line.coin_value in lines_out_values:
-                        in_array = lines_out_values.index(line.coin_value)
-                        result['cash_control'] += [{
-                            'number': line.number,
-                            'coin_in': line.coin_value,
-                            'subtotal_in': line.subtotal,
-                            'coin_out': lines_out[in_array].coin_value,
-                            'subtotal_out': lines_out[in_array].subtotal,
-                        }]
-                        lines_out_used += [lines_out[in_array]]
-                    else:
-                        result['cash_control'] += [{
-                            'number': line.number,
-                            'coin_in': line.coin_value,
-                            'subtotal_in': line.subtotal,
-                            'coin_out': 0,
-                            'subtotal_out': 0,
-                        }]
-                for i in list(set(lines_out) - set(lines_out_used)):
+        for session in pos_session_ids:
+            lines_in = session.cash_register_id.cashbox_start_id.cashbox_lines_ids
+            lines_out = session.cash_register_id.cashbox_end_id.cashbox_lines_ids
+            lines_out_values = [l.coin_value for l in lines_out]
+            lines_out_used = []
+            for line in lines_in:
+                if line.coin_value in lines_out_values:
+                    in_array = lines_out_values.index(line.coin_value)
                     result['cash_control'] += [{
-                        'number': i.number,
-                        'coin_in': 0,
-                        'subtotal_in': 0,
-                        'coin_out': i.coin_value,
-                        'subtotal_out': i.subtotal,
+                        'number': line.number,
+                        'coin_in': line.coin_value,
+                        'subtotal_in': line.subtotal,
+                        'coin_out': lines_out[in_array].coin_value,
+                        'subtotal_out': lines_out[in_array].subtotal,
                     }]
+                    lines_out_used += [lines_out[in_array]]
+                else:
+                    result['cash_control'] += [{
+                        'number': line.number,
+                        'coin_in': line.coin_value,
+                        'subtotal_in': line.subtotal,
+                        'coin_out': 0,
+                        'subtotal_out': 0,
+                    }]
+            for i in list(set(lines_out) - set(lines_out_used)):
+                result['cash_control'] += [{
+                    'number': i.number,
+                    'coin_in': 0,
+                    'subtotal_in': 0,
+                    'coin_out': i.coin_value,
+                    'subtotal_out': i.subtotal,
+                }]
 
         result['put_in_out'] = []
         for ps in pos_session_ids:
