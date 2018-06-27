@@ -159,7 +159,40 @@
         <h4><strong>Real Closing Balance: </strong><t t-esc="real_closing_balance" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
         <h4><strong>Difference: </strong><t t-esc="closing_difference" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
 
+        <br/>
+
+        <h3>Card Transactions</h3>
+        <table  class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>Order Reference</th>
+                    <th>Datetime</th>
+                    <th>Payment method</th>
+                    <th>Cashier</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach='card_payments' t-as='pay'>
+                    <td><t t-esc="pay['ref']" /></td>
+                    <td><t t-esc="pay['datetime']"  t-options="{'widget': 'datetime'}"/></td>
+                    <td><t t-esc="pay['journal']" /></td>
+                    <td><t t-esc="pay['cashier']" /></td>
+                    <td><t t-esc="pay['amount']" t-options="{'widget': 'float', 'precision': currency_precision}" /></td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="text-right">
+                        <strong>Total:</strong> <t t-esc="card_payments_total" t-options="{'widget': 'float', 'precision': currency_precision}" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br/>
+        <br/>
+
     </xpath>
+
     <xpath expr="//div[hasclass('page')]" position="inside">
         <h5 style="text-align: right;">___________________ <t t-esc="date"/></h5>
     </xpath>
