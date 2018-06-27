@@ -15,7 +15,7 @@ class AnalyticLink(models.Model):
         'account.analytic.line',
         'Expense',
         ondelete='cascade')
-    weight = fields.Integer('Weight', default=1)
+    weight = fields.Integer('Weight', default=100)
 
     _sql_constraints = [
         ('weight_positive', 'check(weight > 0)', 'Weight must be positive!'),
