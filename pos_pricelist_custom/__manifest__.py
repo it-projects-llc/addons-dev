@@ -22,7 +22,7 @@
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
-        # "pos_pricelist_custom_template.xml",
+        "views/pos_pricelist_custom_template.xml",
     ],
     "demo": [
     ],
