@@ -34,9 +34,9 @@ Maintainers
 Further information
 ===================
 
-Demo: http://runbot.it-projects.info/demo/website-addons/11.0
+Demo: http://runbot.it-projects.info/demo/website-addons/10.0
 
-HTML Description: https://apps.odoo.com/apps/modules/11.0/wesbsite_sale_address_custom/
+HTML Description: https://apps.odoo.com/apps/modules/10.0/wesbsite_sale_address_custom/
 
 Usage instructions: `<doc/index.rst>`_
 
