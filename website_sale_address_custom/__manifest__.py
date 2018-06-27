@@ -2,9 +2,9 @@
 # Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 {
-    "name": """Website Sale Customisation""",
-    "summary": """{SHORT_DESCRIPTION_OF_THE_MODULE}""",
-    "category": "{MODULE_CATEGORY}",
+    "name": """Website Sale Customization""",
+    "summary": """The module customizes address form for eCommerce""",
+    "category": "eCommerce",
     # "live_test_url": "",
     "images": [],
     "version": "10.0.1.0.0",
