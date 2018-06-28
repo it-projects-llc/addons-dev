@@ -13,6 +13,7 @@ class TestUi(odoo.tests.HttpCase):
         # create new pricelist
         pricelist = env['product.pricelist'].create({
             'name': 'POS pricelist',
+            'pos_discount_policy': 'without_discount',
         })
 
         env['product.pricelist.item'].create({
@@ -24,15 +25,13 @@ class TestUi(odoo.tests.HttpCase):
 
         all_pricelists = env['product.pricelist'].search([])
 
-        public_pricelist = env.ref('product.list0')
-
         # get exist pos_config
         main_pos_config = env.ref('point_of_sale.pos_config_main')
 
         main_pos_config.write({
             'use_pricelist': True,
             'available_pricelist_ids': [(4, pricelist.id) for pricelist in all_pricelists],
-            'pricelist_id': public_pricelist.id,
+            'pricelist_id': pricelist.id,
             'show_orderline_default_pricelist': True,
         })
 

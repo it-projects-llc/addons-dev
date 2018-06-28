@@ -39,6 +39,12 @@ odoo.define('pos_pricelist_custom.tour', function(require) {
         return [{
             trigger: '.control-buttons .js_orderline_pricelist',
             content: 'click default orderline pricelist button',
+        }, {
+            trigger: '.orderline .info .price',
+            content: 'Check price',
+            run: function () {
+                // it's a check
+            }
         }];
     }
 
@@ -125,7 +131,7 @@ odoo.define('pos_pricelist_custom.tour', function(require) {
 
     steps = steps.concat(goto_payment_screen_and_select_payment_method());
 
-    steps = steps.concat(generate_payment_screen_keypad_steps("10"));
+    steps = steps.concat(generate_payment_screen_keypad_steps("4.59"));
 
     steps = steps.concat(finish_order());
 
