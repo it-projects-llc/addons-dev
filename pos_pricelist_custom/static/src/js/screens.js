@@ -27,7 +27,6 @@ odoo.define('pos_pricelist_custom.screens', function (require) {
         save_changes: function () {
             this._super();
             if (this.has_client_changed()) {
-                var order = this.pos.get_order();
                 var buttons = this.getParent().screens.products.action_buttons;
                 if (buttons && buttons.pricelist) {
                     buttons.pricelist.renderElement();
