@@ -40,8 +40,14 @@ odoo.define('pos_pricelist_custom.tour', function(require) {
             trigger: '.control-buttons .js_orderline_pricelist',
             content: 'click default orderline pricelist button',
         }, {
-            trigger: '.orderline .info .price',
-            content: 'Check price',
+            trigger: '.orderline.selected .info:contains("discount")',
+            content: 'Check discount',
+            run: function () {
+                // it's a check
+            }
+        }, {
+            trigger: '.orderline.selected .info .price',
+            content: 'Check New Price',
             run: function () {
                 // it's a check
             }

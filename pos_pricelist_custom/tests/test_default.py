@@ -23,14 +23,14 @@ class TestUi(odoo.tests.HttpCase):
             'applied_on': '3_global',
         })
 
-        all_pricelists = env['product.pricelist'].search([])
+        all_pricelists = env['product.pricelist'].search([('currency_id', '=', env.user.company_id.currency_id.id)])
 
         # get exist pos_config
         main_pos_config = env.ref('point_of_sale.pos_config_main')
 
         main_pos_config.write({
             'use_pricelist': True,
-            'available_pricelist_ids': [(4, pricelist.id) for pricelist in all_pricelists],
+            'available_pricelist_ids': [(4, p.id) for p in all_pricelists],
             'pricelist_id': pricelist.id,
             'show_orderline_default_pricelist': True,
         })
