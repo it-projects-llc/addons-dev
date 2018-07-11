@@ -44,7 +44,7 @@ class ReportSaleDetails(models.AbstractModel):
         result['payments_total'] = {
             'name': 'Total',
             'total': sum([p['total'] for p in result['payments']] + [0]),
-            'pay_num': sum([p['pay_num'] for p in result['payments']] + [0]),
+            'pay_num': sum([('pay_num' in p and p['pay_num'] or 0) for p in result['payments']] + [0]),
         }
 
         result['card_payments'] = []
@@ -58,40 +58,31 @@ class ReportSaleDetails(models.AbstractModel):
             }]
         result['card_payments_total'] = sum([p['amount'] for p in result['card_payments']] + [0])
 
-
         result['cash_control'] = []
+        lines_in = []
         for session in pos_session_ids:
-            lines_in = session.cash_register_id.cashbox_start_id.cashbox_lines_ids
+            lines_in += session.cash_register_id.cashbox_start_id.cashbox_lines_ids
             lines_out = session.cash_register_id.cashbox_end_id.cashbox_lines_ids
-            lines_out_values = [l.coin_value for l in lines_out]
-            lines_out_used = []
-            for line in lines_in:
-                if line.coin_value in lines_out_values:
-                    in_array = lines_out_values.index(line.coin_value)
+            for i in lines_out:
+                in_report = False
+                for j in result['cash_control']:
+                    if i.coin_value == j['coin_value']:
+                        j['coin_out'] += 1
+                        in_report = True
+                if not in_report:
                     result['cash_control'] += [{
-                        'number': line.number,
-                        'coin_in': line.coin_value,
-                        'subtotal_in': line.subtotal,
-                        'coin_out': lines_out[in_array].coin_value,
-                        'subtotal_out': lines_out[in_array].subtotal,
+                        'coin_value': i.coin_value,
+                        'coin_in': 0,
+                        'subtotal_in': 0,
+                        'coin_out': i.number,
+                        'subtotal_out': i.subtotal,
                     }]
-                    lines_out_used += [lines_out[in_array]]
-                else:
-                    result['cash_control'] += [{
-                        'number': line.number,
-                        'coin_in': line.coin_value,
-                        'subtotal_in': line.subtotal,
-                        'coin_out': 0,
-                        'subtotal_out': 0,
-                    }]
-            for i in list(set(lines_out) - set(lines_out_used)):
-                result['cash_control'] += [{
-                    'number': i.number,
-                    'coin_in': 0,
-                    'subtotal_in': 0,
-                    'coin_out': i.coin_value,
-                    'subtotal_out': i.subtotal,
-                }]
+
+        for i in lines_in:
+            for j in result['cash_control']:
+                if i.coin_value == j['coin_value']:
+                    j['coin_in'] += i.number
+                    j['subtotal_in'] += i.number * i.coin_value
 
         result['put_in_out'] = []
         for ps in pos_session_ids:
