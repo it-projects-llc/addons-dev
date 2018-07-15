@@ -136,7 +136,7 @@
             </thead>
             <tbody>
                 <tr t-foreach='cash_control' t-as='val'>
-                    <td><t t-esc="val['number']" /></td>
+                    <td><t t-esc="val['coin_value']" /></td>
                     <td><t t-esc="val['coin_in']" /></td>
                     <td><t t-esc="val['subtotal_in']" /></td>
                     <td><t t-esc="val['coin_out']" /></td>
