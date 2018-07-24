@@ -32,7 +32,7 @@ class WechatController(http.Controller):
             return """<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[Signature failure]]></return_msg></xml>"""
 
     @http.route('/wechat/miniprogram/authenticate', type='json', auth='public', csrf=False)
-    def authenticate(self, code, user_info):
+    def authenticate(self, code, user_info, test_mock=False):
         """
         :param code: After the user is permitted to log in on the WeChat mini-program, the callback content will
         bring the code (five-minute validity period). The developer needs to send the code to the backend
@@ -68,7 +68,7 @@ class WechatController(http.Controller):
                 'city': city,
                 'groups_id': [(4, request.env.ref('wechat.group_miniprogram_user').id)]
             })
-
+        request.env.cr.commit()
         request.session.authenticate(request.db, user.login, user.wechat_session_key)
         _logger.debug('Current user login: %s, id: %s', request.env.user.login, request.env.user.id)
         session_info = request.env['ir.http'].session_info()
