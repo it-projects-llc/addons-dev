@@ -70,14 +70,12 @@ class WechatController(http.Controller):
             })
 
         if test_cr is False:
-            """
-            For user authentication uses the new courses
-            which can't see the last changes of the current transaction.
-            Therefore we need to make the commit.
-            The special cursor is used on the test mode.
-            During test transaction, we don't need to make the commit
-            because we cannot make the rollback the test changes
-            """
+            # A new cursor is used to authenticate the user and cannot see the
+            # latest changes to the current transaction.
+            # Therefore we need to make the commit.
+
+            # In test mode, one special cursor is used for all transactions.
+            # So we don't need to make the commit otherwise we cannot make the rollback the test changes
             request.env.cr.commit()
 
         request.session.authenticate(request.db, user.login, user.wechat_session_key)
