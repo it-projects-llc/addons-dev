@@ -68,7 +68,10 @@ class WechatController(http.Controller):
                 'city': city,
                 'groups_id': [(4, request.env.ref('wechat.group_miniprogram_user').id)]
             })
-        request.env.cr.commit()
+
+        if test_mock is False:
+            request.env.cr.commit()
+
         request.session.authenticate(request.db, user.login, user.wechat_session_key)
         _logger.debug('Current user login: %s, id: %s', request.env.user.login, request.env.user.id)
         session_info = request.env['ir.http'].session_info()

@@ -109,7 +109,8 @@ class TestWeChatOrder(HttpCase):
         params = {
             "context": {},
             "code": code,
-            "user_info": user_info
+            "user_info": user_info,
+            "test_mock": True
         }
         data = {
             "jsonrpc": "2.0",
