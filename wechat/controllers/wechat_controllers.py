@@ -32,7 +32,7 @@ class WechatController(http.Controller):
             return """<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[Signature failure]]></return_msg></xml>"""
 
     @http.route('/wechat/miniprogram/authenticate', type='json', auth='public', csrf=False)
-    def authenticate(self, code, user_info, test_mock=False):
+    def authenticate(self, code, user_info, test_cr=False):
         """
         :param code: After the user is permitted to log in on the WeChat mini-program, the callback content will
         bring the code (five-minute validity period). The developer needs to send the code to the backend
@@ -69,7 +69,15 @@ class WechatController(http.Controller):
                 'groups_id': [(4, request.env.ref('wechat.group_miniprogram_user').id)]
             })
 
-        if test_mock is False:
+        if test_cr is False:
+            """
+            For user authentication uses the new courses
+            which can't see the last changes of the current transaction.
+            Therefore we need to make the commit.
+            The special cursor is used on the test mode.
+            During test transaction, we don't need to make the commit
+            because we cannot make the rollback the test changes
+            """
             request.env.cr.commit()
 
         request.session.authenticate(request.db, user.login, user.wechat_session_key)
