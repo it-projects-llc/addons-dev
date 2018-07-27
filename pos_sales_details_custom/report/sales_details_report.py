@@ -33,13 +33,13 @@ class ReportSaleDetails(models.AbstractModel):
             for i in result['payments']:
                 if i['name'] == journal.name:
                     i['pay_num'] = 'pay_num' in i and i['pay_num'] + 1 or 1
-                    i['total'] += pay.amount
                     key = 1
-            if not key:
-                result['payments'] += [{'name': journal.name,
-                                        'total': pay.amount,
-                                        'pay_num': 1,
-                                        }]
+            # if not key:
+            #     result['payments'] += [{'name': journal.name,
+            #                             'total': pay.amount,
+            #                             'pay_num': 1,
+            #                             }]
+            # awaits next update. if all is ok ill be removed
 
         result['payments_total'] = {
             'name': 'Total',
@@ -60,29 +60,38 @@ class ReportSaleDetails(models.AbstractModel):
 
         result['cash_control'] = []
         lines_in = []
+        lines_out = []
         for session in pos_session_ids:
             lines_in += session.cash_register_id.cashbox_start_id.cashbox_lines_ids
-            lines_out = session.cash_register_id.cashbox_end_id.cashbox_lines_ids
-            for i in lines_out:
-                in_report = False
-                for j in result['cash_control']:
-                    if i.coin_value == j['coin_value']:
-                        j['coin_out'] += 1
-                        in_report = True
-                if not in_report:
-                    result['cash_control'] += [{
-                        'coin_value': i.coin_value,
-                        'coin_in': 0,
-                        'subtotal_in': 0,
-                        'coin_out': i.number,
-                        'subtotal_out': i.subtotal,
-                    }]
-
+            lines_out += session.cash_register_id.cashbox_end_id.cashbox_lines_ids
+        for i in lines_out:
+            in_report = False
+            for j in result['cash_control']:
+                if i.coin_value == j['coin_value']:
+                    j['coin_out'] += i.number
+                    in_report = True
+            if not in_report:
+                result['cash_control'] += [{
+                    'coin_value': i.coin_value,
+                    'coin_in': 0,
+                    'subtotal_in': 0,
+                    'coin_out': i.number,
+                    'subtotal_out': i.subtotal,
+                }]
         for i in lines_in:
+            in_report = False
             for j in result['cash_control']:
                 if i.coin_value == j['coin_value']:
                     j['coin_in'] += i.number
-                    j['subtotal_in'] += i.number * i.coin_value
+                    in_report = True
+            if not in_report:
+                result['cash_control'] += [{
+                    'coin_value': i.coin_value,
+                    'coin_in': i.number,
+                    'subtotal_in': i.subtotal,
+                    'coin_out': 0,
+                    'subtotal_out': 0,
+                }]
 
         result['put_in_out'] = []
         for ps in pos_session_ids:
