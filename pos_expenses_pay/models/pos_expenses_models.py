@@ -21,6 +21,7 @@ class HrExpenseSheet(models.Model):
 
     processed_by_pos = fields.Boolean()
     cashier = fields.Char()
+    datetime = fields.Datetime(required=True, string="Datetime", default=fields.Datetime.now)
 
     def process_expense_from_pos(self, cashier):
         if (self.state == 'approve'):

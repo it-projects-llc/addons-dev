@@ -65,6 +65,7 @@ class AccountPayment(models.Model):
 
     paid_by_pos = fields.Boolean(default=False)
     cashier = fields.Many2one('res.users')
+    datetime = fields.Datetime(required=True, string="Datetime", default=fields.Datetime.now)
 
 
 class AccountInvoice(models.Model):
