@@ -114,6 +114,7 @@ class Generator(models.TransientModel):
                 return 'expense_not_linked'
 
         # STAGE: Create quant for incomes
+        _logger.info('Quant generation: Create quant for incomes')
         for line in search_lines([('is_expense', '=', False)]):
             # No need to split incomes
             Quant.create({
@@ -127,6 +128,7 @@ class Generator(models.TransientModel):
 
         # STAGE distribute quants to corresponding incomes proportionally to
         # link weight
+        _logger.info('Quant generation: distribute quants to corresponding incomes proportionally to link weight')
         for expense in search_expense_lines([
                 ('link_income_ids', '!=', False)
         ]):
@@ -168,6 +170,7 @@ class Generator(models.TransientModel):
         # STAGE: destribute quants to incomes that belong to quants'
         # interval. Quants are distributed proportionally to size of found
         # incomes
+        _logger.info('Quant generation: destribute quants to incomes that belong to quants interval. Quants are distributed proportionally to size of found incomes')
         for expense in search_expense_lines([]):
             # expense is negative!
             expense_amount = expense_remaining(expense)
@@ -230,6 +233,7 @@ class Generator(models.TransientModel):
                 })
 
         # STAGE: distribute quants to income with closest date
+        _logger.info('Quant generation: distribute quants to income with closest date')
         for expense in search_expense_lines([]):
             # expense is negative!
             expense_amount = expense_remaining(expense)
@@ -292,8 +296,11 @@ class Generator(models.TransientModel):
                 })
 
         # FINAL STAGE: fill quant_income_id
+        _logger.info('Quant generation: fill quant_income_id')
         for expense in search_quants([('type', '!=', 'income')]):
             if not expense.income_id:
                 continue
             income = search_quants([('line_id', '=', expense.income_id.id)])
             expense.quant_income_id = income.id
+
+        _logger.info('Quant generation: DONE!')
