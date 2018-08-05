@@ -179,11 +179,12 @@ class Generator(models.TransientModel):
                 ready_expenses.add(expense.id)
 
             domain = [('is_expense', '=', False)]
-            if expense.date_start and expense.date_end:
-                domain += [
-                    ('date_start', '<', expense.date_end),
-                    ('date_end', '>', expense.date_start)
-                ]
+            date_start = expense.date_start or expense.date
+            date_end = expense.date_end or expense.date
+            domain += [
+                ('date_start', '<=', date_end),
+                ('date_end', '>=', date_start)
+            ]
 
             income_lines = search_lines(domain)
 
@@ -192,22 +193,23 @@ class Generator(models.TransientModel):
                 continue
 
             available_income = income_remaining(income_lines)
-            if expense.date_start and expense.date_end:
-                for income in income_lines:
-                    delta = None
-                    if date(expense.date_start) < date(income.date_start):
-                        delta = date(expense.date_end) - date(income.date_start)
-                    elif expense.date_end > income.date_end:
-                        delta = date(income.date_end) - date(expense.date_start)
-                    else:
-                        # expense is inside the income
-                        continue
-                    # "1+" is needed. For example if date_start = date_end -- we
-                    # consider it as 1 day)
-                    income_days = 1 + (date(income.date_end) - date(income.date_start)).days
-                    intersection_days = 1 + delta.days
+            for income in income_lines:
+                delta = None
+                if date(date_start) < date(income.date_start):
+                    delta = date(date_end) - date(income.date_start)
+                elif date_end > income.date_end:
+                    delta = date(income.date_end) - date(date_start)
+                else:
+                    # expense is inside the income
+                    continue
+                # "1+" is needed. For example if date_start = date_end -- we
+                # consider it as 1 day)
+                income_days = 1 + (date(income.date_end) - date(income.date_start)).days
+                intersection_days = 1 + delta.days
+                assert income_days > 0
+                assert intersection_days > 0
 
-                    available_income[income.id] *= intersection_days / income_days
+                available_income[income.id] *= intersection_days / income_days
 
             total_income = sum([a for id, a
                                 in available_income.items()])
@@ -246,18 +248,19 @@ class Generator(models.TransientModel):
             where = 'is_expense=FALSE'
             select_params = []
             where_params = []
-            if expense.date_start and expense.date_end:
-                # use undated income at the end
-                select += ",CASE WHEN date_start IS NOT NULL AND date_end IS NOT NULL THEN least(date_start - %s, %s - date_end) ELSE interval '100333000 days' END AS days_delta"
-                select_params.append(expense.date_end)
-                select_params.append(expense.date_start)
+            date_start = expense.date_start or expense.date
+            date_end = expense.date_end or expense.date
+            # use undated income at the end
+            select += ",CASE WHEN date_start IS NOT NULL AND date_end IS NOT NULL THEN least(date_start - %s, %s - date_end) ELSE interval '100333000 days' END AS days_delta"
+            select_params.append(date_end)
+            select_params.append(date_start)
 
-                # only income outside of expenses are left -- so filter out other ones
-                where += ' AND (date_start > %s OR %s > date_end)'
-                where_params.append(expense.date_end)
-                where_params.append(expense.date_start)
+            # only income outside of expenses are left -- so filter out other ones
+            where += ' AND (date_start > %s OR %s > date_end)'
+            where_params.append(date_end)
+            where_params.append(date_start)
 
-                order = 'ORDER BY days_delta'
+            order = 'ORDER BY days_delta'
 
             request = 'SELECT %s FROM account_analytic_line WHERE %s %s' % (select, where, order)
             request_params = [date(d) for d in select_params + where_params]
