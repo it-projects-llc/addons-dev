@@ -41,10 +41,10 @@ class AnalyticQuant(models.Model):
         help="""The income this Quant is attached to.
         For income quant: reference to itself"""
     )
-    income_project_id = fields.Many2one(
-        'project.project',
-        'Income Project',
-        related='income_id.project_id',
+    income_account_id = fields.Many2one(
+        'account.analytic.account',
+        'Income Analytic',
+        related='income_id.account_id',
         readonly=True,
         store=True,
         index=True,
@@ -84,10 +84,10 @@ class AnalyticQuant(models.Model):
         store=True,
         readonly=True,
     )
-    project_id = fields.Many2one(
-        'project.project',
-        'Project',
-        related='line_id.project_id',
+    account_id = fields.Many2one(
+        'account.analytic.account',
+        'Analytic',
+        related='line_id.account_id',
         store=True,
         readonly=True,
     )
