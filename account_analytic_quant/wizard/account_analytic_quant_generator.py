@@ -117,8 +117,11 @@ class Generator(models.TransientModel):
         _logger.info('Quant generation: Create quant for incomes')
         for line in search_lines([('is_expense', '=', False)]):
             # No need to split incomes
+            amount = line.amount
+            if float_is_zero(amount, precision_rounding=self.currency_id.rounding):
+                continue
             Quant.create({
-                'amount': line.amount,
+                'amount': amount,
                 'type': 'income',
                 # income is linked to itself
                 'income_id': line.id,
@@ -155,6 +158,8 @@ class Generator(models.TransientModel):
                 amount = portion * link_income.weight
                 income = link_income.income_id
                 amount = min(amount, available_income[income.id])
+                if float_is_zero(amount, precision_rounding=self.currency_id.rounding):
+                    continue
                 Quant.create({
                     'amount': -1 * amount,
                     'type': 'expense',
@@ -176,6 +181,7 @@ class Generator(models.TransientModel):
 
             if float_is_zero(expense_amount, precision_rounding=self.currency_id.rounding):
                 ready_expenses.add(expense.id)
+                continue
 
             domain = [('is_expense', '=', False)]
             date_start = expense.date_start or expense.date
@@ -225,8 +231,11 @@ class Generator(models.TransientModel):
             portion = min(abs(expense_amount), total_income) / total_income
 
             for income_id, income_amount in available_income.items():
+                amount = -1 * portion * income_amount
+                if float_is_zero(amount, precision_rounding=self.currency_id.rounding):
+                    continue
                 Quant.create({
-                    'amount': -1 * portion * income_amount,
+                    'amount': amount,
                     'type': expense_uncovered(expense),
                     'income_id': income_id,
                     'line_id': expense.id,
@@ -241,6 +250,7 @@ class Generator(models.TransientModel):
 
             if float_is_zero(expense_amount, precision_rounding=self.currency_id.rounding):
                 ready_expenses.add(expense.id)
+                continue
 
             select = 'id'
             order = ''
@@ -289,8 +299,11 @@ class Generator(models.TransientModel):
             portion = min(abs(expense_amount), total_income) / total_income
 
             for income_id, income_amount in available_income.items():
+                amount = -1 * portion * income_amount
+                if float_is_zero(amount, precision_rounding=self.currency_id.rounding):
+                    continue
                 Quant.create({
-                    'amount': -1 * portion * income_amount,
+                    'amount': amount,
                     'type': expense_uncovered(expense),
                     'income_id': income_id,
                     'line_id': expense.id,
