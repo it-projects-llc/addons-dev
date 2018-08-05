@@ -126,8 +126,7 @@ class Generator(models.TransientModel):
                 'generation': generation,
             })
 
-        # STAGE distribute quants to corresponding incomes proportionally to
-        # link weight
+        # STAGE: linked
         _logger.info('Quant generation: distribute quants to corresponding incomes proportionally to link weight')
         for expense in search_expense_lines([
                 ('link_income_ids', '!=', False)

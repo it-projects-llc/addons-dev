@@ -15,8 +15,8 @@
                        string="Analyze User"
                        filter_domain="['|', ('user_id', 'ilike', self), ('quant_expense_ids.user_id', 'ilike', self)]"
                        />
-                <field name="project_id" string="Project"/>
-                <field name="income_project_id" string="Income Project"/>
+                <field name="account_id" string="Analytic"/>
+                <field name="income_account_id" string="Income Analytic"/>
 
                 <filter string="Income" domain="[('type', '=', 'income')]"/>
                 <filter string="Covered Expenses" domain="[('type', '=', 'expense')]"/>
@@ -26,8 +26,8 @@
                     <filter string="Quant Type" domain="[]" context="{'group_by': 'type'}"/>
                     <filter string="Profitability" domain="[]" context="{'group_by': 'profitability'}"/>
                     <filter string="Income" domain="[]" context="{'group_by': 'income_id'}"/>
-                    <filter string="Income Project" domain="[]" context="{'group_by': 'income_project_id'}"/>
-                    <filter string="Project" domain="[]" context="{'group_by': 'project_id'}"/>
+                    <filter string="Income Analytic" domain="[]" context="{'group_by': 'income_account_id'}"/>
+                    <filter string="Analytic" domain="[]" context="{'group_by': 'account_id'}"/>
                     <filter string="Task" domain="[]" context="{'group_by': 'task_id'}"/>
 
                     <filter string="Year" domain="[]" context="{'group_by': 'date:year'}"/>
@@ -45,9 +45,9 @@
             <tree>
                 <field name="type"/>
                 <field name="amount"/>
-                <field name="project_id"/>
+                <field name="account_id"/>
                 <field name="task_id"/>
-                <field name="income_project_id"/>
+                <field name="income_account_id"/>
                 <field name="income_id"/>
             </tree>
         </field>
@@ -57,7 +57,7 @@
         <field name="model">account.analytic.quant</field>
         <field name="arch" type="xml">
             <graph string="Analytic Quants">
-                <field name="project_id" type="row"/>
+                <field name="account_id" type="row"/>
                 <field name="abs_amount" type="measure"/>
             </graph>
         </field>
@@ -74,12 +74,12 @@
                         <field name="amount"/>
                         <field name="currency_id" groups="base.group_multi_currency"/>
                         <field name="line_id"/>
-                        <field name="project_id"/>
+                        <field name="account_id"/>
                         <field name="task_id"/>
                     </group>
                     <group string="Coverage">
                         <field name="income_id"/>
-                        <field name="income_project_id"/>
+                        <field name="income_account_id"/>
                     </group>
                     <group>
                         <field name="generation"/>
