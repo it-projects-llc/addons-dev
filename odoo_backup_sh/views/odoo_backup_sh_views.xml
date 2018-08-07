@@ -5,6 +5,46 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
 
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.odoo_backup_sh</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="20"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="odoo_backup_sh" string="Odoo-backup.sh" data-key="odoo_backup_sh">
+                    <h2>Odoo-backup.sh</h2>
+                    <div class="row mt16 o_settings_container" id="webmaster_settings">
+                        <div class="col-xs-12 col-md-6 o_setting_box" id="odoo_backup_sh_setting">
+                            <div class="o_setting_right_pane">
+                                <label string="Encryption Settings"/>
+                                <div class="content-group">
+                                    <div class="row mt16">
+                                        <label class="col-md-3 o_light_label" string="Encrypt backups"/>
+                                        <field name="encrypt_backups"/>
+                                    </div>
+                                    <div class="row mt16">
+                                        <label class="col-md-3 o_light_label" string="Encryption Password"/>
+                                        <field name="encryption_password" password="True" attrs="{'required':[('encrypt_backups', '=', True)]}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_backup_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'odoo_backup_sh'}</field>
+    </record>
+
     <record id="backup_dashboard" model="ir.actions.client">
         <field name="name">Dashboard</field>
         <field name="tag">backup_dashboard</field>
@@ -55,6 +95,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
               id="menu_dashboard" sequence="1"/>
     <menuitem name="Backups" parent="menu_backup_root" id="menu_backups" sequence="10"/>
     <menuitem name="Configuration" parent="menu_backup_root" id="menu_config" sequence="100"/>
+    <menuitem name="Settings" action="action_backup_settings" parent="menu_config" id="menu_settings"/>
     <menuitem action="odoo_backup_sh_backup_action" parent="menu_backups" id="backups_menu" sequence="1"/>
 
 </odoo>

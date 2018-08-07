@@ -14,6 +14,7 @@ import tempfile
 try:
     import boto3
     import botocore
+    from pretty_bad_protocol import gnupg
 except ImportError as err:
     logging.getLogger(__name__).debug(err)
 
@@ -23,7 +24,8 @@ except ImportError:
     import ConfigParser
 
 import odoo
-from odoo import http
+from odoo import http, _
+from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import config
 from odoo.tools.misc import str2bool
@@ -119,7 +121,11 @@ class BackupController(http.Controller):
                     res['credit_url'] = credit_url
                 return res
             except botocore.exceptions.ClientError as e:
-                if e.get('ResponseMetadata') and e['ResponseMetadata']['HTTPStatusCode'] == 403:
+                if isinstance(e, dict):
+                    status_code = e['ResponseMetadata']['HTTPStatusCode']
+                else:
+                    status_code = e.response['ResponseMetadata']['HTTPStatusCode']
+                if status_code == 403:
                     # Delete local cloud parameters and receive it again to make sure they are up-to-date.
                     for key in ['amazon_bucket_name', 'amazon_access_key', 'amazon_secret_access_key', 'oauth_uid']:
                         config.__setitem__(key, '')
@@ -150,7 +156,7 @@ class BackupController(http.Controller):
             else:
                 return response
 
-    @http.route('/web/database/backups', type='http', auth="public")
+    @http.route('/web/database/backups', type='http', auth="none")
     def backup_list(self):
         redirect = request.httprequest.url
         res = self.update_info(redirect)
@@ -172,16 +178,27 @@ class BackupController(http.Controller):
         cloud_params = self.get_cloud_params()
         s3_client = boto3.client('s3', aws_access_key_id=cloud_params['amazon_access_key'],
                                  aws_secret_access_key=cloud_params['amazon_secret_access_key'])
-        backup_file_full_name = '%s/%s' % (cloud_params['oauth_uid'], backup_file_name)
-        backup_object = s3_client.get_object(Bucket=cloud_params['amazon_bucket_name'], Key=backup_file_full_name)
-        backup_file = backup_object['Body'].read()
+        backup_file_path = '%s/%s' % (cloud_params['oauth_uid'], backup_file_name)
+        backup_object = s3_client.get_object(Bucket=cloud_params['amazon_bucket_name'], Key=backup_file_path)
+        backup_file = tempfile.NamedTemporaryFile()
+        backup_file.write(backup_object['Body'].read())
+        if backup_file_name.split('|')[0][-4:] == '.enc':
+            passphrase = config.get('odoo_backup_encryption_password')
+            if not passphrase:
+                raise UserError(_(
+                    'The backup are encrypted. But encryption password is not found. Please check your module settings.'
+                ))
+            # GnuPG ignores the --output parameter with an existing file object as value
+            decrypted_backup_file = tempfile.NamedTemporaryFile()
+            decrypted_backup_file_name = decrypted_backup_file.name
+            os.unlink(decrypted_backup_file_name)
+            gnupg.GPG().decrypt_file(backup_file, passphrase=passphrase, output=decrypted_backup_file_name)
+            backup_file = open(decrypted_backup_file_name, 'rb')
         try:
-            with tempfile.NamedTemporaryFile(delete=False) as data_file:
-                data_file.write(backup_file)
-            db.restore_db(name, data_file.name, str2bool(copy))
+            db.restore_db(name, backup_file.name, str2bool(copy))
             return http.local_redirect('/web/database/manager')
         except Exception as e:
             error = "Database restore error: %s" % (str(e) or repr(e))
             return env.get_template("backup_list.html").render(error=error)
         finally:
-            os.unlink(data_file.name)
+            os.unlink(backup_file.name)
