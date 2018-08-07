@@ -5,6 +5,10 @@
 Installation
 ============
 
+* Install `a Python wrapper for GnuPG <https://pypi.org/project/pretty-bad-protocol>`__ ::
+
+    pip install pretty-bad-protocol
+
 * `Install <https://odoo-development.readthedocs.io/en/latest/odoo/usage/install-module.html>`__ this module in a usual way
 
 Configuration
