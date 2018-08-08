@@ -14,7 +14,8 @@ Configuration
 * Open POS configuration form
 * Click ``[Edit]``
 * Check ``[x] Orders History`` box
-* Check ``[x] Orders Return`` box
+* Check ``[x] Return Orders`` box to activate order returns
+* Check ``[x] Show Returned Orders`` box to display all previously returned orders
 * Click ``[Save]``
 
 Usage
