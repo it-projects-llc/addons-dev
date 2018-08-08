@@ -49,7 +49,7 @@
     ],
     "demo_url": "pos-orders-reprint",
     "demo_summary": "Reprint receipts of paid POS orders",
-     "demo_images": [
+    "demo_images": [
         "images/pos_orders_reprint_main.png",
     ]
 }
