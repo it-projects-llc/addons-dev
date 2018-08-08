@@ -265,7 +265,7 @@ class Generator(models.TransientModel):
             select_params.append(date_start)
 
             # only income outside of expenses are left -- so filter out other ones
-            where += ' AND (date_start > %s OR %s > date_end)'
+            where += ' AND (date_start IS NULL OR date_end IS NULL OR date_start > %s OR %s > date_end)'
             where_params.append(date_end)
             where_params.append(date_start)
 
@@ -280,6 +280,7 @@ class Generator(models.TransientModel):
 
             if not income_lines:
                 # no more incomes left
+                _logger.info('No more incomes left to distriubute')
                 break
 
             available_income = income_remaining(income_lines)
@@ -289,6 +290,7 @@ class Generator(models.TransientModel):
 
             if float_is_zero(total_income, precision_rounding=self.currency_id.rounding):
                 # no more incomes left
+                _logger.info('Left incomes are distributed completly')
                 break
 
             assert total_income > 0
@@ -296,12 +298,12 @@ class Generator(models.TransientModel):
             if abs(expense_amount) <= total_income:
                 ready_expenses.add(expense.id)
 
-            portion = min(abs(expense_amount), total_income) / total_income
+            abs_expense_amount = abs(expense_amount)
 
             for income_id, income_amount in available_income.items():
-                amount = -1 * portion * income_amount
-                if float_is_zero(amount, precision_rounding=self.currency_id.rounding):
+                if float_is_zero(income_amount, precision_rounding=self.currency_id.rounding):
                     continue
+                amount = -1 * min(abs_expense_amount, income_amount)
                 Quant.create({
                     'amount': amount,
                     'type': expense_uncovered(expense),
@@ -309,6 +311,11 @@ class Generator(models.TransientModel):
                     'line_id': expense.id,
                     'generation': generation,
                 })
+                # amount is negative, so +=
+                abs_expense_amount += amount
+
+                if float_is_zero(abs_expense_amount, precision_rounding=self.currency_id.rounding):
+                    break
 
         # FINAL STAGE: fill quant_income_id
         _logger.info('Quant generation: fill quant_income_id')
