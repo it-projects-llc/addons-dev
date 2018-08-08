@@ -7,7 +7,7 @@
     "summary": """Reprint receipts of paid POS orders""",
     "category": "Point of Sale",
     "live_test_url": "http://apps.it-projects.info/shop/product/pos-orders-reprint?version=10.0",
-    "images": [],
+    "images": ["images/pos_orders_reprint_main.png"],
     "version": "10.0.1.0.0",
     "application": False,
 
@@ -49,7 +49,7 @@
     ],
     "demo_url": "pos-orders-reprint",
     "demo_summary": "Reprint receipts of paid POS orders",
-    # "demo_images": [
-    #    "images/MAIN_IMAGE",
-    # ]
+     "demo_images": [
+        "images/pos_orders_reprint_main.png",
+    ]
 }
