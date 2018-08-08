@@ -23,6 +23,6 @@ Usage
 * Go to ``Point of Sale`` menu
 * Open POS session
 * Click ``History``
-* Select an ``Order``
+* Select an order
 * Click ``Reprint``
 * RESULT: The order receipt is printed again
