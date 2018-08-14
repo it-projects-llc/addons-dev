@@ -2,6 +2,8 @@
 # Copyright 2018 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 import urllib
+import urlparse
+import uuid
 
 from odoo import models, fields, api
 
@@ -35,6 +37,17 @@ class Namespace(models.Model):
         string='Latest usage'
     )
 
+    access_ids = fields.One2many('openapi.access', 'namespace_id', string='Accesses')
+
+    token = fields.Char('Identification token',
+                        default=lambda self: str(uuid.uuid4()), readonly=True,
+                        required=True, copy=False)
+    _sql_constraints = [
+        ('name_uniq',
+         'unique (name)',
+         'A namespace already exists with this name. Namespace\'s name must be unique!')
+    ]
+
     @api.multi
     def name_get(self):
         return [(record.id, "/api/v1/%s%s" % (record.name,
@@ -57,3 +70,26 @@ class Namespace(models.Model):
     def write(self, vals):
         vals = self._fix_name(vals)
         return super(Namespace, self).write(vals)
+
+    @api.multi
+    def get_OAS_part(self):
+        current_host = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        parsed_current_host = urlparse.urlparse(current_host)
+
+        for record in self:
+            spec = {
+                "swagger": "2.0",
+                "info": {
+                    "title": "Swagger Sample App",
+                    "version": "1.0.0"
+                },
+                "host": parsed_current_host.netloc,
+                "basePath": "/v1/%s" % record.name,
+                "schemes": [
+                    parsed_current_host.scheme
+                ],
+            }
+            for openapi_access in record.access_ids:
+                spec.update(openapi_access.get_OAS_part())
+
+            return spec

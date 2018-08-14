@@ -105,6 +105,265 @@ class Access(models.Model):
         return [(record.id, "%s/%s" % (record.namespace_id.name, record.model))
                 for record in self]
 
+    @api.multi
+    def _get_read_many_definition_name(self):
+        for record in self:
+            return '%s-read_many' % record.model
+
+    @api.multi
+    def _get_read_one_definition_name(self):
+        for record in self:
+            return '%s-read_one' % record.model
+
+    @api.multi
+    def get_OAS_paths_part(self):
+        for record in self:
+            model_name = record.model
+            read_many_path = '/%s' % model_name
+            # uncomment if spec['basePath'] not will be contain namespace
+            # read_many_path = '/%s/%s' % (record.namespace_id.name, model_name)
+            read_one_path = '%s/{%s.id}' % (read_many_path, model_name)
+
+            read_many_definition_ref = "#/definitions/%s" % record._get_read_many_definition_name()
+            read_one_definition_ref = "#/definitions/%s" % record._get_read_one_definition_name()
+
+            capitalized_model_name = ''.join([s.capitalize() for s in model_name.split('.')])
+
+            paths_object = {
+                read_many_path: {},
+                read_one_path: {},
+            }
+
+            if record.api_create:
+                paths_object[read_many_path]['post'] = {
+                    "summary": "Add a new %s object to the store" % model_name,
+                    "description": "",
+                    "operationId": "add%s" % capitalized_model_name,
+                    "consumes": [
+                        "application/json",
+                    ],
+                    "produces": [
+                        "application/json"
+                    ],
+                    "parameters": [
+                        {
+                            "in": "body",
+                            "name": "body",
+                            "description": "%s object that needs to be added to the store" % model_name,
+                            "required": True,
+                            "schema": {
+                                "$ref": read_one_definition_ref
+                            }
+                        }
+                    ],
+                    "responses": {
+                        "201": {
+                            "description": "successful create",
+                            "schema": {
+                                "$ref": "#/definitions/%s-read_one" % model_name
+                            }
+                        },
+                        "405": {
+                            "description": "Invalid input"
+                        },
+                    },
+                }
+
+            if record.api_read:
+                paths_object[read_many_path]['get'] = {
+                    "summary": "Get all %s objects" % model_name,
+                    'description': 'Returns all %s objects' % model_name,
+                    "operationId": "getAll%s" % capitalized_model_name,
+                    "produces": [
+                        "application/json"
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "A list of %s." % model_name,
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": read_many_definition_ref
+                                }
+                            }
+                        }
+                    }
+                }
+
+                paths_object[read_one_path]['get'] = {
+                    "summary": "Get %s by ID" % model_name,
+                    "description": "Returns a single %s" % model_name,
+                    "operationId": "get%sById" % capitalized_model_name,
+                    "produces": [
+                        "application/json"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "%s.id" % model_name,
+                            "in": "path",
+                            "description": "ID of %s to return" % model_name,
+                            "required": True,
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "successful operation",
+                            "schema": {
+                                "$ref": read_one_definition_ref
+                            }
+                        },
+                        "404": {
+                            "description": "%s not found" % model_name
+                        }
+                    }
+                }
+
+            if record.api_update:
+                paths_object[read_one_path]['put'] = {
+                    "summary": "Update %s by ID" % model_name,
+                    "description": "",
+                    "operationId": "update%sById" % capitalized_model_name,
+                    "produces": [
+                        "application/json"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "%s.id" % model_name,
+                            "in": "path",
+                            "description": "ID that need to be updated",
+                            "required": True,
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        {
+                            "in": "body",
+                            "name": "body",
+                            "description": "Updated %s object" % model_name,
+                            "required": True,
+                            "schema": {
+                                "$ref": read_one_definition_ref
+                            }
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "successful update",
+                            "schema": {
+                                "$ref": read_one_definition_ref
+                            }
+                        },
+                        # TODO: think about it
+                        # "204": {
+                        #     "description": "no content",
+                        # },
+                        "404": {
+                            "description": "%s not found" % model_name
+                        }
+                    }
+                }
+
+            if record.api_delete:
+                paths_object[read_one_path]['delete'] = {
+                    "summary": "Delete %s by ID" % model_name,
+                    "description": "",
+                    # "description": "This can only be done by the user with special access.",
+                    "operationId": "delete%s" % capitalized_model_name,
+                    "produces": [
+                        "application/json"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "%s.id" % model_name,
+                            "in": "path",
+                            "description": "The ID that needs to be deleted",
+                            "required": True,
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    ],
+                    "responses": {
+                        "204": {
+                            "description": "successful delete"
+                        },
+                        "404": {
+                            "description": "%s not found" % model_name
+                        }
+                    }
+                }
+
+            # remove the keys for which there are an empty value
+            return {k: v for k, v in paths_object.items() if v}
+
+    @api.multi
+    def get_OAS_definitions_part(self):
+        for record in self:
+            read_one_definition_name = record._get_read_one_definition_name()
+            read_many_definition_name = record._get_read_many_definition_name()
+
+            export_fields_read_one = [r.name for r in record.read_one_id.export_fields]
+            export_fields_read_many = [r.name for r in record.read_many_id.export_fields]
+
+            definitions = {
+                read_one_definition_name: {
+                    'type': 'object',
+                    'properties': {},
+                },
+                read_many_definition_name: {
+                    'type': 'object',
+                    'properties': {},
+                }
+            }
+            for field, meta in self.env[record.model].fields_get().items():
+                containing_definitions_names = []
+                if field in export_fields_read_one:
+                    containing_definitions_names.append(read_one_definition_name)
+                if field in export_fields_read_many:
+                    containing_definitions_names.append(read_many_definition_name)
+                if not containing_definitions_names:
+                    continue
+
+                if meta['type'] == 'selection':
+                    field_property = {
+                        # TODO: check item type in selection
+                        'type': 'string',
+                        'enum': [i[0] for i in meta['selection']]
+                    }
+                elif meta['type'] in ['one2many', 'many2many']:
+                    field_property = {
+                        'type': 'array',
+                        'items': {
+                            'type': 'integer'
+                        }
+                    }
+                elif meta['type'] == 'many2one':
+                    field_property = {
+                        'type': 'integer'
+                    }
+                else:
+                    field_property = {
+                        'type': _get_OAS_type_by_odoo_field_type(meta['type'])
+                    }
+
+                for definition_name in containing_definitions_names:
+                    if field in export_fields_read_one:
+                        definitions[definition_name]['properties'][field] = field_property
+                        if meta['required']:
+                            definitions[definition_name]['required'] = \
+                                definitions[definition_name].get('required', []).append(field)
+
+            # remove the keys for which there are an empty value by 'properties' key
+            return {k: v for k, v in definitions.items() if v['properties']}
+
+    @api.multi
+    def get_OAS_part(self):
+        for record in self:
+            return {
+                'definitions': record.get_OAS_definitions_part(),
+                'paths': record.get_OAS_paths_part(),
+            }
+
 
 class AccessCreateContext(models.Model):
     _name = 'openapi.access.create.context'
