@@ -24,7 +24,7 @@ class TestAPI(HttpCase):
             "content-type": "application/json",
         }
         resp = requests.request(method, url, params=params, headers=headers, timeout=30)
-        self.assertIn(resp.code, ['200'], 'Wrong response code')
+        self.assertIn(resp.status_code, ['200'], 'Wrong response code')
         return resp.json()
 
     def test_read_many_all(self):

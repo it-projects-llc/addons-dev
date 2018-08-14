@@ -21,7 +21,7 @@
         "web_tour",
         "web_settings_dashboard",
     ],
-    "external_dependencies": {"python": [], "bin": []},
+    "external_dependencies": {"python": ['bravado_core'], "bin": []},
     "data": [
         "security/ir.model.access.csv",
         "views/assets.xml",
