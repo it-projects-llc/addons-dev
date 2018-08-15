@@ -8,7 +8,7 @@
 Installation
 ============
 
-* Install `qcloudsms_py library<https://github.com/qcloudsms/qcloudsms_py>`__::
+* Install `qcloudsms_py library <https://github.com/qcloudsms/qcloudsms_py>`__::
 
     pip install qcloudsms_py
 
