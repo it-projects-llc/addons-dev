@@ -22,10 +22,15 @@ class TestQCloudSMS(HttpCase):
         super(TestQCloudSMS, self).setUp()
         self.phantom_env = api.Environment(self.registry.test_cr, self.uid, {})
         self.Message = self.phantom_env['qcloud.sms']
-        self.partner = self.phantom_env.ref('base.res_partner_1')
+        self.partner_1 = self.phantom_env.ref('base.res_partner_1')
+        self.partner_2 = self.phantom_env.ref('base.res_partner_2')
 
-        self.partner.write({
+        self.partner_1.write({
             'mobile': '+1234567890'
+        })
+
+        self.partner_2.write({
+            'mobile': '+1987654320'
         })
 
         self.message_template = self.phantom_env['qcloud.sms.template'].create({
@@ -63,11 +68,29 @@ class TestQCloudSMS(HttpCase):
         url = 'https://yun.tim.qq.com/v5/tlssmssvr/sendsms'
         self._patch_post_requests(url, response_json)
 
-        return self.Message.send_message(message, self.partner.id, template_id=self.message_template.id)
+        return self.Message.send_message(message, self.partner_1.id, template_id=self.message_template.id)
 
     def test_send_message(self):
         message = "Your login verification code is 1234, which is valid for 2 minutes." \
                   "If you are not using our service, ignore the message."
 
         response = self._send_simple_message(message)
+        self.assertEquals(response.get('result'), 0, 'Could not send message')
+
+    def _send_group_message(self, message):
+        response_json = {
+            "result": 0,
+            "errmsg": "OK",
+            "ext": "",
+            "fee": 1,
+            "sid": "xxxxxxx"
+        }
+        url = 'https://yun.tim.qq.com/v5/tlssmssvr/sendsms'
+        self._patch_post_requests(url, response_json)
+
+        return self.Message.send_group_message(message, [self.partner_1.id, self.partner_2.id], template_id=self.message_template.id)
+
+    def test_send_group_message(self):
+        message = "Discount for all products 50%!"
+        response = self._send_group_message(message)
         self.assertEquals(response.get('result'), 0, 'Could not send message')
