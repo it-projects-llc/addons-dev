@@ -22,7 +22,9 @@
     "external_dependencies": {"python": [
         'qcloudsms_py',
     ], "bin": []},
-    "data": [],
+    "data": [
+        "security/ir.model.access.csv",
+    ],
     "qweb": [],
 
     "auto_install": False,
