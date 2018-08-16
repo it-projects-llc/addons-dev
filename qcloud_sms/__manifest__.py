@@ -21,6 +21,7 @@
     ],
     "external_dependencies": {"python": [
         'qcloudsms_py',
+        'phonenumbers',
     ], "bin": []},
     "data": [
         "security/ir.model.access.csv",
