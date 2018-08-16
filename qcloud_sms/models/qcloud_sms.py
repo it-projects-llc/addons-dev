@@ -112,7 +112,8 @@ class QCloudSMS(models.Model):
             params = sms.template_id.international_template_params if sms.template_id else False
             sign = sms.template_id.international_sms_sign if sms.template_id else False
 
-        params = params.split(',')
+        if params:
+            params = params.split(',')
 
         extend_field = kwargs.get('extend_field') or ""
 
@@ -192,7 +193,8 @@ class QCloudSMS(models.Model):
             params = sms.template_id.international_template_params if sms.template_id else False
             sign = sms.template_id.international_sms_sign if sms.template_id else False
 
-        params = params.split(',')
+        if params:
+            params = params.split(',')
 
         extend_field = kwargs.get('extend_field') or ""
 
