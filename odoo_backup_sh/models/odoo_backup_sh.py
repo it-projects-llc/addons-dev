@@ -1,11 +1,16 @@
-# -*- coding: utf-8 -*-
 # Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
-import datetime
 import logging
 import os
 import tempfile
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+
+try:
+    import configparser as ConfigParser
+except ImportError:
+    import ConfigParser
 
 try:
     import boto3
@@ -16,44 +21,213 @@ except ImportError as err:
 
 import odoo
 from odoo import api, fields, models, exceptions
-from odoo.tools import config
-from odoo.tools.translate import _
 from odoo.exceptions import UserError
+from odoo.tools import config, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.translate import _
 from ..controllers.main import BackupController
 
 
-class Dashboard(models.AbstractModel):
-    _name = 'odoo_backup_sh.dashboard'
-    _description = 'Backup Dashboard'
+class BackupConfig(models.Model):
+    _name = 'odoo_backup_sh.config'
+    _description = 'Backup Configurations'
+
+    DATABASE_NAMES = [(db, db) for db in odoo.service.db.list_dbs() if db != 'session_store']
+
+    active = fields.Boolean('Active', compute='_compute_active', inverse='_inverse_active', store=True)
+    database = fields.Selection(selection=DATABASE_NAMES, string='Database', required=True, copy=False)
+    config_cron_ids = fields.One2many('odoo_backup_sh.config.cron', 'backup_config_id', string='Scheduled Auto Backups')
+    hourly = fields.Integer(
+        'Hourly', default=-1, help='How many hourly backups to preserve, a negative number indicates no limit.')
+    daily = fields.Integer(
+        'Daily', default=-1, help='How many daily backups to preserve, a negative number indicates no limit.')
+    weekly = fields.Integer(
+        'Weekly', default=-1, help='How many weekly backups to preserve, a negative number indicates no limit.')
+    monthly = fields.Integer(
+        'Monthly', default=-1, help='How many monthly backups to preserve, a negative number indicates no limit.')
+    yearly = fields.Integer(
+        'Yearly', default=-1, help='How many yearly backups to preserve, a negative number indicates no limit.')
+
+    _sql_constraints = [
+        ('database_unique', 'unique (database)', "Settings for this database already exist!"),
+    ]
+
+    @api.depends('config_cron_ids', 'config_cron_ids.active')
+    @api.multi
+    def _compute_active(self):
+        for backup_config in self:
+            backup_config.active = backup_config.config_cron_ids and any(backup_config.config_cron_ids.mapped('active'))
+
+    @api.multi
+    def _inverse_active(self):
+        for backup_config in self:
+            backup_config.config_cron_ids.write({
+                'active': backup_config.active
+            })
+
+    @api.multi
+    def unlink(self):
+        self.mapped('config_cron_ids').unlink()
+        return super(BackupConfig, self).unlink()
 
     @api.model
     def action_dashboard_redirect(self):
         return self.env.ref('odoo_backup_sh.backup_dashboard').read()[0]
 
-    @api.model
-    def update_info(self, redirect):
-        res = BackupController().update_info(redirect)
-        if 'backup_list' in res:
-            res['dbs'] = [db for db in odoo.service.db.list_dbs() if db != 'session_store']
-            backup_model = self.env['odoo_backup_sh.backup']
-            backup_model.search([]).unlink()
-            for bck in res['backup_list']:
-                bck_vals = bck.split('|')
-                backup_model.create({
-                    'database': bck_vals[0],
-                    'date_upload': datetime.datetime.strptime(bck_vals[1], '%Y-%m-%d_%H-%M-%S')
-                })
-        return res
+    @api.multi
+    def action_create_new(self):
+        return {
+            'name': 'Create backup configuration',
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': self._name,
+            'view_id': self.env.ref('odoo_backup_sh.odoo_backup_sh_config_form').id,
+            'context': {'active_test': False},
+        }
 
     @api.model
-    def make_backup(self, name):
+    def get_cloud_params(self, redirect):
+        return BackupController().get_cloud_params(redirect)
+
+    @api.model
+    def check_insufficient_credit(self, credit):
+        return BackupController().check_insufficient_credit(credit)
+
+    @api.model
+    def update_info(self, cloud_params):
+        backup_list = BackupController().load_backup_list(cloud_params)
+        if 'backup_list' in backup_list:
+            # Create a dictionary with remote backup objects:
+            # remote_backups = {
+            #     db_name: {
+            #         backup_datetime(datetime.datetime): [backup_file_name(str), info_file_name(str)],
+            #         ...
+            #     },
+            #     ...
+            # }
+            active_backup_configs = self.search([('active', '=', True)])
+            remote_backups = {db: {} for db in active_backup_configs.mapped('database')}
+            for file_name in backup_list['backup_list']:
+                file_name_parts = file_name.split('.')
+                if file_name_parts[0] not in remote_backups:
+                    continue
+                backup_dt = datetime.strptime(file_name_parts[1], "%Y-%m-%d_%H-%M-%S")
+                if backup_dt not in remote_backups[file_name_parts[0]]:
+                    remote_backups[file_name_parts[0]][backup_dt] = []
+                remote_backups[file_name_parts[0]][backup_dt].append(file_name)
+
+            # Compute remote backup objects to delete
+            remote_objects_to_delete = []
+            for backup_config in active_backup_configs:
+                if (backup_config.hourly > 0 or backup_config.daily > 0 or backup_config.weekly > 0 or
+                        backup_config.monthly > 0 or backup_config.yearly > 0):
+                    sorted_backup_dts = sorted(remote_backups[backup_config.database], reverse=True)
+                    last_backup_dt = sorted_backup_dts.pop(0)
+                    needed_backup_dts = [last_backup_dt]
+                    backup_config_time_frames = []
+                    if backup_config.hourly > 1:
+                        last_backup_dt_hour = last_backup_dt.replace(minute=0, second=0)
+                        for hour in range(1, backup_config.hourly):
+                            backup_config_time_frames.append([last_backup_dt_hour - timedelta(hours=hour),
+                                                              last_backup_dt_hour - timedelta(hours=hour-1)])
+                    if backup_config.daily > 1:
+                        last_backup_dt_day = last_backup_dt.replace(hour=0, minute=0, second=0)
+                        for day in range(1, backup_config.daily):
+                            backup_config_time_frames.append([last_backup_dt_day - timedelta(days=day),
+                                                              last_backup_dt_day - timedelta(days=day-1)])
+                    if backup_config.weekly > 1:
+                        last_backup_dt_day = last_backup_dt.replace(hour=0, minute=0, second=0)
+                        last_backup_dt_week = last_backup_dt_day - timedelta(days=last_backup_dt_day.weekday())
+                        for week in range(1, backup_config.weekly):
+                            backup_config_time_frames.append([last_backup_dt_week - timedelta(weeks=week),
+                                                              last_backup_dt_week - timedelta(weeks=week-1)])
+                    if backup_config.monthly > 1:
+                        last_backup_dt_month = last_backup_dt.replace(day=0, hour=0, minute=0, second=0)
+                        for month in range(1, backup_config.monthly):
+                            backup_config_time_frames.append([last_backup_dt_month - relativedelta(months=month),
+                                                              last_backup_dt_month - relativedelta(months=month-1)])
+                    if backup_config.yearly > 1:
+                        last_backup_dt_year = last_backup_dt.replace(month=0, day=0, hour=0, minute=0, second=0)
+                        for year in range(1, backup_config.yearly):
+                            backup_config_time_frames.append([last_backup_dt_year - relativedelta(years=year),
+                                                              last_backup_dt_year - relativedelta(years=year-1)])
+                    while backup_config_time_frames:
+                        frame = backup_config_time_frames.pop()
+                        if any(frame[0] < backup_dt < frame[1] for backup_dt in needed_backup_dts):
+                            continue
+                        for backup_dt in sorted_backup_dts:
+                            if frame[0] < backup_dt < frame[1]:
+                                needed_backup_dts.append(backup_dt)
+                                sorted_backup_dts.remove(backup_dt)
+                                break
+                    for backup_dt in sorted_backup_dts:
+                        remote_objects_to_delete += [{'Key': '%s/%s' % (cloud_params['oauth_uid'], file_name)} for
+                                                     file_name in remote_backups[backup_config.database][backup_dt]]
+                        del remote_backups[backup_config.database][backup_dt]
+
+            s3_client = boto3.client('s3', aws_access_key_id=cloud_params['amazon_access_key'],
+                                     aws_secret_access_key=cloud_params['amazon_secret_access_key'])
+
+            # Delete unnecessary remote backup objects
+            if remote_objects_to_delete:
+                try:
+                    s3_client.delete_objects(
+                        Bucket=cloud_params['amazon_bucket_name'], Delete={'Objects': remote_objects_to_delete})
+                except botocore.exceptions.ClientError as e:
+                    raise exceptions.ValidationError(_("Amazon error: ") + e.response['Error']['Message'])
+
+            # Delete unnecessary local backup info records
+            backup_info_ids_to_delete = [r.id for r in self.env['odoo_backup_sh.backup_info'].search(
+                [('database', 'in', list(remote_backups.keys()))]
+            ) if r.upload_datetime not in remote_backups[r.database]]
+            self.env['odoo_backup_sh.backup_info'].browse(backup_info_ids_to_delete).unlink()
+
+            # Create missing local backup info records
+            for db_name, backup_dts in remote_backups.items():
+                for backup_dt, files_names in backup_dts.items():
+                    if not self.env['odoo_backup_sh.backup_info'].search([
+                        ('database', '=', db_name),
+                        ('upload_datetime', '>=', datetime.strftime(backup_dt, DEFAULT_SERVER_DATETIME_FORMAT)),
+                        ('upload_datetime', '<', datetime.strftime(backup_dt + relativedelta(seconds=1),
+                                                                   DEFAULT_SERVER_DATETIME_FORMAT))
+                    ]):
+                        info_file_name = files_names[0] if files_names[0][-5:] == '.info' else files_names[1]
+                        try:
+                            info_file_object = s3_client.get_object(
+                                Bucket=cloud_params['amazon_bucket_name'],
+                                Key='%s/%s' % (cloud_params['oauth_uid'], info_file_name)
+                            )
+                        except botocore.exceptions.ClientError as e:
+                            raise exceptions.ValidationError(_("Amazon error: ") + e.response['Error']['Message'])
+                        info_file = tempfile.NamedTemporaryFile()
+                        info_file.write(info_file_object['Body'].read())
+                        info_file.seek(0)
+                        config_parser = ConfigParser.RawConfigParser()
+                        config_parser.read(info_file.name)
+                        backup_info_vals = {}
+                        for (name, value) in config_parser.items('common'):
+                            if value == 'True' or value == 'true':
+                                value = True
+                            if value == 'False' or value == 'false':
+                                value = False
+                            if name == 'upload_datetime':
+                                value = datetime.strptime(value, "%Y-%m-%d_%H-%M-%S")
+                            backup_info_vals[name] = value
+                        self.env['odoo_backup_sh.backup_info'].create(backup_info_vals)
+        return backup_list
+
+    @api.model
+    def make_backup(self, name, init_by_cron_id=None):
+        if init_by_cron_id and not self.env['ir.cron'].browse(init_by_cron_id).active:
+            # The case when an auto backup was initiated by an inactive backup config.
+            return None
         dump_stream = odoo.service.db.dump_db(name, None, 'zip')
-        filename = name + '.zip'
+        backup_name_suffix = '.zip'
         if self.env['ir.config_parameter'].get_param('odoo_backup_sh.encrypt_backups', 'False').lower() == 'true':
             passphrase = config.get('odoo_backup_encryption_password')
             if not passphrase:
                 raise UserError(_('Encryption password is not found. Please check your module settings.'))
-            filename += '.enc'
+            backup_name_suffix += '.enc'
             # GnuPG ignores the --output parameter with an existing file object as value
             backup_encrpyted = tempfile.NamedTemporaryFile()
             backup_encrpyted_name = backup_encrpyted.name
@@ -61,22 +235,75 @@ class Dashboard(models.AbstractModel):
             gnupg.GPG().encrypt(
                 dump_stream, symmetric=True, passphrase=passphrase, encrypt=False, output=backup_encrpyted_name)
             dump_stream = open(backup_encrpyted_name, 'rb')
-        credentials = BackupController().get_cloud_params()
-        s3_client = boto3.client('s3', aws_access_key_id=credentials['amazon_access_key'],
-                                 aws_secret_access_key=credentials['amazon_secret_access_key'])
-        ts = datetime.datetime.utcnow().strftime("%Y-%m-%d_%H-%M-%S")
-        filename = "%s|%s" % (filename, ts)
-        s3_path_key = '%s/%s' % (credentials['oauth_uid'], filename)
+        cloud_params = BackupController().get_local_cloud_params()
+        s3_client = boto3.client('s3', aws_access_key_id=cloud_params['amazon_access_key'],
+                                 aws_secret_access_key=cloud_params['amazon_secret_access_key'])
+        dt = datetime.utcnow()
+        ts = dt.strftime("%Y-%m-%d_%H-%M-%S")
+        s3_backup_path = '%s/%s.%s%s' % (cloud_params['oauth_uid'], name, ts, backup_name_suffix)
+        info_file = tempfile.TemporaryFile()
+        info_file.write('[common]\n'.encode())
+        info_file_content = {
+            'database': name,
+            'encrypted': True if '.enc' in backup_name_suffix else False,
+            'upload_datetime': ts,
+        }
+        for key, value in info_file_content.items():
+            line = key + ' = ' + str(value) + '\n'
+            info_file.write(line.encode())
+        info_file.seek(0)
+        s3_info_file_path = '%s/%s.%s.info' % (cloud_params['oauth_uid'], name, ts)
+        # Create new record with backup info data
+        info_file_content['upload_datetime'] = dt
+        self.env['odoo_backup_sh.backup_info'].create(info_file_content)
+        # Upload two backup objects to AWS S3
         try:
-            s3_client.put_object(Body=dump_stream, Bucket=credentials['amazon_bucket_name'], Key=s3_path_key)
+            s3_client.put_object(Body=dump_stream, Bucket=cloud_params['amazon_bucket_name'], Key=s3_backup_path)
+            s3_client.put_object(Body=info_file, Bucket=cloud_params['amazon_bucket_name'], Key=s3_info_file_path)
         except botocore.exceptions.ClientError as e:
             raise exceptions.ValidationError(_("Amazon error: ") + e.response['Error']['Message'])
+        self.update_info(cloud_params)
         return None
 
 
-class Backup(models.Model):
-    _name = 'odoo_backup_sh.backup'
+class BackupConfigCron(models.Model):
+    _name = 'odoo_backup_sh.config.cron'
+    _inherits = {'ir.cron': 'ir_cron_id'}
+    _description = 'Backup Configuration Scheduled Actions'
+
+    backup_config_id = fields.Many2one(
+        'odoo_backup_sh.config', string='Backup Configuration', required=True)
+    ir_cron_id = fields.Many2one('ir.cron', string='Scheduled Action', required=True, ondelete='restrict')
+
+    @api.model
+    def create(self, vals):
+        database = self.env['odoo_backup_sh.config'].browse(vals['backup_config_id']).database
+        vals.update({
+            'name': 'Odoo-backup.sh: Backup the "%s" database and send it to the remote storage' % database,
+            'model_id': self.env.ref('odoo_backup_sh.model_odoo_backup_sh_config').id,
+            'state': 'code',
+            'numbercall': -1,
+            'doall': False,
+        })
+        res = super(BackupConfigCron, self).create(vals)
+        res.write({
+            'code': 'model.make_backup("%s", init_by_cron_id=%s)' % (database, res.ir_cron_id.id),
+        })
+        return res
+
+    @api.multi
+    def unlink(self):
+        ir_cron_ids = [r.ir_cron_id.id for r in self]
+        res = super(BackupConfigCron, self).unlink()
+        if ir_cron_ids:
+            self.env['ir.cron'].browse(ir_cron_ids).unlink()
+        return res
+
+
+class BackupInfo(models.Model):
+    _name = 'odoo_backup_sh.backup_info'
     _description = 'Information about backups'
 
-    database = fields.Char(string='Database Name')
-    date_upload = fields.Datetime(string='Upload Date')
+    database = fields.Char(string='Database Name', readonly=True)
+    upload_datetime = fields.Datetime(string='Upload Datetime', readonly=True)
+    encrypted = fields.Boolean(string='Encrypted', readonly=True)

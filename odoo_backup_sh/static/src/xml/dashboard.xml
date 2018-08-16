@@ -6,37 +6,51 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 <templates id="template" xml:space="preserve">
 
     <t t-name="odoo_backup_sh.BackupDashboardMain">
-        <div class="o_dashboards">
-            <t t-call="odoo_backup_sh.dashboard_header"/>
-            <div class="o_backup_dashboard_content o_kanban_view o_kanban_dashboard o_kanban_ungrouped"/>
-        </div>
-    </t>
-
-    <t t-name="odoo_backup_sh.dashboard_header">
-        <div class="row o_dashboard_header">
-            <div class="o_box">
-                <a href="#" class="o_box_item o_dashboard_action_update_info" name="odoo_backup_sh.odoo_backup_sh_backup_action" title="Update backups information.">
+        <div class="o_backup_dashboard">
+            <div class="o_backup_dashboard_header">
+                <a href="#" class="o_box_item o_dashboard_action_add_database" name="odoo_backup_sh.odoo_backup_sh_backup_action" title="Add new database in the dashboard.">
+                    <div class="o_inner_box o_primary">
+                        <i class="fa fa-plus fa-3x"/><br/>
+                        Add Database
+                    </div>
+                </a>
+                <a href="#" class="o_box_item o_dashboard_action_update_info" title="Update backups information.">
                     <div class="o_inner_box o_primary">
                         <i class="fa fa-refresh fa-3x"/><br/>
                         Update Info
                     </div>
                 </a>
-                <a href="#" class="o_box_item o_dashboard_action_up_balance" name="odoo_backup_sh.odoo_backup_sh_backup_action" title="Up to the balance.">
+                <a href="#" class="o_box_item o_dashboard_action_up_balance" title="Up to the balance."><!-- name="odoo_backup_sh.odoo_backup_sh_backup_action"-->
                     <div class="o_inner_box o_primary">
-                        <span id="insufficient_credit_notice" class="hide">
+                        <span id="insufficient_credit_notice" t-if="widget.show_insufficient_credit_warning">
                             Funds are insufficient for<br/>
                             the next subscription fee!
                         </span>
-                        <i class="fa fa-money fa-3x" id="up_to_the_balance_text"/><br/>
+                        <i class="fa fa-money fa-3x" id="up_to_the_balance_text" t-if="!widget.show_insufficient_credit_warning"/><br/>
                         Go to Balance<br/>
                     </div>
                 </a>
             </div>
+            <div class="o_backup_dashboard_note_section">
+                <div class="o_backup_dashboard_nocontent" t-if="widget.show_nocontent_msg">
+                    <p class="o_backup_dashboard_nocontent_create">
+                        Click to add a new Database
+                    </p>
+                    <p>
+                        The application helps you easily manage your databases:<br/>
+                        Auto/manual backup, auto rotation, remote storage for your backups, detailed statistics, etc.
+                    </p>
+                </div>
+                <div class="o_backup_dashboard_inactive_warning" t-if="widget.show_inactive_warning">
+                    <strong>Warning: </strong>You have not active configs with auto backups.
+                </div>
+            </div>
+            <div class="o_backup_dashboard_content o_kanban_view o_kanban_dashboard o_kanban_ungrouped"/>
         </div>
     </t>
 
     <t t-name="odoo_backup_sh.databases">
-        <t t-foreach="widget.dashboards_data.dbs" t-as="db">
+        <t t-foreach="dbs" t-as="db">
             <div class="o_kanban_record">
                 <div t-attf-class="o_kanban_card_header">
                     <div class="o_kanban_card_header_title">
@@ -44,14 +58,14 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                             <span>Database</span>
                         </div>
                         <div class="o_primary">
-                            <t t-esc="db"/>
+                            <t t-esc="db.database"/>
                         </div>
                     </div>
                 </div>
                 <div class="container o_kanban_card_content">
                     <div class="row">
                         <div class="col-xs-6 o_kanban_primary_left">
-                            <button type="object" t-att-data-name="db" class="btn btn-primary btn-sm o_dashboard_action_make_backup">
+                            <button type="object" t-att-data-name="db.database" class="btn btn-primary btn-sm o_dashboard_action_make_backup">
                                 <span>New Backup</span>
                             </button>
                         </div>
@@ -59,6 +73,10 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                 </div>
             </div>
         </t>
+    </t>
+
+    <t t-name="odoo_backup_sh.error_msg">
+        <strong>Error: </strong><t t-value="error_msg"/>
     </t>
 
 </templates>

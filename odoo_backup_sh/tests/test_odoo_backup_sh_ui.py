@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
@@ -17,16 +16,15 @@ class TestUi(odoo.tests.HttpCase):
     def setUp(self):
         super(TestUi, self).setUp()
 
-        def patch_update_info(redirect=None):
-            return {
-                'backup_list': ['database_1|2018-06-20_10-44-43', 'database_2|2018-06-20_10-47-13'],
-                'credit_url': 'https://iap.odoo.com/iap/1/credit...',
-            }
+        self.patcher_get_cloud_params = patch(
+            'odoo.addons.odoo_backup_sh.controllers.main.BackupController.get_cloud_params',
+            wraps=lambda *args: {})
+        self.patcher_get_cloud_params.start()
 
-        self.patcher1 = patch(
-            'odoo.addons.odoo_backup_sh.controllers.main.BackupController.update_info',
-            wraps=patch_update_info)
-        self.patcher1.start()
+        self.patcher_check_insufficient_credit = patch(
+            'odoo.addons.odoo_backup_sh.controllers.main.BackupController.check_insufficient_credit',
+            wraps=lambda *args: {'credit_url': 'https://iap.odoo.com/iap/1/credit...'})
+        self.patcher_check_insufficient_credit.start()
 
     def test_01_odoo_backup_sh_tour(self):
         # needed because tests are run before the module is marked as
@@ -42,5 +40,6 @@ class TestUi(odoo.tests.HttpCase):
                         "odoo.__DEBUG__.services['web_tour.tour'].tours.odoo_backup_sh_tour.ready", login="admin")
 
     def tearDown(self):
-        self.patcher1.stop()
+        self.patcher_get_cloud_params.stop()
+        self.patcher_check_insufficient_credit.stop()
         super(TestUi, self).tearDown()

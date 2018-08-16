@@ -1,24 +1,27 @@
 // Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
 // License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
-.o_dashboard_header {
+.o_backup_dashboard {
+    display: flex;
+    flex-direction: column;
+}
+
+.o_backup_dashboard_header {
     background-color: #fff;
     border-bottom: 1px solid #d9d7d7;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
 
-    .o_box {
-        display: flex;
-        flex-flow: row wrap;
-        justify-content: flex-start;
-        > .o_box_item {
-            @media (max-width: @screen-sm-min) {
-                flex: 1 1 200px;
-                display: block !important;
-            }
-            @media (min-width: @screen-sm-min) {
-                flex: 0 0 16.6%;
-                display: inline-block;  // it's necessary for a correct passing of tests with PhantomJS,
-                                        // otherwise it can be deleted.
-            }
+    > .o_box_item {
+        @media (max-width: @screen-sm-min) {
+            flex: 1 1 200px;
+            display: block !important;
+        }
+        @media (min-width: @screen-sm-min) {
+            flex: 0 0 16.6%;
+            display: inline-block;  // it's necessary for a correct passing of tests with PhantomJS,
+                                    // otherwise it can be deleted.
         }
     }
 
@@ -39,6 +42,49 @@
                 background-color: darken(@odoo-brand-primary, 10%);
             }
         }
-
     }
+}
+
+.o_backup_dashboard_content {
+    display: flex;
+    flex-direction: row;
+}
+
+.o_backup_dashboard_nocontent {
+    padding: 15px;
+    margin-top: 0;
+    color: #777777;
+    font-size: 125%;
+    max-width: 700px;
+
+    .o_backup_dashboard_nocontent_create {
+        margin-top: 0;
+        padding-top: 35px;
+
+        &:before {
+            content: "";
+            display: inline-block;
+            position: absolute;
+            width: 70px;
+            height: 80px;
+            margin-left: -70px;
+            margin-top: -50px;
+            background: transparent url(/web/static/src/img/view_empty_arrow.png) no-repeat 0px 0px;
+        }
+    }
+
+    > p {
+        padding-left: 78px;
+    }
+}
+
+.o_backup_dashboard_inactive_warning {
+    background-color: #fef9f3;
+    border: 2px solid #fceedb;
+    color: #81500b;
+    display: block;
+    font-size: 15px;
+    margin: 8px 16px 4px;
+    padding: 8px 16px;
+    position: static;
 }
