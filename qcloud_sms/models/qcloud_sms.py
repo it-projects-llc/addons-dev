@@ -1,7 +1,6 @@
 # Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 import logging
-import json
 
 from odoo import models, fields, api, _
 from odoo.tools.translate import _
@@ -98,10 +97,13 @@ class QCloudSMS(models.Model):
         except UserError as e:
             sms.state = 'error'
             _logger.debug(e)
+            raise
 
         country_code = phone_obj.country_code
         national_number = phone_obj.national_number
         sms_type = sms.template_id.sms_type if sms.template_id else 0
+
+        _logger.debug("Country code: %s, Mobile number: %s", country_code, national_number)
 
         # China Country Code 86 (use domestics templates)
         if country_code == '86':

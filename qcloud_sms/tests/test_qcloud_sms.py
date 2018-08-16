@@ -18,10 +18,12 @@ class TestQCloudSMS(HttpCase):
         super(TestQCloudSMS, self).setUp()
         self.phantom_env = api.Environment(self.registry.test_cr, self.uid, {})
         self.Message = self.phantom_env['qcloud.sms']
-        self.partner = self.phantom_env['res.partner'].create({
-            'name': 'Test User',
-            'email': 'test@test.test',
-            'mobile': '861234567890'
+        self.partner = self.phantom_env.ref('base.res_partner_1')
+
+        # TODO: path check number function
+        
+        self.partner.write({
+            'mobile': '+79373410108'
         })
         self.message_template = self.phantom_env['qcloud.sms.template'].create({
             'name': 'Test Template',
@@ -52,4 +54,4 @@ class TestQCloudSMS(HttpCase):
                   "If you are not using our service, ignore the message."
 
         response = self._send_simple_message(message)
-        self.assertEquals(response.result, 0, 'Could not send message')
+        self.assertEquals(response.get('result'), 0, 'Could not send message')
