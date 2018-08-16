@@ -25,6 +25,7 @@
     ], "bin": []},
     "data": [
         "security/ir.model.access.csv",
+        "views/res_config.xml",
     ],
     "qweb": [],
 
