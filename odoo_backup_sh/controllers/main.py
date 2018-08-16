@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
@@ -10,6 +9,19 @@ import random
 import requests
 import string
 import tempfile
+from contextlib import closing
+
+import odoo
+from odoo import http, _
+from odoo.exceptions import UserError
+from odoo.http import request
+from odoo.service import db
+from odoo.sql_db import db_connect
+from odoo.tools import config
+from odoo.tools.misc import str2bool
+from odoo.addons import web
+from odoo.addons.iap import jsonrpc, InsufficientCreditError
+from odoo.addons.web.controllers.main import DBNAME_PATTERN
 
 try:
     import boto3
@@ -22,17 +34,7 @@ try:
     import configparser as ConfigParser
 except ImportError:
     import ConfigParser
-
-import odoo
-from odoo import http, _
-from odoo.exceptions import UserError
-from odoo.http import request
-from odoo.tools import config
-from odoo.tools.misc import str2bool
-from odoo.addons import web
-from odoo.addons.web.controllers.main import DBNAME_PATTERN
-from odoo.addons.iap import jsonrpc, InsufficientCreditError
-from odoo.service import db
+config_parser = ConfigParser.ConfigParser()
 
 path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'views'))
 loader = jinja2.FileSystemLoader(path)
@@ -68,32 +70,64 @@ class BackupDatabase(web.controllers.main.Database):
 
 class BackupController(http.Controller):
 
-    def get_cloud_params(self):
-        cloud_params = {}
-        p = ConfigParser.RawConfigParser()
-        p.read([config.rcfile])
-        for (name, value) in p.items('options'):
-            if name in ['amazon_bucket_name', 'amazon_access_key', 'amazon_secret_access_key', 'oauth_uid',
-                        'odoo_backup_user_key'] and value:
-                cloud_params[name] = value
-        if not cloud_params.get('odoo_backup_user_key'):
-            user_key = ''.join(random.choice(string.hexdigits) for _ in range(30))
-            config.__setitem__('odoo_backup_user_key', user_key)
-            config.save()
-            cloud_params['odoo_backup_user_key'] = user_key
+    def get_cloud_params(self, redirect):
+        cloud_params = self.get_local_cloud_params()
+        if not cloud_params:
+            config_parser.read(config.rcfile)
+            user_key = config_parser.get('options', 'odoo_backup_user_key', fallback=None)
+            if not user_key:
+                user_key = ''.join(random.choice(string.hexdigits) for _ in range(30))
+                config_parser.set('options', 'odoo_backup_user_key', user_key)
+                with open(config.rcfile, 'w') as configfile:
+                    config_parser.write(configfile)
+            cloud_params = requests.get(
+                BACKUP_SERVICE_ENDPOINT + '/get_cloud_params',
+                params={'user_key': user_key, 'redirect': redirect}
+            ).json()
+            if 'auth_link' not in cloud_params:
+                for param_key, param_value in cloud_params.items():
+                    config_parser.set('options', param_key, param_value)
+                with open(config.rcfile, 'w') as configfile:
+                    config_parser.write(configfile)
+                cloud_params['updated'] = True  # The mark that all params are updated
         return cloud_params
 
-    def load_backup_list(self, credentials):
-        s3_client = boto3.client('s3', aws_access_key_id=credentials['amazon_access_key'],
-                                 aws_secret_access_key=credentials['amazon_secret_access_key'])
-        user_dir_name = '%s/' % credentials['oauth_uid']
-        s3_user_dir_info = s3_client.list_objects_v2(
-            Bucket=credentials['amazon_bucket_name'], Prefix=user_dir_name, Delimiter='/')
-        backup_list = []
-        for obj in s3_user_dir_info.get('Contents', {}):
-            if obj.get('Size'):
-                backup_list.append(obj['Key'][len(user_dir_name):])
-        return backup_list
+    def get_local_cloud_params(self):
+        config_parser.read(config.rcfile)
+        try:
+            cloud_params = {}
+            for name in ['odoo_backup_user_key', 'amazon_bucket_name', 'amazon_access_key', 'amazon_secret_access_key',
+                         'oauth_uid']:
+                cloud_params[name] = config_parser.get('options', name)
+        except ConfigParser.NoOptionError:
+            return None
+        return cloud_params
+
+    def load_backup_list(self, cloud_params):
+        try:
+            s3_client = boto3.client('s3', aws_access_key_id=cloud_params['amazon_access_key'],
+                                     aws_secret_access_key=cloud_params['amazon_secret_access_key'])
+            user_dir_name = '%s/' % cloud_params['oauth_uid']
+            s3_user_dir_info = s3_client.list_objects_v2(
+                Bucket=cloud_params['amazon_bucket_name'], Prefix=user_dir_name, Delimiter='/')
+        except botocore.exceptions.ClientError as e:
+            if isinstance(e, dict):
+                status_code = e['ResponseMetadata']['HTTPStatusCode']
+            else:
+                status_code = e.response['ResponseMetadata']['HTTPStatusCode']
+            if status_code == 403 and not cloud_params.get('updated'):
+                config_parser.read(config.rcfile)
+                # Delete local cloud parameters and receive it again to make sure they are up-to-date.
+                for key in ['amazon_bucket_name', 'amazon_access_key', 'amazon_secret_access_key', 'oauth_uid']:
+                    config_parser.remove_option('options', key)
+                with open(config.rcfile, 'w') as configfile:
+                    config_parser.write(configfile)
+                return {'reload_page': True}
+            else:
+                return {'error': "Amazon Web Services error: %s" % e.response['Error']['Message']}
+        backup_list = [
+            obj['Key'][len(user_dir_name):] for obj in s3_user_dir_info.get('Contents', {}) if obj.get('Size')]
+        return {'backup_list': backup_list}
 
     def check_insufficient_credit(self, credit):
         user_token = request.env['iap.account'].sudo().get('odoo_backup_sh')
@@ -110,72 +144,26 @@ class BackupController(http.Controller):
             return credit_url
         return None
 
-    def update_info(self, redirect):
-        cloud_params = self.get_cloud_params()
-        if all(cloud_params.get(i) for i in
-               ['amazon_bucket_name', 'amazon_access_key', 'amazon_secret_access_key', 'oauth_uid']):
-            try:
-                res = {'backup_list': self.load_backup_list(cloud_params)}
-                credit_url = self.check_insufficient_credit(credit=10)
-                if credit_url:
-                    res['credit_url'] = credit_url
-                return res
-            except botocore.exceptions.ClientError as e:
-                if isinstance(e, dict):
-                    status_code = e['ResponseMetadata']['HTTPStatusCode']
-                else:
-                    status_code = e.response['ResponseMetadata']['HTTPStatusCode']
-                if status_code == 403:
-                    # Delete local cloud parameters and receive it again to make sure they are up-to-date.
-                    for key in ['amazon_bucket_name', 'amazon_access_key', 'amazon_secret_access_key', 'oauth_uid']:
-                        config.__setitem__(key, '')
-                    config.save()
-                    return {'reload_page': True}
-                else:
-                    # Show message of another errors
-                    error = "Amazon Web Services error: %s" % e.response['Error']['Message']
-                    return {'error': error}
-        else:
-            response = requests.get(
-                BACKUP_SERVICE_ENDPOINT + '/get_cloud_params',
-                params={'user_key': cloud_params['odoo_backup_user_key'], 'redirect': redirect}
-            ).json()
-            if 'auth_link' not in response:
-                for credential_key, credential_value in response.items():
-                    config.__setitem__(credential_key, credential_value)
-                config.save()
-                try:
-                    res = {'backup_list': self.load_backup_list(response)}
-                    credit_url = self.check_insufficient_credit(credit=10)
-                    if credit_url:
-                        res['credit_url'] = credit_url
-                    return res
-                except botocore.exceptions.ClientError as e:
-                    error = "Amazon S3 error: %s" % e.response['Error']['Message']
-                    return {'error': error}
-            else:
-                return response
-
     @http.route('/web/database/backups', type='http', auth="none")
     def backup_list(self):
-        redirect = request.httprequest.url
-        res = self.update_info(redirect)
-        if 'auth_link' in res:
-            return "<html><head><script>window.location.href = '%s';</script></head></html>" % res['auth_link']
-        elif 'reload_page' in res:
+        cloud_params = self.get_cloud_params(request.httprequest.url)
+        if 'auth_link' in cloud_params:
+            return "<html><head><script>window.location.href = '%s';</script></head></html>" % cloud_params['auth_link']
+        backup_list = self.load_backup_list(cloud_params)
+        if 'reload_page' in backup_list:
             return "<html><head><script>window.location.href = '%s';</script></head></html>" % request.httprequest.url
-        else:
-            d = {
-                'backup_list': res.get('backup_list'),
-                'error': res.get('error'),
-                'pattern': DBNAME_PATTERN,
-                'insecure': odoo.tools.config.verify_admin_password('admin')
-            }
-            return env.get_template("backup_list.html").render(d)
+        backup_list_wo_info = [name for name in backup_list['backup_list'] if name[-5:] != '.info']
+        page_values = {
+            'backup_list': backup_list_wo_info,
+            'error': backup_list.get('error'),
+            'pattern': DBNAME_PATTERN,
+            'insecure': odoo.tools.config.verify_admin_password('admin')
+        }
+        return env.get_template("backup_list.html").render(page_values)
 
     @http.route('/web/database/restore_via_odoo_backup_sh', type='http', auth="none", methods=['POST'], csrf=False)
     def restore_via_odoo_backup_sh(self, master_pwd, backup_file_name, name, copy=False):
-        cloud_params = self.get_cloud_params()
+        cloud_params = self.get_cloud_params(request.httprequest.url)
         s3_client = boto3.client('s3', aws_access_key_id=cloud_params['amazon_access_key'],
                                  aws_secret_access_key=cloud_params['amazon_secret_access_key'])
         backup_file_path = '%s/%s' % (cloud_params['oauth_uid'], backup_file_name)
@@ -196,6 +184,15 @@ class BackupController(http.Controller):
             backup_file = open(decrypted_backup_file_name, 'rb')
         try:
             db.restore_db(name, backup_file.name, str2bool(copy))
+            # Make all auto backup cron recors inactive
+            with closing(db_connect(name).cursor()) as cr:
+                cr.autocommit(True)
+                cr.execute("""
+                    UPDATE ir_cron SET active=false
+                    WHERE active=true AND id IN (SELECT ir_cron_id FROM odoo_backup_sh_config_cron);
+
+                    UPDATE odoo_backup_sh_config SET active=false WHERE active=true;
+                """)
             return http.local_redirect('/web/database/manager')
         except Exception as e:
             error = "Database restore error: %s" % (str(e) or repr(e))

@@ -52,20 +52,20 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
     <record id="ir_actions_server_backup_dashboard" model="ir.actions.server">
         <field name="name">Backups: Dashboard</field>
-        <field name="model_id" ref="odoo_backup_sh.model_odoo_backup_sh_dashboard"/>
+        <field name="model_id" ref="odoo_backup_sh.model_odoo_backup_sh_config"/>
         <field name="state">code</field>
         <field name="code">action = model.action_dashboard_redirect()</field>
     </record>
 
     <record id='odoo_backup_sh_backup_form' model='ir.ui.view'>
-        <field name="name">odoo_backup_sh.backup.form</field>
-        <field name="model">odoo_backup_sh.backup</field>
+        <field name="name">odoo_backup_sh.backup_info.form</field>
+        <field name="model">odoo_backup_sh.backup_info</field>
         <field name="arch" type="xml">
             <form string="Backup">
                 <sheet>
                     <group>
-                        <field name="database" />
-                        <field name="date_upload" />
+                        <field name="database"/>
+                        <field name="upload_datetime"/>
                     </group>
                 </sheet>
             </form>
@@ -73,21 +73,73 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
     </record>
 
     <record id='odoo_backup_sh_backup_tree' model='ir.ui.view'>
-        <field name="name">odoo_backup_sh.backup.tree</field>
-        <field name="model">odoo_backup_sh.backup</field>
+        <field name="name">odoo_backup_sh.backup_info.tree</field>
+        <field name="model">odoo_backup_sh.backup_info</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="database" />
-                <field name="date_upload" />
+                <field name="database"/>
+                <field name="upload_datetime"/>
+                <field name="encrypted"/>
             </tree>
         </field>
     </record>
 
     <record id='odoo_backup_sh_backup_action' model='ir.actions.act_window'>
         <field name="name">Backups</field>
-        <field name="res_model">odoo_backup_sh.backup</field>
+        <field name="res_model">odoo_backup_sh.backup_info</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id='odoo_backup_sh_config_form' model='ir.ui.view'>
+        <field name="name">odoo_backup_sh.config.form</field>
+        <field name="model">odoo_backup_sh.config</field>
+        <field name="arch" type="xml">
+            <form string="Backup Configuration">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="database" class="oe_edit_only"/>
+                        <h1><field name="database"/></h1>
+                    </div>
+                    <group string="Scheduled Auto Backups">
+                        <field name="config_cron_ids" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="interval_number"/>
+                                <field name="interval_type"/>
+                                <field name="nextcall"/>
+                                <field name="active"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group string="Auto Rotation" attrs="{'invisible': [('config_cron_ids', '=', [])]}">
+                        <!--How many backups for what time intervals to preserve on a remote server.-->
+                        <field name="hourly"/>
+                        <field name="daily"/>
+                        <field name="weekly"/>
+                        <field name="monthly"/>
+                        <field name="yearly"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id='odoo_backup_sh_config_tree' model='ir.ui.view'>
+        <field name="name">odoo_backup_sh.config.tree</field>
+        <field name="model">odoo_backup_sh.config</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="database"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id='action_backup_config' model='ir.actions.act_window'>
+        <field name="name">Backup Configurations</field>
+        <field name="res_model">odoo_backup_sh.config</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'active_test': False}</field>
     </record>
 
     <menuitem name="Backups" id="menu_backup_root" sequence="100" web_icon="odoo_backup_sh,static/description/icon.png"/>
@@ -95,6 +147,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
               id="menu_dashboard" sequence="1"/>
     <menuitem name="Backups" parent="menu_backup_root" id="menu_backups" sequence="10"/>
     <menuitem name="Configuration" parent="menu_backup_root" id="menu_config" sequence="100"/>
+    <menuitem name="Backups" action="action_backup_config" parent="menu_config" id="menu_backup_config"/>
     <menuitem name="Settings" action="action_backup_settings" parent="menu_config" id="menu_settings"/>
     <menuitem action="odoo_backup_sh_backup_action" parent="menu_backups" id="backups_menu" sequence="1"/>
 
