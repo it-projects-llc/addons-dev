@@ -10,9 +10,7 @@ _logger = logging.getLogger(__name__)
 try:
     from qcloudsms_py.httpclient import HTTPError
     import phonenumbers
-    _sms_phonenumbers_lib_imported = True
 except ImportError as err:
-    _sms_phonenumbers_lib_imported = False
     _logger.debug(err)
 
 
@@ -45,7 +43,7 @@ class QCloudSMS(models.Model):
 
     def _sms_sanitization(self, partner):
         number = partner.mobile
-        if number and _sms_phonenumbers_lib_imported:
+        if number:
             country = self._phone_get_country(partner)
             country_code = country.code if country else None
             try:
