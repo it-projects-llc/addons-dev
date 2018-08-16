@@ -35,11 +35,15 @@ Credentials
   * ``qcloudsms.app_key``
 
 
-SMS tracking
+SMS Tracking
 ------------
-Tencent Cloud SMS messages can be found at ``[[ Invoicing ]] >> Configuration >> Tencent Cloud SMS``. If you don't have that menu, you need to configure ``Show Full Accounting Features`` for your user first:
+ALL SMS messages can be found at ``[[ Settings ]] >> Tencent Cloud SMS >> Messages``. If you don't have that menu, you need to `Activate Developer Mode <https://odoo-development.readthedocs.io/en/latest/odoo/usage/debug-mode.html>`__
 
+SMS Templates
+-------------
 * `Activate Developer Mode <https://odoo-development.readthedocs.io/en/latest/odoo/usage/debug-mode.html>`__
-* Open menu ``[[ Settings ]] >> Users & Companies >> Users``
-* Open user you need
-* Activate ``Show Full Accounting Features``
+* Open menu ``[[ Settings ]] >> Tencent Cloud SMS >> Templates``
+* Click on ``[Create]``
+* Specify ``Name`` and ``SMS Type``
+* If necessary, specify other fields
+* Click on ``[Save]``
