@@ -55,8 +55,7 @@ class QCloudSMS(models.Model):
                 raise UserError(_('Invalid number %s: probably incorrect prefix') % number)
             return phone_nbr
         else:
-            raise UserError(_("The `phonenumbers` Python module is not available."
-                              "Try `pip3 install phonenumbers` to install it."))
+            raise UserError(_("Mobile phone number not specified for Partner: %s(id: %s)", partner.name, partner.id))
 
     @api.model
     def send_message(self, message, partner_id, **kwargs):
