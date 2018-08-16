@@ -3,6 +3,11 @@
 import logging
 import requests_mock
 
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
+
 from odoo.tests.common import HttpCase
 from odoo import api
 
@@ -20,18 +25,27 @@ class TestQCloudSMS(HttpCase):
         self.Message = self.phantom_env['qcloud.sms']
         self.partner = self.phantom_env.ref('base.res_partner_1')
 
-        # TODO: path check number function
-        
         self.partner.write({
-            'mobile': '+79373410108'
+            'mobile': '+1234567890'
         })
+
         self.message_template = self.phantom_env['qcloud.sms.template'].create({
             'name': 'Test Template',
             'sms_type': '0'
         })
+
+        # add patch
         self.requests_mock = requests_mock.Mocker(real_http=True)
         self.requests_mock.start()
         self.addCleanup(self.requests_mock.stop)
+
+        patcher_possible_number = patch('phonenumbers.is_possible_number', wraps=lambda *args: True)
+        patcher_possible_number.start()
+        self.addCleanup(patcher_possible_number.stop)
+
+        patcher_valid_number = patch('phonenumbers.is_valid_number', wraps=lambda *args: True)
+        patcher_valid_number.start()
+        self.addCleanup(patcher_valid_number.stop)
 
     def _patch_post_requests(self, url, response_json):
         self.requests_mock.register_uri('POST', url, json=response_json)
@@ -44,12 +58,12 @@ class TestQCloudSMS(HttpCase):
             "fee": 1,
             "sid": "xxxxxxx"
         }
-        base_url = 'https://yun.tim.qq.com/v5/tlssmssvr/sendsms'
-        self._patch_post_requests(base_url, response_json)
+        url = 'https://yun.tim.qq.com/v5/tlssmssvr/sendsms'
+        self._patch_post_requests(url, response_json)
+
         return self.Message.send_message(message, self.partner.id, template_id=self.message_template.id)
 
     def test_send_message(self):
-        # sms_type: 0 - normal SMS, 1 - marketing SMS
         message = "Your login verification code is 1234, which is valid for 2 minutes." \
                   "If you are not using our service, ignore the message."
 

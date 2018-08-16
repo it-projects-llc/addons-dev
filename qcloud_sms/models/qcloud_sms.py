@@ -69,6 +69,7 @@ class QCloudSMS(models.Model):
             return {
                 'error': _('Error on sending SMS: %s') % e.response.text
             }
+        _logger.debug('Send message JSON result: %s', result)
         return result
 
     @api.model
@@ -118,7 +119,6 @@ class QCloudSMS(models.Model):
         if phone_obj:
             sms.state = 'sent'
 
-        # TODO: check it. we need to use Thread?
         if template_ID or sign_ID:
             # TODO: params
             params = []
@@ -135,6 +135,7 @@ class QCloudSMS(models.Model):
             return {
                 'error': _('Error on sending SMS: %s') % e.response.text
             }
+        _logger.debug('Send message JSON result: %s', result)
         return result
 
     @api.model
@@ -189,7 +190,6 @@ class QCloudSMS(models.Model):
         if phone_obj_list:
             sms.state = 'sent'
 
-        # TODO: check it. we need to use Thread?
         if template_ID or sign_ID:
             # send sms by params
             # TODO: params
