@@ -51,8 +51,8 @@
             <form>
                 <sheet>
                     <group>
-                        <field name="name" />
-                        <field name="sms_type" />
+                        <field name="name" required="True"/>
+                        <field name="sms_type" required="True"/>
                     </group>
                     <group>
                         <field name="domestic_sms_template_ID" />
