@@ -1,7 +1,6 @@
 # Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 import logging
-import requests_mock
 
 try:
     from unittest.mock import patch
@@ -35,10 +34,6 @@ class TestQCloudSMS(HttpCase):
         })
 
         # add patch
-        self.requests_mock = requests_mock.Mocker(real_http=True)
-        self.requests_mock.start()
-        self.addCleanup(self.requests_mock.stop)
-
         patcher_possible_number = patch('phonenumbers.is_possible_number', wraps=lambda *args: True)
         patcher_possible_number.start()
         self.addCleanup(patcher_possible_number.stop)
@@ -48,7 +43,14 @@ class TestQCloudSMS(HttpCase):
         self.addCleanup(patcher_valid_number.stop)
 
     def _patch_post_requests(self, url, response_json):
-        self.requests_mock.register_uri('POST', url, json=response_json)
+
+        def api_request(req, httpclient=None):
+            _logger.debug("Request data: req - %s, httpclient - %s", req, httpclient)
+            return response_json
+
+        patcher = patch('qcloudsms_py.util.api_request', wraps=api_request)
+        patcher.start()
+        self.addCleanup(patcher.stop)
 
     def _send_simple_message(self, message):
         response_json = {
