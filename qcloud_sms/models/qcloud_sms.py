@@ -108,22 +108,29 @@ class QCloudSMS(models.Model):
         # China Country Code 86 (use domestics templates)
         if country_code == '86':
             template_ID = sms.template_id.domestic_sms_template_ID if sms.template_id else False
-            sign_ID = sms.template_id.domestic_sms_sign_ID if sms.template_id else False
+            params = sms.template_id.domestic_template_params if sms.template_id else False
+            sign = sms.template_id.domestic_sms_sign if sms.template_id else False
         else:
             template_ID = sms.template_id.international_sms_template_ID if sms.template_id else False
-            sign_ID = sms.template_id.international_sms_sign_ID if sms.template_id else False
+            params = sms.template_id.international_template_params if sms.template_id else False
+            sign = sms.template_id.international_sms_sign if sms.template_id else False
+
+        params = params.split(',')
 
         extend_field = kwargs.get('extend_field') or ""
 
-        if phone_obj:
-            sms.state = 'sent'
-
-        if template_ID or sign_ID:
-            # TODO: params
-            params = []
-            result = ssender.send_with_param(country_code, national_number, template_ID, params, sign=sign_ID, extend=extend_field, ext=sms.id)
+        if template_ID or sign:
+            result = ssender.send_with_param(country_code, national_number, template_ID,
+                                             params, sign=sign, extend=extend_field, ext=sms.id)
         else:
-            result = ssender.send(sms_type, country_code, national_number, message, extend=extend_field, ext=sms.id)
+            result = ssender.send(sms_type, country_code, national_number,
+                                  message, extend=extend_field, ext=sms.id)
+
+        if result.get('result') == 0:
+            sms.state = 'sent'
+        else:
+            sms.state = 'error'
+
         return result
 
     @api.model
@@ -174,29 +181,36 @@ class QCloudSMS(models.Model):
         country_code = country_code[0]
         national_number_list = list(map(lambda x: x.national_number, phone_obj_list))
 
+        _logger.debug("Country code: %s, Mobile numbers: %s", country_code, national_number_list)
+
         sms_type = sms.template_id.sms_type if sms.template_id else 0
 
         # China Country Code 86 (use domestics templates)
         if country_code == '86':
             template_ID = sms.template_id.domestic_sms_template_ID if sms.template_id else False
-            sign_ID = sms.template_id.domestic_sms_sign_ID if sms.template_id else False
+            params = sms.template_id.domestic_template_params if sms.template_id else False
+            sign = sms.template_id.domestic_sms_sign if sms.template_id else False
         else:
             template_ID = sms.template_id.international_sms_template_ID if sms.template_id else False
-            sign_ID = sms.template_id.international_sms_sign_ID if sms.template_id else False
+            params = sms.template_id.international_template_params if sms.template_id else False
+            sign = sms.template_id.international_sms_sign if sms.template_id else False
+
+        params = params.split(',')
 
         extend_field = kwargs.get('extend_field') or ""
 
-        if phone_obj_list:
-            sms.state = 'sent'
-
-        if template_ID or sign_ID:
+        if template_ID or sign:
             # send sms by params
-            # TODO: params
-            params = []
-            result = msender.send_with_param(country_code, national_number_list, template_ID, params, sign=sign_ID,
+            result = msender.send_with_param(country_code, national_number_list, template_ID, params, sign=sign,
                                              extend=extend_field, ext=sms.id)
         else:
-            result = msender.send(sms_type, country_code, national_number_list, message, extend=extend_field, ext=sms.id)
+            result = msender.send(sms_type, country_code, national_number_list,
+                                  message, extend=extend_field, ext=sms.id)
+
+        if result.get('result') == 0:
+            sms.state = 'sent'
+        else:
+            sms.state = 'error'
 
         return result
 
@@ -214,18 +228,26 @@ class QCloudSMSTemplate(models.Model):
         string='Domestic SMS Template ID',
         help='SMS Template ID is the Tencent Cloud SMS template (the specific content of the SMS message to be sent).'
     )
-    domestic_sms_sign_ID = fields.Integer(
-        string='Domestic SMS Signature ID',
-        help='SMS Signature ID is the Tencent Cloud SMS signature (an identifier added before the message body for '
+    domestic_template_params = fields.Text(
+        string="Domestic Template parameters",
+        help="Parameters must be separated by commas. If the template has no parameters, leave it empty."
+    )
+    domestic_sms_sign = fields.Char(
+        string='Domestic SMS Signature',
+        help='SMS Signature is the Tencent Cloud SMS signature (an identifier added before the message body for '
              'identification of the company or business.).'
     )
     international_sms_template_ID = fields.Integer(
         string='International SMS Template ID',
         help='SMS Template ID is the Tencent Cloud SMS template (the specific content of the SMS message to be sent).'
     )
-    international_sms_sign_ID = fields.Integer(
+    international_template_params = fields.Text(
+        string="International Template parameters",
+        help="Parameters must be separated by commas. If the template has no parameters, leave it empty."
+    )
+    international_sms_sign = fields.Char(
         string='International SMS Signature ID',
-        help='SMS Signature ID is the Tencent Cloud SMS signature (an identifier added before the message body for '
+        help='SMS Signature is the Tencent Cloud SMS signature (an identifier added before the message body for '
              'identification of the company or business.).'
     )
     sms_type = fields.Selection([
