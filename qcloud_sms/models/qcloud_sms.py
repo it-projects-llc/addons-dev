@@ -86,7 +86,7 @@ class QCloudSMS(models.Model):
         sms = self.create(vals)
 
         # get SMS object
-        qcloudsms = self.env['ir.config_parameter'].get_qcloud_sms_object()
+        qcloudsms = self.env['ir.config_parameter'].sudo().get_qcloud_sms_object()
         ssender = qcloudsms.SmsSingleSender()
 
         try:
@@ -129,7 +129,9 @@ class QCloudSMS(models.Model):
         else:
             sms.state = 'error'
 
-        return result, sms
+        # TODO: check it
+        result['sms_id'] = sms.id
+        return result
 
     @api.model
     def send_group_message(self, message, partner_ids, **kwargs):
@@ -161,7 +163,7 @@ class QCloudSMS(models.Model):
         sms = self.create(vals)
 
         # get SMS object
-        qcloudsms = self.env['ir.config_parameter'].get_qcloud_sms_object()
+        qcloudsms = self.env['ir.config_parameter'].sudo().get_qcloud_sms_object()
         msender = qcloudsms.SmsMultiSender()
 
         try:
@@ -211,7 +213,9 @@ class QCloudSMS(models.Model):
         else:
             sms.state = 'error'
 
-        return result, sms
+        # TODO: check it
+        result['sms_id'] = sms.id
+        return result
 
 
 class QCloudSMSTemplate(models.Model):
