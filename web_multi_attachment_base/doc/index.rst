@@ -10,7 +10,7 @@ Installation
 Usage
 =====
 
-To use this module add a model for attachments and paste the attribute **drop_attachments_field = '1'** into the corresponding canban view.
+To use this module add a model for attachments and specify the attribute **drop_attachments_field = '1'** into the corresponding kanban view.
 
 For example::
 
