@@ -41,8 +41,8 @@ class QCloudSMS(models.Model):
             return partner.country_id
         return self.env.user.company_id.country_id
 
-    def _sms_sanitization(self, partner):
-        number = partner.mobile
+    def _sms_sanitization(self, partner, number=None):
+        number = number or partner.mobile
         if number:
             country = self._phone_get_country(partner)
             country_code = country.code if country else None
@@ -60,13 +60,13 @@ class QCloudSMS(models.Model):
     @api.model
     def send_message(self, message, partner_id, **kwargs):
         try:
-            result = self._send_message(message, partner_id, **kwargs)
+            result, sms = self._send_message(message, partner_id, **kwargs)
         except HTTPError as e:
             return {
                 'error': _('Error on sending SMS: %s') % e.response.text
             }
         _logger.debug('Send message JSON result: %s', result)
-        return result
+        return result, sms
 
     @api.model
     def _send_message(self, message, partner_id, **kwargs):
@@ -129,18 +129,18 @@ class QCloudSMS(models.Model):
         else:
             sms.state = 'error'
 
-        return result
+        return result, sms
 
     @api.model
     def send_group_message(self, message, partner_ids, **kwargs):
         try:
-            result = self._send_group_message(message, partner_ids, **kwargs)
+            result, sms = self._send_group_message(message, partner_ids, **kwargs)
         except HTTPError as e:
             return {
                 'error': _('Error on sending SMS: %s') % e.response.text
             }
         _logger.debug('Send message JSON result: %s', result)
-        return result
+        return result, sms
 
     @api.model
     def _send_group_message(self, message, partner_ids, **kwargs):
@@ -211,7 +211,7 @@ class QCloudSMS(models.Model):
         else:
             sms.state = 'error'
 
-        return result
+        return result, sms
 
 
 class QCloudSMSTemplate(models.Model):
