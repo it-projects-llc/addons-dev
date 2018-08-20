@@ -27,19 +27,11 @@ class ReportSaleDetails(models.AbstractModel):
                                                                        ('datetime', '>=', date_start),
                                                                        ('datetime', '<=', date_stop)])
 
-        for pay in all_payments:
+        for pay in all_payments.filtered(lambda p: p.amount > 0):
             journal = self.env['account.journal'].search([('name', '=', pay.journal_id.name)], limit=1)
-            key = 0
             for i in result['payments']:
                 if i['name'] == journal.name:
                     i['pay_num'] = 'pay_num' in i and i['pay_num'] + 1 or 1
-                    key = 1
-            # if not key:
-            #     result['payments'] += [{'name': journal.name,
-            #                             'total': pay.amount,
-            #                             'pay_num': 1,
-            #                             }]
-            # awaits next update. if all is ok ill be removed
 
         result['payments_total'] = {
             'name': 'Total',
@@ -61,7 +53,13 @@ class ReportSaleDetails(models.AbstractModel):
         result['cash_control'] = []
         lines_in = []
         lines_out = []
+        result['sessions'] = []
         for session in pos_session_ids:
+            result['sessions'].append({
+                'name': session.name,
+                'opened_by': session.opened_by.name,
+                'closed_by': session.closed_by.name
+            })
             lines_in += session.cash_register_id.cashbox_start_id.cashbox_lines_ids
             lines_out += session.cash_register_id.cashbox_end_id.cashbox_lines_ids
         for i in lines_out:

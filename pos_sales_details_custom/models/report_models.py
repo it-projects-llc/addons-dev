@@ -10,6 +10,24 @@ class PosSession(models.Model):
     _inherit = 'pos.session'
 
     pos_cash_box_ids = fields.One2many('pos.cash.box', 'session_id')
+    opened_by = fields.Many2one('res.users', string='User opened the session')
+    closed_by = fields.Many2one('res.users', string='User closed the session')
+
+    @api.multi
+    def action_pos_session_open(self):
+        res = super(PosSession, self).action_pos_session_open()
+        self.write({
+            'opened_by': self.env.context.get('uid')
+        })
+        return res
+
+    @api.multi
+    def action_pos_session_close(self):
+        res = super(PosSession, self).action_pos_session_close()
+        self.write({
+            'closed_by': self.env.context.get('uid')
+        })
+        return res
 
 
 class CashBoxOut(models.Model):
