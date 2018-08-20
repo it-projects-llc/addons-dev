@@ -60,13 +60,13 @@ class QCloudSMS(models.Model):
     @api.model
     def send_message(self, message, partner_id, **kwargs):
         try:
-            result, sms = self._send_message(message, partner_id, **kwargs)
+            result = self._send_message(message, partner_id, **kwargs)
         except HTTPError as e:
             return {
                 'error': _('Error on sending SMS: %s') % e.response.text
             }
         _logger.debug('Send message JSON result: %s', result)
-        return result, sms
+        return result
 
     @api.model
     def _send_message(self, message, partner_id, **kwargs):
@@ -136,13 +136,13 @@ class QCloudSMS(models.Model):
     @api.model
     def send_group_message(self, message, partner_ids, **kwargs):
         try:
-            result, sms = self._send_group_message(message, partner_ids, **kwargs)
+            result = self._send_group_message(message, partner_ids, **kwargs)
         except HTTPError as e:
             return {
                 'error': _('Error on sending SMS: %s') % e.response.text
             }
         _logger.debug('Send message JSON result: %s', result)
-        return result, sms
+        return result
 
     @api.model
     def _send_group_message(self, message, partner_ids, **kwargs):
