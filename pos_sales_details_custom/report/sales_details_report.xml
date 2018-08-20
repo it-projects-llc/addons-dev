@@ -189,6 +189,26 @@
         </table>
 
         <br/>
+
+        <h3>Sessions</h3>
+        <table  class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>Reference</th>
+                    <th>Opened by</th>
+                    <th>Closed by</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach='sessions' t-as='s'>
+                    <td><t t-esc="s['name']"/></td>
+                    <td><t t-esc="s['opened_by'] or ''"/></td>
+                    <td><t t-esc="s['closed_by'] or ''"/></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br/>
         <br/>
 
     </xpath>
