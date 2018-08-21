@@ -24,21 +24,19 @@ class TestQCloudSMS(HttpCase):
         self.Message = self.phantom_env['qcloud.sms']
         self.partner_1 = self.phantom_env.ref('base.res_partner_1')
         self.partner_2 = self.phantom_env.ref('base.res_partner_2')
-
         self.partner_1.write({
             'mobile': '+1234567890'
         })
-
         self.partner_2.write({
             'mobile': '+1987654320'
         })
-
-        self.message_template = self.phantom_env['qcloud.sms.template'].create({
+        self.Template = self.phantom_env['qcloud.sms.template'].create({
             'name': 'Test Template',
-            'sms_type': '0'
+            'international_sms_template_ID': 123456,
+            'international_template_params': '1,2,3,4,5',
+            'international_sms_sign': 'Test LLC'
         })
-
-        # add patch
+        # add patch for phonenumbers
         patcher_possible_number = patch('phonenumbers.is_possible_number', wraps=lambda *args: True)
         patcher_possible_number.start()
         self.addCleanup(patcher_possible_number.stop)
@@ -47,7 +45,17 @@ class TestQCloudSMS(HttpCase):
         patcher_valid_number.start()
         self.addCleanup(patcher_valid_number.stop)
 
-    def _patch_post_requests(self, url, response_json):
+        # add patch for qcloudsms_py request
+        response_json = {
+            "result": 0,
+            "errmsg": "OK",
+            "ext": "",
+            "fee": 1,
+            "sid": "xxxxxxx"
+        }
+        self._patch_post_requests(response_json)
+
+    def _patch_post_requests(self, response_json):
 
         def api_request(req, httpclient=None):
             _logger.debug("Request data: req - %s, httpclient - %s", req, httpclient)
@@ -57,40 +65,25 @@ class TestQCloudSMS(HttpCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
-    def _send_simple_message(self, message):
-        response_json = {
-            "result": 0,
-            "errmsg": "OK",
-            "ext": "",
-            "fee": 1,
-            "sid": "xxxxxxx"
-        }
-        url = 'https://yun.tim.qq.com/v5/tlssmssvr/sendsms'
-        self._patch_post_requests(url, response_json)
-
-        return self.Message.send_message(message, self.partner_1.id, template_id=self.message_template.id)
-
     def test_send_message(self):
         message = "Your login verification code is 1234, which is valid for 2 minutes." \
                   "If you are not using our service, ignore the message."
-
-        response = self._send_simple_message(message)
+        response = self.Message.send_message(message, self.partner_1.id)
         self.assertEquals(response.get('result'), 0, 'Could not send message')
-
-    def _send_group_message(self, message):
-        response_json = {
-            "result": 0,
-            "errmsg": "OK",
-            "ext": "",
-            "fee": 1,
-            "sid": "xxxxxxx"
-        }
-        url = 'https://yun.tim.qq.com/v5/tlssmssvr/sendsms'
-        self._patch_post_requests(url, response_json)
-
-        return self.Message.send_group_message(message, [self.partner_1.id, self.partner_2.id], template_id=self.message_template.id)
 
     def test_send_group_message(self):
         message = "Discount for all products 50%!"
-        response = self._send_group_message(message)
-        self.assertEquals(response.get('result'), 0, 'Could not send message')
+        response = self.Message.send_group_message(message, [self.partner_1.id, self.partner_2.id], sms_type=1)
+        self.assertEquals(response.get('result'), 0, 'Could not send group message')
+
+    def test_send_template_message(self):
+        message = "Your login verification code is {1}, which is valid for 2 minutes." \
+                  "If you are not using our service, ignore the message."
+        response = self.Template.send_template_message(message, self.partner_1.id, self.Template.id)
+        self.assertEquals(response.get('result'), 0, 'Could not send template message')
+
+    def test_send_template_group_message(self):
+        message = "Your login verification code is {1}, which is valid for 2 minutes." \
+                  "If you are not using our service, ignore the message."
+        response = self.Template.send_template_group_message(message, [self.partner_1.id, self.partner_2.id], self.Template.id)
+        self.assertEquals(response.get('result'), 0, 'Could not send template group message')
