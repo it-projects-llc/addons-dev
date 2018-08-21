@@ -27,6 +27,7 @@
                     </group>
                     <group>
                         <field name="message" />
+                        <field name="sms_type"/>
                         <field name="template_id"/>
                     </group>
                 </sheet>
@@ -52,7 +53,6 @@
                 <sheet>
                     <group>
                         <field name="name" required="True"/>
-                        <field name="sms_type" required="True"/>
                     </group>
                     <group>
                         <field name="domestic_sms_template_ID" />
