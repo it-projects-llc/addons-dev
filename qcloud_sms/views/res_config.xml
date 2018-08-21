@@ -27,7 +27,7 @@
                     </group>
                     <group>
                         <field name="message" />
-                        <field name="sms_type"/>
+                        <field name="sms_type" required="True"/>
                         <field name="template_id"/>
                     </group>
                 </sheet>
