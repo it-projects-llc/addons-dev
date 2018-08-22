@@ -3,6 +3,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
+CHANNEL_NAME = "wechat.miniprogram"
 
 class WeChatOrder(models.Model):
     _inherit = 'wechat.order'
@@ -15,40 +16,48 @@ class WeChatOrder(models.Model):
 
     @api.model
     def create_from_miniprogram_ui(self, lines, create_vals):
-        # TODO: check access sending message (verify mobile)
-
+        if self.env.user.number_verified is False:
+            raise UserError(_("Mobile phone number not specified for User: %s (id: %s)") % (self.env.user.name, self.env.user.id))
         pay_method = create_vals.get('miniprogram_pay_method')
         create_vals['order_from_miniprogram'] = True
-        # miniprogram_pay_method (Pay Now - 0, Pay Later - 1)
+
         if pay_method == 0:
+            # create new wechat order, pay and send to POS
             return self.create_jsapi_order(lines, create_vals)
         elif pay_method == 1:
-            message = self._get_pos_format_message(lines=lines, vals=create_vals)
-            self._send_message_to_pos(message)
-            return True
+            # create new wechat order (without pay) and send to POS
+            debug = self.env['ir.config_parameter'].sudo().get_param('wechat.local_sandbox') == '1'
+            vals = {
+                'trade_type': 'NATIVE',
+                'line_ids': [(0, 0, line) for line in lines],
+                'debug': debug,
+            }
+            if create_vals:
+                vals.update(create_vals)
+            order = self.sudo().create(vals)
+            order._send_message_to_pos()
+            return {'order_id': order.id}
         else:
             raise UserError(_('Pay Method %s is not defined'), pay_method)
 
-    def _get_pos_format_message(self, lines=None, vals=None):
-        if lines or vals:
-            return {
-                'vals': vals,
-                'lines': lines
-            }
-        else:
-            return {
-                'vals': self.read()[0],
-                'lines': self.line_ids.read(['product_id', 'quantity', 'price'])[0]
-            }
+    @api.multi
+    def _prepare_mp_message(self):
+        """
+        To prepare the message of mini-program for POS
+        """
+        self.ensure_one()
+        fields = ['id', 'note', 'table_id', 'customer_count', 'order_from_miniprogram', 'state', 'line_ids']
+        return self.read(fields)[0]
+
+    @api.multi
+    def _send_message_to_pos(self):
+        self.ensure_one()
+        message = self._prepare_mp_message()
+        for pos in self.env['pos.config'].search([('allow_message_from_miniprogram', '=', True)]):
+            self.env['pos.config']._send_to_channel_by_id(self._cr.dbname, pos.id, CHANNEL_NAME, message)
 
     def on_notification(self, data):
         order = super(WeChatOrder, self).on_notification(data)
         if order.order_from_miniprogram:
-            message = order._get_pos_format_message()
-            self._send_message_to_pos(message)
+            order._send_message_to_pos()
         return order
-
-    def _send_message_to_pos(self, message):
-        channel_name = "wechat.miniprogram"
-        for pos in self.env['pos.config'].search([('allow_message_from_miniprogram', '=', True)]):
-            self.env['pos.config']._send_to_channel_by_id(self._cr.dbname, pos.id, channel_name, message)
