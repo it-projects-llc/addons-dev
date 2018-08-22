@@ -725,7 +725,7 @@ var SaleOrdersWidget = InvoicesAndOrdersBaseWidget.extend({
         }).fail(function (type, err) {
             self.gui.show_popup('error', {
                 'title': _t(err.message),
-                'body': _t(err.data.arguments[0])
+                'body': _t(type.data.arguments[0])
             });
             event.preventDefault();
         });
@@ -1036,17 +1036,45 @@ gui.define_screen({name:'invoice_payment', widget: InvoicePayment});
 
 var InvoiceReceiptScreenWidget = screens.ReceiptScreenWidget.extend({
     template: 'InvoiceReceiptScreenWidget',
-    render_receipt: function () {
+    render_invoice_ticket: function(){
         var order = this.pos.get_order();
-        this.$('.pos-receipt-container').html(QWeb.render('PosInvoiceTicket',{
+        return QWeb.render('PosInvoiceTicket',{
                 widget:this,
                 order: order,
                 receipt: order.export_for_printing(),
                 orderlines: order.get_orderlines(),
                 paymentlines: order.get_paymentlines(),
-            }));
+            });
     },
-
+    render_invoice_receipt: function(){
+        var order = this.pos.get_order();
+        return QWeb.render('PosInvoiceReceipt',{
+                widget:this,
+                order: order,
+                receipt: order.export_for_printing(),
+                orderlines: order.get_orderlines(),
+                paymentlines: order.get_paymentlines(),
+            });
+    },
+    render_receipt: function () {
+        var order = this.pos.get_order();
+        if (order.invoice_to_pay) {
+            var receipt = this.render_invoice_ticket();
+            this.$('.pos-receipt-container').html(receipt);
+        } else {
+            this._super();
+        }
+    },
+    print_xml: function() {
+        var order = this.pos.get_order();
+        if (order.invoice_to_pay) {
+            var receipt = this.render_invoice_receipt();
+            this.pos.proxy.print_receipt(receipt);
+            order._printed = true;
+        } else {
+            this._super();
+        }
+    },
     render_change: function () {
         var order = this.pos.get_order();
         this.$('.change-value').html(this.format_currency(order.invoice_to_pay.get_change()));
