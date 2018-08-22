@@ -18,12 +18,15 @@
 
     "depends": [
         "wechat_miniprogram",
-        "pos_wechat",
+        "qcloud_sms",
+        "pos_restaurant",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
         "security/wechat_security.xml",
         "security/ir.model.access.csv",
+        "views/product_view.xml",
+        "views/template.xml",
     ],
     "demo": [
     ],
