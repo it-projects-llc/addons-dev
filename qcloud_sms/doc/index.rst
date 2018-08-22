@@ -47,3 +47,10 @@ SMS Templates
 * Specify ``Name`` and ``SMS Type``
 * If necessary, specify other fields
 * Click on ``[Save]``
+
+SMS Templates params
+--------------------
+
+`domestic_template_params` or `international_template_params` - The array of template values. The parameters must be separated by commas. If the template has no parameters, leave it empty. For example:
+
+If the template has the following format: "Your login verification code is {1}, which is valid for {2} minutes." and the params have the following values: ['123456', '5'], after sending an SMS we receive the message: "Your login verification code is 123456, which is valid for 5 minutes."
