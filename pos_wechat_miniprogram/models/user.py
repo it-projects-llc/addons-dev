@@ -36,7 +36,7 @@ class ResPartner(models.Model):
         Qcloud = self.env['qcloud.sms']
         code = random.randrange(10000, 1000000)
 
-        country = Qcloud._phone_get_country(self)
+        country = Qcloud._get_country(self)
         country_code = country.code if country else None
 
         phone_obj = phonenumbers.parse(number, region=country_code, keep_raw_input=True)
