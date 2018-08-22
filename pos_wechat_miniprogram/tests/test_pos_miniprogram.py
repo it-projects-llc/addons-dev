@@ -138,6 +138,9 @@ class TestQCloudSMS(HttpCase):
         """
         Create order from mini-program UI, pay, and send the Order to POS
         """
+        self.user.write({
+            'number_verified': True
+        })
         # pay method (Pay Now - 0, Pay Later - 1)
         self.create_vals['miniprogram_pay_method'] = 0
         res = self._create_from_miniprogram_ui(create_vals=self.create_vals, lines=self.lines)
@@ -162,8 +165,14 @@ class TestQCloudSMS(HttpCase):
         """
         Create order from mini-program UI and send the Order to POS
         """
+        self.user.write({
+            'number_verified': True
+        })
         # pay method (Pay Now - 0, Pay Later - 1)
         self.create_vals['miniprogram_pay_method'] = 1
 
         res = self._create_from_miniprogram_ui(create_vals=self.create_vals, lines=self.lines)
-        self.assertTrue(res, 'Cannot send the order to POS')
+        order_id = res.get('order_id')
+        order = self.Order.browse(order_id)
+
+        self.assertEqual(order.state, 'draft', 'Just created order has wrong state. ')
