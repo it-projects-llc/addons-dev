@@ -40,7 +40,7 @@ class QCloudSMS(models.Model):
         (1, 'Marketing')
     ], string='SMS Type', default=0, help='Type of SMS message')
 
-    def _phone_get_country(self, partner):
+    def _get_country(self, partner):
         if 'country_id' in partner:
             return partner.country_id
         return self.env.user.company_id.country_id
@@ -48,7 +48,7 @@ class QCloudSMS(models.Model):
     def _sms_sanitization(self, partner, number=None):
         number = number or partner.mobile
         if number:
-            country = self._phone_get_country(partner)
+            country = self._get_country(partner)
             country_code = country.code if country else None
             try:
                 phone_nbr = phonenumbers.parse(number, region=country_code, keep_raw_input=True)
@@ -63,6 +63,15 @@ class QCloudSMS(models.Model):
 
     @api.model
     def send_message(self, message, partner_id, sms_type=None, **kwargs):
+        """
+        Send single SMS message.
+
+        :param message: SMS message content
+        :param partner_id: id of partner to whom the message will be sent
+        :param sms_type: SMS message type, 0 - normal SMS, 1 - marketing SMS
+        :param kwargs: not required parameters, extend - extend field, default is empty string,
+        ext - ext field, content will be returned by server as it is, url - custom url
+        """
         try:
             result = self._send_message(message, partner_id, sms_type, **kwargs)
         except HTTPError as e:
@@ -74,11 +83,6 @@ class QCloudSMS(models.Model):
 
     @api.model
     def _send_message(self, message, partner_id, sms_type, **kwargs):
-        """Send Message
-
-        :param message: SMS message
-        :param partner_id: id of partner
-        """
         partner = self.env['res.partner'].browse(partner_id)
         vals = {
             'message': message,
@@ -107,7 +111,10 @@ class QCloudSMS(models.Model):
         _logger.debug("Country code: %s, Mobile number: %s", country_code, national_number)
 
         extend_field = kwargs.get('extend_field') or ""
-        result = ssender.send(sms.sms_type, country_code, national_number, message, extend=extend_field, ext=sms.id)
+        url = kwargs.get('url') or None
+
+        result = ssender.send(sms.sms_type, country_code, national_number,
+                              message, extend=extend_field, ext=sms.id, url=url)
 
         state = 'sent' if result.get('result') == 0 else 'error'
         sms.write({
@@ -118,6 +125,15 @@ class QCloudSMS(models.Model):
 
     @api.model
     def send_group_message(self, message, partner_ids, sms_type=None, **kwargs):
+        """
+        Send a SMS messages to multiple partners at once.
+
+        :param message: SMS message content
+        :param partner_ids: ids of partners to whom the message will be sent
+        :param sms_type: SMS message type, 0 - normal SMS, 1 - marketing SMS
+        :param kwargs: not required parameters, extend - extend field, default is empty string,
+        ext - ext field, content will be returned by server as it is, url - custom url
+        """
         try:
             result = self._send_group_message(message, partner_ids, sms_type, **kwargs)
         except HTTPError as e:
@@ -129,11 +145,6 @@ class QCloudSMS(models.Model):
 
     @api.model
     def _send_group_message(self, message, partner_ids, sms_type, **kwargs):
-        """Send a message to a group of partners
-
-        :param message: SMS message
-        :param partner_ids: list of partners ids
-        """
         partners = self.env['res.partner'].browse(partner_ids)
 
         vals = {
@@ -167,7 +178,10 @@ class QCloudSMS(models.Model):
         _logger.debug("Country code: %s, Mobile numbers: %s", country_code, national_number_list)
 
         extend_field = kwargs.get('extend_field') or ""
-        result = msender.send(sms.sms_type, country_code, national_number_list, message, extend=extend_field, ext=sms.id)
+        url = kwargs.get('url') or None
+
+        result = msender.send(sms.sms_type, country_code, national_number_list,
+                              message, extend=extend_field, ext=sms.id, url=url)
 
         state = 'sent' if result.get('result') == 0 else 'error'
         sms.write({
@@ -213,30 +227,50 @@ class QCloudSMSTemplate(models.Model):
              'identification of the company or business.).'
     )
 
+    @api.multi
+    def _get_sms_params_by_country_code(self, code):
+        self.ensure_one()
+        res = {}
+        # China Country Code 86 (use domestics templates)
+        if code == '86':
+            res['template_ID'] = self.domestic_sms_template_ID or ''
+            params = self.domestic_template_params or ''
+            res['sign'] = self.domestic_sms_sign or ''
+        else:
+            res['template_ID'] = self.international_sms_template_ID or ''
+            params = self.international_template_params or ''
+            res['sign'] = self.international_sms_sign or ''
+
+        res['template_params'] = params.split(',')
+
+        return res
+
     @api.model
-    def send_template_message(self, message, partner_id, template_id, **kwargs):
+    def send_template_message(self, partner_id, template_id, **kwargs):
+        """
+        Send single SMS message with template paramters.
+
+        :param partner_id: id of partner to whom the message will be sent
+        :param template_id: id of template
+        :param kwargs: not required parameters, extend - extend field, default is empty string,
+        ext - ext field, content will be returned by server as it is, url - custom url
+        """
         try:
             template = self.browse(template_id)
-            result = template._send_template_message(message, partner_id, **kwargs)
+            result = template._send_template_message(partner_id, **kwargs)
         except HTTPError as e:
             return {
                 'error': _('Error on sending Template SMS: %s') % e.response.text
             }
-        _logger.debug('Send message JSON result: %s', result)
+        _logger.debug('Send JSON result: %s', result)
         return result
 
     @api.multi
-    def _send_template_message(self, message, partner_id, **kwargs):
-        """ Send Template Message
-
-        :param message: SMS message
-        :param partner_id: id of partner
-        """
+    def _send_template_message(self, partner_id, **kwargs):
         self.ensure_one()
         partner = self.env['res.partner'].browse(partner_id)
 
         vals = {
-            'message': message,
             'partner_ids': partner,
             'template_id': self.id,
         }
@@ -263,21 +297,16 @@ class QCloudSMSTemplate(models.Model):
 
         _logger.debug("Country code: %s, Mobile number: %s", country_code, national_number)
 
-        # China Country Code 86 (use domestics templates)
-        if country_code == '86':
-            template_ID = self.domestic_sms_template_ID or ''
-            params = self.domestic_template_params or ''
-            sign = self.domestic_sms_sign or ''
-        else:
-            template_ID = self.international_sms_template_ID or ''
-            params = self.international_template_params or ''
-            sign = self.international_sms_sign or ''
+        params = self._get_sms_params_by_country_code(country_code)
 
-        params = params.split(',')
+        _logger.debug("SMS params: %s", params)
+
         extend_field = kwargs.get('extend_field') or ''
+        url = kwargs.get('url') or None
 
-        result = ssender.send_with_param(country_code, national_number, template_ID, params,
-                                         sign=sign, extend=extend_field, ext=sms_record.id)
+        result = ssender.send_with_param(country_code, national_number, params.get('template_ID'),
+                                         params.get('template_params'), sign=params.get('sign'), extend=extend_field,
+                                         ext=sms_record.id, url=url)
 
         state = 'sent' if result.get('result') == 0 else 'error'
         sms_record.write({
@@ -288,10 +317,19 @@ class QCloudSMSTemplate(models.Model):
         return result
 
     @api.model
-    def send_template_group_message(self, message, partner_ids, template_id, **kwargs):
+    def send_template_group_message(self, partner_ids, template_id, **kwargs):
+        """
+        Send a SMS messages with template parameters to multiple
+        partners at once.
+
+        :param partner_ids: ids of partners to whom the message will be sent
+        :param template_id: id of template
+        :param kwargs: not required parameters, extend - extend field, default is empty string,
+        ext - ext field, content will be returned by server as it is, url - custom url
+        """
         try:
             template = self.browse(template_id)
-            result = template._send_template_group_message(message, partner_ids, **kwargs)
+            result = template._send_template_group_message(partner_ids, **kwargs)
         except HTTPError as e:
             return {
                 'error': _('Error on sending Template SMS: %s') % e.response.text
@@ -300,17 +338,11 @@ class QCloudSMSTemplate(models.Model):
         return result
 
     @api.multi
-    def _send_template_group_message(self, message, partner_ids, **kwargs):
-        """ Send Template message to a group of partners
-
-        :param message: SMS message
-        :param partner_ids: list of partners ids
-        """
+    def _send_template_group_message(self, partner_ids, **kwargs):
         self.ensure_one()
         partners = self.env['res.partner'].browse(partner_ids)
 
         vals = {
-            'message': message,
             'partner_ids': partners,
             'template_id': self.id,
         }
@@ -343,21 +375,16 @@ class QCloudSMSTemplate(models.Model):
 
         _logger.debug("Country code: %s, Mobile numbers: %s", country_code, national_number_list)
 
-        # China Country Code 86 (use domestics templates)
-        if country_code == '86':
-            template_ID = self.domestic_sms_template_ID or ''
-            params = self.domestic_template_params or ''
-            sign = self.domestic_sms_sign or ''
-        else:
-            template_ID = self.international_sms_template_ID or ''
-            params = self.international_template_params or ''
-            sign = self.international_sms_sign or ''
+        params = self._get_sms_params_by_country_code(country_code)
 
-        params = params.split(',')
+        _logger.debug("SMS params: %s", params)
+
         extend_field = kwargs.get('extend_field') or ''
+        url = kwargs.get('url') or None
 
-        result = msender.send_with_param(country_code, national_number_list, template_ID, params, sign=sign,
-                                         extend=extend_field, ext=sms_record.id)
+        result = msender.send_with_param(country_code, national_number_list, params.get('template_ID'),
+                                         params.get('template_params'), sign=params.get('sign'), extend=extend_field,
+                                         ext=sms_record.id, url=url)
 
         state = 'sent' if result.get('result') == 0 else 'error'
         sms_record.write({
