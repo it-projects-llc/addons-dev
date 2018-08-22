@@ -19,6 +19,7 @@
     "depends": [
         "wechat_miniprogram",
         "qcloud_sms",
+        "pos_longpolling",
         "pos_restaurant",
     ],
     "external_dependencies": {"python": [], "bin": []},
