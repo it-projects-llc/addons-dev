@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 from odoo import fields, models, api, _
 from werkzeug import url_encode
-import json
 
 CHANNEL = "pos_expenses"
+
 
 class PosConfig(models.Model):
     _inherit = 'pos.config'
@@ -21,7 +20,7 @@ class HrExpenseSheet(models.Model):
 
     processed_by_pos = fields.Boolean()
     cashier = fields.Char()
-    datetime = fields.Datetime(required=True, string="Datetime", default=fields.Datetime.now)
+    payment_datetime = fields.Datetime(required=True, string="Datetime")
 
     def process_expense_from_pos(self, cashier):
         if (self.state == 'approve'):
@@ -64,3 +63,10 @@ class HrExpenseSheet(models.Model):
 
     def action_updated_expense(self):
         self.env['pos.config'].notify_expenses_updates(self.id)
+
+    @api.multi
+    def set_to_paid(self):
+        super(HrExpenseSheet, self).set_to_paid()
+        self.write({
+            'payment_datetime': fields.Datetime.now(),
+        })

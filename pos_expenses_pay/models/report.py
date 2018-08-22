@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-import datetime
 from odoo import api, fields, models
 
 
@@ -12,8 +10,8 @@ class ReportSaleDetails(models.AbstractModel):
         res = super(ReportSaleDetails, self).get_sale_details(date_start, date_stop, configs)
 
         expenses = self.env['hr.expense.sheet'].search([
-            ('datetime', '>=', date_start),
-            ('datetime', '<=', date_stop),
+            ('payment_datetime', '>=', date_start),
+            ('payment_datetime', '<=', date_stop),
             ('state', '=', 'done')
         ])
         res['expenses_total'] = 0
