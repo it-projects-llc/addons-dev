@@ -140,7 +140,7 @@ class QCloudSMS(models.Model):
             return {
                 'error': _('Error on sending SMS: %s') % e.response.text
             }
-        _logger.debug('Send message JSON result: %s', result)
+        _logger.debug('Send group message JSON result: %s', result)
         return result
 
     @api.model
@@ -262,7 +262,7 @@ class QCloudSMSTemplate(models.Model):
             return {
                 'error': _('Error on sending Template SMS: %s') % e.response.text
             }
-        _logger.debug('Send JSON result: %s', result)
+        _logger.debug('Send template message JSON result: %s', result)
         return result
 
     @api.multi
@@ -334,7 +334,7 @@ class QCloudSMSTemplate(models.Model):
             return {
                 'error': _('Error on sending Template SMS: %s') % e.response.text
             }
-        _logger.debug('Send message JSON result: %s', result)
+        _logger.debug('Send template group message JSON result: %s', result)
         return result
 
     @api.multi
