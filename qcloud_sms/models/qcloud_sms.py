@@ -31,7 +31,7 @@ class QCloudSMS(models.Model):
     partner_ids = fields.Many2many('res.partner', string='Partner')
     send_datetime = fields.Datetime(string='Sent', readonly=True, help='Date and Time of sending the message',
                                     default=fields.Datetime.now)
-    message = fields.Text(string='Message', required=True)
+    message = fields.Text(string='Message')
     state = fields.Selection(STATE_SELECTION, string='Status', readonly=True, default='draft',
                              help='Status of the SMS message')
     template_id = fields.Many2one('qcloud.sms.template', 'SMS Template')
