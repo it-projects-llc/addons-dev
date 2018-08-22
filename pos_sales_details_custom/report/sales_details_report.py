@@ -67,6 +67,7 @@ class ReportSaleDetails(models.AbstractModel):
             for j in result['cash_control']:
                 if i.coin_value == j['coin_value']:
                     j['coin_out'] += i.number
+                    j['subtotal_out'] += i.subtotal
                     in_report = True
             if not in_report:
                 result['cash_control'] += [{
@@ -81,6 +82,7 @@ class ReportSaleDetails(models.AbstractModel):
             for j in result['cash_control']:
                 if i.coin_value == j['coin_value']:
                     j['coin_in'] += i.number
+                    j['subtotal_in'] += i.subtotal
                     in_report = True
             if not in_report:
                 result['cash_control'] += [{
