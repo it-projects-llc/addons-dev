@@ -16,6 +16,12 @@ class WeChatOrder(models.Model):
 
     @api.model
     def create_from_miniprogram_ui(self, lines, create_vals):
+        """
+        Create order from mini-program and send the order to POS
+
+        :param lines: orderlines from mini-program
+        :param create_vals: additional information about order
+        """
         if self.env.user.number_verified is False:
             raise UserError(_("Mobile phone number not specified for User: %s (id: %s)") % (self.env.user.name, self.env.user.id))
         pay_method = create_vals.get('miniprogram_pay_method')
@@ -46,8 +52,13 @@ class WeChatOrder(models.Model):
         To prepare the message of mini-program for POS
         """
         self.ensure_one()
-        fields = ['id', 'note', 'table_id', 'customer_count', 'order_from_miniprogram', 'state', 'line_ids']
-        return self.read(fields)[0]
+        order_fields = ['id', 'note', 'table_id', 'customer_count', 'order_from_miniprogram', 'state']
+        line_fields = ['id', 'product_id', 'price', 'quantity', 'category']
+
+        res = self.read(order_fields)[0]
+        res['line_ids'] = self.line_ids.read(line_fields)[0]
+
+        return res
 
     @api.multi
     def _send_message_to_pos(self):
