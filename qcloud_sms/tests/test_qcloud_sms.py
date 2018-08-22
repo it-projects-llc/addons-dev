@@ -77,13 +77,9 @@ class TestQCloudSMS(HttpCase):
         self.assertEquals(response.get('result'), 0, 'Could not send group message')
 
     def test_send_template_message(self):
-        message = "Your login verification code is {1}, which is valid for 2 minutes." \
-                  "If you are not using our service, ignore the message."
-        response = self.Template.send_template_message(message, self.partner_1.id, self.Template.id)
+        response = self.Template.send_template_message(self.partner_1.id, self.Template.id)
         self.assertEquals(response.get('result'), 0, 'Could not send template message')
 
     def test_send_template_group_message(self):
-        message = "Your login verification code is {1}, which is valid for 2 minutes." \
-                  "If you are not using our service, ignore the message."
-        response = self.Template.send_template_group_message(message, [self.partner_1.id, self.partner_2.id], self.Template.id)
+        response = self.Template.send_template_group_message([self.partner_1.id, self.partner_2.id], self.Template.id)
         self.assertEquals(response.get('result'), 0, 'Could not send template group message')
