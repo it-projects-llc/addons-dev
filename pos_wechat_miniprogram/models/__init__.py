@@ -4,3 +4,5 @@ from . import user
 from . import http
 from . import wechat_order
 from . import pos_config
+from . import pos_order
+from . import pos_wechat_miniprogram
