@@ -25,6 +25,7 @@ class WeChatOrder(models.Model):
         :returns order_id:    Current order id
                  result_json: Payments data for WeChat
         """
+
         debug = self.env['ir.config_parameter'].sudo().get_param('wechat.local_sandbox') == '1'
 
         vals = {
