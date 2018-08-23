@@ -28,7 +28,8 @@ class TestQCloudSMS(HttpCase):
             'mobile': '+1234567890'
         })
 
-        self.Order = self.phantom_env['wechat.order']
+        self.Order = self.phantom_env['pos.miniprogram.order']
+
         self.product1 = self.phantom_env['product.product'].create({
             'name': 'Product1',
         })
@@ -56,12 +57,10 @@ class TestQCloudSMS(HttpCase):
         ]
 
         # fake values for a test
-        floor = self.phantom_env.ref('pos_restaurant.floor_main')
         table = self.phantom_env.ref('pos_restaurant.table_01')
 
         self.create_vals = {
             'note': 'This is test Order note',
-            'floor_id': floor.id,
             'table_id': table.id,
             'guests': 4
         }
@@ -125,7 +124,7 @@ class TestQCloudSMS(HttpCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
-        return self.phantom_env['wechat.order'].create_from_miniprogram_ui(lines, create_vals)
+        return self.phantom_env['pos.miniprogram.order'].create_from_miniprogram_ui(lines, create_vals)
 
     def test_mobile_number_verification(self):
         mobile = '+1234567890'
@@ -141,25 +140,10 @@ class TestQCloudSMS(HttpCase):
         self.user.write({
             'number_verified': True
         })
-        # pay method (Pay Now - 0, Pay Later - 1)
-        self.create_vals['miniprogram_pay_method'] = 0
-        res = self._create_from_miniprogram_ui(create_vals=self.create_vals, lines=self.lines)
-        order_id = res.get('order_id')
-        order = self.Order.browse(order_id)
-
+        # Pay method ('now' - Pay from mini-program, 'later' - Pay from POS)
+        self.create_vals['miniprogram_pay_method'] = 'now'
+        order = self._create_from_miniprogram_ui(create_vals=self.create_vals, lines=self.lines)
         self.assertEqual(order.state, 'draft', 'Just created order has wrong state. ')
-
-        # simulate notification
-        notification = {
-            'return_code': 'SUCCESS',
-            'result_code': 'SUCCESS',
-            'out_trade_no': order.name,
-        }
-
-        handled = self.Order.on_notification(notification)
-
-        self.assertTrue(handled, 'Notification was not handled (error in checking for duplicates?) ')
-        self.assertEqual(order.state, 'done', "Order's state is not changed after notification about update. ")
 
     def test_create_without_pay_from_miniprogram_ui(self):
         """
@@ -168,11 +152,8 @@ class TestQCloudSMS(HttpCase):
         self.user.write({
             'number_verified': True
         })
-        # pay method (Pay Now - 0, Pay Later - 1)
-        self.create_vals['miniprogram_pay_method'] = 1
+        # Pay method ('now' - Pay from mini-program, 'later' - Pay from POS)
+        self.create_vals['miniprogram_pay_method'] = 'later'
 
-        res = self._create_from_miniprogram_ui(create_vals=self.create_vals, lines=self.lines)
-        order_id = res.get('order_id')
-        order = self.Order.browse(order_id)
-
+        order = self._create_from_miniprogram_ui(create_vals=self.create_vals, lines=self.lines)
         self.assertEqual(order.state, 'draft', 'Just created order has wrong state. ')
