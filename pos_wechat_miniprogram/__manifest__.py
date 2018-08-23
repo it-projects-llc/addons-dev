@@ -21,6 +21,7 @@
         "qcloud_sms",
         "pos_longpolling",
         "pos_restaurant",
+        "pos_order_note",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
