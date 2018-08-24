@@ -14,7 +14,7 @@ odoo.define('pos_wechat_miniprogram.screens', function(require){
             var self = this;
             if (reset) {
                 var order = this.pos.get_order();
-                if (order && order.miniprogram_state === "done") {
+                if (order && order.miniprogram_order.state === "done") {
                     $(this.el).addClass('paid');
                     $(this.el).find('.rightpane .layout-table').before('<div class="disable-products"></div>');
                     var validate ="<button class='button validate'><div class='pay-circle'><i class='fa fa-check' /></div>Validate</button>";
@@ -35,7 +35,7 @@ odoo.define('pos_wechat_miniprogram.screens', function(require){
         show: function(){
             this._super();
             var order = this.pos.get_order();
-            if (order && order.miniprogram_state === "done") {
+            if (order && order.miniprogram_order.state === "done") {
                 $(this.el).addClass('paid');
             } else {
                 $(this.el).removeClass('paid');

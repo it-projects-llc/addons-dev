@@ -30,7 +30,7 @@ class PosWeChatMiniProgramOrder(models.Model):
     amount_total = fields.Float(compute='_compute_amount_all', string='Total', digits=0)
     lines_ids = fields.One2many('pos.miniprogram.order.line', 'order_id', string='Order Lines',
                                 readonly=True, copy=True)
-    config_id = fields.Many2one('pos.config', string="Point of Sale")
+    order_id = fields.Many2one('pos.order', string="Point of Sale")
     wechat_order_id = fields.Many2one('wechat.order', string="WeChar Order")
     state = fields.Selection([
         ('draft', 'Unpaid'),
@@ -46,7 +46,8 @@ class PosWeChatMiniProgramOrder(models.Model):
         ('now', 'Pay from mini-program'),
         ('later', 'Pay from POS')
     ], string='Pay method', default='now')
-    to_invoice = fields.Boolean(default=False)
+    to_invoice = fields.Boolean(string="Invoice", default=False)
+    confirmed_from_pos = fields.Boolean(string="Order Confirmed from POS", default=False)
 
     @api.depends('lines_ids.amount_total', 'lines_ids.discount')
     def _compute_amount_all(self):
@@ -130,13 +131,12 @@ class PosWeChatMiniProgramOrderLine(models.Model):
     price = fields.Float('Price', required=True, help='Price in currency units (not cents)')
     quantity = fields.Float('Quantity', default=1)
     order_id = fields.Many2one('pos.miniprogram.order', string="WeChat mini-program Order")
-    amount_total = fields.Float(compute='_compute_amount_line_all', digits=0, string='Total')
     discount = fields.Float(string='Discount (%)', digits=0, default=0.0)
     create_date = fields.Datetime(string='Creation Date', readonly=True)
     amount_total = fields.Float(compute='_compute_amount_all', string='Total', digits=0)
 
     @api.depends('price', 'quantity', 'discount', 'product_id')
-    def _compute_amount_line_all(self):
+    def _compute_amount_all(self):
         for line in self:
             price = line.price * (1 - (line.discount or 0.0) / 100.0)
             amount_total = price * line.quantity

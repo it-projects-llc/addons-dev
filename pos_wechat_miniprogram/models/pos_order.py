@@ -7,16 +7,22 @@ class PosOrder(models.Model):
     _inherit = 'pos.order'
 
     order_from_miniprogram = fields.Boolean(default=False)
+    # mp_order_ids = fields.One2many('pos.miniprogram.order', 'order_id', string="Mini-program Order")
 
     @api.model
     def create_from_ui(self, orders):
         res = super(PosOrder, self).create_from_ui(orders)
         for o in orders:
-            submitted_references = o['data']['name']
-            mp_order = self.search([('pos_reference', '=', submitted_references), ('order_from_miniprogram', '=', True)])
-            if mp_order and o['data']['miniprogram_state'] != 'done':
-                wechat_order = self.env['wechat.order'].browse(o['data']['miniprogram_order_id'])
-                wechat_order.write({
-                    'state': 'done'
-                })
+            data = o.get('data')
+            submitted_references = data.get('name')
+            order = self.search([('pos_reference', '=', submitted_references), ('order_from_miniprogram', '=', True)])
+            if order:
+                miniprogram_data = data.get("miniprogram_order")
+                miniprogram_order = self.env['pos.miniprogram.order'].browse(miniprogram_data.get('id'))
+                if miniprogram_order:
+                    miniprogram_order.write({
+                        'state': 'done',
+                        'order_id': order.id,
+                        'confirmed_from_pos': True
+                    })
         return res

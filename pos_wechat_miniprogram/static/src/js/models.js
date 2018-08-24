@@ -4,12 +4,28 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
     "use strict";
 
     var models = require('point_of_sale.models');
+    var rpc = require('web.rpc');
 
     models.load_fields('account.journal', ['wechat']);
 
+    models.load_models({
+        model: 'pos.miniprogram.order',
+        fields: [],
+        domain:[['confirmed_from_pos', '=', false]],
+        loaded: function(self, orders) {
+            // load not confirmed orders
+            orders.forEach(function(order) {
+                self.get_miniprogram_order_lines_by_order_id(order.id).then(function(lines) {
+                    order.lines_ids = lines;
+                    self.on_wechat_miniprogram(order);
+                })
+            });
+        },
+    });
+
     var PosModelSuper = models.PosModel;
     models.PosModel = models.PosModel.extend({
-        initialize: function(){
+        initialize: function() {
             var self = this;
             PosModelSuper.prototype.initialize.apply(this, arguments);
             this.bus.add_channel_callback("wechat.miniprogram", this.on_wechat_miniprogram, this);
@@ -21,42 +37,105 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
                         'table_id': 1,
                         'customer_count': 4,
                         'state': 'done',
-                        'line_ids': [{'id': 666, 'product_id': 69, 'price': 1, 'quantity': 5}],
+                        'lines_ids': [{'id': 666, 'product_id': [69, 'Product'], 'price': 5, 'quantity': 5}],
                         'partner_id': 26,
                         'to_invoice': false,
                         'order_from_miniprogram': true
                     };
+
                     self.on_wechat_miniprogram(demo_message);
+
+                    var demo_message1 = {
+                        'id': 666,
+                        'note': 'Test Order Note',
+                        'table_id': 1,
+                        'customer_count': 4,
+                        'state': 'done',
+                        'lines_ids': [{'id': 666, 'product_id': [69, 'Product'], 'price': 3, 'quantity': 3}],
+                        'partner_id': 26,
+                        'to_invoice': false,
+                        'order_from_miniprogram': true
+                    };
+
+                    self.on_wechat_miniprogram(demo_message1);
+
+                    var demo_message2 = {
+                        'id': 666,
+                        'note': 'Test Order Note',
+                        'table_id': 1,
+                        'customer_count': 4,
+                        'state': 'done',
+                        'lines_ids': [{'id': 666, 'product_id': [69, 'Product'], 'price': 1, 'quantity': 1}, {'id': 667, 'product_id': [69, 'Product'], 'price': 3, 'quantity': 3}],
+                        'partner_id': 26,
+                        'to_invoice': false,
+                        'order_from_miniprogram': true
+                    };
+
+                    self.on_wechat_miniprogram(demo_message2);
                 }
+            });
+        },
+        get_miniprogram_order_lines_by_order_id: function (id) {
+            return rpc.query({
+                model: 'pos.miniprogram.order.line',
+                method: 'search_read',
+                fields: [],
+                domain: [['order_id', '=', id]]
             });
         },
         on_wechat_miniprogram: function(message) {
             var order = this.get('orders').find(function(item){
-                return item.miniprogram_order_id === message.id;
+                return item.miniprogram_order.id === message.id;
             });
             if (order) {
-                order.update_miniprogram_order(message);
+                this.update_miniprogram_order(order, message);
             } else {
                 this.create_miniprogram_order(message);
             }
         },
+        update_miniprogram_order: function(order, data) {
+            var self = this;
+            var not_found = order.orderlines.map(function(r) {
+                return r.miniprogram_line.id;
+            });
+
+            data.lines_ids.forEach(function(l) {
+                var line = order.orderlines.find(function(r){
+                    // search by mini-program orderline id
+                    return l.id === r.miniprogram_line.id;
+                });
+
+                not_found = _.without(not_found, l.id);
+
+                if (line) {
+                    // update line
+                    line.apply_updates_miniprogram_line(l);
+                } else {
+                    // create new line and add to the Order
+                    line = self.create_orderline_by_miniprogram_data(order, l);
+                    if (line) {
+                        order.orderlines.add(line);
+                    }
+                }
+            });
+
+            // remove old lines
+            _.each(not_found, function(id){
+                var line = order.orderlines.find(function(r){
+                    return id === r.miniprogram_line.id;
+                });
+                order.orderlines.remove(line);
+            });
+
+            // update exist order
+            order.apply_updates_miniprogram_order(data);
+        },
         create_miniprogram_order: function(data) {
             var self = this;
-
-            var mp_data = {
-                id: data.id,
-                table_id: data.table_id,
-                floors_id: data.floor_id,
-                note: data.note,
-                customer_count: data.customer_count,
-                state: data.state,
-                to_invoice: data.to_invoice,
-                order_from_miniprogram: data.order_from_miniprogram
-            };
             // get current order
             var current_order = this.get_order();
             // create new order
-            var order = new models.Order({}, {mp_data: mp_data, pos: this});
+            var order = new models.Order({}, {mp_data: data, pos: this});
             // get and set partner
             if(typeof data.partner_id === 'undefined') {
                 order.set_client(null);
@@ -75,21 +154,27 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
             // set current order
             this.set('selectedOrder', current_order);
             // create orderlines
-            data.line_ids.forEach(function(l){
-                var product = self.db.get_product_by_id(l.product_id);
-                if (product) {
-                    var line = new models.Orderline({}, {pos: self, order: order, product: product});
-                    if (l.quantity !== undefined && l.quantity !== line.quantity){
-                        line.set_quantity(l.quantity);
-                    }
-                    if (l.price !== undefined && l.price !== line.price) {
-                        line.set_unit_price(l.price);
-                    }
+            data.lines_ids.forEach(function(l) {
+                var line = self.create_orderline_by_miniprogram_data(order, l);
+                if (line) {
                     order.orderlines.add(line);
-                } else {
-                    console.error("Product is not defined", product);
                 }
             });
+        },
+        create_orderline_by_miniprogram_data: function(order, data) {
+            var product = this.db.get_product_by_id(data.product_id[0]);
+            if (product) {
+                var line = new models.Orderline({}, {pos: this, order: order, product: product, mp_data: data});
+                if (typeof data.quantity !== 'undefined' && data.quantity !== line.quantity){
+                    line.set_quantity(data.quantity);
+                }
+                if (typeof data.price !== 'undefined' && data.price !== line.price) {
+                    line.set_unit_price(data.price);
+                }
+                return line;
+            } else {
+                return false;
+            }
         },
         load_new_partners_by_id: function(partner_id){
             var self = this;
@@ -131,35 +216,71 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
     models.Order = models.Order.extend({
         initialize: function (attributes, options) {
             options = options || {};
+            this.miniprogram_order = {};
             OrderSuper.prototype.initialize.apply(this, arguments);
             if (options.mp_data) {
-                this.update_miniprogram_order(options.mp_data);
+                this.apply_updates_miniprogram_order(options.mp_data);
             }
         },
-        update_miniprogram_order: function(data) {
-            this.miniprogram_order_id = data.id;
-            this.miniprogram_state = data.state;
+        apply_updates_miniprogram_order: function(data) {
+            // all mini-program data
+            this.miniprogram_order = data;
+
+            // common data for the order and for the order of mini-program
             this.table = this.pos.tables_by_id[data.table_id];
             this.floor = this.table ? this.pos.floors_by_id[data.floor_id] : undefined;
             this.customer_count = data.customer_count || 1;
             this.note = data.note;
             this.to_invoice = data.to_invoice;
-            this.order_from_miniprogram = data.order_from_miniprogram;
+
             // save to db
             this.trigger('change',this);
         },
         export_as_JSON: function() {
             var data = OrderSuper.prototype.export_as_JSON.apply(this, arguments);
-            data.miniprogram_state = this.miniprogram_state;
-            data.miniprogram_order_id = this.miniprogram_order_id;
-            data.order_from_miniprogram = this.order_from_miniprogram;
+            data.miniprogram_order = this.miniprogram_order;
             return data;
         },
         init_from_JSON: function(json) {
-            this.miniprogram_state = json.miniprogram_state;
-            this.miniprogram_order_id = json.miniprogram_order_id;
-            this.order_from_miniprogram = json.order_from_miniprogram;
+            this.miniprogram_order = json.miniprogram_order;
             OrderSuper.prototype.init_from_JSON.call(this, json);
+        },
+    });
+
+    var OrderlineSuper = models.Orderline;
+    models.Orderline = models.Orderline.extend({
+        initialize: function(attr,options) {
+            options = options || {};
+            this.miniprogram_line = {};
+            OrderlineSuper.prototype.initialize.apply(this,arguments);
+            if (options.mp_data) {
+                this.apply_updates_miniprogram_line(options.mp_data);
+            }
+        },
+        apply_updates_miniprogram_line: function(data) {
+            // all mini-program data
+            this.miniprogram_line = data;
+
+            // common data for the orderline and for the line of mini-program
+            if (this.quantity !== data.quantity){
+                this.set_quantity(data.quantity);
+            }
+            if (this.price !== data.price) {
+                this.set_unit_price(data.price);
+            }
+
+            // save to db
+            this.trigger('change',this);
+            this.order.trigger('change',this);
+        },
+        export_as_JSON: function() {
+            var data = OrderlineSuper.prototype.export_as_JSON.apply(this, arguments);
+            data.miniprogram_line = this.miniprogram_line;
+            return data;
+        },
+        init_from_JSON: function(json) {
+            this.miniprogram_line = json.miniprogram_line;
+            OrderlineSuper.prototype.init_from_JSON.call(this, json);
         },
     });
 });
