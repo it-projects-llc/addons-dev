@@ -29,51 +29,6 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
             var self = this;
             PosModelSuper.prototype.initialize.apply(this, arguments);
             this.bus.add_channel_callback("wechat.miniprogram", this.on_wechat_miniprogram, this);
-            this.ready.then(function() {
-                if (self.debug) {
-                    var demo_message = {
-                        'id': 666,
-                        'note': 'Test Order Note',
-                        'table_id': 1,
-                        'customer_count': 4,
-                        'state': 'done',
-                        'lines_ids': [{'id': 666, 'product_id': [69, 'Product'], 'price': 5, 'quantity': 5}],
-                        'partner_id': 26,
-                        'to_invoice': false,
-                        'order_from_miniprogram': true
-                    };
-
-                    self.on_wechat_miniprogram(demo_message);
-
-                    var demo_message1 = {
-                        'id': 666,
-                        'note': 'Test Order Note',
-                        'table_id': 1,
-                        'customer_count': 4,
-                        'state': 'done',
-                        'lines_ids': [{'id': 666, 'product_id': [69, 'Product'], 'price': 3, 'quantity': 3}],
-                        'partner_id': 26,
-                        'to_invoice': false,
-                        'order_from_miniprogram': true
-                    };
-
-                    self.on_wechat_miniprogram(demo_message1);
-
-                    var demo_message2 = {
-                        'id': 666,
-                        'note': 'Test Order Note',
-                        'table_id': 1,
-                        'customer_count': 4,
-                        'state': 'done',
-                        'lines_ids': [{'id': 666, 'product_id': [69, 'Product'], 'price': 1, 'quantity': 1}, {'id': 667, 'product_id': [69, 'Product'], 'price': 3, 'quantity': 3}],
-                        'partner_id': 26,
-                        'to_invoice': false,
-                        'order_from_miniprogram': true
-                    };
-
-                    self.on_wechat_miniprogram(demo_message2);
-                }
-            });
         },
         get_miniprogram_order_lines_by_order_id: function (id) {
             return rpc.query({
