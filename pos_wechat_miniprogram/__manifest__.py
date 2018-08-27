@@ -28,6 +28,7 @@
         "security/wechat_security.xml",
         "security/ir.model.access.csv",
         "views/product_view.xml",
+        "views/pos_wechat_miniprogram_view.xml",
         "views/template.xml",
     ],
     "demo": [
@@ -38,3 +39,4 @@
     "auto_install": False,
     "installable": True,
 }
+# TODO: ACCESS
