@@ -2,7 +2,6 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 import logging
 import werkzeug.urls
-from Crypto.Cipher import AES
 import base64
 import json
 
@@ -13,6 +12,7 @@ from odoo.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 try:
+    from Crypto.Cipher import AES
     from wechatpy import WeChatPay
 except ImportError as err:
     _logger.debug(err)
