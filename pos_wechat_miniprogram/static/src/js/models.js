@@ -26,7 +26,6 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
     var PosModelSuper = models.PosModel;
     models.PosModel = models.PosModel.extend({
         initialize: function() {
-            var self = this;
             PosModelSuper.prototype.initialize.apply(this, arguments);
             this.bus.add_channel_callback("wechat.miniprogram", this.on_wechat_miniprogram, this);
         },
@@ -34,8 +33,7 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
             return rpc.query({
                 model: 'pos.miniprogram.order.line',
                 method: 'search_read',
-                fields: [],
-                domain: [['order_id', '=', id]]
+                args: [[['order_id', '=', id]], []],
             });
         },
         on_wechat_miniprogram: function(message) {
@@ -95,9 +93,9 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
             if(typeof data.partner_id === 'undefined') {
                 order.set_client(null);
             } else {
-                var client = order.pos.db.get_partner_by_id(data.partner_id);
+                var client = order.pos.db.get_partner_by_id(data.partner_id[0]);
                 if(!client) {
-                    $.when(this.load_new_partners_by_id(data.partner_id)).then(function(new_client){
+                    $.when(this.load_new_partners_by_id(data.partner_id[0])).then(function(new_client){
                         new_client = order.pos.db.get_partner_by_id(data.partner_id);
                         order.set_client(new_client);
                     });
@@ -183,9 +181,6 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
 
             // common data for the order and for the order of mini-program
             this.table = this.pos.tables_by_id[data.table_id];
-            this.floor = this.table
-            ? this.pos.floors_by_id[data.floor_id]
-            : null;
             this.customer_count = data.customer_count || 1;
             this.note = data.note;
             this.to_invoice = data.to_invoice;
