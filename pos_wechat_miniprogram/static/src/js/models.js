@@ -18,7 +18,7 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
                 self.get_miniprogram_order_lines_by_order_id(order.id).then(function(lines) {
                     order.lines_ids = lines;
                     self.on_wechat_miniprogram(order);
-                })
+                });
             });
         },
     });
@@ -172,9 +172,8 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
                     line.set_unit_price(data.price);
                 }
                 return line;
-            } else {
-                return false;
             }
+            return false;
         },
         load_new_partners_by_id: function(partner_id){
             var self = this;
@@ -182,6 +181,7 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
             var fields = _.find(this.models,function(model){
                 return model.model === 'res.partner';
             }).fields;
+
             var domain = [['id','=',partner_id]];
             rpc.query({
                     model: 'res.partner',
@@ -228,7 +228,9 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
 
             // common data for the order and for the order of mini-program
             this.table = this.pos.tables_by_id[data.table_id];
-            this.floor = this.table ? this.pos.floors_by_id[data.floor_id] : undefined;
+            this.floor = this.table
+                ? this.pos.floors_by_id[data.floor_id]
+                : null;
             this.customer_count = data.customer_count || 1;
             this.note = data.note;
             this.to_invoice = data.to_invoice;

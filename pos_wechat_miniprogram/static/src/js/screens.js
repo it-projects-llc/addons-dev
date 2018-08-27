@@ -97,17 +97,20 @@ odoo.define('pos_wechat_miniprogram.screens', function(require){
                                 self.gui.show_screen('clientlist');
                             },
                         });
-                    } else if (error.code < 0) {        // XmlHttpRequest Errors
+                    } else if (error.code < 0) {
+                        // XmlHttpRequest Errors
                         self.gui.show_popup('error',{
                             'title': _t('The order could not be sent'),
                             'body': _t('Check your internet connection and try again.'),
                         });
-                    } else if (error.code === 200) {    // OpenERP Server Errors
+                    } else if (error.code === 200) {
+                        // OpenERP Server Errors
                         self.gui.show_popup('error-traceback',{
                             'title': error.data.message || _t("Server Error"),
                             'body': error.data.debug || _t('The server encountered an error while receiving your order.'),
                         });
-                    } else {                            // other Error
+                    } else {
+                        // other Error
                         self.gui.show_popup('error',{
                             'title': _t("Unknown Error"),
                             'body':  _t("The order could not be sent to the server due to an unknown error"),
