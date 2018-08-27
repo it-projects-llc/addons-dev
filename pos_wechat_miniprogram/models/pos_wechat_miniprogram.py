@@ -120,6 +120,24 @@ class PosWeChatMiniProgramOrder(models.Model):
         for pos in self.env['pos.config'].search([('allow_message_from_miniprogram', '=', True)]):
             self.env['pos.config']._send_to_channel_by_id(self._cr.dbname, pos.id, CHANNEL_NAME, message)
 
+    @api.model
+    def add_orderline(self, vals):
+        line = self.env['pos.miniprogram.order.line'].create(vals)
+        # TODO: send the line to other mini-programs
+        return line
+
+    @api.model
+    def remove_orderline(self, id):
+        line = self.env['pos.miniprogram.order.line'].browse(id)
+        # TODO: send remove information about the line to other mini-programs
+        return line.unlink()
+
+    @api.model
+    def change_orderline(self, id, vals):
+        line = self.env['pos.miniprogram.order.line'].browse(id)
+        # TODO: send update information about the line to other mini-programs
+        return line.write(vals)
+
 
 class PosWeChatMiniProgramOrderLine(models.Model):
     _name = 'pos.miniprogram.order.line'
