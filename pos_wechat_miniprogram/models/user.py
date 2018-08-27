@@ -20,6 +20,10 @@ class Users(models.Model):
         return self.partner_id._mobile_number_verification(number, **kwargs)
 
     @api.model
+    def wechat_mobile_number_verification(self, data):
+        return self.partner_id._wechat_mobile_number_verification(data)
+
+    @api.model
     def check_verification_code(self, code):
         return self.partner_id._check_verification_code(code)
 
@@ -30,9 +34,15 @@ class ResPartner(models.Model):
     number_verified = fields.Boolean(string='Verified', default=False)
     verification_code = fields.Char(string='Verification code')
 
-    @api.model
+    @api.multi
     def _mobile_number_verification(self, number, **kwargs):
+        """
+        Send verification code to mobile number
 
+        :param number: mobile number from mini-program
+        :return result: result of send
+        """
+        self.ensure_one()
         Qcloud = self.env['qcloud.sms']
         code = random.randrange(10000, 1000000)
 
@@ -60,8 +70,40 @@ class ResPartner(models.Model):
 
         return result
 
-    @api.model
+    @api.multi
+    def _wechat_mobile_number_verification(self, data):
+        """
+        Save WeChat mobile number
+
+        :param data: data['encryptedData'] Encrypted data with complete user information including sensitive data
+        :param data: data['iv'] Initial vector of the encryption algorithm
+        :return result: result of wechat phone number verification
+        """
+        self.ensure_one()
+
+        encryptedData = data.get('encryptedData')
+        iv = data.get('iv')
+        res = self.env['ir.config_parameter'].sudo().decrypt_wechat_miniprogram_data(encryptedData, iv)
+        PhoneNumber = res.get('purePhoneNumber')
+        countryCode = res.get('countryCode')
+
+        phone_obj = phonenumbers.parse(PhoneNumber, region=countryCode, keep_raw_input=True)
+        phone_number = phonenumbers.format_number(phone_obj, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
+
+        self.write({
+            'mobile': phone_number,
+            'number_verified': True
+        })
+
+        return {'result': True}
+
+    @api.multi
     def _check_verification_code(self, code):
+        """
+        :param code: verification code from a sms
+        :return result: verification result
+        """
+        self.ensure_one()
         if self.verification_code == code:
             self.write({
                 'number_verified': True
