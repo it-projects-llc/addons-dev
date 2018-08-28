@@ -55,11 +55,11 @@ class Param(models.Model):
         _logger.debug('openid url: %s', url)
         return url
 
-    def decrypt_wechat_miniprogram_data(self, user, encryptedData, iv):
+    def decrypt_wechat_miniprogram_data(self, session_key, encryptedData, iv):
         # base64 decode
         _logger.debug('Decrypt arguments: %s, %s', encryptedData, iv)
 
-        sessionKey = base64.b64decode(user.wechat_session_key)
+        sessionKey = base64.b64decode(session_key)
         encryptedData = base64.b64decode(encryptedData)
         iv = base64.b64decode(iv)
 

@@ -83,7 +83,8 @@ class ResPartner(models.Model):
 
         encryptedData = data.get('encryptedData')
         iv = data.get('iv')
-        res = self.env['ir.config_parameter'].sudo().decrypt_wechat_miniprogram_data(self.env.user, encryptedData, iv)
+        session_key = self.env.user.wechat_session_key
+        res = self.env['ir.config_parameter'].sudo().decrypt_wechat_miniprogram_data(session_key, encryptedData, iv)
         PhoneNumber = res.get('purePhoneNumber')
         countryCode = res.get('countryCode')
 
