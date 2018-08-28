@@ -17,15 +17,15 @@ class Users(models.Model):
 
     @api.model
     def mobile_number_verification(self, number, **kwargs):
-        return self.partner_id._mobile_number_verification(number, **kwargs)
+        return self.env.user.partner_id._mobile_number_verification(number, **kwargs)
 
     @api.model
     def wechat_mobile_number_verification(self, data):
-        return self.partner_id._wechat_mobile_number_verification(data)
+        return self.env.user.partner_id._wechat_mobile_number_verification(data)
 
     @api.model
     def check_verification_code(self, code):
-        return self.partner_id._check_verification_code(code)
+        return self.env.user.partner_id._check_verification_code(code)
 
 
 class ResPartner(models.Model):
