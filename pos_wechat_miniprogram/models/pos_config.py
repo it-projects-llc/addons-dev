@@ -8,7 +8,9 @@ MODULE = 'pos_wechat_miniprogram'
 class PosConfig(models.Model):
     _inherit = 'pos.config'
 
-    allow_message_from_miniprogram = fields.Boolean('Allow receiving messages from the mini-program', default=True)
+    allow_message_from_miniprogram = fields.Boolean(string='Allow receiving messages',
+                                                    help='Allow receiving messages from the WeChat mini-program',
+                                                    default=True)
 
     @api.multi
     def open_session_cb(self):
