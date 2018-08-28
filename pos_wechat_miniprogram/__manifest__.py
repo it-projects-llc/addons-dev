@@ -30,6 +30,7 @@
         "views/product_view.xml",
         "views/pos_wechat_miniprogram_view.xml",
         "views/template.xml",
+        "views/pos_config_view.xml",
     ],
     "demo": [
     ],
