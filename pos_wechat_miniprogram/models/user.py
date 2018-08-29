@@ -86,9 +86,8 @@ class ResPartner(models.Model):
         session_key = self.wechat_session_key
         res = self.env['ir.config_parameter'].sudo().decrypt_wechat_miniprogram_data(session_key, encryptedData, iv)
         PhoneNumber = res.get('purePhoneNumber')
-        countryCode = res.get('countryCode')
 
-        phone_obj = phonenumbers.parse(PhoneNumber, region=countryCode, keep_raw_input=True)
+        phone_obj = phonenumbers.parse(PhoneNumber, keep_raw_input=True)
         phone_number = phonenumbers.format_number(phone_obj, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
 
         self.write({
