@@ -11,9 +11,6 @@ _logger = logging.getLogger(__name__)
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
-    openid = fields.Char('Openid')
-    wechat_session_key = fields.Char("WeChat session key")
-
     @api.model
     def check_credentials(self, password):
         try:
@@ -22,3 +19,10 @@ class ResUsers(models.Model):
             res = self.sudo().search([('id', '=', self.env.uid), ('wechat_session_key', '=', password)])
             if not res:
                 raise
+
+
+class ResPartner(models.Model):
+    _inherit = "res.partner"
+
+    openid = fields.Char('Openid')
+    wechat_session_key = fields.Char("WeChat session key")
