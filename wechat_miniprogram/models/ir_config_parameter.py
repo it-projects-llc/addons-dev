@@ -64,7 +64,8 @@ class Param(models.Model):
         iv = base64.b64decode(iv)
 
         cipher = AES.new(sessionKey, AES.MODE_CBC, iv)
-        decrypted = json.loads(self._unpad(cipher.decrypt(encryptedData)))
+        data = self._unpad(cipher.decrypt(encryptedData)).decode('UTF-8')
+        decrypted = json.loads(data)
 
         _logger.debug('Decrypt result: %s', decrypted)
 

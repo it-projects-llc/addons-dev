@@ -19,7 +19,7 @@
     "depends": [
         'wechat',
     ],
-    "external_dependencies": {"python": [], "bin": []},
+    "external_dependencies": {"python": ['pycryptodome'], "bin": []},
     "data": [
         "data/module_data.xml",
         "security/wechat_security.xml",
