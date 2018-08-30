@@ -148,7 +148,7 @@ class ResPartner(models.Model):
         :return result: verification result
         """
         self.ensure_one()
-        if self.verification_code == code:
+        if int(self.verification_code) == int(code):
             now = fields.datetime.now()
             end = datetime.strptime(self.end_verification_code_datetime, "%Y-%m-%d %H:%M:%S")
             if now > end:
