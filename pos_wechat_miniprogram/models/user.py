@@ -3,6 +3,7 @@
 from odoo import api, fields, models, _
 import random
 import logging
+from datetime import timedelta, datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -37,6 +38,7 @@ class ResPartner(models.Model):
 
     number_verified = fields.Boolean(string='Verified', default=False)
     verification_code = fields.Char(string='Verification code')
+    end_verification_code_datetime = fields.Datetime(string='Datetime of Verification code')
 
     @api.multi
     def _sms_mobile_number_verification(self, number, **kwargs):
@@ -49,6 +51,7 @@ class ResPartner(models.Model):
         self.ensure_one()
         Qcloud = self.env['qcloud.sms']
         code = random.randrange(10000, 1000000)
+        duration = random.randrange(2, 6)
 
         country = Qcloud._get_country(self)
         country_code = country.code if country else None
@@ -60,8 +63,8 @@ class ResPartner(models.Model):
             'mobile': phone_number,
         })
 
-        message = _("Your login verification code is %s. If you are not using our service, "
-                    "ignore the message.") % (code)
+        message = _("Your verification code is %s, please enter it within %s minutes. For account safety, "
+                    "don't forward the code to others.") % (code, duration)
 
         result = Qcloud.send_message(message, self.id, **kwargs)
 
@@ -70,6 +73,7 @@ class ResPartner(models.Model):
         if sms.state == 'sent':
             self.write({
                 'verification_code': code,
+                'end_verification_code_datetime': fields.datetime.now() + timedelta(minutes=duration)
             })
 
         return result
@@ -87,6 +91,7 @@ class ResPartner(models.Model):
         Qcloud = self.env['qcloud.sms']
         QcloudTemplate = self.env['qcloud.sms.template'].browse(template_id)
         code = random.randrange(10000, 1000000)
+        duration = random.randrange(2, 6)
         country = Qcloud._get_country(self)
         country_code = country.code if country else None
 
@@ -97,12 +102,15 @@ class ResPartner(models.Model):
             'mobile': phone_number,
         })
 
-        result = QcloudTemplate.send_template_message(self.id, template_id, params=code, **kwargs)
+        params = str(code) + ',' + str(duration)
+
+        result = QcloudTemplate.send_template_message(self.id, template_id, params=params, **kwargs)
         sms = Qcloud.browse(result.get('sms_id'))
 
         if sms.state == 'sent':
             self.write({
                 'verification_code': code,
+                'end_verification_code_datetime': fields.datetime.now() + timedelta(minutes=duration)
             })
 
         return result
@@ -141,9 +149,14 @@ class ResPartner(models.Model):
         """
         self.ensure_one()
         if self.verification_code == code:
+            now = fields.datetime.now()
+            end = datetime.strptime(self.end_verification_code_datetime, "%Y-%m-%d %H:%M:%S")
+            if now > end:
+                return {'result': False, 'message': _('Verification Code validity is over')}
+
             self.write({
                 'number_verified': True
             })
             return {'result': True}
         else:
-            return {'result': False}
+            return {'result': False, 'message': _('Verification Code does not match')}
