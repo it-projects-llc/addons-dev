@@ -228,18 +228,21 @@ class QCloudSMSTemplate(models.Model):
     )
 
     @api.multi
-    def _get_sms_params_by_country_code(self, code):
+    def _get_sms_params_by_country_code(self, code, **kwargs):
         self.ensure_one()
         res = {}
         # China Country Code 86 (use domestics templates)
         if code == '86':
             res['template_ID'] = self.domestic_sms_template_ID or ''
-            params = self.domestic_template_params or ''
+            params = self.domestic_template_params or False
             res['sign'] = self.domestic_sms_sign or ''
         else:
             res['template_ID'] = self.international_sms_template_ID or ''
-            params = self.international_template_params or ''
+            params = self.international_template_params or False
             res['sign'] = self.international_sms_sign or ''
+
+        if params is False:
+            params = kwargs.get('params', '')
 
         res['template_params'] = params.split(',')
 
@@ -297,7 +300,7 @@ class QCloudSMSTemplate(models.Model):
 
         _logger.debug("Country code: %s, Mobile number: %s", country_code, national_number)
 
-        params = self._get_sms_params_by_country_code(country_code)
+        params = self._get_sms_params_by_country_code(country_code, **kwargs)
 
         _logger.debug("SMS params: %s", params)
 
@@ -375,7 +378,7 @@ class QCloudSMSTemplate(models.Model):
 
         _logger.debug("Country code: %s, Mobile numbers: %s", country_code, national_number_list)
 
-        params = self._get_sms_params_by_country_code(country_code)
+        params = self._get_sms_params_by_country_code(country_code, **kwargs)
 
         _logger.debug("SMS params: %s", params)
 
