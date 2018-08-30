@@ -92,7 +92,7 @@ class TestQCloudSMS(HttpCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
-    def _mobile_number_verification(self, mobile):
+    def _sms_template_mobile_number_verification(self, mobile, template_id):
         response_json = {
             "result": 0,
             "errmsg": "OK",
@@ -103,7 +103,20 @@ class TestQCloudSMS(HttpCase):
         patch_url = 'qcloudsms_py.util.api_request'
         self._patch_post_requests(response_json, patch_url)
 
-        return self.user.mobile_number_verification(mobile)
+        return self.user.sms_template_mobile_number_verification(mobile, template_id)
+
+    def _sms_mobile_number_verification(self, mobile):
+        response_json = {
+            "result": 0,
+            "errmsg": "OK",
+            "ext": "",
+            "fee": 1,
+            "sid": "xxxxxxx"
+        }
+        patch_url = 'qcloudsms_py.util.api_request'
+        self._patch_post_requests(response_json, patch_url)
+
+        return self.user.sms_mobile_number_verification(mobile)
 
     def _create_from_miniprogram_ui(self, create_vals, lines):
         post_result = {
@@ -126,9 +139,25 @@ class TestQCloudSMS(HttpCase):
 
         return self.phantom_env['pos.miniprogram.order'].create_from_miniprogram_ui(lines, create_vals)
 
-    def test_mobile_number_verification(self):
+    def test_sms_mobile_number_verification(self):
         mobile = '+1234567890'
-        response = self._mobile_number_verification(mobile)
+        response = self._sms_mobile_number_verification(mobile)
+        self.assertEquals(response.get('result'), 0, 'Could not send message')
+        result = self._check_verification_code()
+        self.assertTrue(result, "Verification code does not match")
+
+    def test_template_sms_mobile_number_verification(self):
+        mobile = '+1234567890'
+
+        template = self.phantom_env['qcloud.sms.template'].create({
+            'name': 'Verification by sms template',
+            'domestic_sms_template_ID': '123',
+            'domestic_sms_sign': 'Test',
+            'international_sms_template_ID': '321',
+            'international_sms_sign': 'Test'
+        })
+
+        response = self._sms_template_mobile_number_verification(mobile, template.id)
         self.assertEquals(response.get('result'), 0, 'Could not send message')
         result = self._check_verification_code()
         self.assertTrue(result, "Verification code does not match")
