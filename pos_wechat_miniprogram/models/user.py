@@ -16,8 +16,12 @@ class Users(models.Model):
     _inherit = "res.users"
 
     @api.model
-    def mobile_number_verification(self, number, **kwargs):
-        return self.env.user.partner_id._mobile_number_verification(number, **kwargs)
+    def sms_mobile_number_verification(self, number, **kwargs):
+        return self.env.user.partner_id._sms_mobile_number_verification(number, **kwargs)
+
+    @api.model
+    def template_sms_mobile_number_verification(self, number, template_id, **kwargs):
+        return self.env.user.partner_id._template_sms_mobile_number_verification(number, template_id, **kwargs)
 
     @api.model
     def wechat_mobile_number_verification(self, data):
@@ -35,7 +39,7 @@ class ResPartner(models.Model):
     verification_code = fields.Char(string='Verification code')
 
     @api.multi
-    def _mobile_number_verification(self, number, **kwargs):
+    def _sms_mobile_number_verification(self, number, **kwargs):
         """
         Send verification code to mobile number
 
@@ -61,7 +65,40 @@ class ResPartner(models.Model):
 
         result = Qcloud.send_message(message, self.id, **kwargs)
 
-        sms = self.env['qcloud.sms'].browse(result.get('sms_id'))
+        sms = Qcloud.browse(result.get('sms_id'))
+
+        if sms.state == 'sent':
+            self.write({
+                'verification_code': code,
+            })
+
+        return result
+
+    @api.multi
+    def _template_sms_mobile_number_verification(self, number, template_id, **kwargs):
+        """
+        Send verification code to mobile number with template of sms
+
+        :param number: mobile number from mini-program
+        :param template_id: sms template id
+        :return result: result of send
+        """
+        self.ensure_one()
+        Qcloud = self.env['qcloud.sms']
+        QcloudTemplate = self.env['qcloud.sms.template'].browse(template_id)
+        code = random.randrange(10000, 1000000)
+        country = Qcloud._get_country(self)
+        country_code = country.code if country else None
+
+        phone_obj = phonenumbers.parse(number, region=country_code, keep_raw_input=True)
+        phone_number = phonenumbers.format_number(phone_obj, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
+
+        self.write({
+            'mobile': phone_number,
+        })
+
+        result = QcloudTemplate.send_template_message(self.id, template_id, params=code, **kwargs)
+        sms = Qcloud.browse(result.get('sms_id'))
 
         if sms.state == 'sent':
             self.write({
