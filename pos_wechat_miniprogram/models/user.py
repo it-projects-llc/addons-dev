@@ -89,7 +89,7 @@ class ResPartner(models.Model):
         """
         self.ensure_one()
         Qcloud = self.env['qcloud.sms']
-        QcloudTemplate = self.env['qcloud.sms.template'].browse(template_id)
+        QcloudTemplate = self.env['qcloud.sms.template'].browse(int(template_id))
         code = random.randrange(10000, 1000000)
         duration = random.randrange(2, 6)
         country = Qcloud._get_country(self)
