@@ -143,8 +143,8 @@ class TestQCloudSMS(HttpCase):
         mobile = '+1234567890'
         response = self._sms_mobile_number_verification(mobile)
         self.assertEquals(response.get('result'), 0, 'Could not send message')
-        result = self._check_verification_code()
-        self.assertTrue(result, "Verification code does not match")
+        res = self._check_verification_code()
+        self.assertTrue(res.get('result'), res.get('message'))
 
     def test_template_sms_mobile_number_verification(self):
         mobile = '+1234567890'
@@ -159,8 +159,8 @@ class TestQCloudSMS(HttpCase):
 
         response = self._sms_template_mobile_number_verification(mobile, template.id)
         self.assertEquals(response.get('result'), 0, 'Could not send message')
-        result = self._check_verification_code()
-        self.assertTrue(result, "Verification code does not match")
+        res = self._check_verification_code()
+        self.assertTrue(res.get('result'), res.get('message'))
 
     def test_create_and_pay_from_miniprogram_ui(self):
         """
