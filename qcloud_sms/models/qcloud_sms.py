@@ -200,7 +200,7 @@ class QCloudSMSTemplate(models.Model):
 
     name = fields.Char(string='Name', help='The template name')
 
-    domestic_sms_template_ID = fields.Integer(
+    domestic_sms_template_ID = fields.Char(
         string='Domestic SMS Template ID',
         help='SMS Template ID is the Tencent Cloud SMS template (the specific content of the SMS message to be sent).'
     )
@@ -213,7 +213,7 @@ class QCloudSMSTemplate(models.Model):
         help='SMS Signature is the Tencent Cloud SMS signature (an identifier added before the message body for '
              'identification of the company or business.).'
     )
-    international_sms_template_ID = fields.Integer(
+    international_sms_template_ID = fields.Char(
         string='International SMS Template ID',
         help='SMS Template ID is the Tencent Cloud SMS template (the specific content of the SMS message to be sent).'
     )
