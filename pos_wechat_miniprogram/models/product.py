@@ -8,13 +8,4 @@ class ProductTemplate(models.Model):
 
     hot_product = fields.Boolean(string='Hot Product', help='Check if you this product is hot product (promotion)',
                                  default=False)
-    hot_product_image_ids = fields.One2many('product.hot.image', 'product_tmpl_id', string='Images',
-                                            help='Hot Product images (shows like slide show on mini program)')
-
-
-class ProductHotImage(models.Model):
-    _name = 'product.hot.image'
-
-    name = fields.Char('Name')
-    image = fields.Binary('Image', attachment=True)
-    product_tmpl_id = fields.Many2one('product.template', 'Related Product', copy=True)
+    banner = fields.Binary(string='Hot product banner', attachment=True)
