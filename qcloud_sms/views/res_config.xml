@@ -4,7 +4,7 @@
         <field name="name">qcloud.sms.tree</field>
         <field name="model">qcloud.sms</field>
         <field name="arch" type="xml">
-            <tree editable="bottom" create="false" delete="false">
+            <tree create="false" delete="false">
                 <field name="partner_ids" widget="many2many_tags"/>
                 <field name="send_datetime"/>
                 <field name="state"/>
@@ -16,7 +16,7 @@
         <field name="name">qcloud.sms.form</field>
         <field name="model">qcloud.sms</field>
         <field name="arch" type="xml">
-            <form editable="bottom" create="false" delete="false">
+            <form create="0" edit="0" delete="0">
                 <header>
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,done" nolabel="1" readonly="1" />
                 </header>
