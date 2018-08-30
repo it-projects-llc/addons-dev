@@ -104,7 +104,7 @@ class ResPartner(models.Model):
 
         params = str(code) + ',' + str(duration)
 
-        result = QcloudTemplate.send_template_message(self.id, template_id, params=params, **kwargs)
+        result = QcloudTemplate._send_template_message(self.id, params=params, **kwargs)
         sms = Qcloud.browse(result.get('sms_id'))
 
         if sms.state == 'sent':
