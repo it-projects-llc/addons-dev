@@ -10,44 +10,8 @@
             <field name="to_weight" position="after">
                 <field name="available_in_pos"/>
                 <field name="hot_product" attrs="{'invisible': [('available_in_pos', '=', False)]}"/>
-                <field name="hot_product_image_ids" mode="kanban" attrs="{'invisible': ['|', ('available_in_pos', '=', False), ('hot_product', '=', False)]}" context="{'default_name': name, 'default_product_tmpl_id': active_id}">
-                    <kanban string="Hot Product Images">
-                        <field name="name"/>
-                        <field name="image" />
-                        <templates>
-                            <t t-name="kanban-box">
-                                <div class="oe_kanban_global_click">
-                                    <a t-if="!read_only_mode" type="delete" class="fa fa-times pull-right"/>
-                                        <div class="o_kanban_image">
-                                            <img t-if="record.image.raw_value" t-att-src="'data:image/png;base64,'+record.image.raw_value"/>
-                                        </div>
-                                        <div class="oe_kanban_details">
-                                            <field name="name"/>
-                                        </div>
-                                    </div>
-                                </t>
-                            </templates>
-                        </kanban>
-                </field>
+                <field name="banner" attrs="{'invisible': ['|', ('available_in_pos', '=', False), ('hot_product', '=', False)]}"/>
             </field>
         </field>
     </record>
-
-    <record model="ir.ui.view" id="view_product_image_form">
-        <field name="name">product.hot.image.form</field>
-        <field name="model">product.hot.image</field>
-        <field name="arch" type="xml">
-            <form string="Hot Product Images">
-                <sheet>
-                    <field name="image" widget="image" class="oe_miniprogram_banner" options="{'size': [320, 150]}"/>
-                    <div class="oe_title">
-                        <label class="oe_edit_only" for="name" string="Image Name"/>
-                        <h1><field name="name" placeholder="Image Name" required="True"/></h1>
-                        <field name="product_tmpl_id" invisible="1"/>
-                    </div>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
 </odoo>
