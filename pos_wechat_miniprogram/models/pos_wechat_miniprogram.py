@@ -50,6 +50,11 @@ class PosWeChatMiniProgramOrder(models.Model):
     to_invoice = fields.Boolean(string="Invoice", default=False)
     confirmed_from_pos = fields.Boolean(string="Order Confirmed from POS", default=False)
     user_id = fields.Many2one(related='order_id.user_id', store=True)
+    packingMethods = fields.Selection([
+        ('takeout', 'Takeout'),
+        ('indoors', 'Indoors'),
+        ('delivery', 'Delivery')
+    ], string='Pay method', default='now')
 
     @api.depends('lines_ids.amount_total', 'lines_ids.discount')
     def _compute_amount_all(self):
