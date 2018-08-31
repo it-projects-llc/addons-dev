@@ -15,8 +15,13 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
         loaded: function(self, orders) {
             // load not confirmed orders
             orders.forEach(function(order) {
+                order.lines_ids = [];
                 self.get_miniprogram_order_lines_by_order_id(order.id).then(function(lines) {
-                    order.lines_ids = lines;
+                    if (Array.isArray(lines)) {
+                        order.lines_ids = order.lines_ids.concat(lines);
+                    } else {
+                        order.lines_ids.push(lines);
+                    }
                     self.on_wechat_miniprogram(order);
                 });
             });
