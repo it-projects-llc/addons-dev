@@ -40,6 +40,7 @@ class PosWeChatMiniProgramOrder(models.Model):
     ], string='State', default='draft')
     note = fields.Text(string='Order Notes')
     table_id = fields.Many2one('restaurant.table', string='Table', help='The table where this order was served')
+    floor_id = fields.Many2one('restaurant.floor', string='Floor')
     customer_count = fields.Integer(string='Guests',
                                     help='The amount of customers that have been served by this order.')
     pay_method = fields.Selection([
