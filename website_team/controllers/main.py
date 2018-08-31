@@ -16,11 +16,11 @@ class WebsiteTeam(http.Controller):
 
     @http.route('/team/<string:login>', auth='public', website=True)
     def user(self, login):
-
-        current_user = http.request.env['res.users'].sudo().search([('username_github', '=', login)])
+        User = http.request.env['res.users'].with_context(active_test=False).sudo()
+        current_user = User.search([('username_github', '=', login), ('website_published', '=', True)])
 
         if not current_user:
-            current_user = http.request.env['res.users'].sudo().search([('alias_name', '=', login)])
+            current_user = User.search([('alias_name', '=', login), ('website_published', '=', True)])
             if current_user.username_github is not False and current_user.username_github != current_user.alias_name:
                 return werkzeug.utils.redirect("/team/" + current_user.username_github)
 
