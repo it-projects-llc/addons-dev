@@ -13,8 +13,12 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
         fields: [],
         domain:[['confirmed_from_pos', '=', false]],
         loaded: function(self, orders) {
+            var not_found = self.get('orders').map(function(r) {
+                return r.miniprogram_order.id;
+            });
             // load not confirmed orders
             orders.forEach(function(order) {
+                not_found = _.without(not_found, order.id);
                 order.lines_ids = [];
                 self.get_miniprogram_order_lines_by_order_id(order.id).then(function(lines) {
                     if (Array.isArray(lines)) {
@@ -24,6 +28,13 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
                     }
                     self.on_wechat_miniprogram(order);
                 });
+            });
+            // remove not found orders
+            _.each(not_found, function(id) {
+                var order = self.get('orders').find(function(r){
+                    return id === r.miniprogram_order.id;
+                });
+                order.destroy({'reason':'abandon'});
             });
         },
     });
