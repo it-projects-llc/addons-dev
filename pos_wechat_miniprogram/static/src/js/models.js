@@ -212,6 +212,11 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
 
             // save to db
             this.trigger('change',this);
+
+            // update floor screen
+            if (this.gui.screen_instances.floors && this.gui.get_current_screen() === "floors") {
+                this.gui.screen_instances.floors.renderElement();
+            }
         },
         export_as_JSON: function() {
             var data = OrderSuper.prototype.export_as_JSON.apply(this, arguments);
