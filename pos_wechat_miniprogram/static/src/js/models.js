@@ -185,7 +185,7 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
             this.miniprogram_order = data;
 
             // common data for the order and for the order of mini-program
-            this.table = this.pos.tables_by_id[data.table_id];
+            this.table = this.pos.tables_by_id[data.table_id[0]];
             this.customer_count = data.customer_count || 1;
             this.note = data.note;
             this.to_invoice = data.to_invoice;
