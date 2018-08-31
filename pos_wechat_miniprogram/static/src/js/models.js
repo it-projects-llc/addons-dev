@@ -13,12 +13,9 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
         fields: [],
         domain:[['confirmed_from_pos', '=', false]],
         loaded: function(self, orders) {
-            var not_found = self.get('orders').map(function(r) {
-                return r.miniprogram_order.id;
-            });
             // load not confirmed orders
             orders.forEach(function(order) {
-                not_found = _.without(not_found, order.id);
+                self.unconfirmed_miniprogram_orders_ids.push(order.id);
                 order.lines_ids = [];
                 self.get_miniprogram_order_lines_by_order_id(order.id).then(function(lines) {
                     if (Array.isArray(lines)) {
@@ -29,21 +26,32 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
                     self.on_wechat_miniprogram(order);
                 });
             });
-            // remove not found orders
-            _.each(not_found, function(id) {
-                var order = self.get('orders').find(function(r){
-                    return id === r.miniprogram_order.id;
-                });
-                order.destroy({'reason':'abandon'});
-            });
         },
     });
 
     var PosModelSuper = models.PosModel;
     models.PosModel = models.PosModel.extend({
         initialize: function() {
+            var self = this;
+            this.unconfirmed_miniprogram_orders_ids = [];
             PosModelSuper.prototype.initialize.apply(this, arguments);
             this.bus.add_channel_callback("wechat.miniprogram", this.on_wechat_miniprogram, this);
+            this.ready.then(function() {
+                var not_found = self.get('orders').map(function(r) {
+                    return r.miniprogram_order.id;
+                });
+
+                self.unconfirmed_miniprogram_orders_ids.forEach(function(id) {
+                    not_found = _.without(not_found, id);
+                });
+
+                _.each(not_found, function(id) {
+                    var order = self.get('orders').find(function(r){
+                        return id === r.miniprogram_order.id;
+                    });
+                    order.destroy({'reason':'abandon'});
+                });
+            })
         },
         get_miniprogram_order_lines_by_order_id: function (id) {
             return rpc.query({
