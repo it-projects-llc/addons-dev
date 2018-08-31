@@ -115,7 +115,7 @@ class PosWeChatMiniProgramOrder(models.Model):
         """
         self.ensure_one()
         res = self.read()[0]
-        res['lines_ids'] = self.lines_ids.read()[0]
+        res['lines_ids'] = self.lines_ids.read()
         _logger.debug('Message for POS: %s', res)
         return res
 
