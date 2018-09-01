@@ -16,7 +16,7 @@ class Users(models.Model):
                                             "Copy a link in an address bar from a youtube page contained corresponding video and paste here")
     user_description = fields.Html('Description for the website user', translate=True)
     location = fields.Char(string="Location", help="User Location")
-    website_published = fields.Boolean(string="Show at Team Page", default=True)
+    website_published = fields.Boolean(string="Show at Team Page", default=False)
 
     def youtube_url_validation(self, url):
         youtube_regex = (
