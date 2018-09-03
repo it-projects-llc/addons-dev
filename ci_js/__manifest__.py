@@ -16,21 +16,21 @@
     # "price": 9.00,
     # "currency": "EUR",
 
-    "depends": [
-        "{DEPENDENCY1}",
-        "{DEPENDENCY2}",
-    ],
-    "external_dependencies": {"python": [], "bin": []},
-    "data": [
-        "{FILE1}.xml",
-        "{FILE2}.xml",
-    ],
-    "demo": [
-        "demo/{DEMOFILE1}.xml",
-    ],
-    "qweb": [
-        "static/src/xml/{QWEBFILE1}.xml",
-    ],
+    # "depends": [
+    #     "{DEPENDENCY1}",
+    #     "{DEPENDENCY2}",
+    # ],
+    # "external_dependencies": {"python": [], "bin": []},
+    # "data": [
+    #     "{FILE1}.xml",
+    #     "{FILE2}.xml",
+    # ],
+    # "demo": [
+    #     "demo/{DEMOFILE1}.xml",
+    # ],
+    # "qweb": [
+    #     "static/src/xml/{QWEBFILE1}.xml",
+    # ],
 
     "post_load": None,
     "pre_init_hook": None,
