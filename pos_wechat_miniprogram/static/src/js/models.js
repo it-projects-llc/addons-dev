@@ -51,7 +51,7 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
                     });
                     order.destroy({'reason':'abandon'});
                 });
-            })
+            });
         },
         get_miniprogram_order_lines_by_order_id: function (id) {
             return rpc.query({
@@ -211,7 +211,7 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
 
             // common data for the order and for the order of mini-program
             this.table = this.pos.tables_by_id[data.table_id[0]];
-            this.floor = this.pos.floors_by_id[data.floor_id[0]] || undefined;
+            this.floor = this.pos.floors_by_id[data.floor_id[0]] || null;
             this.customer_count = data.customer_count || 1;
             this.note = data.note;
             this.to_invoice = data.to_invoice;
