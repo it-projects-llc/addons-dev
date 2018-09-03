@@ -137,6 +137,12 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
                     order.orderlines.add(line);
                 }
             });
+
+            // auto print payed orders
+            if(order.hasChangesToPrint() && this.config.auto_print_miniprogram_orders && order.miniprogram_order.state === "done"){
+                order.printChanges();
+                order.saveChanges();
+            }
         },
         create_orderline_by_miniprogram_data: function(order, data) {
             var product = this.db.get_product_by_id(data.product_id[0]);
