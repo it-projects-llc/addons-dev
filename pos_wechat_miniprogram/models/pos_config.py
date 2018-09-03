@@ -11,6 +11,9 @@ class PosConfig(models.Model):
     allow_message_from_miniprogram = fields.Boolean(string='Allow receiving messages',
                                                     help='Allow receiving messages from the WeChat mini-program',
                                                     default=True)
+    auto_print_miniprogram_orders = fields.Boolean(string='Auto Print miniprogram Orders',
+                                                   help='Auto Print miniprogram order to kitchen',
+                                                   default=True)
 
     @api.multi
     def open_session_cb(self):
