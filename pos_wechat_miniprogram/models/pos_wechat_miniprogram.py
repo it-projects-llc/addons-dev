@@ -62,6 +62,10 @@ class PosWeChatMiniProgramOrder(models.Model):
             order.amount_total = sum(line.amount_total for line in order.lines_ids)
 
     @api.model
+    def get_user_pos_miniprogram_orders(self):
+        return self.search(['user_id', '=', self.env.user.id])
+
+    @api.model
     def create_from_miniprogram_ui(self, lines, create_vals):
         """
         Create order from mini-program and send the order to POS

@@ -18,6 +18,7 @@
                     <field name="customer_count"/>
                     <field name="confirmed_from_pos"/>
                     <field name="table_id"/>
+                    <field name="floor_id"/>
                 </group>
                 <notebook colspan="4">
                     <page string="Products">
@@ -51,6 +52,7 @@
                             <field name="user_id"/>
                             <field name="to_invoice"/>
                             <field name="pay_method"/>
+                            <field name="packingMethods"/>
                         </group>
                         <group string="POS Order">
                             <group>
