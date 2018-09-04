@@ -221,7 +221,7 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
 
             // update floor screen
             if (this.pos.gui.screen_instances.floors && this.pos.gui.get_current_screen() === "floors") {
-                this.gui.screen_instances.floors.renderElement();
+                this.pos.gui.screen_instances.floors.renderElement();
             }
         },
         export_as_JSON: function() {
