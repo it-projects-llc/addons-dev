@@ -12,10 +12,6 @@ class TestJsonSpec(HttpCase):
     at_install = True
     post_install = True
 
-    # def setUp(self):
-    #     super(TestJsonSpec, self).setUp()
-    #     self.opener.addheaders.append(("content-type", "application/json"))
-
     def test_json_base(self):
 
         resp = self.url_open("http://localhost:%d/api/v1/demo/swagger.json?token=demo_token&download" % PORT,

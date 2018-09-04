@@ -324,27 +324,39 @@ class Access(models.Model):
                 if not containing_definitions_names:
                     continue
 
+                types_map = {
+                    # 'odoo_field_type': 'OAS_type'
+                    'integer': 'integer',
+                    # '': 'long',
+                    'float': 'float',
+                    # '': 'double',
+                    'char': 'string',
+                    'text': 'string',
+                    'binary': 'byte',
+                    'boolean': 'boolean',
+                    'date': 'date',
+                    'datetime': 'dateTime',
+                    # 'selection': '',
+                    'one2many': 'array',
+                    'many2one': 'integer',
+                    'many2many': 'array',
+                }
+
+                field_property = {
+                    'type': types_map.get(meta['type'])
+                }
+
                 if meta['type'] == 'selection':
-                    field_property = {
-                        # TODO: check item type in selection
-                        'type': 'string',
+                    field_property.update({
+                        'type': 'integer' if isinstance(meta['selection'][0][0], int) else 'string',
                         'enum': [i[0] for i in meta['selection']]
-                    }
+                    })
                 elif meta['type'] in ['one2many', 'many2many']:
-                    field_property = {
-                        'type': 'array',
+                    field_property.update({
                         'items': {
                             'type': 'integer'
                         }
-                    }
-                elif meta['type'] == 'many2one':
-                    field_property = {
-                        'type': 'integer'
-                    }
-                else:
-                    field_property = {
-                        'type': _get_OAS_type_by_odoo_field_type(meta['type'])
-                    }
+                    })
 
                 for definition_name in containing_definitions_names:
                     if field in export_fields_read_one:
