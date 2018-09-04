@@ -45,6 +45,7 @@ odoo.define('pos_order_receipt_custom.screens', function(require){
                 var order = this.pos.get('selectedOrder');
                 if(order.get_orderlines().length > 0){
                     var receipt = order.export_for_printing();
+                    var printbill = this.gui.screen_instances.products.action_buttons.print_bill;
                     receipt.bill = true;
                     this.pos.proxy.print_receipt(QWeb.render('BillReceipt',{
                         receipt: receipt, widget: printbill, pos: this.pos, order: order,

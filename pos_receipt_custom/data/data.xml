@@ -221,11 +221,11 @@
 
             <!-- HEADER -->
 
-            <t t-if='receipt.company.logo'>
-                <img t-att-src='receipt.company.logo' />
+            <t t-if='header_image'>
+                <img t-att-src='header_image' />
                 <br/>
             </t>
-            <t t-if='!receipt.company.logo'>
+            <t t-if='!header_image'>
                 <h1><t t-esc='receipt.company.name' /></h1>
                 <br/>
             </t>
