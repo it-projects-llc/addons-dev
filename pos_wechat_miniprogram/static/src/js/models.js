@@ -220,7 +220,7 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
             this.trigger('change',this);
 
             // update floor screen
-            if (this.gui.screen_instances.floors && this.gui.get_current_screen() === "floors") {
+            if (this.pos.gui.screen_instances.floors && this.pos.gui.get_current_screen() === "floors") {
                 this.gui.screen_instances.floors.renderElement();
             }
         },
