@@ -14,7 +14,7 @@ _logger = logging.getLogger(__name__)
 class WechatMiniProgramController(http.Controller):
 
     @http.route('/wechat/miniprogram/authenticate', type='json', auth='public', csrf=False)
-    def authenticate(self, code, user_info, test_cr=False):
+    def authenticate(self, code, user_info=False, test_cr=False):
         """
         :param code: After the user is permitted to log in on the WeChat mini-program, the callback content will
         bring the code (five-minute validity period). The developer needs to send the code to the backend
@@ -28,7 +28,8 @@ class WechatMiniProgramController(http.Controller):
         _logger.debug('Authenticate on WeChat server: openid - %s, session_key - %s', openid, session_key)
 
         if not openid or not session_key:
-            raise UserError(_('Unable to get data from WeChat server : openid - %s, session_key - %s') % (openid, session_key))
+            raise UserError(
+                _('Unable to get data from WeChat server : openid - %s, session_key - %s') % (openid, session_key))
 
         User = request.env['res.users'].sudo()
         user = User.search([('openid', '=', openid)])
@@ -37,6 +38,10 @@ class WechatMiniProgramController(http.Controller):
                 'wechat_session_key': session_key,
             })
         else:
+            if user_info is False:
+                raise UserError(
+                    _('Unable to get user info from WeChat mini-program: %s') % user_info)
+
             country = request.env['res.country'].search([('name', 'like', '%'+user_info.get('country')+'%')], limit=1)
             name = user_info.get('nickName')
             login = "wechat_%s" % openid
