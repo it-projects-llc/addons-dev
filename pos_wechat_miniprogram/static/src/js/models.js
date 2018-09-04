@@ -137,6 +137,12 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
                     order.orderlines.add(line);
                 }
             });
+            
+            // update floor screen
+            var floor_screen = this.pos.gui.screen_instances.floors;
+            if (floor_screen && this.pos.gui.get_current_screen() === "floors") {
+                floor_screen.renderElement();
+            }
 
             // auto print payed orders
             if(order.hasChangesToPrint() && this.config.auto_print_miniprogram_orders && order.miniprogram_order.state === "done"){
@@ -217,12 +223,7 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
             this.to_invoice = data.to_invoice;
 
             // save to db
-            this.trigger('change',this);
-
-            // update floor screen
-            if (this.pos.gui.screen_instances.floors && this.pos.gui.get_current_screen() === "floors") {
-                this.pos.gui.screen_instances.floors.renderElement();
-            }
+            this.trigger('change', this);
         },
         export_as_JSON: function() {
             var data = OrderSuper.prototype.export_as_JSON.apply(this, arguments);
