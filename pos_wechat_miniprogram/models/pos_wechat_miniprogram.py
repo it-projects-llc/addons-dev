@@ -91,9 +91,8 @@ class PosWeChatMiniProgramOrder(models.Model):
         if order.pay_method == 'now':
             create_vals['miniprogram_order_ids'] = [(4, order.id)]
             return self.env['wechat.order'].create_jsapi_order(lines, create_vals)
-        else:
-            order._send_message_to_pos()
 
+        order._send_message_to_pos()
         return order
 
     @api.multi

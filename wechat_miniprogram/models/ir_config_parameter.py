@@ -4,6 +4,7 @@ import logging
 import werkzeug.urls
 import base64
 import json
+import requests
 
 from odoo import models, api, _
 from odoo.exceptions import UserError
@@ -76,3 +77,17 @@ class Param(models.Model):
 
     def _unpad(self, s):
         return s[:-ord(s[len(s)-1:])]
+
+    def get_miniprogram_access_token(self):
+        base_url = 'https://api.weixin.qq.com/cgi-bin/token'
+        param = {
+            'appid': self.sudo().get_param('wechat.miniprogram_app_id', ''),
+            'secret': self.sudo().get_param('wechat.miniprogram_app_secret', ''),
+            'grant_type': 'client_credential'
+        }
+        url = '%s?%s' % (base_url, werkzeug.urls.url_encode(param))
+        response = requests.get(url)
+        response.raise_for_status()
+        value = response.json()
+        _logger.debug('access_token value: %s', value)
+        return value
