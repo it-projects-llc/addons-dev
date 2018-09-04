@@ -20,11 +20,11 @@ class IrAttachment(models.Model):
 
     def _get_s3_settings(self, param_name, os_var_name):
         config_obj = self.env['ir.config_parameter']
-        res = config_obj.get_param(param_name)
+        res = config_obj.sudo().get_param(param_name)
         if not res:
             res = os.environ.get(os_var_name)
             if res:
-                config_obj.set_param(param_name, res)
+                config_obj.sudo().set_param(param_name, res)
                 _logger.info('parameter {} has been created from env {}'.format(param_name, os_var_name))
         return res
 
@@ -60,21 +60,25 @@ class IrAttachment(models.Model):
         return s3
 
     def _inverse_datas(self):
-        s3 = self._get_s3_resource()
+        # set s3_records to empty recordset
         condition = self._get_s3_settings('s3.condition', 'S3_CONDITION')
-        if not s3:
-            # set s3_records to empty recordset
-            s3_records = self.env[self._name]
-        elif condition:
+        if condition:
             condition = safe_eval(condition, mode="eval")
-            s3_records = self.search([('id', 'in', self.ids)] + condition)
+            s3_records = self.sudo().search([('id', 'in', self.ids)] + condition)
         else:
             # if there is no condition then store all attachments on s3
             s3_records = self
-        s3_records = s3_records._filter_protected_attachments()
-        s3_records = s3_records.filtered('datas')
 
-        for attach in s3_records:
+        if s3_records:
+            s3 = self._get_s3_resource()
+            if not s3:
+                _logger.info('something wrong on aws side, keep attachments as usual')
+                s3_records = self.env[self._name]
+            else:
+                s3_records = s3_records._filter_protected_attachments()
+                s3_records = s3_records.filtered(lambda r: r.type != 'url')
+
+        for attach in self & s3_records:  # datas field has got empty somehow in the result of ``s3_records = self.sudo().search([('id', 'in', self.ids)] + condition)`` search for non-superusers but it is in original recordset. Here we use original (with datas) in case it intersects with the search result
             value = attach.datas
             bin_data = value and value.decode('base64') or ''
             fname = hashlib.sha1(bin_data).hexdigest()
