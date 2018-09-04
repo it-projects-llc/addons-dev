@@ -16,7 +16,7 @@ class PosWeChatMiniProgramOrder(models.Model):
 
     _name = 'pos.miniprogram.order'
     _description = "Orders from WeChat mini-program"
-    _order = 'id desc'
+    _order = 'date_order'
 
     name = fields.Char('Name', readonly=True, copy=False)
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True,
