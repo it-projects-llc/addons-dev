@@ -1,18 +1,19 @@
-/* Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
- * License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). */
-
+/*  Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
+    Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). */
 odoo.define('pos_receipt_custom.screens', function(require){
 
     var models = require('pos_receipt_custom.models');
     var screens = require('point_of_sale.screens');
 
     screens.ReceiptScreenWidget.include({
-        get_custom_receipt: function(){
+        get_display_time: function() {
+            var display_time =false;
             if (this.pos.table) {
-                var open_time = this.pos.table.open_time;
                 var payment_time = this.pos.get_current_datetime();
+                var open_time = this.pos.table.open_time || payment_time;
 
-                var display_time = {time: open_time.time + "-" + payment_time.time};
+                display_time = {time: open_time.time + "-" + payment_time.time};
 
                 if (open_time.date === payment_time.date) {
                     display_time.date = open_time.date;
@@ -20,52 +21,55 @@ odoo.define('pos_receipt_custom.screens', function(require){
                     display_time.date = open_time.date + "-" + payment_time.date;
                 }
             }
-
+            return display_time;
+        },
+        get_custom_receipt_data: function(){
             var order = this.pos.get_order();
-            var env = {
+            var receipt_template = order.get_receipt_template_by_id(this.pos.config.custom_xml_receipt_id[0], 'receipt');
+            var printing_data = order.export_for_printing();
+            var header_image = receipt_template.printable_image
+            ? 'data:image/png;base64,' + receipt_template.printable_image
+            : printing_data.company.logo;
+            return {
                 widget:  this,
                 pos: this.pos,
+                header_image: header_image,
                 order: order,
-                receipt: order.export_for_printing(),
+                receipt: printing_data,
                 paymentlines: order.get_paymentlines(),
-                display_time: display_time || false,
+                display_time: this.get_display_time() || false,
             };
-
+        },
+        get_custom_receipt: function(){
+            var env = this.get_custom_receipt_data();
+            var order = this.pos.get_order();
             var receipt_template = order.get_receipt_template_by_id(this.pos.config.custom_xml_receipt_id[0], 'receipt');
             var template = $.parseXML(receipt_template.qweb_template).children[0];
             var receipt = order.custom_qweb_render(template, env);
             return receipt;
         },
         get_custom_ticket: function(){
-            if (this.pos.table) {
-                var open_time = this.pos.table.open_time;
-                var payment_time = this.pos.get_current_datetime();
-
-                var display_time = {time: open_time.time + "-" + payment_time.time};
-
-                if (open_time.date === payment_time.date) {
-                    display_time.date = open_time.date;
-                } else {
-                    display_time.date = open_time.date + "-" + payment_time.date;
-                }
-            }
-
             var order = this.pos.get_order();
             var ticket_template = order.get_receipt_template_by_id(this.pos.config.custom_ticket_id[0], 'ticket');
+            var printing_data = order.export_for_printing();
+            var header_image = ticket_template.printable_image
+            ? 'data:image/png;base64,' + ticket_template.printable_image
+            : printing_data.company.logo;
             var template = $.parseXML(ticket_template.qweb_template).children[0];
             var ticket = order.custom_qweb_render(template, {
                 widget: this,
                 order: order,
-                receipt: order.export_for_printing(),
+                header_image: header_image,
+                receipt: printing_data,
                 orderlines: order.get_orderlines(),
                 paymentlines: order.get_paymentlines(),
-                display_time: display_time || false,
+                display_time: this.get_display_time() || false,
             });
             return ticket;
         },
         render_receipt: function(){
-            if (this.pos.config.custom_ticket) {
-                var order = this.pos.get_order();
+            var order = this.pos.get_order();
+            if (this.pos.config.custom_ticket && !order.invoice_to_pay) {
                 var ticket = this.get_custom_ticket();
                 this.$('.pos-receipt-container').html(ticket);
                 // for compatibility with pos_orders_history_reprint

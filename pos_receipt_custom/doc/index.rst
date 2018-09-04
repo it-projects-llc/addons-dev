@@ -10,7 +10,7 @@ Installation
 Usage
 =====
 
-* Open menu ``[[ Point Of Sale ]] >> Orders >> Products``
+* Open menu ``[[ Point Of Sale ]] >> Catalog >> Products``
 
   * Open a product
   * Navigate to ``Sales`` Tab

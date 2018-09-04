@@ -1,6 +1,6 @@
-/* Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
- * License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). */
-
+/*  Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
+    Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). */
 odoo.define('pos_receipt_custom.models', function(require){
 
     var models = require('point_of_sale.models');
@@ -11,7 +11,7 @@ odoo.define('pos_receipt_custom.models', function(require){
 
     models.load_models({
         model: 'pos.custom_receipt',
-        fields: ['name','qweb_template', 'type'],
+        fields: ['name','qweb_template', 'type', 'printable_image'],
         loaded: function(self, templates) {
             self.custom_receipt_templates = templates;
         },
@@ -52,13 +52,17 @@ odoo.define('pos_receipt_custom.models', function(require){
                 month = '0' + month;
             }
 
-            var hours   = '' + d.getHours();
-                hours   = hours.length < 2 ? ('0' + hours) : hours;
+            var hours = '' + String(d.getHours());
+                hours = hours.length < 2
+                ? ('0' + hours)
+                : hours;
 
-            var minutes = '' + d.getMinutes();
-                minutes = minutes.length < 2 ? ('0' + minutes) : minutes;
+            var minutes = '' + String(d.getMinutes());
+                minutes = minutes.length < 2
+                ? ('0' + minutes)
+                : minutes;
 
-            return {'date': year + '.' + month + '.' + date, 'time': hours + ':' + minutes}
+            return {'date': year + '.' + month + '.' + date, 'time': hours + ':' + minutes};
         },
     });
 
@@ -68,7 +72,7 @@ odoo.define('pos_receipt_custom.models', function(require){
             var code = Qweb.compile(template), tcompiled;
             var template_name = $(template).attr('t-name');
             try {
-                tcompiled = new Function(['dict'], code);
+                tcompiled = eval("new Function(['dict'], code);");
             } catch (error) {
                 Qweb.tools.exception("Error evaluating template: " + error, { template: template_name });
             }
@@ -96,7 +100,7 @@ odoo.define('pos_receipt_custom.models', function(require){
         },
         set_receipt_type: function(type) {
             this.receipt_type = type;
-        }
+        },
     });
 
     var _super_orderline = models.Orderline.prototype;
