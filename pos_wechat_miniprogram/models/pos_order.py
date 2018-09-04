@@ -11,7 +11,7 @@ class PosOrder(models.Model):
         res = super(PosOrder, self).create_from_ui(orders)
         for o in orders:
             data = o.get('data')
-            miniprogram_data = data.get("miniprogram_order")
+            miniprogram_data = data.get("miniprogram_order") or {}
             submitted_references = data.get('name')
             order = self.search([('pos_reference', '=', submitted_references)])
             if order and miniprogram_data.get('id'):
