@@ -5,6 +5,7 @@ import werkzeug.urls
 import base64
 import json
 import requests
+from wechatpy import WeChatPay
 
 from odoo import models, api, _
 from odoo.exceptions import UserError
@@ -14,7 +15,6 @@ _logger = logging.getLogger(__name__)
 
 try:
     from Crypto.Cipher import AES
-    from wechatpy import WeChatPay
 except ImportError as err:
     _logger.debug(err)
 

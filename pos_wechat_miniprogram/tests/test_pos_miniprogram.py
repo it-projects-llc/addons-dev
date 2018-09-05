@@ -56,13 +56,14 @@ class TestQCloudSMS(HttpCase):
             }
         ]
 
-        # fake values for a test
-        table = self.phantom_env.ref('pos_restaurant.table_01')
-
         self.create_vals = {
+            'name': 'Test Order',
             'note': 'This is test Order note',
-            'table_id': table.id,
-            'guests': 4
+            'table_id': 1,
+            'floor_id': 1,
+            'customer_count': 4,
+            'packingMethods': 'indoors',
+            'to_invoice': True,
         }
 
         # add patch
@@ -103,7 +104,7 @@ class TestQCloudSMS(HttpCase):
         patch_url = 'qcloudsms_py.util.api_request'
         self._patch_post_requests(response_json, patch_url)
 
-        return self.user.sms_template_mobile_number_verification(mobile, template_id)
+        return self.user.template_sms_mobile_number_verification(mobile, template_id)
 
     def _sms_mobile_number_verification(self, mobile):
         response_json = {
@@ -170,8 +171,9 @@ class TestQCloudSMS(HttpCase):
             'number_verified': True
         })
         # Pay method ('now' - Pay from mini-program, 'later' - Pay from POS)
-        self.create_vals['miniprogram_pay_method'] = 'now'
-        order = self._create_from_miniprogram_ui(create_vals=self.create_vals, lines=self.lines)
+        self.create_vals['pay_method'] = 'now'
+        res = self._create_from_miniprogram_ui(create_vals=self.create_vals, lines=self.lines)
+        order = self.Order.search([('wechat_order_id', '=', res.get('order_id'))])
         self.assertEqual(order.state, 'draft', 'Just created order has wrong state. ')
 
     def test_create_without_pay_from_miniprogram_ui(self):
@@ -182,7 +184,6 @@ class TestQCloudSMS(HttpCase):
             'number_verified': True
         })
         # Pay method ('now' - Pay from mini-program, 'later' - Pay from POS)
-        self.create_vals['miniprogram_pay_method'] = 'later'
-
+        self.create_vals['pay_method'] = 'later'
         order = self._create_from_miniprogram_ui(create_vals=self.create_vals, lines=self.lines)
         self.assertEqual(order.state, 'draft', 'Just created order has wrong state. ')
