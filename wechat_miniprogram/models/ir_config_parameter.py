@@ -5,8 +5,9 @@ import werkzeug.urls
 import base64
 import json
 import requests
+from datetime import datetime, timedelta
 
-from odoo import models, api, _
+from odoo import models, api, _, fields
 from odoo.exceptions import UserError
 
 
@@ -90,4 +91,15 @@ class Param(models.Model):
         response.raise_for_status()
         value = response.json()
         _logger.debug('access_token value: %s', value)
-        return value
+        access_token = value.get('access_token')
+        return access_token
+
+    def get_qr_code(self, data, access_token=False):
+        base_url = 'https://api.weixin.qq.com/cgi-bin/wxaapp/createwxaqrcode'
+        param = {
+            'access_token': access_token or self.get_miniprogram_access_token(),
+        }
+        url = '%s?%s' % (base_url, werkzeug.urls.url_encode(param))
+        response = requests.post(url, json=data)
+        img = base64.b64encode(response.content)
+        return img
