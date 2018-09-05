@@ -24,23 +24,19 @@ class OpenapiWebSettingsDashboard(WebSettingsDashboard):
         result = super(OpenapiWebSettingsDashboard, self)\
             .web_settings_dashboard_data(**kw)
 
-        # dummy data for a while
-        dummy = {
-            'models_count': 123,
-            'create_count': 10,
-            'read_count': 123,
-            'update_count': 55,
-            'delete_count': 0,
-            'last_connection': '2018-01-01 12:12:12',
-        }
-
-        def copy(obj, **d):
-            return dict(obj.items() + d.items())
+        namespaces = http.request.env['openapi.namespace'].search([])
 
         namespace_list = [
-            copy(dummy, name='magento'),
-            copy(dummy, name='ebay'),
-            copy(dummy, name='1c'),
+            {
+                'id': n.id,
+                'name': n.name,
+                'models_count': len(n.access_ids),
+                'create_count': 10,
+                'read_count': 123,
+                'update_count': 55,
+                'delete_count': 0,
+                'last_connection': n.last_log_date,
+            } for n in namespaces
         ]
 
         result.update({'openapi': {

@@ -10,6 +10,7 @@
     </record>
 
     <record id="ir_exports_res_partner_one_demo" model="ir.exports">
+        <field name="name">demo / res.partner / read_one</field>
         <field name="resource">res.partner</field>
         <field name="export_fields" eval="[
 (0, 0, {'name': 'name'}),
@@ -25,6 +26,7 @@
     </record>
 
     <record id="ir_exports_res_partner_many_demo" model="ir.exports">
+        <field name="name">demo / res.partner / read_many</field>
         <field name="resource">res.partner</field>
         <field name="export_fields" eval="[
 (0, 0, {'name': 'name'}),
