@@ -5,9 +5,8 @@ import werkzeug.urls
 import base64
 import json
 import requests
-from datetime import datetime, timedelta
 
-from odoo import models, api, _, fields
+from odoo import models, api, _
 from odoo.exceptions import UserError
 
 
