@@ -4,6 +4,61 @@
 
 Integrate POS with WeChat mini-program
 
+Verification mobile number
+==========================
+
+Quick
+-----
+
+Use the mobile phone number specified in your WeChat account.::
+
+    authByWeChat: function (e) {
+        var detail = e.detail;
+        var params = {
+            model: 'res.users',
+            method: 'wechat_mobile_number_verification',
+            args: [detail],
+            context: {},
+            kwargs: {}
+        };
+        odooRpc(params).then(function (res) {
+            wx.setStorageSync('telephoneNumberVerified', res.result);
+        })
+    }
+
+With code confirmation
+----------------------
+
+You need to enter a phone number and confirm the number using a code from SMS message.::
+
+    submitNumber: function(e) {
+        var value = e.detail.value;
+        var TemplateID = 1; # id of verification template (model 'qcloud.sms.template')
+        var params = {
+            model: 'res.users',
+            method: 'template_sms_mobile_number_verification',
+            args: [value.usrtel, TemplateID],
+            context: {},
+            kwargs: {}
+        };
+        odooRpc(params).then(function (res) {
+            # your code here ...
+        });
+    },
+    submitCode: function (e) {
+        var value = e.detail.value;
+        var params = {
+            model: 'res.users',
+            method: 'check_verification_code',
+            args: [value.code],
+            context: {},
+            kwargs: {}
+        };
+        odooRpc(params).then(function (res) {
+            wx.setStorageSync('telephoneNumberVerified', res.result);
+        });
+    }
+
 Credits
 =======
 

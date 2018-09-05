@@ -8,8 +8,8 @@
             <field name="arch" type="xml">
                 <form string="QR Code">
                     <group>
-                        <field name="floor_id" colspan="4" nolabel="1" />
-                        <field name="quantity" colspan="4" nolabel="1" />
+                        <field name="floor_id" colspan="4" string="Floor" />
+                        <field name="quantity" colspan="4" string="Quantity" />
                     </group>
                     <group>
                         <field name="table_ids" colspan="4" nolabel="1" attrs="{'invisible': [('floor_id', '=', False)], 'required': [('floor_id', '!=', False)]}"/>
