@@ -19,18 +19,27 @@
     <record model="ir.ui.view" id="view_pos_config_form_discount">
         <field name="name">pos.config.form.inherit</field>
         <field name="model">pos.config</field>
-        <field name="inherit_id" ref="pos_discount.view_pos_config_form" />
+        <field name="inherit_id" ref="pos_discount.pos_config_view_form_inherit_pos_discount" />
         <field name="priority" eval="99" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='iface_discount']" position="replace">
-                <field name='iface_discount'/>
-                <field name='discount_abs_enabled'/>
-            </xpath>
-
-            <xpath expr="//field[@name='discount_pc']" position="after">
-                <field name='discount_abs_product_id' attrs="{'invisible':[('discount_abs_enabled','=', False)], 'required': [('discount_abs_enabled', '=', True)]}" />
-                <field name='discount_abs_value' attrs="{'invisible':[('discount_abs_enabled','=', False)]}"/>
-                <field name="discount_abs_recalculation" attrs="{'invisible':[('discount_abs_enabled','=', False)]}"/>
+            <xpath expr="//field[@name='discount_pc']/.." position="after">
+                <br/>
+                <div class="row">
+                    <label for="discount_abs_enabled" class="col-md-3 o_light_label"/>
+                    <field name='discount_abs_enabled'/>
+                </div>
+                <div class="row">
+                    <label for="discount_abs_product_id" class="col-md-3 o_light_label"/>
+                    <field name='discount_abs_product_id' attrs="{'invisible':[('discount_abs_enabled','=', False)], 'required': [('discount_abs_enabled', '=', True)]}" />
+                </div>
+                <div class="row">
+                    <label for="discount_abs_value" class="col-md-3 o_light_label"/>
+                    <field name='discount_abs_value' attrs="{'invisible':[('discount_abs_enabled','=', False)]}"/>
+                </div>
+                <div class="row">
+                    <label for="discount_abs_recalculation" class="col-md-3 o_light_label"/>
+                    <field name="discount_abs_recalculation" attrs="{'invisible':[('discount_abs_enabled','=', False)]}"/>
+                </div>
             </xpath>
         </field>
     </record>
