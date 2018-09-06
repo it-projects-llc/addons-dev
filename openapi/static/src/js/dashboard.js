@@ -18,9 +18,11 @@ odoo.define('openapi.dashboard', function (require) {
 
         template: 'DashboardOpenAPI',
 
-        // events: {
+        events: {
         //     'click .o_pay_subscription': 'on_pay_subscription',
-        // },
+            'click .o_openapi_create': 'on_openapi_create',
+            'click .o_openapi_namespace': 'on_namespace_clicked',
+        },
 
         init: function(parent, data){
             this.data = data;
@@ -31,6 +33,35 @@ odoo.define('openapi.dashboard', function (require) {
         // on_pay_subscription: function(){
 
         // },
+
+        on_openapi_create: function () {
+            this.do_action({
+                type: 'ir.actions.act_window',
+                res_model: "openapi.namespace",
+                views: [[false, 'form']],
+                target: 'new',
+            });
+        },
+
+        on_namespace_clicked: function (e) {
+            var self = this;
+            e.preventDefault();
+            var namespace_id = $(e.currentTarget).data('namespace-id');
+            var action = {
+                type: 'ir.actions.act_window',
+                view_type: 'form',
+                view_mode: 'form',
+                res_model: 'openapi.namespace',
+                res_id: namespace_id,
+                views: [[false, 'form']],
+                target: 'new',
+            };
+            this.do_action(action, {
+                on_reverse_breadcrumb: function() {
+                    return self.reload();
+                }
+            });
+        }
     });
 
 });

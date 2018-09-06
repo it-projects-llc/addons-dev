@@ -25,6 +25,7 @@
     "data": [
         "security/ir.model.access.csv",
         "views/assets.xml",
+        "views/openapi_view.xml",
     ],
     "demo": [
         "views/assets_demo.xml",
@@ -32,7 +33,8 @@
         "data/openapi_demo.xml",
     ],
     "qweb": [
-        "static/src/xml/dashboard.xml"
+        "static/src/xml/dashboard.xml",
+        "static/src/xml/configure_api_button.xml"
     ],
 
     "post_load": None,

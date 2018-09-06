@@ -30,7 +30,7 @@
                 <hr/>
                 <t t-foreach="widget.data.namespace_list" t-as="ns">
                     <div class="text-left">
-                    <a href="#"><b><t t-esc="ns.name"/></b></a>
+                    <a href="#"><b class="o_openapi_namespace" t-att-data-namespace-id="ns.id"><t t-esc="ns.name"/></b></a>
                     <br/><em>Last connection: <t t-esc="ns.last_connection"/></em>
                     </div>
                     <t t-if="!ns_last">

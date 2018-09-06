@@ -42,6 +42,8 @@ class Namespace(models.Model):
     token = fields.Char('Identification token',
                         default=lambda self: str(uuid.uuid4()), readonly=True,
                         required=True, copy=False)
+    spec_url = fields.Char('Specification link', compute='_compute_spec_url')
+
     _sql_constraints = [
         ('name_uniq',
          'unique (name)',
@@ -93,3 +95,13 @@ class Namespace(models.Model):
                 spec.update(openapi_access.get_OAS_part())
 
             return spec
+
+    @api.multi
+    def get_spec_url(self):
+        for record in self:
+            return "/api/v1/%s/swagger.json?token=%s" % (record.name, record.token)
+
+    @api.depends('name', 'token')
+    def _compute_spec_url(self):
+        for record in self:
+            record.spec_url = record.get_spec_url()
