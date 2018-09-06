@@ -16,7 +16,14 @@ class TestUi(odoo.tests.HttpCase):
         env = Environment(cr, self.uid, {})
         env['ir.module.module'].search([('name', '=', 'pos_discount_absolute')], limit=1).state = 'installed'
         cr.release()
+
+        # enable discounts in poses
+        env['pos.config'].search([]).write({
+            'module_pos_discount': True,
+            'discount_abs_enabled': True,
+        })
+
         self.phantom_js("/web",
-                        "odoo.__DEBUG__.services['web_tour.tour'].run('pos_abs_discount_tour', 500)",
+                        "odoo.__DEBUG__.services['web_tour.tour'].run('pos_abs_discount_tour', 1000)",
                         "odoo.__DEBUG__.services['web_tour.tour'].tours.pos_abs_discount_tour.ready",
                         login="admin")
