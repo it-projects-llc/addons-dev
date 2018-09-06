@@ -55,7 +55,8 @@ odoo.define('pos_receipt_custom.screens', function(require){
             var header_image = ticket_template.printable_image
             ? 'data:image/png;base64,' + ticket_template.printable_image
             : printing_data.company.logo;
-            var template = $.parseXML(ticket_template.qweb_template).children[0];
+            var template = $.parseXML(ticket_template.qweb_template);
+            template = template.children[0];
             var ticket = order.custom_qweb_render(template, {
                 widget: this,
                 order: order,
