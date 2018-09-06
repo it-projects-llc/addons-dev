@@ -71,9 +71,7 @@ class Access(models.Model):
     @api.depends('public_methods')
     def check_public_methods(self):
         for access in self:
-            if not access.check_public_methods:
-                continue
-            for line in access.check_public_methods.split('\n'):
+            for line in access.public_methods.split('\n'):
                 if line.startswith('_'):
                     ValidationError(_(
                         'Private method (starting with "_" listed in public methods whitelist'))
@@ -85,7 +83,7 @@ class Access(models.Model):
     @api.depends('private_methods')
     def check_private_methods(self):
         for access in self:
-            for line in access.check_public_methods.split('\n'):
+            for line in access.private_methods.split('\n'):
                 if not line.startswith('_'):
                     ValidationError(_(
                         'Public method (not starting with "_" listed in private methods whitelist'))
