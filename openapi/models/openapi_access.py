@@ -5,7 +5,7 @@ import urllib
 import inspect
 
 from odoo import models, fields, api, _
-from odo.expressions import ValidationError
+from odoo.exceptions import ValidationError
 
 
 class Access(models.Model):
