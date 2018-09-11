@@ -14,6 +14,7 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
         domain:[['confirmed_from_pos', '=', false]],
         loaded: function(self, orders) {
             // load not confirmed orders
+            self.auto_print_miniprogram_orders = false;
             orders.forEach(function(order) {
                 self.unconfirmed_miniprogram_orders_ids.push(order.id);
                 order.lines_ids = [];
@@ -26,6 +27,7 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
                     self.on_wechat_miniprogram(order);
                 });
             });
+            self.auto_print_miniprogram_orders = self.config.auto_print_miniprogram_orders;
         },
     });
 
@@ -145,7 +147,7 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
             }
 
             // auto print payed orders
-            if(order.hasChangesToPrint() && this.config.auto_print_miniprogram_orders && order.miniprogram_order.state === "done"){
+            if(this.printers.length && order.hasChangesToPrint() && this.auto_print_miniprogram_orders && order.miniprogram_order.state === "done"){
                 order.printChanges();
                 order.saveChanges();
             }
