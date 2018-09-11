@@ -86,7 +86,7 @@ class QCloudSMS(models.Model):
         partner = self.env['res.partner'].browse(partner_id)
         vals = {
             'message': message,
-            'partner_ids': partner,
+            'partner_ids': [(4, partner.id)],
             'sms_type': sms_type,
         }
 
@@ -149,7 +149,7 @@ class QCloudSMS(models.Model):
 
         vals = {
             'message': message,
-            'partner_ids': partners,
+            'partner_ids': [(4, p.id) for p in partners],
             'sms_type': sms_type,
         }
 
@@ -346,7 +346,7 @@ class QCloudSMSTemplate(models.Model):
         partners = self.env['res.partner'].browse(partner_ids)
 
         vals = {
-            'partner_ids': partners,
+            'partner_ids': [(4, p.id) for p in partners],
             'template_id': self.id,
         }
 
