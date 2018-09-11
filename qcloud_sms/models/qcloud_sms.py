@@ -20,6 +20,7 @@ class QCloudSMS(models.Model):
     _name = 'qcloud.sms'
     _description = 'SMS Messages'
     _rec_name = 'send_datetime'
+    _order = 'id desc'
 
     STATE_SELECTION = [
         ('draft', 'Draft'),
