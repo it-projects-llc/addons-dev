@@ -59,6 +59,19 @@ You need to enter a phone number and confirm the number using a code from SMS me
         });
     }
 
+Payments
+========
+
+Pay via WeChat mini-program
+---------------------------
+
+TODO
+
+Pay via POS
+-----------
+
+TODO
+
 Credits
 =======
 
