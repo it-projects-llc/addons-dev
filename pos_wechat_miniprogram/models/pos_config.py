@@ -22,7 +22,7 @@ class PosConfig(models.Model):
         return res
 
     def init_pos_wechat_miniprogram_journal(self):
-        """Init demo Journals for current company"""
+        """Init mini-program Journals for current company"""
         # Multi-company is not primary task for this module, but I copied this
         # code from pos_debt_notebook, so why not
         journal_obj = self.env['account.journal']
@@ -34,12 +34,9 @@ class PosConfig(models.Model):
         if wechat_journal_active:
             return
 
-        demo_is_on = self.env['ir.module.module'].search([('name', '=', MODULE)]).demo
-
         options = {
             'noupdate': True,
             'type': 'cash',
-            'write_statement': demo_is_on,
         }
         wechat_miniprogram_jsapi_journal = self._create_wechat_mp_journal(dict(
             sequence_name='Wechat mini-program JSAPI Payment',
@@ -49,12 +46,11 @@ class PosConfig(models.Model):
             wechat='jsapi',
             **options
         ))
-        if demo_is_on:
-            self.write({
-                'journal_ids': [
-                    (4, wechat_miniprogram_jsapi_journal.id),
-                ],
-            })
+        self.write({
+            'journal_ids': [
+                (4, wechat_miniprogram_jsapi_journal.id),
+            ],
+        })
 
     def _create_wechat_mp_journal(self, vals):
         user = self.env.user
@@ -85,18 +81,17 @@ class PosConfig(models.Model):
             'res_id': int(journal.id),
             'noupdate': True,  # If it's False, target record (res_id) will be removed while module update
         })
-        if vals['write_statement']:
-            self.write({
-                'journal_ids': [(4, journal.id)],
-            })
-            current_session = self.current_session_id
-            statement = [(0, 0, {
-                'name': current_session.name,
-                'journal_id': journal.id,
-                'user_id': user.id,
-                'company_id': user.company_id.id
-            })]
-            current_session.write({
-                'statement_ids': statement,
-            })
+        self.write({
+            'journal_ids': [(4, journal.id)],
+        })
+        current_session = self.current_session_id
+        statement = [(0, 0, {
+            'name': current_session.name,
+            'journal_id': journal.id,
+            'user_id': user.id,
+            'company_id': user.company_id.id
+        })]
+        current_session.write({
+            'statement_ids': statement,
+        })
         return journal
