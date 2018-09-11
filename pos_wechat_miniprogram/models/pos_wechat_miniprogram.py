@@ -50,7 +50,7 @@ class PosWeChatMiniProgramOrder(models.Model):
         ('takeout', 'Takeout'),
         ('indoors', 'Indoors'),
         ('delivery', 'Delivery')
-    ], string='Pay method', default='now')
+    ], string='Packing method')
 
     @api.depends('lines_ids.amount_total', 'lines_ids.discount')
     def _compute_amount_all(self):
