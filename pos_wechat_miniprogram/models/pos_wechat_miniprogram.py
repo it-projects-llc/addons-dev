@@ -161,6 +161,7 @@ class PosWeChatMiniProgramOrderLine(models.Model):
     discount = fields.Float(string='Discount (%)', digits=0, default=0.0)
     create_date = fields.Datetime(string='Creation Date', readonly=True)
     amount_total = fields.Float(compute='_compute_amount_all', string='Total', digits=0)
+    note = fields.Text(string='Note')
 
     @api.depends('price', 'quantity', 'discount', 'product_id')
     def _compute_amount_all(self):

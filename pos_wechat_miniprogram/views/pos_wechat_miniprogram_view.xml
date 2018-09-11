@@ -37,6 +37,7 @@
                                     <field name="discount" widget="monetary"/>
                                     <field name="price" widget="monetary"/>
                                     <field name="create_date"/>
+                                    <field name="note"/>
                                 </group>
                             </form>
                         </field>
