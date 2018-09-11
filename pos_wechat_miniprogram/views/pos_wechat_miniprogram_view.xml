@@ -29,6 +29,7 @@
                                 <field name="price" widget="monetary"/>
                                 <field name="discount" widget="monetary"/>
                                 <field name="amount_total" widget="monetary"/>
+                                <field name="note"/>
                             </tree>
                             <form string="Order lines">
                                 <group col="4">
