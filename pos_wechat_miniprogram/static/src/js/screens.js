@@ -129,5 +129,13 @@ odoo.define('pos_wechat_miniprogram.screens', function(require){
         },
     });
 
+    screens.OrderWidget.include({
+        rerender_orderline: function (order_line) {
+            if (order_line.node && order_line.node.parentNode) {
+                return this._super(order_line);
+            }
+        }
+    });
+
     return screens;
 });
