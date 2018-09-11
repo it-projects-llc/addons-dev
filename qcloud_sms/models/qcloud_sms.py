@@ -274,7 +274,7 @@ class QCloudSMSTemplate(models.Model):
         partner = self.env['res.partner'].browse(partner_id)
 
         vals = {
-            'partner_ids': partner,
+            'partner_ids': [(4, partner.id)],
             'template_id': self.id,
         }
 
