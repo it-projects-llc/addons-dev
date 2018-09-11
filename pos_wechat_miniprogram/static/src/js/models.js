@@ -257,7 +257,9 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
             if (this.price !== data.price) {
                 this.set_unit_price(data.price);
             }
-
+            if (data.note) {
+                this.set_note(data.note);
+            }
             // save to db
             this.trigger('change',this);
             this.order.trigger('change',this);
