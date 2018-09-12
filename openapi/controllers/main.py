@@ -26,6 +26,7 @@ class OpenapiWebSettingsDashboard(WebSettingsDashboard):
 
         namespaces = http.request.env['openapi.namespace'].search([])
 
+        # TODO: replace dummy data
         namespace_list = [
             {
                 'id': n.id,

@@ -26,6 +26,7 @@
         "security/ir.model.access.csv",
         "views/assets.xml",
         "views/openapi_view.xml",
+        "views/res_users_view.xml",
     ],
     "demo": [
         "views/assets_demo.xml",

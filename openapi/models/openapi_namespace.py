@@ -38,6 +38,7 @@ class Namespace(models.Model):
     )
 
     access_ids = fields.One2many('openapi.access', 'namespace_id', string='Accesses')
+    user_ids = fields.Many2many('res.users', string='Allowed Users')
 
     token = fields.Char('Identification token',
                         default=lambda self: str(uuid.uuid4()), readonly=True,
@@ -96,12 +97,7 @@ class Namespace(models.Model):
 
             return spec
 
-    @api.multi
-    def get_spec_url(self):
-        for record in self:
-            return "/api/v1/%s/swagger.json?token=%s" % (record.name, record.token)
-
     @api.depends('name', 'token')
     def _compute_spec_url(self):
         for record in self:
-            record.spec_url = record.get_spec_url()
+            record.spec_url = "/api/v1/%s/swagger.json?token=%s" % (record.name, record.token)
