@@ -18,8 +18,8 @@ class TestAPI(HttpCase):
         super(TestAPI, self).setUp()
         self.opener.addheaders.append(("content-type", "application/json"))
 
-    def request(self, method, model, params=None):
-        url = "http://localhost:%d/api/v1/%s" % (PORT, model)
+    def request(self, method, namespace, model, params=None):
+        url = "http://localhost:%d/api/v1/%s/%s" % (PORT, namespace, model)
         headers = {
             "content-type": "application/json",
         }
@@ -28,11 +28,11 @@ class TestAPI(HttpCase):
         return resp.json()
 
     def test_read_many_all(self):
-        self.request('GET', 'res.partner')
+        self.request('GET', 'demo', 'res.partner')
         # TODO check content
 
     def test_read_many_domain(self):
-        self.request('GET', 'res.partner', {'domain': '[("phone", "!=", False)]'})
+        self.request('GET', 'demo', 'res.partner', {'domain': '[("phone", "!=", False)]'})
         # TODO check content
 
     # TODO rest methods

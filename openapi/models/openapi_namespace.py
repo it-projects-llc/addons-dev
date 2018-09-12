@@ -88,7 +88,7 @@ class Namespace(models.Model):
                     "version": "1.0.0"
                 },
                 "host": parsed_current_host.netloc,
-                "basePath": "/v1/%s" % record.name,
+                "basePath": "/api/v1/%s" % record.name,
                 "schemes": [
                     parsed_current_host.scheme
                 ],
