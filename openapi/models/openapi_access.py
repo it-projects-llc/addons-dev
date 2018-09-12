@@ -314,12 +314,7 @@ class Access(models.Model):
                 }
             }
             for field, meta in self.env[record.model].fields_get().items():
-                containing_definitions_names = []
-                if field in export_fields_read_one:
-                    containing_definitions_names.append(read_one_definition_name)
-                if field in export_fields_read_many:
-                    containing_definitions_names.append(read_many_definition_name)
-                if not containing_definitions_names:
+                if field not in export_fields_read_one and field not in export_fields_read_many:
                     continue
 
                 types_map = {
@@ -356,12 +351,16 @@ class Access(models.Model):
                         }
                     })
 
-                for definition_name in containing_definitions_names:
-                    if field in export_fields_read_one:
-                        definitions[definition_name]['properties'][field] = field_property
-                        if meta['required']:
-                            definitions[definition_name]['required'] = \
-                                definitions[definition_name].get('required', []).append(field)
+                if field in export_fields_read_one:
+                    definitions[read_one_definition_name]['properties'][field] = field_property
+                    if meta['required']:
+                        definitions[read_one_definition_name]['required'] = \
+                            definitions[read_one_definition_name].get('required', []).append(field)
+                if field in export_fields_read_many:
+                    definitions[read_many_definition_name]['properties'][field] = field_property
+                    if meta['required']:
+                        definitions[read_many_definition_name]['required'] = \
+                            definitions[read_many_definition_name].get('required', []).append(field)
 
             # remove the keys for which there are an empty value by 'properties' key
             return {k: v for k, v in definitions.items() if v['properties']}
