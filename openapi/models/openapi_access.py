@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright 2018 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
+# Copyright 2018 Rafis Bikbov <https://it-projects.info/team/bikbov>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 import urllib
 import inspect
@@ -246,16 +247,9 @@ class Access(models.Model):
                         }
                     ],
                     "responses": {
-                        "200": {
+                        "204": {
                             "description": "successful update",
-                            "schema": {
-                                "$ref": read_one_definition_ref
-                            }
                         },
-                        # TODO: think about it
-                        # "204": {
-                        #     "description": "no content",
-                        # },
                         "404": {
                             "description": "%s not found" % model_name
                         }
@@ -382,7 +376,6 @@ class AccessCreateContext(models.Model):
     description = fields.Char('Description')
     model_id = fields.Many2one('ir.model', 'Model', required=True)
     context = fields.Text('Context', required=True)
-
 
     _sql_constraints = [
         ('context_model_name_uniq',

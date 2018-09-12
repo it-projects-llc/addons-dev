@@ -37,7 +37,7 @@ API_ENDPOINT_V1 = '/v1'
 # We patch the route decorator in pinguin.py
 # with authentication and DB inference logic.
 # We also check if the model is installed in the database.
-# Furthermore we chacek if api version is suppported.
+# Furthermore we check if api version is supported.
 # This keeps the code below minial and readable.
 http.route = pinguin_route
 
@@ -64,7 +64,7 @@ class ApiV1Controller(http.Controller):
     _api_endpoint = _api_endpoint + '/<namespace>'
     # CreateOne # ReadMulti
     _api_endpoint_model = _api_endpoint + '/<model>'
-    # ReadOne # UpdateOne # UnlikOne
+    # ReadOne # UpdateOne # UnlinkOne
     _api_endpoint_model_id = _api_endpoint + '/<model>/<id>'
     # Call Methods
     _api_endpoint_model_id_method = _api_endpoint + '/<model>/<id>/<method>'  # on Singleton Record
@@ -85,7 +85,7 @@ class ApiV1Controller(http.Controller):
         type='http',
         auth='none',
         csrf=False)
-    def create_one__POST(self, namespace, model):
+    def create_one__POST(self, namespace, model, **kw):
         conf = get_model_openapi_access(namespace, model)
         # If context is not a python dict
         # TODO unwrap
@@ -131,7 +131,7 @@ class ApiV1Controller(http.Controller):
         return wrap__resource__update_one(
             modelname=model, id=id, success_code=CODE__ok_no_content)
 
-    # UnlikOne
+    # UnlinkOne
     @http.route(
         _api_endpoint_model_id,
         methods=['DELETE'],
@@ -167,7 +167,7 @@ class ApiV1Controller(http.Controller):
         type='http',
         auth='none',
         csrf=False)
-    def call_method_mulit__PATCH(self, namespace, model, method, ids, **kw):
+    def call_method_multi__PATCH(self, namespace, model, method, ids, **kw):
         return wrap__resource__call_method(
             modelname=model,
             ids=ids,

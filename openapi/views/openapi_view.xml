@@ -76,15 +76,13 @@
                                                 <field name="private_methods"/>
                                                 <field name="read_one_id"
                                                        attrs="{'readonly': [('model_id', '=', False)]}"
-                                                       context="{'default_export_model_id': model_id, 'default_resource': model, 'default_name': parent.name + ' / ' + model + ' / read_one'}"
+                                                       context="{'default_resource': model, 'default_name': parent.name + ' / ' + model + ' / read_one'}"
                                                 >
                                                     <form string="Read One Fields">
                                                         <group>
                                                             <field name="name"/>
                                                             <field name="resource"/>
-                                                            <field name="export_fields"
-                                                            >
-                                                                   <!--attrs="{'readonly': [('id', '=', False)]}"-->
+                                                            <field name="export_fields">
                                                                 <form string="Export Fields">
                                                                     <group>
                                                                         <field name="name"/>
@@ -102,9 +100,7 @@
                                                         <group>
                                                             <field name="name"/>
                                                             <field name="resource"/>
-                                                            <field name="export_fields"
-                                                            >
-                                                                   <!--attrs="{'readonly': [('id', '=', False)]}"-->
+                                                            <field name="export_fields">
                                                                 <form string="Export Fields">
                                                                     <group>
                                                                         <field name="name"/>

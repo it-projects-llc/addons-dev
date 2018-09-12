@@ -9,7 +9,7 @@
 Set up REST API and export Open API (Swagger) specification file for
 integration with whatever you need.
 
-This module impements a ``/api/v1/`` route tree. 
+This module implements a ``/api/v1/`` route tree.
 
 Authentication
 ==============
@@ -27,7 +27,7 @@ Customization
 
 TODO
 
-The model already includes configuration for the following models:
+The module already includes configuration for the following models:
 
   * report
   * sale.order

@@ -60,18 +60,17 @@ CODE__invalid_spec = (501, "Invalid Field Spec",
                       "The field spec supplied is not valid.")
 # If API Workers are enforced, but non is available (switched off)
 CODE__no_api_worker = (503, "API worker sleeping",
-                       "TThe API worker is currently not at work.")
+                       "The API worker is currently not at work.")
 
 
 def successful_response(status, data):
-    """Successful respones wrapper.
+    """Successful responses wrapper.
 
-    Args:
-        status (int): The sucess code.
-        data (str): The json object.
+    :param int status: The success code.
+    :param str data: The json object.
 
-    Returns:
-        Response: The werkzeug `response object`_.
+    :returns: The werkzeug `response object`_.
+    :rtype: werkzeug.wrappers.Response
 
     .. _response object:
         http://werkzeug.pocoo.org/docs/0.14/wrappers/#module-werkzeug.wrappers
@@ -85,15 +84,14 @@ def successful_response(status, data):
 
 
 def error_response(status, error, error_descrip):
-    """Successful respones wrapper.
+    """Error responses wrapper.
 
-    Args:
-        status (int): The sucess code.
-        error (str): The error summary.
-        error_descrip (str): The error description.
+    :param int status: The error code.
+    :param str error: The error summary.
+    :param str error_descrip: The error description.
 
-    Returns:
-        Response: The werkzeug `response object`_.
+    :returns: The werkzeug `response object`_.
+    :rtype: werkzeug.wrappers.Response
 
     .. _response object:
         http://werkzeug.pocoo.org/docs/0.14/wrappers/#module-werkzeug.wrappers
@@ -118,11 +116,10 @@ def error_response(status, error, error_descrip):
 def authenticate_token_for_server(token):
     """Extract and validate the encoded server salt conveyed by the token.
 
-    Args:
-        token (string): The raw access token.
+    :param str token: The raw access token.
 
-    Returns:
-        bool: True if server accepts the token, False otherwise.
+    :returns: **True** if server accepts the token, **False** otherwise.
+    :rtype: bool
     """
     return True  # TODO
 
@@ -132,16 +129,15 @@ def infer_database(token):
     """Extract and validate the encoded database information
     conveyed by the token.
 
-    Args:
-        token (string): The raw access token.
+    :param str token: The raw access token.
 
-    Returns:
-        str: The database name in clear text.
+    :returns: The database name in clear text.
+    :rtype: str
 
     Todo:
         - Validate against registries of the current thread.
         - Do NOT init a new registry by default, even if database exists.
-        - Only load the registry if we are on a special API serving worker 
+        - Only load the registry if we are on a special API serving worker
           with lower than regular HTTP worker priority (nice=5)
     """
 
@@ -152,11 +148,10 @@ def infer_database(token):
 def authenticate_token_for_user(token):
     """Authenticate against the database and setup user session corresponding to the token.
 
-    Args:
-        token (string): The raw access token.
+    :param str token: The raw access token.
 
-    Returns:
-        bool: True if token is authorized for the requested user, False otherwise.
+    :returns: **True** if token is authorized for the requested user, **False** otherwise.
+    :rtype bool
 
     Todo:
         - Return session instead?
@@ -168,12 +163,11 @@ def authenticate_token_for_user(token):
 def authenticate_token_for_namespace(namespace, token):
     """Validate token against the requested namespace.
 
-    Args:
-        namespace (string): The requested namespace.
-        token (string): The raw access token.
+    :param str namespace: The requested namespace.
+    :param str token: The raw access token.
 
-    Returns:
-        bool: True if token is authorized for the requested namespace, False otherwise.
+    :returns: **True** if token is authorized for the requested namespace, **False** otherwise.
+    :rtype: bool
     """
     return True
 
@@ -190,18 +184,16 @@ def pinguin_route(*args, **kwargs):
     Patches the framework and additionally authenticates
     the API token and infers database through a different mechanism.
 
-    Args:
-        *args: Transparent pass through to the patched method.
-        **kwargs: Transparent pass through to the patched method.
+    :param list args: Positional arguments. Transparent pass through to the patched method.
+    :param dict kwargs: Keyword arguments. Transparent pass through to the patched method.
 
-    Returns:
-        wrapped method: Wrapped
+    :returns: wrapped method
     """
     if not authenticate_token_for_server():
         # Second line of defense after WAP and before touching database
         # To (temporarily) cycle all tokens, change the server wide salt.
         # Security by obscurity...
-        error_response(*CODE__server_rejects)
+        return error_response(*CODE__server_rejects)
     db_name = infer_database()
     return http.route(*args, **kwargs)
 
@@ -222,14 +214,12 @@ def get_create_context(namespace, model, canned_context):
     As this should, for performance reasons, not repeatedly result in calls to the persistence
     layer, this method is cached in memory.
 
-    Args:
-        namespace (str): The namespace to also validate against.
-        model (str): The model, for which we retrieve the configuration.
-        canned_context (str): The preconfigured context, which we request.
+    :param str namespace: The namespace to also validate against.
+    :param str model: The model, for which we retrieve the configuration.
+    :param str canned_context: The preconfigured context, which we request.
 
-    Returns:
-        dict: A dictionary containing the requested context.
-
+    :returns: A dictionary containing the requested context.
+    :rtype: dict
     """
     # Token is not authorized on this namespace
     cr, uid = request.cr, request.session.uid
@@ -256,8 +246,8 @@ def get_model_openapi_access(namespace, model):
     The namespace is a lightweight ACL + default implementation to integrate
     with various integration consumer, such as webstore, provisioning platform, etc.
 
-    We validate the namspace at this later stage, because it forms part of the http route.
-    The token has been related to a namspace already previously
+    We validate the namespace at this latter stage, because it forms part of the http route.
+    The token has been related to a namespace already previously
     (:meth:`authenticate_token_for_namespace`).
 
     This is a double purpose method.
@@ -265,13 +255,11 @@ def get_model_openapi_access(namespace, model):
     As this should, for performance reasons, not repeatedly result in calls to the persistence
     layer, this method is cached in memory.
 
-    Args:
-        namespace (str): The namespace to also validate against.
-        model (str): The model, for which we retrieve the configuration.
+    :param str namespace: The namespace to also validate against.
+    :param str model: The model, for which we retrieve the configuration.
 
-    Returns:
-        Response: The error response object if namspace validation failed.
-        dict: A dictionary containing the model API configuration for this namespace.
+    :returns: The error response object if namespace validation failed.
+        A dictionary containing the model API configuration for this namespace.
             The layout of the dict is as follows:
             ```python
             {'context':                 (Dict)      odoo context (default values through context),
@@ -289,7 +277,7 @@ def get_model_openapi_access(namespace, model):
                  },
             }
             ```
-
+    :rtype: werkzeug.wrappers.Response or dict
     """
     # Token is not authorized on this namespace
     if not TRUE:
@@ -341,21 +329,27 @@ def get_model_openapi_access(namespace, model):
 def validate_extra_field(field):
     """Validates extra fields on the fly.
 
-    Args:
-        field (str): The name of the field.
-    Returns:
-        none,Response: None, if validated, a error response else.
+    :param str field: The name of the field.
+
+    :returns: None, if validated, a error response else.
+    :rtype: None or werkzeug.wrappers.Response
     """
     if not isinstance(field, basestring):
-        error_response(*CODE__invalid_spec)
+        return error_response(*CODE__invalid_spec)
 
 
 def validate_spec(model, spec):
     """Validates a spec for a given model.
 
-    Args:
-        model (:obj:`Model`): The model aginst which to validate.
-        none,raise: None, if validated, raises else.
+    :param object model: (:obj:`Model`) The model against which to validate.
+    :param dict spec: The spec to validate.
+
+    :returns: None, if validated, raises else.
+    :rtype: None
+    # TODO: add exceptions types and descriptions
+    :raises ExceptionType:
+                    * if ...
+                    * if ...
     """
     self = model
     for field in spec:
@@ -391,23 +385,23 @@ def validate_spec(model, spec):
 def get_dict_from_model(model, spec, id, **kwargs):
     """Fetch dictionary from one record according to spec.
 
-    Args:
-        model (:obj:`Model`): The model aginst which to validate.
-        spec (:obj:`Tuple`): The spec to validate.
-        id (int): The id of the record.
-        **kwargs['include_fields'] (:obj:`Tuple`): The extra fields.
-            This parameter is not implemented on higher level code in order
-            to serve as a soft ACL implementation on top of the framework's
-            own ACL.
-        **kwargs['exclude_fields'] (:obj:`Tuple`): The excluded fields.
+    :param object model: (:obj:`Model`) The model against which to validate.
+    :param tuple spec: The spec to validate.
+    :param int id: The id of the record.
+    :param dict kwargs: Keyword arguments.
+    :param tuple kwargs['include_fields']: The extra fields.
+        This parameter is not implemented on higher level code in order
+        to serve as a soft ACL implementation on top of the framework's
+        own ACL.
+    :param tuple kwargs['exclude_fields']: The excluded fields.
 
-    Returns:
-        dict: The python dictionary of the requested values.
+    :returns: The python dictionary of the requested values.
+    :rtype: dict
     """
-    include_fields = kw.get(
+    include_fields = kwargs.get(
         'include_fields',
         ())  # Not actually implemented on higher level (ACL!)
-    exclude_fields = kw.get('exclude_fields', ())
+    exclude_fields = kwargs.get('exclude_fields', ())
 
     model_obj = get_model_for_read(model)
 
@@ -415,37 +409,37 @@ def get_dict_from_model(model, spec, id, **kwargs):
         record = model_obj.browse([id])
     except:
         error_response(*CODE__res_not_found)
-    return get_dict_from_record(record, spec, include_fields, include_fields)
+    return get_dict_from_record(record, spec, include_fields, exclude_fields)
 
 
 # List of dicts from model
 def get_dictlist_from_model(model, spec, **kwargs):
     """Fetch dictionary from one record according to spec.
 
-    Args:
-        model (:obj:`Model`): The model aginst which to validate.
-        spec (:obj:`Tuple`): The spec to validate.
-        **kwargs['domain'] (:obj:`Framework Domain`): The domain to filter on.
-        **kwargs['offset'] (int): The offset of the queried records.
-        **kwargs['limit'] (int): The limit to query.
-        **kwargs['order'] (str): The postgres order string.
-        **kwargs['include_fields'] (:obj:`Tuple`): The extra fields.
-            This parameter is not implemented on higher level code in order
-            to serve as a soft ACL implementation on top of the framework's
-            own ACL.
-        **kwargs['exclude_fields'] (:obj:`Tuple`): The excluded fields.
+    :param odoo.models.Model model: The model against which to validate.
+    :param tuple spec: The spec to validate.
+    :param dict kwargs: Keyword arguments.
+    :param list kwargs['domain']: (optional). The domain to filter on.
+    :param int kwargs['offset']: (optional). The offset of the queried records.
+    :param int kwargs['limit']: (optional). The limit to query.
+    :param str kwargs['order']: (optional). The postgres order string.
+    :param tuple kwargs['include_fields']: (optional). The extra fields.
+        This parameter is not implemented on higher level code in order
+        to serve as a soft ACL implementation on top of the framework's
+        own ACL.
+    :param tuple kwargs['exclude_fields']: (optional). The excluded fields.
 
-    Returns:
-        list: The list of python dictionaries of the requested values.
+    :returns: The list of python dictionaries of the requested values.
+    :rtype: list
     """
-    domain = kw.get('domain', [])
-    offset = kw.get('offset', 0)
-    limit = kw.get('limit', None)
-    order = kw.get('order', None)
-    include_fields = kw.get(
+    domain = kwargs.get('domain', [])
+    offset = kwargs.get('offset', 0)
+    limit = kwargs.get('limit', None)
+    order = kwargs.get('order', None)
+    include_fields = kwargs.get(
         'include_fields',
         ())  # Not actually implemented on higher level (ACL!)
-    exclude_fields = kw.get('exclude_fields', ())
+    exclude_fields = kwargs.get('exclude_fields', ())
 
     model_obj = get_model_for_read(model)
 
@@ -473,19 +467,17 @@ def get_dictlist_from_model(model, spec, **kwargs):
 
 # Get a model with special context
 def get_model_for_read(model):
-    """Fetch a model object from the environment opitimized for read.
+    """Fetch a model object from the environment optimized for read.
 
     Postgres serialization levels are changed to allow parallel read queries.
     To increase the overall efficiency, as it is unlikely this API will be used
-    as a mass transactional interface. Rather we asume sequential and structured
+    as a mass transactional interface. Rather we assume sequential and structured
     integration workflows.
 
-    Args:
-        model (str): The model to retrieve from the environment.
+    :param str model: The model to retrieve from the environment.
 
-    Returns:
-        Model: The framework model.
-        Response: The error response object.
+    :returns: the framework model if exist, else the error response object.
+    :rtype: odoo.models.Model or werkzeug.wrappers.Response
     """
     cr, uid = request.cr, request.session.uid
     # Permit parallel query execution on read
@@ -494,27 +486,26 @@ def get_model_for_read(model):
     try:
         return request.env(cr, uid)[model]
     except KeyError:
-        error_response(*CODE__obj_not_found)
+        return error_response(*CODE__obj_not_found)
 
 # Python > 3.5
 # def get_dict_from_record(record, spec: tuple, include_fields: tuple, exclude_fields: tuple):
 
 # Extract nested values from a record
 def get_dict_from_record(record, spec, include_fields, exclude_fields):
-    """Generates nested pyton dict representing one record.
+    """Generates nested python dict representing one record.
 
     Going down to the record level, as the framework does not support nested
     data queries natively as they are typical for a REST API.
 
-    Args:
-        record (:obj:`RecordSet`): The singleton record to load.
-        spec (:obj:`Tuple`): The field spec to load.
-        include_fields (:obj:`Tuple`): The extra fields.
-        exclude_fields (:obj:`Tuple`): The excluded fields.
+    # TODO: replace (:obj:`RecordSet`)
+    :param (:obj:`RecordSet`) record: The singleton record to load.
+    :param tuple spec: The field spec to load.
+    :param tuple include_fields: The extra fields.
+    :param tuple exclude_fields: The excluded fields.
 
-
-    Returns:
-        dict: The python dictionary representing the record according to the field spec.
+    :returns: The python dictionary representing the record according to the field spec.
+    :rtype collections.OrderedDict
     """
     (include_fields + exclude_fields).map(validate_extra_field)
     result = OrderedDict([])
@@ -539,3 +530,82 @@ def get_dict_from_record(record, spec, include_fields, exclude_fields):
         elif isinstance(field, (str, unicode)):
             result[field] = record.get(field, None)
     return result
+
+def wrap__resource__create_one(modelname, context, success_code, out_fields):
+    """TODO: add description
+
+    :param str modelname: The name of the model.
+    :param dict context: TODO
+    :param int success_code: The success code.
+    :param tuple out_fields: Canned fields.
+
+    :returns: TODO
+    :rtype: TODO
+    """
+    pass  # TODO
+
+
+def wrap__resource__read_all(modelname, success_code, out_fields):
+    """TODO: add description
+
+    :param str modelname: The name of the model.
+    :param int success_code: The success code.
+    :param tuple out_fields: Canned fields.
+
+    :returns: TODO
+    :rtype: TODO
+    """
+    pass  # TODO
+
+
+def wrap__resource__read_one(modelname, id, success_code, out_fields):
+    """TODO: add description
+
+    :param str modelname: The name of the model.
+    :param int id: The record id of which we want to read.
+    :param int success_code: The success code.
+    :param tuple out_fields: Canned fields.
+
+    :returns: TODO
+    :rtype: TODO
+    """
+    pass  # TODO
+
+
+def wrap__resource__update_one(modelname, id, success_code):
+    """TODO: add description
+
+    :param str modelname: The name of the model.
+    :param int id: The record id of which we want to update.
+    :param int success_code: The success code.
+
+    :returns: TODO
+    :rtype: TODO
+    """
+    pass  # TODO
+
+
+def wrap__resource__unlink_one(modelname, id, success_code):
+    """TODO: add description
+
+    :param str modelname: The name of the model.
+    :param int id: The record id of which we want to delete.
+    :param int success_code: The success code.
+
+    :returns: TODO
+    :rtype: TODO
+    """
+    pass  # TODO
+
+def wrap__resource__call_method(modelname, ids, method, success_code):
+    """TODO: add description
+
+    :param str modelname: The name of the model.
+    :param list ids: The record ids of which we want to call method.
+    :param str method: The name of the method.
+    :param int success_code: The success code.
+
+    :returns: TODO
+    :rtype: TODO
+    """
+    pass  # TODO
