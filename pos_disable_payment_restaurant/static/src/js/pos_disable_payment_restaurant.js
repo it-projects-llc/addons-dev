@@ -1,5 +1,6 @@
-/* Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
-* License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). */
+/*  Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
+    Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). */
 
 odoo.define('pos_disable_payment_restaurant', function(require){
 
@@ -16,7 +17,7 @@ odoo.define('pos_disable_payment_restaurant', function(require){
             var order = this.pos.get_order();
             if (order) {
                 line = line || order.get_selected_orderline();
-                var user = this.pos.cashier || this.pos.user;
+                var user = this.pos.get_cashier() || this.pos.user;
                 if (!user.allow_decrease_amount || !user.allow_remove_kitchen_order_line) {
                     this.check_kitchen_access(line);
                 }
@@ -24,7 +25,7 @@ odoo.define('pos_disable_payment_restaurant', function(require){
         },
         orderline_change: function(line) {
             this._super(line);
-            var user = this.pos.cashier || this.pos.user;
+            var user = this.pos.get_cashier() || this.pos.user;
             if (line && line.quantity <= 0) {
                 if (user.allow_delete_order_line) {
                     this.$el.find('.numpad-backspace').removeClass('disable');
@@ -40,14 +41,14 @@ odoo.define('pos_disable_payment_restaurant', function(require){
         },
         orderline_change_line: function(line) {
             this._super(line);
-            var user = this.pos.cashier || this.pos.user;
+            var user = this.pos.get_cashier() || this.pos.user;
             var order = this.pos.get_order();
             if (order && !user.allow_decrease_amount) {
                 this.check_kitchen_access(line);
             }
         },
         check_kitchen_access: function(line) {
-            var user = this.pos.cashier || this.pos.user;
+            var user = this.pos.get_cashier() || this.pos.user;
             var state = this.getParent().numpad.state;
             if (user.allow_decrease_kitchen_only) {
                 $('.numpad').find("[data-mode='quantity']").removeClass('disable');
@@ -89,7 +90,7 @@ odoo.define('pos_disable_payment_restaurant', function(require){
     screens.NumpadWidget.include({
         check_access: function(){
             this._super();
-            var user = this.pos.cashier || this.pos.user;
+            var user = this.pos.get_cashier() || this.pos.user;
             var order = this.pos.get_order();
             var orderline = order
             ? order.get_selected_orderline()
