@@ -19,9 +19,9 @@
     "depends": [
         "wechat_miniprogram",
         "qcloud_sms",
-        "pos_longpolling",
-        "pos_restaurant",
+        "pos_multi_session_restaurant",
         "pos_order_note",
+        "base_geolocalize",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
@@ -32,6 +32,7 @@
         "views/template.xml",
         "views/pos_config_view.xml",
         "views/pos_restaurant_view.xml",
+        "views/pos_multi_session_restaurant_view.xml",
         "wizard/qrcode.xml",
         "report/report_table_qrcode.xml",
     ],

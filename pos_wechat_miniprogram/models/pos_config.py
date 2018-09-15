@@ -14,6 +14,7 @@ class PosConfig(models.Model):
     auto_print_miniprogram_orders = fields.Boolean(string='Auto Print miniprogram Orders',
                                                    help='Auto Print miniprogram order to kitchen',
                                                    default=True)
+    shop_id = fields.Many2one(related='multi_session_id.partner_id')
 
     @api.multi
     def open_session_cb(self):

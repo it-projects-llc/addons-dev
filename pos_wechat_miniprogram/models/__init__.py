@@ -7,3 +7,4 @@ from . import pos_config
 from . import pos_order
 from . import pos_wechat_miniprogram
 from . import pos_restaurant
+from . import pos_multi_session_restaurant_models

@@ -23,7 +23,7 @@ class PosWeChatMiniProgramOrder(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True,
                                  default=lambda self: self.env.user.company_id)
     date_order = fields.Datetime(string='Order Date', readonly=True, index=True, default=fields.Datetime.now)
-    partner_id = fields.Many2one('res.partner', string='Customer', index=True, states={'draft': [('readonly', False)]},)
+    partner_id = fields.Many2one('res.partner', string='Customer', index=True, states={'draft': [('readonly', False)]})
     amount_total = fields.Float(compute='_compute_amount_all', string='Total', digits=0)
     lines_ids = fields.One2many('pos.miniprogram.order.line', 'order_id', string='Order Lines',
                                 readonly=True, copy=True)
@@ -60,7 +60,8 @@ class PosWeChatMiniProgramOrder(models.Model):
 
     @api.model
     def get_user_pos_miniprogram_orders(self):
-        return self.search(['partner_id', '=', self.env.user.partner_id.id])
+        partner_id = self.env.user.partner_id.id
+        return self.sudo().search(['partner_id', '=', partner_id])
 
     @api.model
     def create_from_miniprogram_ui(self, lines, create_vals):
