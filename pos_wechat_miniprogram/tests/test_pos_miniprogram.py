@@ -93,7 +93,7 @@ class TestQCloudSMS(HttpCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
-    def _sms_template_mobile_number_verification(self, mobile, template_id):
+    def _sms_template_mobile_number_verification(self, mobile):
         response_json = {
             "result": 0,
             "errmsg": "OK",
@@ -104,7 +104,7 @@ class TestQCloudSMS(HttpCase):
         patch_url = 'qcloudsms_py.util.api_request'
         self._patch_post_requests(response_json, patch_url)
 
-        return self.user.template_sms_mobile_number_verification(mobile, template_id)
+        return self.user.template_sms_mobile_number_verification(mobile)
 
     def _sms_mobile_number_verification(self, mobile):
         response_json = {
@@ -157,8 +157,8 @@ class TestQCloudSMS(HttpCase):
             'international_sms_template_ID': '321',
             'international_sms_sign': 'Test'
         })
-
-        response = self._sms_template_mobile_number_verification(mobile, template.id)
+        self.phantom_env['ir.config_parameter'].sudo().set_param('qcloud.sms_template', template.id)
+        response = self._sms_template_mobile_number_verification(mobile)
         self.assertEquals(response.get('result'), 0, 'Could not send message')
         res = self._check_verification_code()
         self.assertTrue(res.get('result'), res.get('message'))
