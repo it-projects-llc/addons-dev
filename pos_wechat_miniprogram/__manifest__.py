@@ -33,6 +33,7 @@
         "views/pos_config_view.xml",
         "views/pos_restaurant_view.xml",
         "views/pos_multi_session_restaurant_view.xml",
+        "views/res_config_settings_view.xml",
         "wizard/qrcode.xml",
         "report/report_table_qrcode.xml",
     ],
