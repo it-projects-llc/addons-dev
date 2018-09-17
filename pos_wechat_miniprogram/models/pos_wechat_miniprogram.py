@@ -52,6 +52,7 @@ class PosWeChatMiniProgramOrder(models.Model):
         ('indoors', 'Indoors'),
         ('delivery', 'Delivery')
     ], string='Packing method')
+    shop_id = fields.Many2one('res.partner', string='Shop', index=True, states={'draft': [('readonly', False)]})
 
     @api.depends('lines_ids.amount_total', 'lines_ids.discount')
     def _compute_amount_all(self):
@@ -126,7 +127,7 @@ class PosWeChatMiniProgramOrder(models.Model):
     def _send_message_to_pos(self):
         self.ensure_one()
         message = self._prepare_mp_message()
-        for pos in self.env['pos.config'].search([('allow_message_from_miniprogram', '=', True)]):
+        for pos in self.env['pos.config'].search([('allow_message_from_miniprogram', '=', True), ('shop_id', '=', self.shop_id.id)]):
             self.env['pos.config']._send_to_channel_by_id(self._cr.dbname, pos.id, CHANNEL_NAME, message)
 
     @api.model
