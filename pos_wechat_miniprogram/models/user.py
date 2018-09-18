@@ -22,7 +22,7 @@ class Users(models.Model):
 
     @api.model
     def template_sms_mobile_number_verification(self, number, **kwargs):
-        template_id = self.env['ir.config_parameter'].sudo().get_param('qcloud.sms_template')
+        template_id = self.env['ir.config_parameter'].sudo().get_param('qcloud.sms_template_id')
         return self.env.user.partner_id._template_sms_mobile_number_verification(number, template_id, **kwargs)
 
     @api.model
