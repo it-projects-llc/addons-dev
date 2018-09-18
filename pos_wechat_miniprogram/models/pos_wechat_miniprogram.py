@@ -62,7 +62,7 @@ class PosWeChatMiniProgramOrder(models.Model):
     @api.model
     def get_user_pos_miniprogram_orders(self):
         orders = self.search([('partner_id', '=', self.env.user.partner_id.id)])
-        return orders.read()
+        return [o._prepare_mp_message() for o in orders]
 
     @api.model
     def create_from_miniprogram_ui(self, lines, create_vals):
@@ -115,12 +115,12 @@ class PosWeChatMiniProgramOrder(models.Model):
     @api.multi
     def _prepare_mp_message(self):
         """
-        To prepare the message of mini-program for POS
+        To prepare the message of mini-program
         """
         self.ensure_one()
         res = self.read()[0]
         res['lines_ids'] = self.lines_ids.read()
-        _logger.debug('Message for POS: %s', res)
+        _logger.debug('Read order and orderline: %s', res)
         return res
 
     @api.multi
