@@ -101,6 +101,31 @@ odoo.define('pos_receipt_custom.models', function(require){
         set_receipt_type: function(type) {
             this.receipt_type = type;
         },
+        get_total_order_discount: function() {
+            var self = this;
+            var sum = this.get_total_discount();
+
+            var disc_product_id = this.pos.config.discount_product_id && this.pos.config.discount_product_id[0];
+            // compatibility with pos_discount and pos_discount_absolute
+            if (disc_product_id) {
+                sum -= this.get_discount_product_display_price(disc_product_id);
+
+                var abs_disc_product_id = this.pos.config.discount_abs_product_id && this.pos.config.discount_abs_product_id[0];
+                if (abs_disc_product_id) {
+                    sum -= this.get_discount_product_display_price(abs_disc_product_id);
+                }
+            }
+            return sum;
+        },
+        get_discount_product_display_price: function(disc_product_id) {
+            var disc_product = this.pos.db.get_product_by_id(disc_product_id);
+            disc_product = _.find(this.get_orderlines(), function(pl) {
+                return pl.product.id === disc_product_id;
+            });
+            return disc_product
+            ? disc_product.get_display_price()
+            : 0;
+        },
     });
 
     var _super_orderline = models.Orderline.prototype;
