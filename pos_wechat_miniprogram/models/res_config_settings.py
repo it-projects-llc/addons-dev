@@ -23,6 +23,6 @@ class ResConfigSettings(models.TransientModel):
         sms_template_id = get_param('qcloud.sms_template_id', default=False),
         if sms_template_id:
             res.update(
-                sms_verification_template=int(sms_template_id),
+                sms_verification_template=sms_template_id,
             )
         return res
