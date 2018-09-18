@@ -2,6 +2,7 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
 from odoo import fields, models, api
+from ast import literal_eval
 
 
 class ResConfigSettings(models.TransientModel):
@@ -14,15 +15,18 @@ class ResConfigSettings(models.TransientModel):
     def set_values(self):
         super(ResConfigSettings, self).set_values()
         set_param = self.env['ir.config_parameter'].sudo().set_param
-        set_param('qcloud.sms_template_id', self.sms_verification_template.id)
+        set_param('qcloud.sms_template_id', repr(self.sms_verification_template.id))
 
     @api.model
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
         get_param = self.env['ir.config_parameter'].sudo().get_param
-        sms_template_id = get_param('qcloud.sms_template_id', default=False),
-        if sms_template_id:
-            res.update(
-                sms_verification_template=sms_template_id,
-            )
+
+        sms_template_id = literal_eval(get_param('qcloud.sms_template_id', default='False'))
+        if sms_template_id and not self.env['qcloud.sms.template'].sudo().browse(sms_template_id).exists():
+            sms_template_id = False
+
+        res.update(
+            sms_verification_template=sms_template_id,
+        )
         return res
