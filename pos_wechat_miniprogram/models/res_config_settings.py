@@ -20,7 +20,9 @@ class ResConfigSettings(models.TransientModel):
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
         get_param = self.env['ir.config_parameter'].sudo().get_param
-        res.update(
-            sms_verification_template=get_param(int('qcloud.sms_template_id'), default=None),
-        )
+        sms_template_id = get_param('qcloud.sms_template_id', default=False),
+        if sms_template_id:
+            res.update(
+                sms_verification_template=int(sms_template_id),
+            )
         return res
