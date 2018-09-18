@@ -61,8 +61,7 @@ class PosWeChatMiniProgramOrder(models.Model):
 
     @api.model
     def get_user_pos_miniprogram_orders(self):
-        partner_id = self.env.user.partner_id.id
-        return self.sudo().search(['partner_id', '=', partner_id])
+        return self.search(['partner_id', '=', self.env.user.partner_id.id])
 
     @api.model
     def create_from_miniprogram_ui(self, lines, create_vals):
