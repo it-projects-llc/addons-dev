@@ -10,7 +10,17 @@ class ResConfigSettings(models.TransientModel):
     sms_verification_template = fields.Many2one('qcloud.sms.template', string='SMS Verification Template',
                                                 help='Used to verify a user with a text SMS message')
 
+    @api.multi
     def set_values(self):
         super(ResConfigSettings, self).set_values()
         set_param = self.env['ir.config_parameter'].sudo().set_param
-        set_param('qcloud.sms_template', self.sms_verification_template)
+        set_param('qcloud.sms_template_id', self.sms_verification_template.id)
+
+    @api.model
+    def get_values(self):
+        res = super(ResConfigSettings, self).get_values()
+        get_param = self.env['ir.config_parameter'].sudo().get_param
+        res.update(
+            sms_verification_template=get_param('qcloud.sms_template_id', default=''),
+        )
+        return res
