@@ -153,7 +153,7 @@ odoo.define('pos_discount_absolute', function (require) {
             total = total === 0
                 ? _t('FREE')
                 : Number(total.toFixed(2));
-            $('.summary .total > .value').text(total);
+            $('.summary .total > .value').text( this.format_currency(total) );
         },
     });
 
