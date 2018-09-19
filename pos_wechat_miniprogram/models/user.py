@@ -132,7 +132,10 @@ class ResPartner(models.Model):
         session_key = self.wechat_session_key
         res = self.env['ir.config_parameter'].sudo().decrypt_wechat_miniprogram_data(session_key, encryptedData, iv)
         PhoneNumber = res.get('phoneNumber')
-        phone_obj = phonenumbers.parse(PhoneNumber, keep_raw_input=True)
+        Qcloud = self.env['qcloud.sms']
+        country = Qcloud._get_country(self)
+        country_code = country.code if country else None
+        phone_obj = phonenumbers.parse(PhoneNumber, region=country_code, keep_raw_input=True)
         phone_number = phonenumbers.format_number(phone_obj, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
 
         self.write({
