@@ -17,6 +17,7 @@
                     <field name="partner_id"/>
                     <field name="customer_count"/>
                     <field name="confirmed_from_pos"/>
+                    <field name="shop_id"/>
                     <field name="table_id"/>
                     <field name="floor_id"/>
                 </group>
@@ -85,6 +86,7 @@
                 <field name="partner_id"/>
                 <field name="date_order"/>
                 <field name="user_id"/>
+                <field name="shop_id"/>
                 <field name="amount_total" sum="Amount total" widget="monetary"/>
                 <field name="state"/>
                 <field name="confirmed_from_pos"/>
