@@ -11,7 +11,26 @@ odoo.define('pos_disable_payment_restaurant', function(require){
 
     models.load_fields("res.users", ['allow_decrease_kitchen_only','allow_remove_kitchen_order_line']);
 
+    screens.ProductScreenWidget.include({
+        show: function(reset){
+            this._super(reset);
+            var self = this;
+            var state_mode_buttons = $('.product-screen.screen .numpad .mode-button');
+            state_mode_buttons.add('.product-screen.screen .order-submit').on('click', function(e) {
+                self.pos.trigger('change:NumpadState');
+            });
+        },
+    });
+
     screens.OrderWidget.include({
+        init: function(parent, options) {
+            var self = this;
+            this._super(parent,options);
+            this.pos.bind('change:NumpadState', function(){
+                self.check_numpad_access();
+            });
+        },
+
         check_numpad_access: function(line) {
             this._super(line);
             var order = this.pos.get_order();
@@ -50,28 +69,20 @@ odoo.define('pos_disable_payment_restaurant', function(require){
         check_kitchen_access: function(line) {
             var user = this.pos.get_cashier() || this.pos.user;
             var state = this.getParent().numpad.state;
+            var common_selector = '.product-screen.screen .numpad .input-button';
+            var numpad_buttons = $(common_selector + '.number-char');
+
             if (user.allow_decrease_kitchen_only) {
-                $('.numpad').find("[data-mode='quantity']").removeClass('disable');
-                if (state.get('mode') !== 'quantity') {
-                    state.changeMode('quantity');
+                numpad_buttons = numpad_buttons.add(common_selector + '.numpad-minus');
+                if ((line && line.was_printed) || (state.get('mode') != 'quantity')) {
+                    numpad_buttons.removeClass('disable');
+                } else if (!numpad_buttons.hasClass('disable')) {
+                    numpad_buttons.addClass('disable');
                 }
-            } else if (line && line.mp_dirty) {
-                if ($('.numpad').find("[data-mode='quantity']").hasClass('disable')) {
-                    $('.numpad').find("[data-mode='quantity']").removeClass('disable');
-                    state.changeMode('quantity');
-                }
-            } else {
-                $('.numpad').find("[data-mode='quantity']").addClass('disable');
-                if (state.get('mode') === 'quantity') {
-                    if (user.allow_discount) {
-                        state.changeMode('discount');
-                    } else if (user.allow_edit_price) {
-                        state.changeMode('price');
-                    } else {
-                        state.changeMode("");
-                    }
-                }
+            } else if (numpad_buttons.hasClass('disable')) {
+                numpad_buttons.removeClass('disable');
             }
+
             if (line && line.quantity <= 0) {
                 if (user.allow_delete_order_line) {
                     $('.pads .numpad').find('.numpad-backspace').removeClass('disable');
@@ -128,4 +139,5 @@ odoo.define('pos_disable_payment_restaurant', function(require){
             _super_orderline.init_from_JSON.call(this, json);
         }
     });
+
 });

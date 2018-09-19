@@ -7,16 +7,10 @@ from odoo import fields, models, api
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
-    allow_decrease_kitchen_only = fields.Boolean('Allow change Qty for kitchen orders', default=True)
+    allow_decrease_kitchen_only = fields.Boolean('Allow change Qty for kitchen orders only', default=True)
     allow_remove_kitchen_order_line = fields.Boolean('Allow remove kitchen order line', default=True)
 
     @api.onchange('allow_delete_order_line')
     def _onchange_allow_delete_order_line(self):
         if self.allow_delete_order_line is False:
             self.allow_remove_kitchen_order_line = False
-
-    @api.onchange('allow_decrease_amount')
-    def _onchange_allow_decrease_amount(self):
-        super(ResUsers, self)._onchange_allow_decrease_amount()
-        if self.allow_decrease_amount is True:
-            self.allow_decrease_kitchen_only = True
