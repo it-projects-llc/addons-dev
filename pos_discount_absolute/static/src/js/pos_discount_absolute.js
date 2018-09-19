@@ -92,6 +92,9 @@ odoo.define('pos_discount_absolute', function (require) {
             if (val && val !== 0){
                 order.add_product(abs_disc_product, { price: - Math.abs(discount) });
             }
+
+            // prevents setting discount to a default value when partner changing (set_pricelist)
+            this.pos.get_order().get_selected_orderline().price_manually_set = true;
         },
         abs_disc_presence: function() {
             var presence = false;

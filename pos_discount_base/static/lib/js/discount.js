@@ -3,6 +3,7 @@ odoo.define('pos_discount_base.screens', function (require) {
 
     var PosBaseWidget = require('point_of_sale.BaseWidget');
     var screens = require('point_of_sale.screens');
+    var models = require('point_of_sale.models');
 
     PosBaseWidget.include({
         init:function(parent,options){
@@ -21,6 +22,19 @@ odoo.define('pos_discount_base.screens', function (require) {
                     self.gui.screen_instances.products.order_widget.discount_button_click();
                 };
             }
+        },
+    });
+
+    var OrderlineSuper = models.Orderline;
+    models.Orderline = models.Orderline.extend({
+        export_as_JSON: function() {
+            var ret = OrderlineSuper.prototype.export_as_JSON.apply(this);
+            ret.price_manually_set = this.price_manually_set;
+            return ret
+        },
+        init_from_JSON: function(json) {
+            OrderlineSuper.prototype.init_from_JSON.apply(this,arguments);
+            this.price_manually_set = json.price_manually_set;
         },
     });
 
@@ -46,6 +60,9 @@ odoo.define('pos_discount_base.screens', function (require) {
             if( discount < 0 ){
                 order.add_product(product, { price: discount });
             }
+
+            // prevents setting discount to a default value when partner changing (set_pricelist)
+            this.pos.get_order().get_selected_orderline().price_manually_set = true;
         },
         // DIFFERENCES FROM ORIGINAL:
         // confirm is separate function
