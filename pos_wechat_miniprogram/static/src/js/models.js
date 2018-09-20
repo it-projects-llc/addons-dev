@@ -11,21 +11,25 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
     models.load_models({
         model: 'pos.miniprogram.order',
         fields: [],
-        domain:[['confirmed_from_pos', '=', false]],
+        domain: function(self) {
+          return [['confirmed_from_pos', '=', false], ['shop_id', '=', self.config.shop_id[0]]];
+        },
         loaded: function(self, orders) {
-            // load not confirmed orders
-            orders.forEach(function(order) {
-                self.unconfirmed_miniprogram_orders_ids.push(order.id);
-                order.lines_ids = [];
-                self.get_miniprogram_order_lines_by_order_id(order.id).then(function(lines) {
-                    if (Array.isArray(lines)) {
-                        order.lines_ids = order.lines_ids.concat(lines);
-                    } else {
-                        order.lines_ids.push(lines);
-                    }
-                    self.on_wechat_miniprogram(order);
+            if (self.config.allow_message_from_miniprogram) {
+                // load not confirmed orders
+                orders.forEach(function (order) {
+                    self.unconfirmed_miniprogram_orders_ids.push(order.id);
+                    order.lines_ids = [];
+                    self.get_miniprogram_order_lines_by_order_id(order.id).then(function (lines) {
+                        if (Array.isArray(lines)) {
+                            order.lines_ids = order.lines_ids.concat(lines);
+                        } else {
+                            order.lines_ids.push(lines);
+                        }
+                        self.on_wechat_miniprogram(order);
+                    });
                 });
-            });
+            }
         },
     });
 
@@ -207,6 +211,13 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
             return this.cashregisters.find(function(c) {
                 return c.journal.wechat && c.journal.wechat === 'jsapi';
             });
+        },
+        ms_create_order: function(options) {
+            var data = options.data;
+            if (data.miniprogram_order && data.miniprogram_order.id) {
+                return false;
+            }
+            return PosModelSuper.prototype.ms_create_order.apply(this, arguments);
         }
     });
 
