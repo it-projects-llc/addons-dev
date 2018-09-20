@@ -57,12 +57,14 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
             return rpc.query({
                 model: 'pos.miniprogram.order.line',
                 method: 'search_read',
-                args: [[['order_id', '=', id]], []],
+                args: [[['order_id', '=', id]], []]
             });
         },
         on_wechat_miniprogram: function(message) {
-            var order = this.get('orders').find(function(item){
-                return item.miniprogram_order.id === message.id;
+            var order = this.get('orders').find(function(item) {
+                if (item.miniprogram_order) {
+                    return item.miniprogram_order.id === message.id;
+                }
             });
             if (order) {
                 this.update_miniprogram_order(order, message);
