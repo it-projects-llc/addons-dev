@@ -47,7 +47,7 @@ odoo.define('pos_disable_payment_restaurant', function(require){
                     this.$el.find('.numpad-backspace').removeClass('disable');
                     if (user.allow_remove_kitchen_order_line) {
                         $('.pads .numpad').find('.numpad-backspace').removeClass('disable');
-                    } else if (line.at_least_once_printed) {
+                    } else if (line.was_printed) {
                         $('.pads .numpad').find('.numpad-backspace').addClass('disable');
                     }
                 } else{
@@ -59,7 +59,7 @@ odoo.define('pos_disable_payment_restaurant', function(require){
             this._super(line);
             var user = this.pos.get_cashier() || this.pos.user;
             var order = this.pos.get_order();
-            if (order && !user.allow_decrease_amount) {
+            if (order) {
                 this.check_kitchen_access(line);
             }
         },
@@ -69,19 +69,16 @@ odoo.define('pos_disable_payment_restaurant', function(require){
             var common_selector = '.product-screen.screen .numpad .input-button';
             var numpad_buttons = $(common_selector + '.number-char');
 
-            if (user.allow_decrease_kitchen) {
-                numpad_buttons.removeClass('disable');
-            } else {
-                if (user.allow_refund) {
-                    numpad_buttons = numpad_buttons.add(common_selector + '.numpad-minus');
-                }
-                if (user.allow_decrease_amount) {
-                    numpad_buttons = numpad_buttons.add(common_selector + '.numpad-backspace');
-                }
-                numpad_buttons.removeClass('disable');
-                if ( line && line.at_least_once_printed && state.get('mode') === 'quantity') {
+            if (user.allow_refund) {
+                numpad_buttons = numpad_buttons.add(common_selector + '.numpad-minus');
+            }
+            if (user.allow_decrease_amount) {
+                numpad_buttons = numpad_buttons.add(common_selector + '.numpad-backspace');
+            }
+
+            numpad_buttons.removeClass('disable');
+            if (!user.allow_decrease_kitchen && (line && line.was_printed && state.get('mode') === 'quantity' )) {
                     numpad_buttons.addClass('disable');
-                }
             }
 
             if (line && line.quantity <= 0) {
@@ -89,7 +86,7 @@ odoo.define('pos_disable_payment_restaurant', function(require){
                     $('.pads .numpad').find('.numpad-backspace').removeClass('disable');
                     if (user.allow_remove_kitchen_order_line) {
                         $('.pads .numpad').find('.numpad-backspace').removeClass('disable');
-                    } else if (line.at_least_once_printed) {
+                    } else if (line.was_printed) {
                         $('.pads .numpad').find('.numpad-backspace').addClass('disable');
                     }
                 } else {
@@ -112,7 +109,7 @@ odoo.define('pos_disable_payment_restaurant', function(require){
                     this.$el.find('.numpad-backspace').removeClass('disable');
                     if (user.allow_remove_kitchen_order_line) {
                         this.$el.find('.numpad-backspace').removeClass('disable');
-                    } else if (orderline.at_least_once_printed) {
+                    } else if (orderline.was_printed) {
                         this.$el.find('.numpad-backspace').addClass('disable');
                     }
                 } else{
@@ -126,17 +123,17 @@ odoo.define('pos_disable_payment_restaurant', function(require){
     models.Orderline = models.Orderline.extend({
         set_dirty: function(dirty) {
             if (this.mp_dirty && this.mp_dirty !== dirty && dirty === false) {
-                this.at_least_once_printed = true;
+                this.was_printed = true;
             }
             _super_orderline.set_dirty.apply(this,arguments);
         },
         export_as_JSON: function() {
             var data = _super_orderline.export_as_JSON.apply(this, arguments);
-            data.at_least_once_printed = this.at_least_once_printed || false;
+            data.was_printed = this.was_printed || false;
             return data;
         },
         init_from_JSON: function(json) {
-            this.at_least_once_printed = json.at_least_once_printed;
+            this.was_printed = json.was_printed;
             _super_orderline.init_from_JSON.call(this, json);
         }
     });

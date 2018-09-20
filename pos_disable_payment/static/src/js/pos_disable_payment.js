@@ -26,6 +26,16 @@ odoo.define('pos_disable_payment', function(require){
             }
         }
     });
+    var _super_order = models.Order.prototype;
+    models.Order = models.Order.extend({
+        select_orderline: function(line){
+            _super_order.select_orderline.call(this, line);
+            var chrome_screens = this.pos.chrome.screens
+            if (chrome_screens && chrome_screens.products && chrome_screens.products.order_widget) {
+                chrome_screens.products.order_widget.check_numpad_access();
+            }
+        },
+    });
 
     chrome.Chrome.include({
         init: function(){
@@ -81,10 +91,6 @@ odoo.define('pos_disable_payment', function(require){
                 $('.numpad-backspace').removeClass('disable');
             }
             this.check_numpad_access(line);
-        },
-        click_line: function(orderline, event) {
-            this._super(orderline, event);
-            this.check_numpad_access(orderline);
         },
         renderElement:function(scrollbottom){
             this._super(scrollbottom);
