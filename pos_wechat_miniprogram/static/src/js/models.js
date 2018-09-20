@@ -38,7 +38,9 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
             this.bus.add_channel_callback("wechat.miniprogram", this.on_wechat_miniprogram, this);
             this.ready.then(function() {
                 var not_found = self.get('orders').map(function(r) {
-                    return r.miniprogram_order.id;
+                    if (r.miniprogram_order) {
+                        return r.miniprogram_order.id;
+                    }
                 });
 
                 self.unconfirmed_miniprogram_orders_ids.forEach(function(id) {
@@ -47,7 +49,7 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
 
                 _.each(not_found, function(id) {
                     var order = self.get('orders').find(function(r){
-                        return id === r.miniprogram_order.id;
+                        return r.miniprogram_order && id === r.miniprogram_order.id;
                     });
                     order.destroy({'reason':'abandon'});
                 });
@@ -147,7 +149,7 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
             }
 
             // auto print payed orders
-            if(this.printers.length && order.hasChangesToPrint() && this.config.auto_print_miniprogram_orders && order.miniprogram_order.state === "done"){
+            if(this.printers.length && order.hasChangesToPrint() && this.config.auto_print_miniprogram_orders && order.miniprogram_order && order.miniprogram_order.state === "done"){
                 order.printChanges();
                 order.saveChanges();
             }
@@ -274,6 +276,6 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
         init_from_JSON: function(json) {
             this.miniprogram_line = json.miniprogram_line;
             OrderlineSuper.prototype.init_from_JSON.call(this, json);
-        },
+        }
     });
 });

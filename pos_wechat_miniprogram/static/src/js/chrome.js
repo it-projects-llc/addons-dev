@@ -9,7 +9,7 @@ odoo.define('pos_wechat_miniprogram.chrome', function(require){
         renderElement: function() {
             this._super();
             var order = this.pos.get_order();
-            if (order && order.miniprogram_order.state === "done") {
+            if (order && order.miniprogram_order && order.miniprogram_order.state === "done") {
                 $(this.el).addClass('paid');
             } else {
                 $(this.el).removeClass('paid');
