@@ -39,7 +39,9 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
             this.ready.then(function() {
 
                 var mp_orders = self.get('orders').filter(function(order) {
-                    return order.miniprogram_order
+                    if (order.miniprogram_order) {
+                        return order.miniprogram_order
+                    }
                 });
 
                 var not_found = mp_orders.map(function(r) {
