@@ -7,7 +7,7 @@
 }
 /* Product Screen */
 .pos .product-screen.paid .leftpane .numpad {
-    display: none;
+    display: none!important;
 }
 .pos .product-screen.paid .leftpane .control-buttons {
     padding: 8px 16px 0px 10px;
