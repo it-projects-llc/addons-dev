@@ -9,7 +9,7 @@ odoo.define('pos_disable_payment_restaurant', function(require){
     var screens = require('pos_disable_payment');
     var models = require('point_of_sale.models');
 
-    models.load_fields("res.users", ['allow_decrease_kitchen_only','allow_remove_kitchen_order_line']);
+    models.load_fields("res.users", ['allow_decrease_kitchen','allow_remove_kitchen_order_line']);
 
     screens.ProductScreenWidget.include({
         show: function(reset){
@@ -36,10 +36,7 @@ odoo.define('pos_disable_payment_restaurant', function(require){
             var order = this.pos.get_order();
             if (order) {
                 line = line || order.get_selected_orderline();
-                var user = this.pos.get_cashier() || this.pos.user;
-                if (!user.allow_decrease_amount || !user.allow_remove_kitchen_order_line) {
-                    this.check_kitchen_access(line);
-                }
+                this.check_kitchen_access(line);
             }
         },
         orderline_change: function(line) {
@@ -72,15 +69,19 @@ odoo.define('pos_disable_payment_restaurant', function(require){
             var common_selector = '.product-screen.screen .numpad .input-button';
             var numpad_buttons = $(common_selector + '.number-char');
 
-            if (user.allow_decrease_kitchen_only) {
-                numpad_buttons = numpad_buttons.add(common_selector + '.numpad-minus');
-                if ((line && line.was_printed) || (state.get('mode') != 'quantity')) {
-                    numpad_buttons.removeClass('disable');
-                } else if (!numpad_buttons.hasClass('disable')) {
+            if (user.allow_decrease_kitchen) {
+                numpad_buttons.removeClass('disable');
+            } else {
+                if (user.allow_refund) {
+                    numpad_buttons = numpad_buttons.add(common_selector + '.numpad-minus');
+                }
+                if (user.allow_decrease_amount) {
+                    numpad_buttons = numpad_buttons.add(common_selector + '.numpad-backspace');
+                }
+                numpad_buttons.removeClass('disable');
+                if ( line && line.at_least_once_printed && state.get('mode') === 'quantity') {
                     numpad_buttons.addClass('disable');
                 }
-            } else if (numpad_buttons.hasClass('disable')) {
-                numpad_buttons.removeClass('disable');
             }
 
             if (line && line.quantity <= 0) {
@@ -124,14 +125,14 @@ odoo.define('pos_disable_payment_restaurant', function(require){
     var _super_orderline = models.Orderline.prototype;
     models.Orderline = models.Orderline.extend({
         set_dirty: function(dirty) {
-            if (this.mp_dirty !== dirty && dirty === false) {
+            if (this.mp_dirty && this.mp_dirty !== dirty && dirty === false) {
                 this.at_least_once_printed = true;
             }
             _super_orderline.set_dirty.apply(this,arguments);
         },
         export_as_JSON: function() {
             var data = _super_orderline.export_as_JSON.apply(this, arguments);
-            data.at_least_once_printed = this.at_least_once_printed || [];
+            data.at_least_once_printed = this.at_least_once_printed || false;
             return data;
         },
         init_from_JSON: function(json) {

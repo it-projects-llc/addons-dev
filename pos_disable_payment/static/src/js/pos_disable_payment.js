@@ -93,11 +93,12 @@ odoo.define('pos_disable_payment', function(require){
         check_numpad_access: function(line) {
             var order = this.pos.get_order();
             if (order) {
+                var numpad_backspace = $('.numpad').find('.numpad-backspace');
                 line = line || order.get_selected_orderline();
-                var user = this.pos.cashier || this.pos.user;
+                var user = this.pos.get_cashier() || this.pos.user;
                 var state = this.getParent().numpad.state;
+                numpad_backspace.removeClass('disable');
                 if (!line) {
-                    $('.numpad').find('.numpad-backspace').removeClass('disable');
                     $('.numpad').find("[data-mode='quantity']").removeClass('disable');
                     return false;
                 }
@@ -108,18 +109,18 @@ odoo.define('pos_disable_payment', function(require){
                         $('.numpad').find("[data-mode='quantity']").removeClass('disable');
                         state.changeMode('quantity');
                     }
-                    if (user.allow_delete_order_line) {
-                        $('.numpad').find('.numpad-backspace').removeClass('disable');
+                    if (!user.allow_delete_order_line) {
+                        numpad_backspace.addClass('disable');
                     }
-                } else {
+                } else if (state.get('mode') === 'quantity'){
                     // disable the backspace button of numpad
-                    $('.pads .numpad').find('.numpad-backspace').addClass('disable');
+                    numpad_backspace.addClass('disable');
                 }
             }
         },
         orderline_change_line: function(line) {
             this._super(line);
-            var user = this.pos.cashier || this.pos.user;
+            var user = this.pos.get_cashier() || this.pos.user;
             var order = this.pos.get_order();
             if (order && !user.allow_decrease_amount) {
                 // disable the backspace button of numpad
