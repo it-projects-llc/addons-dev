@@ -36,7 +36,7 @@
         "views/pos_multi_session_restaurant_view.xml",
         "views/res_config_settings_view.xml",
         "wizard/qrcode.xml",
-        "wizard/pos_payment.xml",
+        "wizard/pos_payment_views.xml",
         "report/report_table_qrcode.xml",
     ],
     "demo": [
