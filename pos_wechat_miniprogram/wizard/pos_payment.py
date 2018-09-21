@@ -14,7 +14,6 @@ class PosMakePayment(models.TransientModel):
     def update_wechat_order(self):
         super(PosMakePayment, self).update_wechat_order()
         if self.journal_wechat == 'jsapi':
-            order = self.env['pos.order'].browse(self.env.context.get('active_id', False))
-            record = self.env['pos.miniprogram.order'].search([('order_id', '=', order.id)]).wechat_order_id
+            record = self.env['pos.miniprogram.order'].search([('order_ref', '=', self.order_ref)]).wechat_order_id
             self.wechat_order_id = record
             self.micropay_id = False

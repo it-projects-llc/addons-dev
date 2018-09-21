@@ -28,6 +28,7 @@ class PosWeChatMiniProgramOrder(models.Model):
     lines_ids = fields.One2many('pos.miniprogram.order.line', 'order_id', string='Order Lines',
                                 readonly=True, copy=True)
     order_id = fields.Many2one('pos.order', string="Point of Sale")
+    order_ref = fields.Char('Order Reference', readonly=True)
     wechat_order_id = fields.Many2one('wechat.order', string="WeChar Order")
     state = fields.Selection([
         ('draft', 'Unpaid'),

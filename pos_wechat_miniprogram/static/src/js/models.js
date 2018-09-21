@@ -248,6 +248,7 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
         export_as_JSON: function() {
             var data = OrderSuper.prototype.export_as_JSON.apply(this, arguments);
             data.miniprogram_order = this.miniprogram_order;
+            data.miniprogram_order_ref = this.uid;
             return data;
         },
         init_from_JSON: function(json) {

@@ -20,6 +20,7 @@ class PosOrder(models.Model):
                     miniprogram_order.write({
                         'state': 'done',
                         'order_id': order.id,
-                        'confirmed_from_pos': True
+                        'confirmed_from_pos': True,
+                        'order_ref': data.get('miniprogram_order_ref')
                     })
         return res
