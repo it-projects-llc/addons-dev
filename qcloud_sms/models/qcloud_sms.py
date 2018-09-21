@@ -223,7 +223,7 @@ class QCloudSMSTemplate(models.Model):
         help="Parameters must be separated by commas. If the template has no parameters, leave it empty."
     )
     international_sms_sign = fields.Char(
-        string='International SMS Signature ID',
+        string='International SMS Signature',
         help='SMS Signature is the Tencent Cloud SMS signature (an identifier added before the message body for '
              'identification of the company or business.).'
     )
