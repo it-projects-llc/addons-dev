@@ -21,6 +21,7 @@
         "qcloud_sms",
         "pos_multi_session_restaurant",
         "pos_order_note",
+        "pos_wechat",
         "base_geolocalize",
     ],
     "external_dependencies": {"python": [], "bin": []},
