@@ -179,7 +179,11 @@ odoo.define('pos_order_receipt_custom.models', function (require) {
         },
         init_from_JSON: function(json) {
             _super_order.init_from_JSON.apply(this,arguments);
-            this.table.open_time = json.table_open_time;
+            if (!this.table){
+                // the condition is made for compatibility with pos_orders_history_reprint
+                this.table = {floor: {}};
+            }
+            this.table.open_time = json.table_open_time || json.create_date;
             this.first_order_printing = json.first_order_printing;
         },
     });
