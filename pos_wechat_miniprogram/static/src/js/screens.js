@@ -31,6 +31,18 @@ odoo.define('pos_wechat_miniprogram.screens', function(require){
         }
     });
 
+    screens.PaymentScreenWidget.include({
+        render_paymentmethods: function() {
+            var methods = this._super();
+            var jsapi_journal = this.pos.get_mp_cashregister();
+            var el = methods.find(`[data-id='${jsapi_journal.id}']`);
+            if (el.length) {
+                el.remove();
+            }
+            return methods;
+        },
+    });
+
     screens.ClientListScreenWidget.include({
         show: function(){
             this._super();
