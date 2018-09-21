@@ -35,7 +35,8 @@
     ],
     "qweb": [
         "static/src/xml/dashboard.xml",
-        "static/src/xml/configure_api_button.xml"
+        # Сommented until we discuss it
+        # "static/src/xml/configure_api_button.xml"
     ],
 
     "post_load": None,
