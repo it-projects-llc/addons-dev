@@ -38,7 +38,7 @@ class WechatMiniProgramController(http.Controller):
                 'wechat_session_key': session_key,
             })
         else:
-            if user_info is False:
+            if not user_info:
                 raise UserError(
                     _('Unable to get user info from WeChat mini-program: %s') % user_info)
 
