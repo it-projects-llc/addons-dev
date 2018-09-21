@@ -214,7 +214,11 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
         },
         ms_create_order: function(options) {
             var data = options.data;
-            if (data.miniprogram_order && data.miniprogram_order.id) {
+            var json = options.json;
+            if (data && data.miniprogram_order && data.miniprogram_order.id) {
+                return false;
+            }
+            if (json && json.miniprogram_order && json.miniprogram_order.id) {
                 return false;
             }
             return PosModelSuper.prototype.ms_create_order.apply(this, arguments);
