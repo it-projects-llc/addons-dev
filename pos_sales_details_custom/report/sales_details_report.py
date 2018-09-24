@@ -32,11 +32,13 @@ class ReportSaleDetails(models.AbstractModel):
             for i in result['payments']:
                 if i['name'] == journal.name:
                     i['pay_num'] = 'pay_num' in i and i['pay_num'] + 1 or 1
+                    i['type'] = journal.type
 
         result['payments_total'] = {
             'name': 'Total',
             'total': sum([p['total'] for p in result['payments']] + [0]),
             'pay_num': sum([('pay_num' in p and p['pay_num'] or 0) for p in result['payments']] + [0]),
+            'cash': sum([p['total'] for p in result['payments'] if p['type'] == 'cash'] + [0]),
         }
 
         result['card_payments'] = []
@@ -110,12 +112,14 @@ class ReportSaleDetails(models.AbstractModel):
             put_inout += ps.pos_cash_box_ids and sum(
                 [(cb.put_type == 'in' and cb.amount or -cb.amount) for cb in ps.pos_cash_box_ids]) or 0
             result['real_closing_balance'] += ps.cash_register_balance_end_real
-            result['cash_register_balance_end'] += ps.cash_register_balance_end
             result['opening_balance'] += ps.cash_register_balance_start
 
-        result['real_closing_balance'] = result['real_closing_balance']
-        result['theoretical_closing_balance'] = (result['cash_register_balance_end'] + put_inout +
-                                                 result['expenses_total'] + result['total_invoices_cash'])
+        result['theoretical_closing_balance'] = (result['opening_balance'] + put_inout +
+                                                 result['payments_total']['total'] +
+                                                 result['expenses_total'] + result['total_invoices'])
+        result['cash_register_balance_end'] = (result['opening_balance'] + put_inout +
+                                               result['payments_total']['cash'] +
+                                               result['expenses_total'] + result['total_invoices_cash'])
         result['closing_difference'] = result['cash_register_balance_end'] - result['real_closing_balance']
         result['date'] = datetime.now().strftime('%y/%m/%d')
 
