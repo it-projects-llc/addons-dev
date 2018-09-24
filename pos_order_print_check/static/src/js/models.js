@@ -10,11 +10,11 @@ odoo.define('pos_order_print_check.models', function (require) {
         print_order_receipt: function(printer, changes) {
             this.old_res = this.saved_resume || {};
             var self = this;
-            if ( changes['new'].length > 0 || changes['cancelled'].length > 0) {
+            if ( changes.new.length > 0 || changes.cancelled.length > 0) {
                 printer.check_connection().then(function() {
                     _super_order.print_order_receipt.call(self, printer, changes);
-                    var cancelled_lines = changes['cancelled'] || [];
-                    var new_lines = changes['new'] || [];
+                    var cancelled_lines = changes.cancelled || [];
+                    var new_lines = changes.new || [];
                     var lines = new_lines.concat(cancelled_lines);
                     lines.forEach(function (l) {
                         var line = self.get_orderline(l.line_id);
@@ -42,8 +42,8 @@ odoo.define('pos_order_print_check.models', function (require) {
                     });
                     setTimeout(function(){
                         self.saved_resume = self.old_res;
-                        var cancelled_lines = changes['cancelled'] || [];
-                        var new_lines = changes['new'] || [];
+                        var cancelled_lines = changes.cancelled || [];
+                        var new_lines = changes.new || [];
                         var lines = new_lines.concat(cancelled_lines);
                         lines.forEach(function (l) {
                            var line = self.get_orderline(l.line_id);
