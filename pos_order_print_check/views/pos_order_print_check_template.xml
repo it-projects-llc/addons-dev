@@ -8,7 +8,6 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
                 <script type="text/javascript" src="/pos_order_print_check/static/src/js/widget.js"></script>
                 <script type="text/javascript" src="/pos_order_print_check/static/src/js/models.js"></script>
                 <script type="text/javascript" src="/pos_order_print_check/static/src/js/multiprint.js"></script>
-                <link rel="stylesheet" href="/pos_order_print_check/static/src/css/print_check_styles.css"/>
             </xpath>
         </template>
     </data>
