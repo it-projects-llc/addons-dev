@@ -13,7 +13,7 @@ class ReportSaleDetails(models.AbstractModel):
         payments = self.env['account.payment'].search([
             ('datetime', '>=', date_start),
             ('datetime', '<=', date_stop),
-            ('paid_by_pos', '=', True)
+            ('pos_session_id', 'in', configs.mapped('session_ids').ids)
         ])
 
         res['invoices'] = []

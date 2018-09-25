@@ -46,14 +46,14 @@ class PosOrder(models.Model):
                 'partner_type': 'customer',
                 'payment_difference_handling': payment_difference_handling,
                 'writeoff_account_id': writeoff_acc_id,
-                'paid_by_pos': True,
-                'cashier': cashier
+                'cashier': cashier,
+                'pos_session_id': invoice['data']['pos_session_id']
             }
             payment = self.env['account.payment'].create(vals)
             payment.post()
 
     @api.model
-    def process_invoices_creation(self, sale_order_id):
+    def process_invoices_creation(self, sale_order_id, session_id):
         order = self.env['sale.order'].browse(sale_order_id)
         inv_id = order.action_invoice_create()
         self.env['account.invoice'].browse(inv_id).action_invoice_open()
@@ -63,9 +63,9 @@ class PosOrder(models.Model):
 class AccountPayment(models.Model):
     _inherit = 'account.payment'
 
-    paid_by_pos = fields.Boolean(default=False)
+    pos_session_id = fields.Many2one('pos.session', string='POS session')
     cashier = fields.Many2one('res.users')
-    datetime = fields.Datetime(required=True, string="Datetime", default=fields.Datetime.now)
+    datetime = fields.Datetime(string="Datetime", default=fields.Datetime.now)
 
 
 class AccountInvoice(models.Model):
