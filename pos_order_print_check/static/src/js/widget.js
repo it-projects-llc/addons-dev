@@ -24,7 +24,7 @@ odoo.define('pos_order_print_check.widget', function (require) {
 
                     if (show_popup) {
                         self.pos.gui.show_popup('error',{
-                            'title': _t('Error: Cannot Print Orders'),
+                            'title': _t('Error: Cannot print the order'),
                             'body': _t('No connection to PosBox.')
                         });
                         return false;
