@@ -10,7 +10,7 @@ odoo.define('pos_disable_payment', function(require){
     var PosBaseWidget = require('point_of_sale.BaseWidget');
     var _t = core._t;
 
-    models.load_fields("res.users", ['allow_payments','allow_delete_order','allow_discount','allow_edit_price','allow_decrease_amount','allow_decrease_kitchen_only','allow_delete_order_line','allow_create_order_line','allow_refund','allow_manual_customer_selecting']);
+    models.load_fields("res.users", ['allow_payments','allow_delete_order','allow_discount','allow_edit_price','allow_decrease_amount', 'allow_delete_order_line','allow_create_order_line','allow_refund','allow_manual_customer_selecting']);
 
     // Example of event binding and handling (triggering). Look up binding lower bind('change:cashier' ...
     // Example extending of class (method set_cashier), than was created using extend.
@@ -25,6 +25,16 @@ odoo.define('pos_disable_payment', function(require){
                 this.trigger('change:cashier', this);
             }
         }
+    });
+    var _super_order = models.Order.prototype;
+    models.Order = models.Order.extend({
+        select_orderline: function(line){
+            _super_order.select_orderline.call(this, line);
+            var chrome_screens = this.pos.chrome.screens
+            if (chrome_screens && chrome_screens.products && chrome_screens.products.order_widget) {
+                chrome_screens.products.order_widget.check_numpad_access();
+            }
+        },
     });
 
     chrome.Chrome.include({
@@ -82,10 +92,6 @@ odoo.define('pos_disable_payment', function(require){
             }
             this.check_numpad_access(line);
         },
-        click_line: function(orderline, event) {
-            this._super(orderline, event);
-            this.check_numpad_access(orderline);
-        },
         renderElement:function(scrollbottom){
             this._super(scrollbottom);
             this.check_numpad_access();
@@ -93,11 +99,12 @@ odoo.define('pos_disable_payment', function(require){
         check_numpad_access: function(line) {
             var order = this.pos.get_order();
             if (order) {
+                var numpad_backspace = $('.numpad').find('.numpad-backspace');
                 line = line || order.get_selected_orderline();
-                var user = this.pos.cashier || this.pos.user;
+                var user = this.pos.get_cashier() || this.pos.user;
                 var state = this.getParent().numpad.state;
+                numpad_backspace.removeClass('disable');
                 if (!line) {
-                    $('.numpad').find('.numpad-backspace').removeClass('disable');
                     $('.numpad').find("[data-mode='quantity']").removeClass('disable');
                     return false;
                 }
@@ -108,50 +115,22 @@ odoo.define('pos_disable_payment', function(require){
                         $('.numpad').find("[data-mode='quantity']").removeClass('disable');
                         state.changeMode('quantity');
                     }
-                    if (user.allow_delete_order_line) {
-                        $('.numpad').find('.numpad-backspace').removeClass('disable');
+                    if (!user.allow_delete_order_line) {
+                        numpad_backspace.addClass('disable');
                     }
-                } else {
+                } else if (state.get('mode') === 'quantity'){
                     // disable the backspace button of numpad
-                    $('.pads .numpad').find('.numpad-backspace').addClass('disable');
-                    this.check_kitchen_access(line);
+                    numpad_backspace.addClass('disable');
                 }
             }
         },
         orderline_change_line: function(line) {
             this._super(line);
-            var user = this.pos.cashier || this.pos.user;
+            var user = this.pos.get_cashier() || this.pos.user;
             var order = this.pos.get_order();
             if (order && !user.allow_decrease_amount) {
                 // disable the backspace button of numpad
                 $('.pads .numpad').find('.numpad-backspace').addClass('disable');
-                this.check_kitchen_access(line);
-            }
-        },
-        check_kitchen_access: function(line) {
-            var user = this.pos.cashier || this.pos.user;
-            var state = this.getParent().numpad.state;
-            if (user.allow_decrease_kitchen_only) {
-                $('.numpad').find("[data-mode='quantity']").removeClass('disable');
-                if (state.get('mode') !== 'quantity') {
-                    state.changeMode('quantity');
-                }
-            } else if (line.mp_dirty) {
-                if ($('.numpad').find("[data-mode='quantity']").hasClass('disable')) {
-                    $('.numpad').find("[data-mode='quantity']").removeClass('disable');
-                    state.changeMode('quantity');
-                }
-            } else {
-                $('.numpad').find("[data-mode='quantity']").addClass('disable');
-                if (state.get('mode') === 'quantity') {
-                    if (user.allow_discount) {
-                        state.changeMode('discount');
-                    } else if (user.allow_edit_price) {
-                        state.changeMode('price');
-                    } else {
-                        state.changeMode("");
-                    }
-                }
             }
         }
     });
@@ -305,4 +284,6 @@ odoo.define('pos_disable_payment', function(require){
             }
         }
     });
+
+    return screens;
 });
