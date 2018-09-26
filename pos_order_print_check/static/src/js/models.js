@@ -37,8 +37,8 @@ odoo.define('pos_order_print_check.models', function (require) {
                     self.trigger('change', self);
                 }, function() {
                     self.pos.gui.show_popup('error',{
-                        'title': _t('Error: Cannot Print some Products'),
-                        'body': _t('No connection to Printer: ' + printer.config.name)
+                        'title': _t('Error: Cannot print some of the products'),
+                        'body': _t('No connection to the printer: ' + printer.config.name)
                     });
                     setTimeout(function(){
                         self.saved_resume = self.old_res;
