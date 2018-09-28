@@ -21,6 +21,13 @@ odoo.define('pos_discount_absolute', function (require) {
             // popup_abs_discount prevents errors on a page loading and exclude discount stuff rendering in other popups
             this.popup_abs_discount = false;
             this.pos.discount_abs_type = false;
+
+            if (typeof options === 'string') {
+                options = {title: options};
+            } else {
+                options = options || {};
+            }
+
             if (options.abs_disc) {
                 self.popup_abs_discount = true;
                 self.events["click .absolute.button"] = "click_absolute_discount";
