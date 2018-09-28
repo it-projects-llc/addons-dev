@@ -14,6 +14,9 @@ import pytz
 import odoo.addons.decimal_precision as dp
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools import float_is_zero
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class ResPartner(models.Model):
@@ -322,6 +325,7 @@ class PosConfig(models.Model):
     def create_journal(self, vals):
         if self.env['account.journal'].search([('code', '=', vals['code'])]):
             return
+        _logger.info("Creating '" + vals['journal_name'] + "' journal")
         user = vals['user']
         debt_account = vals['debt_account']
         new_sequence = self.env['ir.sequence'].create({
@@ -503,7 +507,7 @@ class PosOrder(models.Model):
     @api.model
     def _order_fields(self, ui_order):
         res = super(PosOrder, self)._order_fields(ui_order)
-        res['amount_via_discount'] = ui_order['amount_via_discount']
+        res['amount_via_discount'] = ui_order.get('amount_via_discount', 0)
         return res
 
     def action_pos_order_paid(self):
