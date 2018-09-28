@@ -132,7 +132,7 @@ odoo.define('pos_discount_absolute', function (require) {
         update_summary: function(){
             var order = this.pos.get('selectedOrder');
             this._super();
-            if (!this.pos.config.discount_abs_enabled || !order.get_orderlines().length || !this.pos.config.discount_abs_recalculation){
+            if (!order || !this.pos.config.discount_abs_enabled || !order.get_orderlines().length || !this.pos.config.discount_abs_recalculation){
                 return;
             }
             var total = order
