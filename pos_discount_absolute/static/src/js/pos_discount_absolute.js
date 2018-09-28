@@ -30,17 +30,16 @@ odoo.define('pos_discount_absolute', function (require) {
         click_absolute_discount: function() {
             this.pos.discount_abs_type = true;
             this.inputbuffer = this.pos.config.discount_abs_value.toString();
+            this.options.title = "Absolute Discount";
             this.renderElement("Absolute Discount");
         },
         click_percentage_discount: function() {
             this.pos.discount_abs_type = false;
             this.inputbuffer = this.pos.config.discount_pc.toString();
+            this.options.title = "Discount Percentage";
             this.renderElement("Discount Percentage");
         },
-        renderElement: function(options){
-            if (options) {
-                this.options.title = options;
-            }
+        renderElement: function(){
             this._super();
             if (this.popup_abs_discount) {
                 this.$('.popup.popup-number').addClass("popup-abs-discount");
@@ -71,7 +70,7 @@ odoo.define('pos_discount_absolute', function (require) {
             this._super();
         },
         confirm_discount: function(val) {
-            if (this.pos.discount_abs_type){
+            if (this.pos.discount_abs_type && val !== null){
                 this.apply_absolute_discount(val);
             } else if (this.abs_disc_presence()) {
                 var abs_disc = this.remove_abs_discount();
