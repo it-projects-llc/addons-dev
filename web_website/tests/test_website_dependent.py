@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2018 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 import logging
@@ -63,6 +62,18 @@ class TestFields(common.TransactionCase):
         self.assertEqual(record.foo, 'nowebsite')
         self.assertEqual(record.with_context(context1).foo, 'alpha')
         self.assertEqual(record.with_context(context2).foo, 'nowebsite')
+
+        # mostly for coverage of search_multi
+        res = self.env[MODEL].search([('foo', '=', False)])
+        self.assertFalse(res)
+
+        # test many2one
+        record = self.env[MODEL].create({
+            'name': 'Name',
+            'user_id': self.env.user,
+        })
+        record.invalidate_cache()
+        self.assertEqual(record.user_id, self.env.user)
 
     def _create_property(self, vals, record=None):
         base_vals = {
@@ -135,6 +146,7 @@ class TestFields(common.TransactionCase):
         company = self.env.user.company_id
         wrong_company = self.env['res.company'].create({'name': 'A'})
         website = self.env.ref('website.default_website')
+        website.company_id = company
         record = self.env[MODEL].create({'foo': 'new_record'})
         record = record.with_context(website_id=website.id)
 
@@ -212,6 +224,8 @@ class TestFields(common.TransactionCase):
         company0 = self.env.ref('base.main_company')
         company1 = self.env['res.company'].create({'name': 'A', 'parent_id': company0.id})
         company2 = self.env['res.company'].create({'name': 'B', 'parent_id': company1.id})
+        # we assume that root user has company0
+        self.env.user.company_id = company0
         # create one user per company
         user0 = self.env['res.users'].create({'name': 'Foo', 'login': 'foo',
                                               'company_id': company0.id, 'company_ids': []})
