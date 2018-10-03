@@ -26,6 +26,7 @@
     "external_dependencies": {"python": [], "bin": []},
     "data": [
         "data/event_event_attendee_field_data.xml",
+        "views/website_event_templates.xml",
     ],
     "qweb": [
     ],
