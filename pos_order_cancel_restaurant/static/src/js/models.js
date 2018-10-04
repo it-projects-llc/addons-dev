@@ -63,7 +63,7 @@ odoo.define('pos_order_cancel_restaurant.models', function (require) {
             var new_lines = [];
             unique_categories_ids.forEach(function(id){
                 lines.forEach(function(line){
-                    if (line.product.pos_categ_id[0] === id) {
+                    if (_.contains(line.product.pos_category_ids, id)) {
                         new_lines.push(line);
                     }
                 });
