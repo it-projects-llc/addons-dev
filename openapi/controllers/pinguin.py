@@ -519,8 +519,10 @@ def transform_strfields_to_dict(fields_list):
     dct = {}
     for field in fields_list:
         parts = field.split('/')
-        data = {parts.pop(): None}
+        data = None
         for part in parts[::-1]:
+            if part == '.id':
+                part = 'id'
             data = {part: data}
         update(dct, data)
     return dct
