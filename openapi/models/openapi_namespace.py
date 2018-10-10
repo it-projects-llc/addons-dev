@@ -38,7 +38,7 @@ class Namespace(models.Model):
         string='Latest usage'
     )
 
-    access_ids = fields.One2many('openapi.access', 'namespace_id', string='Accesses')
+    access_ids = fields.One2many('openapi.access', 'namespace_id', string='Accesses', context={'active_test': False})
     user_ids = fields.Many2many('res.users', string='Allowed Users')
 
     token = fields.Char('Identification token',
