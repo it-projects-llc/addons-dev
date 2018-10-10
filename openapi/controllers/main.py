@@ -8,10 +8,10 @@ from collections import OrderedDict
 
 import werkzeug
 from odoo import http
-
-from odoo.http import content_disposition
 from odoo.addons.web_settings_dashboard.controllers.main \
     import WebSettingsDashboard
+
+import pinguin
 
 _logger = logging.getLogger(__name__)
 
@@ -52,11 +52,11 @@ class OAS(http.Controller):
     @http.route('/api/v1/<namespace_name>/swagger.json',
                 type='http', auth='public', csrf=False)
     def OAS_json_spec_download(self, namespace_name, **kwargs):
-        namespace = http.request.env['openapi.namespace'].sudo().search([
-            ('name', '=', namespace_name), ('token', '=', kwargs.get('token', ''))
-        ])
+        namespace = http.request.env['openapi.namespace'].search([('name', '=', namespace_name)])
         if not namespace:
             raise werkzeug.exceptions.NotFound()
+        if not pinguin.authenticate_token_for_namespace(namespace, kwargs.get('token')):
+            raise werkzeug.exceptions.Forbidden()
 
         spec = namespace.get_OAS_part()
 
@@ -90,7 +90,7 @@ class OAS(http.Controller):
         if 'download' in kwargs:
             response_params['headers'] = [
                 ('Content-Type', 'application/octet-stream; charset=binary'),
-                ('Content-Disposition', content_disposition('swagger.json')),
+                ('Content-Disposition', http.content_disposition('swagger.json')),
             ]
             response_params['direct_passthrough'] = True
 

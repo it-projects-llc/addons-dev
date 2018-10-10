@@ -163,13 +163,13 @@ def authenticate_token_for_user(token):
 def authenticate_token_for_namespace(namespace, token):
     """Validate token against the requested namespace.
 
-    :param str namespace: The requested namespace.
+    :param openapi.namespace namespace: The requested namespace.
     :param str token: The raw access token.
 
     :returns: **True** if token is authorized for the requested namespace, **False** otherwise.
     :rtype: bool
     """
-    return True
+    return namespace.token == token
 
 
 ###################
@@ -237,6 +237,7 @@ def get_create_context(namespace, model, canned_context):
         return error_response(*CODE__canned_ctx_not_found)
 
     return context
+
 
 # TODO: cache per model and database
 # Get model configuration (openapi.access)
@@ -464,6 +465,7 @@ def get_dictlist_from_model(model, spec, **kwargs):
         ]
 
     return result
+
 
 # Get a model with special context
 def get_model_for_read(model):
