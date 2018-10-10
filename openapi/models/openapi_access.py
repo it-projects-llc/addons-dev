@@ -5,8 +5,7 @@
 import urllib
 import inspect
 
-from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo import models, fields, api, _, exceptions
 
 
 class Access(models.Model):
@@ -44,7 +43,7 @@ class Access(models.Model):
     private_methods = fields.Text(
         'Allow Private methods',
         help='Allowed private methods. '
-        'Private methods are ones that start with undescore. '
+        'Private methods are ones that start with underscore. '
         'Format: one method per line. '
         'When empty -- private methods are not allowed')
     read_one_id = fields.Many2one(
@@ -69,27 +68,33 @@ class Access(models.Model):
     def _get_method_list(self):
         return {m[0] for m in inspect.getmembers(self.env[self.model], predicate=inspect.ismethod)}
 
-    @api.depends('public_methods')
-    def check_public_methods(self):
+    @api.multi
+    @api.constrains('public_methods')
+    def _check_public_methods(self):
         for access in self:
             for line in access.public_methods.split('\n'):
+                if not line:
+                    continue
                 if line.startswith('_'):
-                    ValidationError(_(
-                        'Private method (starting with "_" listed in public methods whitelist'))
+                    raise exceptions.ValidationError(_(
+                        'Private method (starting with "_" listed in public methods whitelist)'))
                 if line not in self._get_method_list():
-                    ValidationError(_(
+                    raise exceptions.ValidationError(_(
                         'Method %r is not part of the model\'s method list:\n %r') % (
                         line, self._get_method_list()))
 
-    @api.depends('private_methods')
-    def check_private_methods(self):
+    @api.multi
+    @api.constrains('private_methods')
+    def _check_private_methods(self):
         for access in self:
             for line in access.private_methods.split('\n'):
+                if not line:
+                    continue
                 if not line.startswith('_'):
-                    ValidationError(_(
+                    raise exceptions.ValidationError(_(
                         'Public method (not starting with "_" listed in private methods whitelist'))
                 if line not in self._get_method_list():
-                    ValidationError(_(
+                    raise exceptions.ValidationError(_(
                         'Method %r is not part of the model\'s method list:\n %r') % (
                         line, self._get_method_list()))
 
