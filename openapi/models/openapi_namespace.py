@@ -7,6 +7,7 @@ import urlparse
 import uuid
 
 from odoo import models, fields, api
+from ..controllers import pinguin
 
 
 class Namespace(models.Model):
@@ -93,8 +94,8 @@ class Namespace(models.Model):
                     parsed_current_host.scheme
                 ],
             }
-            for openapi_access in record.access_ids:
-                spec.update(openapi_access.get_OAS_part())
+            for openapi_access in record.access_ids.filtered('active'):
+                pinguin.update(spec, openapi_access.get_OAS_part())
 
             return spec
 

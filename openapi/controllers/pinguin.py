@@ -490,6 +490,24 @@ def get_model_for_read(model):
     except KeyError:
         return error_response(*CODE__obj_not_found)
 
+
+def update(d, u):
+    """Update value of a nested dictionary of varying depth.
+
+    :param dict d: Dictionary to update.
+    :param dict u: Dictionary with updates.
+
+    :returns: Merged dictionary.
+    :rtype: dict
+    """
+    for k, v in u.items():
+        if isinstance(v, collections.Mapping):
+            d[k] = update(d.get(k, {}), v)
+        else:
+            d[k] = v
+    return d
+
+
 # Python > 3.5
 # def get_dict_from_record(record, spec: tuple, include_fields: tuple, exclude_fields: tuple):
 
