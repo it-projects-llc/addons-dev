@@ -508,6 +508,47 @@ def update(d, u):
     return d
 
 
+def transform_strfields_to_dict(fields_list):
+    """Transform string fields to dictionary.
+
+    :param list fields_list: The list of string fields.
+
+    :returns: The dict of transformed fields.
+    :rtype: dict
+    """
+    dct = {}
+    for field in fields_list:
+        parts = field.split('/')
+        data = {parts.pop(): None}
+        for part in parts[::-1]:
+            data = {part: data}
+        update(dct, data)
+    return dct
+
+
+def transform_dictfields_to_list_of_tuples(record, dct):
+    """Transform fields dictionary to list.
+
+    :param odoo.models.Model record: The model object.
+    :param dict dct: The dictionary.
+
+    :returns: The list of transformed fields.
+    :rtype: list
+    """
+    fields_with_meta = {k: meta for k, meta in record.fields_get().items() if
+                        k in dct.keys()}
+    result = {}
+    for key, value in dct.items():
+        if isinstance(value, dict):
+            model_obj = get_model_for_read(fields_with_meta[key]['relation'])
+            inner_result = transform_dictfields_to_list_of_tuples(model_obj, value)
+            is_to_many = fields_with_meta[key]['type'].endswith('2many')
+            result[key] = list(inner_result) if is_to_many else tuple(inner_result)
+        else:
+            result[key] = value
+    return [(key, value) if value else key for key, value in result.items()]
+
+
 # Python > 3.5
 # def get_dict_from_record(record, spec: tuple, include_fields: tuple, exclude_fields: tuple):
 
@@ -629,3 +670,122 @@ def wrap__resource__call_method(modelname, ids, method, success_code):
     :rtype: TODO
     """
     pass  # TODO
+
+
+def get_definition_name(modelname, prefix='', postfix='', splitter='-'):
+    """Concatenation of the prefix, modelname, postfix.
+
+    :param str modelname: The name of the model.
+    :param str prefix: The prefix.
+    :param str postfix: The postfix.
+    :param str splitter: The splitter.
+
+    :returns: Concatenation of the arguments
+    :rtype: str
+    """
+    return splitter.join([s for s in [prefix, modelname, postfix] if s])
+
+
+TYPES_MAP = {
+    # 'odoo_field_type': 'OAS_type'
+    'integer': 'integer',
+    # '': 'long',
+    'float': 'float',
+    # '': 'double',
+    'char': 'string',
+    'text': 'string',
+    'binary': 'byte',
+    'boolean': 'boolean',
+    'date': 'date',
+    'datetime': 'dateTime',
+    # 'selection': '',
+    'one2many': 'array',
+    'many2one': 'integer',
+    'many2many': 'array',
+}
+
+
+def get_OAS_definitions_part(model_obj, export_fields_dict, definition_prefix='', definition_postfix=''):
+    """Recursively gets definition parts of the OAS for model by export fields.
+
+    :param odoo.models.Model model_obj: The model object.
+    :param dict export_fields_dict: The dictionary with export fields.
+            Example of the dict is as follows:
+            ```python
+            {
+                u'active': None,
+                u'child_ids': {
+                    u'user_ids': {
+                        u'city': None,
+                        u'login': None,
+                        u'password': None,
+                        u'id': None}, u'id': None
+                    },
+                    u'email': None,
+                    u'name': None
+                }
+            ```
+
+    :param str definition_prefix: The prefix for definition name.
+    :param str definition_postfix: The postfix for definition name.
+
+    :returns: Definitions for the model and relative models.
+    :rtype: dict
+    """
+    definition_name = get_definition_name(model_obj._name, definition_prefix, definition_postfix)
+
+    definitions = {
+        definition_name: {
+            'type': 'object',
+            'properties': {},
+            'required': []
+        },
+    }
+
+    fields_meta = model_obj.fields_get(export_fields_dict.keys())
+
+    for field, child_fields in export_fields_dict.items():
+        meta = fields_meta[field]
+        if child_fields:
+            child_model = model_obj.env[meta['relation']]
+            child_definition = get_OAS_definitions_part(child_model, child_fields, definition_prefix=definition_name)
+            definitions.update(child_definition)
+            child_definition_ref = "#/definitions/%s" % get_definition_name(child_model._name, prefix=definition_name)
+
+            if meta['type'].endswith('2one'):
+                field_property = {
+                    '$ref': child_definition_ref
+                }
+            else:
+                field_property = {
+                    'type': 'array',
+                    'items': {
+                        '$ref': child_definition_ref
+                    }
+                }
+        else:
+            field_property = {
+                'type': TYPES_MAP.get(meta['type'])
+            }
+
+            if meta['type'] == 'selection':
+                field_property.update({
+                    'type': 'integer' if isinstance(meta['selection'][0][0], int) else 'string',
+                    'enum': [i[0] for i in meta['selection']]
+                })
+            elif meta['type'] in ['one2many', 'many2many']:
+                field_property.update({
+                    'items': {
+                        'type': 'integer'
+                    }
+                })
+
+        definitions[definition_name]['properties'][field] = field_property
+
+        if meta['required']:
+            definitions[definition_name]['required'].append(field)
+
+    if not definitions[definition_name]['required']:
+        del definitions[definition_name]['required']
+
+    return definitions

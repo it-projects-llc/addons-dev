@@ -8,6 +8,7 @@ import inspect
 
 from odoo import models, fields, api, _, exceptions
 
+from ..controllers import pinguin
 
 class Access(models.Model):
     _name = 'openapi.access'
@@ -111,17 +112,7 @@ class Access(models.Model):
                 for record in self]
 
     @api.multi
-    def _get_read_many_definition_name(self):
-        for record in self:
-            return '%s-read_many' % record.model
-
-    @api.multi
-    def _get_read_one_definition_name(self):
-        for record in self:
-            return '%s-read_one' % record.model
-
-    @api.multi
-    def get_OAS_paths_part(self):
+    def get_OAS_paths_part(self, definition_prefix=''):
         for record in self:
             model_name = record.model
             read_many_path = '/%s' % model_name
@@ -129,8 +120,8 @@ class Access(models.Model):
             # read_many_path = '/%s/%s' % (record.namespace_id.name, model_name)
             read_one_path = '%s/{%s.id}' % (read_many_path, model_name)
 
-            read_many_definition_ref = "#/definitions/%s" % record._get_read_many_definition_name()
-            read_one_definition_ref = "#/definitions/%s" % record._get_read_one_definition_name()
+            read_many_definition_ref = "#/definitions/%s" % pinguin.get_definition_name(record.model, definition_prefix, 'read_many')
+            read_one_definition_ref = "#/definitions/%s" % pinguin.get_definition_name(record.model, definition_prefix, 'read_one')
 
             capitalized_model_name = ''.join([s.capitalize() for s in model_name.split('.')])
 
@@ -297,73 +288,13 @@ class Access(models.Model):
     @api.multi
     def get_OAS_definitions_part(self):
         for record in self:
-            read_one_definition_name = record._get_read_one_definition_name()
-            read_many_definition_name = record._get_read_many_definition_name()
-
-            export_fields_read_one = [r.name for r in record.read_one_id.export_fields]
-            export_fields_read_many = [r.name for r in record.read_many_id.export_fields]
-
-            definitions = {
-                read_one_definition_name: {
-                    'type': 'object',
-                    'properties': {},
-                },
-                read_many_definition_name: {
-                    'type': 'object',
-                    'properties': {},
-                }
-            }
-            for field, meta in self.env[record.model].fields_get().items():
-                if field not in export_fields_read_one and field not in export_fields_read_many:
-                    continue
-
-                types_map = {
-                    # 'odoo_field_type': 'OAS_type'
-                    'integer': 'integer',
-                    # '': 'long',
-                    'float': 'float',
-                    # '': 'double',
-                    'char': 'string',
-                    'text': 'string',
-                    'binary': 'byte',
-                    'boolean': 'boolean',
-                    'date': 'date',
-                    'datetime': 'dateTime',
-                    # 'selection': '',
-                    'one2many': 'array',
-                    'many2one': 'integer',
-                    'many2many': 'array',
-                }
-
-                field_property = {
-                    'type': types_map.get(meta['type'])
-                }
-
-                if meta['type'] == 'selection':
-                    field_property.update({
-                        'type': 'integer' if isinstance(meta['selection'][0][0], int) else 'string',
-                        'enum': [i[0] for i in meta['selection']]
-                    })
-                elif meta['type'] in ['one2many', 'many2many']:
-                    field_property.update({
-                        'items': {
-                            'type': 'integer'
-                        }
-                    })
-
-                if field in export_fields_read_one:
-                    definitions[read_one_definition_name]['properties'][field] = field_property
-                    if meta['required']:
-                        definitions[read_one_definition_name]['required'] = \
-                            definitions[read_one_definition_name].get('required', []).append(field)
-                if field in export_fields_read_many:
-                    definitions[read_many_definition_name]['properties'][field] = field_property
-                    if meta['required']:
-                        definitions[read_many_definition_name]['required'] = \
-                            definitions[read_many_definition_name].get('required', []).append(field)
-
-            # remove the keys for which there are an empty value by 'properties' key
-            return {k: v for k, v in definitions.items() if v['properties']}
+            related_model = record.env[record.model]
+            export_fields_read_one = pinguin.transform_strfields_to_dict(record.read_one_id.export_fields.mapped('name'))
+            export_fields_read_many = pinguin.transform_strfields_to_dict(record.read_many_id.export_fields.mapped('name'))
+            definitions = {}
+            definitions.update(pinguin.get_OAS_definitions_part(related_model, export_fields_read_one, definition_postfix='read_one'))
+            definitions.update(pinguin.get_OAS_definitions_part(related_model, export_fields_read_many, definition_postfix='read_many'))
+            return definitions
 
     @api.multi
     def get_OAS_part(self):
