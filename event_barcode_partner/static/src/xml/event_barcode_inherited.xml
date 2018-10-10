@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates>
+
+    <t t-name="session_number_h1">
+        <h1 class="mt0">Session #: <t  t-esc="session_number"></t></h1>
+    </t>
+
+    <t t-name="client_row">
+        <div class="client_cell" t-attf-aid="#{att.aid}">
+            <div class="col-md-8 col-xs-8">
+                <h2 class="o_client_name">
+                    <t t-esc="att.a_name"/>
+                    <t t-esc="att.p_name"/>
+                </h2>
+            </div>
+            <div class="col-md-4 col-xs-4 client_status">
+                <h2>
+                    <t t-if="att.state == 'draft'">
+                        Unconfirmed
+                    </t>
+                    <t t-if="att.state == 'cancel'">
+                        Cancelled
+                    </t>
+                    <t t-if="att.state == 'open'">
+                        Confirmed
+                    </t>
+                    <t t-if="att.state == 'done'">
+                        Attended
+                    </t>
+                </h2>
+            </div>
+            <div class="col-md-8 col-xs-8 rfid" style="display: none">
+                <h2 class="o_client_name">
+                    RFID: <t t-esc="att.rfid || 'no RFID for the attendee'"/>
+                </h2>
+            </div>
+            <div class="col-md-4 col-xs-4 rfid accept_button" style="display: none">
+                <!-- -->
+            </div>
+            <t t-if="!att.signed_terms">
+                <div class="col-md-8 col-xs-8 rfid" style="display: none">
+                    <h2 class="o_client_name">
+                        Attendee have not signed terms
+                    </h2>
+                </div>
+                <div class="btn btn-default col-md-4 col-xs-4 rfid sign_request" style="display: none">
+                    <h2>Send Request</h2>
+                </div>
+            </t>
+            <t t-else="">
+                <t t-if="att.state == 'open' || att.state == 'draft'">
+                    <div class="col-md-8 col-xs-8 rfid" style="display: none">
+                        <h2 class="o_client_name">
+                            Terms are signed
+                        </h2>
+                    </div>
+                    <div class="btn btn-primary col-md-4 col-xs-4 rfid accept_request" style="display: none">
+                        <h2>Accept</h2>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="col-md-8 col-xs-8 rfid" style="display: none">
+                        <h2 class="o_client_name">
+                            Terms are signed
+                        </h2>
+                    </div>
+                </t>
+            </t>
+
+        </div>
+    </t>
+
+    <t t-name="event_barcode_template" t-extend="event_barcode_template">
+        <t t-jquery=".o_event_barcode_main" t-operation="after">
+            <div class="o_event_barcode_detail client_info text-center">
+                <div class="col-md-12 col-xs-12 client_title text-center">
+                    <h2 class="o_client_list_title">Clients</h2>
+                </div>
+            </div>
+        </t>
+
+        <t t-jquery="input#event_barcode" t-operation="after">
+            <input class="mt32" type="text" id="event_client_name_search" placeholder="Search Client by Name..." size="40"/>
+        </t>
+    </t>
+
+</templates>
