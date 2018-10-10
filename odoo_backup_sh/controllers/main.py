@@ -70,44 +70,40 @@ class BackupDatabase(web.controllers.main.Database):
 
 class BackupController(http.Controller):
 
-    def get_cloud_params(self, redirect):
-        cloud_params = self.get_local_cloud_params()
-        if not cloud_params:
-            config_parser.read(config.rcfile)
-            user_key = config_parser.get('options', 'odoo_backup_user_key', fallback=None)
-            if not user_key:
-                user_key = ''.join(random.choice(string.hexdigits) for _ in range(30))
-                config_parser.set('options', 'odoo_backup_user_key', user_key)
-                with open(config.rcfile, 'w') as configfile:
-                    config_parser.write(configfile)
-            cloud_params = requests.get(
-                BACKUP_SERVICE_ENDPOINT + '/get_cloud_params',
-                params={'user_key': user_key, 'redirect': redirect}
-            ).json()
-            if 'auth_link' not in cloud_params:
-                for param_key, param_value in cloud_params.items():
-                    config_parser.set('options', param_key, param_value)
-                with open(config.rcfile, 'w') as configfile:
-                    config_parser.write(configfile)
-                cloud_params['updated'] = True  # The mark that all params are updated
+    def get_cloud_params(self, redirect=None):
+        config_parser.read(config.rcfile)
+        cloud_params = {}
+        for name in ['odoo_backup_user_key', 'amazon_bucket_name', 'amazon_access_key', 'amazon_secret_access_key',
+                     'odoo_oauth_uid']:
+            cloud_params[name] = config_parser.get('options', name, fallback=None)
+        if None in cloud_params.values() and redirect:
+            cloud_params = self.update_cloud_params(cloud_params, redirect)
         return cloud_params
 
-    def get_local_cloud_params(self):
-        config_parser.read(config.rcfile)
-        try:
-            cloud_params = {}
-            for name in ['odoo_backup_user_key', 'amazon_bucket_name', 'amazon_access_key', 'amazon_secret_access_key',
-                         'oauth_uid']:
-                cloud_params[name] = config_parser.get('options', name)
-        except ConfigParser.NoOptionError:
-            return None
+    def update_cloud_params(self, cloud_params, redirect):
+        user_key = cloud_params['odoo_backup_user_key']
+        if not user_key:
+            user_key = ''.join(random.choice(string.hexdigits) for _ in range(30))
+            config_parser.set('options', 'odoo_backup_user_key', user_key)
+            with open(config.rcfile, 'w') as configfile:
+                config_parser.write(configfile)
+        cloud_params = requests.get(
+            BACKUP_SERVICE_ENDPOINT + '/get_cloud_params',
+            params={'user_key': user_key, 'redirect': redirect}
+        ).json()
+        if 'auth_link' not in cloud_params:
+            for param_key, param_value in cloud_params.items():
+                config_parser.set('options', param_key, param_value)
+            with open(config.rcfile, 'w') as configfile:
+                config_parser.write(configfile)
+            cloud_params['updated'] = True  # The mark that all params are updated
         return cloud_params
 
     def load_backup_list(self, cloud_params):
         try:
             s3_client = boto3.client('s3', aws_access_key_id=cloud_params['amazon_access_key'],
                                      aws_secret_access_key=cloud_params['amazon_secret_access_key'])
-            user_dir_name = '%s/' % cloud_params['oauth_uid']
+            user_dir_name = '%s/' % cloud_params['odoo_oauth_uid']
             s3_user_dir_info = s3_client.list_objects_v2(
                 Bucket=cloud_params['amazon_bucket_name'], Prefix=user_dir_name, Delimiter='/')
         except botocore.exceptions.ClientError as e:
@@ -118,7 +114,7 @@ class BackupController(http.Controller):
             if status_code == 403 and not cloud_params.get('updated'):
                 config_parser.read(config.rcfile)
                 # Delete local cloud parameters and receive it again to make sure they are up-to-date.
-                for key in ['amazon_bucket_name', 'amazon_access_key', 'amazon_secret_access_key', 'oauth_uid']:
+                for key in ['amazon_bucket_name', 'amazon_access_key', 'amazon_secret_access_key', 'odoo_oauth_uid']:
                     config_parser.remove_option('options', key)
                 with open(config.rcfile, 'w') as configfile:
                     config_parser.write(configfile)
@@ -166,7 +162,7 @@ class BackupController(http.Controller):
         cloud_params = self.get_cloud_params(request.httprequest.url)
         s3_client = boto3.client('s3', aws_access_key_id=cloud_params['amazon_access_key'],
                                  aws_secret_access_key=cloud_params['amazon_secret_access_key'])
-        backup_file_path = '%s/%s' % (cloud_params['oauth_uid'], backup_file_name)
+        backup_file_path = '%s/%s' % (cloud_params['odoo_oauth_uid'], backup_file_name)
         backup_object = s3_client.get_object(Bucket=cloud_params['amazon_bucket_name'], Key=backup_file_path)
         backup_file = tempfile.NamedTemporaryFile()
         backup_file.write(backup_object['Body'].read())
