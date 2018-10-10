@@ -6,6 +6,17 @@
         <field name="inherit_id" ref="base.view_users_form"/>
         <field name="priority">120</field>
         <field name="arch" type="xml">
+            <header position="inside">
+                <button name="reset_token"
+                        string="Reset Token"
+                        confirm="Do you want to proceed reset token?"
+                        type="object"
+                        attrs="{'invisible': [('id', '=', False)]}"
+                />
+            </header>
+            <field name="partner_id" position="after">
+                <field name="token" attrs="{'invisible': [('id', '=', False)]}"/>
+            </field>
             <notebook position="inside">
                 <page string="Allowed Namespaces">
                     <field name="namespace_ids"/>

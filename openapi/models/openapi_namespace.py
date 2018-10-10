@@ -102,3 +102,10 @@ class Namespace(models.Model):
     def _compute_spec_url(self):
         for record in self:
             record.spec_url = "/api/v1/%s/swagger.json?token=%s" % (record.name, record.token)
+
+    def reset_token(self):
+        for record in self:
+            token = str(uuid.uuid4())
+            while self.search([('token', '=', token)]).exists():
+                token = str(uuid.uuid4())
+            record.write({'token': token})
