@@ -11,7 +11,7 @@ from odoo import http
 from odoo.addons.web_settings_dashboard.controllers.main \
     import WebSettingsDashboard
 
-import pinguin
+from odoo.addons.openapi.controllers import pinguin
 
 _logger = logging.getLogger(__name__)
 

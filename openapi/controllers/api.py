@@ -2,20 +2,12 @@
 # Copyright 2018, XOE Solutions
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
-import functools
-import hashlib
+import json
 import logging
-import os
-from ast import literal_eval
-import base64
 
-import odoo
-from odoo import http, SUPERUSER_ID, models
-from odoo.http import request, OpenERPSession
-from odoo.modules.registry import RegistryManager
-from psycopg2.extensions import ISOLATION_LEVEL_READ_COMMITTED
+from odoo import http
 
-from .pinguin import *
+from . import pinguin
 
 _logger = logging.getLogger(__name__)
 
@@ -39,7 +31,6 @@ API_ENDPOINT_V1 = '/v1'
 # We also check if the model is installed in the database.
 # Furthermore we check if api version is supported.
 # This keeps the code below minial and readable.
-http.route = pinguin_route
 
 
 class ApiV1Controller(http.Controller):
@@ -65,9 +56,9 @@ class ApiV1Controller(http.Controller):
     # CreateOne # ReadMulti
     _api_endpoint_model = _api_endpoint + '/<model>'
     # ReadOne # UpdateOne # UnlinkOne
-    _api_endpoint_model_id = _api_endpoint + '/<model>/<id>'
+    _api_endpoint_model_id = _api_endpoint + '/<model>/<int:id>'
     # Call Methods
-    _api_endpoint_model_id_method = _api_endpoint + '/<model>/<id>/<method>'  # on Singleton Record
+    _api_endpoint_model_id_method = _api_endpoint + '/<model>/<int:id>/<method>'  # on Singleton Record
     _api_endpoint_model_method = _api_endpoint + '/<model>/<method>'  # on RecordSet
     # Get Reports
     _api_report_pdf = _api_endpoint + '/report/pdf/<report_external_id>'  # as PDF
@@ -79,115 +70,134 @@ class ApiV1Controller(http.Controller):
     ##################
 
     # CreateOne
-    @http.route(
+    @pinguin.route(
         _api_endpoint_model,
         methods=['POST'],
         type='http',
         auth='none',
         csrf=False)
-    def create_one__POST(self, namespace, model, **kw):
-        conf = get_model_openapi_access(namespace, model)
-        # If context is not a python dict
-        # TODO unwrap
-        if isinstance(kw.get('context'), basestring):
-            context = get_create_context(namespace, model, kw.get('context'))
-        else:
-            context = kw.get('context') or {}
-        return wrap__resource__create_one(
+    def create_one__POST(self, namespace, model, **data):
+        conf = pinguin.get_model_openapi_access(namespace, model)
+        pinguin.method_is_allowed('api_create', conf['method'], main=True, raise_exception=True)
+        # FIXME: What is contained in context and for what?
+        # # If context is not a python dict
+        # # TODO unwrap
+        # if isinstance(kw.get('context'), basestring):
+        #     context = get_create_context(namespace, model, kw.get('context'))
+        # else:
+        #     context = kw.get('context') or {}
+        return pinguin.wrap__resource__create_one(
             modelname=model,
             context=conf['context'],
-            success_code=CODE__created,
-            out_fields=conf['out_fields_create_one'])
+            data=data,
+            success_code=pinguin.CODE__created,
+            out_fields=conf['out_fields_read_one'])
 
     # ReadMulti (optional: filters, offset, limit, order, include_fields, exclude_fields):
-    @http.route(_api_endpoint_model, methods=['GET'], type='http', auth='none')
+    @pinguin.route(_api_endpoint_model, methods=['GET'], type='http', auth='none', csrf=False)
     def read_multi__GET(self, namespace, model, **kw):
-        conf = get_model_openapi_access(namespace, model)
-        return wrap__resource__read_all(
+        conf = pinguin.get_model_openapi_access(namespace, model)
+        pinguin.method_is_allowed('api_read', conf['method'], main=True, raise_exception=True)
+        return pinguin.wrap__resource__read_all(
             modelname=model,
-            success_code=CODE__success,
+            success_code=pinguin.CODE__success,
             out_fields=conf['out_fields_read_multi'])
 
     # ReadOne (optional: include_fields, exclude_fields)
-    @http.route(
-        _api_endpoint_model_id, methods=['GET'], type='http', auth='none')
+    @pinguin.route(
+        _api_endpoint_model_id, methods=['GET'], type='http', auth='none', csrf=False)
     def read_one__GET(self, namespace, model, id, **kw):
-        conf = get_model_openapi_access(namespace, model)
-        return wrap__resource__read_one(
+        conf = pinguin.get_model_openapi_access(namespace, model)
+        pinguin.method_is_allowed('api_read', conf['method'], main=True, raise_exception=True)
+        return pinguin.wrap__resource__read_one(
             modelname=model,
             id=id,
-            success_code=CODE__success,
+            success_code=pinguin.CODE__success,
             out_fields=conf['out_fields_read_one'])
 
     # UpdateOne
-    @http.route(
+    @pinguin.route(
         _api_endpoint_model_id,
         methods=['PUT'],
         type='http',
         auth='none',
         csrf=False)
-    def update_one__PUT(self, namespace, model, id):
-        _ = namespace
-        return wrap__resource__update_one(
-            modelname=model, id=id, success_code=CODE__ok_no_content)
+    def update_one__PUT(self, namespace, model, id, **data):
+        conf = pinguin.get_model_openapi_access(namespace, model)
+        pinguin.method_is_allowed('api_update', conf['method'], main=True, raise_exception=True)
+        return pinguin.wrap__resource__update_one(
+            modelname=model, id=id, success_code=pinguin.CODE__ok_no_content, data=data)
 
     # UnlinkOne
-    @http.route(
+    @pinguin.route(
         _api_endpoint_model_id,
         methods=['DELETE'],
         type='http',
         auth='none',
         csrf=False)
-    def unlink_one__DELETE(self, namespace, model, id):
-        return wrap__resource__unlink_one(
-            modelname=model, id=id, success_code=CODE__ok_no_content)
+    def unlink_one__DELETE(self, namespace, model, id, **data):
+        conf = pinguin.get_model_openapi_access(namespace, model)
+        pinguin.method_is_allowed('api_delete', conf['method'], main=True, raise_exception=True)
+        return pinguin.wrap__resource__unlink_one(
+            modelname=model, id=id, success_code=pinguin.CODE__ok_no_content)
 
     #######################
     ## Auxiliary Methods ##
     #######################
 
     # Call Method on Singleton Record (optional: method parameters)
-    @http.route(
+    @pinguin.route(
         _api_endpoint_model_id_method,
         methods=['PATCH'],
         type='http',
         auth='none',
         csrf=False)
-    def call_method_one__PATCH(self, namespace, model, id, method):
-        return wrap__resource__call_method(
+    def call_method_one__PATCH(self, namespace, model, id, method, method_params=None):
+        conf = pinguin.get_model_openapi_access(namespace, model)
+        pinguin.method_is_allowed(method, conf['method'])
+        method_params = json.loads(method_params) if method_params else {}
+        return pinguin.wrap__resource__call_method(
             modelname=model,
             ids=[id],
             method=method,
-            success_code=CODE__success)
+            method_params=method_params,
+            success_code=pinguin.CODE__success)
 
     # Call Method on RecordSet (optional: method parameters)
-    @http.route(
+    @pinguin.route(
         _api_endpoint_model_method,
         methods=['PATCH'],
         type='http',
         auth='none',
         csrf=False)
-    def call_method_multi__PATCH(self, namespace, model, method, ids, **kw):
-        return wrap__resource__call_method(
+    def call_method_multi__PATCH(self, namespace, model, method, ids, method_params=None, **kw):
+        conf = pinguin.get_model_openapi_access(namespace, model)
+        pinguin.method_is_allowed(method, conf['method'])
+        ids = json.loads(ids)
+        method_params = json.loads(method_params) if method_params else {}
+        return pinguin.wrap__resource__call_method(
             modelname=model,
             ids=ids,
             method=method,
-            success_code=CODE__accepted)
+            method_params=method_params,
+            success_code=pinguin.CODE__accepted)
 
     # Get Report as PDF
-    @http.route(_api_report_pdf, methods=['GET'], type='http', auth='none')
+    @pinguin.route(_api_report_pdf, methods=['GET'], type='http', auth='none')
     def report_pdf__GET(self, namespace, report_external_id):
-        return wrap__resource__call_method(
+        return pinguin.wrap__resource__call_method(
             modelname='report',
             ids=[1],
             method='get_html',
-            success_code=CODE__success)
+            method_params={},
+            success_code=pinguin.CODE__success)
 
     # Get Report as HTML
-    @http.route(_api_report_html, methods=['GET'], type='http', auth='none')
+    @pinguin.route(_api_report_html, methods=['GET'], type='http', auth='none')
     def report_html__GET(self, namespace, report_external_id):
-        return wrap__resource__call_method(
+        return pinguin.wrap__resource__call_method(
             modelname='report',
             ids=[1],
             method='get_pdf',
-            success_code=CODE__success)
+            method_params={},
+            success_code=pinguin.CODE__success)

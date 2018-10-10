@@ -11,7 +11,7 @@ class ResUsers(models.Model):
 
     namespace_ids = fields.Many2many('openapi.namespace', string='Allowed Integrations')
     token = fields.Char('Identification token',
-                        default=lambda self: str(uuid.uuid4()),
+                        default=lambda self: self._get_unique_token(),
                         required=True, copy=False)
 
     _sql_constraints = [
@@ -23,7 +23,21 @@ class ResUsers(models.Model):
     @api.multi
     def reset_token(self):
         for record in self:
+            record.write({'token': self._get_unique_token()})
+
+    def _get_unique_token(self):
+        token = str(uuid.uuid4())
+        while self.search([('token', '=', token)]).exists():
             token = str(uuid.uuid4())
-            while self.search([('token', '=', token)]).exists():
-                token = str(uuid.uuid4())
-            record.write({'token': token})
+        return token
+
+    @api.multi
+    @api.constrains('token')
+    def token_update(self):
+        for record in self:
+            if len(self.search([('token', '=', record.token)])) > 1:
+                record.reset_token()
+
+    @api.model
+    def reset_all_tokens(self):
+        self.search([]).reset_token()

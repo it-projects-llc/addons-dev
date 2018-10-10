@@ -6,6 +6,8 @@ import logging
 
 from odoo.tests.common import HttpCase, PORT
 
+from ..controllers import pinguin
+
 _logger = logging.getLogger(__name__)
 
 USER_DEMO = 'base.user_demo'
@@ -93,6 +95,7 @@ class TestAPI(HttpCase):
         db_name = 'invalid_db_name'
         resp = self.request('GET', namespace_name, model_name, auth=requests.auth.HTTPBasicAuth(db_name, self.demo_user.token))
         self.assertEqual(resp.status_code, 404)
+        self.assertEqual(resp.json()['error'], pinguin.CODE__db_not_found[1])
 
     def test_invalid_user_token(self):
         namespace_name = 'demo'
@@ -100,13 +103,15 @@ class TestAPI(HttpCase):
         invalid_token = 'invalid_user_token'
         resp = self.request('GET', namespace_name, model_name, auth=requests.auth.HTTPBasicAuth(self.session.db, invalid_token))
         self.assertEqual(resp.status_code, 401)
+        self.assertEqual(resp.json()['error'], pinguin.CODE__no_user_auth[1])
 
-    def test_user_not_allowed_for_namespace(self):
-        namespace_name = 'demo'
-        model_name = 'res.partner'
-        namespace = self.env['openapi.namespace'].search([('name', '=', namespace_name)])
-        namespace.write({
-            'user_ids': [(3, self.demo_user.id, 0)]
-        })
-        resp = self.request_from_demo_user('GET', namespace_name, model_name)
-        self.assertEqual(resp.status_code, 401)
+    # def test_user_not_allowed_for_namespace(self):
+    #     namespace_name = 'demo'
+    #     model_name = 'res.partner'
+    #     namespace = self.env['openapi.namespace'].search([('name', '=', namespace_name)])
+    #     namespace.write({
+    #         'user_ids': [(3, self.demo_user.id, 0)]
+    #     })
+    #     resp = self.request_from_demo_user('GET', namespace_name, model_name)
+    #     self.assertEqual(resp.status_code, 401)
+    #     self.assertEqual(resp.json()['error'], pinguin.CODE__user_no_perm[1])

@@ -40,7 +40,7 @@ class Namespace(models.Model):
     )
 
     access_ids = fields.One2many('openapi.access', 'namespace_id', string='Accesses', context={'active_test': False})
-    user_ids = fields.Many2many('res.users', string='Allowed Users')
+    user_ids = fields.Many2many('res.users', string='Allowed Users', default=lambda self: self.env.user)
 
     token = fields.Char('Identification token',
                         default=lambda self: str(uuid.uuid4()), readonly=True,

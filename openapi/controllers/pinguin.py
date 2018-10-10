@@ -16,17 +16,22 @@ Todo:
 .. _Google Python Style Guide:
    https://google.github.io/styleguide/pyguide.html
 """
+import base64
+import functools
+import six
 
 import werkzeug.wrappers
 
-from collections import OrderedDict
+import collections
+
+import odoo
+
 try:
     import simplejson as json
 except ImportError:
     import json
 
-from odoo import http
-from odoo.http import request, OpenERPSession
+from odoo.http import request, route as http_route, Root
 from psycopg2.extensions import ISOLATION_LEVEL_READ_COMMITTED
 
 ####################################
@@ -63,11 +68,11 @@ CODE__no_api_worker = (503, "API worker sleeping",
                        "The API worker is currently not at work.")
 
 
-def successful_response(status, data):
+def successful_response(status, data=None):
     """Successful responses wrapper.
 
     :param int status: The success code.
-    :param str data: The json object.
+    :param data: (optional). The data that can be converted to a JSON.
 
     :returns: The werkzeug `response object`_.
     :rtype: werkzeug.wrappers.Response
@@ -76,10 +81,11 @@ def successful_response(status, data):
         http://werkzeug.pocoo.org/docs/0.14/wrappers/#module-werkzeug.wrappers
 
     """
+    response = json.dumps(data) if data else None
     return werkzeug.wrappers.Response(
         status=status,
         content_type='application/json; charset=utf-8',
-        response=json.dumps(data),
+        response=response,
     )
 
 
@@ -150,13 +156,16 @@ def authenticate_token_for_user(token):
 
     :param str token: The raw access token.
 
-    :returns: **True** if token is authorized for the requested user, **False** otherwise.
-    :rtype bool
+    :returns: User if token is authorized for the requested user.
+    :rtype odoo.models.Model
 
-    Todo:
-        - Return session instead?
+    :raise: werkzeug.exceptions.HTTPException if user not found.
     """
-    return True  # TODO
+    user = request.env['res.users'].sudo().search([('token', '=', token)])
+    if user.exists():
+        request.session.uid = user.id
+        return user
+    raise werkzeug.exceptions.HTTPException(response=error_response(*CODE__no_user_auth))
 
 
 # Namespace token auth (db-scoped)
@@ -172,13 +181,144 @@ def authenticate_token_for_namespace(namespace, token):
     return namespace.token == token
 
 
+def get_auth_header(headers, raise_exception=False):
+    """check and get basic authentication header from headers
+
+    :param werkzeug.datastructures.Headers headers: All headers in request.
+    :param bool raise_exception: raise exception.
+
+    :returns: Found raw authentication header.
+    :rtype: str or None
+
+    :raise: werkzeug.exceptions.HTTPException if raise_exception is **True**
+                                              and auth header is not in headers
+                                              or it is not Basic type.
+    """
+    auth_header = headers.get('Authorization') or headers.get('authorization')
+    if not auth_header or not auth_header.startswith('Basic '):
+        if raise_exception:
+            raise werkzeug.exceptions.HTTPException(response=error_response(*CODE__no_user_auth))
+    return auth_header
+
+
+def get_data_from_auth_header(header):
+    """decode basic auth header and get data
+
+    :param str header: The raw auth header.
+
+    :returns: db_name and user_token
+    :rtype: dict
+    """
+    normalized_token = header.replace('Basic ', '').replace('\\n', '').encode('utf-8')
+    decoded_token_parts = base64.decodestring(normalized_token).split(':')
+
+    if len(decoded_token_parts) == 1:
+        db_name, user_token = None, decoded_token_parts[0]
+    elif len(decoded_token_parts) == 2:
+        db_name, user_token = decoded_token_parts
+    else:
+        raise Exception('Bad basic auth header')  # TODO: replace dummy exception
+
+    return {
+        'db_name': db_name,
+        'user_token': user_token
+    }
+
+
+def setup_db_decorator(original_setup_db):
+
+    def setup_db_wrapper(self, httprequest):
+        original_setup_db(self, httprequest)
+
+        # if original setup_db method already setup db we do nothing
+        if httprequest.session.db:
+            return
+
+        auth_header = get_auth_header(httprequest.headers)
+        if not auth_header or not auth_header.startswith('Basic '):
+            return
+
+        db_name = get_data_from_auth_header(auth_header)['db_name']
+
+        # check db is exist
+        if db_name not in odoo.service.db.list_dbs(force=True):
+            raise werkzeug.exceptions.HTTPException(response=error_response(*CODE__db_not_found))
+
+        # setup db in session
+        httprequest.session.db = db_name
+
+    return setup_db_wrapper
+
+
+Root.setup_db = setup_db_decorator(Root.setup_db)
+
+
 ###################
 # Pinguin Routing #
 ###################
 
 
+# Try to get namespace from user allowed namespaces
+def get_namespace_by_name_from_users_namespaces(user, namespace_name, raise_exception=False):
+    """check and get namespace from users namespaces by name
+
+    :param ..models.res_users.ResUsers user: The user record.
+    :param str namespace_name: The name of namespace.
+    :param bool raise_exception: raise exception if namespace does not exist.
+
+    :returns: Found 'openapi.namespace' record.
+    :rtype: ..models.openapi_namespace.Namespace
+
+    :raise: werkzeug.exceptions.HTTPException if the namespace is not contained
+                                              in allowed user namespaces.
+    """
+    namespace = user.namespace_ids.search([('name', '=', namespace_name)])
+    if not namespace.exists() and raise_exception:
+        err = list(CODE__user_no_perm)
+        err[2] = "The requested namespace (integration) is not authorized."
+        raise werkzeug.exceptions.HTTPException(response=error_response(*err))
+    return namespace
+
+
+# Create openapi.log record
+def create_log_record(namespace, user, user_request, user_response):
+    """create log for request
+
+    :param ..models.openapi_namespace.Namespace namespace: Requested namespace record.
+    :param odoo.models.Model user: User which requests.
+    :param user_request: a wrapped werkzeug Request object from user.
+    :type user_request: :class:`werkzeug.wrappers.BaseRequest`
+    :param user_response: a wrapped werkzeug Response object to user.
+    :type user_response: :class:`werkzeug.wrappers.Response`
+
+    :returns: New 'openapi.log' record.
+    :rtype: ..models.openapi_log.Log
+    """
+    request_data = None
+    if namespace.log_request == 'full':
+        request_data = user_request.get_data()
+    elif namespace.log_request == 'info':
+        # TODO: only info
+        request_data = user_request.get_data()
+
+    response_data = None
+    if namespace.log_response == 'debug':
+        response_data = user_response.get_data()
+    elif namespace.log_response == 'error' and user_response.status_code > 400:
+        response_data = user_response.get_data()
+
+    # TODO: log data depend on namespace settings
+    log = request.env['openapi.log'].sudo(user).create({
+        'namespace_id': namespace.id,
+        'request': '%s | %s | %d' % (user_request.url, user_request.method, user_response.status_code),
+        'request_data': request_data,
+        'response_data': response_data,
+    })
+    return log
+
+
 # Patched http route
-def pinguin_route(*args, **kwargs):
+def route(*args, **kwargs):
     """Set up the environment for rout handlers.
 
     Patches the framework and additionally authenticates
@@ -189,13 +329,26 @@ def pinguin_route(*args, **kwargs):
 
     :returns: wrapped method
     """
-    if not authenticate_token_for_server():
-        # Second line of defense after WAP and before touching database
-        # To (temporarily) cycle all tokens, change the server wide salt.
-        # Security by obscurity...
-        return error_response(*CODE__server_rejects)
-    db_name = infer_database()
-    return http.route(*args, **kwargs)
+    def decorator(f):
+
+        @http_route(*args, **kwargs)
+        @functools.wraps(f)
+        def controller_method_wrapper(*iargs, **ikwargs):
+            auth_header = get_auth_header(request.httprequest.headers, raise_exception=True)
+            user_token = get_data_from_auth_header(auth_header)['user_token']
+            authenticated_user = authenticate_token_for_user(user_token)
+            namespace = get_namespace_by_name_from_users_namespaces(authenticated_user, ikwargs['namespace'], raise_exception=True)
+            response = f(*iargs, **ikwargs)
+            create_log_record(
+                namespace=namespace,
+                user=authenticated_user,
+                user_request=request.httprequest,
+                user_response=response
+            )
+            return response
+
+        return controller_method_wrapper
+    return decorator
 
 
 ############################
@@ -220,8 +373,8 @@ def get_create_context(namespace, model, canned_context):
 
     :returns: A dictionary containing the requested context.
     :rtype: dict
+    :raise: werkzeug.exceptions.HTTPException TODO: add description in which case
     """
-    # Token is not authorized on this namespace
     cr, uid = request.cr, request.session.uid
 
     # Singleton by construction (_sql_constraints)
@@ -234,7 +387,7 @@ def get_create_context(namespace, model, canned_context):
     assert len(context) == 1, "'context' is not a singleton, bad construction."
 
     if not context:
-        return error_response(*CODE__canned_ctx_not_found)
+        raise werkzeug.exceptions.HTTPException(response=error_response(*CODE__canned_ctx_not_found))
 
     return context
 
@@ -276,27 +429,28 @@ def get_model_openapi_access(namespace, model):
                      'mode':            (String)    one of 'none', 'custom',
                      'whitelist':       (List)      of method strings,
                  },
+                'main' : {
+                     'mode':            (String)    one of 'none', 'custom',
+                     'whitelist':       (List)      of method strings,
+                 },
             }
             ```
-    :rtype: werkzeug.wrappers.Response or dict
+    :rtype: dict
+    :raise: werkzeug.exceptions.HTTPException if the namespace has no accesses.
     """
-    # Token is not authorized on this namespace
-    if not TRUE:
-        err = list(CODE__user_no_perm)
-        err[2] = "The requested namespace (integration) is not authorized."
-        return error_response(*err)
-
     cr, uid = request.cr, request.session.uid
     # Singleton by construction (_sql_constraints)
-    openapi_access = request.env(cr, uid)['openapi.access'].search(
+    openapi_access = request.env(cr, uid)['openapi.access'].sudo().search(
         [('model_id', '=', model), ('namespace_id.name', '=', namespace)])
+    if not openapi_access.exists():
+        raise werkzeug.exceptions.HTTPException(response=error_response(*CODE__canned_ctx_not_found))
 
     # TODO write transformation
     res = {
-        'context': {}, # Take ot here
+        'context': {}, # Take ot here FIXME: make sure it is for create_context
         'out_fields_read_multi': (),
         'out_fields_read_one': (),
-        'out_fields_create_one': (),
+        'out_fields_create_one': (),  # FIXME: for what?
         'method': {
             'public': {
                 'mode': '',
@@ -305,13 +459,17 @@ def get_model_openapi_access(namespace, model):
             'private': {
                 'mode': '',
                 'whitelist': []
-            }
-        }
+            },
+            'main': {
+                'mode': '',
+                'whitelist': []
+            },
+        },
     }
     # Infer public method mode
     if openapi_access.api_public_methods and openapi_access.public_methods:
         res['method']['public']['mode'] = 'custom'
-        res['method']['public']['whitelist'] = []
+        res['method']['public']['whitelist'] = openapi_access.public_methods.split()
     elif openapi_access.api_public_methods:
         res['method']['public']['mode'] = 'all'
     else:
@@ -320,9 +478,32 @@ def get_model_openapi_access(namespace, model):
     # Infer private method mode
     if openapi_access.private_methods:
         res['method']['private']['mode'] = 'custom'
-        res['method']['private']['whitelist'] = []
+        res['method']['private']['whitelist'] = openapi_access.private_methods.split()
     else:
         res['method']['private']['mode'] = 'none'
+
+    for c in openapi_access.create_context_ids.mapped('context'):
+        res['context'].update(json.loads(c[1:-1]))
+
+    res['out_fields_read_multi'] = openapi_access.read_many_id.export_fields.mapped('name')
+    res['out_fields_read_one'] = openapi_access.read_one_id.export_fields.mapped('name')
+
+    if openapi_access.public_methods:
+        res['method']['public']['whitelist'] = openapi_access.public_methods.split()
+    if openapi_access.private_methods:
+        res['method']['private']['whitelist'] = openapi_access.private_methods.split()
+
+    main_methods = ['api_create', 'api_read', 'api_update', 'api_delete']
+    for method in main_methods:
+        if openapi_access[method]:
+            res['method']['main']['whitelist'].append(method)
+
+    if len(res['method']['main']['whitelist']) == len(main_methods):
+        res['method']['main']['mode'] = 'all'
+    elif not res['method']['main']['whitelist']:
+        res['method']['main']['mode'] = 'none'
+    else:
+        res['method']['main']['mode'] = 'custom'
 
     return res
 
@@ -332,50 +513,247 @@ def validate_extra_field(field):
 
     :param str field: The name of the field.
 
-    :returns: None, if validated, a error response else.
-    :rtype: None or werkzeug.wrappers.Response
+    :returns: None, if validated, otherwise raises.
+    :rtype: None
+    :raise: werkzeug.exceptions.HTTPException if field is invalid.
     """
     if not isinstance(field, basestring):
-        return error_response(*CODE__invalid_spec)
+        return werkzeug.exceptions.HTTPException(response=error_response(*CODE__invalid_spec))
 
 
 def validate_spec(model, spec):
     """Validates a spec for a given model.
 
     :param object model: (:obj:`Model`) The model against which to validate.
-    :param dict spec: The spec to validate.
+    :param list spec: The spec to validate.
 
-    :returns: None, if validated, raises else.
+    :returns: None, if validated, otherwise raises.
     :rtype: None
-    # TODO: add exceptions types and descriptions
-    :raises ExceptionType:
-                    * if ...
-                    * if ...
+    :raise: Exception:
+                    * if the tuple representing the field does not have length 2.
+                    * if the second part of the tuple representing the field is not a list or tuple.
+                    * if if a tuple representing a field consists of two parts, but the first part is not a relative field.
+                    * if if the second part of the tuple representing the field is of type tuple, but the field is the ratio 2many.
+                    * if if the field is neither a string nor a tuple.
     """
     self = model
     for field in spec:
         if isinstance(field, tuple):
             # Syntax checks
             if len(field) != 2:
-                raise "Tuples representing fields must have length 2. (%r)" % field
+                raise Exception("Tuples representing fields must have length 2. (%r)" % field)
             if not isinstance(field[1], (tuple, list)):
-                raise """Tuples representing fields must have a tuple wrapped in
-                    a list or a bare tuple as it's second item. (%r)""" % field
+                raise Exception("""Tuples representing fields must have a tuple wrapped in
+                    a list or a bare tuple as it's second item. (%r)""" % field)
             # Validity checks
-            fld = self._fields[field]
+            fld = self._fields[field[0]]
             if not fld.relational:
-                raise "Tuples representing fields can only specify relational fields. (%r)" % field
+                raise Exception("Tuples representing fields can only specify relational fields. (%r)" % field)
             if isinstance(field[1],
                           tuple) and fld.type in ['one2many', 'many2many']:
-                raise "Specification of a 2many record cannot be a bare tuple. (%r)" % field
+                raise Exception("Specification of a 2many record cannot be a bare tuple. (%r)" % field)
+        elif not isinstance(field, six.string_types):
+            raise Exception("Fields are represented by either a strings or tuples. Found: %r" % type(
+                field))
+
+
+def update(d, u):
+    """Update value of a nested dictionary of varying depth.
+
+    :param dict d: Dictionary to update.
+    :param dict u: Dictionary with updates.
+
+    :returns: Merged dictionary.
+    :rtype: dict
+    """
+    for k, v in u.items():
+        if isinstance(v, collections.Mapping):
+            d[k] = update(d.get(k, {}), v)
         else:
-            raise "Fields are represented by either a strings or tulples. Found: %r" % type(
-                field)
+            d[k] = v
+    return d
+
+
+# Transform string fields to dictionary
+def transform_strfields_to_dict(fields_list):
+    """Transform string fields to dictionary.
+    Example:
+    for ['name', 'email', 'bank_ids/bank_id/id', 'bank_ids/bank_name', 'bank_ids/id']
+    the result will be the next dictionary
+    {
+        'name': None,
+        'email': None
+        'bank_ids': {
+            'bank_name': None,
+            'bank_id': {
+                'id': None
+            }
+        },
+    }
+
+    :param list fields_list: The list of string fields.
+
+    :returns: The dict of transformed fields.
+    :rtype: dict
+    """
+    dct = {}
+    for field in fields_list:
+        parts = field.split('/')
+        data = None
+        for part in parts[::-1]:
+            if part == '.id':
+                part = 'id'
+            data = {part: data}
+        update(dct, data)
+    return dct
+
+
+def transform_dictfields_to_list_of_tuples(record, dct):
+    """Transform fields dictionary to list.
+    for {
+        'name': None,
+        'email': None
+        'bank_ids': {
+            'bank_name': None,
+            'bank_id': {
+                'id': None
+            }
+        },
+    }
+    the result will be
+    ['name', 'email', ('bank_ids', ['bank_name', ('bank_id', ('id',))])]
+
+    :param odoo.models.Model record: The model object.
+    :param dict dct: The dictionary.
+
+    :returns: The list of transformed fields.
+    :rtype: list
+    """
+    fields_with_meta = {k: meta for k, meta in record.fields_get().items() if
+                        k in dct.keys()}
+    result = {}
+    for key, value in dct.items():
+        if isinstance(value, dict):
+            model_obj = get_model_for_read(fields_with_meta[key]['relation'])
+            inner_result = transform_dictfields_to_list_of_tuples(model_obj, value)
+            is_2many = fields_with_meta[key]['type'].endswith('2many')
+            result[key] = list(inner_result) if is_2many else tuple(inner_result)
+        else:
+            result[key] = value
+    return [(key, value) if value else key for key, value in result.items()]
 
 
 ##################
 # Pinguin Worker #
 ##################
+
+def wrap__resource__create_one(modelname, context, data, success_code, out_fields):
+    """TODO: add description
+
+    :param str model: The name of the model.
+    :param dict context: TODO
+    :param dict data: TODO
+    :param int success_code: The success code.
+    :param tuple out_fields: Canned fields.
+
+    :returns: TODO
+    :rtype: TODO
+    """
+    # FIXME: What fields do we accept when creating/updating requests?
+    model_obj = get_model_for_read(modelname)
+    created_obj = model_obj.with_context(context).create(data)
+    out_data = get_dict_from_record(created_obj, out_fields, (), ())
+    return successful_response(success_code, out_data)
+
+
+def wrap__resource__read_all(modelname, success_code, out_fields):
+    """TODO: add description
+
+    :param str modelname: The name of the model.
+    :param int success_code: The success code.
+    :param tuple out_fields: Canned fields.
+
+    :returns: The werkzeug `response object`_.
+    :rtype: werkzeug.wrappers.Response
+    """
+    # record_set.openapi_export_data(export_fields_read_one)
+    data = get_dictlist_from_model(modelname, out_fields)
+    return successful_response(success_code, data)
+
+
+def wrap__resource__read_one(modelname, id, success_code, out_fields):
+    """TODO: add description
+
+    :param str modelname: The name of the model.
+    :param int id: The record id of which we want to read.
+    :param int success_code: The success code.
+    :param tuple out_fields: Canned fields.
+
+    :returns: The werkzeug `response object`_.
+    :rtype: werkzeug.wrappers.Response
+    """
+    out_data = get_dict_from_model(modelname, out_fields, id)
+    return successful_response(success_code, out_data)
+
+
+def wrap__resource__update_one(modelname, id, success_code, data):
+    """TODO: add description
+
+    :param str modelname: The name of the model.
+    :param int id: The record id of which we want to update.
+    :param int success_code: The success code.
+    :param dict data: The data for update.
+
+    :returns: The werkzeug `response object`_.
+    :rtype: werkzeug.wrappers.Response
+    """
+    cr, uid = request.cr, request.session.uid
+    record = request.env(cr, uid)[modelname].browse(id)
+    if not record.exists():
+        return error_response(*CODE__obj_not_found)
+    record.write(data)
+    return successful_response(success_code)
+
+
+def wrap__resource__unlink_one(modelname, id, success_code):
+    """TODO: add description
+
+    :param str modelname: The name of the model.
+    :param int id: The record id of which we want to delete.
+    :param int success_code: The success code.
+
+    :returns: The werkzeug `response object`_.
+    :rtype: werkzeug.wrappers.Response
+    """
+    cr, uid = request.cr, request.session.uid
+    record = request.env(cr, uid)[modelname].browse([id])
+    if not record.exists():
+        return error_response(*CODE__obj_not_found)
+    record.unlink()
+    return successful_response(success_code)
+
+
+def wrap__resource__call_method(modelname, ids, method, method_params, success_code):
+    """TODO: add description
+
+    :param str modelname: The name of the model.
+    :param list ids: The record ids of which we want to call method.
+    :param str method: The name of the method.
+    :param int success_code: The success code.
+
+    :returns: The werkzeug `response object`_.
+    :rtype: werkzeug.wrappers.Response
+    """
+    model_obj = get_model_for_read(modelname)
+
+    if not hasattr(model_obj, method):
+        return error_response(*CODE__invalid_method)
+
+    records = model_obj.browse(ids).exists()
+    for record in records:
+        getattr(record, method)(**method_params)
+    return successful_response(success_code)
+
 
 #######################
 # Pinguin ORM Wrapper #
@@ -386,7 +764,7 @@ def validate_spec(model, spec):
 def get_dict_from_model(model, spec, id, **kwargs):
     """Fetch dictionary from one record according to spec.
 
-    :param object model: (:obj:`Model`) The model against which to validate.
+    :param str model: The model against which to validate.
     :param tuple spec: The spec to validate.
     :param int id: The id of the record.
     :param dict kwargs: Keyword arguments.
@@ -398,6 +776,7 @@ def get_dict_from_model(model, spec, id, **kwargs):
 
     :returns: The python dictionary of the requested values.
     :rtype: dict
+    :raise: werkzeug.exceptions.HTTPException if the record does not exist.
     """
     include_fields = kwargs.get(
         'include_fields',
@@ -406,10 +785,9 @@ def get_dict_from_model(model, spec, id, **kwargs):
 
     model_obj = get_model_for_read(model)
 
-    try:
-        record = model_obj.browse([id])
-    except:
-        error_response(*CODE__res_not_found)
+    record = model_obj.browse([id])
+    if not record.exists():
+        raise werkzeug.exceptions.HTTPException(response=error_response(*CODE__res_not_found))
     return get_dict_from_record(record, spec, include_fields, exclude_fields)
 
 
@@ -417,7 +795,7 @@ def get_dict_from_model(model, spec, id, **kwargs):
 def get_dictlist_from_model(model, spec, **kwargs):
     """Fetch dictionary from one record according to spec.
 
-    :param odoo.models.Model model: The model against which to validate.
+    :param str model: The model against which to validate.
     :param tuple spec: The spec to validate.
     :param dict kwargs: Keyword arguments.
     :param list kwargs['domain']: (optional). The domain to filter on.
@@ -435,8 +813,8 @@ def get_dictlist_from_model(model, spec, **kwargs):
     """
     domain = kwargs.get('domain', [])
     offset = kwargs.get('offset', 0)
-    limit = kwargs.get('limit', None)
-    order = kwargs.get('order', None)
+    limit = kwargs.get('limit')
+    order = kwargs.get('order')
     include_fields = kwargs.get(
         'include_fields',
         ())  # Not actually implemented on higher level (ACL!)
@@ -444,7 +822,7 @@ def get_dictlist_from_model(model, spec, **kwargs):
 
     model_obj = get_model_for_read(model)
 
-    records = model_obj.search(domain, offset=offset, limit=limit, order=order)
+    records = model_obj.sudo().search(domain, offset=offset, limit=limit, order=order)
 
     # Do some optimization for subfields
     _prefetch = {}
@@ -478,8 +856,9 @@ def get_model_for_read(model):
 
     :param str model: The model to retrieve from the environment.
 
-    :returns: the framework model if exist, else the error response object.
-    :rtype: odoo.models.Model or werkzeug.wrappers.Response
+    :returns: the framework model if exist, otherwise raises.
+    :rtype: odoo.models.Model
+    :raise: werkzeug.exceptions.HTTPException if the model not found in env.
     """
     cr, uid = request.cr, request.session.uid
     # Permit parallel query execution on read
@@ -488,67 +867,7 @@ def get_model_for_read(model):
     try:
         return request.env(cr, uid)[model]
     except KeyError:
-        return error_response(*CODE__obj_not_found)
-
-
-def update(d, u):
-    """Update value of a nested dictionary of varying depth.
-
-    :param dict d: Dictionary to update.
-    :param dict u: Dictionary with updates.
-
-    :returns: Merged dictionary.
-    :rtype: dict
-    """
-    for k, v in u.items():
-        if isinstance(v, collections.Mapping):
-            d[k] = update(d.get(k, {}), v)
-        else:
-            d[k] = v
-    return d
-
-
-def transform_strfields_to_dict(fields_list):
-    """Transform string fields to dictionary.
-
-    :param list fields_list: The list of string fields.
-
-    :returns: The dict of transformed fields.
-    :rtype: dict
-    """
-    dct = {}
-    for field in fields_list:
-        parts = field.split('/')
-        data = None
-        for part in parts[::-1]:
-            if part == '.id':
-                part = 'id'
-            data = {part: data}
-        update(dct, data)
-    return dct
-
-
-def transform_dictfields_to_list_of_tuples(record, dct):
-    """Transform fields dictionary to list.
-
-    :param odoo.models.Model record: The model object.
-    :param dict dct: The dictionary.
-
-    :returns: The list of transformed fields.
-    :rtype: list
-    """
-    fields_with_meta = {k: meta for k, meta in record.fields_get().items() if
-                        k in dct.keys()}
-    result = {}
-    for key, value in dct.items():
-        if isinstance(value, dict):
-            model_obj = get_model_for_read(fields_with_meta[key]['relation'])
-            inner_result = transform_dictfields_to_list_of_tuples(model_obj, value)
-            is_to_many = fields_with_meta[key]['type'].endswith('2many')
-            result[key] = list(inner_result) if is_to_many else tuple(inner_result)
-        else:
-            result[key] = value
-    return [(key, value) if value else key for key, value in result.items()]
+        raise werkzeug.exceptions.HTTPException(response=error_response(*CODE__obj_not_found))
 
 
 # Python > 3.5
@@ -570,126 +889,95 @@ def get_dict_from_record(record, spec, include_fields, exclude_fields):
     :returns: The python dictionary representing the record according to the field spec.
     :rtype collections.OrderedDict
     """
-    (include_fields + exclude_fields).map(validate_extra_field)
-    result = OrderedDict([])
+    map(validate_extra_field, include_fields + exclude_fields)
+    result = collections.OrderedDict([])
     _spec = [fld for fld in spec
              if fld not in exclude_fields] + list(include_fields)
+    if filter(lambda x: isinstance(x, six.string_types) and '/' in x, _spec):
+        _spec = transform_dictfields_to_list_of_tuples(record, transform_strfields_to_dict(_spec))
+    validate_spec(record, _spec)
+
     for field in _spec:
         if isinstance(field, tuple):
             # It's a 2many (or a 2one specified as a list)
             if isinstance(field[1], list):
-                result[field] = []
+                result[field[0]] = []
                 for rec in record[field[0]]:
-                    result[field] += [
-                        get_dict_from_record(rec, field[1], [], [])
+                    result[field[0]] += [
+                        get_dict_from_record(rec, field[1], (), ())
                     ]
             # It's a 2one
             if isinstance(field[1], tuple):
-                assert len(record[field[
-                    0]]) == 1, "A bare tuple, cannot spec a 2many field"
-                result[field] = get_dict_from_record(record[field[0]],
-                                                     field[1], [], [])
+                # FIXME: for what?
+                # assert len(record[field[
+                #     0]]) == 1, "A bare tuple, cannot spec a 2many field"
+                result[field[0]] = get_dict_from_record(record[field[0]],
+                                                        field[1], (), ())
         # Normal field, or unspecified relational
-        elif isinstance(field, (str, unicode)):
-            result[field] = record.get(field, None)
+        elif isinstance(field, six.string_types):
+            result[field] = getattr(record, field)
+            fld = record._fields[field]
+            if fld.relational:
+                if fld.type.endswith('2one'):
+                    result[field] = result[field].id
+                elif fld.type.endswith('2many'):
+                    result[field] = result[field].ids
     return result
 
-def wrap__resource__create_one(modelname, context, success_code, out_fields):
+
+# Check the method is allowed
+def method_is_allowed(method, methods_conf, main=False, raise_exception=False):
     """TODO: add description
 
-    :param str modelname: The name of the model.
-    :param dict context: TODO
-    :param int success_code: The success code.
-    :param tuple out_fields: Canned fields.
-
-    :returns: TODO
-    :rtype: TODO
-    """
-    pass  # TODO
-
-
-def wrap__resource__read_all(modelname, success_code, out_fields):
-    """TODO: add description
-
-    :param str modelname: The name of the model.
-    :param int success_code: The success code.
-    :param tuple out_fields: Canned fields.
-
-    :returns: TODO
-    :rtype: TODO
-    """
-    pass  # TODO
-
-
-def wrap__resource__read_one(modelname, id, success_code, out_fields):
-    """TODO: add description
-
-    :param str modelname: The name of the model.
-    :param int id: The record id of which we want to read.
-    :param int success_code: The success code.
-    :param tuple out_fields: Canned fields.
-
-    :returns: TODO
-    :rtype: TODO
-    """
-    pass  # TODO
-
-
-def wrap__resource__update_one(modelname, id, success_code):
-    """TODO: add description
-
-    :param str modelname: The name of the model.
-    :param int id: The record id of which we want to update.
-    :param int success_code: The success code.
-
-    :returns: TODO
-    :rtype: TODO
-    """
-    pass  # TODO
-
-
-def wrap__resource__unlink_one(modelname, id, success_code):
-    """TODO: add description
-
-    :param str modelname: The name of the model.
-    :param int id: The record id of which we want to delete.
-    :param int success_code: The success code.
-
-    :returns: TODO
-    :rtype: TODO
-    """
-    pass  # TODO
-
-def wrap__resource__call_method(modelname, ids, method, success_code):
-    """TODO: add description
-
-    :param str modelname: The name of the model.
-    :param list ids: The record ids of which we want to call method.
     :param str method: The name of the method.
-    :param int success_code: The success code.
+    :param dict methods_conf: The methods configuration dictionary.
+        A dictionary containing the methods API configuration.
+            The layout of the dict is as follows:
+            ```python
+            {
+                'public' : {
+                     'mode':            (String)    one of 'all', 'none', 'custom',
+                     'whitelist':       (List)      of method strings,
+                 },
+                'private' : {
+                     'mode':            (String)    one of 'none', 'custom',
+                     'whitelist':       (List)      of method strings,
+                 },
+                'main' : {
+                     'mode':            (String)    one of 'none', 'custom',
+                     'whitelist':       (List)      of method strings,
+                 },
+            }
+            ```
+    :param bool main: The method is a one of access fields.
+    :param bool raise_exception: raise exception instead of returning **False**.
 
-    :returns: TODO
-    :rtype: TODO
+    :returns: **True** if the method is allowed, otherwise **False**.
+    :rtype: bool
+    :raise: werkzeug.exceptions.HTTPException if the method is not allowed and
+                                              raise_exception is **True**.
     """
-    pass  # TODO
+    if main:
+        method_type = 'main'
+    else:
+        method_type = 'private' if method.startswith('_') else 'public'
+
+    if methods_conf[method_type]['mode'] == 'all':
+        return True
+    if methods_conf[method_type]['mode'] == 'custom' and \
+            method in methods_conf[method_type]['whitelist']:
+        return True
+    if raise_exception:
+        raise werkzeug.exceptions.HTTPException(response=error_response(*CODE__method_blocked))
+    return False
 
 
-def get_definition_name(modelname, prefix='', postfix='', splitter='-'):
-    """Concatenation of the prefix, modelname, postfix.
+###############
+# Pinguin OAS #
+###############
 
-    :param str modelname: The name of the model.
-    :param str prefix: The prefix.
-    :param str postfix: The postfix.
-    :param str splitter: The splitter.
-
-    :returns: Concatenation of the arguments
-    :rtype: str
-    """
-    return splitter.join([s for s in [prefix, modelname, postfix] if s])
-
-
+# Odoo types (left) mapped to OAS types (right)
 TYPES_MAP = {
-    # 'odoo_field_type': 'OAS_type'
     'integer': 'integer',
     # '': 'long',
     'float': 'float',
@@ -707,6 +995,22 @@ TYPES_MAP = {
 }
 
 
+# Get definition name
+def get_definition_name(modelname, prefix='', postfix='', splitter='-'):
+    """Concatenation of the prefix, modelname, postfix.
+
+    :param str modelname: The name of the model.
+    :param str prefix: The prefix.
+    :param str postfix: The postfix.
+    :param str splitter: The splitter.
+
+    :returns: Concatenation of the arguments
+    :rtype: str
+    """
+    return splitter.join([s for s in [prefix, modelname, postfix] if s])
+
+
+# Get OAS definitions part for model and nested models
 def get_OAS_definitions_part(model_obj, export_fields_dict, definition_prefix='', definition_postfix=''):
     """Recursively gets definition parts of the OAS for model by export fields.
 

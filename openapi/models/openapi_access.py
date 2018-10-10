@@ -74,6 +74,8 @@ class Access(models.Model):
     @api.constrains('public_methods')
     def _check_public_methods(self):
         for access in self:
+            if not access.public_methods:
+                continue
             for line in access.public_methods.split('\n'):
                 if not line:
                     continue
@@ -89,6 +91,8 @@ class Access(models.Model):
     @api.constrains('private_methods')
     def _check_private_methods(self):
         for access in self:
+            if not access.private_methods:
+                continue
             for line in access.private_methods.split('\n'):
                 if not line:
                     continue
@@ -298,6 +302,7 @@ class Access(models.Model):
 
     @api.multi
     def get_OAS_part(self):
+        self = self.sudo()
         for record in self:
             return {
                 'definitions': record.get_OAS_definitions_part(),
