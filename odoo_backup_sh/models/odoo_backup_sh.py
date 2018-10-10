@@ -1,6 +1,7 @@
 # Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
+import copy
 import logging
 import os
 import tempfile
@@ -25,6 +26,8 @@ from odoo.exceptions import UserError
 from odoo.tools import config, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.translate import _
 from ..controllers.main import BackupController
+
+_logger = logging.getLogger(__name__)
 
 
 class BackupConfig(models.Model):
@@ -93,6 +96,64 @@ class BackupConfig(models.Model):
     def check_insufficient_credit(self, credit):
         return BackupController().check_insufficient_credit(credit)
 
+    def compute_auto_rotation_backup_dts(self, backup_dts, hourly=-1, daily=-1, weekly=-1, monthly=-1, yearly=-1):
+        backup_dts = sorted(copy.deepcopy(backup_dts), reverse=True)
+        last_backup_dt = backup_dts.pop(0)
+        # We always take the last backup and based on its upload time we compute time frames
+        # for other backups.
+        needed_backup_dts = [last_backup_dt]
+        if hourly > 1:
+            last_backup_dt_of_hour = last_backup_dt
+            for hour in range(hourly-1):
+                next_max_dt_edge = last_backup_dt_of_hour.replace(minute=0, second=0)
+                for dt in backup_dts:
+                    if dt < next_max_dt_edge:
+                        needed_backup_dts.append(dt)
+                        last_backup_dt_of_hour = dt
+                        break
+        if daily > 1:
+            last_backup_dt_of_day = last_backup_dt
+            for day in range(daily-1):
+                next_max_dt_edge = last_backup_dt_of_day.replace(hour=0, minute=0, second=0)
+                for dt in backup_dts:
+                    if dt < next_max_dt_edge:
+                        if dt not in needed_backup_dts:
+                            needed_backup_dts.append(dt)
+                        last_backup_dt_of_day = dt
+                        break
+        if weekly > 1:
+            last_backup_dt_of_week = last_backup_dt
+            for week in range(weekly-1):
+                last_backup_dt_day = last_backup_dt_of_week.replace(hour=0, minute=0, second=0)
+                next_max_dt_edge = last_backup_dt_day - timedelta(days=last_backup_dt_day.weekday())
+                for dt in backup_dts:
+                    if dt < next_max_dt_edge:
+                        if dt not in needed_backup_dts:
+                            needed_backup_dts.append(dt)
+                        last_backup_dt_of_week = dt
+                        break
+        if monthly > 1:
+            last_backup_dt_of_month = last_backup_dt
+            for month in range(monthly-1):
+                next_max_dt_edge = last_backup_dt_of_month.replace(day=1, hour=0, minute=0, second=0)
+                for dt in backup_dts:
+                    if dt < next_max_dt_edge:
+                        if dt not in needed_backup_dts:
+                            needed_backup_dts.append(dt)
+                        last_backup_dt_of_month = dt
+                        break
+        if yearly > 1:
+            last_backup_dt_of_year = last_backup_dt
+            for year in range(yearly-1):
+                next_max_dt_edge = last_backup_dt_of_year.replace(month=1, day=1, hour=0, minute=0, second=0)
+                for dt in backup_dts:
+                    if dt < next_max_dt_edge:
+                        if dt not in needed_backup_dts:
+                            needed_backup_dts.append(dt)
+                        last_backup_dt_of_year = dt
+                        break
+        return needed_backup_dts
+
     @api.model
     def update_info(self, cloud_params):
         backup_list = BackupController().load_backup_list(cloud_params)
@@ -121,49 +182,17 @@ class BackupConfig(models.Model):
             for backup_config in active_backup_configs:
                 if (backup_config.hourly > 0 or backup_config.daily > 0 or backup_config.weekly > 0 or
                         backup_config.monthly > 0 or backup_config.yearly > 0):
-                    sorted_backup_dts = sorted(remote_backups[backup_config.database], reverse=True)
-                    last_backup_dt = sorted_backup_dts.pop(0)
-                    needed_backup_dts = [last_backup_dt]
-                    backup_config_time_frames = []
-                    if backup_config.hourly > 1:
-                        last_backup_dt_hour = last_backup_dt.replace(minute=0, second=0)
-                        for hour in range(1, backup_config.hourly):
-                            backup_config_time_frames.append([last_backup_dt_hour - timedelta(hours=hour),
-                                                              last_backup_dt_hour - timedelta(hours=hour-1)])
-                    if backup_config.daily > 1:
-                        last_backup_dt_day = last_backup_dt.replace(hour=0, minute=0, second=0)
-                        for day in range(1, backup_config.daily):
-                            backup_config_time_frames.append([last_backup_dt_day - timedelta(days=day),
-                                                              last_backup_dt_day - timedelta(days=day-1)])
-                    if backup_config.weekly > 1:
-                        last_backup_dt_day = last_backup_dt.replace(hour=0, minute=0, second=0)
-                        last_backup_dt_week = last_backup_dt_day - timedelta(days=last_backup_dt_day.weekday())
-                        for week in range(1, backup_config.weekly):
-                            backup_config_time_frames.append([last_backup_dt_week - timedelta(weeks=week),
-                                                              last_backup_dt_week - timedelta(weeks=week-1)])
-                    if backup_config.monthly > 1:
-                        last_backup_dt_month = last_backup_dt.replace(day=0, hour=0, minute=0, second=0)
-                        for month in range(1, backup_config.monthly):
-                            backup_config_time_frames.append([last_backup_dt_month - relativedelta(months=month),
-                                                              last_backup_dt_month - relativedelta(months=month-1)])
-                    if backup_config.yearly > 1:
-                        last_backup_dt_year = last_backup_dt.replace(month=0, day=0, hour=0, minute=0, second=0)
-                        for year in range(1, backup_config.yearly):
-                            backup_config_time_frames.append([last_backup_dt_year - relativedelta(years=year),
-                                                              last_backup_dt_year - relativedelta(years=year-1)])
-                    while backup_config_time_frames:
-                        frame = backup_config_time_frames.pop()
-                        if any(frame[0] < backup_dt < frame[1] for backup_dt in needed_backup_dts):
-                            continue
-                        for backup_dt in sorted_backup_dts:
-                            if frame[0] < backup_dt < frame[1]:
-                                needed_backup_dts.append(backup_dt)
-                                sorted_backup_dts.remove(backup_dt)
-                                break
-                    for backup_dt in sorted_backup_dts:
-                        remote_objects_to_delete += [{'Key': '%s/%s' % (cloud_params['oauth_uid'], file_name)} for
-                                                     file_name in remote_backups[backup_config.database][backup_dt]]
-                        del remote_backups[backup_config.database][backup_dt]
+                    backup_dts = copy.deepcopy(remote_backups[backup_config.database])
+                    needed_backup_dts = self.compute_auto_rotation_backup_dts(
+                        backup_dts, backup_config.hourly, backup_config.daily,
+                        backup_config.weekly, backup_config.monthly, backup_config.yearly)
+                    for backup_dt in backup_dts:
+                        if backup_dt not in needed_backup_dts:
+                            remote_objects_to_delete += [
+                                {'Key': '%s/%s' % (cloud_params['odoo_oauth_uid'], file_name)} for file_name in
+                                remote_backups[backup_config.database][backup_dt]
+                            ]
+                            del remote_backups[backup_config.database][backup_dt]
 
             s3_client = boto3.client('s3', aws_access_key_id=cloud_params['amazon_access_key'],
                                      aws_secret_access_key=cloud_params['amazon_secret_access_key'])
@@ -173,13 +202,16 @@ class BackupConfig(models.Model):
                 try:
                     s3_client.delete_objects(
                         Bucket=cloud_params['amazon_bucket_name'], Delete={'Objects': remote_objects_to_delete})
+                    objects_names = [obj['Key'] for obj in remote_objects_to_delete]
+                    _logger.info('Following backup objects have been deleted from the remote storage: %s',
+                                 ', '.join(objects_names))
                 except botocore.exceptions.ClientError as e:
                     raise exceptions.ValidationError(_("Amazon error: ") + e.response['Error']['Message'])
 
             # Delete unnecessary local backup info records
             backup_info_ids_to_delete = [r.id for r in self.env['odoo_backup_sh.backup_info'].search(
                 [('database', 'in', list(remote_backups.keys()))]
-            ) if r.upload_datetime not in remote_backups[r.database]]
+            ) if datetime.strptime(r.upload_datetime, DEFAULT_SERVER_DATETIME_FORMAT) not in remote_backups[r.database]]
             self.env['odoo_backup_sh.backup_info'].browse(backup_info_ids_to_delete).unlink()
 
             # Create missing local backup info records
@@ -195,7 +227,7 @@ class BackupConfig(models.Model):
                         try:
                             info_file_object = s3_client.get_object(
                                 Bucket=cloud_params['amazon_bucket_name'],
-                                Key='%s/%s' % (cloud_params['oauth_uid'], info_file_name)
+                                Key='%s/%s' % (cloud_params['odoo_oauth_uid'], info_file_name)
                             )
                         except botocore.exceptions.ClientError as e:
                             raise exceptions.ValidationError(_("Amazon error: ") + e.response['Error']['Message'])
@@ -235,12 +267,12 @@ class BackupConfig(models.Model):
             gnupg.GPG().encrypt(
                 dump_stream, symmetric=True, passphrase=passphrase, encrypt=False, output=backup_encrpyted_name)
             dump_stream = open(backup_encrpyted_name, 'rb')
-        cloud_params = BackupController().get_local_cloud_params()
+        cloud_params = BackupController().get_cloud_params()
         s3_client = boto3.client('s3', aws_access_key_id=cloud_params['amazon_access_key'],
                                  aws_secret_access_key=cloud_params['amazon_secret_access_key'])
         dt = datetime.utcnow()
         ts = dt.strftime("%Y-%m-%d_%H-%M-%S")
-        s3_backup_path = '%s/%s.%s%s' % (cloud_params['oauth_uid'], name, ts, backup_name_suffix)
+        s3_backup_path = '%s/%s.%s%s' % (cloud_params['odoo_oauth_uid'], name, ts, backup_name_suffix)
         info_file = tempfile.TemporaryFile()
         info_file.write('[common]\n'.encode())
         info_file_content = {
@@ -252,7 +284,7 @@ class BackupConfig(models.Model):
             line = key + ' = ' + str(value) + '\n'
             info_file.write(line.encode())
         info_file.seek(0)
-        s3_info_file_path = '%s/%s.%s.info' % (cloud_params['oauth_uid'], name, ts)
+        s3_info_file_path = '%s/%s.%s.info' % (cloud_params['odoo_oauth_uid'], name, ts)
         # Create new record with backup info data
         info_file_content['upload_datetime'] = dt
         self.env['odoo_backup_sh.backup_info'].create(info_file_content)
@@ -260,6 +292,8 @@ class BackupConfig(models.Model):
         try:
             s3_client.put_object(Body=dump_stream, Bucket=cloud_params['amazon_bucket_name'], Key=s3_backup_path)
             s3_client.put_object(Body=info_file, Bucket=cloud_params['amazon_bucket_name'], Key=s3_info_file_path)
+            _logger.info('Following backup objects have been put in a remote storage: %s',
+                         ', '.join([s3_backup_path, s3_info_file_path]))
         except botocore.exceptions.ClientError as e:
             raise exceptions.ValidationError(_("Amazon error: ") + e.response['Error']['Message'])
         self.update_info(cloud_params)

@@ -112,7 +112,9 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                         </field>
                     </group>
                     <group string="Auto Rotation" attrs="{'invisible': [('config_cron_ids', '=', [])]}">
-                        <!--How many backups for what time intervals to preserve on a remote server.-->
+                        <h3 colspan="2">
+                            How many backups for what time intervals to preserve on a remote storage.
+                        </h3>
                         <field name="hourly"/>
                         <field name="daily"/>
                         <field name="weekly"/>
