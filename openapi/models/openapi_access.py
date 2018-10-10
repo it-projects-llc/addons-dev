@@ -2,6 +2,7 @@
 # Copyright 2018 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 # Copyright 2018 Rafis Bikbov <https://it-projects.info/team/bikbov>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+import json
 import urllib
 import inspect
 
@@ -403,3 +404,12 @@ class AccessCreateContext(models.Model):
     def write(self, vals):
         vals = self._fix_name(vals)
         return super(AccessCreateContext, self).write(vals)
+
+    @api.multi
+    @api.constrains('context')
+    def _check_context(self):
+        for record in self:
+            try:
+                json.loads(record.context[1:-1])
+            except ValueError:
+                raise exceptions.ValidationError(_('Context must be jsonable.'))
