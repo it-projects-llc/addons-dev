@@ -26,7 +26,7 @@ class TestUi(odoo.tests.HttpCase):
             wraps=lambda *args: {'credit_url': 'https://iap.odoo.com/iap/1/credit...'})
         self.patcher_check_insufficient_credit.start()
 
-    def test_01_odoo_backup_sh_tour(self):
+    def test_odoo_backup_sh_tour(self):
         # needed because tests are run before the module is marked as
         # installed. In js web will only load qweb coming from modules
         # that are returned by the backend in module_boot. Without
