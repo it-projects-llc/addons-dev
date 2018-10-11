@@ -45,6 +45,7 @@ odoo.define('pos_order_receipt_custom.screens', function(require){
             if (this.pos.config.custom_xml_receipt) {
                 order.set_receipt_type(_t('Pre-receipt'));
                 this.pos.chrome.screens.receipt.print_xml();
+                order._printed = false;
             } else {
                 var receipt = order.export_for_printing();
                 var printbill = this.gui.screen_instances.products.action_buttons.print_bill;
