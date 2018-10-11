@@ -41,9 +41,12 @@ odoo.define('pos_discount_base.screens', function (require) {
     screens.OrderWidget.include({
         // COPY FROM pos_discount/static/src/js/discount.js
         apply_discount: function(pc) {
-            var order    = this.pos.get_order();
-            var lines    = order.get_orderlines();
-            var product  = this.pos.db.get_product_by_id(this.pos.config.discount_product_id[0]);
+            var order = this.pos.get_order();
+            if (!order) {
+                return;
+            }
+            var lines = order.get_orderlines();
+            var product = this.pos.db.get_product_by_id(this.pos.config.discount_product_id[0]);
 
             // Remove existing discounts
             var i = 0;
@@ -62,7 +65,10 @@ odoo.define('pos_discount_base.screens', function (require) {
             }
 
             // prevents setting discount to a default value when partner changing (set_pricelist)
-            this.pos.get_order().get_selected_orderline().price_manually_set = true;
+            var selected_orderline = order.get_selected_orderline();
+            if (selected_orderline) {
+                selected_orderline.price_manually_set = true;
+            }
         },
         // DIFFERENCES FROM ORIGINAL:
         // confirm is separate function
