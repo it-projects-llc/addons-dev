@@ -1,5 +1,14 @@
+
+`5.0.3`
+-------
+
+- **FIX:** Compatibility with other pos modules
+- **FIX:** Error message displaying on discount credit paymentlines with zero price 
+- **FIX:** Lost overrides of the `order` and `session` forms
+
 `5.0.2`
 -------
+
 - **FIX:** Error related to debt loading after creating a new partner in POS
 
 `5.0.1`

@@ -377,6 +377,12 @@ odoo.define('pos_debt_notebook.pos', function (require) {
         },
         validate_order: function(options) {
             var currentOrder = this.pos.get_order();
+            var zero_paymentlines = _.filter(currentOrder.get_paymentlines(), function(p){
+                return p.amount === 0;
+            });
+            _.each(zero_paymentlines, function(p){
+                currentOrder.remove_paymentline(p);
+            });
             var isDebt = currentOrder.updates_debt();
             var debt_amount = currentOrder.get_debt_delta();
             var client = currentOrder.get_client();
@@ -516,7 +522,7 @@ odoo.define('pos_debt_notebook.pos', function (require) {
         check_discount_credits_for_taxed_products: function(){
             var order = this.pos.get_order(),
                 discount_pl = order.paymentlines_with_credits_via_discounts();
-            if (discount_pl.length === order.get_paymentlines().length) {
+            if (!discount_pl.length || discount_pl.length === order.get_paymentlines().length) {
                 return false;
             }
             var taxes_id = false;
