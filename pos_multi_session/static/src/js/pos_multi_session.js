@@ -172,7 +172,11 @@ odoo.define('pos_multi_session', function(require){
                 self.chrome.loading_message(_t('Sync Orders'), progress);
 
                 var load_sync_all_request = function(){
-                    return self.multi_session.request_sync_all({'immediate_rerendering': true}).then(function() {
+                    var response = self.multi_session.request_sync_all({'immediate_rerendering': true});
+                    if (!response) {
+                        return false;
+                    }
+                    return response.then(function() {
                         self.is_loaded = true;
                         done.resolve();
                     }).fail(function(){
@@ -831,7 +835,7 @@ odoo.define('pos_multi_session', function(require){
         },
         request_sync_all: function(options){
             if (this.on_syncing) {
-                return;
+                return false;
             }
             options = options || {};
             var self = this;
