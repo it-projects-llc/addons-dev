@@ -340,6 +340,10 @@ odoo.define('pos_multi_session', function(require){
             return order;
         },
         ms_update_order: function(order, data){
+            if (order.finalized) {
+                // if true, cannot be modified. - According to Odoo
+                return;
+            }
             var pos = this;
             this.pos_session.order_ID = data.sequence_number;
             if (order){
