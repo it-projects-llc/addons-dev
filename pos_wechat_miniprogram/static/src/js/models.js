@@ -44,7 +44,7 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
 
                 var mp_orders = self.get('orders').filter(function(order) {
                     if (order.miniprogram_order && order.miniprogram_order.id) {
-                        return order.miniprogram_order
+                        return order.miniprogram_order;
                     }
                 });
 

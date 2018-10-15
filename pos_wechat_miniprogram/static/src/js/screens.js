@@ -36,7 +36,7 @@ odoo.define('pos_wechat_miniprogram.screens', function(require){
             var methods = this._super();
             var jsapi_journal = this.pos.get_mp_cashregister();
             if (jsapi_journal) {
-                var el = methods.find(`[data-id='${jsapi_journal.journal_id[0]}']`);
+                var el = methods.find("[data-id=" + jsapi_journal.journal_id[0] + "]");
                 if (el.length) {
                     el.remove();
                 }
