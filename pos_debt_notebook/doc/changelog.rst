@@ -1,3 +1,7 @@
+`5.0.4`
+-------
+
+- **FIX:** compatibility with pos_category_multi
 
 `5.0.3`
 -------
