@@ -70,3 +70,29 @@ class HrExpenseSheet(models.Model):
         self.write({
             'payment_datetime': fields.Datetime.now(),
         })
+
+
+class PosSession(models.Model):
+    _inherit = 'pos.session'
+
+    session_expenses = fields.One2many('hr.expense.sheet', 'pos_session_id',
+                                       string='Expenses', help="Show Expenses paid in the Session")
+    session_expenses_count = fields.Integer('Expenses', compute='_compute_session_expenses_count')
+
+    @api.multi
+    def _compute_session_expenses_count(self):
+        for rec in self:
+            rec.session_expenses_count = len(rec.session_expenses)
+
+    @api.multi
+    def action_paid_expenses(self):
+        expenses = self.env['hr.expense.sheet'].search([('pos_session_id', 'in', self.ids)]).ids
+        domain = [('id', 'in', expenses)]
+        return {
+            'name': _('Expenses'),
+            'type': 'ir.actions.act_window',
+            'domain': domain,
+            'res_model': 'hr.expense.sheet',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+        }
