@@ -1,4 +1,4 @@
-from odoo import api, models, fields
+from odoo import api, models, fields, _
 
 SO_CHANNEL = 'pos_sale_orders'
 INV_CHANNEL = 'pos_invoices'
@@ -143,3 +143,30 @@ class PosConfig(models.Model):
 
     show_invoices = fields.Boolean(help="Show invoices in POS", default=True)
     show_sale_orders = fields.Boolean(help="Show sale orders in POS", default=True)
+
+
+class PosSession(models.Model):
+    _inherit = 'pos.session'
+
+    session_invoices = fields.One2many('account.payment', 'pos_session_id',
+                                       string='Invoice Payments', help="Show invoices paid in the Session")
+    session_invoices_count = fields.Integer('Invoices', compute='_compute_session_invoices_count')
+
+    @api.multi
+    def _compute_session_invoices_count(self):
+        for rec in self:
+            rec.session_invoices_count = len(rec.session_invoices)
+
+    @api.multi
+    def action_invoice_payments(self):
+        payments = self.env['account.payment'].search([('pos_session_id', 'in', self.ids)])
+        invoices = payments.mapped('invoice_ids').ids
+        domain = [('id', 'in', invoices)]
+        return {
+            'name': _('Invoice Payments'),
+            'type': 'ir.actions.act_window',
+            'domain': domain,
+            'res_model': 'account.invoice',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+        }
