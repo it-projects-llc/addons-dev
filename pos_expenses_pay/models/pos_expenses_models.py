@@ -77,7 +77,7 @@ class PosSession(models.Model):
 
     session_expenses = fields.One2many('hr.expense.sheet', 'pos_session_id',
                                        string='Expenses', help="Show Expenses paid in the Session")
-    session_expenses_total = fields.Integer('Expenses', compute='_compute_session_expenses_total')
+    session_expenses_total = fields.Float('Expenses', compute='_compute_session_expenses_total')
 
     @api.multi
     def _compute_session_expenses_total(self):
