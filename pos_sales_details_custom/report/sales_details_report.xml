@@ -156,8 +156,8 @@
 
         <h4><strong>Opening Balance: </strong><t t-esc="opening_balance" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
         <h4><strong>Theoretical Closing Balance: </strong><t t-esc="cash_register_balance_end" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
-        <h4><strong>Real Closing Balance: </strong><t t-esc="real_closing_balance" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
-        <h4><strong>Difference: </strong><t t-esc="closing_difference" t-options="{'widget': 'float', 'precision': currency_precision}" /></h4>
+        <h4><strong>Real Closing Balance: </strong> ___________________ </h4>
+        <h4><strong>Difference: </strong> ___________________ </h4>
 
         <br/>
 
