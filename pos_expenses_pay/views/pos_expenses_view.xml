@@ -83,7 +83,7 @@
                 <field name="session_expenses" invisible="1"/>
                 <button name="action_paid_expenses" type="object"
                         class="oe_stat_button" icon="fa-list-alt">
-                    <field name="session_expenses_count" widget="statinfo"/>
+                    <field name="session_expenses_total" widget="statinfo"/>
                 </button>
             </xpath>
         </field>

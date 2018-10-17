@@ -77,12 +77,12 @@ class PosSession(models.Model):
 
     session_expenses = fields.One2many('hr.expense.sheet', 'pos_session_id',
                                        string='Expenses', help="Show Expenses paid in the Session")
-    session_expenses_count = fields.Integer('Expenses', compute='_compute_session_expenses_count')
+    session_expenses_total = fields.Integer('Expenses', compute='_compute_session_expenses_total')
 
     @api.multi
-    def _compute_session_expenses_count(self):
+    def _compute_session_expenses_total(self):
         for rec in self:
-            rec.session_expenses_count = len(rec.session_expenses)
+            rec.session_expenses_total = sum(rec.session_expenses.mapped('total_amount') + [0])
 
     @api.multi
     def action_paid_expenses(self):

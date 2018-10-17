@@ -148,14 +148,14 @@ class PosConfig(models.Model):
 class PosSession(models.Model):
     _inherit = 'pos.session'
 
-    session_invoices = fields.One2many('account.payment', 'pos_session_id',
+    session_payments = fields.One2many('account.payment', 'pos_session_id',
                                        string='Invoice Payments', help="Show invoices paid in the Session")
-    session_invoices_count = fields.Integer('Invoices', compute='_compute_session_invoices_count')
+    session_invoices_total = fields.Float('Invoices', compute='_compute_session_invoices_total')
 
     @api.multi
-    def _compute_session_invoices_count(self):
+    def _compute_session_invoices_total(self):
         for rec in self:
-            rec.session_invoices_count = len(rec.session_invoices)
+            rec.session_invoices_total = sum(rec.session_payments.mapped('invoice_ids').mapped('amount_total') + [0])
 
     @api.multi
     def action_invoice_payments(self):
