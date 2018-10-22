@@ -1,5 +1,4 @@
-/* Copyright (c) 2004-2015 Odoo S.A.
-   Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+/* Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). */
 odoo.define('event_barcode_partner.sign_kiosk_mode', function (require) {
 "use strict";
@@ -11,10 +10,18 @@ var Widget = require('web.Widget');
 var Session = require('web.session');
 var local_storage = require('web.local_storage');
 var BarcodeHandlerMixin = require('barcodes.BarcodeHandlerMixin');
+//var event_toggleFullScreen = require('event_barcode_partner.event_models');
 
 var QWeb = core.qweb;
 var _t = core._t;
 
+//$( document ).ready(function() {
+//    console.log( "ready!" );
+//    if (!document.webkitIsFullScreen) {
+//        event_toggleFullScreen.toggleFullScreen(document.documentElement);
+//        $('nav').hide();
+//    }
+//});
 
 var AcceptModalKiosk = Widget.extend({
     events: {
@@ -151,6 +158,7 @@ var KioskMode = Widget.extend(BarcodeHandlerMixin, {
                 self.company_image_url = self.session.url('/web/image', {model: 'res.company', id: self.session.company_id, field: 'logo',});
 
                 self.$el.html(QWeb.render("ESTKioskMode", {widget: self}));
+                self.toggle_full_screen();
                 self.start_sign_widget();
                 // TODO: remove it
                 $('.o_hr_attendance_button_partners').on('click', function(e){
@@ -172,6 +180,26 @@ var KioskMode = Widget.extend(BarcodeHandlerMixin, {
 
             });
         return self._super.apply(this, arguments);
+    },
+
+    toggle_full_screen: function(){
+        if (!document.webkitIsFullScreen) {
+
+            var el = document.documentElement;
+            var requestMethod = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullScreen;
+            if (requestMethod) { // Native full screen.
+                requestMethod.call(el);
+            } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+                var wscript = new ActiveXObject("WScript.Shell");
+                if (wscript !== null) {
+                    wscript.SendKeys("{F11}");
+                }
+            }
+
+            // event_toggleFullScreen.toggleFullScreen(document.documentElement);
+            // anyway hide navbar from others
+            $('nav').hide();
+        }
     },
 
     start_sign_widget: function(){

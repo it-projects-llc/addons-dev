@@ -23,15 +23,8 @@ class EventRegistration(models.Model):
          """
         return '052' + str(int(uuid.uuid4().bytes[:5].encode('hex'), 16))
 
-    @api.model
-    def _get_random_rfid_token(self):
-        """
-            We set rfid templates to distinct event.registration barcode from attendee barcode (rfid)
-         """
-        return '053' + str(int(uuid.uuid4().bytes[:5].encode('hex'), 16))
-
     barcode = fields.Char(default=_get_random_token)
-    rfid = fields.Char(default=_get_random_rfid_token)
+    rfid = fields.Char(related='partner_id.barcode')
     sign_attachment_id = fields.Many2one('ir.attachment', 'E-Sign')
 
     signed_terms = fields.Boolean('Terms are Signed', compute='_compute_signed_terms')
@@ -192,3 +185,17 @@ class EsignatureTabSession(models.Model):
             },
             'target': 'fullscreen',
         }
+
+
+class ResPartner(models.Model):
+    """Partners"""
+    _inherit = 'res.partner'
+
+    @api.model
+    def _get_random_rfid_token(self):
+        """
+            We set rfid templates to distinct event.registration barcode from attendee barcode (rfid)
+         """
+        return '053' + str(int(uuid.uuid4().bytes[:5].encode('hex'), 16))
+
+    barcode = fields.Char(default=_get_random_rfid_token)
