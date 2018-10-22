@@ -112,12 +112,21 @@ var KioskMode = Widget.extend(BarcodeHandlerMixin, {
     update_bus: function(){
         var self = this;
         this.bus = bus.bus;
+        this.bus.stop_polling();
         var channel_name = this.get_full_channel_name('est.longpolling.sign', this.action.context.barcode_interface + '')
         this.bus.add_channel(channel_name);
-        this.bus.start_polling();
+        this.force_start_polling();
         this.bus.on("notification", this.bus, function(data){
             self.on_est_sign_updates(data);
         });
+    },
+
+    force_start_polling: function(){
+        this.bus.start_polling();
+        if(!this.bus.activated){
+            this.bus.poll();
+            this.bus.stop = false;
+        }
     },
 
     get_full_channel_name: function(channel_name, sub_channel){

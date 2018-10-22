@@ -21,19 +21,18 @@ event_barcode.EventScanView.include({
           return str.length === 1 && str.match(/[a-z]/i);
         }
 
-        this.$('input#event_client_name_search').on('change', function(e){
-            var name = e.target.value;
-            self.on_name_entered(name);
-        });
 //        this.$('input#event_client_name_search').on('change', function(e){
-//            var name = isLetter(e.key)
-//             ? e.target.value + e.key
-//             : e.target.value;
-//            if (name) {
-//                self.on_name_entered(name);
-//            }
+//            var name = e.target.value;
+//            self.on_name_entered(name);
 //        });
-
+        this.$('input#event_client_name_search').on('keypress', function(e){
+            var name = isLetter(e.key)
+             ? e.target.value + e.key
+             : e.target.value;
+            if (name) {
+                self.on_name_entered(name);
+            }
+        });
 
         this.update_session_id().then(function(data){
             self.update_bus();
@@ -44,12 +43,23 @@ event_barcode.EventScanView.include({
     update_bus: function(){
         var self = this;
         this.bus = bus.bus;
+        this.bus.stop_polling();
         var channel_name = this.get_full_channel_name('bi.longpolling.notifs', this.interface_session_number + '')
         this.bus.add_channel(channel_name);
-        this.bus.start_polling();
+        this.force_start_polling();
         this.bus.on("notification", this.bus, function(data){
-            self.update_client_list(JSON.parse(data[0][1]));
+            if (data && data.length){
+                self.update_client_list(JSON.parse(data[0][1]));
+            }
         });
+    },
+
+    force_start_polling: function(){
+        this.bus.start_polling();
+        if(!this.bus.activated){
+            this.bus.poll();
+            this.bus.stop = false;
+        }
     },
 
     get_full_channel_name: function(channel_name, sub_channel){
