@@ -1,4 +1,4 @@
-from odoo import api, models, fields
+from odoo import api, models, fields, _
 
 SO_CHANNEL = 'pos_sale_orders'
 INV_CHANNEL = 'pos_invoices'
@@ -46,14 +46,14 @@ class PosOrder(models.Model):
                 'partner_type': 'customer',
                 'payment_difference_handling': payment_difference_handling,
                 'writeoff_account_id': writeoff_acc_id,
-                'paid_by_pos': True,
-                'cashier': cashier
+                'cashier': cashier,
+                'pos_session_id': invoice['data']['pos_session_id']
             }
             payment = self.env['account.payment'].create(vals)
             payment.post()
 
     @api.model
-    def process_invoices_creation(self, sale_order_id):
+    def process_invoices_creation(self, sale_order_id, session_id):
         order = self.env['sale.order'].browse(sale_order_id)
         inv_id = order.action_invoice_create()
         self.env['account.invoice'].browse(inv_id).action_invoice_open()
@@ -63,9 +63,9 @@ class PosOrder(models.Model):
 class AccountPayment(models.Model):
     _inherit = 'account.payment'
 
-    paid_by_pos = fields.Boolean(default=False)
+    pos_session_id = fields.Many2one('pos.session', string='POS session')
     cashier = fields.Many2one('res.users')
-    datetime = fields.Datetime(required=True, string="Datetime", default=fields.Datetime.now)
+    datetime = fields.Datetime(string="Datetime", default=fields.Datetime.now)
 
 
 class AccountInvoice(models.Model):
@@ -143,3 +143,30 @@ class PosConfig(models.Model):
 
     show_invoices = fields.Boolean(help="Show invoices in POS", default=True)
     show_sale_orders = fields.Boolean(help="Show sale orders in POS", default=True)
+
+
+class PosSession(models.Model):
+    _inherit = 'pos.session'
+
+    session_payments = fields.One2many('account.payment', 'pos_session_id',
+                                       string='Invoice Payments', help="Show invoices paid in the Session")
+    session_invoices_total = fields.Float('Invoices', compute='_compute_session_invoices_total')
+
+    @api.multi
+    def _compute_session_invoices_total(self):
+        for rec in self:
+            rec.session_invoices_total = sum(rec.session_payments.mapped('invoice_ids').mapped('amount_total') + [0])
+
+    @api.multi
+    def action_invoice_payments(self):
+        payments = self.env['account.payment'].search([('pos_session_id', 'in', self.ids)])
+        invoices = payments.mapped('invoice_ids').ids
+        domain = [('id', 'in', invoices)]
+        return {
+            'name': _('Invoice Payments'),
+            'type': 'ir.actions.act_window',
+            'domain': domain,
+            'res_model': 'account.invoice',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+        }

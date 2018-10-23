@@ -708,7 +708,7 @@ var SaleOrdersWidget = InvoicesAndOrdersBaseWidget.extend({
         rpc.query({
             model: 'pos.order',
             method: 'process_invoices_creation',
-            args: [sale_order.id],
+            args: [sale_order.id, self.pos.pos_session.id],
         }).then(function (created_invoice_id) {
             // Explicitly update the db to avoid race condition.
             self.pos.update_or_fetch_invoice(created_invoice_id).then(function (res) {
@@ -716,7 +716,7 @@ var SaleOrdersWidget = InvoicesAndOrdersBaseWidget.extend({
                 self.pos.gui.screen_instances.invoice_payment.render_paymentlines();
                 self.gui.show_screen('invoice_payment', {type: 'orders'});
             });
-        }).fail(function (type, err) {
+        }).fail(function (err, type) {
             self.gui.show_popup('error', {
                 'title': _t(err.message),
                 'body': _t(err.data.arguments[0])

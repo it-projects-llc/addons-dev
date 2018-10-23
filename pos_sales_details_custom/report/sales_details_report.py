@@ -13,8 +13,8 @@ class ReportSaleDetails(models.AbstractModel):
         result = super(ReportSaleDetails, self).get_sale_details(date_start, date_stop, configs)
         active_user = self.env['res.users'].browse(self.env.context['uid'])
         pos_session_ids = self.env['pos.session'].search([('config_id', 'in', configs.ids),
-                                                          ('start_at', '<', date_stop),
-                                                          ('stop_at', '>', date_start)])
+                                                          ('start_at', '<', date_stop)])
+        pos_session_ids = pos_session_ids.filtered(lambda d: (not d.stop_at) or d.stop_at > date_start)
         pos_session_refs = [p_s.name for p_s in pos_session_ids]
         pos_orders = self.env['pos.order'].search([('session_id', 'in', pos_session_ids.ids),
                                                    ('date_order', '<', date_stop),
@@ -27,16 +27,21 @@ class ReportSaleDetails(models.AbstractModel):
                                                                        ('datetime', '>=', date_start),
                                                                        ('datetime', '<=', date_stop)])
 
+        for p in result['payments']:
+            p['type'] = ''
+
         for pay in all_payments.filtered(lambda p: p.amount > 0):
             journal = self.env['account.journal'].search([('name', '=', pay.journal_id.name)], limit=1)
             for i in result['payments']:
                 if i['name'] == journal.name:
                     i['pay_num'] = 'pay_num' in i and i['pay_num'] + 1 or 1
+                    i['type'] = journal.type
 
         result['payments_total'] = {
             'name': 'Total',
             'total': sum([p['total'] for p in result['payments']] + [0]),
             'pay_num': sum([('pay_num' in p and p['pay_num'] or 0) for p in result['payments']] + [0]),
+            'cash': sum([p['total'] for p in result['payments'] if p['type'] == 'cash'] + [0]),
         }
 
         result['card_payments'] = []
@@ -58,7 +63,7 @@ class ReportSaleDetails(models.AbstractModel):
             result['sessions'].append({
                 'name': session.name,
                 'opened_by': session.opened_by.name,
-                'closed_by': session.closed_by.name
+                'closed_by': session.closed_by and session.closed_by.name or ''
             })
             lines_in += session.cash_register_id.cashbox_start_id.cashbox_lines_ids
             lines_out += session.cash_register_id.cashbox_end_id.cashbox_lines_ids
@@ -67,6 +72,7 @@ class ReportSaleDetails(models.AbstractModel):
             for j in result['cash_control']:
                 if i.coin_value == j['coin_value']:
                     j['coin_out'] += i.number
+                    j['subtotal_out'] += i.subtotal
                     in_report = True
             if not in_report:
                 result['cash_control'] += [{
@@ -81,6 +87,7 @@ class ReportSaleDetails(models.AbstractModel):
             for j in result['cash_control']:
                 if i.coin_value == j['coin_value']:
                     j['coin_in'] += i.number
+                    j['subtotal_in'] += i.subtotal
                     in_report = True
             if not in_report:
                 result['cash_control'] += [{
@@ -102,19 +109,20 @@ class ReportSaleDetails(models.AbstractModel):
                     }]
         result['put_in_out_total'] = sum([l['amount'] for l in result['put_in_out']] + [0])
 
-        result['closing_difference'] = result['real_closing_balance'] = result['cash_register_balance_end'] = result['opening_balance'] = 0
+        result['cash_register_balance_end'] = result['opening_balance'] = 0
         put_inout = 0
         for ps in pos_session_ids:
             put_inout += ps.pos_cash_box_ids and sum(
                 [(cb.put_type == 'in' and cb.amount or -cb.amount) for cb in ps.pos_cash_box_ids]) or 0
-            result['real_closing_balance'] += ps.cash_register_balance_end_real
-            result['cash_register_balance_end'] += ps.cash_register_balance_end
             result['opening_balance'] += ps.cash_register_balance_start
 
-        result['real_closing_balance'] = result['real_closing_balance']
-        result['theoretical_closing_balance'] = (result['cash_register_balance_end'] + put_inout +
-                                                 result['expenses_total'] + result['total_invoices_cash'])
-        result['closing_difference'] = result['cash_register_balance_end'] - result['real_closing_balance']
+        result['theoretical_closing_balance'] = (result['opening_balance'] + put_inout +
+                                                 result['payments_total']['total'] +
+                                                 result['expenses_total'] + result['total_invoices'])
+        result['cash_register_balance_end'] = (result['opening_balance'] + put_inout +
+                                               result['payments_total']['cash'] +
+                                               result['expenses_total'] + result['total_invoices_cash'])
+
         result['date'] = datetime.now().strftime('%y/%m/%d')
 
         result['returns_total'] = 0

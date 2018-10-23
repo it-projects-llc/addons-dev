@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Copyright 2018 Artyom Losev
+    Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
+    Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).-->
 <odoo>
-    <data>
         <record model="ir.ui.view" id="view_pos_config_form">
             <field name="name">pos.config.form.view.inherit</field>
             <field name="model">pos.config</field>
@@ -68,5 +71,22 @@
                 </xpath>
             </field>
         </record>
-    </data>
+
+<!--POS SESSION-->
+
+    <record id="pos_expenses_pay_session_form_expenses" model="ir.ui.view">
+        <field name="name">pos.session.form.view</field>
+        <field name="model">pos.session</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_session_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/div/button[@name='action_stock_picking']" position="after">
+                <field name="session_expenses" invisible="1"/>
+                <button name="action_paid_expenses" type="object"
+                        class="oe_stat_button" icon="fa-list-alt">
+                    <field name="session_expenses_total" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
