@@ -7,7 +7,6 @@
             <script type="text/javascript" src="/web/static/lib/jSignature/jSignatureCustom.js"></script>
             <!--Internal files-->
             <link rel="stylesheet" href='/event_barcode_partner/static/src/css/event_barcode_inherited.css'/>
-            <script type="text/javascript" src="/event_barcode_partner/static/src/js/event_models.js"></script>
             <script type="text/javascript" src="/event_barcode_partner/static/src/js/event_barcode_custom.js"></script>
             <script type="text/javascript" src="/event_barcode_partner/static/src/js/est_mode.js"></script>
         </xpath>

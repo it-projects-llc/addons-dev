@@ -21,17 +21,8 @@ event_barcode.EventScanView.include({
           return str.length === 1 && str.match(/[a-z]/i);
         }
 
-//        this.$('input#event_client_name_search').on('change', function(e){
-//            var name = e.target.value;
-//            self.on_name_entered(name);
-//        });
-        this.$('input#event_client_name_search').on('keypress', function(e){
-            var name = isLetter(e.key)
-             ? e.target.value + e.key
-             : e.target.value;
-            if (name) {
-                self.on_name_entered(name);
-            }
+        this.$('input#event_client_name_search').on('keyup', function(e){
+            self.on_name_entered(e.target.value);
         });
 
         this.update_session_id().then(function(data){

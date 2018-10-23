@@ -117,7 +117,10 @@ var KioskMode = Widget.extend(BarcodeHandlerMixin, {
         this.bus.add_channel(channel_name);
         this.force_start_polling();
         this.bus.on("notification", this.bus, function(data){
-            self.on_est_sign_updates(data);
+            if (data && data.length){
+//                self.update_client_list(JSON.parse(data[0][1]));
+                self.on_est_sign_updates(data);
+            }
         });
     },
 
