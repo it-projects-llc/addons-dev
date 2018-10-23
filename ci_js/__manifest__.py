@@ -21,10 +21,10 @@
     #     "{DEPENDENCY2}",
     # ],
     # "external_dependencies": {"python": [], "bin": []},
-    # "data": [
-    #     "{FILE1}.xml",
-    #     "{FILE2}.xml",
-    # ],
+    "data": [
+        "security/ir.model.access.csv",
+        "views/ci_js_view.xml",
+    ],
     # "demo": [
     #     "demo/{DEMOFILE1}.xml",
     # ],

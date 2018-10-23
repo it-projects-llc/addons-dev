@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id='ci_js_view_tree' model='ir.ui.view'>
+        <field name="name">ci_js.tour.tree</field>
+        <field name="model">ci_js.tour</field>
+        <field name="arch" type="xml">
+            <tree string="Test">
+                <field name="tour_name" />
+                <!--<field name="active" invisible="1"/>-->
+                <!--<field name="license_plate" />-->
+                <!--<field name="model_id" />-->
+                <!--<field name="driver_id" />-->
+                <!--<field name="vin_sn" />-->
+                <!--<field name="acquisition_date" />-->
+                <!--<field name="state_id"/>-->
+                <!--<field name="odometer"/>-->
+                <!--<field name="odometer_unit" />-->
+                <!--<field name="contract_renewal_due_soon" invisible="1"/>-->
+                <!--<field name="contract_renewal_overdue" invisible="1" />-->
+                <!--<field name="contract_renewal_total" invisible="1"/>-->
+            </tree>
+        </field>
+    </record>
+    <record id='ci_js_set_view_tree' model='ir.ui.view'>
+        <field name="name">ci_js.tour.set.tree</field>
+        <field name="model">ci_js.tour.set</field>
+        <field name="arch" type="xml">
+            <tree string="Test">
+                <field name="set_name" />
+            </tree>
+        </field>
+    </record>
+    <record id='ci_js_step_view_tree' model='ir.ui.view'>
+        <field name="name">ci_js.tour.set.step.tree</field>
+        <field name="model">ci_js.tour.set.step</field>
+        <field name="arch" type="xml">
+            <tree string="Test">
+                <field name="content" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- На эту запись будет ссылаться menuitem с помощю action'а в котором указано -->
+    <!-- ir.actions.act_window как я понимаю отвечает за показ в боковом(не обязателно) меню -->
+    <record id="ci_js_model_tour_action" model='ir.actions.act_window'>
+        <field name="name">Tours</field>
+        <!-- Поле(field) в записи(record) с названием res_model принимает имя модели на которуб ссылается наша запись-->
+        <!-- В нашем случае вроде как должна быть основная модель, которая хранит в себе все остальное - ci_js.tour-->
+        <field name="res_model">ci_js.tour</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <!-- Про это поле не знаю пока, нужно оно или нет -->
+        <!--<field name="context">{"search_default_groupby_brand" : True,}</field>-->
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a new tour.
+          </p>
+        </field>
+    </record>
+
+    <menuitem name="CI JS" id="menu_ci_js_root" sequence="116"/>
+    <menuitem name="CI JS" parent="menu_ci_js_root" id="ci_js_main_menu" sequence="100"/>
+    <menuitem action="ci_js_model_tour_action" parent="ci_js_main_menu" id="ci_js_tours_menu"/>
+
+    <record id="ci_js_tour_view_form" model="ir.ui.view">
+        <field name="name">ci_js.tour.form</field>
+        <field name="model">ci_js.tour</field>
+        <field name="arch" type="xml">
+            <form string="Tour">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="tour_name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="tour_name" placeholder="Tour name"/>
+                        </h1>
+                    </div>
+                    <group col="2" string="Test">
+                        <group>
+                            <field name="start_url" placeholder="e.g. /shop"/>
+                            <field name="wait_for"/>
+                        </group>
+                        <group>
+                            <field name="skip_enabled" />
+                            <!--<field name="assets" />-->
+                        </group>
+                    </group>
+                    <field name="set_ids"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
