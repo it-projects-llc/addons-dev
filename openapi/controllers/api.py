@@ -180,7 +180,7 @@ class ApiV1Controller(http.Controller):
             ids=ids,
             method=method,
             method_params=method_params,
-            success_code=pinguin.CODE__accepted)
+            success_code=pinguin.CODE__success)
 
     # Get Report as PDF
     @pinguin.route(_api_report_pdf, methods=['GET'], type='http', auth='none')
