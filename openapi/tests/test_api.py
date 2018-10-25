@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Copyright 2018 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+import json
+
 import requests
 import logging
 
@@ -21,8 +23,12 @@ class TestAPI(HttpCase):
         super(TestAPI, self).setUp()
         self.demo_user = self.env.ref(USER_DEMO)
 
-    def request(self, method, namespace, model, id='', **kwargs):
-        url = "http://localhost:%d/api/v1/%s/%s/%s" % (PORT, namespace, model, id)
+    def request(self, method, namespace, model, record_id='', model_method_name='', **kwargs):
+        url = "http://localhost:%d/api/v1/%s/%s" % (PORT, namespace, model)
+        if record_id:
+            url += '/%s' % record_id
+        if model_method_name:
+            url += '/%s' % model_method_name
         return requests.request(method, url, timeout=30, **kwargs)
 
     def request_from_demo_user(self, *args, **kwargs):
@@ -115,3 +121,50 @@ class TestAPI(HttpCase):
     #     resp = self.request_from_demo_user('GET', namespace_name, model_name)
     #     self.assertEqual(resp.status_code, 401)
     #     self.assertEqual(resp.json()['error'], pinguin.CODE__user_no_perm[1])
+
+    def test_call_allowed_method_on_singleton_record(self):
+        namespace_name = 'demo'
+        model_name = 'res.partner'
+        model_method_name = 'write'
+
+        partner = self.env[model_name].search([], limit=1)
+        method_params = {
+            'vals': {
+                'name': 'changed from write method which call from api'
+            },
+        }
+        data = {
+            'method_params': json.dumps(method_params)
+        }
+
+        resp = self.request_from_demo_user('PATCH', namespace_name, model_name, partner.id, model_method_name, data=data)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(resp.json())
+        # TODO: check changes in db
+        # self.assertEqual(partner.name, method_params['vals']['name'])
+
+    def test_call_allowed_method_on_recordset(self):
+        namespace_name = 'demo'
+        model_name = 'res.partner'
+        model_method_name = 'write'
+
+        partners = self.env[model_name].search([], limit=5)
+        method_params = {
+            'vals': {
+                'name': 'changed from write method which call from api'
+            },
+        }
+        data = {
+            'ids': json.dumps(partners.mapped('id')),
+            'method_params': json.dumps(method_params)
+        }
+
+        resp = self.request_from_demo_user('PATCH', namespace_name, model_name, model_method_name, data=data)
+
+        self.assertEqual(resp.status_code, 200)
+        for i in range(len(partners)):
+            self.assertTrue(resp.json()[i])
+        # TODO: check changes in db
+        # for partner in partners:
+        #     self.assertEqual(partner.name, method_params['vals']['name'])
