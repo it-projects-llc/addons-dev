@@ -8,7 +8,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
     <t t-name="odoo_backup_sh.BackupDashboardMain">
         <div class="o_backup_dashboard">
             <div class="o_backup_dashboard_header">
-                <a href="#" class="o_box_item o_dashboard_action_add_database" name="odoo_backup_sh.odoo_backup_sh_backup_action" title="Add new database in the dashboard.">
+                <a href="#" class="o_box_item o_dashboard_action_add_database" title="Add new database in the dashboard.">
                     <div class="o_inner_box o_primary">
                         <i class="fa fa-plus fa-3x"/><br/>
                         Add Database
@@ -45,32 +45,27 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                     <strong>Warning: </strong>You have not active configs with auto backups.
                 </div>
             </div>
-            <div class="o_backup_dashboard_content o_kanban_view o_kanban_dashboard o_kanban_ungrouped"/>
+            <div class="graph_container" t-if="!widget.show_nocontent_msg">
+                <h2>COMMON REMOTE STORAGE USAGE</h2>
+                <div id="graph_remote_storage_usage"/>
+            </div>
+            <div class="o_backup_dashboard_configs o_kanban_view o_kanban_dashboard o_kanban_ungrouped"/>
         </div>
     </t>
 
-    <t t-name="odoo_backup_sh.databases">
-        <t t-foreach="dbs" t-as="db">
-            <div class="o_kanban_record">
-                <div t-attf-class="o_kanban_card_header">
-                    <div class="o_kanban_card_header_title">
-                        <div class="o_secondary">
-                            <span>Database</span>
-                        </div>
-                        <div class="o_primary">
-                            <t t-esc="db.database"/>
-                        </div>
-                    </div>
+    <t t-name="odoo_backup_sh.config_cards">
+        <t t-foreach="configs" t-as="config">
+            <div class="o_kanban_record" t-att-data-db_name="config.database">
+                <div class="backup_card_title"><t t-esc="config.database"/></div>
+                <div class="backup_card_content">
+                    <button type="object" class="btn btn-primary btn-sm pull-left o_dashboard_action_make_backup">
+                        <span>New Backup</span>
+                    </button>
+                    <a href="#" class="pull-right o_dashboard_action_view_backups">
+                        <t t-esc="config.backups_number"/> Remotely stored backups
+                    </a>
                 </div>
-                <div class="container o_kanban_card_content">
-                    <div class="row">
-                        <div class="col-xs-6 o_kanban_primary_left">
-                            <button type="object" t-att-data-name="db.database" class="btn btn-primary btn-sm o_dashboard_action_make_backup">
-                                <span>New Backup</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <div class="backup_config_card_graph"/>
             </div>
         </t>
     </t>

@@ -1,20 +1,28 @@
 # Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
-from odoo.api import Environment
-import odoo.tests
+import requests_mock
+
 try:
     from unittest.mock import patch
 except ImportError:
     from mock import patch
 
+from odoo.api import Environment
+from odoo.tests.common import HttpCase, at_install, post_install, HOST, PORT
 
-@odoo.tests.common.at_install(True)
-@odoo.tests.common.post_install(True)
-class TestUi(odoo.tests.HttpCase):
+
+@at_install(True)
+@post_install(True)
+class TestUi(HttpCase):
 
     def setUp(self):
         super(TestUi, self).setUp()
+
+        self.fetch_dashboard_data_mock = requests_mock.Mocker(real_http=True)
+        url = "http://%s:%s/odoo_backup_sh/fetch_dashboard_data" % (HOST, PORT)
+        self.fetch_dashboard_data_mock.register_uri('GET', url, json={'configs': []})
+        self.fetch_dashboard_data_mock.start()
 
         self.patcher_get_cloud_params = patch(
             'odoo.addons.odoo_backup_sh.controllers.main.BackupController.get_cloud_params',
@@ -40,6 +48,7 @@ class TestUi(odoo.tests.HttpCase):
                         "odoo.__DEBUG__.services['web_tour.tour'].tours.odoo_backup_sh_tour.ready", login="admin")
 
     def tearDown(self):
+        self.fetch_dashboard_data_mock.stop()
         self.patcher_get_cloud_params.stop()
         self.patcher_check_insufficient_credit.stop()
         super(TestUi, self).tearDown()

@@ -31,7 +31,8 @@ class ResConfigSettings(models.TransientModel):
         # we store the repr of the value, since the value of the parameter is a required string
         self.env['ir.config_parameter'].set_param('odoo_backup_sh.encrypt_backups', repr(self.encrypt_backups))
         config_parser = ConfigParser.ConfigParser()
-        config_parser.set('options', 'odoo_backup_encryption_password', repr(self.encryption_password))
+        config_parser.read(config.rcfile)
+        config_parser.set('options', 'odoo_backup_encryption_password', (self.encryption_password or '').strip())
         with open(config.rcfile, 'w') as configfile:
             config_parser.write(configfile)
         super(ResConfigSettings, self).set_values()

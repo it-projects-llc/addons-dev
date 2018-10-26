@@ -23,11 +23,13 @@ except ImportError as err:
 import odoo
 from odoo import api, fields, models, exceptions
 from odoo.exceptions import UserError
-from odoo.tools import config, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import config, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.translate import _
 from ..controllers.main import BackupController
 
 _logger = logging.getLogger(__name__)
+
+REMOTE_STORAGE_DATETIME_FORMAT = "%Y-%m-%d_%H-%M-%S"
 
 
 class BackupConfig(models.Model):
@@ -76,25 +78,13 @@ class BackupConfig(models.Model):
     def action_dashboard_redirect(self):
         return self.env.ref('odoo_backup_sh.backup_dashboard').read()[0]
 
-    @api.multi
-    def action_create_new(self):
-        return {
-            'name': 'Create backup configuration',
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': self._name,
-            'view_id': self.env.ref('odoo_backup_sh.odoo_backup_sh_config_form').id,
-            'context': {'active_test': False},
-        }
-
     @api.model
     def get_cloud_params(self, redirect):
-        return BackupController().get_cloud_params(redirect)
+        return BackupController.get_cloud_params(redirect)
 
     @api.model
     def check_insufficient_credit(self, credit):
-        return BackupController().check_insufficient_credit(credit)
+        return BackupController.check_insufficient_credit(credit)
 
     def compute_auto_rotation_backup_dts(self, backup_dts, hourly=-1, daily=-1, weekly=-1, monthly=-1, yearly=-1):
         backup_dts = sorted(copy.deepcopy(backup_dts), reverse=True)
@@ -156,7 +146,7 @@ class BackupConfig(models.Model):
 
     @api.model
     def update_info(self, cloud_params):
-        backup_list = BackupController().load_backup_list(cloud_params)
+        backup_list = BackupController.load_backup_list(cloud_params)
         if 'backup_list' in backup_list:
             # Create a dictionary with remote backup objects:
             # remote_backups = {
@@ -166,20 +156,21 @@ class BackupConfig(models.Model):
             #     },
             #     ...
             # }
-            active_backup_configs = self.search([('active', '=', True)])
-            remote_backups = {db: {} for db in active_backup_configs.mapped('database')}
+            remote_backups = {}
             for file_name in backup_list['backup_list']:
                 file_name_parts = file_name.split('.')
-                if file_name_parts[0] not in remote_backups:
-                    continue
-                backup_dt = datetime.strptime(file_name_parts[1], "%Y-%m-%d_%H-%M-%S")
-                if backup_dt not in remote_backups[file_name_parts[0]]:
-                    remote_backups[file_name_parts[0]][backup_dt] = []
-                remote_backups[file_name_parts[0]][backup_dt].append(file_name)
+                backup_dt_part_index = -3 if file_name_parts[-1] == 'enc' else -2
+                db_name = '.'.join(file_name_parts[:backup_dt_part_index])
+                backup_dt = datetime.strptime(file_name_parts[backup_dt_part_index], REMOTE_STORAGE_DATETIME_FORMAT)
+                if db_name not in remote_backups:
+                    remote_backups[db_name] = {}
+                if backup_dt not in remote_backups[db_name]:
+                    remote_backups[db_name][backup_dt] = []
+                remote_backups[db_name][backup_dt].append(file_name)
 
-            # Compute remote backup objects to delete
+            # Compute remote backup objects to delete according to auto rotation parameters.
             remote_objects_to_delete = []
-            for backup_config in active_backup_configs:
+            for backup_config in self.search([('active', '=', True)]):
                 if (backup_config.hourly > 0 or backup_config.daily > 0 or backup_config.weekly > 0 or
                         backup_config.monthly > 0 or backup_config.yearly > 0):
                     backup_dts = copy.deepcopy(remote_backups[backup_config.database])
@@ -209,9 +200,11 @@ class BackupConfig(models.Model):
                     raise exceptions.ValidationError(_("Amazon error: ") + e.response['Error']['Message'])
 
             # Delete unnecessary local backup info records
-            backup_info_ids_to_delete = [r.id for r in self.env['odoo_backup_sh.backup_info'].search(
-                [('database', 'in', list(remote_backups.keys()))]
-            ) if datetime.strptime(r.upload_datetime, DEFAULT_SERVER_DATETIME_FORMAT) not in remote_backups[r.database]]
+            backup_info_ids_to_delete = [
+                r.id for r in self.env['odoo_backup_sh.backup_info'].search([]) if
+                (r.database not in remote_backups or
+                 datetime.strptime(r.upload_datetime, DEFAULT_SERVER_DATETIME_FORMAT) not in remote_backups[r.database])
+            ]
             self.env['odoo_backup_sh.backup_info'].browse(backup_info_ids_to_delete).unlink()
 
             # Create missing local backup info records
@@ -243,7 +236,9 @@ class BackupConfig(models.Model):
                             if value == 'False' or value == 'false':
                                 value = False
                             if name == 'upload_datetime':
-                                value = datetime.strptime(value, "%Y-%m-%d_%H-%M-%S")
+                                value = datetime.strptime(value, REMOTE_STORAGE_DATETIME_FORMAT)
+                            elif name == 'backup_size':
+                                value = int(float(value))
                             backup_info_vals[name] = value
                         self.env['odoo_backup_sh.backup_info'].create(backup_info_vals)
         return backup_list
@@ -267,11 +262,11 @@ class BackupConfig(models.Model):
             gnupg.GPG().encrypt(
                 dump_stream, symmetric=True, passphrase=passphrase, encrypt=False, output=backup_encrpyted_name)
             dump_stream = open(backup_encrpyted_name, 'rb')
-        cloud_params = BackupController().get_cloud_params()
-        s3_client = boto3.client('s3', aws_access_key_id=cloud_params['amazon_access_key'],
-                                 aws_secret_access_key=cloud_params['amazon_secret_access_key'])
+        backup_size = dump_stream.seek(0, 2) / 1024 / 1024
+        dump_stream.seek(0)
+        cloud_params = BackupController.get_cloud_params()
         dt = datetime.utcnow()
-        ts = dt.strftime("%Y-%m-%d_%H-%M-%S")
+        ts = dt.strftime(REMOTE_STORAGE_DATETIME_FORMAT)
         s3_backup_path = '%s/%s.%s%s' % (cloud_params['odoo_oauth_uid'], name, ts, backup_name_suffix)
         info_file = tempfile.TemporaryFile()
         info_file.write('[common]\n'.encode())
@@ -279,6 +274,7 @@ class BackupConfig(models.Model):
             'database': name,
             'encrypted': True if '.enc' in backup_name_suffix else False,
             'upload_datetime': ts,
+            'backup_size': backup_size,
         }
         for key, value in info_file_content.items():
             line = key + ' = ' + str(value) + '\n'
@@ -290,6 +286,8 @@ class BackupConfig(models.Model):
         self.env['odoo_backup_sh.backup_info'].create(info_file_content)
         # Upload two backup objects to AWS S3
         try:
+            s3_client = boto3.client('s3', aws_access_key_id=cloud_params['amazon_access_key'],
+                                     aws_secret_access_key=cloud_params['amazon_secret_access_key'])
             s3_client.put_object(Body=dump_stream, Bucket=cloud_params['amazon_bucket_name'], Key=s3_backup_path)
             s3_client.put_object(Body=info_file, Bucket=cloud_params['amazon_bucket_name'], Key=s3_info_file_path)
             _logger.info('Following backup objects have been put in a remote storage: %s',
@@ -336,8 +334,77 @@ class BackupConfigCron(models.Model):
 
 class BackupInfo(models.Model):
     _name = 'odoo_backup_sh.backup_info'
-    _description = 'Information about backups'
+    _description = 'Information About Backups'
 
     database = fields.Char(string='Database Name', readonly=True)
     upload_datetime = fields.Datetime(string='Upload Datetime', readonly=True)
     encrypted = fields.Boolean(string='Encrypted', readonly=True)
+    backup_size = fields.Integer(string='Backup Size, MB', readonly=True)
+
+    @api.model
+    def create(self, vals):
+        res = super(BackupInfo, self).create(vals)
+        self.env['odoo_backup_sh.remote_storage'].compute_total_used_remote_storage()
+        return res
+
+    @api.multi
+    def unlink(self):
+        res = super(BackupInfo, self).unlink()
+        self.env['odoo_backup_sh.remote_storage'].compute_total_used_remote_storage()
+        return res
+
+
+class BackupRemoteStorage(models.Model):
+    _name = 'odoo_backup_sh.remote_storage'
+    _description = 'Remote Storage Usage'
+
+    date = fields.Date(string='Date of Update', readonly=True)
+    total_used_remote_storage = fields.Integer(string='Total Usage, MB', readonly=True)
+
+    @api.multi
+    def compute_total_used_remote_storage(self):
+        amount = sum(self.env['odoo_backup_sh.backup_info'].search([]).mapped('backup_size'))
+        today_record = self.search([('date', '=', datetime.strftime(datetime.now(), DEFAULT_SERVER_DATE_FORMAT))])
+        if today_record:
+            today_record.total_used_remote_storage = amount
+        else:
+            self.create({
+                'date': datetime.now(),
+                'total_used_remote_storage': amount
+            })
+
+
+class DeleteRemoteBackupWizard(models.TransientModel):
+    _name = "odoo_backup_sh.delete_remote_backup_wizard"
+    _description = "Delete Remote Backups Wizard"
+
+    @api.multi
+    def delete_remove_backup_button(self):
+        record_ids = (self._context.get('active_model') == 'odoo_backup_sh.backup_info' and
+                      self._context.get('active_ids') or [])
+        backup_info_records = self.env['odoo_backup_sh.backup_info'].browse(record_ids)
+        cloud_params = BackupController.get_cloud_params()
+        remote_objects_to_delete = []
+        for record in backup_info_records:
+            backup_files_suffixes = ['.zip', '.info']
+            if record.encrypted:
+                backup_files_suffixes[0] += '.enc'
+            upload_datetime = datetime.strftime(datetime.strptime(
+                record.upload_datetime, DEFAULT_SERVER_DATETIME_FORMAT), REMOTE_STORAGE_DATETIME_FORMAT)
+            for suffix in backup_files_suffixes:
+                remote_objects_to_delete += [{
+                    'Key': '%s/%s.%s%s' % (cloud_params['odoo_oauth_uid'], record.database, upload_datetime, suffix)
+                }]
+        # Delete unnecessary remote backup objects
+        if remote_objects_to_delete:
+            s3_client = boto3.client('s3', aws_access_key_id=cloud_params['amazon_access_key'],
+                                     aws_secret_access_key=cloud_params['amazon_secret_access_key'])
+            try:
+                s3_client.delete_objects(
+                    Bucket=cloud_params['amazon_bucket_name'], Delete={'Objects': remote_objects_to_delete})
+                objects_names = [obj['Key'] for obj in remote_objects_to_delete]
+                _logger.info('Following backup objects have been deleted from the remote storage: %s',
+                             ', '.join(objects_names))
+            except botocore.exceptions.ClientError as e:
+                raise exceptions.ValidationError(_("Amazon error: ") + e.response['Error']['Message'])
+        backup_info_records.unlink()
