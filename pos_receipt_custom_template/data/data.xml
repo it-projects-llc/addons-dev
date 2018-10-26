@@ -19,29 +19,29 @@
                   </t>
                   <div>
                       <t t-if='receipt.company.contact_address'>
-                          <div font='b'><t t-esc='receipt.company.contact_address' /></div>
+                          <div><t t-esc='receipt.company.contact_address' /></div>
                       </t>
                       <t t-if='receipt.company.phone'>
-                          <div font='b'>Tel:<t t-esc='receipt.company.phone' /></div>
+                          <div>Tel:<t t-esc='receipt.company.phone' /></div>
                       </t>
                       <t t-if='receipt.company.vat'>
                           <div>VAT:<t t-esc='receipt.company.vat' /></div>
                       </t>
                       <t t-if='receipt.company.email'>
-                          <div font='b'><t t-esc='receipt.company.email' /></div>
+                          <div><t t-esc='receipt.company.email' /></div>
                       </t>
                       <t t-if='receipt.company.website'>
-                          <div font='b'><t t-esc='receipt.company.website' /></div>
+                          <div><t t-esc='receipt.company.website' /></div>
                       </t>
                       <t t-if='receipt.header_xml'>
-                          <div font='b'><t t-raw='receipt.header_xml' /></div>
+                          <div><t t-raw='receipt.header_xml' /></div>
                       </t>
                       <t t-if='!receipt.header_xml and receipt.header'>
-                          <div font='b'><t t-raw='receipt.header' /></div>
+                          <div><t t-raw='receipt.header' /></div>
                       </t>
                       <div>&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</div>
                       <t t-if='receipt.cashier'>
-                          <div font='b' class='cashier'>
+                          <div class='cashier'>
                               <div>Served by <t t-esc='receipt.cashier' /></div>
                           </div>
                       </t>
@@ -56,9 +56,11 @@
                           <t t-set='simple' t-value='line.discount === 0 and line.unit_name === "Unit(s)" and line.quantity === 1' />
                           <t t-if='simple'>
                               <t t-if="line.brand_name">
-                                  <line indent='1' style="overflow:hidden;">
-                                      <left><t t-esc='line.brand_name' /></left>
-                                      <right><t t-esc='line.categ_name' /></right>
+                                 <line>
+                                  <left>
+                                    <t t-esc='line.brand_name' />
+                                    <t t-esc='line.categ_name' />
+                                  </left>
                                   </line>
                               </t>
                               <line>
@@ -68,16 +70,18 @@
                               <t t-call="XmlReceiptWrappedProductNameLines"/>
                           </t>
                           <t t-if='!simple'>
+                              <t t-if="line.brand_name">
+                                <line>
+                                  <left>
+                                    <t t-esc='line.brand_name' />
+                                    <t t-esc='line.categ_name' />
+                                  </left>
+                                </line>
+                              </t>
                               <line><left><t t-esc='line.product_name_wrapped[0]' /></left></line>
                               <t t-call="XmlReceiptWrappedProductNameLines"/>
                               <t t-if='line.discount !== 0'>
                                   <line indent='1'><left>Discount: <t t-esc='line.discount' />%</left></line>
-                              </t>
-                              <t t-if="line.brand_name">
-                                  <line indent='1' style="overflow:hidden;">
-                                      <left><t t-esc='line.brand_name' /></left>
-                                      <right><t t-esc='line.categ_name' /></right>
-                                  </line>
                               </t>
                               <line indent='1'>
                                   <left>
