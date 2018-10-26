@@ -10,14 +10,15 @@ import requests
 import string
 import tempfile
 from contextlib import closing
+from datetime import datetime, timedelta
 
 import odoo
-from odoo import http, _
+from odoo import fields, http, _
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.service import db
 from odoo.sql_db import db_connect
-from odoo.tools import config
+from odoo.tools import config, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.misc import str2bool
 from odoo.addons import web
 from odoo.addons.iap import jsonrpc, InsufficientCreditError
@@ -70,14 +71,15 @@ class BackupDatabase(web.controllers.main.Database):
 
 class BackupController(http.Controller):
 
-    def get_cloud_params(self, redirect=None):
+    @classmethod
+    def get_cloud_params(cls, redirect=None):
         config_parser.read(config.rcfile)
         cloud_params = {}
         for name in ['odoo_backup_user_key', 'amazon_bucket_name', 'amazon_access_key', 'amazon_secret_access_key',
                      'odoo_oauth_uid']:
             cloud_params[name] = config_parser.get('options', name, fallback=None)
         if None in cloud_params.values() and redirect:
-            cloud_params = self.update_cloud_params(cloud_params, redirect)
+            cloud_params = cls.update_cloud_params(cloud_params, redirect)
         return cloud_params
 
     def update_cloud_params(self, cloud_params, redirect):
@@ -99,7 +101,8 @@ class BackupController(http.Controller):
             cloud_params['updated'] = True  # The mark that all params are updated
         return cloud_params
 
-    def load_backup_list(self, cloud_params):
+    @classmethod
+    def load_backup_list(cls, cloud_params):
         try:
             s3_client = boto3.client('s3', aws_access_key_id=cloud_params['amazon_access_key'],
                                      aws_secret_access_key=cloud_params['amazon_secret_access_key'])
@@ -125,7 +128,8 @@ class BackupController(http.Controller):
             obj['Key'][len(user_dir_name):] for obj in s3_user_dir_info.get('Contents', {}) if obj.get('Size')]
         return {'backup_list': backup_list}
 
-    def check_insufficient_credit(self, credit):
+    @classmethod
+    def check_insufficient_credit(cls, credit):
         user_token = request.env['iap.account'].sudo().get('odoo_backup_sh')
         params = {
             'account_token': user_token.account_token,
@@ -180,7 +184,7 @@ class BackupController(http.Controller):
             backup_file = open(decrypted_backup_file_name, 'rb')
         try:
             db.restore_db(name, backup_file.name, str2bool(copy))
-            # Make all auto backup cron recors inactive
+            # Make all auto backup cron records inactive
             with closing(db_connect(name).cursor()) as cr:
                 cr.autocommit(True)
                 cr.execute("""
@@ -195,3 +199,59 @@ class BackupController(http.Controller):
             return env.get_template("backup_list.html").render(error=error)
         finally:
             os.unlink(backup_file.name)
+
+    @http.route('/odoo_backup_sh/fetch_dashboard_data', type="json", auth='user')
+    def fetch_dashboard_data(self):
+        date_month_before = datetime.now().date() - timedelta(days=29)
+        date_list = [date_month_before + timedelta(days=x) for x in range(30)]
+        last_month_domain = [('date', '>=', datetime.strftime(date_list[0], DEFAULT_SERVER_DATE_FORMAT))]
+        usage_values = {
+            datetime.strptime(r.date, DEFAULT_SERVER_DATE_FORMAT).date(): r.total_used_remote_storage for r in
+            request.env['odoo_backup_sh.remote_storage'].search(last_month_domain).sorted(key='date')
+        }
+        for date in date_list:
+            if date not in usage_values:
+                if date_list.index(date) == 0:
+                    usage_values[date] = 0
+                else:
+                    usage_values[date] = usage_values.get(date_list[date_list.index(date) - 1], 0)
+        dashboard_data = {
+            'remote_storage_usage_graph_values': [{
+                'key': 'Remote Storage Usage',
+                'values': [{
+                    0: fields.Date.to_string(day),
+                    1: usage_values[day]
+                } for day in date_list]
+            }]
+        }
+
+        last_week_dates = date_list[-7:]
+        backup_configs = request.env['odoo_backup_sh.config'].with_context({'active_test': False}).search_read(
+            [], ['database', 'active'])
+        for b_config in backup_configs:
+            graph_values = {date: 0 for date in last_week_dates}
+            for backup in request.env['odoo_backup_sh.backup_info'].search([
+                    ('database', '=', b_config['database']),
+                    ('upload_datetime', '>=', datetime.strftime(last_week_dates[0], DEFAULT_SERVER_DATETIME_FORMAT))]):
+                graph_values[datetime.strptime(backup.upload_datetime, DEFAULT_SERVER_DATETIME_FORMAT).date()] +=\
+                    backup.backup_size
+            b_config['graph'] = [{
+                'key': 'Backups of Last 7 Days',
+                'values': [{
+                    'label': 'Today' if date == last_week_dates[-1] else datetime.strftime(date, '%d %b'),
+                    'value': graph_values[date],
+                } for date in last_week_dates]
+            }]
+            b_config.update({
+                'backups_number': request.env['odoo_backup_sh.backup_info'].search_count([
+                    ('database', '=', b_config['database'])]),
+                'graph': [{
+                    'key': 'Backups of Last 7 Days',
+                    'values': [{
+                        'label': 'Today' if date == last_week_dates[-1] else datetime.strftime(date, '%d %b'),
+                        'value': graph_values[date],
+                    } for date in last_week_dates]
+                }]
+            })
+        dashboard_data['configs'] = backup_configs
+        return dashboard_data

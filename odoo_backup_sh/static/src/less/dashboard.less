@@ -45,9 +45,10 @@
     }
 }
 
-.o_backup_dashboard_content {
+.o_backup_dashboard_configs {
     display: flex;
     flex-direction: row;
+    margin: 8px 0 4px;
 }
 
 .o_backup_dashboard_nocontent {
@@ -69,7 +70,7 @@
             height: 80px;
             margin-left: -70px;
             margin-top: -50px;
-            background: transparent url(/web/static/src/img/view_empty_arrow.png) no-repeat 0px 0px;
+            background: transparent url(/web/static/src/img/view_empty_arrow.png) no-repeat 0 0;
         }
     }
 
@@ -84,7 +85,23 @@
     color: #81500b;
     display: block;
     font-size: 15px;
-    margin: 8px 16px 4px;
+    margin: 16px 16px 0;
     padding: 8px 16px;
     position: static;
+}
+
+.graph_container {
+    background-color: #fff;
+    border: 1px solid #d9d7d7;
+    color: #7c7bad;
+    margin: 16px 16px 0;
+    padding: 8px 16px;
+}
+
+.backup_card_title {
+    font-size: 18px;
+}
+
+.backup_card_content {
+    padding: 12px 0;
 }

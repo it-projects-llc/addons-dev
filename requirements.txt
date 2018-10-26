@@ -1,3 +1,4 @@
 icalendar
 boto3
 pretty_bad_protocol
+requests-mock
