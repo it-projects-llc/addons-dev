@@ -338,7 +338,19 @@ def route(*args, **kwargs):
             user_token = get_data_from_auth_header(auth_header)['user_token']
             authenticated_user = authenticate_token_for_user(user_token)
             namespace = get_namespace_by_name_from_users_namespaces(authenticated_user, ikwargs['namespace'], raise_exception=True)
-            response = f(*iargs, **ikwargs)
+
+            try:
+                response = f(*iargs, **ikwargs)
+            except werkzeug.exceptions.HTTPException as e:
+                response = e
+            except Exception as e:
+                response = error_response(
+                    status=400,
+                    error=type(e).__name__,
+                    error_descrip=e.name if hasattr(e, 'name') else str(e)
+                )
+                print(response.__dict__)
+
             create_log_record(
                 namespace=namespace,
                 user=authenticated_user,
