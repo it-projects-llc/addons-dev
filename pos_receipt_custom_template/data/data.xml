@@ -10,13 +10,12 @@
         <field name="qweb_template"><![CDATA[
             <t t-name="custom_pos_receipt">
               <receipt align='center' width='40' value-thousands-separator='' >
-                  <t t-if='header_image'>
-                      <img t-att-src='header_image' />
-                  </t>
-                  <t t-if='!header_image'>
-                      <h1><t t-esc='receipt.company.name' /></h1>
-                      <br/>
-                  </t>
+                  <div>
+                      <b font='b' bold='on' size='double'>BECKHOFF</b>
+                  </div>
+                  <div>
+                      <em bold='on'>Technik und Design</em>
+                  </div>
                   <div>
                       <t t-if='receipt.company.contact_address'>
                           <div><t t-esc='receipt.company.contact_address' /></div>
@@ -55,29 +54,34 @@
                       <t t-foreach='receipt.orderlines' t-as='line'>
                           <t t-set='simple' t-value='line.discount === 0 and line.unit_name === "Unit(s)" and line.quantity === 1' />
                           <t t-if='simple'>
-                              <t t-if="line.brand_name">
-                                 <line>
+                                <line>
                                   <left>
-                                    <t t-esc='line.brand_name' />
-                                    <t t-esc='line.categ_name' />
+                                    <t t-if="line.brand_name">
+                                        <t t-esc='line.brand_name' />
+                                    </t>
+                                    <t t-if="line.categ_name">
+                                        <t t-esc='line.categ_name' />
+                                    </t>
                                   </left>
-                                  </line>
-                              </t>
-                              <line>
+                                </line>
+                                <line>
                                   <left><t t-esc='line.product_name_wrapped[0]' /></left>
                                   <right><value t-att-value-decimals='pos.currency.decimals'><t t-esc='line.price_display' /></value></right>
-                              </line>
+                                </line>
                               <t t-call="XmlReceiptWrappedProductNameLines"/>
                           </t>
                           <t t-if='!simple'>
-                              <t t-if="line.brand_name">
-                                <line>
-                                  <left>
+                            <line>
+                              <left>
+                                <t t-if="line.brand_name">
                                     <t t-esc='line.brand_name' />
+                                </t>
+                                <t t-if="line.categ_name">
                                     <t t-esc='line.categ_name' />
-                                  </left>
-                                </line>
-                              </t>
+                                </t>
+                              </left>
+                            </line>
+
                               <line><left><t t-esc='line.product_name_wrapped[0]' /></left></line>
                               <t t-call="XmlReceiptWrappedProductNameLines"/>
                               <t t-if='line.discount !== 0'>
