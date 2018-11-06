@@ -20,6 +20,7 @@ odoo.define('pos_receipt_custom_template.models', function(require){
             var categ = prod.categ_id;
             res.brand_name = prod.product_brand_id && prod.product_brand_id[1];
             res.categ_name = categ && categ[1].substring(categ[1].lastIndexOf('/ ') + 1, categ[1].length);
+            res.abs_disc = this.get_absolute_discount && this.get_absolute_discount() || 0;
             return res;
         },
     });

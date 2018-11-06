@@ -46,7 +46,7 @@
 
                   <div class='orderlines' line-ratio='0.6'>
                       <t t-foreach='receipt.orderlines' t-as='line'>
-                          <t t-set='simple' t-value='line.discount === 0 and line.unit_name === "Unit(s)" and line.quantity === 1' />
+                          <t t-set='simple' t-value='line.discount === 0 and line.unit_name === "Unit(s)" and line.quantity === 1 and !line.abs_disc' />
                           <t t-if='simple'>
                                 <line>
                                   <left>
@@ -58,7 +58,7 @@
                                     </t>
                                   </left>
                                 </line>
-                                <line>
+                                <line indent='1'>
                                   <left><t t-esc='line.product_name_wrapped[0]' /></left>
                                   <right><value t-att-value-decimals='pos.currency.decimals'><t t-esc='line.price_display' /></value></right>
                                 </line>
@@ -80,6 +80,9 @@
                               <t t-call="XmlReceiptWrappedProductNameLines"/>
                               <t t-if='line.discount !== 0'>
                                   <line indent='1'><left>Discount: <t t-esc='line.discount' />%</left></line>
+                              </t>
+                              <t t-if='line.abs_disc !== 0'>
+                                  <line indent='1'><left>Discount: <t t-esc='line.abs_disc' />€</left></line>
                               </t>
                               <line indent='1'>
                                   <left>
@@ -122,7 +125,7 @@
 
                   <line><right>&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</right></line>
                   <line class='total' size='double-height'>
-                      <left><pre>        TOTAL</pre></left>
+                      <left><pre>        TOTAL (EUR)</pre></left>
                       <right><value t-att-value-decimals='pos.currency.decimals'><t t-esc='receipt.total_with_tax' /></value></right>
                   </line>
                   <br/><br/>
