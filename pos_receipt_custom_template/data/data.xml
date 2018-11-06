@@ -11,12 +11,6 @@
             <t t-name="custom_pos_receipt">
               <receipt align='center' width='40' value-thousands-separator='' >
                   <div>
-                      <b font='b' bold='on' size='double'>BECKHOFF</b>
-                  </div>
-                  <div>
-                      <em bold='on'>Technik und Design</em>
-                  </div>
-                  <div>
                       <t t-if='receipt.company.contact_address'>
                           <div><t t-esc='receipt.company.contact_address' /></div>
                       </t>
@@ -82,7 +76,7 @@
                               </left>
                             </line>
 
-                              <line><left><t t-esc='line.product_name_wrapped[0]' /></left></line>
+                              <line indent='1'><left><t t-esc='line.product_name_wrapped[0]' /></left></line>
                               <t t-call="XmlReceiptWrappedProductNameLines"/>
                               <t t-if='line.discount !== 0'>
                                   <line indent='1'><left>Discount: <t t-esc='line.discount' />%</left></line>
@@ -209,14 +203,6 @@
             <t t-name="custom_pos_invoice_receipt">
                 <receipt align='center' width='40' value-thousands-separator='' >
                     <div>
-                        <t t-if='header_image'>
-                            <img t-att-src='header_image' />
-                        </t>
-                        <t t-if='!header_image'>
-                            <h1><t t-esc='receipt.company.name' /></h1>
-                            <br/>
-                        </t>
-
                         <div>
                             <t t-if='receipt.company.contact_address'>
                                 <div font='b'><t t-esc='receipt.company.contact_address' /></div>
