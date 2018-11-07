@@ -20,7 +20,7 @@
                     <h2 class="panel-heading fold_terms fold_terms_start">Terms and Conditions</h2>
                     <div class="terms_text">
                         <p>
-                            <t t-esc="widget.action.context.terms_to_sign"/>
+                            <t t-raw="widget.action.context.terms_to_sign"/>
                         </p>
                     </div>
                     <h2 class="fold_terms fold_terms_end">Click to fold Terms and Conditions</h2>

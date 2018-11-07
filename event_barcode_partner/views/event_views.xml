@@ -29,9 +29,13 @@
         <field name="model">event.event</field>
         <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='date_tz']" position="after">
-                <field name="signature_template_id" />
-                <field name="terms_to_sign"/>
+            <xpath expr="//notebook" position="inside">
+                <page string="Terms and Conditions">
+                    <group>
+                        <field name="signature_template_id" />
+                        <field name="terms_to_sign" widget="ace" options="{'mode': 'xml'}"/>
+                    </group>
+                </page>
             </xpath>
         </field>
     </record>
