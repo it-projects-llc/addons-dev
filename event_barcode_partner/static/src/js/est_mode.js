@@ -87,13 +87,13 @@ var KioskMode = Widget.extend(BarcodeHandlerMixin, {
         if (this.action.context.session_name) {
             this.save_locally('session_name', context.session_name);
             this.save_locally('barcode_interface', context.barcode_interface);
-            this.save_locally('start_at', context.start_at);
+//            this.save_locally('start_at', context.start_at);
             this.save_locally('terms_to_sign', context.terms_to_sign);
             this.save_locally('event_id', context.event_id);
         } else {
             context.session_name = this.get_from_storage('session_name');
             context.barcode_interface = this.get_from_storage('barcode_interface');
-            context.start_at = this.get_from_storage('start_at');
+//            context.start_at = this.get_from_storage('start_at');
             context.terms_to_sign = this.get_from_storage('terms_to_sign');
             context.event_id = this.get_from_storage('event_id');
         }

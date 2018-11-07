@@ -83,11 +83,19 @@ class EventBarcodeExtended(EventBarcode):
             event_id = event_id.sudo()
 
         attendee = request.env["event.registration"].browse(int(attendee_id))
-        sign_req = request.env["signature.request"].search([('attendee_id', '=', attendee.id),
-                                                            ('template_id', '=', event_id.signature_template_id.id)], limit=1)
+        sign_req = attendee.event_request_id
+
+        if not sign_req:
+            sign_req = request.env["signature.request"].create({
+                'template_id': attendee.event_id.signature_template_id.id,
+                'attendee': attendee.id,
+                'reference': 'Event Terms ' + attendee.name
+            })
+            attendee.event_request_id = sign_req.id
+
         data = {
-            'sign_token': sign_req and sign_req.access_token or '',
-            'rid': sign_req and sign_req.id or 0,
+            'sign_token': sign_req.access_token,
+            'rid': sign_req.id,
             'attendee_name': attendee.name,
             'attendee_id': attendee.id,
         }
@@ -100,11 +108,10 @@ class EventBarcodeExtended(EventBarcode):
         param_model = request.env['ir.config_parameter'].sudo()
         params = param_model.get_param('event_barcode.' + str(event_id) + '.sessions')
         if not params:
-            params = json.dumps([0])
-        list_params = json.loads(params)
-        new_param = max(list_params) + 1
-        list_params.append(new_param)
-        param_model.set_param('event_barcode.' + str(event_id) + '.sessions', json.dumps(list_params))
+            params = json.dumps(0)
+        param = json.loads(params)
+        new_param = int(float(param)) + 1
+        param_model.set_param('event_barcode.' + str(event_id) + '.sessions', json.dumps(new_param))
 
         return new_param
 
@@ -127,6 +134,8 @@ class EventBarcodeExtended(EventBarcode):
         attendee.write({
             'sign_attachment_id': attachment.id,
         })
+
+        # attendee.embed_sign_to_pdf()
 
         channel_name = "bi.longpolling.notifs"
         attendee.event_id.send_to_barcode_interface(channel_name, barcode_interface_id, json.dumps(self.compound_vals(attendee)))

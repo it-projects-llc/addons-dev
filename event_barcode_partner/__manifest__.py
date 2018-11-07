@@ -24,7 +24,7 @@
     "data": [
         "views/assets.xml",
         "views/event_views.xml",
-        "views/est_views.xml",
+        "wizard/est_views.xml",
     ],
     "demo": [
     ],

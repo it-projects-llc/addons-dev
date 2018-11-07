@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--<record id="est_session_view_tree" model="ir.ui.view">-->
+        <!--<field name="name">est.session.tree</field>-->
+        <!--<field name="model">est.session</field>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<tree>-->
+                <!--<field name="name"/>-->
+                <!--<field name="user_id"/>-->
+                <!--<field name="state"/>-->
+            <!--</tree>-->
+        <!--</field>-->
+    <!--</record>-->
+
+    <record id="est_session_view_form" model="ir.ui.view">
+        <field name="name">est.session.form</field>
+        <field name="model">est.session</field>
+        <field name="arch" type="xml">
+            <form string="EST Session">
+                <header>
+                    <button name="open_est_session" string="Open" type="object" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <label for="event_id"/>
+                    <div>
+                        <field name="event_id" class="oe_inline"/>
+                    </div>
+                    <label for="barcode_interface"/>
+                    <div>
+                        <field name="barcode_interface" class="oe_inline"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="est_session_view_action" model="ir.actions.act_window">
+        <field name="name">EST</field>
+        <field name="res_model">est.session</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{}</field>
+    </record>
+
+
+    <record id="est_session_view_action" model="ir.actions.act_window">
+        <field name="name">EST</field>
+        <field name="res_model">est.session</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record id="open_est_session_action" model="ir.actions.client">
+        <field name="name">E-Sign Kiosk</field>
+        <field name="tag">est_kiosk_mode</field>
+        <field name="target">fullscreen</field>
+        <!--<field name="context">{-->
+            <!--'event_id': self.event_id,-->
+            <!--'barcode_interface': self.barcode_interface,-->
+            <!--'terms_to_sign': self.event_id.terms_to_sign,-->
+        <!--}</field>-->
+    </record>
+
+
+    <menuitem id="est_menu" sequence="50" name="EST" parent="event.event_main_menu"/>
+    <menuitem id="attendee_signature_request_menu" name="Signature Requests" parent="est_menu" action="website_sign.signature_request_action"/>
+    <menuitem id="est_sessions_menu" name="EST session" parent="est_menu" action="est_session_view_action"/>
+
+</odoo>

@@ -5,8 +5,11 @@
 from odoo import models, fields, api, _
 import logging
 import uuid
-from datetime import datetime
+import StringIO
+import base64
 from odoo.exceptions import UserError
+from reportlab.lib.utils import ImageReader
+from pyPdf import PdfFileReader, PdfFileWriter
 
 
 _logger = logging.getLogger(__name__)
@@ -28,7 +31,8 @@ class EventRegistration(models.Model):
     sign_attachment_id = fields.Many2one('ir.attachment', 'E-Sign')
 
     signed_terms = fields.Boolean('Terms are Signed', compute='_compute_signed_terms')
-    requested_signature_ids = fields.One2many('signature.request', 'attendee_id', string='Terms sign request')
+    requested_signature_ids = fields.One2many('signature.request', 'attendee_id', string='Requests')
+    event_request_id = fields.Many2one('signature.request', string='Terms sign request')
 
     _sql_constraints = [
         ('barcode_rfid_uniq', 'unique(rfid, event_id)', "RFID Barcode should be unique per event")
@@ -77,15 +81,32 @@ class EventRegistration(models.Model):
         else:
             raise UserError(_("User must confirm the event terms at first"))
 
+    @api.one
+    def embed_sign_to_pdf(self):
+
+        print 'Here is a commented code for embedding'
+        # pdf = self.event_request_id.template_id
+        # items = pdf.signature_item_ids
+        # SignatureItemValue = self.env['signature.item.value']
+        # old_pdf = PdfFileReader(StringIO.StringIO(base64.b64decode(self.template_id.attachment_id.datas)))
+        # box = old_pdf.getPage(p).mediaBox
+        # width = int(box.getUpperRight_x())
+        # height = int(box.getUpperRight_y())
+        # for item in items:
+        #     if item.type_id.type == "signature" or item.type_id.type == "initial":
+        #         img = base64.b64decode(self.sign_attachment_id[self.sign_attachment_id.find(',') + 1:])
+        #         can.drawImage(ImageReader(StringIO.StringIO(img)), width * item.posX,
+        #                       height * (1 - item.posY - item.height), width * item.width, height * item.height, 'auto',
+        #                       True)
+
+
 
 class EventEvent(models.Model):
     """Event"""
     _inherit = 'event.event'
 
-    e_sign_active = fields.Boolean(default=False, track_visibility="onchange")
     terms_to_sign = fields.Char(string='Event Terms')
     signature_template_id = fields.Many2one('signature.request.template', string='Terms template')
-    est_session_ids = fields.One2many('est.session', 'event_id', string='Configs')
 
     @api.model
     def send_to_all_estes(self, channel_name, sub_channel, data):
@@ -101,7 +122,6 @@ class EventEvent(models.Model):
 
     @api.model
     def send_data_by_poll(self, channel_name, sub_channel, data):
-        sessions = self.est_session_ids.filtered(lambda x: x.state == 'opened')
         channel = self._get_full_channel_name(channel_name, sub_channel)
         notifications = [[channel, data]]
         self.env['bus.bus'].sendmany(notifications)
@@ -121,70 +141,6 @@ class SignatureRequest(models.Model):
     _inherit = "signature.request"
 
     attendee_id = fields.Many2one('event.registration', string="Attendee")
-    est_session_id = fields.Many2one('est.session', string="EST Session")
-
-
-class EsignatureTabSession(models.Model):
-    _name = 'est.session'
-
-    EST_SESSION_STATE = [
-        ('created', 'Not Started Yet'),
-        ('opened', 'In Progress'),
-        ('closed', 'Closed & Posted'),
-    ]
-
-    name = fields.Char(string='Session ID', required=True, default='/')
-    user_id = fields.Many2one(
-        'res.users', string='Responsible',
-        required=True,
-        index=True,
-        readonly=True,
-        states={'opening_control': [('readonly', False)]},
-        default=lambda self: self.env.uid)
-    start_at = fields.Datetime(string='Opening Date', readonly=True)
-    stop_at = fields.Datetime(string='Closing Date', readonly=True, copy=False)
-
-    state = fields.Selection(
-        EST_SESSION_STATE, string='Status',
-        required=True, readonly=True,
-        index=True, copy=False)
-
-    sequence_number = fields.Integer(string='Order Sequence Number', help='A sequence number that is incremented with each sign', default=1)
-    login_number = fields.Integer(string='Login Sequence Number', help='A sequence number that is incremented each time a user resumes the pos session', default=0)
-    event_id = fields.Many2one('event.event', string='Event', required=True)
-    barcode_interface = fields.Integer(string='Barcode Interface Number', required=True)
-
-    @api.model
-    def create(self, values):
-        name = values.get('name') or self.env['ir.sequence'].next_by_code('est.session')
-        values.update({
-            'name': name,
-            'start_at': datetime.now(),
-            'state': 'created',
-        })
-
-        res = super(EsignatureTabSession, self.sudo()).create(values)
-        return res
-
-    @api.multi
-    def open_session(self):
-        self.ensure_one()
-        session = self.write({
-            'state': 'opened'
-        })
-        return {
-            'name': self.name,
-            'type': 'ir.actions.client',
-            'tag': 'est_kiosk_mode',
-            'context': {
-                'session_name': self.name,
-                'event_id': self.event_id.id,
-                'barcode_interface': self.barcode_interface,
-                'start_at': self.start_at,
-                'terms_to_sign': self.event_id.terms_to_sign,
-            },
-            'target': 'fullscreen',
-        }
 
 
 class ResPartner(models.Model):

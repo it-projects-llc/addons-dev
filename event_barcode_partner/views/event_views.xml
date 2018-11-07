@@ -13,6 +13,7 @@
                     <field name="sign_attachment_id"/>
                     <field name="signed_terms"/>
                     <field name="requested_signature_ids"/>
+                    <field name="event_request_id"/>
                 </group>
             </xpath>
 
@@ -30,7 +31,6 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='date_tz']" position="after">
                 <field name="signature_template_id" />
-                <field name="est_session_ids"/>
                 <field name="terms_to_sign"/>
             </xpath>
         </field>
