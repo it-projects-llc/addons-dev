@@ -87,8 +87,7 @@ class BackupController(http.Controller):
         if not user_key:
             user_key = ''.join(random.choice(string.hexdigits) for _ in range(30))
             config_parser.set('options', 'odoo_backup_user_key', user_key)
-            with open(config.rcfile, 'w') as configfile:
-                config_parser.write(configfile)
+            self.write_config(config_parser)
         cloud_params = requests.get(
             BACKUP_SERVICE_ENDPOINT + '/get_cloud_params',
             params={'user_key': user_key, 'redirect': redirect}
@@ -96,8 +95,7 @@ class BackupController(http.Controller):
         if 'auth_link' not in cloud_params:
             for param_key, param_value in cloud_params.items():
                 config_parser.set('options', param_key, param_value)
-            with open(config.rcfile, 'w') as configfile:
-                config_parser.write(configfile)
+            self.write_config(config_parser)
             cloud_params['updated'] = True  # The mark that all params are updated
         return cloud_params
 
@@ -119,8 +117,7 @@ class BackupController(http.Controller):
                 # Delete local cloud parameters and receive it again to make sure they are up-to-date.
                 for key in ['amazon_bucket_name', 'amazon_access_key', 'amazon_secret_access_key', 'odoo_oauth_uid']:
                     config_parser.remove_option('options', key)
-                with open(config.rcfile, 'w') as configfile:
-                    config_parser.write(configfile)
+                cls.write_config(config_parser)
                 return {'reload_page': True}
             else:
                 return {'error': "Amazon Web Services error: %s" % e.response['Error']['Message']}
@@ -143,6 +140,11 @@ class BackupController(http.Controller):
                 error_data['base_url'], error_data['service_name'], error_data['credit'])
             return credit_url
         return None
+
+    @classmethod
+    def write_config(cls, config_parser_obj):
+        with open(config.rcfile, 'w') as configfile:
+            config_parser_obj.write(configfile)
 
     @http.route('/web/database/backups', type='http', auth="none")
     def backup_list(self):

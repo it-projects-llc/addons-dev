@@ -9,6 +9,8 @@ except ImportError:
 from odoo import api, fields, models
 from odoo.tools import config
 
+from ..controllers.main import BackupController
+
 
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
@@ -33,6 +35,5 @@ class ResConfigSettings(models.TransientModel):
         config_parser = ConfigParser.ConfigParser()
         config_parser.read(config.rcfile)
         config_parser.set('options', 'odoo_backup_encryption_password', (self.encryption_password or '').strip())
-        with open(config.rcfile, 'w') as configfile:
-            config_parser.write(configfile)
+        BackupController.write_config(config_parser)
         super(ResConfigSettings, self).set_values()
