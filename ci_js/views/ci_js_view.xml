@@ -1,23 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <!--Следующие три записи нужны для корректного отображения списков. Иначе вместо названий будут выводиться id записей-->
     <record id='ci_js_view_tree' model='ir.ui.view'>
         <field name="name">ci_js.tour.tree</field>
         <field name="model">ci_js.tour</field>
         <field name="arch" type="xml">
-            <tree string="Test">
+            <tree>
                 <field name="tour_name" />
-                <!--<field name="active" invisible="1"/>-->
-                <!--<field name="license_plate" />-->
-                <!--<field name="model_id" />-->
-                <!--<field name="driver_id" />-->
-                <!--<field name="vin_sn" />-->
-                <!--<field name="acquisition_date" />-->
-                <!--<field name="state_id"/>-->
-                <!--<field name="odometer"/>-->
-                <!--<field name="odometer_unit" />-->
-                <!--<field name="contract_renewal_due_soon" invisible="1"/>-->
-                <!--<field name="contract_renewal_overdue" invisible="1" />-->
-                <!--<field name="contract_renewal_total" invisible="1"/>-->
             </tree>
         </field>
     </record>
@@ -25,7 +14,7 @@
         <field name="name">ci_js.tour.set.tree</field>
         <field name="model">ci_js.tour.set</field>
         <field name="arch" type="xml">
-            <tree string="Test">
+            <tree>
                 <field name="set_name" />
             </tree>
         </field>
@@ -34,7 +23,7 @@
         <field name="name">ci_js.tour.set.step.tree</field>
         <field name="model">ci_js.tour.set.step</field>
         <field name="arch" type="xml">
-            <tree string="Test">
+            <tree>
                 <field name="content" />
             </tree>
         </field>
@@ -44,13 +33,10 @@
     <!-- ir.actions.act_window как я понимаю отвечает за показ в боковом(не обязателно) меню -->
     <record id="ci_js_model_tour_action" model='ir.actions.act_window'>
         <field name="name">Tours</field>
-        <!-- Поле(field) в записи(record) с названием res_model принимает имя модели на которуб ссылается наша запись-->
-        <!-- В нашем случае вроде как должна быть основная модель, которая хранит в себе все остальное - ci_js.tour-->
+        <!-- Поле(field) в записи(record) с названием res_model принимает имя модели на которую ссылается наша запись-->
         <field name="res_model">ci_js.tour</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <!-- Про это поле не знаю пока, нужно оно или нет -->
-        <!--<field name="context">{"search_default_groupby_brand" : True,}</field>-->
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to create a new tour.
@@ -82,6 +68,7 @@
                         <group>
                             <field name="skip_enabled" />
                             <!--<field name="assets" />-->
+                            <field name="tour_file" filename="tour_file_name" string="Download tour"/>
                         </group>
                     </group>
                     <field name="set_ids"/>
