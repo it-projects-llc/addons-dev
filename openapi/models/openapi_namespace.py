@@ -2,6 +2,7 @@
 # Copyright 2018 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 # Copyright 2018 Rafis Bikbov <https://it-projects.info/team/bikbov>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+import collections
 import urllib
 import urlparse
 import uuid
@@ -44,7 +45,8 @@ class Namespace(models.Model):
 
     token = fields.Char('Identification token',
                         default=lambda self: str(uuid.uuid4()), readonly=True,
-                        required=True, copy=False)
+                        required=True, copy=False,
+                        help='Token passed by a query string parameter to access the specification.')
     spec_url = fields.Char('Specification link', compute='_compute_spec_url')
 
     _sql_constraints = [
@@ -81,28 +83,126 @@ class Namespace(models.Model):
         current_host = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         parsed_current_host = urlparse.urlparse(current_host)
 
-        for record in self:
-            spec = {
-                "swagger": "2.0",
-                "info": {
-                    "title": "Swagger Sample App",
-                    "version": "1.0.0"
+        spec = collections.OrderedDict([
+            ('swagger', '2.0'),
+            ('info', {
+                "title": "Swagger Sample App",
+                "version": "1.0.0"
+            }),
+            ('host', parsed_current_host.netloc),
+            ('basePath', "/api/v1/%s" % self.name),
+            ('schemes', [
+                parsed_current_host.scheme
+            ]),
+            ('consumes', [
+                "multipart/form-data",
+                "application/x-www-form-urlencoded",
+            ]),
+            ('produces', [
+                "application/json"
+            ]),
+            ('definitions', {
+                "ErrorResponse": {
+                    "type": "object",
+                    "required": [
+                        "error",
+                        "error_descrip"
+                    ],
+                    "properties": {
+                        "error": {
+                            "type": "string"
+                        },
+                        "error_descrip": {
+                            "type": "string"
+                        }
+                    }
                 },
-                "host": parsed_current_host.netloc,
-                "basePath": "/api/v1/%s" % record.name,
-                "schemes": [
-                    parsed_current_host.scheme
-                ],
-            }
-            for openapi_access in record.access_ids.filtered('active'):
-                pinguin.update(spec, openapi_access.get_OAS_part())
+            }),
+            ('parameters', {
+                "RecordIdInPath": {
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID of record to operation",
+                    "required": True,
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "MethodParams-single_record": {
+                    "in": "body",
+                    "name": "body",
+                    "description": "Parameters for calling method",
+                    "required": False,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "method_params": {
+                                "type": "string"
+                            }
+                        },
+                        "example": {
+                            "method_params": "{\"vals\": {\"name\": \"changed from 'write' method which call from api\"}}"
+                        }
+                    }
+                },
+                "MethodParams-recordset": {
+                    "in": "body",
+                    "name": "body",
+                    "description": "Parameters for calling method",
+                    "required": False,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "ids": {
+                                "type": "string"
+                            },
+                            "method_params": {
+                                "type": "string"
+                            }
+                        },
+                        "example": {
+                            "ids": "[8, 18, 33, 23, 22]",
+                            "method_params": "{\"vals\": {\"name\": \"changed from 'write' method which call from api\"}}"
+                        }
+                    }
+                },
+            }),
+            ('responses', {
+                "401": {
+                    "description": "Authentication information is missing or invalid",
+                    "schema": {
+                        "$ref": "#/definitions/ErrorResponse"
+                    }
+                },
+                "500": {
+                    "description": "Server Error",
+                    "schema": {
+                        "$ref": "#/definitions/ErrorResponse"
+                    }
+                }
+            }),
+            ('securityDefinitions', {
+                'basicAuth': {
+                    'type': 'basic'
+                }
+            }),
+            ('security', [
+                {'basicAuth': []}
+            ]),
+            ('tags', [])
+        ])
 
-            return spec
+        for openapi_access in self.access_ids.filtered('active'):
+            OAS_part_for_model = openapi_access.get_OAS_part()
+            spec['tags'].append(OAS_part_for_model['tag'])
+            del OAS_part_for_model['tag']
+            pinguin.update(spec, OAS_part_for_model)
+
+        return spec
 
     @api.depends('name', 'token')
     def _compute_spec_url(self):
         for record in self:
-            record.spec_url = "/api/v1/%s/swagger.json?token=%s" % (record.name, record.token)
+            record.spec_url = "/api/v1/%s/swagger.json?token=%s&db=%s" % (record.name, record.token, self._cr.dbname)
 
     def reset_token(self):
         for record in self:

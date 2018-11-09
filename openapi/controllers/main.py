@@ -4,14 +4,13 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 import json
 import logging
-from collections import OrderedDict
 
 import werkzeug
+
 from odoo import http
 from odoo.addons.web_settings_dashboard.controllers.main \
     import WebSettingsDashboard
-
-from odoo.addons.openapi.controllers import pinguin
+from odoo.addons.web.controllers.main import ensure_db
 
 _logger = logging.getLogger(__name__)
 
@@ -31,7 +30,7 @@ class OpenapiWebSettingsDashboard(WebSettingsDashboard):
             {
                 'id': n.id,
                 'name': n.name,
-                'models_count': len(n.access_ids),
+                'models_count': n.access_ids.search_count([]),
                 'create_count': 10,
                 'read_count': 123,
                 'update_count': 55,
@@ -50,52 +49,31 @@ class OpenapiWebSettingsDashboard(WebSettingsDashboard):
 class OAS(http.Controller):
 
     @http.route('/api/v1/<namespace_name>/swagger.json',
-                type='http', auth='public', csrf=False)
+                type='http', auth='none')
     def OAS_json_spec_download(self, namespace_name, **kwargs):
+        ensure_db()
         namespace = http.request.env['openapi.namespace'].search([('name', '=', namespace_name)])
         if not namespace:
             raise werkzeug.exceptions.NotFound()
-        if not pinguin.authenticate_token_for_namespace(namespace, kwargs.get('token')):
+        if namespace.token != kwargs.get('token'):
             raise werkzeug.exceptions.Forbidden()
 
         spec = namespace.get_OAS_part()
-
-        ORDERED_SWAGGER_MAIN_PROPERTIES = [
-            'swagger',  # 'string'
-            'info',  # 'Info Object'
-            'host',  # 'string'
-            'basePath',  # 'string'
-            'schemes',  # ['string']
-            'consumes',  # ['string']
-            'produces',  # ['string']
-            'paths',  # 'Paths Object'
-            'definitions',  # 'Definitions Object'
-            'parameters',  # 'Parameters Definitions Object'
-            'responses',  # 'Responses Definitions Object'
-            'securityDefinitions',  # 'Security Definitions Object'
-            'security',  # ['Security Requirement Object']
-            'tags',  # ['Tag Object']
-            'externalDocs',  # 'External Documentation Object'
-        ]
-
-        sorted_spec = OrderedDict([
-            (property_name, spec[property_name])
-            for property_name in ORDERED_SWAGGER_MAIN_PROPERTIES
-            if spec.get(property_name)
-        ])
 
         response_params = {
             'headers': [('Content-Type', 'application/json')]
         }
         if 'download' in kwargs:
-            response_params['headers'] = [
-                ('Content-Type', 'application/octet-stream; charset=binary'),
-                ('Content-Disposition', http.content_disposition('swagger.json')),
-            ]
-            response_params['direct_passthrough'] = True
+            response_params = {
+                'headers': [
+                    ('Content-Type', 'application/octet-stream; charset=binary'),
+                    ('Content-Disposition', http.content_disposition('swagger.json')),
+                ],
+                'direct_passthrough': True
+            }
 
         return werkzeug.wrappers.Response(
-            json.dumps(sorted_spec),
+            json.dumps(spec),
             status=200,
             **response_params
         )

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright 2018, XOE Solutions
+# Copyright 2018 Rafis Bikbov <https://it-projects.info/team/bikbov>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
 """Pinguin module for Odoo REST Api.
@@ -118,38 +119,6 @@ def error_response(status, error, error_descrip):
 ##########################
 
 
-# Server wide auth
-def authenticate_token_for_server(token):
-    """Extract and validate the encoded server salt conveyed by the token.
-
-    :param str token: The raw access token.
-
-    :returns: **True** if server accepts the token, **False** otherwise.
-    :rtype: bool
-    """
-    return True  # TODO
-
-
-# Database detection
-def infer_database(token):
-    """Extract and validate the encoded database information
-    conveyed by the token.
-
-    :param str token: The raw access token.
-
-    :returns: The database name in clear text.
-    :rtype: str
-
-    Todo:
-        - Validate against registries of the current thread.
-        - Do NOT init a new registry by default, even if database exists.
-        - Only load the registry if we are on a special API serving worker
-          with lower than regular HTTP worker priority (nice=5)
-    """
-
-    return 'test'  # TODO
-
-
 # User token auth (db-scoped)
 def authenticate_token_for_user(token):
     """Authenticate against the database and setup user session corresponding to the token.
@@ -166,19 +135,6 @@ def authenticate_token_for_user(token):
         request.session.uid = user.id
         return user
     raise werkzeug.exceptions.HTTPException(response=error_response(*CODE__no_user_auth))
-
-
-# Namespace token auth (db-scoped)
-def authenticate_token_for_namespace(namespace, token):
-    """Validate token against the requested namespace.
-
-    :param openapi.namespace namespace: The requested namespace.
-    :param str token: The raw access token.
-
-    :returns: **True** if token is authorized for the requested namespace, **False** otherwise.
-    :rtype: bool
-    """
-    return namespace.token == token
 
 
 def get_auth_header(headers, raise_exception=False):
@@ -210,14 +166,17 @@ def get_data_from_auth_header(header):
     :rtype: dict
     """
     normalized_token = header.replace('Basic ', '').replace('\\n', '').encode('utf-8')
-    decoded_token_parts = base64.decodestring(normalized_token).split(':')
+    try:
+        decoded_token_parts = base64.decodestring(normalized_token).split(':')
+    except Exception as e:
+        raise werkzeug.exceptions.HTTPException(response=error_response(500, 'Invalid header', 'Basic auth header must be valid base64 string'))
 
     if len(decoded_token_parts) == 1:
         db_name, user_token = None, decoded_token_parts[0]
     elif len(decoded_token_parts) == 2:
         db_name, user_token = decoded_token_parts
     else:
-        raise Exception('Bad basic auth header')  # TODO: replace dummy exception
+        raise werkzeug.exceptions.HTTPException(response=error_response(500, 'Invalid header', 'Basic auth header must contain user token'))
 
     return {
         'db_name': db_name,
@@ -240,11 +199,9 @@ def setup_db_decorator(original_setup_db):
 
         db_name = get_data_from_auth_header(auth_header)['db_name']
 
-        # check db is exist
         if db_name not in odoo.service.db.list_dbs(force=True):
             raise werkzeug.exceptions.HTTPException(response=error_response(*CODE__db_not_found))
 
-        # setup db in session
         httprequest.session.db = db_name
 
     return setup_db_wrapper
@@ -295,21 +252,20 @@ def create_log_record(namespace, user, user_request, user_response):
     :rtype: ..models.openapi_log.Log
     """
     request_data = None
-    if namespace.log_request == 'full':
+    if namespace['log_request'] == 'full':
         request_data = user_request.get_data()
-    elif namespace.log_request == 'info':
+    elif namespace['log_request'] == 'info':
         # TODO: only info
         request_data = user_request.get_data()
 
     response_data = None
-    if namespace.log_response == 'debug':
-        response_data = user_response.get_data()
-    elif namespace.log_response == 'error' and user_response.status_code > 400:
-        response_data = user_response.get_data()
+    if namespace['log_response'] == 'debug':
+        response_data = user_response.__dict__
+    elif namespace['log_response'] == 'error' and user_response.status_code > 400:
+        response_data = user_response.__dict__
 
-    # TODO: log data depend on namespace settings
     log = request.env['openapi.log'].sudo(user).create({
-        'namespace_id': namespace.id,
+        'namespace_id': namespace['id'],
         'request': '%s | %s | %d' % (user_request.url, user_request.method, user_response.status_code),
         'request_data': request_data,
         'response_data': response_data,
@@ -329,10 +285,10 @@ def route(*args, **kwargs):
 
     :returns: wrapped method
     """
-    def decorator(f):
+    def decorator(controller_method):
 
         @http_route(*args, **kwargs)
-        @functools.wraps(f)
+        @functools.wraps(controller_method)
         def controller_method_wrapper(*iargs, **ikwargs):
             auth_header = get_auth_header(request.httprequest.headers, raise_exception=True)
             user_token = get_data_from_auth_header(auth_header)['user_token']
@@ -340,16 +296,15 @@ def route(*args, **kwargs):
             namespace = get_namespace_by_name_from_users_namespaces(authenticated_user, ikwargs['namespace'], raise_exception=True)
 
             try:
-                response = f(*iargs, **ikwargs)
+                response = controller_method(*iargs, **ikwargs)
             except werkzeug.exceptions.HTTPException as e:
-                response = e
+                response = e.response
             except Exception as e:
                 response = error_response(
-                    status=400,
+                    status=500,
                     error=type(e).__name__,
                     error_descrip=e.name if hasattr(e, 'name') else str(e)
                 )
-                print(response.__dict__)
 
             create_log_record(
                 namespace=namespace,
@@ -357,6 +312,7 @@ def route(*args, **kwargs):
                 user_request=request.httprequest,
                 user_response=response
             )
+
             return response
 
         return controller_method_wrapper
@@ -414,7 +370,6 @@ def get_model_openapi_access(namespace, model):
 
     We validate the namespace at this latter stage, because it forms part of the http route.
     The token has been related to a namespace already previously
-    (:meth:`authenticate_token_for_namespace`).
 
     This is a double purpose method.
 
@@ -457,9 +412,8 @@ def get_model_openapi_access(namespace, model):
     if not openapi_access.exists():
         raise werkzeug.exceptions.HTTPException(response=error_response(*CODE__canned_ctx_not_found))
 
-    # TODO write transformation
     res = {
-        'context': {}, # Take ot here FIXME: make sure it is for create_context
+        'context': {},  # Take ot here FIXME: make sure it is for create_context
         'out_fields_read_multi': (),
         'out_fields_read_one': (),
         'out_fields_create_one': (),  # FIXME: for what?
@@ -580,7 +534,7 @@ def update(d, u):
     """
     for k, v in u.items():
         if isinstance(v, collections.Mapping):
-            d[k] = update(d.get(k, {}), v)
+            d[k] = update(d.get(k, collections.OrderedDict([])), v)
         else:
             d[k] = v
     return d
@@ -660,48 +614,52 @@ def transform_dictfields_to_list_of_tuples(record, dct):
 ##################
 
 def wrap__resource__create_one(modelname, context, data, success_code, out_fields):
-    """TODO: add description
+    """Function to create one record.
 
     :param str model: The name of the model.
     :param dict context: TODO
-    :param dict data: TODO
+    :param dict data: Data received from the user.
     :param int success_code: The success code.
     :param tuple out_fields: Canned fields.
 
-    :returns: TODO
-    :rtype: TODO
+    :returns: successful response if the create operation is performed
+              otherwise error response
+    :rtype: werkzeug.wrappers.Response
     """
     # FIXME: What fields do we accept when creating/updating requests?
     model_obj = get_model_for_read(modelname)
-    created_obj = model_obj.with_context(context).create(data)
+    try:
+        created_obj = model_obj.with_context(context).create(data)
+    except Exception as e:
+        return error_response(400, type(e).__name__, str(e))
+
     out_data = get_dict_from_record(created_obj, out_fields, (), ())
     return successful_response(success_code, out_data)
 
 
 def wrap__resource__read_all(modelname, success_code, out_fields):
-    """TODO: add description
+    """function to read all records.
 
     :param str modelname: The name of the model.
     :param int success_code: The success code.
     :param tuple out_fields: Canned fields.
 
-    :returns: The werkzeug `response object`_.
+    :returns: successful response with records data
     :rtype: werkzeug.wrappers.Response
     """
-    # record_set.openapi_export_data(export_fields_read_one)
     data = get_dictlist_from_model(modelname, out_fields)
     return successful_response(success_code, data)
 
 
 def wrap__resource__read_one(modelname, id, success_code, out_fields):
-    """TODO: add description
+    """Function to read one record.
 
     :param str modelname: The name of the model.
     :param int id: The record id of which we want to read.
     :param int success_code: The success code.
     :param tuple out_fields: Canned fields.
 
-    :returns: The werkzeug `response object`_.
+    :returns: successful response with the data of one record
     :rtype: werkzeug.wrappers.Response
     """
     out_data = get_dict_from_model(modelname, out_fields, id)
@@ -709,32 +667,37 @@ def wrap__resource__read_one(modelname, id, success_code, out_fields):
 
 
 def wrap__resource__update_one(modelname, id, success_code, data):
-    """TODO: add description
+    """Function to update one record.
 
     :param str modelname: The name of the model.
     :param int id: The record id of which we want to update.
     :param int success_code: The success code.
     :param dict data: The data for update.
 
-    :returns: The werkzeug `response object`_.
+    :returns: successful response if the update operation is performed
+              otherwise error response
     :rtype: werkzeug.wrappers.Response
     """
     cr, uid = request.cr, request.session.uid
     record = request.env(cr, uid)[modelname].browse(id)
     if not record.exists():
         return error_response(*CODE__obj_not_found)
-    record.write(data)
+    try:
+        record.write(data)
+    except Exception as e:
+        return error_response(400, type(e).__name__, str(e))
     return successful_response(success_code)
 
 
 def wrap__resource__unlink_one(modelname, id, success_code):
-    """TODO: add description
+    """Function to delete one record.
 
     :param str modelname: The name of the model.
     :param int id: The record id of which we want to delete.
     :param int success_code: The success code.
 
-    :returns: The werkzeug `response object`_.
+    :returns: successful response if the delete operation is performed
+              otherwise error response
     :rtype: werkzeug.wrappers.Response
     """
     cr, uid = request.cr, request.session.uid
@@ -746,14 +709,15 @@ def wrap__resource__unlink_one(modelname, id, success_code):
 
 
 def wrap__resource__call_method(modelname, ids, method, method_params, success_code):
-    """TODO: add description
+    """Function to call the model method for records by IDs.
 
     :param str modelname: The name of the model.
     :param list ids: The record ids of which we want to call method.
     :param str method: The name of the method.
     :param int success_code: The success code.
 
-    :returns: The werkzeug `response object`_.
+    :returns: successful response if the method execution did not cause an error
+              otherwise error response
     :rtype: werkzeug.wrappers.Response
     """
     model_obj = get_model_for_read(modelname)
@@ -897,8 +861,7 @@ def get_dict_from_record(record, spec, include_fields, exclude_fields):
     Going down to the record level, as the framework does not support nested
     data queries natively as they are typical for a REST API.
 
-    # TODO: replace (:obj:`RecordSet`)
-    :param (:obj:`RecordSet`) record: The singleton record to load.
+    :param odoo.models.Model record: The singleton record to load.
     :param tuple spec: The field spec to load.
     :param tuple include_fields: The extra fields.
     :param tuple exclude_fields: The excluded fields.
@@ -925,14 +888,15 @@ def get_dict_from_record(record, spec, include_fields, exclude_fields):
                     ]
             # It's a 2one
             if isinstance(field[1], tuple):
-                # FIXME: for what?
-                # assert len(record[field[
-                #     0]]) == 1, "A bare tuple, cannot spec a 2many field"
                 result[field[0]] = get_dict_from_record(record[field[0]],
                                                         field[1], (), ())
         # Normal field, or unspecified relational
         elif isinstance(field, six.string_types):
-            result[field] = getattr(record, field)
+            if not hasattr(record, field):
+                raise odoo.exceptions.ValidationError(odoo._('The model "%s" has no such field: "%s".') % (record._name, field))
+
+            # result[field] = getattr(record, field)
+            result[field] = record[field]
             fld = record._fields[field]
             if fld.relational:
                 if fld.type.endswith('2one'):
@@ -942,9 +906,9 @@ def get_dict_from_record(record, spec, include_fields, exclude_fields):
     return result
 
 
-# Check the method is allowed
+# Check that the method is allowed
 def method_is_allowed(method, methods_conf, main=False, raise_exception=False):
-    """TODO: add description
+    """Check that the method is allowed for the specified settings.
 
     :param str method: The name of the method.
     :param dict methods_conf: The methods configuration dictionary.
@@ -1072,19 +1036,13 @@ def get_OAS_definitions_part(model_obj, export_fields_dict, definition_prefix=''
         if child_fields:
             child_model = model_obj.env[meta['relation']]
             child_definition = get_OAS_definitions_part(child_model, child_fields, definition_prefix=definition_name)
-            definitions.update(child_definition)
-            child_definition_ref = "#/definitions/%s" % get_definition_name(child_model._name, prefix=definition_name)
 
             if meta['type'].endswith('2one'):
-                field_property = {
-                    '$ref': child_definition_ref
-                }
+                field_property = child_definition[get_definition_name(child_model._name, prefix=definition_name)]
             else:
                 field_property = {
                     'type': 'array',
-                    'items': {
-                        '$ref': child_definition_ref
-                    }
+                    'items': child_definition[get_definition_name(child_model._name, prefix=definition_name)]
                 }
         else:
             field_property = {

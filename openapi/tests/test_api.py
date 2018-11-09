@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 # Copyright 2018 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
+# Copyright 2018 Rafis Bikbov <https://it-projects.info/team/bikbov>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 import json
 
 import requests
 import logging
 
-from odoo.tests.common import HttpCase, PORT
+from odoo.tests.common import HttpCase, PORT, get_db_name
 
-from ..controllers import pinguin
+from odoo.addons.openapi.controllers import pinguin
 
 _logger = logging.getLogger(__name__)
 
@@ -22,6 +23,7 @@ class TestAPI(HttpCase):
     def setUp(self):
         super(TestAPI, self).setUp()
         self.demo_user = self.env.ref(USER_DEMO)
+        self.db_name = get_db_name()
 
     def request(self, method, namespace, model, record_id='', model_method_name='', **kwargs):
         url = "http://localhost:%d/api/v1/%s/%s" % (PORT, namespace, model)
@@ -32,7 +34,7 @@ class TestAPI(HttpCase):
         return requests.request(method, url, timeout=30, **kwargs)
 
     def request_from_demo_user(self, *args, **kwargs):
-        kwargs['auth'] = requests.auth.HTTPBasicAuth(self.session.db, self.demo_user.token)
+        kwargs['auth'] = requests.auth.HTTPBasicAuth(self.db_name, self.demo_user.token)
         return self.request(*args, **kwargs)
 
     def test_read_many_all(self):
@@ -107,20 +109,20 @@ class TestAPI(HttpCase):
         namespace_name = 'demo'
         model_name = 'res.partner'
         invalid_token = 'invalid_user_token'
-        resp = self.request('GET', namespace_name, model_name, auth=requests.auth.HTTPBasicAuth(self.session.db, invalid_token))
+        resp = self.request('GET', namespace_name, model_name, auth=requests.auth.HTTPBasicAuth(self.db_name, invalid_token))
         self.assertEqual(resp.status_code, 401)
         self.assertEqual(resp.json()['error'], pinguin.CODE__no_user_auth[1])
 
-    # def test_user_not_allowed_for_namespace(self):
-    #     namespace_name = 'demo'
-    #     model_name = 'res.partner'
-    #     namespace = self.env['openapi.namespace'].search([('name', '=', namespace_name)])
-    #     namespace.write({
-    #         'user_ids': [(3, self.demo_user.id, 0)]
-    #     })
-    #     resp = self.request_from_demo_user('GET', namespace_name, model_name)
-    #     self.assertEqual(resp.status_code, 401)
-    #     self.assertEqual(resp.json()['error'], pinguin.CODE__user_no_perm[1])
+    def test_user_not_allowed_for_namespace(self):
+        namespace_name = 'demo'
+        model_name = 'res.partner'
+        namespace = self.env['openapi.namespace'].search([('name', '=', namespace_name)])
+        namespace.write({
+            'user_ids': [(3, self.demo_user.id, 0)]
+        })
+        resp = self.request_from_demo_user('GET', namespace_name, model_name)
+        self.assertEqual(resp.status_code, 401)
+        self.assertEqual(resp.json()['error'], pinguin.CODE__user_no_perm[1])
 
     def test_call_allowed_method_on_singleton_record(self):
         namespace_name = 'demo'
@@ -168,3 +170,11 @@ class TestAPI(HttpCase):
         # TODO: check changes in db
         # for partner in partners:
         #     self.assertEqual(partner.name, method_params['vals']['name'])
+
+    def test_log_creating(self):
+        namespace_name = 'demo'
+        model_name = 'res.partner'
+        logs_count_before_request = len(self.env['openapi.log'].search([]))
+        self.request_from_demo_user('GET', namespace_name, model_name)
+        logs_count_after_request = len(self.env['openapi.log'].search([]))
+        self.assertEqual(logs_count_after_request - logs_count_before_request, 1)

@@ -4,3 +4,4 @@ from . import openapi_namespace
 from . import ir_model
 from . import openapi_access
 from . import res_users
+from . import ir_exports

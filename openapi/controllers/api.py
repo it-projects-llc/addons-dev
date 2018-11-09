@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright 2018, XOE Solutions
+# Copyright 2018 Rafis Bikbov <https://it-projects.info/team/bikbov>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
 import json
@@ -24,7 +25,7 @@ _logger = logging.getLogger(__name__)
 
 API_ENDPOINT = '/api'
 API_ENDPOINT_V1 = '/v1'
-# API_ENDPOINT_V2 = '/2'
+# API_ENDPOINT_V2 = '/v2'
 
 # We patch the route decorator in pinguin.py
 # with authentication and DB inference logic.
