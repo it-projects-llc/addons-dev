@@ -127,44 +127,6 @@ class Namespace(models.Model):
                     "type": "integer",
                     "format": "int64"
                 },
-                "MethodParams-single_record": {
-                    "in": "body",
-                    "name": "body",
-                    "description": "Parameters for calling method",
-                    "required": False,
-                    "schema": {
-                        "type": "object",
-                        "properties": {
-                            "method_params": {
-                                "type": "string"
-                            }
-                        },
-                        "example": {
-                            "method_params": "{\"vals\": {\"name\": \"changed from 'write' method which call from api\"}}"
-                        }
-                    }
-                },
-                "MethodParams-recordset": {
-                    "in": "body",
-                    "name": "body",
-                    "description": "Parameters for calling method",
-                    "required": False,
-                    "schema": {
-                        "type": "object",
-                        "properties": {
-                            "ids": {
-                                "type": "string"
-                            },
-                            "method_params": {
-                                "type": "string"
-                            }
-                        },
-                        "example": {
-                            "ids": "[8, 18, 33, 23, 22]",
-                            "method_params": "{\"vals\": {\"name\": \"changed from 'write' method which call from api\"}}"
-                        }
-                    }
-                },
             }),
             ('responses', {
                 "401": {

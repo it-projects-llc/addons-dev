@@ -293,67 +293,104 @@ class Access(models.Model):
                 allowed_methods += [m for m in self.public_methods.split('\n') if m]
             if self.private_methods:
                 allowed_methods += [m for m in self.private_methods.split('\n') if m]
+
             allowed_methods = list(set(allowed_methods))
 
-            params_one_ref = "#/parameters/MethodParams-single_record"
-            params_many_ref = "#/parameters/MethodParams-recordset"
-
-            for method_name in allowed_methods:
-                read_one_path_method = '%s/%s' % (read_one_path, method_name)
-                read_many_path_method = '%s/%s' % (read_many_path, method_name)
-
-                paths_object[read_one_path_method] = {
-                    'patch': {
-                        "summary": "Patch %s by single ID" % model_name,
-                        "description": "Call model method for single record.",
-                        "operationId": "%sMethodCallFor%sSingleRecord" % (method_name, capitalized_model_name),
-                        "consumes": [
-                            "multipart/form-data",
-                            "application/x-www-form-urlencoded",
-                        ],
-                        "produces": [
-                            "application/json",
-                        ],
-                        "parameters": [
-                            {
-                                '$ref': param_id_ref
+            paths_object[read_one_path]['patch'] = {
+                "summary": "Patch %s by single ID" % model_name,
+                "description": "Call model method for single record.",
+                "operationId": "callMethodFor%sSingleRecord" % capitalized_model_name,
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded",
+                ],
+                "produces": [
+                    "application/json",
+                ],
+                "parameters": [
+                    {
+                        '$ref': param_id_ref
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Parameters for calling the method on a single record",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "method_name"
+                            ],
+                            "properties": {
+                                "method_name": {
+                                    "type": "string",
+                                    "enum": allowed_methods
+                                },
+                                "method_params": {
+                                    "type": "string"
+                                }
                             },
-                            {
-                                '$ref': params_one_ref
+                            "example": {
+                                "method_name": "write",
+                                "method_params": "{\"vals\": {\"name\": \"changed from 'write' method which call from api\"}}"
                             }
-                        ],
-                        "responses": {
-                            "200": {
-                                "description": "successful patch"
-                            },
                         }
-                    }
+                    },
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful patch"
+                    },
                 }
+            }
 
-                paths_object[read_many_path_method] = {
-                    'patch': {
-                        "summary": "Patch %s by some IDs" % model_name,
-                        "description": "Call model method for recordset.",
-                        "operationId": "%sMethodCallFor%sRecordset" % (method_name, capitalized_model_name),
-                        "consumes": [
-                            "multipart/form-data",
-                            "application/x-www-form-urlencoded",
-                        ],
-                        "produces": [
-                            "application/json",
-                        ],
-                        "parameters": [
-                            {
-                                '$ref': params_many_ref
-                            }
-                        ],
-                        "responses": {
-                            "200": {
-                                "description": "successful patch"
+            paths_object[read_many_path]['patch'] = {
+                "summary": "Patch %s by some IDs" % model_name,
+                "description": "Call model method for recordset.",
+                "operationId": "callMethodFor%sRecordset" % capitalized_model_name,
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded",
+                ],
+                "produces": [
+                    "application/json",
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Parameters for calling the method on a recordset",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "method_name",
+                                "ids"
+                            ],
+                            "properties": {
+                                "method_name": {
+                                    "type": "string",
+                                    "enum": allowed_methods
+                                },
+                                "ids": {
+                                    "type": "string"
+                                },
+                                "method_params": {
+                                    "type": "string"
+                                }
                             },
+                            "example": {
+                                "ids": "[8, 18, 33, 23, 22]",
+                                "method_name": "write",
+                                "method_params": "{\"vals\": {\"name\": \"changed from 'write' method which call from api\"}}"
+                            }
                         }
-                    }
+                    },
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful patch"
+                    },
                 }
+            }
 
         for path_item_value in paths_object.values():
             for path_method in path_item_value.values():

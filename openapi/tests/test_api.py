@@ -127,19 +127,18 @@ class TestAPI(HttpCase):
     def test_call_allowed_method_on_singleton_record(self):
         namespace_name = 'demo'
         model_name = 'res.partner'
-        model_method_name = 'write'
-
         partner = self.env[model_name].search([], limit=1)
-        method_params = {
-            'vals': {
-                'name': 'changed from write method which call from api'
-            },
-        }
+
         data = {
-            'method_params': json.dumps(method_params)
+            'method_name': 'write',
+            'method_params': json.dumps({
+                'vals': {
+                    'name': 'changed from write method which call from api'
+                }
+            })
         }
 
-        resp = self.request_from_demo_user('PATCH', namespace_name, model_name, partner.id, model_method_name, data=data)
+        resp = self.request_from_demo_user('PATCH', namespace_name, model_name, partner.id, data=data)
 
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(resp.json())
@@ -149,20 +148,19 @@ class TestAPI(HttpCase):
     def test_call_allowed_method_on_recordset(self):
         namespace_name = 'demo'
         model_name = 'res.partner'
-        model_method_name = 'write'
 
         partners = self.env[model_name].search([], limit=5)
-        method_params = {
-            'vals': {
-                'name': 'changed from write method which call from api'
-            },
-        }
         data = {
+            'method_name': 'write',
             'ids': json.dumps(partners.mapped('id')),
-            'method_params': json.dumps(method_params)
+            'method_params': json.dumps({
+                'vals': {
+                    'name': 'changed from write method which call from api'
+                },
+            })
         }
 
-        resp = self.request_from_demo_user('PATCH', namespace_name, model_name, model_method_name, data=data)
+        resp = self.request_from_demo_user('PATCH', namespace_name, model_name, data=data)
 
         self.assertEqual(resp.status_code, 200)
         for i in range(len(partners)):
