@@ -46,6 +46,17 @@
 
                   <div class='orderlines' line-ratio='0.6'>
                      <t t-foreach='receipt.orderlines' t-as='line'>
+                        <line>
+                          <left>
+                            <t t-if="line.brand_name">
+                                <t t-esc='line.brand_name' />
+                            </t>
+                            <t t-if="line.categ_name">
+                                <t t-esc='line.categ_name' />
+                            </t>
+                          </left>
+                        </line>
+
                          <t t-set='simple' t-value='line.discount === 0 and line.unit_name === "Unit(s)" and line.quantity === 1 and !line.abs_disc' />
                          <t t-if='simple'>
                                <t t-set='name_array' t-value="line.product_name_wrapped"/>
@@ -91,8 +102,6 @@
                          </t>
                      </t>
                     </div>
-
-
 
 
                   <t t-set='taxincluded' t-value='Math.abs(receipt.subtotal - receipt.total_with_tax) &lt;= 0.000001' />
