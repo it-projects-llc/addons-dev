@@ -71,13 +71,108 @@
         </div>
     </t>
 
+    <t t-name="bracelet_table">
+        <t t-if="bracelets.length">
+            <div class="bracelet_header">
+                <div class="col-md-6 col-xs-6">
+                    <h2 class="o_braslet_name">
+                        Name
+                    </h2>
+                </div>
+                <div class="col-md-6 col-xs-6">
+                    <h2 class="o_braslet_name">
+                        Bracelets sold
+                    </h2>
+                </div>
+            </div>
+            <div class="bracelet_header">
+                <div class="col-md-6 col-xs-6">
+                </div>
+                <div class="col-md-2 col-xs-2">
+                    <h2 class="o_braslet_name">
+                        All
+                    </h2>
+                </div>
+                <div class="col-md-2 col-xs-2">
+                    <h2 class="o_braslet_name">
+                        Day
+                    </h2>
+                </div>
+                <div class="col-md-2 col-xs-2">
+                    <h2 class="o_braslet_name">
+                        Hour
+                    </h2>
+                </div>
+            </div>
+            <t t-foreach="bracelets" t-as="bras">
+                <div class="bracelet_cell" t-attf-bid="#{bras.id}">
+                    <div class="col-md-6 col-xs-6">
+                        <h2 class="o_braslet_name">
+                            <t t-esc="bras.ticket_name"/>
+                        </h2>
+                    </div>
+                    <!--<div class="col-md-2 col-xs-2">-->
+                        <!--<h2 class="o_braslet_name">-->
+                            <!--<t t-esc="bras.bracelet_qty"/>-->
+                        <!--</h2>-->
+                    <!--</div>-->
+                    <div class="col-md-2 col-xs-2">
+                        <h2 class="o_braslet_name">
+                            <t t-esc="bras.done_attendees"/>
+                        </h2>
+                    </div>
+                    <div class="col-md-2 col-xs-2">
+                        <h2 class="o_braslet_name">
+                            <t t-esc="bras.done_today"/>
+                        </h2>
+                    </div>
+                    <div class="col-md-2 col-xs-2">
+                        <h2 class="o_braslet_name">
+                            <t t-esc="bras.done_hour"/>
+                        </h2>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </t>
+
+    <!--<t t-name="payment_window">-->
+
+
+    <!--</t>-->
+
     <t t-name="event_barcode_template" t-extend="event_barcode_template">
+        <t t-jquery=".o_event_barcode_detail" t-operation="after">
+            <div class="o_event_barcode_detail bracelets_info text-center">
+                <div class="col-md-12 col-xs-12 bracelets_title text-center">
+                    <h2 class="o_client_list_title">Bracelets</h2>
+                </div>
+                <div class="bracelet_container" style="display: none;">
+                    <t t-set="bracelets" t-value="widget.data.bracelets"/>
+                    <t t-call="bracelet_table"/>
+                </div>
+            </div>
+
+            <!--<div class="o_event_barcode_detail payment_window text-center">-->
+                <!--<div class="col-md-12 col-xs-12 payment_title text-center">-->
+                    <!--<h2 class="o_client_list_title">New Attendee</h2>-->
+                <!--</div>-->
+                <!--<div class="payment_container" style="display: none;">-->
+                    <!--<t t-call="payment_window"/>-->
+                <!--</div>-->
+            <!--</div>-->
+
+        </t>
+
         <t t-jquery=".o_event_barcode_main" t-operation="after">
             <div class="o_event_barcode_detail client_info text-center">
                 <div class="col-md-12 col-xs-12 client_title text-center">
                     <h2 class="o_client_list_title">Clients</h2>
                 </div>
             </div>
+        </t>
+
+        <t t-jquery="div.o_event_barcode_main img" t-operation="replace">
         </t>
 
         <t t-jquery="input#event_barcode" t-operation="after">

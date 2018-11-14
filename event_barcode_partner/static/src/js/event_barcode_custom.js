@@ -25,6 +25,15 @@ event_barcode.EventScanView.include({
             self.on_name_entered(e.target.value);
         });
 
+        this.$('div.bracelets_title').on('click', function(e){
+            var container = self.$('div.bracelet_container')[0];
+            if (container.style.display === "none") {
+                container.style.display = "block";
+            } else {
+                container.style.display = "none";
+            }
+        });
+
         this.update_session_id().then(function(data){
             self.update_bus();
         });
@@ -40,7 +49,7 @@ event_barcode.EventScanView.include({
         this.force_start_polling();
         this.bus.on("notification", this.bus, function(data){
             if (data && data.length){
-                self.update_client_list(JSON.parse(data[0][1]));
+                self.update_interface_els(JSON.parse(data[0][1]));
             }
         });
     },
@@ -104,10 +113,20 @@ event_barcode.EventScanView.include({
     },
 
     on_name_entered: function(name) {
-        this.make_request_and_update('/event_barcode/get_attendees_by_name', {
-             name: name,
-             event_id: this.action.context.active_id
-        });
+        if (name) {
+            this.make_request_and_update('/event_barcode/get_attendees_by_name', {
+                 name: name,
+                 event_id: this.action.context.active_id
+            });
+        } else {
+            this.update_client_list(false);
+        }
+    },
+
+    update_interface_els: function(data) {
+        var self = this;
+        this.update_client_list(data.attendees);
+        this.update_bracelet_table(data.bracelets);
     },
 
     update_client_list: function(data) {
@@ -152,7 +171,7 @@ event_barcode.EventScanView.include({
                     } else if (result.warning) {
                         self.do_warn(_("Warning"), result.warning);
                     }
-                    self.update_client_list(result.attendee);
+                    self.update_interface_els(result.data);
                 });
             });
             self.set_attendee_by_id(aid);
@@ -162,6 +181,15 @@ event_barcode.EventScanView.include({
             this.$('.o_event_barcode_detail.client_info.text-center .client_cell').find('.rfid').show();
             this.set_attendee_by_id(data[0].aid);
         }
+    },
+
+    update_bracelet_table: function(data) {
+        var self = this;
+        var bracelet_container = this.$('.bracelet_container');
+        bracelet_container[0].innerHTML = '';
+        var new_table = QWeb.render('bracelet_table', {'bracelets':data}) ;
+        bracelet_container.append(new_table);
+        console.log();
     },
 
     set_attendee_by_id: function(aid) {
@@ -174,7 +202,7 @@ event_barcode.EventScanView.include({
     make_request_and_update: function(rout, vals) {
         var self = this;
         return Session.rpc(rout, vals).then(function(result) {
-            self.update_client_list(result);
+            self.update_interface_els(result);
         });
     },
 

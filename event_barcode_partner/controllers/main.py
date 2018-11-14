@@ -3,33 +3,94 @@ from odoo import fields, http, _
 from odoo.http import request
 from odoo.addons.event_barcode.controllers.main import EventBarcode
 import json
+import datetime
 
 
 class EventBarcodeExtended(EventBarcode):
 
-    def compound_vals(self, attendees):
-        return [{
-            'a_name': a.name,
-            'p_name': a.partner_id.name,
-            'state': a.state,
-            'aid': a.id,
-            'rfid': a.rfid,
-            'signed_terms': a.signed_terms,
-        } for a in attendees]
+    def compound_vals(self, attendees, event_id):
+        return {
+            'attendees': [{
+                'a_name': a.name,
+                'p_name': a.partner_id.name,
+                'state': a.state,
+                'aid': a.id,
+                'rfid': a.rfid,
+                'signed_terms': a.signed_terms,
+            } for a in attendees],
+            'bracelets': self.get_bracelet_info(event_id)
+        }
+
+    def get_bracelet_info(self, event_id):
+        event = request.env['event.event'].browse(event_id)
+        tickets = event.event_ticket_ids
+        bracelets = request.env['bracelet.type'].search([('event_ticket_id', 'in', tickets.ids)])
+        today = datetime.datetime.now()
+        attendees = request.env['event.registration'].search([('event_ticket_id', 'in', tickets.ids),
+                                                              ('state', '=', 'done')])
+        vals = []
+        for t in tickets:
+            done_attendees = attendees.filtered(lambda x: x.event_ticket_id.id == t.id)
+            done_today = done_attendees.filtered(lambda x:
+                                                 datetime.datetime.strptime(x.date_closed, '%Y-%m-%d %H:%M:%S').day == today.day
+                                                 )
+            done_hour = done_today.filtered(lambda x:
+                                            datetime.datetime.strptime(x.date_closed, '%Y-%m-%d %H:%M:%S') - datetime.timedelta(hours=1) <=
+                                            datetime.datetime.strptime(x.date_closed, '%Y-%m-%d %H:%M:%S') <=
+                                            datetime.datetime.strptime(x.date_closed, '%Y-%m-%d %H:%M:%S')
+                                            )
+
+            vals.append({
+                'id': t.id,
+                'ticket_name': t.name,
+                'done_hour': done_hour and len(done_hour) or 0,
+                'done_today': done_today and len(done_today) or 0,
+                'done_attendees': done_attendees and len(done_attendees) or 0,
+            })
+        return vals
+
+    # def read_group_done_attendees(self, event_id, additional_domain):
+    #     event = request.env['event.event'].browse(event_id)
+    #     domain = additional_domain + [('event_ticket_id', 'in', event.event_ticket_ids.ids), ('state', '=', 'done')]
+    #     registration = request.env['event.registration']
+    #     return registration.read_group(domain, ['event_ticket_id'], ['event_ticket_id'])
+    #
+    # def get_bracelet_info(self, event_id):
+    #     done_attendees = self.read_group_done_attendees(event_id, [])
+    #     today = datetime.datetime.now()
+    #     done_today = self.read_group_done_attendees(event_id, [('date_closed.day', '=', today.day)])
+    #     done_hour = self.read_group_done_attendees(event_id, [('date_closed.day', '<=', today.hour),
+    #                                                           ('date_closed.day', '>=', today.hour - 1)])
+    #     return {
+    #         'done_hour': len(done_hour),
+    #         'done_today': len(done_today),
+    #         'done_attendees': len(done_attendees),
+    #     }
+
+
+    @http.route()
+    def get_event_data(self, event_id):
+        # import wdb
+        # wdb.set_trace()
+        res = super(EventBarcodeExtended, self).get_event_data(event_id)
+        # bracelets = request.env['bracelet.type'].search([('event_id', '=', event_id)])
+        # res['bracelets'] = bracelets.read(['name', 'barcode_pattern', 'bracelet_left', 'id'])
+        res['bracelets'] = self.get_bracelet_info(event_id)
+        return res
 
     @http.route('/event_barcode/get_attendees_by_name', type='json', auth="user")
     def get_attendees_by_name(self, event_id, name, **kw):
         Registration = request.env['event.registration']
         attendees = Registration.search([('event_id', '=', event_id),
                                          ('name', 'ilike', name)])
-        return self.compound_vals(attendees)
+        return self.compound_vals(attendees, event_id)
 
     @http.route('/event_barcode/get_attendee_by_barcode', type='json', auth="user")
     def get_attendee_by_barcode(self, event_id, barcode, **kw):
         Registration = request.env['event.registration']
         attendees = Registration.search([('event_id', '=', event_id),
                                          ('barcode', '=', barcode)], limit=1)
-        return self.compound_vals(attendees)
+        return self.compound_vals(attendees, event_id)
 
     @http.route('/event_barcode/set_rfid', type='json', auth="user")
     def set_attendee_rfid(self, rfid, aid, **kw):
@@ -40,7 +101,7 @@ class EventBarcodeExtended(EventBarcode):
             'rfid': rfid
         })
 
-        return self.compound_vals(attendee)
+        return self.compound_vals(attendee, attendee.event_id.id)
 
     @http.route('/event_barcode/register_attendee', type='json', auth="user")
     def register_attendee(self, barcode, event_id, **kw):
@@ -61,18 +122,18 @@ class EventBarcodeExtended(EventBarcode):
         Registration = request.env['event.registration']
         attendee = Registration.browse(int(attendee_id))
         if not attendee:
-            return {'warning': _('This ticket is not valid for this event')}
+            return {'warning': _('This ticket is not valid for this event'), 'data': False}
         count = Registration.search_count([('state', '=', 'done'), ('event_id', '=', attendee.event_id.id)])
         attendee_name = attendee.name or _('Attendee')
 
         if attendee.state == 'cancel':
-            return {'warning': _('Canceled registration'), 'count': count, 'attendee': self.compound_vals(attendee)}
+            return {'warning': _('Canceled registration'), 'count': count, 'data': self.compound_vals(attendee, attendee.event_id.id)}
         elif attendee.state != 'done':
             attendee.write({'state': 'done', 'date_closed': fields.Datetime.now()})
             count += 1
-            return {'success': _('%s is successfully registered') % attendee_name, 'count': count, 'attendee': self.compound_vals(attendee)}
+            return {'success': _('%s is successfully registered') % attendee_name, 'count': count, 'data': self.compound_vals(attendee, attendee.event_id.id)}
         else:
-            return {'warning': _('%s is already registered') % attendee_name, 'count': count, 'attendee': self.compound_vals(attendee)}
+            return {'warning': _('%s is already registered') % attendee_name, 'count': count, 'data': self.compound_vals(attendee, attendee.event_id.id)}
 
 
     @http.route('/event_barcode/sign_request', type="json", auth="user")
@@ -138,6 +199,6 @@ class EventBarcodeExtended(EventBarcode):
         # attendee.embed_sign_to_pdf()
 
         channel_name = "bi.longpolling.notifs"
-        attendee.event_id.send_to_barcode_interface(channel_name, barcode_interface_id, json.dumps(self.compound_vals(attendee)))
+        attendee.event_id.send_to_barcode_interface(channel_name, barcode_interface_id, json.dumps(self.compound_vals(attendee, attendee.event_id.id)))
 
         return attendee.id

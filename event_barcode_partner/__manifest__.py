@@ -19,6 +19,7 @@
     "depends": [
         "event_barcode",
         "website_sign",
+        "event_sale",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [

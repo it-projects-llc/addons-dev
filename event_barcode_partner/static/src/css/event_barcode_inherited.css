@@ -7,7 +7,6 @@
     background-color: rgb(245, 245, 245);
     display: table;
 }
-
 .o_event_barcode_detail.client_info .client_title {
     height: 50px;
     color: rgb(255, 255, 255);
@@ -20,15 +19,36 @@
     -webkit-border-top-right-radius: 10px;
     -moz-border-radius-topright: 10px;
 }
-
 .o_event_barcode_detail.client_info  .client_cell {
     width: 100%;
     color: inherit;
     border-width: 0px 0px 1px 0px;
     border-color: #666666;
     border-style: solid;
+    display: inherit;
 }
 
+.o_event_barcode_detail.bracelets_info {
+
+    margin-top: 16px !important;
+    margin-bottom: 16px !important;
+    min-height: 60px;
+
+    background-color: rgb(245, 245, 245);
+    display: table;
+}
+.o_event_barcode_detail.bracelets_info .bracelets_title {
+    height: 50px;
+    color: rgb(255, 255, 255);
+    background-color: #A2488A;
+
+    border-top-left-radius: 10px;
+    -webkit-border-top-left-radius: 10px;
+    -moz-border-radius-topleft: 10px;
+    border-top-right-radius: 10px;
+    -webkit-border-top-right-radius: 10px;
+    -moz-border-radius-topright: 10px;
+}
 
 
 
