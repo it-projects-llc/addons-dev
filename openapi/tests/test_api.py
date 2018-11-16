@@ -7,6 +7,7 @@ import json
 import requests
 import logging
 
+from odoo import api
 from odoo.tests.common import HttpCase, PORT, get_db_name
 
 from odoo.addons.openapi.controllers import pinguin
@@ -22,7 +23,6 @@ class TestAPI(HttpCase):
 
     def setUp(self):
         super(TestAPI, self).setUp()
-        self.demo_user = self.env.ref(USER_DEMO)
         self.db_name = get_db_name()
 
     def request(self, method, namespace, model, record_id='', model_method_name='', **kwargs):
@@ -33,14 +33,18 @@ class TestAPI(HttpCase):
             url += '/%s' % model_method_name
         return requests.request(method, url, timeout=30, **kwargs)
 
-    def request_from_demo_user(self, *args, **kwargs):
-        kwargs['auth'] = requests.auth.HTTPBasicAuth(self.db_name, self.demo_user.token)
+    def request_from_user(self, *args, **kwargs):
+        user = kwargs['user']
+        del kwargs['user']
+        kwargs['auth'] = requests.auth.HTTPBasicAuth(self.db_name, user.token)
         return self.request(*args, **kwargs)
 
     def test_read_many_all(self):
+        phantom_env = api.Environment(self.registry.test_cr, self.uid, {})
         namespace_name = 'demo'
         model_name = 'res.partner'
-        resp = self.request_from_demo_user('GET', namespace_name, model_name)
+        demo_user = phantom_env.ref(USER_DEMO)
+        resp = self.request_from_user('GET', namespace_name, model_name, user=demo_user)
         self.assertEqual(resp.status_code, 200)
         # TODO check content
 
@@ -50,46 +54,51 @@ class TestAPI(HttpCase):
     #     # TODO check content
 
     def test_read_one(self):
+        phantom_env = api.Environment(self.registry.test_cr, self.uid, {})
         namespace_name = 'demo'
         model_name = 'res.partner'
-        id = self.env[model_name].search([], limit=1).id
-        resp = self.request_from_demo_user('GET', namespace_name, model_name, id)
+        id = phantom_env[model_name].search([], limit=1).id
+        demo_user = phantom_env.ref(USER_DEMO)
+        resp = self.request_from_user('GET', namespace_name, model_name, id, user=demo_user)
         self.assertEqual(resp.status_code, 200)
         # TODO check content
 
     def test_create_one(self):
+        phantom_env = api.Environment(self.registry.test_cr, self.uid, {})
         namespace_name = 'demo'
         model_name = 'res.partner'
         data_for_create = {
             'name': 'created_from_test',
             'type': 'other'
         }
-        resp = self.request_from_demo_user('POST', namespace_name, model_name, data=data_for_create)
+        demo_user = phantom_env.ref(USER_DEMO)
+        resp = self.request_from_user('POST', namespace_name, model_name, data=data_for_create, user=demo_user)
         self.assertEqual(resp.status_code, 201)
-        # TODO: check creating in db
-        # created_user = self.env[model_name].browse(resp.json()['id'])
-        # self.assertEqual(created_user.name, data_for_create['name'])
+        created_user = phantom_env[model_name].browse(resp.json()['id'])
+        self.assertEqual(created_user.name, data_for_create['name'])
 
     def test_update_one(self):
+        phantom_env = api.Environment(self.registry.test_cr, self.uid, {})
         namespace_name = 'demo'
         model_name = 'res.partner'
         data_for_update = {
             'name': 'for update in test',
         }
-        partner = self.env[model_name].search([], limit=1)
-        resp = self.request_from_demo_user('PUT', namespace_name, model_name, partner.id, data=data_for_update)
+        partner = phantom_env[model_name].search([], limit=1)
+        demo_user = phantom_env.ref(USER_DEMO)
+        resp = self.request_from_user('PUT', namespace_name, model_name, partner.id, data=data_for_update, user=demo_user)
         self.assertEqual(resp.status_code, 204)
-        # TODO: check content is changed
-        # self.assertEqual(partner.name, data_for_update['name'])
+        self.assertEqual(partner.name, data_for_update['name'])
 
     def test_unlink_one(self):
+        phantom_env = api.Environment(self.registry.test_cr, self.uid, {})
         namespace_name = 'demo'
         model_name = 'res.partner'
-        partner = self.env[model_name].create({'name': 'record for deleting from test'})
-        resp = self.request_from_demo_user('DELETE', namespace_name, model_name, partner.id)
+        partner = phantom_env[model_name].create({'name': 'record for deleting from test'})
+        demo_user = phantom_env.ref(USER_DEMO)
+        resp = self.request_from_user('DELETE', namespace_name, model_name, partner.id, user=demo_user)
         self.assertEqual(resp.status_code, 204)
-        # TODO: check deleting from db
-        # self.assertFalse(self.env[model_name].browse(partner.id).exists())
+        self.assertFalse(phantom_env[model_name].browse(partner.id).exists())
 
     def test_unauthorized_user(self):
         namespace_name = 'demo'
@@ -98,10 +107,12 @@ class TestAPI(HttpCase):
         self.assertEqual(resp.status_code, 404)
 
     def test_invalid_dbname(self):
+        phantom_env = api.Environment(self.registry.test_cr, self.uid, {})
+        demo_user = phantom_env.ref(USER_DEMO)
         namespace_name = 'demo'
         model_name = 'res.partner'
         db_name = 'invalid_db_name'
-        resp = self.request('GET', namespace_name, model_name, auth=requests.auth.HTTPBasicAuth(db_name, self.demo_user.token))
+        resp = self.request('GET', namespace_name, model_name, auth=requests.auth.HTTPBasicAuth(db_name, demo_user.token))
         self.assertEqual(resp.status_code, 404)
         self.assertEqual(resp.json()['error'], pinguin.CODE__db_not_found[1])
 
@@ -114,65 +125,77 @@ class TestAPI(HttpCase):
         self.assertEqual(resp.json()['error'], pinguin.CODE__no_user_auth[1])
 
     def test_user_not_allowed_for_namespace(self):
+        phantom_env = api.Environment(self.registry.test_cr, self.uid, {})
         namespace_name = 'demo'
         model_name = 'res.partner'
-        namespace = self.env['openapi.namespace'].search([('name', '=', namespace_name)])
-        namespace.write({
-            'user_ids': [(3, self.demo_user.id, 0)]
+        namespace = phantom_env['openapi.namespace'].search([('name', '=', namespace_name)])
+        new_user = phantom_env['res.users'].create({
+            'name': 'new user',
+            'login': 'new_user',
         })
-        resp = self.request_from_demo_user('GET', namespace_name, model_name)
-        self.assertEqual(resp.status_code, 401)
+        new_user.reset_token()
+        self.assertTrue(new_user.id not in namespace.user_ids.ids)
+        self.assertTrue(namespace.id not in new_user.namespace_ids.ids)
+
+        resp = self.request_from_user('GET', namespace_name, model_name, user=new_user)
+        self.assertEqual(resp.status_code, 401, resp.json())
         self.assertEqual(resp.json()['error'], pinguin.CODE__user_no_perm[1])
 
     def test_call_allowed_method_on_singleton_record(self):
+        phantom_env = api.Environment(self.registry.test_cr, self.uid, {})
         namespace_name = 'demo'
         model_name = 'res.partner'
-        partner = self.env[model_name].search([], limit=1)
+        partner = phantom_env[model_name].search([], limit=1)
 
+        method_params = {
+            'vals': {
+                'name': 'changed from write method which call from api'
+            }
+        }
         data = {
             'method_name': 'write',
-            'method_params': json.dumps({
-                'vals': {
-                    'name': 'changed from write method which call from api'
-                }
-            })
+            'method_params': json.dumps(method_params)
         }
 
-        resp = self.request_from_demo_user('PATCH', namespace_name, model_name, partner.id, data=data)
+        demo_user = phantom_env.ref(USER_DEMO)
+        resp = self.request_from_user('PATCH', namespace_name, model_name, partner.id, data=data, user=demo_user)
 
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(resp.json())
-        # TODO: check changes in db
-        # self.assertEqual(partner.name, method_params['vals']['name'])
+        self.assertEqual(partner.name, method_params['vals']['name'])
 
     def test_call_allowed_method_on_recordset(self):
+        phantom_env = api.Environment(self.registry.test_cr, self.uid, {})
         namespace_name = 'demo'
         model_name = 'res.partner'
 
-        partners = self.env[model_name].search([], limit=5)
+        partners = phantom_env[model_name].search([], limit=5)
+        method_params = {
+            'vals': {
+                'name': 'changed from write method which call from api'
+            },
+        }
         data = {
             'method_name': 'write',
             'ids': json.dumps(partners.mapped('id')),
-            'method_params': json.dumps({
-                'vals': {
-                    'name': 'changed from write method which call from api'
-                },
-            })
+            'method_params': json.dumps(method_params)
         }
 
-        resp = self.request_from_demo_user('PATCH', namespace_name, model_name, data=data)
+        demo_user = phantom_env.ref(USER_DEMO)
+        resp = self.request_from_user('PATCH', namespace_name, model_name, data=data, user=demo_user)
 
         self.assertEqual(resp.status_code, 200)
         for i in range(len(partners)):
             self.assertTrue(resp.json()[i])
-        # TODO: check changes in db
-        # for partner in partners:
-        #     self.assertEqual(partner.name, method_params['vals']['name'])
+        for partner in partners:
+            self.assertEqual(partner.name, method_params['vals']['name'])
 
     def test_log_creating(self):
+        phantom_env = api.Environment(self.registry.test_cr, self.uid, {})
+        demo_user = phantom_env.ref(USER_DEMO)
         namespace_name = 'demo'
         model_name = 'res.partner'
-        logs_count_before_request = len(self.env['openapi.log'].search([]))
-        self.request_from_demo_user('GET', namespace_name, model_name)
-        logs_count_after_request = len(self.env['openapi.log'].search([]))
-        self.assertEqual(logs_count_after_request - logs_count_before_request, 1)
+        logs_count_before_request = len(phantom_env['openapi.log'].search([]))
+        self.request_from_user('GET', namespace_name, model_name, user=demo_user)
+        logs_count_after_request = len(phantom_env['openapi.log'].search([]))
+        self.assertTrue(logs_count_after_request > logs_count_before_request)
