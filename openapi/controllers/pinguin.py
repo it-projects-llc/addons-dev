@@ -220,7 +220,7 @@ def get_namespace_by_name_from_users_namespaces(user, namespace_name, raise_exce
     :raise: werkzeug.exceptions.HTTPException if the namespace is not contained
                                               in allowed user namespaces.
     """
-    namespace = user.namespace_ids.search([('name', '=', namespace_name)])
+    namespace = request.env['openapi.namespace'].search(['&', ('name', '=', namespace_name), ('user_ids', 'in', user.id)])
     if not namespace.exists() and raise_exception:
         err = list(CODE__user_no_perm)
         err[2] = "The requested namespace (integration) is not authorized."
