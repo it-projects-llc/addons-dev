@@ -27,6 +27,7 @@
         "views/assets.xml",
         "views/openapi_view.xml",
         "views/res_users_view.xml",
+        "views/ir_model_view.xml",
     ],
     "demo": [
         "views/assets_demo.xml",
