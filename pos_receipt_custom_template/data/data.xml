@@ -10,38 +10,31 @@
         <field name="qweb_template"><![CDATA[
             <t t-name="custom_pos_receipt">
               <receipt align='center' width='40' value-thousands-separator='' >
-                  <t t-if='header_image'>
-                      <img t-att-src='header_image' />
-                  </t>
-                  <t t-if='!header_image'>
-                      <h1><t t-esc='receipt.company.name' /></h1>
-                      <br/>
-                  </t>
                   <div>
                       <t t-if='receipt.company.contact_address'>
-                          <div font='b'><t t-esc='receipt.company.contact_address' /></div>
+                          <div><t t-esc='receipt.company.contact_address' /></div>
                       </t>
                       <t t-if='receipt.company.phone'>
-                          <div font='b'>Tel:<t t-esc='receipt.company.phone' /></div>
+                          <div>Tel:<t t-esc='receipt.company.phone' /></div>
                       </t>
                       <t t-if='receipt.company.vat'>
                           <div>VAT:<t t-esc='receipt.company.vat' /></div>
                       </t>
                       <t t-if='receipt.company.email'>
-                          <div font='b'><t t-esc='receipt.company.email' /></div>
+                          <div><t t-esc='receipt.company.email' /></div>
                       </t>
                       <t t-if='receipt.company.website'>
-                          <div font='b'><t t-esc='receipt.company.website' /></div>
+                          <div><t t-esc='receipt.company.website' /></div>
                       </t>
                       <t t-if='receipt.header_xml'>
-                          <div font='b'><t t-raw='receipt.header_xml' /></div>
+                          <div><t t-raw='receipt.header_xml' /></div>
                       </t>
                       <t t-if='!receipt.header_xml and receipt.header'>
-                          <div font='b'><t t-raw='receipt.header' /></div>
+                          <div><t t-raw='receipt.header' /></div>
                       </t>
                       <div>&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</div>
                       <t t-if='receipt.cashier'>
-                          <div font='b' class='cashier'>
+                          <div class='cashier'>
                               <div>Served by <t t-esc='receipt.cashier' /></div>
                           </div>
                       </t>
@@ -52,55 +45,63 @@
 
 
                   <div class='orderlines' line-ratio='0.6'>
-                      <t t-foreach='receipt.orderlines' t-as='line'>
-                          <t t-set='simple' t-value='line.discount === 0 and line.unit_name === "Unit(s)" and line.quantity === 1' />
-                          <t t-if='simple'>
-                              <t t-if="line.brand_name">
-                                  <line indent='1' style="overflow:hidden;">
-                                      <left><t t-esc='line.brand_name' /></left>
-                                      <right><t t-esc='line.categ_name' /></right>
-                                  </line>
-                              </t>
-                              <line>
-                                  <left><t t-esc='line.product_name_wrapped[0]' /></left>
-                                  <right><value t-att-value-decimals='pos.currency.decimals'><t t-esc='line.price_display' /></value></right>
-                              </line>
-                              <t t-call="XmlReceiptWrappedProductNameLines"/>
-                          </t>
-                          <t t-if='!simple'>
-                              <line><left><t t-esc='line.product_name_wrapped[0]' /></left></line>
-                              <t t-call="XmlReceiptWrappedProductNameLines"/>
-                              <t t-if='line.discount !== 0'>
-                                  <line indent='1'><left>Discount: <t t-esc='line.discount' />%</left></line>
-                              </t>
-                              <t t-if="line.brand_name">
-                                  <line indent='1' style="overflow:hidden;">
-                                      <left><t t-esc='line.brand_name' /></left>
-                                      <right><t t-esc='line.categ_name' /></right>
-                                  </line>
-                              </t>
-                              <line indent='1'>
-                                  <left>
-                                      <value t-att-value-decimals='pos.dp["Product Unit of Measure"]' value-autoint='on'>
-                                          <t t-esc='line.quantity' />
-                                      </value>
-                                      <t t-if='line.unit_name !== "Unit(s)"'>
-                                          <t t-esc='line.unit_name' />
-                                      </t>
-                                      x
-                                      <value t-att-value-decimals='pos.dp["Product Price"]'>
-                                          <t t-esc='line.price' />
-                                      </value>
-                                  </left>
-                                  <right>
-                                      <value t-att-value-decimals='pos.currency.decimals'><t t-esc='line.price_display' /></value>
-                                  </right>
-                              </line>
-                          </t>
-                      </t>
-                  </div>
+                     <t t-foreach='receipt.orderlines' t-as='line'>
+                        <line>
+                          <left>
+                            <t t-if="line.brand_name">
+                                <t t-esc='line.brand_name' />
+                            </t>
+                            <t t-if="line.categ_name">
+                                <t t-esc='line.categ_name' />
+                            </t>
+                          </left>
+                        </line>
 
-
+                         <t t-set='simple' t-value='line.discount === 0 and line.unit_name === "Unit(s)" and line.quantity === 1 and !line.abs_disc' />
+                         <t t-if='simple'>
+                               <t t-set='name_array' t-value="line.product_name_wrapped"/>
+                               <t t-set='len' t-value="name_array.length"/>
+                               <t t-set='ind' t-value="0"/>
+                               <t t-foreach='name_array' t-as='slice'>
+                                   <t t-set='ind' t-value="ind + 1"/>
+                                   <line indent='1'>
+                                       <left><t t-esc='slice' /></left>
+                                       <t t-if="ind == len">
+                                         <right><value t-att-value-decimals='pos.currency.decimals'><t t-esc='line.price_display' /></value></right>
+                                       </t>
+                                   </line>
+                               </t>
+                         </t>
+                         <t t-if='!simple'>
+                             <t t-foreach='line.product_name_wrapped' t-as='slice'>
+                               <line indent='1'><left><t t-esc='slice' /></left></line>
+                             </t>
+                             <t t-if='line.discount !== 0'>
+                                 <line indent='1'><left>Discount: <t t-esc='line.discount' />%</left></line>
+                             </t>
+                             <t t-if='line.abs_disc !== 0'>
+                                 <line indent='1'><left>Discount: <t t-esc='line.abs_disc' />€</left></line>
+                             </t>
+                             <line indent='1'>
+                                 <left>
+                                     <value t-att-value-decimals='pos.dp["Product Unit of Measure"]' value-autoint='on'>
+                                         <t t-esc='line.quantity' />
+                                     </value>
+                                     <t t-if='line.unit_name !== "Unit(s)"'>
+                                         <t t-esc='line.unit_name' />
+                                     </t>
+                                     x
+                                     <value t-att-value-decimals='pos.dp["Product Price"]'>
+                                         <t t-esc='line.price' />
+                                     </value>
+                                 </left>
+                                 <right>
+                                     <value t-att-value-decimals='pos.currency.decimals'><t t-esc='line.price_display' /></value>
+                                 </right>
+                             </line>
+                         </t>
+                     </t>
+                    </div>
 
 
                   <t t-set='taxincluded' t-value='Math.abs(receipt.subtotal - receipt.total_with_tax) &lt;= 0.000001' />
@@ -120,7 +121,7 @@
 
                   <line><right>&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</right></line>
                   <line class='total' size='double-height'>
-                      <left><pre>        TOTAL</pre></left>
+                      <left><pre>        TOTAL (EUR)</pre></left>
                       <right><value t-att-value-decimals='pos.currency.decimals'><t t-esc='receipt.total_with_tax' /></value></right>
                   </line>
                   <br/><br/>
@@ -201,14 +202,6 @@
             <t t-name="custom_pos_invoice_receipt">
                 <receipt align='center' width='40' value-thousands-separator='' >
                     <div>
-                        <t t-if='header_image'>
-                            <img t-att-src='header_image' />
-                        </t>
-                        <t t-if='!header_image'>
-                            <h1><t t-esc='receipt.company.name' /></h1>
-                            <br/>
-                        </t>
-
                         <div>
                             <t t-if='receipt.company.contact_address'>
                                 <div font='b'><t t-esc='receipt.company.contact_address' /></div>
