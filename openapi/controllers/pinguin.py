@@ -32,7 +32,7 @@ try:
 except ImportError:
     import json
 
-from odoo.http import request, route as http_route, Root
+from odoo.http import request, route as http_route
 from psycopg2.extensions import ISOLATION_LEVEL_READ_COMMITTED
 
 ####################################
@@ -162,13 +162,16 @@ def get_data_from_auth_header(header):
 
     :param str header: The raw auth header.
 
-    :returns: db_name and user_token
-    :rtype: dict
+    :returns: a tuple of database name and user token
+    :rtype: tuple
+    :raise: werkzeug.exceptions.HTTPException if basic header is invalid base64
+                                              string or if the basic header is
+                                              in the wrong format
     """
     normalized_token = header.replace('Basic ', '').replace('\\n', '').encode('utf-8')
     try:
         decoded_token_parts = base64.decodestring(normalized_token).split(':')
-    except Exception as e:
+    except TypeError:
         raise werkzeug.exceptions.HTTPException(response=error_response(500, 'Invalid header', 'Basic auth header must be valid base64 string'))
 
     if len(decoded_token_parts) == 1:
@@ -176,39 +179,27 @@ def get_data_from_auth_header(header):
     elif len(decoded_token_parts) == 2:
         db_name, user_token = decoded_token_parts
     else:
-        raise werkzeug.exceptions.HTTPException(response=error_response(500, 'Invalid header', 'Basic auth header must contain user token'))
+        err_descrip = 'Basic auth header payload must be of the form "<%s>" (encoded to base64)' % 'user_token' if odoo.tools.config['dbfilter'] else 'db_name:user_token'
+        raise werkzeug.exceptions.HTTPException(response=error_response(500, 'Invalid header', err_descrip))
 
-    return {
-        'db_name': db_name,
-        'user_token': user_token
-    }
+    return db_name, user_token
 
 
-def setup_db_decorator(original_setup_db):
+def setup_db(httprequest, db_name):
+    """check and setup db in session by db name
 
-    def setup_db_wrapper(self, httprequest):
-        original_setup_db(self, httprequest)
+    :param httprequest: a wrapped werkzeug Request object
+    :type httprequest: :class:`werkzeug.wrappers.BaseRequest`
+    :param str db_name: Database name.
 
-        # if original setup_db method already setup db we do nothing
-        if httprequest.session.db:
-            return
+    :raise: werkzeug.exceptions.HTTPException if the database not found.
+    """
+    if httprequest.session.db:
+        return
+    if db_name not in odoo.service.db.list_dbs(force=True):
+        raise werkzeug.exceptions.HTTPException(response=error_response(*CODE__db_not_found))
 
-        auth_header = get_auth_header(httprequest.headers)
-        if not auth_header or not auth_header.startswith('Basic '):
-            return
-
-        db_name = get_data_from_auth_header(auth_header)['db_name']
-
-        if db_name not in odoo.service.db.list_dbs(force=True):
-            raise werkzeug.exceptions.HTTPException(response=error_response(*CODE__db_not_found))
-
-        httprequest.session.db = db_name
-
-    return setup_db_wrapper
-
-
-Root.setup_db = setup_db_decorator(Root.setup_db)
-
+    httprequest.session.db = db_name
 
 ###################
 # Pinguin Routing #
@@ -291,7 +282,8 @@ def route(*args, **kwargs):
         @functools.wraps(controller_method)
         def controller_method_wrapper(*iargs, **ikwargs):
             auth_header = get_auth_header(request.httprequest.headers, raise_exception=True)
-            user_token = get_data_from_auth_header(auth_header)['user_token']
+            db_name, user_token = get_data_from_auth_header(auth_header)
+            setup_db(request.httprequest, db_name)
             authenticated_user = authenticate_token_for_user(user_token)
             namespace = get_namespace_by_name_from_users_namespaces(authenticated_user, ikwargs['namespace'], raise_exception=True)
 

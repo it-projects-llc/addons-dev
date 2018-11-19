@@ -49,7 +49,7 @@ class OpenapiWebSettingsDashboard(WebSettingsDashboard):
 class OAS(http.Controller):
 
     @http.route('/api/v1/<namespace_name>/swagger.json',
-                type='http', auth='none')
+                type='http', auth='none', csrf=False, cors='*')
     def OAS_json_spec_download(self, namespace_name, **kwargs):
         ensure_db()
         namespace = http.request.env['openapi.namespace'].search([('name', '=', namespace_name)])
@@ -57,8 +57,6 @@ class OAS(http.Controller):
             raise werkzeug.exceptions.NotFound()
         if namespace.token != kwargs.get('token'):
             raise werkzeug.exceptions.Forbidden()
-
-        spec = namespace.get_OAS_part()
 
         response_params = {
             'headers': [('Content-Type', 'application/json')]
@@ -73,7 +71,7 @@ class OAS(http.Controller):
             }
 
         return werkzeug.wrappers.Response(
-            json.dumps(spec),
+            json.dumps(namespace.get_OAS()),
             status=200,
             **response_params
         )

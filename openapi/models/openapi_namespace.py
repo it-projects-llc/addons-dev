@@ -79,7 +79,7 @@ class Namespace(models.Model):
         return super(Namespace, self).write(vals)
 
     @api.multi
-    def get_OAS_part(self):
+    def get_OAS(self):
         current_host = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         parsed_current_host = urlparse.urlparse(current_host)
 
