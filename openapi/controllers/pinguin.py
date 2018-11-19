@@ -19,6 +19,8 @@ Todo:
 """
 import base64
 import functools
+import traceback
+
 import six
 
 import werkzeug.wrappers
@@ -292,6 +294,9 @@ def route(*args, **kwargs):
             except werkzeug.exceptions.HTTPException as e:
                 response = e.response
             except Exception as e:
+                traceback.print_exc()
+                if hasattr(e, 'error') and isinstance(e.error, Exception):
+                    e = e.error
                 response = error_response(
                     status=500,
                     error=type(e).__name__,
