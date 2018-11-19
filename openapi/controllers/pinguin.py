@@ -618,7 +618,6 @@ def wrap__resource__create_one(modelname, context, data, success_code, out_field
               otherwise error response
     :rtype: werkzeug.wrappers.Response
     """
-    # FIXME: What fields do we accept when creating/updating requests?
     model_obj = get_model_for_read(modelname)
     try:
         created_obj = model_obj.with_context(context).create(data)
@@ -840,7 +839,9 @@ def get_model_for_read(model):
     try:
         return request.env(cr, uid)[model]
     except KeyError:
-        raise werkzeug.exceptions.HTTPException(response=error_response(*CODE__obj_not_found))
+        err = list(CODE__obj_not_found)
+        err[2] = "The \"%s\" model is not available on this instance." % model
+        raise werkzeug.exceptions.HTTPException(response=error_response(*err))
 
 
 # Python > 3.5

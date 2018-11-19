@@ -17,9 +17,9 @@ class IrExports(models.Model):
 
         fields = self.export_fields.mapped('name')
         for field in fields:
-            if fields.count(field) > 1:
-                raise exceptions.ValidationError(
-                    _('exported "%s" field duplicated.') % field)
+            field_count = fields.count(field)
+            if field_count > 1:
+                self.export_fields.search([('name', '=', field)], limit=field_count-1).unlink()
 
         fields.sort()
         for i in range(len(fields) - 1):
