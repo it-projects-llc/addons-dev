@@ -242,26 +242,25 @@ def create_log_record(namespace, user, user_request, user_response):
     :returns: New 'openapi.log' record.
     :rtype: ..models.openapi_log.Log
     """
-    request_data = None
-    if namespace['log_request'] == 'full':
-        request_data = user_request.get_data()
-    elif namespace['log_request'] == 'info':
-        # TODO: only info
-        request_data = user_request.get_data()
-
-    response_data = None
-    if namespace['log_response'] == 'debug':
-        response_data = user_response.__dict__
-    elif namespace['log_response'] == 'error' and user_response.status_code > 400:
-        response_data = user_response.__dict__
-
-    log = request.env['openapi.log'].sudo(user).create({
+    log_data = {
         'namespace_id': namespace['id'],
         'request': '%s | %s | %d' % (user_request.url, user_request.method, user_response.status_code),
-        'request_data': request_data,
-        'response_data': response_data,
-    })
-    return log
+        'request_data': None,
+        'response_data': None,
+    }
+    if namespace['log_request'] == 'debug':
+        log_data['request_data'] = user_request.__dict__
+    elif namespace['log_request'] == 'info':
+        log_data['request_data'] = user_request.__dict__
+        for k in ['form', 'files']:
+            del log_data['request_data'][k]
+
+    if namespace['log_response'] == 'debug':
+        log_data['response_data'] = user_response.__dict__
+    elif namespace['log_response'] == 'error' and user_response.status_code > 400:
+        log_data['response_data'] = user_response.__dict__
+
+    return request.env['openapi.log'].sudo(user).create(log_data)
 
 
 # Patched http route
@@ -289,6 +288,7 @@ def route(*args, **kwargs):
 
             try:
                 response = controller_method(*iargs, **ikwargs)
+                request.cr.commit()
             except werkzeug.exceptions.HTTPException as e:
                 response = e.response
             except Exception as e:
