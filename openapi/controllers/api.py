@@ -61,7 +61,6 @@ class ApiV1Controller(http.Controller):
     # Get Reports
     _api_report_docids = _api_endpoint + '/report/<any(pdf, html):converter>/<report_external_id>/<docids>'
 
-
     # #################
     # # CRUD Methods ##
     # #################

@@ -231,14 +231,16 @@ def get_namespace_by_name_from_users_namespaces(user, namespace_name, raise_exce
     :raise: werkzeug.exceptions.HTTPException if the namespace is not contained
                                               in allowed user namespaces.
     """
-    domain = ['&', ('name', '=', namespace_name), ('user_ids', 'in', user.id)]
-    if user._is_superuser():
-        domain = [('name', '=', namespace_name)]
-    namespace = request.env['openapi.namespace'].search(domain)
+    namespace = request.env['openapi.namespace'].search([('name', '=', namespace_name)])
+
     if not namespace.exists() and raise_exception:
+        raise werkzeug.exceptions.HTTPException(response=error_response(*CODE__obj_not_found))
+
+    if namespace not in user.namespace_ids and raise_exception:
         err = list(CODE__user_no_perm)
         err[2] = "The requested namespace (integration) is not authorized."
         raise werkzeug.exceptions.HTTPException(response=error_response(*err))
+
     return namespace
 
 
