@@ -86,8 +86,8 @@ class Namespace(models.Model):
         spec = collections.OrderedDict([
             ('swagger', '2.0'),
             ('info', {
-                "title": "Swagger Sample App",
-                "version": "1.0.0"
+                "title": self.name,
+                "version": self.write_date
             }),
             ('host', parsed_current_host.netloc),
             ('basePath', "/api/v1/%s" % self.name),

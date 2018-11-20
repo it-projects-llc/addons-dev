@@ -398,6 +398,10 @@ class Access(models.Model):
                     'tags': [model_name]
                 })
 
+        # remove empty paths
+        for k, v in paths_object.items():
+            if not v:
+                del paths_object[k]
         return paths_object
 
     @api.multi
