@@ -28,6 +28,7 @@ import werkzeug.wrappers
 import collections
 
 import odoo
+from odoo.service import security
 
 try:
     import simplejson as json
@@ -134,7 +135,14 @@ def authenticate_token_for_user(token):
     """
     user = request.env['res.users'].sudo().search([('token', '=', token)])
     if user.exists():
+        # copy-pasted from odoo.http.py:OpenERPSession.authenticate()
         request.session.uid = user.id
+        request.session.login = user.login
+        request.session.session_token = user.id and security.compute_session_token(request.session, request.env)
+        request.uid = user.id
+        request.disable_db = False
+        request.session.get_context()
+
         return user
     raise werkzeug.exceptions.HTTPException(response=error_response(*CODE__no_user_auth))
 
@@ -222,7 +230,10 @@ def get_namespace_by_name_from_users_namespaces(user, namespace_name, raise_exce
     :raise: werkzeug.exceptions.HTTPException if the namespace is not contained
                                               in allowed user namespaces.
     """
-    namespace = request.env['openapi.namespace'].search(['&', ('name', '=', namespace_name), ('user_ids', 'in', user.id)])
+    domain = ['&', ('name', '=', namespace_name), ('user_ids', 'in', user.id)]
+    if user._is_superuser():
+        domain = [('name', '=', namespace_name)]
+    namespace = request.env['openapi.namespace'].search(domain)
     if not namespace.exists() and raise_exception:
         err = list(CODE__user_no_perm)
         err[2] = "The requested namespace (integration) is not authorized."
