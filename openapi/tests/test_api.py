@@ -46,7 +46,7 @@ class TestAPI(HttpCase):
         model_name = 'res.partner'
         demo_user = phantom_env.ref(USER_DEMO)
         resp = self.request_from_user('GET', namespace_name, model_name, user=demo_user)
-        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.status_code, pinguin.CODE__success)
         # TODO check content
 
     # def test_read_many_domain(self):
@@ -61,7 +61,7 @@ class TestAPI(HttpCase):
         id = phantom_env[model_name].search([], limit=1).id
         demo_user = phantom_env.ref(USER_DEMO)
         resp = self.request_from_user('GET', namespace_name, model_name, id, user=demo_user)
-        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.status_code, pinguin.CODE__success)
         # TODO check content
 
     def test_create_one(self):
@@ -74,7 +74,7 @@ class TestAPI(HttpCase):
         }
         demo_user = phantom_env.ref(USER_DEMO)
         resp = self.request_from_user('POST', namespace_name, model_name, data=data_for_create, user=demo_user)
-        self.assertEqual(resp.status_code, 201)
+        self.assertEqual(resp.status_code, pinguin.CODE__created)
         created_user = phantom_env[model_name].browse(resp.json()['id'])
         self.assertEqual(created_user.name, data_for_create['name'])
 
@@ -88,7 +88,7 @@ class TestAPI(HttpCase):
         partner = phantom_env[model_name].search([], limit=1)
         demo_user = phantom_env.ref(USER_DEMO)
         resp = self.request_from_user('PUT', namespace_name, model_name, partner.id, data=data_for_update, user=demo_user)
-        self.assertEqual(resp.status_code, 204)
+        self.assertEqual(resp.status_code, pinguin.CODE__ok_no_content)
         self.assertEqual(partner.name, data_for_update['name'])
 
     def test_unlink_one(self):
@@ -98,14 +98,14 @@ class TestAPI(HttpCase):
         partner = phantom_env[model_name].create({'name': 'record for deleting from test'})
         demo_user = phantom_env.ref(USER_DEMO)
         resp = self.request_from_user('DELETE', namespace_name, model_name, partner.id, user=demo_user)
-        self.assertEqual(resp.status_code, 204)
+        self.assertEqual(resp.status_code, pinguin.CODE__ok_no_content)
         self.assertFalse(phantom_env[model_name].browse(partner.id).exists())
 
     def test_unauthorized_user(self):
         namespace_name = 'demo'
         model_name = 'res.partner'
         resp = self.request('GET', namespace_name, model_name)
-        self.assertEqual(resp.status_code, 404)
+        self.assertEqual(resp.status_code, pinguin.CODE__no_user_auth[0])
 
     def test_invalid_dbname(self):
         phantom_env = api.Environment(self.registry.test_cr, self.uid, {})
@@ -114,7 +114,7 @@ class TestAPI(HttpCase):
         model_name = 'res.partner'
         db_name = 'invalid_db_name'
         resp = self.request('GET', namespace_name, model_name, auth=requests.auth.HTTPBasicAuth(db_name, demo_user.token))
-        self.assertEqual(resp.status_code, 404)
+        self.assertEqual(resp.status_code, pinguin.CODE__db_not_found[0])
         self.assertEqual(resp.json()['error'], pinguin.CODE__db_not_found[1])
 
     def test_invalid_user_token(self):
@@ -122,7 +122,7 @@ class TestAPI(HttpCase):
         model_name = 'res.partner'
         invalid_token = 'invalid_user_token'
         resp = self.request('GET', namespace_name, model_name, auth=requests.auth.HTTPBasicAuth(self.db_name, invalid_token))
-        self.assertEqual(resp.status_code, 401)
+        self.assertEqual(resp.status_code, pinguin.CODE__no_user_auth[0])
         self.assertEqual(resp.json()['error'], pinguin.CODE__no_user_auth[1])
 
     def test_user_not_allowed_for_namespace(self):
@@ -161,7 +161,7 @@ class TestAPI(HttpCase):
         demo_user = phantom_env.ref(USER_DEMO)
         resp = self.request_from_user('PATCH', namespace_name, model_name, partner.id, data=data, user=demo_user)
 
-        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.status_code, pinguin.CODE__success)
         self.assertTrue(resp.json())
         self.assertEqual(partner.name, method_params['vals']['name'])
 
@@ -185,7 +185,7 @@ class TestAPI(HttpCase):
         demo_user = phantom_env.ref(USER_DEMO)
         resp = self.request_from_user('PATCH', namespace_name, model_name, data=data, user=demo_user)
 
-        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.status_code, pinguin.CODE__success)
         for i in range(len(partners)):
             self.assertTrue(resp.json()[i])
         for partner in partners:
@@ -210,10 +210,10 @@ class TestAPI(HttpCase):
 
         model_for_report = phantom_env['ir.model'].search([('model', '=', modelname_for_report)])
         namespace = phantom_env['openapi.namespace'].search([('name', '=', namespace_name)])
-        records_for_report = phantom_env[modelname_for_report].search([])
+        records_for_report = phantom_env[modelname_for_report].search([], limit=3)
         docids = ','.join([str(i) for i in records_for_report.ids])
 
-        new_access = phantom_env['openapi.access'].create({
+        phantom_env['openapi.access'].create({
             'active': True,
             'namespace_id': namespace.id,
             'model_id': model_for_report.id,
@@ -231,4 +231,4 @@ class TestAPI(HttpCase):
 
         url = "http://localhost:%d/api/v1/%s/report/html/%s/%s" % (PORT, namespace_name, report_external_id, docids)
         resp = requests.request('GET', url, timeout=30, auth=requests.auth.HTTPBasicAuth(self.db_name, super_user.token))
-        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.status_code, pinguin.CODE__success)
