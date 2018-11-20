@@ -256,25 +256,28 @@ def create_log_record(namespace, user, user_request, user_response):
     :returns: New 'openapi.log' record.
     :rtype: ..models.openapi_log.Log
     """
-    log_data = {
-        'namespace_id': namespace['id'],
-        'request': '%s | %s | %d' % (user_request.url, user_request.method, user_response.status_code),
-        'request_data': None,
-        'response_data': None,
-    }
-    if namespace['log_request'] == 'debug':
-        log_data['request_data'] = user_request.__dict__
-    elif namespace['log_request'] == 'info':
-        log_data['request_data'] = user_request.__dict__
-        for k in ['form', 'files']:
-            del log_data['request_data'][k]
+    # The new cursor is necessary because in case of an error the old cursor may already be closed
+    with odoo.registry(request.session.db).cursor() as cr:
+        env = odoo.api.Environment(cr, request.uid, {})
+        log_data = {
+            'namespace_id': namespace['id'],
+            'request': '%s | %s | %d' % (user_request.url, user_request.method, user_response.status_code),
+            'request_data': None,
+            'response_data': None,
+        }
+        if namespace['log_request'] == 'debug':
+            log_data['request_data'] = user_request.__dict__
+        elif namespace['log_request'] == 'info':
+            log_data['request_data'] = user_request.__dict__
+            for k in ['form', 'files']:
+                del log_data['request_data'][k]
 
-    if namespace['log_response'] == 'debug':
-        log_data['response_data'] = user_response.__dict__
-    elif namespace['log_response'] == 'error' and user_response.status_code > 400:
-        log_data['response_data'] = user_response.__dict__
+        if namespace['log_response'] == 'debug':
+            log_data['response_data'] = user_response.__dict__
+        elif namespace['log_response'] == 'error' and user_response.status_code > 400:
+            log_data['response_data'] = user_response.__dict__
 
-    return request.env['openapi.log'].sudo(user).create(log_data)
+        return env['openapi.log'].create(log_data)
 
 
 # Patched http route
@@ -302,7 +305,6 @@ def route(*args, **kwargs):
 
             try:
                 response = controller_method(*iargs, **ikwargs)
-                request.cr.commit()
             except werkzeug.exceptions.HTTPException as e:
                 response = e.response
             except Exception as e:
