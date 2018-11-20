@@ -10,7 +10,7 @@ import logging
 from odoo import api
 from odoo.tests.common import HttpCase, PORT, get_db_name
 
-from odoo.addons.openapi.controllers import pinguin
+from ..controllers import pinguin
 
 _logger = logging.getLogger(__name__)
 

@@ -62,9 +62,9 @@ class ApiV1Controller(http.Controller):
     _api_report_docids = _api_endpoint + '/report/<any(pdf, html):converter>/<report_external_id>/<docids>'
 
 
-    ##################
-    ## CRUD Methods ##
-    ##################
+    # #################
+    # # CRUD Methods ##
+    # #################
 
     # CreateOne
     @pinguin.route(
@@ -138,9 +138,9 @@ class ApiV1Controller(http.Controller):
         return pinguin.wrap__resource__unlink_one(
             modelname=model, id=id, success_code=pinguin.CODE__ok_no_content)
 
-    #######################
-    ## Auxiliary Methods ##
-    #######################
+    # ######################
+    # # Auxiliary Methods ##
+    # ######################
 
     # Call Method on Singleton Record (optional: method parameters)
     @pinguin.route(

@@ -9,7 +9,7 @@ import inspect
 
 from odoo import models, fields, api, _, exceptions
 
-from odoo.addons.openapi.controllers import pinguin
+from ..controllers import pinguin
 
 
 class Access(models.Model):
