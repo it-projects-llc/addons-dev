@@ -15,6 +15,7 @@ from odoo.addons.openapi.controllers import pinguin
 _logger = logging.getLogger(__name__)
 
 USER_DEMO = 'base.user_demo'
+USER_ROOT = 'base.user_root'
 
 
 class TestAPI(HttpCase):
@@ -199,3 +200,35 @@ class TestAPI(HttpCase):
         self.request_from_user('GET', namespace_name, model_name, user=demo_user)
         logs_count_after_request = len(phantom_env['openapi.log'].search([]))
         self.assertTrue(logs_count_after_request > logs_count_before_request)
+
+    def test_get_report_for_allowed_model(self):
+        phantom_env = api.Environment(self.registry.test_cr, self.uid, {})
+        super_user = phantom_env.ref(USER_ROOT)
+        namespace_name = 'demo'
+        modelname_for_report = 'ir.module.module'
+        report_external_id = 'base.ir_module_reference_print'
+
+        model_for_report = phantom_env['ir.model'].search([('model', '=', modelname_for_report)])
+        namespace = phantom_env['openapi.namespace'].search([('name', '=', namespace_name)])
+        records_for_report = phantom_env[modelname_for_report].search([])
+        docids = ','.join([str(i) for i in records_for_report.ids])
+
+        new_access = phantom_env['openapi.access'].create({
+            'active': True,
+            'namespace_id': namespace.id,
+            'model_id': model_for_report.id,
+            'model': modelname_for_report,
+            'api_create': False,
+            'api_read': True,
+            'api_update': False,
+            'api_public_methods': False,
+            'public_methods': False,
+            'private_methods': False,
+            'read_one_id': False,
+            'read_many_id': False,
+            'create_context_ids': False
+        })
+
+        url = "http://localhost:%d/api/v1/%s/report/html/%s/%s" % (PORT, namespace_name, report_external_id, docids)
+        resp = requests.request('GET', url, timeout=30, auth=requests.auth.HTTPBasicAuth(self.db_name, super_user.token))
+        self.assertEqual(resp.status_code, 200)
