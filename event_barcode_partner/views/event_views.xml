@@ -40,51 +40,7 @@
         </field>
     </record>
 
-
-    <!-- BRACELET.TYPE VIEWS -->
-    <record model="ir.ui.view" id="view_bracelet_type_form">
-        <field name="name">bracelet.type.form</field>
-        <field name="model">bracelet.type</field>
-        <field name="arch" type="xml">
-            <form string="Bracelet Type">
-                <sheet>
-                    <label for="name"/>
-                    <div>
-                        <field name="name" class="oe_inline"/>
-                    </div>
-                    <label for="event_ticket_id"/>
-                    <div>
-                        <field name="event_ticket_id" class="oe_inline"/>
-                    </div>
-                    <label for="bracelet_qty"/>
-                    <div>
-                        <field name="bracelet_qty" class="oe_inline"/>
-                    </div>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="view_bracelet_type_tree">
-        <field name="name">bracelet.type.tree</field>
-        <field name="model">bracelet.type</field>
-        <field name="arch" type="xml">
-            <tree string="Bracelet Types">
-                <field name="name"/>
-                <field name="bracelet_qty"/>
-                <field name="event_ticket_id"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="bracelet_type_view_action" model="ir.actions.act_window">
-        <field name="name">Bracelet Types</field>
-        <field name="res_model">bracelet.type</field>
-        <field name="view_type">form</field>
-    </record>
-
     <menuitem id="est_menu" sequence="50" name="EST" parent="event.event_main_menu"/>
     <menuitem id="attendee_signature_request_menu" name="Signature Requests" parent="est_menu" action="website_sign.signature_request_action"/>
-    <menuitem id="bracelet_type_menu" name="Bracelet Types" parent="event.menu_event_configuration" action="bracelet_type_view_action"/>
 
 </odoo>

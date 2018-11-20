@@ -124,9 +124,12 @@ event_barcode.EventScanView.include({
     },
 
     update_interface_els: function(data) {
-        var self = this;
-        this.update_client_list(data.attendees);
-        this.update_bracelet_table(data.bracelets);
+        if (data.attendees) {
+            this.update_client_list(data.attendees);
+        }
+        if (data.bracelets) {
+            this.update_bracelet_table(data.bracelets);
+        }
     },
 
     update_client_list: function(data) {

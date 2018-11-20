@@ -136,11 +136,6 @@
         </t>
     </t>
 
-    <!--<t t-name="payment_window">-->
-
-
-    <!--</t>-->
-
     <t t-name="event_barcode_template" t-extend="event_barcode_template">
         <t t-jquery=".o_event_barcode_detail" t-operation="after">
             <div class="o_event_barcode_detail bracelets_info text-center">
@@ -152,16 +147,6 @@
                     <t t-call="bracelet_table"/>
                 </div>
             </div>
-
-            <!--<div class="o_event_barcode_detail payment_window text-center">-->
-                <!--<div class="col-md-12 col-xs-12 payment_title text-center">-->
-                    <!--<h2 class="o_client_list_title">New Attendee</h2>-->
-                <!--</div>-->
-                <!--<div class="payment_container" style="display: none;">-->
-                    <!--<t t-call="payment_window"/>-->
-                <!--</div>-->
-            <!--</div>-->
-
         </t>
 
         <t t-jquery=".o_event_barcode_main" t-operation="after">

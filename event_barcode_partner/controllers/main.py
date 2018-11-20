@@ -24,7 +24,6 @@ class EventBarcodeExtended(EventBarcode):
     def get_bracelet_info(self, event_id):
         event = request.env['event.event'].browse(event_id)
         tickets = event.event_ticket_ids
-        bracelets = request.env['bracelet.type'].search([('event_ticket_id', 'in', tickets.ids)])
         today = datetime.datetime.now()
         attendees = request.env['event.registration'].search([('event_ticket_id', 'in', tickets.ids),
                                                               ('state', '=', 'done')])
@@ -70,12 +69,9 @@ class EventBarcodeExtended(EventBarcode):
 
     @http.route()
     def get_event_data(self, event_id):
-        # import wdb
-        # wdb.set_trace()
         res = super(EventBarcodeExtended, self).get_event_data(event_id)
-        # bracelets = request.env['bracelet.type'].search([('event_id', '=', event_id)])
-        # res['bracelets'] = bracelets.read(['name', 'barcode_pattern', 'bracelet_left', 'id'])
         res['bracelets'] = self.get_bracelet_info(event_id)
+        res['event_id'] = event_id
         return res
 
     @http.route('/event_barcode/get_attendees_by_name', type='json', auth="user")
@@ -135,9 +131,8 @@ class EventBarcodeExtended(EventBarcode):
         else:
             return {'warning': _('%s is already registered') % attendee_name, 'count': count, 'data': self.compound_vals(attendee, attendee.event_id.id)}
 
-
     @http.route('/event_barcode/sign_request', type="json", auth="user")
-    def update_connection(self, attendee_id, event_id, barcode_interface_id):
+    def sign_request(self, attendee_id, event_id, barcode_interface_id):
         channel_name = "est.longpolling.sign"
         event_id = request.env['event.event'].browse(event_id)
         if request.env['ir.config_parameter'].get_param('pos_longpolling.allow_public'):

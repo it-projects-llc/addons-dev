@@ -155,19 +155,3 @@ class ResPartner(models.Model):
         return '053' + str(int(uuid.uuid4().bytes[:5].encode('hex'), 16))
 
     barcode = fields.Char(default=_get_random_rfid_token)
-    # bracelet_type = fields.Many2one("bracelet.type")
-
-
-class BraceletType(models.Model):
-    _name = "bracelet.type"
-
-    name = fields.Char(string='Bracelet Type', required=True)
-    bracelet_qty = fields.Integer('Available Bracelets', required=True, default=0)
-    event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket')
-
-    # next field are probably excessive
-    barcode_pattern = fields.Char('Barcode Pattern')
-    barcode_rule = fields.Many2one('barcode.rule', string='Barcode Rule')
-
-    # TODO: if needed, not sure. Its possible to make a 'bracelet.bracelet' model and relate it with 'res.partner'
-    # partner_ids = fields.One2many('res.partner', 'bracelet_type', string='Registered Partners')
