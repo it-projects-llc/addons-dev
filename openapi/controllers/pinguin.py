@@ -29,6 +29,7 @@ import collections
 
 import odoo
 from odoo.service import security
+from odoo.addons.report.controllers.main import ReportController
 
 try:
     import simplejson as json
@@ -741,6 +742,29 @@ def wrap__resource__call_method(modelname, ids, method, method_params, success_c
     if len(ids) == 1 and len(results):
         results = results[0]
     return successful_response(success_code, data=results)
+
+
+def wrap__resource__get_report(namespace, report_external_id, docids, converter, success_code):
+    """Return html or pdf report response.
+
+    :param namespace: id/ids/browserecord of the records to print (if not used, pass an empty list)
+    :param docids: id/ids/browserecord of the records to print (if not used, pass an empty list)
+    :param docids: id/ids/browserecord of the records to print (if not used, pass an empty list)
+    :param report_name: Name of the template to generate an action for
+    """
+    report = request.env.ref(report_external_id)
+
+    if isinstance(report, type(request.env['ir.ui.view'])):
+        report = request.env['report']._get_report_from_name(report_external_id)
+
+    model = report.model
+    report_name = report.report_name
+
+    get_model_openapi_access(namespace, model)
+
+    response = ReportController().report_routes(report_name, docids, converter)
+    response.status_code = success_code
+    return response
 
 
 #######################

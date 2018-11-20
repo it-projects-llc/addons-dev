@@ -101,6 +101,62 @@ class Namespace(models.Model):
             ('produces', [
                 "application/json"
             ]),
+            ('paths', {
+                '/report/pdf/{report_external_id}/{docids}': {
+                    'get': {
+                        "summary": "Get PDF report file for %s namespace" % self.name,
+                        'description': 'Returns PDF report file for %s namespace' % self.name,
+                        "operationId": "getPdfReportFileFor%sNamespace" % self.name.capitalize(),
+                        "produces": [
+                            "application/pdf"
+                        ],
+                        "responses": {
+                            "200": {
+                                "description": "A PDF report file for %s namespace." % self.name,
+                                "schema": {
+                                    "type": "file"
+                                }
+                            }
+                        },
+                        "parameters": [
+                            {
+                                "$ref": "#/parameters/ReportExternalId"
+                            },
+                            {
+                                "$ref": "#/parameters/ReportDocids"
+                            },
+                        ],
+                        "tags": ["report"]
+                    }
+                },
+                '/report/html/{report_external_id}/{docids}': {
+                    'get': {
+                        "summary": "Get HTML report file for %s namespace" % self.name,
+                        'description': 'Returns HTML report text for %s namespace' % self.name,
+                        "operationId": "getHtmlReportTextFor%sNamespace" % self.name.capitalize(),
+                        "produces": [
+                            "text/html"
+                        ],
+                        "responses": {
+                            "200": {
+                                "description": "A HTML report text for %s namespace." % self.name,
+                                "examples": {
+                                    "text/html": "<!DOCTYPE html><html><head></head><body></body></html>"
+                                }
+                            }
+                        },
+                        "parameters": [
+                            {
+                                "$ref": "#/parameters/ReportExternalId"
+                            },
+                            {
+                                "$ref": "#/parameters/ReportDocids"
+                            },
+                        ],
+                        "tags": ["report"]
+                    }
+                },
+            }),
             ('definitions', {
                 "ErrorResponse": {
                     "type": "object",
@@ -126,6 +182,20 @@ class Namespace(models.Model):
                     "required": True,
                     "type": "integer",
                     "format": "int64"
+                },
+                "ReportExternalId": {
+                    "name": "report_external_id",
+                    "in": "path",
+                    "description": "Report xml id or report name",
+                    "required": True,
+                    "type": "string",
+                },
+                "ReportDocids": {
+                    "name": "docids",
+                    "in": "path",
+                    "description": "One identifier or several identifiers separated by commas",
+                    "required": True,
+                    "type": "string",
                 },
             }),
             ('responses', {

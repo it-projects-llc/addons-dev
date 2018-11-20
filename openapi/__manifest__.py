@@ -20,6 +20,7 @@
     "depends": [
         "web_tour",
         "web_settings_dashboard",
+        "report",
     ],
     "external_dependencies": {"python": ['bravado_core', 'swagger_spec_validator'], "bin": []},
     "data": [

@@ -59,8 +59,7 @@ class ApiV1Controller(http.Controller):
     # ReadOne # UpdateOne # UnlinkOne
     _api_endpoint_model_id = _api_endpoint + '/<model>/<int:id>'
     # Get Reports
-    _api_report_pdf = _api_endpoint + '/report/pdf/<report_external_id>'  # as PDF
-    _api_report_html = _api_endpoint + '/report/html/<report_external_id>'  # as HTML
+    _api_report_docids = _api_endpoint + '/report/<any(pdf, html):converter>/<report_external_id>/<docids>'
 
 
     ##################
@@ -180,22 +179,12 @@ class ApiV1Controller(http.Controller):
             method_params=method_params,
             success_code=pinguin.CODE__success)
 
-    # Get Report as PDF
-    @pinguin.route(_api_report_pdf, methods=['GET'], type='http', auth='none')
-    def report_pdf__GET(self, namespace, report_external_id):
-        return pinguin.wrap__resource__call_method(
-            modelname='report',
-            ids=[1],
-            method='get_html',
-            method_params={},
-            success_code=pinguin.CODE__success)
-
-    # Get Report as HTML
-    @pinguin.route(_api_report_html, methods=['GET'], type='http', auth='none')
-    def report_html__GET(self, namespace, report_external_id):
-        return pinguin.wrap__resource__call_method(
-            modelname='report',
-            ids=[1],
-            method='get_pdf',
-            method_params={},
+    # Get Report
+    @pinguin.route(_api_report_docids, methods=['GET'], type='http', auth='none', csrf=False)
+    def report__GET(self, converter, namespace, report_external_id, docids):
+        return pinguin.wrap__resource__get_report(
+            namespace=namespace,
+            report_external_id=report_external_id,
+            docids=docids,
+            converter=converter,
             success_code=pinguin.CODE__success)
