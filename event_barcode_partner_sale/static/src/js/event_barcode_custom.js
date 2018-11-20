@@ -56,7 +56,16 @@ event_barcode.EventScanView.include({
         });
 
         attendee_creation_btn.on('click', function(e){
-            self.make_request_and_update('/event_barcode/create_attendee', )
+            var vals = {}
+            _.each($('.attendee_creation:not(.event_ticket)'), function(f){
+                vals[$(f).getAttributes().name] = f.value;
+            });
+            self.make_request_and_update('/event_barcode/create_attendee', {
+                vals: vals,
+                event_id: self.data.event_id,
+                event_ticket_id: self.$('.attendee_creation.event_ticket').val(),
+                partner_id: self.$('#new_attendee_data').getAttributes().pid || 0,
+            });
         });
 
     },
@@ -86,6 +95,7 @@ event_barcode.EventScanView.include({
                 input = data_container.find('input[fdata=' + f + '], select[fdata=' + f + ']');
                 input.val(partner[f] || '');
             });
+            this.$('#new_attendee_data').attr('pid', partner.id);
         }
         if (!data.existed_attendee) {
             data_container.show();

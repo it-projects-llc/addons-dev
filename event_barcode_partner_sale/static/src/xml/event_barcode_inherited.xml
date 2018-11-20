@@ -23,14 +23,14 @@
         <div id="new_attendee_data" style="display: none;">
             <t t-foreach="attendee_fields" t-as="field">
                 <t t-if="field.name != 'email'">
-                    <div class="attendee_input">
+                    <div class="attendee_input mt16">
                         <t t-if="field.type == 'date'">
-                            <label class="mt16" t-attf-for="#{field.name}"><t t-esc="field.description"/></label>
+                            <label t-attf-for="#{field.name}"><t t-esc="field.description"/></label>
                             <input class="attendee_creation" type="date" t-attf-placeholder="#{field.description}" t-attf-fdata="#{field.name}" t-attf-name="#{field.name}" t-attf-ftype="#{field.type}"/>
                         </t>
 
                         <t t-if="field.type == 'many2one'">
-                            <label class="mt16" t-attf-for="#{field.name}"><t t-esc="field.description"/></label>
+                            <label t-attf-for="#{field.name}"><t t-esc="field.description"/></label>
                             <select class="attendee_creation" type="text" t-attf-placeholder="#{field.description}" t-attf-name="#{field.name}"  t-attf-fdata="#{field.name}" t-attf-ftype="#{field.type}">
                                 <t t-foreach="field.data" t-as="d">
                                     <option t-attf-value="#{d.id}">
@@ -41,16 +41,16 @@
                         </t>
 
                         <t t-if="field.type == 'char'">
-                            <label class="mt16" t-attf-for="#{field.name}"><t t-esc="field.description"/></label>
+                            <label t-attf-for="#{field.name}"><t t-esc="field.description"/></label>
                             <input class="attendee_creation" type="text" t-attf-name="#{field.name}"  t-attf-placeholder="#{field.description}" t-attf-fdata="#{field.name}" t-attf-ftype="#{field.type}"/>
                         </t>
                     </div>
                 </t>
             </t>
 
-            <div class="attendee_input">
-                <label class="mt16" for="event_ticket_id">Event Ticket</label>
-                <select class="attendee_creation" type="text" name="event_ticket_id" t-attf-placeholder="Select a Ticket" fdata="event_ticket_id" ftype="char">
+            <div class="attendee_input mt16">
+                <label for="event_ticket_id">Event Ticket</label>
+                <select class="attendee_creation event_ticket" type="text" name="event_ticket_id" t-attf-placeholder="Select a Ticket" fdata="event_ticket_id" ftype="char">
                     <t t-foreach="bracelets" t-as="b">
                         <option t-attf-value="#{b.id}">
                             <t t-esc="b.ticket_name"/>
@@ -59,13 +59,13 @@
                 </select>
             </div>
 
-        </div>
 
-        <br/>
-        <div class="col-md-4 col-xs-4"/>
-        <!--<div class="col-md-4 col-xs-4 create_client btn btn-primary"> Create Attendee </div>-->
-        <div class="col-md-4 col-xs-4 create_client  btn btn-primary" style="display: none"> Create Attendee </div>
-        <div class="col-md-4 col-xs-4"/>
+            <br/>
+            <div class="col-md-4 col-xs-4"/>
+            <!--<div class="col-md-4 col-xs-4 create_client btn btn-primary"> Create Attendee </div>-->
+            <div class="col-md-4 col-xs-4 create_client  btn btn-primary" style="display: none"> Create Attendee </div>
+            <div class="col-md-4 col-xs-4"/>
+        </div>
     </t>
 
     <t t-name="event_barcode_template" t-extend="event_barcode_template">
