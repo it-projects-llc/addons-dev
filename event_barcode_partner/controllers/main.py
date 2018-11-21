@@ -72,6 +72,11 @@ class EventBarcodeExtended(EventBarcode):
         res = super(EventBarcodeExtended, self).get_event_data(event_id)
         res['bracelets'] = self.get_bracelet_info(event_id)
         res['event_id'] = event_id
+
+        url_first_part = request.env['ir.config_parameter'].get_param('web.base.url') + "/web#id="
+        url_second_part = "&view_type=form&model=event.registration"
+        res['attendee_url'] = [url_first_part, url_second_part]
+
         return res
 
     @http.route('/event_barcode/get_attendees_by_name', type='json', auth="user")
@@ -140,8 +145,21 @@ class EventBarcodeExtended(EventBarcode):
 
         attendee = request.env["event.registration"].browse(int(attendee_id))
         sign_req = attendee.event_request_id
-
+        # import wdb
+        # wdb.set_trace()
         if not sign_req:
+            if not attendee.event_id.signature_template_id:
+                channel_name = "bi.longpolling.notifs"
+                return attendee.event_id.send_to_barcode_interface(channel_name, barcode_interface_id, json.dumps(
+                    {
+                        'notification': {
+                            'type': 'error',
+                            'header': 'Event Signature Template Error',
+                            'text': 'Set Event Signature Template before sending requests',
+                        }
+                    }
+                ))
+
             sign_req = request.env["signature.request"].create({
                 'template_id': attendee.event_id.signature_template_id.id,
                 'attendee': attendee.id,
@@ -193,7 +211,20 @@ class EventBarcodeExtended(EventBarcode):
 
         # attendee.embed_sign_to_pdf()
 
+        result = self.compound_vals(attendee, attendee.event_id.id)
+        result['notification'] = {
+            'type': 'success',
+            'header': 'Terms Are Signed',
+            'message': '',
+        }
         channel_name = "bi.longpolling.notifs"
-        attendee.event_id.send_to_barcode_interface(channel_name, barcode_interface_id, json.dumps(self.compound_vals(attendee, attendee.event_id.id)))
+        attendee.event_id.send_to_barcode_interface(channel_name, barcode_interface_id, json.dumps(result))
 
-        return attendee.id
+        return attendee.id\
+
+    @http.route('/event_barcode/go_to_attendee_form', type="json", auth="user")
+    def redirect_to_attendee(self, attendee_id):
+
+        first_url = request.env['ir.config_parameter'].get_param('web.base.url')
+        second_url = base_url + "/web#id=" + str(attendee_id) + "&view_type=form&model=event.registration"
+        return []

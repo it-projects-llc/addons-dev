@@ -18,33 +18,27 @@ event_barcode.EventScanView.include({
         this._super.apply(this, arguments);
 
         this.$('div.payment_title').on('click', function(e){
-            var pay_container = self.$('div.payment_container')[0];
-            var main_container = self.$('div.o_event_barcode_main')[0];
-
-            if (pay_container.style.display === "none") {
-                pay_container.style.display = "block";
-                main_container.style.display = "none";
-            } else {
-                pay_container.style.display = "none";
-                main_container.style.display = "block";
-            }
+            self.refold_new_attendee_container();
         });
 
         this.$('div.check_partner_email.btn-primary').on('click', function(e){
             var email_val = self.$('div.attendee_input input.attendee_creation.email_check').val();
-            self.make_request_and_update('/event_barcode/check_new_attendee_email', {email: email_val, event_id: self.data.event_id});
+            if (email_val) {
+                self.make_request_and_update('/event_barcode/check_new_attendee_email', {email: email_val, event_id: self.data.event_id});
+            }
         });
 
+        var new_data_container = this.$('#new_attendee_data');
         this.$('div.attendee_input input.attendee_creation.email_check').on('keyup', function(e){
             self.$('div.check_partner_email.received_message').hide();
             self.$('div.check_partner_email.btn-primary').removeClass('disabled');
-            self.$('#new_attendee_data').hide();
+            new_data_container.hide();
         });
 
         var attendee_creation_btn = this.$('.create_client.btn.btn-primary');
-        var att_fields = this.$('.attendee_creation');
-        att_fields.on('keyup', function(e){
-            var vals = _.pluck(att_fields, 'value');
+        var all_att_fields = this.$('.attendee_creation');
+        all_att_fields.on('keyup', function(e){
+            var vals = _.pluck(all_att_fields, 'value');
             var check = _.find(vals, function(v){
                 return !v;
             });
@@ -64,7 +58,13 @@ event_barcode.EventScanView.include({
                 vals: vals,
                 event_id: self.data.event_id,
                 event_ticket_id: self.$('.attendee_creation.event_ticket').val(),
-                partner_id: self.$('#new_attendee_data').getAttributes().pid || 0,
+                partner_id: new_data_container.getAttributes().pid || 0,
+            }).then(function(res){
+                console.log(res);
+                new_data_container.hide();
+                all_att_fields.val('');
+                new_data_container.attr('pid', '');
+                self.refold_new_attendee_container('fold');
             });
         });
 
@@ -79,16 +79,12 @@ event_barcode.EventScanView.include({
 
     update_new_attendee: function(data) {
         var self = this;
-        var received_message = this.$('div.check_partner_email.received_message');
         var check_button = this.$('div.check_partner_email.btn-primary');
         var data_container = this.$('#new_attendee_data');
-
-        received_message.text(data.message).show();
         check_button.addClass('disabled');
-        //TODO: color for message
         if (data.partner) {
             console.log(data);
-            var partner = data.partner[0];
+            var partner = data.partner;
             var fields = _.keys(partner);
             var input = false;
             _.each(fields, function(f){
@@ -99,6 +95,19 @@ event_barcode.EventScanView.include({
         }
         if (!data.existed_attendee) {
             data_container.show();
+        }
+    },
+
+    refold_new_attendee_container: function(aim){
+        var pay_container = this.$('div.payment_container')[0];
+        var main_container = this.$('div.o_event_barcode_main')[0];
+
+        if (pay_container.style.display === "block" || aim === 'fold') {
+            pay_container.style.display = "none";
+            main_container.style.display = "block";
+        } else {
+            pay_container.style.display = "block";
+            main_container.style.display = "none";
         }
     },
 });

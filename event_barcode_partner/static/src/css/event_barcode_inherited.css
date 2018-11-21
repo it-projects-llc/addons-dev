@@ -103,4 +103,22 @@
 
 }
 
+.o_event_error {
+    color: black;
+    background-color: #ff5454 !important;
+}
+.o_notification_text {
+    padding: 10px 10px 10px 20px;
+}
 
+.o_event_warning {
+    color: black;
+    background-color: #ffbf6f !important;
+}
+.o_client_div {
+    cursor: pointer;
+}
+
+.o_event_barcode_bg {
+    position: relative;
+}

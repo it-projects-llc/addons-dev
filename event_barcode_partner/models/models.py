@@ -99,6 +99,19 @@ class EventRegistration(models.Model):
         #                       height * (1 - item.posY - item.height), width * item.width, height * item.height, 'auto',
         #                       True)
 
+    @api.multi
+    def redirect_to_attendee(self, attendee_id):
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        record_url = base_url + "/web#id=" + str(attendee_id) + "&view_type=form&model=event.registration"
+        client_action = {
+            'type': 'ir.actions.act_url',
+            'name': "Attendee",
+            'target': 'new',
+            'url': record_url,
+        }
+        # import wdb
+        # wdb.set_trace()
+        return client_action
 
 
 class EventEvent(models.Model):

@@ -9,14 +9,12 @@
         </div>
 
         <br/>
-        <div>
+        <div class="row">
             <div class="col-md-4 col-xs-4"/>
-            <!--<div class="col-md-4 col-xs-4 create_client btn btn-primary"> Create Attendee </div>-->
             <div class="col-md-4 col-xs-4">
                 <div class="check_partner_email btn btn-primary"> Check Email </div>
             </div>
             <div class="col-md-4 col-xs-4">
-                <div class="check_partner_email received_message"/>
             </div>
         </div>
 
@@ -62,7 +60,6 @@
 
             <br/>
             <div class="col-md-4 col-xs-4"/>
-            <!--<div class="col-md-4 col-xs-4 create_client btn btn-primary"> Create Attendee </div>-->
             <div class="col-md-4 col-xs-4 create_client  btn btn-primary" style="display: none"> Create Attendee </div>
             <div class="col-md-4 col-xs-4"/>
         </div>

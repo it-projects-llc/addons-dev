@@ -5,11 +5,30 @@ var bus = require('bus.bus');
 var Session = require('web.session');
 var local_storage = require('web.local_storage');
 var event_barcode = require('event_barcode.EventScanView');
+var Notification = require('web.notification').Notification;
+var NotificationManager = require('web.notification').NotificationManager;
 
 var core = require('web.core');
 var QWeb = core.qweb;
 var _t = core._t;
 
+// Success Notification with thumbs-up icon
+var Error = Notification.extend({
+    template: 'event_barcode_error'
+});
+
+var Warning = Notification.extend({
+    template: 'event_barcode_warning'
+});
+
+event_barcode.NotificationSuccess.include({
+    error: function(title, text, sticky) {
+        return this.display(new Error(this, title, text, sticky));
+    },
+    warning: function(title, text, sticky) {
+        return this.display(new Warning(this, title, text, sticky));
+    }
+});
 
 event_barcode.EventScanView.include({
 
@@ -38,6 +57,8 @@ event_barcode.EventScanView.include({
             self.update_bus();
         });
 
+//        this.action_manager = new ActionManager;
+//        this.action_manager.main_control_panel = new ControlPanel(this.action_manager);
     },
 
     update_bus: function(){
@@ -130,6 +151,18 @@ event_barcode.EventScanView.include({
         if (data.bracelets) {
             this.update_bracelet_table(data.bracelets);
         }
+        if (data.notification) {
+            this.show_message(data.notification);
+        }
+    },
+
+    show_message: function(data) {
+        if (data.type === 'warning') {
+            data.sticky = data.sticky || 5000;
+        }
+        if (this.notification_manager[data.type]) {
+            this.notification_manager[data.type](data.header, data.text);
+        }
     },
 
     update_client_list: function(data) {
@@ -137,6 +170,11 @@ event_barcode.EventScanView.include({
         var row_html = '';
         var table = this.$('.o_event_barcode_detail.client_info.text-center');
         var old_rows = table.find('.client_cell');
+
+        var openInNewTab = function(url) {
+          var win = window.open(url, '_blank');
+          win.focus();
+        }
 
         this.attendees = data;
         this.set_attendee_by_id();
@@ -153,12 +191,16 @@ event_barcode.EventScanView.include({
             var aid = row.getAttribute('aid');
             $(list).find('.rfid').hide();
             $(row).find('.rfid').show();
+            $(row).find('.o_client_div').off().on('click', function(e){
+                console.log(self)
+                var url = self.data.attendee_url[0] + aid + self.data.attendee_url[1];
+                openInNewTab(url);
+            });
             $(row).find('.sign_request').off().on('click', function(e){
                 Session.rpc('/event_barcode/sign_request', {
                      attendee_id: aid,
                      event_id: self.action.context.active_id,
                      barcode_interface_id: self.interface_session_number,
-                     //db_name: Session.db
                 });
             });
             $(row).find('.accept_request').off().on('click', function(e){

@@ -8,7 +8,7 @@
 
     <t t-name="client_row">
         <div class="client_cell" t-attf-aid="#{att.aid}">
-            <div class="col-md-8 col-xs-8">
+            <div class="col-md-8 col-xs-8 o_client_div">
                 <h2 class="o_client_name">
                     <t t-esc="att.a_name"/>
                     <t t-esc="att.p_name"/>
@@ -163,6 +163,32 @@
         <t t-jquery="input#event_barcode" t-operation="after">
             <input class="mt32" type="text" id="event_client_name_search" placeholder="Search Client by Name..." size="40"/>
         </t>
+    </t>
+
+    <t t-name="event_barcode_error">
+        <div class="o_notification o_event_error" t-translation="off">
+            <i class="fa fa-times o_close" href="#"/>
+            <div class="o_notification_title">
+                <span class="o_icon fa fa-3x fa-ban"/>
+                <t t-raw="widget.title"/>
+            </div>
+            <div class="o_notification_text">
+                <t t-raw="widget.text"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="event_barcode_warning">
+        <div class="o_notification o_event_warning" t-translation="off">
+            <i class="fa fa-times o_close" href="#"/>
+            <div class="o_notification_title">
+                <span class="o_icon fa fa-3x fa-ban"/>
+                <t t-raw="widget.title"/>
+            </div>
+            <div class="o_notification_text">
+                <t t-raw="widget.text"/>
+            </div>
+        </div>
     </t>
 
 </templates>
