@@ -245,11 +245,13 @@ def get_namespace_by_name_from_users_namespaces(user, namespace_name, raise_exce
 
 
 # Create openapi.log record
-def create_log_record(namespace, user, user_request, user_response):
+def create_log_record(namespace_id, namespace_log_request, namespace_log_response, user_id, user_request, user_response):
     """create log for request
 
-    :param ..models.openapi_namespace.Namespace namespace: Requested namespace record.
-    :param odoo.models.Model user: User which requests.
+    :param int namespace_id: Requested namespace id.
+    :param string namespace_log_request: Request save option.
+    :param string namespace_log_response: Response save option.
+    :param int user_id: User id which requests.
     :param user_request: a wrapped werkzeug Request object from user.
     :type user_request: :class:`werkzeug.wrappers.BaseRequest`
     :param user_response: a wrapped werkzeug Response object to user.
@@ -260,23 +262,23 @@ def create_log_record(namespace, user, user_request, user_response):
     """
     # The new cursor is necessary because in case of an error the old cursor may already be closed
     with odoo.registry(request.session.db).cursor() as cr:
-        env = odoo.api.Environment(cr, request.uid, {})
+        env = odoo.api.Environment(cr, user_id, {})
         log_data = {
-            'namespace_id': namespace['id'],
+            'namespace_id': namespace_id,
             'request': '%s | %s | %d' % (user_request.url, user_request.method, user_response.status_code),
             'request_data': None,
             'response_data': None,
         }
-        if namespace['log_request'] == 'debug':
+        if namespace_log_request == 'debug':
             log_data['request_data'] = user_request.__dict__
-        elif namespace['log_request'] == 'info':
+        elif namespace_log_request == 'info':
             log_data['request_data'] = user_request.__dict__
             for k in ['form', 'files']:
                 del log_data['request_data'][k]
 
-        if namespace['log_response'] == 'debug':
+        if namespace_log_response == 'debug':
             log_data['response_data'] = user_response.__dict__
-        elif namespace['log_response'] == 'error' and user_response.status_code > 400:
+        elif namespace_log_response == 'error' and user_response.status_code > 400:
             log_data['response_data'] = user_response.__dict__
 
         return env['openapi.log'].create(log_data)
@@ -304,6 +306,14 @@ def route(*args, **kwargs):
             setup_db(request.httprequest, db_name)
             authenticated_user = authenticate_token_for_user(user_token)
             namespace = get_namespace_by_name_from_users_namespaces(authenticated_user, ikwargs['namespace'], raise_exception=True)
+            data_for_log = {
+                'namespace_id': namespace.id,
+                'namespace_log_request': namespace.log_request,
+                'namespace_log_response': namespace.log_response,
+                'user_id': authenticated_user.id,
+                'user_request': None,
+                'user_response': None
+            }
 
             try:
                 response = controller_method(*iargs, **ikwargs)
@@ -319,12 +329,11 @@ def route(*args, **kwargs):
                     error_descrip=e.name if hasattr(e, 'name') else str(e)
                 )
 
-            create_log_record(
-                namespace=namespace,
-                user=authenticated_user,
-                user_request=request.httprequest,
-                user_response=response
-            )
+            data_for_log.update({
+                'user_request': request.httprequest,
+                'user_response': response
+            })
+            create_log_record(**data_for_log)
 
             return response
 

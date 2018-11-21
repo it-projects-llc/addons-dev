@@ -78,6 +78,16 @@ class TestAPI(HttpCase):
         created_user = phantom_env[model_name].browse(resp.json()['id'])
         self.assertEqual(created_user.name, data_for_create['name'])
 
+    # disabled because there is one cursor in the tests, and to create a log in case of an error, you need two cursors
+    # def test_create_one_with_invalid_data(self):
+    #     phantom_env = api.Environment(self.registry.test_cr, self.uid, {})
+    #     namespace_name = 'demo'
+    #     model_name = 'res.partner'
+    #     data_for_create = {'company_id': 0, 'name': 'string', 'email': 'string'}
+    #     demo_user = phantom_env.ref(USER_DEMO)
+    #     resp = self.request_from_user('POST', namespace_name, model_name, data=data_for_create, user=demo_user)
+    #     self.assertEqual(resp.status_code, 400)
+
     def test_update_one(self):
         phantom_env = api.Environment(self.registry.test_cr, self.uid, {})
         namespace_name = 'demo'
