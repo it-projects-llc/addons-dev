@@ -139,7 +139,7 @@ class TestAPI(HttpCase):
         self.assertTrue(namespace.id not in new_user.namespace_ids.ids)
 
         resp = self.request_from_user('GET', namespace_name, model_name, user=new_user)
-        self.assertEqual(resp.status_code, 401, resp.json())
+        self.assertEqual(resp.status_code, pinguin.CODE__user_no_perm[0], resp.json())
         self.assertEqual(resp.json()['error'], pinguin.CODE__user_no_perm[1])
 
     def test_call_allowed_method_on_singleton_record(self):
@@ -227,6 +227,10 @@ class TestAPI(HttpCase):
             'read_one_id': False,
             'read_many_id': False,
             'create_context_ids': False
+        })
+
+        super_user.write({
+            'namespace_ids': [(4, namespace.id)]
         })
 
         url = "http://localhost:%d/api/v1/%s/report/html/%s/%s" % (PORT, namespace_name, report_external_id, docids)
