@@ -340,6 +340,12 @@ class Access(models.Model):
                     "200": {
                         "description": "successful patch"
                     },
+                    "403": {
+                        "description": "Requested model method is not allowed",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
                 }
             }
 
@@ -392,16 +398,28 @@ class Access(models.Model):
                 }
             }
 
-        for path_item_value in paths_object.values():
+        for path_item_key, path_item_value in paths_object.items():
+            # remove empty paths
+            if not path_item_value:
+                del paths_object[path_item_key]
+                continue
+
             for path_method in path_item_value.values():
+                # add tag
                 path_method.update({
                     'tags': [model_name]
                 })
 
-        # remove empty paths
-        for k, v in paths_object.items():
-            if not v:
-                del paths_object[k]
+                # add global responses
+                path_method['responses'].update({
+                    401: {
+                        '$ref': '#/responses/401'
+                    },
+                    500: {
+                        '$ref': '#/responses/500'
+                    },
+                })
+
         return paths_object
 
     @api.multi
