@@ -3,6 +3,7 @@ from odoo import fields, http, _
 from odoo.http import request
 from odoo.addons.event_barcode.controllers.main import EventBarcode
 from odoo.addons.event_barcode_partner.controllers.main import EventBarcodeExtended
+import re
 
 
 class EventBarcodeExtendedSale(EventBarcodeExtended):
@@ -49,15 +50,23 @@ class EventBarcodeExtendedSale(EventBarcodeExtended):
 
     @http.route('/event_barcode/check_new_attendee_email', type='json', auth="user")
     def check_new_attendee_email(self, email, event_id, **kw):
-
-        partner_id = request.env['res.partner'].search([('email', '=', email)])
-        res = {}
-        result = {}
         notification = {
             'type': 'success',
             'header': 'Email is available',
             'text': '',
         }
+
+        match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', email)
+        if match == None:
+            notification['type'] = 'error'
+            notification['header'] = 'Not a valid E-mail'
+            return {
+                'notification': notification,
+            }
+
+        res = {}
+        result = {}
+        partner_id = request.env['res.partner'].search([('email', '=', email)])
 
         if partner_id:
             field_ids = request.env['event.event'].browse(event_id).attendee_field_ids
