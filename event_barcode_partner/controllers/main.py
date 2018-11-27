@@ -76,6 +76,7 @@ class EventBarcodeExtended(EventBarcode):
         url_first_part = request.env['ir.config_parameter'].get_param('web.base.url') + "/web#id="
         url_second_part = "&view_type=form&model=event.registration"
         res['attendee_url'] = [url_first_part, url_second_part]
+        res['rfid_templates'] = request.env['event.event'].browse(event_id).rfid_templates
 
         return res
 

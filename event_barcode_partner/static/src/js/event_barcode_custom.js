@@ -57,8 +57,7 @@ event_barcode.EventScanView.include({
             self.update_bus();
         });
 
-//        this.action_manager = new ActionManager;
-//        this.action_manager.main_control_panel = new ControlPanel(this.action_manager);
+        this.rfid_templates = this.data.rfid_templates.split(',');
     },
 
     update_bus: function(){
@@ -87,9 +86,16 @@ event_barcode.EventScanView.include({
         return JSON.stringify([Session.db,channel_name,sub_channel]);
     },
 
+    check_barcode_template: function(barcode) {
+        var self = this;
+        return _.find(this.rfid_templates, function(t){
+            return barcode.startsWith(t);
+        });
+    },
+
     on_barcode_scanned: function(barcode) {
         var self = this;
-        if (this.attendee && barcode.startsWith('05')) {
+        if (this.attendee && this.check_barcode_template(barcode)) {
             this.make_request_and_update('/event_barcode/set_rfid', {
                  aid: this.attendee.aid,
                  rfid: barcode,
@@ -106,7 +112,7 @@ event_barcode.EventScanView.include({
     on_manual_scan: function(e) {
         if (e.which === 13) { // Enter
             var barcode = $(e.currentTarget).val().trim();
-            if (this.attendee && barcode.startsWith('05')) {
+            if (this.attendee && this.check_barcode_template(barcode)) {
                 this.make_request_and_update('/event_barcode/set_rfid', {
                      aid: this.attendee.aid,
                      rfid: barcode,

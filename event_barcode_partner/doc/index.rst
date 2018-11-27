@@ -13,22 +13,32 @@ Installation
 Configuration
 =============
 
-{Instruction how to configure the module before start to use it}
-
-* `Activate Developer Mode <https://odoo-development.readthedocs.io/en/latest/odoo/usage/debug-mode.html>`__
-* Open menu ``[[ {Menu} ]] >> {Submenu} >> {Subsubmenu}``
-* Click ``[{Button Name}]``
+* In order to use E-Sign feature be sure to provide a request template in event form
 
 Usage
 =====
 
-{Instruction for daily usage. It should describe how to check that module works. What shall user do and what would user get.} 
 
-* Open menu ``[[ {Menu} ]]>> {Submenu} >> {Subsubmenu}``
-* Click ``[{Button Name}]``
-* RESULT: {what user gets, how the modules changes default behaviour}
 
-Uninstallation
-==============
+* Open menu ``[[ Events ]]``
+* Select an event
+* Click on *Barcode Interface* Button in the header of thr form
 
-{Optional section for uninstallation notes. Delete it if you don't have notes for uninstallation.}
+* On another device open menu ``[[ Events ]]`` >> EST Session
+* Select the event according to the *Barcode Interface* event in ``Event`` field
+* Type the number of the opened *Barcode Interface* in the ``Barcode Interface Number`` field
+* Click ``Open``
+
+* In the *Barcode Interface* device Scan barcode or paste it into the top input, or start to type a name of an attendee in the bottom input
+* Click on the required attendee
+* in unfolded pop-up click *Send Request*
+
+* In *EST Session* device you will see the request for sign
+* Let the attendee sign here
+* Click *Submit Sign*
+
+* In the *Barcode Interface* you will see the notification that terms are signed
+* Scan *RFID*
+* Click ``Accept``
+
+* Customer Attendeed

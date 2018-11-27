@@ -29,6 +29,9 @@
         <field name="model">event.event</field>
         <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="rfid_templates" />
+            </xpath>
             <xpath expr="//notebook" position="inside">
                 <page string="Terms and Conditions">
                     <group>

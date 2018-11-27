@@ -120,6 +120,7 @@ class EventEvent(models.Model):
 
     terms_to_sign = fields.Char(string='Event Terms')
     signature_template_id = fields.Many2one('signature.request.template', string='Terms template')
+    rfid_templates = fields.Char(string='RFID Templates', help='Write it in the next way: 057 or 057,056,067')
 
     @api.model
     def send_to_all_estes(self, channel_name, sub_channel, data):

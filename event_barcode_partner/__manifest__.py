@@ -2,7 +2,7 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 {
     "name": """Customised Event Barcode Interface""",
-    "summary": """{SHORT module description for REAMDE and manifest}""",
+    "summary": """Allow to ask E-Sign in Barcode Interface""",
     "category": "{MODULE_CATEGORY}",
     # "live_test_url": "http://apps.it-projects.info/shop/product/DEMO-URL?version=10.0",
     "images": [],
