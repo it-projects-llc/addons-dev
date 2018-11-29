@@ -161,7 +161,7 @@ class Access(models.Model):
                         "description": "%s object that needs to be added to the store" % model_name,
                         "required": True,
                         "schema": {
-                            "$ref": read_one_definition_ref
+                            "$ref": "#/definitions/%s" % pinguin.get_definition_name(self.model)
                         }
                     }
                 ],
@@ -242,7 +242,7 @@ class Access(models.Model):
                         "description": "Updated %s object" % model_name,
                         "required": True,
                         "schema": {
-                            "$ref": read_one_definition_ref
+                            "$ref": "#/definitions/%s" % pinguin.get_definition_name(self.model)
                         }
                     }
                 ],
@@ -422,29 +422,28 @@ class Access(models.Model):
 
         return paths_object
 
-    @api.multi
     def get_OAS_definitions_part(self):
-        for record in self:
-            related_model = record.env[record.model]
-            export_fields_read_one = pinguin.transform_strfields_to_dict(record.read_one_id.export_fields.mapped('name'))
-            export_fields_read_many = pinguin.transform_strfields_to_dict(record.read_many_id.export_fields.mapped('name'))
-            definitions = {}
-            definitions.update(pinguin.get_OAS_definitions_part(related_model, export_fields_read_one, definition_postfix='read_one'))
-            definitions.update(pinguin.get_OAS_definitions_part(related_model, export_fields_read_many, definition_postfix='read_many'))
-            return definitions
+        related_model = self.env[self.model]
+        export_fields_read_one = pinguin.transform_strfields_to_dict(self.read_one_id.export_fields.mapped('name'))
+        export_fields_read_many = pinguin.transform_strfields_to_dict(self.read_many_id.export_fields.mapped('name'))
+        definitions = {}
+        definitions.update(pinguin.get_OAS_definitions_part(related_model, export_fields_read_one, definition_postfix='read_one'))
+        definitions.update(pinguin.get_OAS_definitions_part(related_model, export_fields_read_many, definition_postfix='read_many'))
+        if self.api_create or self.api_update:
+            all_fields = pinguin.transform_strfields_to_dict(related_model.fields_get_keys())
+            definitions.update(pinguin.get_OAS_definitions_part(related_model, all_fields))
+        return definitions
 
-    @api.multi
     def get_OAS_part(self):
         self = self.sudo()
-        for record in self:
-            return {
-                'definitions': record.get_OAS_definitions_part(),
-                'paths': record.get_OAS_paths_part(),
-                'tag': {
-                    "name": "%s" % self.model,
-                    "description": "Everything about %s" % self.model,
-                }
+        return {
+            'definitions': self.get_OAS_definitions_part(),
+            'paths': self.get_OAS_paths_part(),
+            'tag': {
+                "name": "%s" % self.model,
+                "description": "Everything about %s" % self.model,
             }
+        }
 
 
 class AccessCreateContext(models.Model):
