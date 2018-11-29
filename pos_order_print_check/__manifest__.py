@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 {
@@ -7,12 +6,12 @@
     "category": "Point of Sale",
     # "live_test_url": "",
     "images": [],
-    "version": "10.0.1.0.0",
+    "version": "12.0.1.0.0",
     "application": False,
 
     "author": "IT-Projects LLC, Dinar Gabbasov",
     "support": "apps@it-projects.info",
-    "website": "https://it-projects.info/team/GabbasovDinar",
+    "website": "https://apps.odoo.com/apps/modules/12.0/pos_order_print_check/",
     "license": "LGPL-3",
     # "price": 9.00,
     # "currency": "EUR",
