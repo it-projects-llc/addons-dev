@@ -1003,25 +1003,6 @@ def method_is_allowed(method, methods_conf, main=False, raise_exception=False):
 # Pinguin OAS #
 ###############
 
-# Odoo types (left) mapped to OAS types (right)
-TYPES_MAP = {
-    'integer': 'integer',
-    # '': 'long',
-    'float': 'float',
-    # '': 'double',
-    'char': 'string',
-    'text': 'string',
-    'binary': 'byte',
-    'boolean': 'boolean',
-    'date': 'date',
-    'datetime': 'dateTime',
-    # 'selection': '',
-    'one2many': 'array',
-    'many2one': 'integer',
-    'many2many': 'array',
-}
-
-
 # Get definition name
 def get_definition_name(modelname, prefix='', postfix='', splitter='-'):
     """Concatenation of the prefix, modelname, postfix.
@@ -1091,21 +1072,41 @@ def get_OAS_definitions_part(model_obj, export_fields_dict, definition_prefix=''
                     'items': child_definition[get_definition_name(child_model._name, prefix=definition_name)]
                 }
         else:
-            field_property = {
-                'type': TYPES_MAP.get(meta['type'])
-            }
+            field_property = {}
 
-            if meta['type'] == 'selection':
+            if meta['type'] == 'integer':
+                field_property.update(type='integer')
+            elif meta['type'] == 'float':
+                field_property.update(type='integer', format='float')
+            elif meta['type'] == 'char':
+                field_property.update(type='string')
+            elif meta['type'] == 'text':
+                field_property.update(type='string')
+            elif meta['type'] == 'binary':
+                field_property.update(type='string', format='binary')
+            elif meta['type'] == 'boolean':
+                field_property.update(type='boolean')
+            elif meta['type'] == 'date':
+                field_property.update(type='string', format='date')
+            elif meta['type'] == 'datetime':
+                field_property.update(type='string', format='date-time')
+            elif meta['type'] == 'many2one':
+                field_property.update(type='integer')
+            elif meta['type'] == 'selection':
                 field_property.update({
                     'type': 'integer' if isinstance(meta['selection'][0][0], int) else 'string',
                     'enum': [i[0] for i in meta['selection']]
                 })
             elif meta['type'] in ['one2many', 'many2many']:
                 field_property.update({
+                    'type': 'array',
                     'items': {
                         'type': 'integer'
                     }
                 })
+
+            if meta['readonly']:
+                field_property.update(readOnly=True)
 
         definitions[definition_name]['properties'][field] = field_property
 
