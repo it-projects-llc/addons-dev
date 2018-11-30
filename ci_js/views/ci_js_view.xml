@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <!--Следующие три записи нужны для корректного отображения списков. Иначе вместо названий будут выводиться id записей-->
     <record id='ci_js_view_tree' model='ir.ui.view'>
         <field name="name">ci_js.tour.tree</field>
         <field name="model">ci_js.tour</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="tour_name" />
+                <field name="name" />
             </tree>
         </field>
     </record>
+
     <record id='ci_js_set_view_tree' model='ir.ui.view'>
         <field name="name">ci_js.tour.set.tree</field>
         <field name="model">ci_js.tour.set</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="set_name" />
+                <field name="sequence" widget="handle"/>
+                <field name="name" />
             </tree>
         </field>
     </record>
+
     <record id='ci_js_step_view_tree' model='ir.ui.view'>
         <field name="name">ci_js.tour.set.step.tree</field>
         <field name="model">ci_js.tour.set.step</field>
@@ -29,11 +31,9 @@
         </field>
     </record>
 
-    <!-- На эту запись будет ссылаться menuitem с помощю action'а в котором указано -->
-    <!-- ir.actions.act_window как я понимаю отвечает за показ в боковом(не обязателно) меню -->
     <record id="ci_js_model_tour_action" model='ir.actions.act_window'>
         <field name="name">Tours</field>
-        <!-- Поле(field) в записи(record) с названием res_model принимает имя модели на которую ссылается наша запись-->
+        <field name="type">ir.actions.act_window</field>
         <field name="res_model">ci_js.tour</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
@@ -55,9 +55,9 @@
             <form string="Tour">
                 <sheet>
                     <div class="oe_title">
-                        <label for="tour_name" class="oe_edit_only"/>
+                        <label for="name" class="oe_edit_only"/>
                         <h1>
-                            <field name="tour_name" placeholder="Tour name"/>
+                            <field name="name" placeholder="Tour name"/>
                         </h1>
                     </div>
                     <group col="2" string="Test">
@@ -68,7 +68,7 @@
                         <group>
                             <field name="skip_enabled" />
                             <!--<field name="assets" />-->
-                            <field name="tour_file" filename="tour_file_name" string="Download tour"/>
+                            <field name="file" filename="file_name" string="Download tour"/>
                         </group>
                     </group>
                     <field name="set_ids"/>
