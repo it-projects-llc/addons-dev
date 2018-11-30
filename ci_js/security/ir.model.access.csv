@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ci_js_tour,access_ci_js_tour,model_ci_js_tour,,1,0,0,0
+access_ci_js_tour_set,access_ci_js_tour_set,model_ci_js_tour_set,,1,0,0,0
+access_ci_js_template,access_ci_js_template,model_ci_js_template,,1,0,0,0
+access_ci_js_tour_set_step,access_ci_js_tour_set_step,model_ci_js_tour_set_step,,1,0,0,0

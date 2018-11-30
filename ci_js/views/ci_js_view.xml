@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id='ci_js_view_tree' model='ir.ui.view'>
+        <field name="name">ci_js.tour.tree</field>
+        <field name="model">ci_js.tour</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+    <record id='ci_js_set_view_tree' model='ir.ui.view'>
+        <field name="name">ci_js.tour.set.tree</field>
+        <field name="model">ci_js.tour.set</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+    <record id='ci_js_step_view_tree' model='ir.ui.view'>
+        <field name="name">ci_js.tour.set.step.tree</field>
+        <field name="model">ci_js.tour.set.step</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="content" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="ci_js_model_tour_action" model='ir.actions.act_window'>
+        <field name="name">Tours</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ci_js.tour</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a new tour.
+          </p>
+        </field>
+    </record>
+
+    <menuitem name="CI JS" id="menu_ci_js_root" sequence="116"/>
+    <menuitem name="CI JS" parent="menu_ci_js_root" id="ci_js_main_menu" sequence="100"/>
+    <menuitem action="ci_js_model_tour_action" parent="ci_js_main_menu" id="ci_js_tours_menu"/>
+
+    <record id="ci_js_tour_view_form" model="ir.ui.view">
+        <field name="name">ci_js.tour.form</field>
+        <field name="model">ci_js.tour</field>
+        <field name="arch" type="xml">
+            <form string="Tour">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Tour name"/>
+                        </h1>
+                    </div>
+                    <group col="2" string="Test">
+                        <group>
+                            <field name="start_url" placeholder="e.g. /shop"/>
+                            <field name="wait_for"/>
+                        </group>
+                        <group>
+                            <field name="skip_enabled" />
+                            <!--<field name="assets" />-->
+                            <field name="file" filename="file_name" string="Download tour"/>
+                        </group>
+                    </group>
+                    <field name="set_ids"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
