@@ -10,34 +10,34 @@ Configuration
 Usage
 =====
 
-Создание нового тура
+Creating a new tour
 --------------------
 
-* Открыть ``[[ CI JS ]] >> CI JS >> [Tours]``
-* Нажать ``[Create]``
-* В открывшемся окне заполнить поля:
-    * **Tour name** - название тура
-    * **Start URL** - стартовый адрес тура
-    * **Wait for** - указать условие при котором тур может запускаться(e.g. base.ready())
-    * **Skip enabled** - поставить галочку, если нужно добавить кнопку Skip в подсказках
-    * **Using assets** - выбрать нужные ассетсы (assets_frontend, assets_backend, pos_assets)// Надо подробнее обдумать как будет исппользоваться это поле и будет ли оно вообще использоваться таким образом
-* Во вкладке ``Sets`` нажимаем на ``[Add an item]``
-* В поле **Set name** вводим название текущего сета
-* В поле **Template** нажимаем на выпадающее меню и выбираем подходящий шаблон.
-* Если нужного шаблона нет, то нажимаем на ``[Create and Edit]``:
-    * В поле **Template name** вводим название шаблона
-    * Во вкладке ``Steps`` нажать ``[Add an item]`` и в появившемся окне заполнить следующие поля:
-        * **content** - будет выводится в tips
-        * **trigger** - селектор элемента, по которому нужно кликнуть в тесте, либо напротив чего разместить указатель(обязательное поле)
-        * **extra_trigger** - клик на ``trigger`` сработает, когда указанный здесь элемент будет видимым.
-        * **timeout** - максимальное время ожидания условия
-        * **position** - позиция для указателя на выбор: left, rigth, top, bottom
-        * **width** - ширина указателя в пикселях. По умолчанию 270px
-        * **edition** - указание того, в каком издании Odoo можно выполнять шаг (community, enterprise or any edition). По умолчанию стоит параметр any edition
-        * **run** - действия которые выполняются, когда тур запущен автоматически
-        * **auto** - шаг будет пропущен в не автоматическом запуске
-    * Если нужно добавить ещё шаг, то нажать ``[Save & New]``, либо ``[Save & Close]``, если шаги закончились.
-    * Нажать ``[Save]``, чтобы сохранить получившийся шаблон
+* Open ``[[ CI JS ]] >> CI JS >> [Tours]``
+* Press ``[Create]``
+* In the opened window fill in the following fields:
+    * **Tour name** - current tour name
+    * **Start URL** - URL address to start the tour
+    * **Wait for** - specify the condition under which the tour can be started (e.g. base.ready())
+    * **Skip enabled** - check the box if you want to add the "Skip" button in the tips
+    * **Using assets** - choose assets which you use (assets_frontend, assets_backend, pos_assets)
+* In the ``Sets`` tab press ``[Add an item]``
+* In the field **Set name** enter the name of the current tour
+* In the field **Template** press on the drop-down menu and select the appropriate template
+* If the list does not have a suitable template, then click on the ``[Create and Edit]`` button:
+    * In the field **Template name** fill in the name of the creating template
+    * In the ``Steps`` tab press ``[Add an item]`` button and fill in the following fields in the window that appears:
+        * **content** - will be displayed in tips.
+        * **trigger** - where to place tip. In js tests: where to click (mandatory)
+        * **extra_trigger** - when this becomes visible, the tip is appeared. In js tests: when to click
+        * **timeout** - max time to wait for conditions
+        * **position** - how to show tip (left, rigth, top, bottom), default right
+        * **width** - width in px of the tip when opened, default 270
+        * **edition** - specify to execute in “community” or in “enterprise” only. By default empty – execute at any edition
+        * **run** - what to do when tour runs automatically (e.g. in tests)
+        * **auto** - step is skipped in non-auto running
+    * If you need to add another step - click ``[Save & New]`` button or ``[Save & Close]`` button if steps are over
+    * Press ``[Save]`` button if all work is done with current template
 * Когда шаблон выбран, то под полем ``[Template]`` появляются поля с названиями переменных, которые принимает шаблон(если он их принимает), нужно заполнить эти поля, в соответствии с контекстом
 * Когда все необходимые поля заполнены, можно нажать ``[Save & New]``, если нужно добавить еще один set. Если составление сетов для тура закончено можно нажать ``[Save & Close]``
 * Чтобы сохранить получившийся тур нужно нажать ``[Save]``, после этого увидим наш тур во вкладке ``Tours``

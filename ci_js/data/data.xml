@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tour for pos_debt_notebook -->
+
+    <!-- Steps for open_pos_neworder() -->
+    <record id="open_pos_neworder_step_1" model="ci_js.tour.set.step">
+        <!-- TODO: think how to pass html tags to the field, construction above doesn't work -->
+        <!--<field name="content">Ready to launch your <b>point of sale</b>? <i>Click here</i>.</field>-->
+        <field name="content">Ready to launch your point of sale? Click here.</field>
+        <field name="trigger">.o_app[data-menu-xmlid="point_of_sale.menu_point_root"], .oe_menu_toggler[data-menu-xmlid="point_of_sale.menu_point_root"]</field>
+        <field name="position">bottom</field>
+        <field name="sequence">1</field>
+    </record>
+
+    <record id="open_pos_neworder_step_2" model="ci_js.tour.set.step">
+        <field name="trigger">.o_pos_kanban button.oe_kanban_action_button</field>
+        <!--<field name="content"><p>Click to start the point of sale interface. It <b>runs on tablets</b>, laptops, or industrial hardware.</p><p>Once the session launched, the system continues to run without an internet connection.</p></field>-->
+        <field name="content">Click to start the point of sale interface. It runs on tablets, laptops, or industrial hardware. Once the session launched, the system continues to run without an internet connection.</field>
+        <field name="position">bottom</field>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="open_pos_neworder_step_3" model="ci_js.tour.set.step">
+        <field name="trigger">.table:not(.oe_invisible .neworder-button), .order-button.selected</field>
+        <field name="content">Switch to table or make dummy action</field>
+        <field name="position">bottom</field>
+        <field name="timeout">20000</field>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="open_pos_neworder_step_4" model="ci_js.tour.set.step">
+        <field name="trigger">.order-button.neworder-button</field>
+        <field name="content">waiting for loading to finish</field>
+        <field name="sequence">4</field>
+    </record>
+
+    <!-- steps for add_product_to_order(product_name) -->
+    <!-- TODO: додумать как передавать в поля строки с конкатенацией -->
+
+    <record id="add_product_to_order_step_1" model="ci_js.tour.set.step">
+        <!--<field name="trigger">.product-list .product-name:contains("Miscellaneous")</field>-->
+        <field name="trigger">.product-list .product-name:contains("${args}")</field>
+        <!--<field name="content">buy Miscellaneous</field>-->
+        <field name="content">buy ${args}</field>
+        <field name="sequence">1</field>
+    </record>
+
+    <record id="add_product_to_order_step_2" model="ci_js.tour.set.step">
+        <field name="trigger">.order .product-name:contains("Miscellaneous")</field>
+        <field name="content">the Miscellaneous have been added to the order</field>
+        <!--<field name="content">the ' + product_name + ' have been added to the order</field>-->
+        <field name="sequence">2</field>
+    </record>
+
+    <!-- steps for set_customer(name) -->
+
+    <record id="set_customer_step_1" model="ci_js.tour.set.step">
+        <field name="trigger">.button.set-customer</field>
+        <field name="content">Open the customer screen</field>
+        <field name="sequence">1</field>
+    </record>
+
+    <record id="set_customer_step_2" model="ci_js.tour.set.step">
+        <!--<field name="trigger">td:contains("' + name + '")</field>-->
+        <field name="trigger">td:contains("Agrolait")</field>
+        <field name="content">Open the customer screen</field>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="set_customer_step_3" model="ci_js.tour.set.step">
+        <field name="trigger">.button.next.highlight:contains("Set Customer")</field>
+        <field name="extra_trigger">.button.next.highlight:contains("Set Customer")</field>
+        <field name="content">Set Customer</field>
+        <field name="sequence">3</field>
+    </record>
+
+    <!-- steps for debt_method_paying(pay_method) -->
+    <record id="debt_method_paying_step_1" model="ci_js.tour.set.step">
+        <field name="trigger">.order-button.selected</field>
+        <field name="content">Make a dummy action</field>
+        <field name="sequence">1</field>
+    </record>
+
+    <record id="debt_method_paying_step_2" model="ci_js.tour.set.step">
+        <field name="trigger">.button.pay</field>
+        <field name="content">Open the payment screen</field>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="debt_method_paying_step_3" model="ci_js.tour.set.step">
+        <field name="trigger">.modal-dialog.cashier:not(.oe_hidden) .cashier .selection-item:contains("Administrator"), .payment-screen:not(.oe_hidden) h1:contains("Payment")</field>
+        <field name="content">Choose Administrator like a cashier or make a dummy action</field>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="debt_method_paying_step_4" model="ci_js.tour.set.step">
+        <!--<field name="trigger">.button.paymentmethod:contains("' + pay_method +'")</field>-->
+        <field name="trigger">.button.paymentmethod:contains("Credits (USD)")</field>
+        <field name="extra_trigger">.button.paymentmethod:contains("Credits (USD)")</field>
+        <!--<field name="extra_trigger">.button.paymentmethod:contains("Credits (USD)")</field>-->
+        <field name="content">Click the payment method</field>
+        <field name="sequence">4</field>
+    </record>
+
+    <record id="debt_method_paying_step_5" model="ci_js.tour.set.step">
+        <field name="extra_trigger">.button.next.highlight:contains("Validate")</field>
+        <field name="trigger">.button.next.highlight:contains("Validate")</field>
+        <field name="content">Validate payment</field>
+        <field name="sequence">5</field>
+    </record>
+
+    <record id="debt_method_paying_step_6" model="ci_js.tour.set.step">
+        <field name="trigger">.button.next.highlight:contains("Next Order")</field>
+        <field name="content">Check proceeded validation</field>
+        <field name="sequence">6</field>
+    </record>
+
+
+    <!-- Templates -->
+
+    <!-- template for open_pos_neworder -->
+    <record id="open_pos_neworder_template" model="ci_js.template">
+        <field name="name">open_pos_neworder_template</field>
+        <field name="step_ids" eval="[(4, ref('open_pos_neworder_step_1')), (4, ref('open_pos_neworder_step_2')), (4, ref('open_pos_neworder_step_3')), (4, ref('open_pos_neworder_step_4')),]"/>
+    </record>
+
+    <!-- template for add_product_to_order -->
+    <record id="add_product_to_order_template" model="ci_js.template">
+        <field name="name">add_product_to_order_template</field>
+        <field name="step_ids" eval="[(4, ref('add_product_to_order_step_1')), (4, ref('add_product_to_order_step_2')),]"/>
+    </record>
+
+    <!-- template for set_customer -->
+    <record id="set_costumer_template" model="ci_js.template">
+        <field name="name">set_costumer_template</field>
+        <field name="step_ids" eval="[(4, ref('set_customer_step_1')), (4, ref('set_customer_step_2')), (4, ref('set_customer_step_3')),]"/>
+    </record>
+
+    <!-- template for debt_method_paying -->
+    <record id="debt_method_paying_template" model="ci_js.template">
+        <field name="name">debt_method_paying_template</field>
+        <field name="step_ids" eval="[(4, ref('debt_method_paying_step_1')), (4, ref('debt_method_paying_step_2')), (4, ref('debt_method_paying_step_3')), (4, ref('debt_method_paying_step_4')), (4, ref('debt_method_paying_step_5')), (4, ref('debt_method_paying_step_6')),]"/>
+    </record>
+
+    <!-- Sets -->
+    <!-- TODO: add passing of arguments-->
+
+    <record id="open_pos_neworder_set" model="ci_js.tour.set">
+        <field name="name">open_pos_neworder</field>
+        <field name="sequence">1</field>
+        <field name="template_id" ref="open_pos_neworder_template" />
+    </record>
+
+    <record id="add_product_to_order_set" model="ci_js.tour.set">
+        <field name="name">add_product_to_order</field>
+        <field name="args">ARRRRGSSS</field>
+        <field name="sequence">2</field>
+        <field name="template_id" ref="add_product_to_order_template" />
+    </record>
+
+    <record id="set_costumer_set" model="ci_js.tour.set">
+        <field name="name">set_costumer</field>
+        <field name="sequence">3</field>
+        <field name="template_id" ref="set_costumer_template" />
+    </record>
+
+    <record id="debt_method_paying_set" model="ci_js.tour.set">
+        <field name="name">debt_method_paying</field>
+        <field name="sequence">4</field>
+        <field name="template_id" ref="debt_method_paying_template" />
+    </record>
+
+    <!-- Tour -->
+
+    <record id="pos_debt_notebook_tour" model="ci_js.tour">
+        <field name="name">tour_pos_debt_notebook</field>
+        <field name="start_url">/web</field>
+        <field name="assets">assets_backend</field>
+        <field name="set_ids" eval="[(4, ref('open_pos_neworder_set')), (4, ref('add_product_to_order_set')), (4, ref('set_costumer_set')), (4, ref('debt_method_paying_set')),]" />
+    </record>
+
+</odoo>

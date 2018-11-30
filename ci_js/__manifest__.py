@@ -24,9 +24,8 @@
     "data": [
         "security/ir.model.access.csv",
         "views/ci_js_view.xml",
+        "data/data.xml"
     ],
-    # "demo": [
-    #     "demo/{DEMOFILE1}.xml",
     # ],
     # "qweb": [
     #     "static/src/xml/{QWEBFILE1}.xml",

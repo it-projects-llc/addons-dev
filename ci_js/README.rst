@@ -45,4 +45,4 @@ Changelog: `<doc/changelog.rst>`_
 
 Notifications on updates: `via Atom <https://github.com/it-projects-llc/addons-dev/commits/10.0/ci_js.atom>`_, `by Email <https://blogtrottr.com/?subscribe=https://github.com/it-projects-llc/addons-dev/commits/10.0/ci_js.atom>`_
 
-Tested on Odoo 10.0 {ODOO_COMMIT_SHA_TO_BE_UPDATED}
+Tested on Odoo 10.0 854eb97b2ef371b70c49ebe6ba39e431bfb74fe3
