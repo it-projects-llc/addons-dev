@@ -4,16 +4,16 @@
     "name": """POS Absolute and Relative Discounts""",
     "summary": """Provides absolute discounting for Point of Sale""",
     "category": "Point of Sale",
-    "version": "11.0.1.0.0",
+    "version": "12.0.1.0.0",
     "application": False,
 
     "author": "IT-Projects LLC, Kolushov Alexandr",
     "support": "apps@it-projects.info",
-    "website": "https://it-projects.info",
+    "website": "https://apps.odoo.com/apps/modules/12.0/pos_discount_absolute/",
     "license": "LGPL-3",
 
     "depends": [
-        "pos_discount_base",
+        "pos_discount",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
