@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
+<odoo noupdate="1">
+
+    <record id="group_decrease_kitchen" model="res.groups">
+        <field name="name">Point of Sale - Decrease Kitchen</field>
+        <field name="category_id" ref="base.module_category_usability"/>
+    </record>
+
+    <record id="group_remove_kitchen_order_line" model="res.groups">
+        <field name="name">Point of Sale - Remove Kitchen Orderline</field>
+        <field name="category_id" ref="base.module_category_usability"/>
+    </record>
+
+</odoo>
