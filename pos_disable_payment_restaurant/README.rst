@@ -8,12 +8,15 @@
 
 Control access to POS Restaurant options
 
-The mdoule adds new options on user form (``Point of Sale`` tab):
+The mdoule adds new access rights on user form (``Extra Rights`` section):
 
-* ``Allow change Qty for kitchen orders``
-* ``Allow remove kitchen order line``
+* ``Point of Sale - Decrease Kitchen``
+* ``Point of Sale - Remove Kitchen Orderline``
 
-The module depends on the OCA pos_access_right module. You must use the latest update of the `pos_access_right <https://github.com/OCA/pos/pull/304>`__ module.
+Notes:
+
+* Deactivated ``Point of Sale - Remove Kitchen Orderline`` works only if the rights ``Point of Sale - Decrease Kitchen`` and ``Point of Sale - Decrease Kitchen`` are active
+* The module depends on the OCA ``pos_access_right`` module. You must use `the latest update <https://github.com/OCA/pos/pull/304>`__ of this module
 
 Credits
 =======
