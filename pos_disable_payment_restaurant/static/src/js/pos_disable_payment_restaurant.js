@@ -14,7 +14,8 @@ odoo.define('pos_disable_payment_restaurant', function(require){
     screens.NumpadWidget.include({
         clickChangeMode: function (event) {
             var res = this._super(event);
-            this.check_kitchen_access(event.currentTarget.attributes['data-mode'].nodeValue);
+            var mode = this.state.get('mode');
+            this.check_kitchen_access(mode);
             return res;
         },
         clickDeleteLastChar: function () {
