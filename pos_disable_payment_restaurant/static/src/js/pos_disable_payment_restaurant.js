@@ -29,7 +29,7 @@ odoo.define('pos_disable_payment_restaurant', function(require){
                     'title': _t('Cannot kitchen decrease of orderline - Unauthorized function'),
                     'body':  _t('Please ask your manager to do it.'),
                 });
-            } else if (this.pos.get_cashier().groups_id.indexOf(this.pos.config.group_decrease_kitchen_id[0]) === -1  && (order.get_selected_orderline() && order.get_selected_orderline().was_printed && this.state.get('mode') === 'quantity' )) {
+            } else if (this.pos.get_cashier().groups_id.indexOf(this.pos.config.group_decrease_kitchen_id[0]) === -1 && (order.get_selected_orderline() && order.get_selected_orderline().was_printed && this.state.get('mode') === 'quantity' )) {
                 this.gui.show_popup('error', {
                     'title': _t('Cannot remove kitchen orderline - Unauthorized function'),
                     'body':  _t('Please ask your manager to do it.'),
@@ -44,9 +44,9 @@ odoo.define('pos_disable_payment_restaurant', function(require){
             this.$('.numpad-backspace').removeClass('pos-disabled-mode');
             var order = this.pos.get_order();
             if (order) {
-                var line = line || order.get_selected_orderline();
+                line = line || order.get_selected_orderline();
                 var user = this.pos.get('cashier') || this.pos.get_cashier();
-                if (user.groups_id.indexOf(this.pos.config.group_decrease_kitchen_id[0]) === -1  && (line && line.was_printed && nodeValue === 'quantity' )) {
+                if (user.groups_id.indexOf(this.pos.config.group_decrease_kitchen_id[0]) === -1 && (line && line.was_printed && nodeValue === 'quantity' )) {
                     this.$('.input-button').addClass('pos-disabled-mode');
                     this.$('.numpad-backspace').addClass('pos-disabled-mode');
                     this.disable_numpad = true;
@@ -71,7 +71,7 @@ odoo.define('pos_disable_payment_restaurant', function(require){
             this.check_kitchen_access(line);
             if (numpad.disable_numpad || (line && line.quantity <= 0 && user.groups_id.indexOf(this.pos.config.group_delete_order_line_id[0]) === -1 && numpad.state.get('mode') === "quantity") ||
                 (line && line.quantity <= 0 && line.was_printed && user.groups_id.indexOf(this.pos.config.group_remove_kitchen_order_line_id[0]) === -1 && numpad.state.get('mode') === "quantity") ||
-                (user.groups_id.indexOf(this.pos.config.group_decrease_kitchen_id[0]) === -1  && (line && line.was_printed && numpad.state.get('mode') === 'quantity' ))) {
+                (user.groups_id.indexOf(this.pos.config.group_decrease_kitchen_id[0]) === -1 && (line && line.was_printed && numpad.state.get('mode') === 'quantity' ))) {
                 $('.numpad-backspace').addClass('pos-disabled-mode');
             } else {
                 $('.numpad-backspace').removeClass('pos-disabled-mode');
