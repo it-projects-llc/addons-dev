@@ -30,13 +30,32 @@
                     </t>
                 </h2>
             </div>
+            <t t-set="rfid" t-value="att.rfid || false"/>
             <div class="col-md-8 col-xs-8 rfid" style="display: none">
                 <h2 class="o_client_name">
-                    RFID: <t t-esc="att.rfid || 'no RFID for the attendee'"/>
+                    RFID: <t t-esc="rfid || 'no RFID for the attendee'"/>
                 </h2>
+                <div class="set_rfid_input" style="display:none;">
+                    <input class="mt32" type="text" placeholder="Scan RFID..." size="40"/>
+                </div>
             </div>
             <div class="col-md-4 col-xs-4 rfid accept_button" style="display: none">
-                <!-- -->
+                <t t-if="rfid">
+                    <div class="btn btn-default col-md-4 col-xs-4 rfid_button change_rfid">
+                        <h2>Change RFID</h2>
+                    </div>
+                </t>
+                <t t-if="!rfid &amp;&amp; (att.state == 'open' || att.state == 'draft')">
+                    <div class="btn btn-default col-md-4 col-xs-4 rfid_button add_rfid">
+                        <h2>Add RFID</h2>
+                    </div>
+                </t>
+                <div class="btn btn-default col-md-4 col-xs-4 rfid_button set_rfid" style="display:none;">
+                    <h2>Set RFID</h2>
+                </div>
+                <div class="btn btn-default col-md-4 col-xs-4 rfid_button discard_rfid" style="display:none;">
+                    <h2>Discard</h2>
+                </div>
             </div>
             <t t-if="!att.signed_terms">
                 <div class="col-md-8 col-xs-8 rfid" style="display: none">
@@ -44,8 +63,10 @@
                         Attendee have not signed terms
                     </h2>
                 </div>
-                <div class="btn btn-default col-md-4 col-xs-4 rfid sign_request" style="display: none">
-                    <h2>Send Request</h2>
+                <div class="col-md-4 col-xs-4 rfid sign_request" style="display: none">
+                    <div class="btn btn-default rfid_button sign_button">
+                        <h2>Send Request</h2>
+                    </div>
                 </div>
             </t>
             <t t-else="">
@@ -55,8 +76,11 @@
                             Terms are signed
                         </h2>
                     </div>
-                    <div class="btn btn-primary col-md-4 col-xs-4 rfid accept_request" style="display: none">
-                        <h2>Accept</h2>
+                    <div class="col-md-4 col-xs-4 rfid accept_request" style="display: none">
+                        <!--<h2>Accept</h2>-->
+                        <div class="btn btn-default rfid_button sign_button">
+                            <h2>Accept</h2>
+                        </div>
                     </div>
                 </t>
                 <t t-else="">

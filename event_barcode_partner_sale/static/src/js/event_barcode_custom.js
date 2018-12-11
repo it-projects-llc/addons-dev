@@ -60,7 +60,6 @@ event_barcode.EventScanView.include({
                 event_ticket_id: self.$('.attendee_creation.event_ticket').val(),
                 partner_id: new_data_container.getAttributes().pid || 0,
             }).then(function(res){
-                console.log(res);
                 new_data_container.hide();
                 all_att_fields.val('');
                 new_data_container.attr('pid', '');
@@ -83,7 +82,6 @@ event_barcode.EventScanView.include({
         var data_container = this.$('#new_attendee_data');
         check_button.addClass('disabled');
         if (data.partner) {
-            console.log(data);
             var partner = data.partner;
             var fields = _.keys(partner);
             var input = false;

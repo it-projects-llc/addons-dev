@@ -57,7 +57,7 @@ event_barcode.EventScanView.include({
             self.update_bus();
         });
 
-        this.rfid_templates = this.data.rfid_templates.split(',');
+        this.rfid_templates = this.data.rfid_templates && this.data.rfid_templates.split(',');
     },
 
     update_bus: function(){
@@ -192,46 +192,94 @@ event_barcode.EventScanView.include({
         });
         var new_rows = table.find('.client_cell').on('click', function(e){
             var row = e.target.closest('.client_cell');
-            var list = row.parentElement;
-
-            var aid = row.getAttribute('aid');
-            $(list).find('.rfid').hide();
-            $(row).find('.rfid').show();
-            $(row).find('.o_client_div').off().on('click', function(e){
-                console.log(self)
-                var url = self.data.attendee_url[0] + aid + self.data.attendee_url[1];
-                openInNewTab(url);
-            });
-            $(row).find('.sign_request').off().on('click', function(e){
-                Session.rpc('/event_barcode/sign_request', {
-                     attendee_id: aid,
-                     event_id: self.action.context.active_id,
-                     barcode_interface_id: self.interface_session_number,
-                });
-            });
-            $(row).find('.accept_request').off().on('click', function(e){
-                Session.rpc('/event_barcode/register_attendee_by_id', {
-                     attendee_id: aid,
-                }).then(function(result) {
-                    if (result.success) {
-                        self.updateCount(
-                            self.$('.o_event_reg_attendee'),
-                            result.count
-                        );
-                        self.notification_manager.success(result.success);
-                    } else if (result.warning) {
-                        self.do_warn(_("Warning"), result.warning);
-                    }
-                    self.update_interface_els(result.data);
-                });
-            });
-            self.set_attendee_by_id(aid);
+            self.open_and_activate_row_actions(row);
         });
 
         if (data.length === 1) {
-            this.$('.o_event_barcode_detail.client_info.text-center .client_cell').find('.rfid').show();
+            var client_row = this.$('.o_event_barcode_detail.client_info.text-center .client_cell');
+            self.open_and_activate_row_actions(client_row[0]);
             this.set_attendee_by_id(data[0].aid);
         }
+    },
+
+    open_and_activate_row_actions: function(row){
+        var self = this;
+
+        var list = row.parentElement;
+        var aid = row.getAttribute('aid');
+        $(list).find('.rfid').hide();
+        $(row).find('.rfid').show();
+        $(row).find('.o_client_div').off().on('click', function(e){
+            var url = self.data.attendee_url[0] + aid + self.data.attendee_url[1];
+            openInNewTab(url);
+        });
+
+        var show_custom_rfid_setting = function(row){
+            $(row).find('.set_rfid_input').show().find('input').focus();
+            $(row).find('.set_rfid').show();
+            $(row).find('.discard_rfid').show();
+            $(row).find('.change_rfid').hide();
+            $(row).find('.add_rfid').hide();
+        };
+
+        var hide_custom_rfid_setting = function(row){
+            $(row).find('.set_rfid_input').hide().find('input').focusout();
+            $(row).find('.set_rfid').hide();
+            $(row).find('.discard_rfid').hide();
+            if (self.attendee.rfid) {
+                $(row).find('.change_rfid').show();
+            } else {
+                $(row).find('.add_rfid').show();
+            }
+        };
+
+        $(row).find('.rfid_button.add_rfid').off().on('click', function(e){
+            show_custom_rfid_setting(row);
+        });
+        $(row).find('.rfid_button.change_rfid').off().on('click', function(e){
+            show_custom_rfid_setting(row);
+        });
+        $(row).find('.rfid_button.discard_rfid').off().on('click', function(e){
+            hide_custom_rfid_setting(row);
+        });
+        $(row).find('.rfid_button.set_rfid').off().on('click', function(e){
+
+            var input_value = $(row).find('.set_rfid_input input').val();
+            if (input_value) {
+                self.make_request_and_update('/event_barcode/set_rfid', {
+                     aid: self.attendee.aid,
+                     rfid: input_value,
+                }).then(function(res){
+                    hide_custom_rfid_setting(row);
+                });
+            }
+
+        });
+
+        $(row).find('.sign_request').off().on('click', function(e){
+            Session.rpc('/event_barcode/sign_request', {
+                 attendee_id: aid,
+                 event_id: self.action.context.active_id,
+                 barcode_interface_id: self.interface_session_number,
+            });
+        });
+        $(row).find('.accept_request').off().on('click', function(e){
+            Session.rpc('/event_barcode/register_attendee_by_id', {
+                 attendee_id: aid,
+            }).then(function(result) {
+                if (result.success) {
+                    self.updateCount(
+                        self.$('.o_event_reg_attendee'),
+                        result.count
+                    );
+                    self.notification_manager.success(result.success);
+                } else if (result.warning) {
+                    self.do_warn(_("Warning"), result.warning);
+                }
+                self.update_interface_els(result.data);
+            });
+        });
+        this.set_attendee_by_id(aid);
     },
 
     update_bracelet_table: function(data) {
@@ -240,7 +288,6 @@ event_barcode.EventScanView.include({
         bracelet_container[0].innerHTML = '';
         var new_table = QWeb.render('bracelet_table', {'bracelets':data}) ;
         bracelet_container.append(new_table);
-        console.log();
     },
 
     set_attendee_by_id: function(aid) {

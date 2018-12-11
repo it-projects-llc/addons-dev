@@ -27,6 +27,35 @@
     border-style: solid;
     display: inherit;
 }
+.o_event_barcode_detail.client_info  .rfid_button {
+    width: 100%;
+    border-radius: 5px;
+    border: solid;
+    border-color: #aba7a7;
+    border-width: 2px;
+    text-transform: capitalize;
+    margin: 5px;
+}
+.o_event_barcode_detail.client_info  .sign_button {
+    border-radius: 5px;
+    border: solid;
+    border-color: #aba7a7;
+    border-width: 2px;
+    text-transform: capitalize;
+}
+
+.o_event_barcode_detail .set_rfid_input input {
+    width: 100%;
+    border: 1px solid #c4c4c4;
+    font-size: 19px;
+    padding: 4px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    box-shadow: 0px 0px 8px #d9d9d9;
+    -moz-box-shadow: 0px 0px 8px #d9d9d9;
+    -webkit-box-shadow: 0px 0px 8px #d9d9d9;
+}
 
 .o_event_barcode_detail.bracelets_info {
 

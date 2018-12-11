@@ -10,18 +10,10 @@ var Widget = require('web.Widget');
 var Session = require('web.session');
 var local_storage = require('web.local_storage');
 var BarcodeHandlerMixin = require('barcodes.BarcodeHandlerMixin');
-//var event_toggleFullScreen = require('event_barcode_partner.event_models');
 
 var QWeb = core.qweb;
 var _t = core._t;
 
-//$( document ).ready(function() {
-//    console.log( "ready!" );
-//    if (!document.webkitIsFullScreen) {
-//        event_toggleFullScreen.toggleFullScreen(document.documentElement);
-//        $('nav').hide();
-//    }
-//});
 
 var AcceptModalKiosk = Widget.extend({
     events: {

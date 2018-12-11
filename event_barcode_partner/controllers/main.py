@@ -223,9 +223,9 @@ class EventBarcodeExtended(EventBarcode):
 
         return attendee.id\
 
-    @http.route('/event_barcode/go_to_attendee_form', type="json", auth="user")
-    def redirect_to_attendee(self, attendee_id):
-
-        first_url = request.env['ir.config_parameter'].get_param('web.base.url')
-        second_url = base_url + "/web#id=" + str(attendee_id) + "&view_type=form&model=event.registration"
-        return []
+    # @http.route('/event_barcode/go_to_attendee_form', type="json", auth="user")
+    # def redirect_to_attendee(self, attendee_id):
+    #
+    #     first_url = request.env['ir.config_parameter'].get_param('web.base.url')
+    #     second_url = base_url + "/web#id=" + str(attendee_id) + "&view_type=form&model=event.registration"
+    #     return []
