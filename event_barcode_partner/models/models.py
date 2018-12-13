@@ -10,6 +10,7 @@ import base64
 from odoo.exceptions import UserError
 from reportlab.lib.utils import ImageReader
 from pyPdf import PdfFileReader, PdfFileWriter
+from reportlab.pdfgen import canvas
 
 
 _logger = logging.getLogger(__name__)
@@ -29,6 +30,7 @@ class EventRegistration(models.Model):
     barcode = fields.Char(default=_get_random_token)
     rfid = fields.Char(related='partner_id.barcode')
     sign_attachment_id = fields.Many2one('ir.attachment', 'E-Sign')
+    completed_document = fields.Binary(readonly=True, string="Completed Document", attachment=True)
 
     signed_terms = fields.Boolean('Terms are Signed', compute='_compute_signed_terms')
     requested_signature_ids = fields.One2many('signature.request', 'attendee_id', string='Requests')
@@ -41,8 +43,9 @@ class EventRegistration(models.Model):
     @api.multi
     @api.depends('sign_attachment_id')
     def _compute_signed_terms(self):
+        # TODO: make the check according to the document completion, not only its presence
         for r in self:
-            r.signed_terms = bool(r.sign_attachment_id)
+            r.signed_terms = bool(r.completed_document)
 
     @api.model_cr_context
     def _init_column(self, column_name):
@@ -83,21 +86,47 @@ class EventRegistration(models.Model):
 
     @api.one
     def embed_sign_to_pdf(self):
-        # TODO: it
-        print 'Here is a commented code for embedding'
-        # pdf = self.event_request_id.template_id
-        # items = pdf.signature_item_ids
-        # SignatureItemValue = self.env['signature.item.value']
-        # old_pdf = PdfFileReader(StringIO.StringIO(base64.b64decode(self.template_id.attachment_id.datas)))
-        # box = old_pdf.getPage(p).mediaBox
-        # width = int(box.getUpperRight_x())
-        # height = int(box.getUpperRight_y())
-        # for item in items:
-        #     if item.type_id.type == "signature" or item.type_id.type == "initial":
-        #         img = base64.b64decode(self.sign_attachment_id[self.sign_attachment_id.find(',') + 1:])
-        #         can.drawImage(ImageReader(StringIO.StringIO(img)), width * item.posX,
-        #                       height * (1 - item.posY - item.height), width * item.width, height * item.height, 'auto',
-        #                       True)
+        if not self.event_id.signature_template_id:
+            return False
+
+        packet = StringIO.StringIO()
+        can = canvas.Canvas(packet)
+        pdf = self.event_request_id.template_id
+        itemsByPage = pdf.signature_item_ids.getByPage()
+        old_pdf = PdfFileReader(StringIO.StringIO(base64.b64decode(self.event_id.signature_template_id.attachment_id.datas)))
+        for p in range(0, old_pdf.getNumPages()):
+            if (p+1) not in itemsByPage:
+                can.showPage()
+                continue
+            items = itemsByPage[p + 1]
+            for item in items:
+                value = self.sign_attachment_id
+                if not value:
+                    continue
+
+                # value = value.value
+                box = old_pdf.getPage(p).mediaBox
+                width = int(box.getUpperRight_x())
+                height = int(box.getUpperRight_y())
+                if item.type_id.type == "signature" or item.type_id.type == "initial":
+                    img = base64.b64decode(value.datas[value.datas.find(',') + 1:])
+                    can.drawImage(ImageReader(StringIO.StringIO(img)), width*item.posX, height*(1-item.posY-item.height), width*item.width, height*item.height, 'auto', True)
+            can.showPage()
+        can.save()
+        item_pdf = PdfFileReader(packet)
+        new_pdf = PdfFileWriter()
+
+        for p in range(0, old_pdf.getNumPages()):
+            page = old_pdf.getPage(p)
+            page.mergePage(item_pdf.getPage(p))
+            new_pdf.addPage(page)
+
+        output = StringIO.StringIO()
+        new_pdf.write(output)
+        self.completed_document = base64.b64encode(output.getvalue())
+        output.close()
+
+        return True
 
     @api.multi
     def redirect_to_attendee(self, attendee_id):

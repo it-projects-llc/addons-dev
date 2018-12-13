@@ -146,8 +146,6 @@ class EventBarcodeExtended(EventBarcode):
 
         attendee = request.env["event.registration"].browse(int(attendee_id))
         sign_req = attendee.event_request_id
-        # import wdb
-        # wdb.set_trace()
         if not sign_req:
             if not attendee.event_id.signature_template_id:
                 channel_name = "bi.longpolling.notifs"
@@ -210,7 +208,8 @@ class EventBarcodeExtended(EventBarcode):
             'sign_attachment_id': attachment.id,
         })
 
-        # attendee.embed_sign_to_pdf()
+        # embed_sign_to_pdf returns false if smth's wrong
+        is_embedded = attendee.embed_sign_to_pdf()
 
         result = self.compound_vals(attendee, attendee.event_id.id)
         result['notification'] = {
@@ -218,6 +217,13 @@ class EventBarcodeExtended(EventBarcode):
             'header': 'Terms Are Signed',
             'message': '',
         }
+        if not is_embedded:
+            result['notification'] = {
+                'type': 'error',
+                'header': 'Something went wrong',
+                'message': 'PDF is not created, Sing is saved',
+            }
+
         channel_name = "bi.longpolling.notifs"
         attendee.event_id.send_to_barcode_interface(channel_name, barcode_interface_id, json.dumps(result))
 

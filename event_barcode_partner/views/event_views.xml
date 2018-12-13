@@ -14,6 +14,7 @@
                     <field name="signed_terms"/>
                     <field name="requested_signature_ids"/>
                     <field name="event_request_id"/>
+                    <field name="completed_document"/>
                 </group>
             </xpath>
 
