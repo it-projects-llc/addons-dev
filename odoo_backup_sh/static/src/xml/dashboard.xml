@@ -41,6 +41,12 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                         Auto/manual backup, auto rotation, remote storage for your backups, detailed statistics, etc.
                     </p>
                 </div>
+                <t t-foreach="widget.notifications" t-as="notification">
+                    <div class="o_backup_dashboard_notification" t-att-data-notification_id="notification.id">
+                        <t t-esc="notification.message"/>
+                        <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
+                    </div>
+                </t>
                 <div class="o_backup_dashboard_inactive_warning" t-if="widget.show_inactive_warning">
                     <strong>Warning: </strong>You have not active configs with auto backups.
                 </div>

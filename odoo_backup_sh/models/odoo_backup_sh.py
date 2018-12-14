@@ -4,6 +4,7 @@
 import copy
 import logging
 import os
+import requests
 import tempfile
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
@@ -25,7 +26,7 @@ from odoo import api, fields, models, exceptions
 from odoo.exceptions import UserError
 from odoo.tools import config, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.translate import _
-from ..controllers.main import BackupController
+from ..controllers.main import BackupController, BACKUP_SERVICE_ENDPOINT
 
 _logger = logging.getLogger(__name__)
 
@@ -352,6 +353,44 @@ class BackupInfo(models.Model):
         res = super(BackupInfo, self).unlink()
         self.env['odoo_backup_sh.remote_storage'].compute_total_used_remote_storage()
         return res
+
+
+class BackupNotification(models.Model):
+    _name = 'odoo_backup_sh.notification'
+    _description = 'Backup Notifications'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'date_create desc'
+
+    date_create = fields.Datetime('Date', readonly=True)
+    message = fields.Text('Message', readonly=True)
+    is_read = fields.Boolean('Is Read', readonly=True)
+
+    @api.multi
+    def toggle_is_read(self):
+        self.write({'is_read': not self.is_read})
+        self.activity_ids.unlink()
+        return True
+
+    @api.model
+    def fetch_notifications(self):
+        config_params = self.env['ir.config_parameter'].sudo()
+        response = requests.get(
+            BACKUP_SERVICE_ENDPOINT + '/fetch_notifications',
+            params={'date_last_request': config_params.get_param('odoo_backup_sh.date_last_request', None)}
+        ).json()
+        config_params.set_param('odoo_backup_sh.date_last_request', response['date_last_request'])
+        for n in response['notifications']:
+            new_record = self.create({
+                'date_create': n['date_create'],
+                'message': n['message'],
+            })
+            self.env['mail.activity'].create({
+                'res_id': new_record.id,
+                'res_model_id': self.env.ref('odoo_backup_sh.model_odoo_backup_sh_notification').id,
+                'activity_type_id': self.env.ref('odoo_backup_sh.mail_activity_data_notification').id,
+                'summary': 'Please read important message.',
+                'date_deadline': datetime.today().strftime(DEFAULT_SERVER_DATE_FORMAT),
+            })
 
 
 class BackupRemoteStorage(models.Model):

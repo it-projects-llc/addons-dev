@@ -27,6 +27,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         'click .o_dashboard_action_make_backup': 'o_dashboard_action_make_backup',
         'click .o_dashboard_action_up_balance': 'o_dashboard_action_up_balance',
         'click .o_dashboard_action_view_backups': 'o_dashboard_action_view_backups',
+        'click .o_backup_dashboard_notification .close': 'close_dashboard_notification',
     },
 
     willStart: function() {
@@ -44,6 +45,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
             }).done(function(results) {
                 self.remote_storage_usage_graph_values = results.remote_storage_usage_graph_values;
                 self.configs = results.configs;
+                self.notifications = results.notifications;
                 self.show_nocontent_msg = results.configs.length === 0;
                 self.show_inactive_warning = !self.show_nocontent_msg &&
                     results.configs.every(function (config) {
@@ -235,7 +237,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
     o_dashboard_action_up_balance: function (ev) {
         ev.preventDefault();
         this._rpc({
-            model: 'odoo_backup_sh.backup',
+            model: 'odoo_backup_sh.config',
             method: 'check_insufficient_credit',
             kwargs: {
                 credit: 1000000,
@@ -245,6 +247,18 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
             success: function(url) {
                 window.open(url.result);
             },
+        });
+    },
+
+    close_dashboard_notification: function (ev) {
+        ev.preventDefault();
+        var $o_backup_dashboard_notification = $(ev.currentTarget).closest('.o_backup_dashboard_notification');
+        this._rpc({
+            model: 'odoo_backup_sh.notification',
+            method: 'toggle_is_read',
+            args: [$o_backup_dashboard_notification.data('notification_id')]
+        }).then(function () {
+            $o_backup_dashboard_notification.hide();
         });
     },
 

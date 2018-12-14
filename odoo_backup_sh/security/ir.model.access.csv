@@ -2,4 +2,5 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_odoo_backup_sh_config,access_odoo_backup_sh_config,model_odoo_backup_sh_config,,1,1,1,1
 access_odoo_backup_sh_config_cron,access_odoo_backup_sh_config_cron,model_odoo_backup_sh_config_cron,,1,1,1,1
 access_odoo_backup_sh_backup_info,access_odoo_backup_sh_backup_info,model_odoo_backup_sh_backup_info,,1,1,1,1
+access_odoo_backup_sh_notification,access_odoo_backup_sh_notification,model_odoo_backup_sh_notification,,1,1,1,1
 access_odoo_backup_sh_remote_storage,access_odoo_backup_sh_remote_storageo,model_odoo_backup_sh_remote_storage,,1,1,1,1

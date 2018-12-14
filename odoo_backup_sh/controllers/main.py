@@ -82,12 +82,13 @@ class BackupController(http.Controller):
             cloud_params = cls.update_cloud_params(cloud_params, redirect)
         return cloud_params
 
-    def update_cloud_params(self, cloud_params, redirect):
+    @classmethod
+    def update_cloud_params(cls, cloud_params, redirect):
         user_key = cloud_params['odoo_backup_user_key']
         if not user_key:
             user_key = ''.join(random.choice(string.hexdigits) for _ in range(30))
             config_parser.set('options', 'odoo_backup_user_key', user_key)
-            self.write_config(config_parser)
+            cls.write_config(config_parser)
         cloud_params = requests.get(
             BACKUP_SERVICE_ENDPOINT + '/get_cloud_params',
             params={'user_key': user_key, 'redirect': redirect}
@@ -95,7 +96,7 @@ class BackupController(http.Controller):
         if 'auth_link' not in cloud_params:
             for param_key, param_value in cloud_params.items():
                 config_parser.set('options', param_key, param_value)
-            self.write_config(config_parser)
+            cls.write_config(config_parser)
             cloud_params['updated'] = True  # The mark that all params are updated
         return cloud_params
 
@@ -256,4 +257,9 @@ class BackupController(http.Controller):
                 }]
             })
         dashboard_data['configs'] = backup_configs
+        dashboard_data.update({
+            'configs': backup_configs,
+            'notifications': request.env['odoo_backup_sh.notification'].search_read(
+                [('is_read', '=', False)], ['id', 'date_create', 'message'])
+        })
         return dashboard_data
