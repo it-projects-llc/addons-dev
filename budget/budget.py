@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Author: Arnaud Wüst
@@ -18,118 +17,65 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from datetime import date, datetime
+from datetime import datetime
 import calendar
 
-from openerp.osv import fields, orm
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
+from odoo import fields, models, api, _
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DTF
 
 
-class budget_budget(orm.Model):
+class BudgetBudget(models.Model):
 
     """ Budget Model. The module's main object.  """
     _name = "budget.budget"
     _description = "Budget"
     _order = 'name ASC'
 
-    def _get_active_version(self, cr, uid, ids, field_name, arg, context=None):
-        version_obj = self.pool['budget.version']
-        result = {}
+    @api.depends('budget_version_ids', 'budget_version_ids.is_active')
+    def _compute_active_version(self):
+        if self.budget_version_ids:
+            self.active_version_id = self.budget_version_ids.filtered(lambda x: x.is_active is True).id
 
-        for budget_id in ids:
-            active_ids = version_obj.search(cr, uid, [
-                ('budget_id', '=', budget_id),
-                ('is_active', '=', True),
-            ], context=context)
+    code = fields.Char('Code')
+    name = fields.Char('Name', required=True)
+    active = fields.Boolean('Active', default=lambda *args: 1)
+    start_date = fields.Date('Start Date', required=True)
+    stop_date = fields.Date('End Date')
+    budget_item_id = fields.Many2one('budget.item', 'Budget Structure', required=True, ondelete='restrict')
+    budget_version_ids = fields.One2many('budget.version', 'budget_id', 'Budget Versions', readonly=True)
+    active_version_id = fields.Many2one('budget.version', compute=_compute_active_version, string='Active Version')
+    note = fields.Text('Notes')
+    create_date = fields.Datetime('Creation Date', readonly=True)
 
-            result[budget_id] = active_ids and active_ids[0] or False
+    @api.onchange('start_date', 'stop_date')
+    def _onchange_start_stop_date(self):
+        if self.start_date and not self.stop_date:
+            start_date = datetime.strptime(self.start_date, DTF)
+            last_day_of_month = calendar.monthrange(start_date.year, start_date.month)[1]
+            self.stop_date = datetime(year=start_date.year, month=start_date.month, day=last_day_of_month)
 
-        return result
+        if self.stop_date and not self.start_date:
+            self.stop_date = False
+            return {
+                'warning': {
+                    'title': _("Error"),
+                    'message': _("Date Error: The end date is defined before the start date"),
+                }
+            }
 
-    _columns = {
-        'code': fields.char('Code'),
-        'name': fields.char('Name', required=True),
-        'active': fields.boolean('Active'),
-        'start_date': fields.date('Start Date', required=True),
-        'end_date': fields.date('End Date', required=True),
-        'budget_item_id': fields.many2one('budget.item',
-                                          'Budget Structure',
-                                          required=True,
-                                          ondelete='restrict'),
-        'budget_version_ids': fields.one2many('budget.version',
-                                              'budget_id',
-                                              'Budget Versions',
-                                              readonly=True),
-        'active_version_id': fields.function(
-            _get_active_version,
-            string='Active Version',
-            type='many2one',
-            relation='budget.version',
-        ),
-        'note': fields.text('Notes'),
-        'create_date': fields.datetime('Creation Date', readonly=True)
-    }
+        if self.stop_date and self.start_date and self.stop_date < self.start_date:
+            return {
+                'warning': {
+                    'title': _("Error"),
+                    'message': _("End Date cannot be earlier then Start Date"),
+                }
+            }
 
-    _defaults = {
-        'active': True,
-    }
-
-    def _check_start_end_dates(self, cr, uid, ids, context=None):
-        """ check the start date is before the end date """
-        lines = self.browse(cr, uid, ids)
-        for l in lines:
-            if l.end_date < l.start_date:
-                return False
-        return True
-
-    _constraints = [
-        (_check_start_end_dates,
-         'Date Error: The end date is defined before the start date',
-         ['start_date', 'end_date']),
-    ]
-
-    def name_search(self, cr, uid, name, args=None,
-                    operator='ilike', context=None, limit=100):
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
         """ Extend search to look in name and code """
         if args is None:
             args = []
-        ids = self.search(cr, uid,
-                          ['|',
-                           ('name', operator, name),
-                           ('code', operator, name)] + args,
-                          limit=limit,
-                          context=context)
-        return self.name_get(cr, uid, ids, context=context)
-
-    def _get_periods(self, cr, uid, ids, context=None):
-        """ return the list of budget's periods ordered by date_start"""
-        if context is None:
-            context = {}
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        period_obj = self.pool.get('account.period')
-        result = []
-        for budget in self.browse(cr, uid, ids, context=context):
-            period_ids = period_obj.search(
-                cr, uid,
-                [('date_stop', '>', budget.start_date),
-                 ('date_start', '<', budget.end_date)],
-                order="date_start ASC",
-                context=context)
-            result += period_obj.browse(cr, uid, period_ids, context=context)
-        return result
-
-    def on_change_start_date(self, cr, uid, ids, start_date_str, context=None):
-        start_date = datetime.strptime(start_date_str, DATE_FORMAT)
-
-        last_day_of_month = calendar.monthrange(start_date.year,
-                                                start_date.month)[1]
-
-        end_date = datetime(
-            year=start_date.year,
-            month=start_date.month,
-            day=last_day_of_month)
-
-        end_date_str = date.strftime(end_date, DATE_FORMAT)
-
-        return {'value': {'end_date': end_date_str}}
+        domain = ['|', ('name', operator, name), ('code', operator, name)]
+        budgets = self.search(domain + args, limit=limit)
+        return budgets.name_get()

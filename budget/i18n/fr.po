@@ -56,8 +56,8 @@ msgid "Group By..."
 msgstr "Grouper Par..."
 
 #. module: budget
-#: field:budget.budget,end_date:0
-#: field:budget.line,date_stop:0
+#: field:budget.budget,stop_date:0
+#: field:budget.line,stop_date:0
 msgid "End Date"
 msgstr "Date Fin"
 
@@ -406,7 +406,7 @@ msgstr "Lignes de budget"
 
 #. module: budget
 #: field:budget.budget,start_date:0
-#: field:budget.line,date_start:0
+#: field:budget.line,start_date:0
 msgid "Start Date"
 msgstr "Date Début"
 

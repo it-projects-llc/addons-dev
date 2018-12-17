@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Author: Guewen Baconnier
@@ -18,14 +17,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import orm, fields
+from odoo import fields, models
 
 
-class account_analytic_account(orm.Model):
+class AccountAnalyticAccount(models.Model):
     _inherit = 'account.analytic.account'
-
-    _columns = {
-        'budget_line_ids': fields.one2many('budget.line',
-                                           'analytic_account_id',
-                                           string='Budget Lines'),
-    }
+    budget_line_ids = fields.One2many('budget.line', 'analytic_account_id', string='Budget Lines', copy=False)

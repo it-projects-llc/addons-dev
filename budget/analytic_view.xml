@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data noupdate="0">
+<odoo noupdate="0">
 
         <!-- lines displayed from the analytic account -->
         <record model="ir.ui.view" id="view_budget_line_analytic_list">
@@ -14,8 +13,8 @@
                     <field name="budget_version_id" />
                     <field name="budget_item_id"  domain="[('type', '=', 'normal')]" />
                     <field name="name" />
-                    <field name="date_start"/>
-                    <field name="date_stop"/>
+                    <field name="start_date"/>
+                    <field name="stop_date"/>
                     <field name="amount" />
                     <field name="currency_id" />
                     <field name="analytic_amount"
@@ -47,5 +46,4 @@
             res_model="budget.line"
             src_model="account.analytic.account"/>
 
-    </data>
-</openerp>
+</odoo>

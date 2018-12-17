@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Author: Arnaud Wüst, Guewen Baconnier
@@ -46,22 +45,15 @@ well.
 
     """,
  "complexity": "expert",
- "depends": ["base",
-             "account",
-             "analytic_multicurrency",
-             ],
- "data": ["budget_view.xml",
-          "analytic_view.xml",
-          "security/security.xml",
-          "security/ir.model.access.csv"
-          ],
- "test": [
-     "test/setup_user.yml",
-     "test/test_analytic_amount.yml",
-     "test/test_duplicate_budget.yml",
-     "test/test_default_end_date.yml",
-     "test/test_active_version.yml",
+ "depends": [
+     "account_invoicing",
  ],
- "installable": False,
+ "data": [
+     "budget_view.xml",
+     "analytic_view.xml",
+     "security/security.xml",
+     "security/ir.model.access.csv"
+ ],
+ "installable": True,
  "application": True,
  }

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Author: Arnaud Wüst, Leonardo Pistone
@@ -18,10 +17,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import fields, orm
+from odoo import fields, api, models
 
 
-class BudgetVersion(orm.Model):
+class BudgetVersion(models.Model):
 
     """ Budget version.
 
@@ -30,82 +29,45 @@ class BudgetVersion(orm.Model):
 
     _name = "budget.version"
     _description = "Budget versions"
-
     _order = 'name ASC'
 
-    _columns = {
-        'code': fields.char('Code'),
-        'name': fields.char('Version Name', required=True),
-        'budget_id': fields.many2one('budget.budget',
-                                     string='Budget',
-                                     required=True,
-                                     ondelete='cascade'),
-        'currency_id': fields.many2one('res.currency',
-                                       string='Currency',
-                                       required=True),
-        'company_id': fields.many2one('res.company',
-                                      string='Company',
-                                      required=True),
-        'user_id': fields.many2one('res.users', string='User In Charge'),
-        'budget_line_ids': fields.one2many('budget.line',
-                                           'budget_version_id',
-                                           string='Budget Lines'),
-        'note': fields.text('Notes'),
-        'create_date': fields.datetime('Creation Date', readonly=True),
-        'ref_date': fields.date('Reference Date', required=True),
-        'is_active': fields.boolean(
-            'Active version',
-            readonly=True,
-            help='Each budget can have no more than one active version.')
-    }
+    code = fields.Char('Code')
+    name = fields.Char('Version Name', required=True)
+    budget_id = fields.Many2one('budget.budget', string='Budget', required=True, ondelete='cascade')
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True)
+    company_id = fields.Many2one('res.company', string='Company', required=True,
+                                 default=lambda self: self.env['res.company']._company_default_get('account.account'))
+    user_id = fields.Many2one('res.users', string='User In Charge')
+    budget_line_ids = fields.One2many('budget.line', 'budget_version_id', string='Budget Lines')
+    note = fields.Text('Notes')
+    create_date = fields.Datetime('Creation Date', readonly=True)
+    ref_date = fields.Date('Reference Date', required=True, default=fields.Date.context_today)
+    is_active = fields.Boolean('Active version', readonly=True,
+                               help='Each budget can have no more than one active version.')
 
-    _defaults = {
-        'ref_date': fields.date.context_today,
-        'company_id':
-        lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(
-            cr, uid, 'account.account', context=c),
-    }
-
-    def name_search(self, cr, uid, name, args=None, operator='ilike',
-                    context=None, limit=100):
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
         """Extend search to name and code. """
-
         if args is None:
             args = []
-        ids = self.search(cr, uid,
-                          ['|',
-                           ('name', operator, name),
-                           ('code', operator, name)] + args,
-                          limit=limit,
-                          context=context)
-        return self.name_get(cr, uid, ids, context=context)
+        domain = ['|', ('name', operator, name), ('code', operator, name)]
+        versions = self.search(domain + args, limit=limit)
+        return versions.name_get()
 
-    def _get_periods(self, cr, uid, version, context=None):
-        """return periods informations used by this version.
-
-        (the periods are those between start and end dates defined in
-         budget)"""
-        budget_obj = self.pool.get('budget.budget')
-        return budget_obj._get_periods(cr, uid, version.budget_id.id,
-                                       context=context)
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        self.write(cr, uid, id, {'is_active': False}, context)
-
+    @api.multi
+    def copy(self, default=None):
+        self.ensure_one()
+        self.write({
+            'is_active': False
+        })
         if default is None:
             default = {}
-
         default['budget_line_ids'] = []
+        return super(BudgetVersion, self).copy(default)
 
-        return super(BudgetVersion, self).copy(
-            cr, uid, id, default, context)
-
-    def make_active(self, cr, uid, ids, context=None):
-        for this_version in self.browse(cr, uid, ids, context):
-            this_version.write({'is_active': True})
-
-            other_versions = self.search(cr, uid, [
-                ('budget_id', '=', this_version.budget_id.id),
-                ('id', '!=', this_version.id),
-            ], context=context)
-            self.write(cr, uid, other_versions, {'is_active': False}, context)
+    @api.multi
+    def make_active(self):
+        for r in self:
+            r.write({'is_active': True})
+            other_versions = self.search([('budget_id', '=', r.budget_id.id), ('id', '!=', r.id)])
+            other_versions.write({'is_active': False})

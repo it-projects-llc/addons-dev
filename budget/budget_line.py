@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Author: Arnaud Wüst
@@ -18,13 +17,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from operator import itemgetter
-from itertools import imap
-from openerp.osv import fields, orm
-from openerp.addons import decimal_precision as dp
+from odoo import fields, models, api, _
+from odoo.addons import decimal_precision as dp
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DTF
+from datetime import datetime
 
 
-class budget_line(orm.Model):
+class BudgetLine(models.Model):
 
     """ Budget line.
 
@@ -32,280 +31,129 @@ class budget_line(orm.Model):
 
     _name = "budget.line"
     _description = "Budget Lines"
-
     _order = 'name ASC'
 
-    def _get_alloc_rel(self, cr, uid, ids, context=None):
-        item_obj = self.pool['budget.item']
-        line_obj = self.pool['budget.line']
-        item_ids = item_obj.search(cr, uid, [('allocation_id', 'in', ids)],
-                                   context=context)
-        if item_ids:
-            line_ids = line_obj.search(cr, uid,
-                                       [('budget_item_id', 'in', item_ids)],
-                                       context=context)
-            return line_ids
-        return []
+    @api.depends('currency_id', 'budget_currency_id', 'amount')
+    def _compute_budget_currency_amount(self):
+        """ line's amount xchanged in the budget's currency """
+        for r in self:
+            if r.budget_currency_id and r.amount:
+                r.budget_amount = r.currency_id.compute(r.amount, r.budget_currency_id)
 
-    _store_tuple = (lambda self, cr, uid, ids, c=None: ids,
-                    ['budget_item_id'], 10)
-    _alloc_store_tuple = (_get_alloc_rel, [], 20)
-
-    def _get_budget_currency_amount(self, cr, uid, ids, name, arg,
-                                    context=None):
-        """ return the line's amount xchanged in the budget's currency """
-        res = {}
-        currency_obj = self.pool.get('res.currency')
-        # We get all values from DB
-        for line in self.browse(cr, uid, ids, context=context):
-            budget_currency_id = line.budget_currency_id.id
-            res[line.id] = currency_obj.compute(cr, uid,
-                                                line.currency_id.id,
-                                                budget_currency_id,
-                                                line.amount,
-                                                context=context)
-        return res
-
-    def _get_analytic_amount(self, cr, uid, ids, field_names=None,
-                             arg=False, context=None):
-        """ Compute the amounts in the analytic account's currency"""
-        res = {}
-        if field_names is None:
-            field_names = []
-        currency_obj = self.pool.get('res.currency')
-        anl_lines_obj = self.pool.get('account.analytic.line')
-
-        for line in self.browse(cr, uid, ids, context=context):
+    @api.depends('currency_id', 'analytic_account_id.line_ids', 'amount')
+    def _compute_analytic_amount(self):
+        """ Compute the amounts in the analytic account's currency """
+        anl_lines_obj = self.env['account.analytic.line']
+        for line in self:
             anl_account = line.analytic_account_id
             if not anl_account:
-                res[line.id] = dict.fromkeys(field_names, 0.0)
                 continue
 
-            line_currency_id = line.currency_id.id
-            anl_currency_id = line.analytic_currency_id.id
-            amount = currency_obj.compute(cr, uid,
-                                          line_currency_id,
-                                          anl_currency_id,
-                                          line.amount,
-                                          context=context)
-            fnl_account_ids = [acc.id for acc
-                               in line.budget_item_id.all_account_ids]
+            anl_currency_id = line.analytic_currency_id
+
+            amount = line.currency_id.compute(line.amount, anl_currency_id)
+            fnl_account_ids = [acc.id for acc in line.budget_item_id.all_account_ids]
 
             # real amount is the total of analytic lines
             # within the time frame, we'll read it in the
             # analytic account's currency, as for the
             # the budget line so we can compare them
-            domain = [('account_id', 'child_of', anl_account.id),
-                      ('general_account_id', 'in', fnl_account_ids)]
-            if line.date_start:
-                domain.append(('date', '>=', line.date_start))
-            if line.date_stop:
-                domain.append(('date', '<=', line.date_stop))
-            anl_line_ids = anl_lines_obj.search(cr, uid, domain,
-                                                context=context)
-            anl_lines = anl_lines_obj.read(
-                cr, uid, anl_line_ids, ['aa_amount_currency'], context=context)
-            real = sum([l['aa_amount_currency'] for l in anl_lines])
-            res[line.id] = {
-                'analytic_amount': amount,
-                'analytic_real_amount': real,
-                'analytic_diff_amount': real - amount,
-            }
-        return res
 
-    def _get_budget_version_currency(self, cr, uid, context=None):
+            domain = [('general_account_id', 'in', fnl_account_ids), ('account_id', '=', anl_account.id)]
+
+            if line.start_date:
+                domain.append(('date', '>=', line.start_date))
+            if line.stop_date:
+                domain.append(('date', '<=', line.stop_date))
+
+            anl_lines = anl_lines_obj.search(domain)
+            real = sum([l.currency_id.compute(l.analytic_amount_currency, anl_currency_id) for l in anl_lines])
+
+            line.analytic_amount = amount
+            line.analytic_real_amount = real
+            line.analytic_diff_amount = real - amount
+
+    def _get_budget_version_currency(self):
         """ return the default currency for this line of account.
         The default currency is the currency set for the budget
         version if it exists """
-        if context is None:
-            context = {}
-        # if the budget currency is already set
-        return context.get('currency_id', False)
+        if self.env.context.get('currency_id'):
+            return self.env['res.currency'].browse(self.env.context['currency_id'])
 
-    def _fetch_budget_line_from_aal(self, cr, uid, ids, context=None):
+    def _fetch_budget_line_from_aal(self):
         """
         return the list of budget line to which belong the
         analytic.account.line `ids´
         """
         account_ids = []
-        budget_line_obj = self.pool.get('budget.line')
-        for aal in self.browse(cr, uid, ids, context=context):
+        for aal in self:
             if aal.account_id and aal.account_id.id not in account_ids:
                 account_ids.append(aal.account_id.id)
+        return self.browse(account_ids)
 
-        line_ids = budget_line_obj.search(cr,
-                                          uid,
-                                          [('analytic_account_id',
-                                            'in',
-                                            account_ids)],
-                                          context=context)
-        return line_ids
+    start_date = fields.Date('Start Date')
+    stop_date = fields.Date('End Date')
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
+    budget_item_id = fields.Many2one('budget.item', string='Budget Item', required=True, ondelete='restrict')
+    allocation = fields.Char(related='budget_item_id.allocation_id.name', string='Budget Item Allocation',
+                             readonly=True)
+    name = fields.Char(string='Description')
+    amount = fields.Float(string='Amount', required=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=_get_budget_version_currency)
+    budget_amount = fields.Float(compute='_compute_budget_currency_amount', string="In Budget's Currency",
+                                 digits=dp.get_precision('Account'), store=True)
+    budget_currency_id = fields.Many2one(related='budget_version_id.currency_id', string='Budget Currency',
+                                         readonly=True)
+    budget_version_id = fields.Many2one('budget.version', string='Budget Version', required=True, ondelete='cascade')
+    analytic_amount = fields.Float(compute='_compute_analytic_amount', digits=dp.get_precision('Account'),
+                                   multi='analytic', string="In Analytic Amount's Currency")
+    analytic_real_amount = fields.Float(compute='_compute_analytic_amount', digits=dp.get_precision('Account'),
+                                        multi='analytic', string="Analytic Real Amount")
+    analytic_diff_amount = fields.Float(compute='_compute_analytic_amount', digits=dp.get_precision('Account'),
+                                        multi='analytic', string="Analytic Difference Amount")
+    analytic_currency_id = fields.Many2one(related='analytic_account_id.currency_id', string='Analytic Currency',
+                                           readonly=True)
 
-    _columns = {
-        'date_start': fields.date('Start Date'),
-        'date_stop': fields.date('End Date'),
-        'analytic_account_id': fields.many2one(
-            'account.analytic.account',
-            string='Analytic Account',
-            domain="[('state', '=', 'open'), ('type', '!=', 'view')]"),
-        'budget_item_id': fields.many2one('budget.item',
-                                          'Budget Item',
-                                          required=True,
-                                          ondelete='restrict'),
-        'allocation': fields.related(
-            'budget_item_id',
-            'allocation_id',
-            'name',
-            type='char',
-            string='Budget Item Allocation',
-            select=True,
-            readonly=True,
-            store={
-                'budget.line': _store_tuple,
-                'budget.allocation.type': _alloc_store_tuple}),
-        'name': fields.char('Description'),
-        'amount': fields.float('Amount', required=True),
-        'currency_id': fields.many2one('res.currency',
-                                       'Currency',
-                                       required=True),
-        'budget_amount': fields.function(
-            _get_budget_currency_amount,
-            type='float',
-            precision=dp.get_precision('Account'),
-            string="In Budget's Currency",
-            store=True),
-        'budget_currency_id': fields.related('budget_version_id',
-                                             'currency_id',
-                                             type='many2one',
-                                             relation='res.currency',
-                                             string='Budget Currency',
-                                             readonly=True),
-        'budget_version_id': fields.many2one('budget.version',
-                                             'Budget Version',
-                                             required=True,
-                                             ondelete='cascade'),
-        'analytic_amount': fields.function(
-            _get_analytic_amount,
-            type='float',
-            precision=dp.get_precision('Account'),
-            multi='analytic',
-            string="In Analytic Amount's Currency",
-            store={
-                'budget.line': (lambda self, cr, uid, ids, c: ids,
-                                ['amount',
-                                 'date_start',
-                                 'date_stop',
-                                 'analytic_account_id',
-                                 'currency_id'], 10),
-                'account.analytic.line': (_fetch_budget_line_from_aal,
-                                          ['amount',
-                                           'unit_amount',
-                                           'date'], 10),
-            }
-        ),
-        'analytic_real_amount': fields.function(
-            _get_analytic_amount,
-            type='float',
-            precision=dp.get_precision('Account'),
-            multi='analytic',
-            string="Analytic Real Amount",
-            store={
-                'budget.line': (lambda self, cr, uid, ids, c: ids,
-                                ['amount',
-                                 'date_start',
-                                 'date_stop',
-                                 'analytic_account_id',
-                                 'currency_id'], 10),
-                'account.analytic.line': (_fetch_budget_line_from_aal,
-                                          ['amount',
-                                           'unit_amount',
-                                           'date'], 10),
-            }
-        ),
-        'analytic_diff_amount': fields.function(
-            _get_analytic_amount,
-            type='float',
-            precision=dp.get_precision('Account'),
-            multi='analytic',
-            string="Analytic Difference Amount",
-            store={
-                'budget.line': (lambda self, cr, uid, ids, c: ids,
-                                ['amount',
-                                 'date_start',
-                                 'date_stop',
-                                 'analytic_account_id',
-                                 'currency_id'], 10),
-                'account.analytic.line': (_fetch_budget_line_from_aal,
-                                          ['amount',
-                                           'unit_amount',
-                                           'date'], 10),
-            }
-        ),
-        'analytic_currency_id': fields.related('analytic_account_id',
-                                               'currency_id',
-                                               type='many2one',
-                                               relation='res.currency',
-                                               string='Analytic Currency',
-                                               readonly=True)
-    }
-
-    _defaults = {
-        'currency_id': lambda self, cr, uid, context:
-        self._get_budget_version_currency(cr, uid, context)
-    }
-
-    def _check_item_in_budget_tree(self, cr, uid, ids, context=None):
-        """ check if the line's budget item is in the budget's structure """
-        lines = self.browse(cr, uid, ids, context=context)
-        budget_item_obj = self.pool.get('budget.item')
-        for line in lines:
-            item_id = line.budget_version_id.budget_id.budget_item_id.id
-            # get list of budget items for this budget
-            flat_items_ids = budget_item_obj.get_sub_item_ids(cr, uid,
-                                                              [item_id],
-                                                              context=context)
-            if line.budget_item_id.id not in flat_items_ids:
-                return False
-        return True
-
-    def _check_dates_budget(self, cr, uid, ids, context=None):
-        """ check if the line dates are within the budget's dates """
+    @api.onchange('start_date', 'stop_date')
+    def _onchange_start_stop_date(self):
         def date_valid(date, budget):
             if not date:
                 return True
-            return (date >= budget.start_date and
-                    date <= budget.end_date)
-        lines = self.browse(cr, uid, ids, context=context)
-        return all(date_valid(line.date_start,
-                              line.budget_version_id.budget_id) and
-                   date_valid(line.date_stop,
-                              line.budget_version_id.budget_id)
-                   for line in lines)
+            else:
+                date = datetime.strptime(date, DTF)
+            return date >= datetime.strptime(budget.start_date, DTF) and date <= datetime.strptime(budget.stop_date, DTF)
 
-    def _check_dates(self, cr, uid, ids, context=None):
-        def dates_valid(start, stop):
-            if not start or not stop:
-                return True
-            return start <= stop
-        lines = self.browse(cr, uid, ids, context=context)
-        return all(dates_valid(line.date_start, line.date_stop)
-                   for line in lines)
+        if self.stop_date and not self.start_date:
+            self.stop_date = False
+            return {
+                'warning': {
+                    'title': _("Error"),
+                    'message': _("The end date must be after the start date"),
+                }
+            }
 
-    _constraints = [
-        (_check_dates_budget,
-         "The line's dates must be within the budget's start and end dates",
-         ['date_start', 'date_stop']),
-        (_check_dates,
-         "The end date must be after the start date.",
-         ['date_start', 'date_stop']),
-        (_check_item_in_budget_tree,
-         "The line's bugdet item must belong to the budget structure "
-         "defined in the budget",
-         ['budget_item_id'])
-    ]
+        if self.start_date and not self.budget_version_id:
+            self.start_date = False
+            return {
+                'warning': {
+                    'title': _("Error"),
+                    'message': _("Please specify Budget Version first"),
+                }
+            }
 
-    def init(self, cr):
+        res = date_valid(self.start_date, self.budget_version_id.budget_id) and date_valid(self.stop_date, self.budget_version_id.budget_id)
+        if res is not True:
+            self.stop_date = False
+            return {
+                'warning': {
+                    'title': _("Error"),
+                    'message': _("The line's dates must be within the budget's start and end dates"),
+                }
+            }
+
+    def init(self):
         def migrate_period(period_column, date_column):
+            cr = self.env.cr
             sql = ("SELECT column_name FROM information_schema.columns "
                    "WHERE table_name = 'budget_line' "
                    "AND column_name = %s")
@@ -322,72 +170,9 @@ class budget_line(orm.Model):
                    ).format(period_column, date_column)
             cr.execute(sql)
 
-        migrate_period('period_id', 'date_start')
-        migrate_period('to_period_id', 'date_stop')
+        migrate_period('period_id', 'start_date')
+        migrate_period('to_period_id', 'stop_date')
 
-    def onchange_analytic_account_id(self, cr, uid, ids, analytic_account_id,
-                                     context=None):
-        values = {}
-        if analytic_account_id:
-            aa_obj = self.pool.get('account.analytic.account')
-            account = aa_obj.browse(cr, uid, analytic_account_id,
-                                    context=context)
-            values['currency_id'] = account.currency_id.id
-        return {'value': values}
-
-    def _sum_columns(self, cr, uid, res, orderby, context=None):
-        """ Compute sum of columns showed by the group by
-
-        :param res: standard group by result
-        :param orderby: order by string sent by webclient
-        :returns: updated dict with missing sums of int and float
-
-        """
-        # We want to sum float and int only
-        cols_to_sum = self._get_applicable_cols()
-        r_ids = self.search(cr, uid, res['__domain'], context=context)
-        lines = self.read(cr, uid, r_ids, cols_to_sum, context=context)
-        if lines:
-            # Summing list of dict For details:
-            # http://stackoverflow.com/questions/974678/
-            # faster implementation as mine even if less readable
-            tmp_res = dict((key, sum(imap(itemgetter(key), lines)))
-                           for key in cols_to_sum)
-            res.update(tmp_res)
-        return res
-
-    def _get_applicable_cols(self):
-        """ Get function columns of numeric types """
-        col_to_return = []
-        for col, val in self._columns.iteritems():
-            if (isinstance(val, fields.function) and
-                    val._type in ('float', 'integer')):
-                col_to_return.append(col)
-        return col_to_return
-
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0,
-                   limit=None, context=None, orderby=False):
-        """ Override in order to see useful values in group by allocation.
-
-        Compute all numerical values.
-
-        """
-        res = super(budget_line, self).read_group(
-            cr, uid, domain, fields, groupby,
-            offset, limit, context, orderby
-        )
-
-        for result in res:
-            self._sum_columns(cr, uid, result, orderby, context=context)
-        # order_by looks like
-        # 'col1 DESC, col2 DESC, col3 DESC'
-        #  Naive implementation we decide of the order using the first DESC ASC
-        if orderby:
-            order = [x.split(' ') for x in orderby.split(',')]
-            reverse = False
-            if order and len(order[0]) > 1:
-                reverse = (order[0][1] == 'DESC')
-            getter = [x[0] for x in order if x[0]]
-            if getter:
-                res = sorted(res, key=itemgetter(*getter), reverse=reverse)
-        return res
+    @api.onchange('analytic_account_id')
+    def onchange_analytic_account_id(self):
+        self.currency_id = self.analytic_account_id.currency_id.id

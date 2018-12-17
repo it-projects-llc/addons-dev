@@ -14,7 +14,7 @@
   The end date should be filled automatically at the end of the same month
 -
   !assert {model: budget.budget, id: budget_test_march}:
-    - end_date == "2013-03-31"
+    - stop_date == "2013-03-31"
 -
   I create another budget starting on April
 -
@@ -26,4 +26,4 @@
   The end date should be on the 30th
 -
   !assert {model: budget.budget, id: budget_test_april}:
-    - end_date == "2013-04-30"
+    - stop_date == "2013-04-30"
