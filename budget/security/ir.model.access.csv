@@ -1,0 +1,7 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_budget_item","budget.item","model_budget_item","account.group_account_manager",1,1,1,1
+"access_budget_budget","budget.budget","model_budget_budget","account.group_account_manager",1,1,1,1
+"access_budget_version","budget.version","model_budget_version","account.group_account_manager",1,1,1,1
+"access_budget_line","budget.line","model_budget_line","account.group_account_manager",1,1,1,1
+"access_budget_line_responsible","budget.line","model_budget_line","group_budget_responsible",1,1,1,1
+"access_budget_allocation_type","budget.allocation","model_budget_allocation_type","account.group_account_manager",1,1,1,1
