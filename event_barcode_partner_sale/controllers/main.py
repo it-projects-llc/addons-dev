@@ -42,10 +42,25 @@ class EventBarcodeExtendedSale(EventBarcodeExtended):
             'attendee_partner_id': partner.id,
             'origin': 'Barcode Interfface',
             'event_ticket_id': event_ticket_id,
+            'attendee.email': partner.email,
+            'state': 'draft',
         })
 
-        # import wdb
-        # wdb.set_trace()
+        product = attendee.event_ticket_id.product_id
+        account = product.property_account_income_id or product.categ_id.property_account_income_categ_id
+        invoice = request.env['account.invoice'].create({
+            'type': 'out_invoice',
+            'partner_id': partner.id,
+            'invoice_line_ids': [
+                (0, None, {
+                    "product_id": product.id,
+                    "name": product.name,
+                    "price_unit": product.website_price,
+                    "account_id": account.id,
+                })
+            ]
+        })
+
         return self.compound_vals(attendee, event_id)
 
     @http.route('/event_barcode/check_new_attendee_email', type='json', auth="user")
