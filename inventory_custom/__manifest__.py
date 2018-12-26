@@ -22,6 +22,7 @@
     "external_dependencies": {"python": [], "bin": []},
     "data": [
         "views/stock_production_log_views.xml",
+        "views/stock_move_views.xml",
     ],
     "demo": [
     ],
