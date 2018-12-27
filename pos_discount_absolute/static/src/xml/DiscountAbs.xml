@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright 2017-2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
+<templates id="template" xml:space="preserve">
+
+    <t t-name="abs_disc_widget_header_buttons">
+        <div class="button percentage">
+            Percentage
+        </div>
+        <div class="button absolute">
+            Absolute
+        </div>
+    </t>
+
+</templates>

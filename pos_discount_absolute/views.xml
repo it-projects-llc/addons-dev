@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright 2017-2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
+<odoo>
+
+    <template id="assets" name="pos_abs_discount_assets" inherit_id="point_of_sale.assets">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/pos_discount_absolute/static/src/js/pos_discount_absolute.js"></script>
+        </xpath>
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" href="/pos_discount_absolute/static/src/css/pos.css"/>
+        </xpath>
+    </template>
+    <template id="assets_backend" name="pos_discount_absolute backend_assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/pos_discount_absolute/static/src/js/test_abs_disc.js"></script>
+        </xpath>
+    </template>
+
+    <record model="ir.ui.view" id="view_pos_config_form_discount">
+        <field name="name">pos.config.form.inherit</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="pos_discount.pos_config_view_form_inherit_pos_discount" />
+        <field name="priority" eval="99" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='discount_pc']/.." position="after">
+                <br/>
+                <div class="row">
+                    <label for="discount_abs_enabled" class="col-md-3 o_light_label"/>
+                    <field name='discount_abs_enabled'/>
+                </div>
+                <div class="row">
+                    <label for="discount_abs_product_id" class="col-md-3 o_light_label"/>
+                    <field name='discount_abs_product_id' attrs="{'invisible':[('discount_abs_enabled','=', False)], 'required': [('discount_abs_enabled', '=', True)]}" />
+                </div>
+                <div class="row">
+                    <label for="discount_abs_value" class="col-md-3 o_light_label"/>
+                    <field name='discount_abs_value' attrs="{'invisible':[('discount_abs_enabled','=', False)]}"/>
+                </div>
+                <div class="row">
+                    <label for="discount_abs_recalculation" class="col-md-3 o_light_label"/>
+                    <field name="discount_abs_recalculation" attrs="{'invisible':[('discount_abs_enabled','=', False)]}"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
