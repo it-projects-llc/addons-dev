@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
+
+<odoo>
+    <record model="ir.ui.view" id="pos_config_view_form">
+        <field name="name">pos.config.form.view.inherit</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='pricelist_setting']//div[hasclass('content-group')]" position="inside">
+                <div class="row">
+                    <label for="show_orderline_default_pricelist" class="col-md-3 o_light_label"/>
+                    <field name="show_orderline_default_pricelist"/>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='pricelist_id']" position="attributes">
+                <attribute name="context">{'from_pos': 0}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='available_pricelist_ids']" position="attributes">
+                <attribute name="context">{'from_pos': 0}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="pos_pricelist_view_tree" model="ir.ui.view">
+        <field name="name">product.pricelist.tree.inherit.product</field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.product_pricelist_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="currency_id" position="before">
+                <field name="pos_discount_policy" invisible="context.get('from_pos', True)" />
+            </field>
+        </field>
+    </record>
+
+    <record id="pos_pricelist_view_form" model="ir.ui.view">
+        <field name="name">product.pricelist.form.inherit.product</field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.product_pricelist_view"/>
+        <field name="arch" type="xml">
+            <field name="currency_id" position="before">
+                <field name="pos_discount_policy" widget="radio" invisible="context.get('from_pos', True)" />
+            </field>
+        </field>
+    </record>
+</odoo>
