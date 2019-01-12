@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (c) 2010 Camptocamp SA (http://www.camptocamp.com)
@@ -6,26 +5,23 @@
 # Contributor(s) : Florent Xicluna (Wingo SA)
 
 import subprocess
-import os
 import sys
-from odoo import report
 import tempfile
-import time
 import logging
 from functools import partial
-
-from report_helper import WebKitHelper
-import odoo
-from odoo import api, fields, models, tools, _
+from .report_helper import WebKitHelper
 from odoo.modules.module import get_module_resource
-from odoo.report.report_sxw import *
-from odoo import api, fields, models, SUPERUSER_ID
+
+# from odoo.report.report_sxw import *
+report_sxw = object
+from odoo import api, SUPERUSER_ID
 from odoo import tools
 from odoo.tools.translate import _
-from urllib import urlencode, quote as quote
+from urllib.parse import urlencode, quote as quote
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
+
 
 try:
     # We use a jinja2 sandboxed environment to render mako templates.
@@ -56,6 +52,7 @@ try:
 except ImportError:
     _logger.warning("jinja2 not available, templating features will not work!")
 
+
 def mako_template(text):
     """Build a Mako template.
 
@@ -64,7 +61,9 @@ def mako_template(text):
 
     return mako_template_env.from_string(text)
 
+
 _extender_functions = {}
+
 
 def webkit_report_extender(report_name):
     """
@@ -106,7 +105,7 @@ class WebKitParser(report_sxw):
         """Return the lib wkhtml path"""
         env = api.Environment(cursor, SUPERUSER_ID, {})
         proxy = env['ir.config_parameter']
-        webkit_path = proxy.get_param('webkit_path')
+        webkit_path = proxy.sudo().get_param('webkit_path')
         #print "===webkit_path===",webkit_path
 
         if not webkit_path:
@@ -207,7 +206,7 @@ class WebKitParser(report_sxw):
             for f_to_del in file_to_del:
                 try:
                     os.unlink(f_to_del)
-                except (OSError, IOError), exc:
+                except (OSError, IOError) as exc:
                     _logger.error('cannot remove file %s: %s', f_to_del, exc)
         return pdf
 
@@ -292,7 +291,7 @@ class WebKitParser(report_sxw):
             additional = {}
             if xml_id in _extender_functions:
                 for fct in _extender_functions[xml_id]:
-                    fct(pool, cr, uid, parser_instance.localcontext, context)
+                    fct(self.pool, cr, uid, parser_instance.localcontext, context)
             #print "===report_xml===",report_xml#.precise_mode
             if report_xml.precise_mode:
                 ctx = dict(parser_instance.localcontext)
@@ -301,7 +300,7 @@ class WebKitParser(report_sxw):
                     try :
                         html = body_mako_tpl.render(dict(ctx))
                         htmls.append(html)
-                    except Exception, e:
+                    except Exception as e:
                         msg = u"%s" % e
                         _logger.info(msg, exc_info=True)
                         raise UserError(msg)
@@ -310,7 +309,7 @@ class WebKitParser(report_sxw):
                     html = body_mako_tpl.render(dict(parser_instance.localcontext))
                     #print "===html====",html
                     htmls.append(html)
-                except Exception, e:
+                except Exception as e:
                     msg = u"%s" % e
                     #print "===error====",msg
                     _logger.info(msg, exc_info=True)
@@ -320,7 +319,7 @@ class WebKitParser(report_sxw):
             try :
                 head = head_mako_tpl.render(dict(parser_instance.localcontext, _debug=False))
                 #print "===head_mako_tpl==",parser_instance.localcontext,head
-            except Exception, e:
+            except Exception as e:
                 #print "====e=====",e
                 raise UserError(tools.ustr(e))
             foot = False
@@ -328,14 +327,14 @@ class WebKitParser(report_sxw):
                 foot_mako_tpl = mako_template(footer)
                 try :
                     foot = foot_mako_tpl.render(dict(parser_instance.localcontext))
-                except Exception, e:
+                except Exception as e:
                     msg = u"%s" % e
                     _logger.info(msg, exc_info=True)
                     raise UserError(msg)
             if report_xml.webkit_debug :
                 try :
                     deb = head_mako_tpl.render(dict(parser_instance.localcontext, _debug=tools.ustr("\n".join(htmls))))
-                except Exception, e:
+                except Exception as e:
                     msg = u"%s" % e
                     _logger.info(msg, exc_info=True)
                     raise UserError(msg)
@@ -345,7 +344,6 @@ class WebKitParser(report_sxw):
             #print "====bin====",pdf
             return (pdf, 'pdf')
     
-    #@api.model
     def create(self, cursor, uid, ids, data, context=None):
         """We override the create function in order to handle generator
            Code taken from report openoffice. Thanks guys :) """

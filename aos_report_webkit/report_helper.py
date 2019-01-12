@@ -1,50 +1,40 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (c) 2010 Camptocamp SA (http://www.camptocamp.com)
 # Author : Nicolas Bessi (Camptocamp)
 
 import odoo
-from odoo import api, fields, models, SUPERUSER_ID
+from odoo import api, SUPERUSER_ID
+
 
 class WebKitHelper(object):
     """Set of usefull report helper"""
     def __init__(self, cursor, uid, report_id, context):
-        "constructor"
+        """constructor"""
         self.cursor = cursor
         self.uid = uid
         self.pool = odoo.registry(self.cursor.dbname)
         self.report_id = report_id
         self.context = context
         
-    def embed_image(self, type, img, width=0, height=0) :
-        "Transform a DB image into an embedded HTML image"
+    def embed_image(self, type, img, width=0, height=0):
+        """Transform a DB image into an embedded HTML image"""
 
-        if width :
-            width = 'width="%spx"'%(width)
-        else :
+        if width:
+            width = 'width="%spx"' % (width)
+        else:
             width = ' '
-        if height :
-            height = 'height="%spx"'%(height)
-        else :
+        if height:
+            height = 'height="%spx"' % (height)
+        else:
             height = ' '
-        toreturn = '<img %s %s src="data:image/%s;base64,%s" />'%(
-            width,
-            height,
-            type, 
-            str(img))
-        return toreturn
-            
-            
+        return '<img %s %s src="data:image/%s;base64,%s" />' % (width, height, type, str(img))
+
     def get_logo_by_name(self, name):
         """Return logo by name"""
         header_obj = self.pool.get('ir.header_img')
-        header_img_id = header_obj.search(
-                                            self.cursor, 
-                                            self.uid, 
-                                            [('name','=',name)]
-                                        )
-        if not header_img_id :
+        header_img_id = header_obj.search(self.cursor, self.uid, [('name', '=', name)])
+        if not header_img_id:
             return u''
         if isinstance(header_img_id, list):
             header_img_id = header_img_id[0]
@@ -63,9 +53,6 @@ class WebKitHelper(object):
         registry = odoo.registry(self.cursor.dbname)
         with registry.cursor() as cr:
             env = api.Environment(cr, SUPERUSER_ID, {})
-            print "===uid====",uid
             my_user = env['res.users'].browse(uid)
             logo = my_user.company_id.logo_web
             return self.embed_image("png", logo, width, height)
-
-        

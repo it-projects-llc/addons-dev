@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (c) 2010 Camptocamp SA (http://www.camptocamp.com)
@@ -53,24 +52,27 @@ TODO:
     * Zip return for separated PDF
     * Web client WYSIWYG
 """,
-    'version': '10.0.0.1.0',
-    'depends': ['base','report'],
+    'version': '11.0.0.1.0',
+    'depends': [
+        'base'
+    ],
     'author': 'Camptocamp ported by Alphasoft',
     'category': 'Reporting', # i.e a technical module, not shown in Application install menu
     'url': 'http://www.alphasoft.co.id/',
-    'data': [ 'security/ir.model.access.csv',
-              'data.xml',
-              #'wizard/report_webkit_actions_view.xml',
-              'company_view.xml',
-              'header_view.xml',
-              'ir_report_view.xml',
+    'data': [
+        # 'security/ir.model.access.csv',
+        # 'data.xml',
+        #'wizard/report_webkit_actions_view.xml',
+        # 'company_view.xml',
+        # 'header_view.xml',
+        # 'ir_report_view.xml',
     ],
     'demo': [
-        "report/webkit_report_demo.xml",
+        # "report/webkit_report_demo.xml",
     ],
     'test': [
-        "test/print.yml",
+        # "test/print.yml",
     ],
-    'installable': True,
+    'installable': False,
     'auto_install': False,
 }

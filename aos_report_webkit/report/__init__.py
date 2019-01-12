@@ -1,2 +1,1 @@
-
-import webkit_report_demo
+from . import webkit_report_demo

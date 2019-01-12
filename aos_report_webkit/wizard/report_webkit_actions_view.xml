@@ -19,14 +19,11 @@
             </field>
         </record>
 
-        <act_window name="Add Print Buttons"
+        <act_window id="wizard_ofdo_report_actions"
+            key2="client_print_multi"
+            name="Add Print Buttons"
             res_model="report.webkit.actions"
-            src_model="ir.actions.report.xml"
-            view_mode="form"
-            view_type="form"
-            key2="client_print_multi"   
-            target="new"
-            id="wizard_ofdo_report_actions"/>
-        
+            src_model="ir.actions.report"
+            view_mode="form" target="new" view_type="form" />
     </data>
 </openerp>
