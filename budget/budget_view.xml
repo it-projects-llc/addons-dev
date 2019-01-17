@@ -1,0 +1,461 @@
+<?xml version="1.0"?>
+<odoo>
+        <!--VIEW: form view to edit/create a main budget -->
+        <record model="ir.ui.view" id="view_budget_budget_form">
+            <field name="name">budget.budget.form</field>
+            <field name="model">budget.budget</field>
+            <field name="arch" type="xml">
+                <form string="Budget">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" string="Name"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                            <label for="code" string="Code"/>
+                            <h2>
+                                <field name="code"/>
+                            </h2>
+                        </div>
+                        <group>
+                            <field name="budget_item_id" domain="[('parent_id', '=', False)]"/>
+                            <field name="start_date" class="oe_inline"/>
+                            <field name="stop_date" class="oe_inline"/>
+                            <field name="create_date"/>
+                            <field name="active"/>
+                        </group>
+                        <notebook>
+                            <page string="Versions">
+                                <group>
+                                    <field name="budget_version_ids" nolabel="1">
+                                        <tree string="Budget Versions">
+                                            <field name="name"/>
+                                            <field name="code"/>
+                                            <field name="ref_date" />
+                                            <field name="company_id" groups="base.group_multi_company"/>
+                                            <field name="currency_id" />
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
+                            <page string="Notes">
+                                <group>
+                                    <field name="note" nolabel="1"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_budget_tree">
+            <field name="name">budget.budget.tree</field>
+            <field name="model">budget.budget</field>
+            <field name="priority">4</field>
+            <field name="arch" type="xml">
+                <tree string="Budgets">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="start_date"/>
+                    <field name="stop_date"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_budget_budget_search" model="ir.ui.view">
+            <field name="name">budget.budget.search</field>
+            <field name="model">budget.budget</field>
+            <field name="arch" type="xml">
+                <search string="Budget">
+                    <field name="name"/>
+                    <field name="code"/>
+                </search>
+            </field>
+        </record>
+
+        <!--VIEW: form view to edit/create a budget versions -->
+        <record model="ir.ui.view" id="view_budget_version_form">
+            <field name="name">budget.version.form</field>
+            <field name="model">budget.version</field>
+            <field name="arch" type="xml">
+                <form string="Budget Versions">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" string="Name"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                            <label for="code" string="Code"/>
+                            <h2>
+                                <field name="code"/>
+                            </h2>
+                        </div>
+                        <group>
+                            <field name="is_active" />
+                            <button name="make_active" string="Make active" type="object" class="oe_stat_button"/>
+                            <field name="budget_id" />
+                            <field name="currency_id" />
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="user_id" />
+                            <field name="ref_date" />
+                            <field name="create_date" />
+                        </group>
+                        <notebook>
+                            <page string="Lines">
+                                <field name="budget_line_ids" nolabel="1" context="{'currency_id': currency_id, 'budget_id': budget_id}">
+                                    <tree string="Budget Lines">
+                                        <field name="budget_item_id" context="{'budget_id': parent.budget_id}" />
+                                        <field name="name" />
+                                        <field name="analytic_account_id"/>
+                                        <field name="start_date" />
+                                        <field name="stop_date" />
+                                        <field name="amount" />
+                                        <field name="currency_id" />
+                                        <field name="budget_amount" sum="Total Amount" />
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Notes">
+                                <field name="note" nolabel="1" />
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- VIEW: budget version list from the menu-->
+        <record model="ir.ui.view" id="view_budget_version_tree_from_menu">
+            <field name="name">budget.version.tree</field>
+            <field name="model">budget.version</field>
+            <field name="arch" type="xml">
+                <tree string="Budget Versions">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="budget_id" />
+                    <field name="ref_date" />
+                    <field name="company_id" groups="base.group_multi_company" />
+                    <field name="currency_id" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_budget_version_search" model="ir.ui.view">
+            <field name="name">budget.version.search</field>
+            <field name="model">budget.version</field>
+            <field name="arch" type="xml">
+                <search string="Budget Versions">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="budget_id"/>
+                </search>
+            </field>
+        </record>
+
+        <!--VIEW: form view to edit/create a budget item -->
+        <record model="ir.ui.view" id="view_budget_item_form">
+            <field name="name">budget.item.form</field>
+            <field name="model">budget.item</field>
+            <field name="arch" type="xml">
+                <form string="Budget Items">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" string="Name"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                            <label for="code" string="Code"/>
+                            <h2>
+                                <field name="code"/>
+                            </h2>
+                        </div>
+                        <group>
+                            <field name="type" select="1" />
+                            <field name="allocation_id" />
+                            <field name="parent_id" select="2" />
+                            <field name="active" select="2"/>
+                        </group>
+                        <group string="Reports">
+                            <field name="sequence" />
+                            <field name="style" invisible="1" />
+                        </group>
+                        <notebook>
+                            <page string="Accounts">
+                                <field name="account" nolabel="1"/>
+                            </page>
+                            <page string="Children">
+                                <field name="children_ids" nolabel="1"
+                                    widget="many2many"
+                                    domain="[('parent_id', '=', False)]" />
+                            </page>
+                            <page string="Calculation" invisible="1" >
+                                <p class="oe_grey">
+                                    For item of type 'view', you can define a method of calculation based on other items.
+                                </p>
+                                <p class="oe_grey">
+                                    Start your formula by 'result = ' and use standard math symbols with items codes surrounded by %%()f.
+                                    Items' codes will be replaced by items' values and then parsed in python code. So be sure to be python compliant.
+                                </p>
+                                <p class="oe_grey">
+                                    Here is a simple example: result = (%%(ebitda)f + %%(ebit)f) * 2
+                                </p>
+                                <field name="calculation" nolabel="1" colspan="8"/>
+                            </page>
+                            <page string="Notes">
+                                <field name="note" nolabel="1"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- VIEW: budget item list -->
+        <record model="ir.ui.view" id="view_budget_item_list">
+            <field name="name">budget.item.list</field>
+            <field name="model">budget.item</field>
+            <field name="arch" type="xml">
+                <tree string="Budget Items">
+                    <field name="sequence" />
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="type" />
+                    <field name="allocation_id" />
+                    <field name="active" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_budget_item_search" model="ir.ui.view">
+            <field name="name">budget.item.search</field>
+            <field name="model">budget.item</field>
+            <field name="arch" type="xml">
+                <search string="Budget Items">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="type"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- VIEW: budget structure -->
+        <record model="ir.ui.view" id="view_budget_item_tree">
+            <field name="name">budget.item.tree</field>
+            <field name="model">budget.item</field>
+            <field name="field_parent">child_ids</field>
+            <field name="priority">6</field>
+            <field name="arch" type="xml">
+                <tree create="false" string="Budget Structure">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="type"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- VIEW: budget line list -->
+        <record model="ir.ui.view" id="view_budget_line_tree">
+            <field name="name">budget.line.tree</field>
+            <field name="model">budget.line</field>
+            <field name="priority">16</field>
+            <field name="arch" type="xml">
+                <tree string="Budget Lines" editable="top">
+                    <field name="budget_version_id" />
+                    <field name="budget_item_id"  domain="[('type', '=', 'normal')]" />
+                    <field name="allocation" invisible="True"/>
+                    <field name="name" />
+                    <field name="analytic_account_id"/>
+                    <field name="start_date"/>
+                    <field name="stop_date"/>
+                    <field name="amount" />
+                    <field name="currency_id" />
+                    <field name="budget_amount"  sum="Total Amount"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_budget_line_form">
+            <field name="name">budget.line.form</field>
+            <field name="model">budget.line</field>
+            <field name="priority">3</field>
+            <field name="arch" type="xml">
+                <form string="Budget Lines">
+                    <sheet>
+                        <group>
+                            <field name="budget_version_id"/>
+                            <field name="budget_item_id"  domain="[('type', '=', 'normal')]"/>
+                            <field name="name"/>
+                            <field name="analytic_account_id"/>
+                        </group>
+                        <group string="Periods">
+                            <field name="start_date"/>
+                            <field name="stop_date"/>
+                        </group>
+                        <group string="Amount">
+                            <label for="amount"/>
+                            <div>
+                                <field name="amount" class="oe_inline" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="currency_id" class="oe_inline oe_edit_only"/>
+                            </div>
+                            <label for="budget_amount"/>
+                            <div>
+                                <field name="budget_amount" class="oe_inline" widget="monetary" options="{'currency_field': 'budget_currency_id'}"/>
+                                <field name="budget_currency_id" invisible="1"/>
+                            </div>
+                        </group>
+                        <group string="Analytic Amounts">
+                            <field name="analytic_currency_id" invisible="1"/>
+                            <field name="analytic_amount" widget="monetary" options="{'currency_field': 'analytic_currency_id'}"/>
+                            <field name="analytic_real_amount" widget="monetary" options="{'currency_field': 'analytic_currency_id'}"/>
+                            <field name="analytic_diff_amount" widget="monetary" options="{'currency_field': 'analytic_currency_id'}"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_budget_line_search" model="ir.ui.view">
+            <field name="name">budget.line.search</field>
+            <field name="model">budget.line</field>
+            <field name="arch" type="xml">
+                <search string="Budget Lines">
+                    <field name="name"/>
+                    <field name="budget_version_id"/>
+                    <field name="budget_item_id"/>
+                    <field name="analytic_account_id"  filter_domain="[('analytic_account_id','child_of',self)]"/>
+                    <group string="Group By..." expand="0">
+                        <filter string="Version" context="{'group_by': 'budget_version_id'}" name="group_budget_version_id"/>
+                        <filter string="Item" context="{'group_by': 'budget_item_id'}" name="group_budget_item_id"/>
+                        <!--TODO -->
+                        <!--<filter string="Allocation" context="{'group_by': 'allocation'}" name="group_budget_allocation"/>-->
+                        <filter string="Contract" context="{'group_by': 'analytic_account_id'}" name="group_analytic_account_id"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+        <record id="budget_item_allocation_type_form" model="ir.ui.view">
+          <field name="name">budget item allocation type form</field>
+          <field name="model">budget.allocation.type</field>
+          <field name="arch" type="xml">
+            <form string="Allocation">
+              <field name="name"/>
+            </form>
+          </field>
+        </record>
+
+        <record id="budget_item_allocation_type_tree" model="ir.ui.view">
+          <field name="name">budget item allocation type list</field>
+          <field name="model">budget.allocation.type</field>
+          <field name="arch" type="xml">
+            <tree string="Allocation">
+              <field name="name"/>
+            </tree>
+          </field>
+        </record>
+
+        <!-- ########################################### -->
+        <!-- Actions                                     -->
+        <!-- ########################################### -->
+
+        <!-- ACTION: click on Financial Management/Budgets/Budgets -->
+        <record id="open_budget_tree" model="ir.actions.act_window">
+            <field name="name">Budget</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">budget.budget</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new Budget.
+              </p>
+            </field>
+        </record>
+        <!-- ACTION: click on Financial Management/Budgets/Budgets versions -->
+        <record id="open_budget_version_tree" model="ir.actions.act_window">
+            <field name="name">Budget Version</field>
+            <field name="res_model">budget.version</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_budget_version_tree_from_menu"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new Budget Version.
+              </p>
+            </field>
+        </record>
+
+        <!-- ACTION: click on Financial Management/Budgets/Budgets lines -->
+        <record model="ir.actions.act_window" id="open_budget_lines_tree">
+            <field name="name">Budget Line</field>
+            <field name="res_model">budget.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_budget_line_tree"/>
+            <field name="context">{'search_default_group_budget_item_id': 1}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new Budget Line.
+              </p>
+            </field>
+        </record>
+        <!-- ACTION: click on Financial Management/Budgets/Budgets items -->
+        <record model="ir.actions.act_window" id="open_budget_items_tree">
+            <field name="name">Budget Item</field>
+            <field name="res_model">budget.item</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_budget_item_list"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new Budget Item.
+              </p>
+            </field>
+        </record>
+        <!-- ACTION: click on Financial Management/Budgets/Budgets structure-->
+        <record model="ir.actions.act_window" id="open_budget_structure_items_tree">
+            <field name="name">Budgets Structure</field>
+            <field name="res_model">budget.item</field>
+            <field name="view_type">tree</field>
+            <field name="view_mode">list</field>
+            <field name="view_id" ref="view_budget_item_tree"/>
+            <field name="domain">[('parent_id', '=', False)]</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new Budget Structure.
+              </p>
+            </field>
+        </record>
+
+        <!-- ########################################### -->
+        <!-- Menus                                       -->
+        <!-- ########################################### -->
+
+        <menuitem id="menu_budget"  name="Budget" parent="account.menu_finance"/>
+
+        <!-- Budget menu -->
+        <menuitem id="menu_budget_tree"
+            name="Budgets" action="budget.open_budget_tree"
+            parent="budget.menu_budget"/>
+
+        <!-- Budget Versions menu-->
+        <menuitem id="menu_budget_version_tree" name="Budget Versions"
+            action="open_budget_version_tree" parent="menu_budget"/>
+
+        <!-- Budget Lines menu-->
+        <menuitem id="menu_budget_line_tree" name="Budget Lines"
+            action="open_budget_lines_tree" parent="menu_budget"/>
+
+        <!--Budget Items menu-->
+        <menuitem id="menu_budget_item_tree" name="Budget Items"
+            action="open_budget_items_tree"
+            parent="menu_budget"/>
+
+        <!-- Budget Items Structures menu -->
+        <menuitem id="menu_budget_item_structures_tree" name="Budget Items Structures"
+            action="open_budget_structure_items_tree"
+            parent="menu_budget"/>
+</odoo>
