@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="payment" inherit_id="website_sale.payment" name="Payment">
+        <xpath expr="//div[@class='card']" position="before">
+            <h3 class="mb24">Информация об общей сумме заказов с вашего населенного пункта</h3>
+            <div class="card">
+                <div class="card-body">
+                    <!-- TODO what is it N дней? -->
+                    <div>
+                        <div>С Вашего населенного пункта набралось заказов на: <span style="color: #28a745" t-esc='order.partner_id.city_id.total' t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/></div>
+                        <div>Для бесплатной доставки необходимо: <span style="color: #28a745" t-esc='order.partner_id.city_id.limit' t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}' class="address-inline"/></div>
+                        <div>Ожидаемое время набора: <span class="font-weight-bold">N дней</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="oe_structure clearfix mt-3"/>
+        </xpath>
+    </template>
+</odoo>
