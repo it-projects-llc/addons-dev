@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_city_tree" model="ir.ui.view">
+        <field name="model">res.city</field>
+        <field name="inherit_id" ref="base_address_city.view_city_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state_id']" position="after">
+                <field name="limit"/>
+                <field name="total"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_city" model="ir.actions.act_window">
+        <field name="name">Cities</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.city</field>
+        <field name="view_type">form</field>
+        <field name="help">Display and manage the list of all cities.</field>
+    </record>
+
+    <menuitem id="menu_city_partner" action="action_city" parent="contacts.menu_localisation" sequence="4"/>
+
+</odoo>

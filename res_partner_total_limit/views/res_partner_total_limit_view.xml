@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="add_seller_in_res_partner_formview" model="ir.ui.view">
+        <field name="name">Partner.As.Seller</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="odoo_marketplace.add_seller_in_res_partner_formview"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='register_partner_as_a_seller']" position="after">
+                <field name="limit" colspan="2" attrs="{'invisible':[('seller','=',False)]}"/>
+                <field name="total" colspan="2" attrs="{'invisible':[('seller','=',False)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
