@@ -10,8 +10,8 @@ class City(models.Model):
     limit = fields.Float(string="Limit", translate=True)
     total = fields.Float(string="Total", readonly=True, translate=True)
     partner_ids = fields.One2many('res.partner', 'city_id', string='Partners', translate=True)
-    representative_id = fields.Many2one('res.partner', string='Representative of City',
-                                        help='An email will be sent to this representative when the limit is reached.',
+    representative_id = fields.Many2one('res.partner', string='Representative',
+                                        help='The representative will receive the corresponding email once the order limit is reached.',
                                         translate=True)
     expected_delivery_time = fields.Integer(string='Expected Delivery Time (days)', default=0, translate=True)
 
