@@ -8,3 +8,7 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     amount_taken_into_account = fields.Boolean(default=False)
+
+    def action_updated_sale_order(self):
+        if self.state == 'sale':
+            self.partner_id.city_id.update_total()

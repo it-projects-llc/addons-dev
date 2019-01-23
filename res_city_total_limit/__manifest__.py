@@ -14,6 +14,7 @@
     # "currency": "EUR",
 
     "depends": [
+        "base_automation",
         "base_address_city",
         "website_sale",
         "contacts"
@@ -22,6 +23,7 @@
     "data": [
         "views/res_city_total_limit_view.xml",
         "views/website_sale_template.xml",
+        "actions/base_action_rules.xml",
     ],
     "qweb": [],
     "demo": [],
