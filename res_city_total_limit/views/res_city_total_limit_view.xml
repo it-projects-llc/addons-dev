@@ -1,13 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
     <record id="view_city_tree" model="ir.ui.view">
         <field name="model">res.city</field>
         <field name="inherit_id" ref="base_address_city.view_city_tree"/>
         <field name="arch" type="xml">
+            <xpath expr="//tree[@editable='top']" position="attributes">
+                <attribute name="editable"></attribute>
+            </xpath>
             <xpath expr="//field[@name='state_id']" position="after">
                 <field name="limit"/>
                 <field name="total"/>
+                <field name="representative_id"/>
+                <field name="expected_delivery_time"/>
             </xpath>
+        </field>
+    </record>
+
+    <!-- Cities Form View -->
+    <record id="res_city_view_form" model="ir.ui.view">
+        <field name="name">res.city</field>
+        <field name="model">res.city</field>
+        <field name="arch" type="xml">
+            <form string="City">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="country_id"/>
+                            <field name="state_id"/>
+                        </group>
+                        <group>
+                            <field name="name"/>
+                            <field name="zipcode"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="limit"/>
+                            <field name="total"/>
+                        </group>
+                        <group>
+                            <field name="representative_id"/>
+                            <field name="expected_delivery_time"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
         </field>
     </record>
 
