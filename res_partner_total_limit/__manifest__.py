@@ -14,11 +14,14 @@
     # "currency": "EUR",
 
     "depends": [
+        "base_automation",
         "odoo_marketplace",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
         "views/res_partner_total_limit_view.xml",
+        "views/website_sale_template.xml",
+        "actions/base_action_rules.xml"
     ],
     "qweb": [],
     "demo": [],
@@ -28,5 +31,5 @@
     "post_init_hook": None,
 
     "auto_install": False,
-    "installable": False,
+    "installable": True,
 }
