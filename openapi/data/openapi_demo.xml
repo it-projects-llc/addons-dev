@@ -6,11 +6,15 @@
         <field name="name">demo</field>
         <field name="log_request">debug</field>
         <field name="log_response">debug</field>
+        <field name="token">demo_token</field>
+        <field name="user_ids" eval="[(4, ref('base.user_demo'))]" />
     </record>
 
     <record id="ir_exports_res_partner_one_demo" model="ir.exports">
+        <field name="name">demo / res.partner / read_one</field>
         <field name="resource">res.partner</field>
         <field name="export_fields" eval="[
+(0, 0, {'name': 'id'}),
 (0, 0, {'name': 'name'}),
 (0, 0, {'name': 'email'}),
 (0, 0, {'name': 'phone'}),
@@ -24,8 +28,10 @@
     </record>
 
     <record id="ir_exports_res_partner_many_demo" model="ir.exports">
+        <field name="name">demo / res.partner / read_many</field>
         <field name="resource">res.partner</field>
         <field name="export_fields" eval="[
+(0, 0, {'name': 'id'}),
 (0, 0, {'name': 'name'}),
 (0, 0, {'name': 'email'}),
 (0, 0, {'name': 'company_id'}),
@@ -35,7 +41,7 @@
     <record id="context_res_partner_demo" model="openapi.access.create.context">
         <field name="name">default</field>
         <field name="model_id" ref="base.model_res_partner"/>
-        <field name="context">{'default_function': 'CEO'}</field>
+        <field name="context">"{"default_function": "CEO"}"</field>
     </record>
 
     <record id="access_res_partner_demo" model="openapi.access">
@@ -49,5 +55,8 @@
         <field name="private_methods">_email_send</field>
         <field name="read_one_id" ref="ir_exports_res_partner_one_demo"/>
         <field name="read_many_id" ref="ir_exports_res_partner_many_demo"/>
+        <field name="create_context_ids" eval="[(4, ref('context_res_partner_demo'))]" />
     </record>
+
+    <function model="res.users" name="reset_all_tokens"/>
 </odoo>

@@ -1,10 +1,18 @@
 # -*- coding: utf-8 -*-
 # Copyright 2018 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
+# Copyright 2018 Rafis Bikbov <https://it-projects.info/team/bikbov>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
-from odoo import http
+import json
+import logging
 
+import werkzeug
+
+from odoo import http
 from odoo.addons.web_settings_dashboard.controllers.main \
     import WebSettingsDashboard
+from odoo.addons.web.controllers.main import ensure_db
+
+_logger = logging.getLogger(__name__)
 
 
 class OpenapiWebSettingsDashboard(WebSettingsDashboard):
@@ -15,23 +23,20 @@ class OpenapiWebSettingsDashboard(WebSettingsDashboard):
         result = super(OpenapiWebSettingsDashboard, self)\
             .web_settings_dashboard_data(**kw)
 
-        # dummy data for a while
-        dummy = {
-            'models_count': 123,
-            'create_count': 10,
-            'read_count': 123,
-            'update_count': 55,
-            'delete_count': 0,
-            'last_connection': '2018-01-01 12:12:12',
-        }
+        namespaces = http.request.env['openapi.namespace'].search([])
 
-        def copy(obj, **d):
-            return dict(obj.items() + d.items())
-
+        # TODO: replace dummy data
         namespace_list = [
-            copy(dummy, name='magento'),
-            copy(dummy, name='ebay'),
-            copy(dummy, name='1c'),
+            {
+                'id': n.id,
+                'name': n.name,
+                'models_count': n.access_ids.search_count([]),
+                'create_count': 10,
+                'read_count': 123,
+                'update_count': 55,
+                'delete_count': 0,
+                'last_connection': n.last_log_date,
+            } for n in namespaces
         ]
 
         result.update({'openapi': {
@@ -39,3 +44,34 @@ class OpenapiWebSettingsDashboard(WebSettingsDashboard):
         }})
 
         return result
+
+
+class OAS(http.Controller):
+
+    @http.route('/api/v1/<namespace_name>/swagger.json',
+                type='http', auth='none', csrf=False, cors='*')
+    def OAS_json_spec_download(self, namespace_name, **kwargs):
+        ensure_db()
+        namespace = http.request.env['openapi.namespace'].search([('name', '=', namespace_name)])
+        if not namespace:
+            raise werkzeug.exceptions.NotFound()
+        if namespace.token != kwargs.get('token'):
+            raise werkzeug.exceptions.Forbidden()
+
+        response_params = {
+            'headers': [('Content-Type', 'application/json')]
+        }
+        if 'download' in kwargs:
+            response_params = {
+                'headers': [
+                    ('Content-Type', 'application/octet-stream; charset=binary'),
+                    ('Content-Disposition', http.content_disposition('swagger.json')),
+                ],
+                'direct_passthrough': True
+            }
+
+        return werkzeug.wrappers.Response(
+            json.dumps(namespace.get_OAS()),
+            status=200,
+            **response_params
+        )
