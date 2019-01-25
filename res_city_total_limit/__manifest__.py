@@ -23,7 +23,7 @@
     "data": [
         "views/res_city_total_limit_view.xml",
         "views/website_sale_template.xml",
-        "actions/base_action_rules.xml",
+        "data/data.xml",
     ],
     "qweb": [],
     "demo": [],

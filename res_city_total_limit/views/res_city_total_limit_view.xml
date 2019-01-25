@@ -38,9 +38,11 @@
                         <group>
                             <field name="limit"/>
                             <field name="total"/>
+                            <field name="send_email"/>
+                            <field name="city_email_template_id" attrs="{'required': [('send_email', '=', True)], 'invisible':[('send_email','=',False)]}"/>
                         </group>
                         <group>
-                            <field name="representative_id"/>
+                            <field name="representative_id" attrs="{'required': [('send_email', '=', True)]}"/>
                             <field name="expected_delivery_time"/>
                         </group>
                     </group>
