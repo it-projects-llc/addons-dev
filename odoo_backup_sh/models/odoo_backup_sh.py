@@ -147,7 +147,7 @@ class BackupConfig(models.Model):
 
     @api.model
     def update_info(self, cloud_params):
-        backup_list = BackupController.load_backup_list(cloud_params)
+        backup_list = self.env['odoo_backup_sh.cloud_storage'].get_backup_list(cloud_params)
         if 'backup_list' in backup_list:
             # Create a dictionary with remote backup objects:
             # remote_backups = {
@@ -186,19 +186,11 @@ class BackupConfig(models.Model):
                             ]
                             del remote_backups[backup_config.database][backup_dt]
 
-            s3_client = boto3.client('s3', aws_access_key_id=cloud_params['amazon_access_key'],
-                                     aws_secret_access_key=cloud_params['amazon_secret_access_key'])
-
             # Delete unnecessary remote backup objects
             if remote_objects_to_delete:
-                try:
-                    s3_client.delete_objects(
-                        Bucket=cloud_params['amazon_bucket_name'], Delete={'Objects': remote_objects_to_delete})
-                    objects_names = [obj['Key'] for obj in remote_objects_to_delete]
-                    _logger.info('Following backup objects have been deleted from the remote storage: %s',
-                                 ', '.join(objects_names))
-                except botocore.exceptions.ClientError as e:
-                    raise exceptions.ValidationError(_("Amazon error: ") + e.response['Error']['Message'])
+                res = self.env['odoo_backup_sh.cloud_storage'].delete_objects(cloud_params, remote_objects_to_delete)
+                if res and 'reload_page' in res:
+                    return res
 
             # Delete unnecessary local backup info records
             backup_info_ids_to_delete = [
@@ -218,13 +210,10 @@ class BackupConfig(models.Model):
                                                                    DEFAULT_SERVER_DATETIME_FORMAT))
                     ]):
                         info_file_name = files_names[0] if files_names[0][-5:] == '.info' else files_names[1]
-                        try:
-                            info_file_object = s3_client.get_object(
-                                Bucket=cloud_params['amazon_bucket_name'],
-                                Key='%s/%s' % (cloud_params['odoo_oauth_uid'], info_file_name)
-                            )
-                        except botocore.exceptions.ClientError as e:
-                            raise exceptions.ValidationError(_("Amazon error: ") + e.response['Error']['Message'])
+                        info_file_object = self.env['odoo_backup_sh.cloud_storage'].get_object(
+                            cloud_params, info_file_name)
+                        if 'reload_page' in info_file_object:
+                            return info_file_object
                         info_file = tempfile.NamedTemporaryFile()
                         info_file.write(info_file_object['Body'].read())
                         info_file.seek(0)
@@ -282,20 +271,14 @@ class BackupConfig(models.Model):
             info_file.write(line.encode())
         info_file.seek(0)
         s3_info_file_path = '%s/%s.%s.info' % (cloud_params['odoo_oauth_uid'], name, ts)
+        # Upload two backup objects to AWS S3
+        for obj, obj_path in [[dump_stream, s3_backup_path], [info_file, s3_info_file_path]]:
+            res = self.env['odoo_backup_sh.cloud_storage'].put_object(cloud_params, obj, obj_path)
+            if res and 'reload_page' in res:
+                return res
         # Create new record with backup info data
         info_file_content['upload_datetime'] = dt
         self.env['odoo_backup_sh.backup_info'].create(info_file_content)
-        # Upload two backup objects to AWS S3
-        try:
-            s3_client = boto3.client('s3', aws_access_key_id=cloud_params['amazon_access_key'],
-                                     aws_secret_access_key=cloud_params['amazon_secret_access_key'])
-            s3_client.put_object(Body=dump_stream, Bucket=cloud_params['amazon_bucket_name'], Key=s3_backup_path)
-            s3_client.put_object(Body=info_file, Bucket=cloud_params['amazon_bucket_name'], Key=s3_info_file_path)
-            _logger.info('Following backup objects have been put in a remote storage: %s',
-                         ', '.join([s3_backup_path, s3_info_file_path]))
-        except botocore.exceptions.ClientError as e:
-            raise exceptions.ValidationError(_("Amazon error: ") + e.response['Error']['Message'])
-        self.update_info(cloud_params)
         return None
 
 
@@ -436,14 +419,7 @@ class DeleteRemoteBackupWizard(models.TransientModel):
                 }]
         # Delete unnecessary remote backup objects
         if remote_objects_to_delete:
-            s3_client = boto3.client('s3', aws_access_key_id=cloud_params['amazon_access_key'],
-                                     aws_secret_access_key=cloud_params['amazon_secret_access_key'])
-            try:
-                s3_client.delete_objects(
-                    Bucket=cloud_params['amazon_bucket_name'], Delete={'Objects': remote_objects_to_delete})
-                objects_names = [obj['Key'] for obj in remote_objects_to_delete]
-                _logger.info('Following backup objects have been deleted from the remote storage: %s',
-                             ', '.join(objects_names))
-            except botocore.exceptions.ClientError as e:
-                raise exceptions.ValidationError(_("Amazon error: ") + e.response['Error']['Message'])
+            res = self.env['odoo_backup_sh.cloud_storage'].delete_objects(cloud_params, remote_objects_to_delete)
+            if res and 'reload_page' in res:
+                raise UserError("Something went wrong. Please update backup dashboard page.")
         backup_info_records.unlink()

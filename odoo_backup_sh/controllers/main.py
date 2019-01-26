@@ -167,10 +167,7 @@ class BackupController(http.Controller):
     @http.route('/web/database/restore_via_odoo_backup_sh', type='http', auth="none", methods=['POST'], csrf=False)
     def restore_via_odoo_backup_sh(self, master_pwd, backup_file_name, name, copy=False):
         cloud_params = self.get_cloud_params(request.httprequest.url)
-        s3_client = boto3.client('s3', aws_access_key_id=cloud_params['amazon_access_key'],
-                                 aws_secret_access_key=cloud_params['amazon_secret_access_key'])
-        backup_file_path = '%s/%s' % (cloud_params['odoo_oauth_uid'], backup_file_name)
-        backup_object = s3_client.get_object(Bucket=cloud_params['amazon_bucket_name'], Key=backup_file_path)
+        backup_object = request.env['odoo_backup_sh.cloud_storage'].get_object(cloud_params, backup_file_name)
         backup_file = tempfile.NamedTemporaryFile()
         backup_file.write(backup_object['Body'].read())
         if backup_file_name.split('|')[0][-4:] == '.enc':
