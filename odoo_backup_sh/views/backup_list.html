@@ -56,7 +56,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
         <img src="/web/static/src/img/logo2.png" class="img-responsive center-block"/>
       </div>
       {% if error %}
-        <div class="alert alert-danger">{{ error }}</div>
+        <div class="alert alert-danger">{{ error|safe }}</div>
       {% endif %}
       {% if backup_list %}
         <div class="list-group">
