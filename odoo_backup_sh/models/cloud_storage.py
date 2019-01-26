@@ -3,10 +3,14 @@
 
 import logging
 
-import boto3
-import botocore
+try:
+    import boto3
+    import botocore
+except ImportError as err:
+    logging.getLogger(__name__).debug(err)
 
-from odoo import api, exceptions, models
+from odoo import exceptions, models
+from odoo.tools.translate import _
 from .config import OdooToolsConfig
 
 
@@ -22,8 +26,8 @@ def access_control(origin_method):
                 OdooToolsConfig.remove_options('options', ['amazon_access_key_id', 'amazon_secret_access_key'])
                 return {'reload_page': True}
             else:
-                raise exceptions.ValidationError(
-                    "Amazon Web Services error: " + client_error.response['Error']['Message'])
+                raise exceptions.ValidationError(_(
+                    "Amazon Web Services error: " + client_error.response['Error']['Message']))
     return wrapped
 
 

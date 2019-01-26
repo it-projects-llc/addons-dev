@@ -465,5 +465,5 @@ class DeleteRemoteBackupWizard(models.TransientModel):
         if remote_objects_to_delete:
             res = self.env['odoo_backup_sh.cloud_storage'].delete_objects(cloud_params, remote_objects_to_delete)
             if res and 'reload_page' in res:
-                raise UserError("Something went wrong. Please update backup dashboard page.")
+                raise UserError(_("Something went wrong. Please update backup dashboard page."))
         backup_info_records.unlink()

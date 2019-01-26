@@ -71,8 +71,8 @@ class BackupController(http.Controller):
                 cloud_params = cls.update_cloud_params(cloud_params, redirect)
             else:
                 # This case occurs when we cannot pass the redirect param, ex. the request was sent by a cron
-                raise UserError("You don't have credentials to access to cloud storage."
-                                "Please go to the backup dashboard menu")
+                raise UserError(_("You don't have credentials to access to cloud storage. "
+                                  "Please go to the backup dashboard menu"))
         return cloud_params
 
     @classmethod

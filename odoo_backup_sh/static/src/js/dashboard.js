@@ -205,7 +205,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
                 name: $(ev.currentTarget).closest('div[data-db_name]').data('db_name'),
             },
         }).then(function (result) {
-            if (result !== undefined && 'reload_page' in result) {
+            if (typeof result !== undefined && 'reload_page' in result) {
                 window.location.reload();
             }
             self.o_dashboard_action_update_info(self.cloud_params);
