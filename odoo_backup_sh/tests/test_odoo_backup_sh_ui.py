@@ -29,11 +29,6 @@ class TestUi(HttpCase):
             wraps=lambda *args: {})
         self.patcher_get_cloud_params.start()
 
-        self.patcher_check_insufficient_credit = patch(
-            'odoo.addons.odoo_backup_sh.controllers.main.BackupController.check_insufficient_credit',
-            wraps=lambda *args: {'credit_url': 'https://iap.odoo.com/iap/1/credit...'})
-        self.patcher_check_insufficient_credit.start()
-
     def test_odoo_backup_sh_tour(self):
         # needed because tests are run before the module is marked as
         # installed. In js web will only load qweb coming from modules
@@ -50,5 +45,4 @@ class TestUi(HttpCase):
     def tearDown(self):
         self.fetch_dashboard_data_mock.stop()
         self.patcher_get_cloud_params.stop()
-        self.patcher_check_insufficient_credit.stop()
         super(TestUi, self).tearDown()
