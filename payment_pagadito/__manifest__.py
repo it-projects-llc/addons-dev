@@ -22,7 +22,7 @@
     "external_dependencies": {"python": [], "bin": []},
     "data": [
         "data/payment_acquirer_data.xml",
-        "views/payment_paypal_templates.xml",
+        "views/payment_pagadito_templates.xml",
     ],
     "demo": [
     ],
