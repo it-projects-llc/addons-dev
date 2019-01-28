@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="products_item" inherit_id="website_sale.products_item" name="Products item">
+        <xpath expr="//div[@class='product_price']" position="attributes">
+            <attribute name="style">color: #28a745</attribute>
+        </xpath>
+        <xpath expr="//span[@t-esc='product.website_price']" position="after">
+            за <span t-esc="product.uom_id.name"/>
+        </xpath>
+    </template>
+
+    <template id="product_price" inherit_id="website_sale.product_price">
+        <xpath expr="//b[@class='oe_price']" position="after">
+            <b> за <span t-esc="product.uom_id.name"/> </b>
+        </xpath>
+        <xpath expr="//span[@t-field='product.lst_price']" position="after">
+            за <span t-esc="product.uom_id.name"/>
+        </xpath>
+    </template>
+
+</odoo>
