@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+	<data>
+		<record id="wk_seller_payment_form_view" model="ir.ui.view">
+            <field name="name">seller.payment</field>
+            <field name="model">seller.payment</field>
+            <field name="arch" type="xml">
+                <form string="Payment Method For Seller" create="0" delete="0">
+                    <header>
+                        <button name="do_validate" string="Validate" type="object" states="draft" groups="odoo_marketplace.marketplace_officer_group" class="btn-primary"/>
+                        <button name="do_Confirm" string="Confirm" type="object" states="requested" groups="odoo_marketplace.marketplace_officer_group" class="btn-primary"/>
+                        <button name="%(account.action_account_invoice_payment)d" string="Register Payment" type="action" groups="odoo_marketplace.marketplace_officer_group" class="btn-primary" attrs="{'invisible':['|',('payment_type','=','cr'),('state','not in',['confirm'])]}"/>
+                        <button name="view_invoice" string="View Invoice" type="object" groups="odoo_marketplace.marketplace_officer_group" class="btn-primary" attrs="{'invisible':[('invoice_id','=',False)]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,requested"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="seller_id" on_change="change_seller_id(seller_id)" options='{"no_create": True}' context="{'form_view_ref': 'odoo_marketplace.wk_seller_form_view'}"/>
+                                <field name="payment_mode"/>
+                                <field name="memo" attrs="{'readonly':[('payment_mode', 'in', ['order_paid', 'seller_payment']), ('state', 'not in', 'draft')]}"/>
+                                <label for="payable_amount"/>
+                                <div>
+                                    <field name="payable_amount" class="oe_inline" widget="monetary" options="{'currency_field':'currency_id'}"/>
+                                    <field name="currency_id" style="margin-left: 5px;" invisible="1"/>
+                                </div>
+                                <field name="company_id" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="date"/>
+                                <field name="payment_method" attrs="{'invisible':[('payment_type','=','cr')], 'required':[('payment_type','=','dr')]}"/>
+                                <field name="payment_type" required="1"/>
+                                <field name="invoice_id" readonly="1" context="{'is_seller':True}" options="{'no_open': True}"/>
+                                <field name="is_cashable" attrs="{'invisible':[('payment_mode', '!=', 'order_paid')]}"/>
+                                <field name="invoiced_amount" widget="monetary" string="Invoiced Amount" help="Seller Amount in seller currency." attrs="{'invisible': [('invoice_id', '=', False)]}"/>
+                                <field name="invoice_currency_id" invisible="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="description" string="Description">
+                                <!-- <label for="description"/> -->
+                                <field name="description" placeholder="Information About Payment"/>
+                            </page>
+                            <page name="account_invoice_lines" string="Payment Details" attrs="{'invisible': [('invoice_id', '=', False)]}">
+                                <!-- <label for="invoice_line_ids"/> -->
+                                <field name="invoice_line_ids">
+                                    <tree>
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="product_id" domain="[('sale_ok','=',True)]"/>
+                                        <field name="origin" invisible="1"/>
+                                        <field name="name" invisible="1"/>
+                                        <field name="quantity"/>
+                                        <field name="uom_id" groups="uom.group_uom"/>
+                                        <field name="price_unit"/>
+                                        <field name="discount" groups="base.group_no_one"/>
+                                        <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                        <field name="price_subtotal" sum="Total Amount"/>
+                                        <field name="seller_commission" sum="Total Seller Commission" widget="monetary"/>
+                                        <field name="currency_id" invisible="1"/>
+                                    </tree>
+                                </field>
+                                <group>
+                                    <label for="seller_commission" string="Applied Commission Rate"/>
+                                    <div>
+                                        <field name="seller_commission" class="oe_inline" help=""/>%
+                                    </div>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <!-- <field name="activity_ids" widget="mail_activity"/> -->
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="wk_seller_payment_kanban_view" model="ir.ui.view">
+            <field name="name">seller.payment</field>
+            <field name="model">seller.payment</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile" create="0" delete="0">
+                    <field name="name"/>
+                    <field name="seller_id"/>
+                    <field name="date"/>
+                    <field name="payment_type"/>
+                    <field name="payment_mode"/>
+                    <field name="memo"/>
+                    <field name="payable_amount"/>
+                    <field name="currency_id"/>
+                    <field name="state"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="o_kanban_record_top mb8">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title"><span><t t-esc="record.name.value"/></span></strong>
+                                    </div>
+                                    <strong><field name="payable_amount" widget="monetary"/></strong>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+										<strong> Seller: </strong>
+                                        <t t-esc="record.seller_id.value"/>
+                                    </div>
+                                    <strong>
+										<field name="state" widget="label_selection" options="{'classes': {'draft': 'info', 'canceled': 'danger', 'requested': 'warning', 'confirmed': 'warning','posted': 'success'}}"/>
+                                    </strong>
+                                </div>
+								<div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <strong> Memo: </strong>
+										<field name="memo"/>
+									</div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <t t-esc="record.date.value and record.date.value.split(' ')[0] or False"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="wk_seller_payment_form_view_for_manager" model="ir.ui.view">
+            <field name="name">Allow Manager For Invoice</field>
+            <field name="model">seller.payment</field>
+            <field name="inherit_id" ref="odoo_marketplace.wk_seller_payment_form_view"/>
+            <field name="groups_id" eval="[(6, 0, [ref('odoo_marketplace.marketplace_manager_group') ])]"/>
+            <field name="arch" type="xml">
+                <form position="attributes">
+                    <attribute name="create">1</attribute>
+                </form>
+                <field name='invoice_id' position="attributes">
+                    <attribute name="options">""</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="wk_seller_payment_kanban_view_for_manager" model="ir.ui.view">
+            <field name="name">Allow to Manager</field>
+            <field name="model">seller.payment</field>
+            <field name="inherit_id" ref="odoo_marketplace.wk_seller_payment_kanban_view"/>
+            <field name="groups_id" eval="[(6, 0, [ref('odoo_marketplace.marketplace_manager_group') ])]"/>
+            <field name="arch" type="xml">
+                <kanban position="attributes">
+                    <attribute name="create">1</attribute>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="wk_seller_payment_tree_view" model="ir.ui.view">
+            <field name="name">seller.payment</field>
+            <field name="model">seller.payment</field>
+            <field name="arch" type="xml">
+                <tree string="Payment Method For Sellers" decoration-success="payment_type=='dr' and state=='posted'" decoration-warning="state=='requested'" decoration-danger="payment_type=='cr'" create="0" delete="0">
+                    <field name="name"/>
+                    <field name="seller_id" groups="odoo_marketplace.marketplace_officer_group"/>
+                    <field name="date"/>
+                    <field name="payment_type"/>
+                    <field name="payment_mode"/>
+                    <field name="memo"/>
+                    <field name="payable_amount" sum="Total Payable Amount" widget="monetary"/>
+                    <field name="state"/>
+                    <field name="create_date" string="Create Date" widget="date"/>
+                    <field name="currency_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="wk_seller_payment_tree_view_for_manager" model="ir.ui.view">
+            <field name="name">Allow to Manager</field>
+            <field name="model">seller.payment</field>
+            <field name="inherit_id" ref="odoo_marketplace.wk_seller_payment_tree_view"/>
+            <field name="groups_id" eval="[(6, 0, [ref('odoo_marketplace.marketplace_manager_group') ])]"/>
+            <field name="arch" type="xml">
+                <tree position="attributes">
+                    <attribute name="create">1</attribute>
+                </tree>
+            </field>
+        </record>
+
+        <record id="wk_seller_payment_method_form_view" model="ir.ui.view">
+            <field name="name">seller.payment.method</field>
+            <field name="model">seller.payment.method</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form string="Payment Method">
+                    <group>
+                        <field name="name" placeholder="Payment Method"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="wk_seller_payment_method_tree_view" model="ir.ui.view">
+            <field name="name">seller.payment.method</field>
+            <field name="model">seller.payment.method</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <tree string="Payment Method">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Filters -->
+        <!-- <record id="seller_payment_filter" model="ir.ui.view">
+            <field name="name">Seller Payment</field>
+            <field name="model">seller.payment</field>
+            <field name="arch" type="xml">
+                <search string="Search Seller Payment">
+                    <field name="seller_id"/>
+                    <field name="payment_type"/>
+                    <field name="payment_mode"/>
+                    <field name="memo"/>
+                    <field name="date"/>
+                    <filter string="Credit"  domain="[('payment_type','=','cr')]"  help="" />
+                    <filter string="Debit"  domain="[('payment_type','=','dr')]"  help="" />
+                    <filter string="Order Paid"  domain="[('payment_mode','=','order_paid')]"  help="" />
+                    <filter string="Order Refund"  domain="[('payment_mode','=','order_refund')]"  help="" />
+                    <filter string="Seller Payment"  domain="[('payment_mode','=','seller_payment')]"  help="" />
+                    <filter string="Payment Request"  domain="[('state','=','requested'), ('payment_mode','=','seller_payment')]"  help="" />
+                    <filter string="Confirm/Posted"  domain="[('state','in',['posted','confirm'])]"  help="" groups="odoo_marketplace.marketplace_officer_group" name="confirm_posted_filter"/>
+
+                    <group  string="Group By">
+                        <filter string="Type" context="{'group_by':'payment_type'}" name="by_type"/>
+                        <filter string="Payment Month"  context="{'group_by':'date'}" name="by_payment_month"/>
+                        <filter string="Payment Mode" context="{'group_by':'payment_mode'}" name="by_payment_mode"/>
+                    </group>
+               </search>
+            </field>
+        </record> -->
+
+        <!-- <record id="seller_payment_filter_inherit" model="ir.ui.view">
+            <field name="name">Add Seller Group By For MP Manager</field>
+            <field name="model">seller.payment</field>
+            <field name="inherit_id" ref="odoo_marketplace.seller_payment_filter"/>
+            <field name="groups_id" eval="[(6, 0, [ref('odoo_marketplace.marketplace_officer_group')])]"/>
+            <field name="arch" type="xml">
+				<filter name="by_type" position="before">
+					<filter string="Seller" context="{'group_by':'seller_id'}"  name="seller_filter" groups="odoo_marketplace.marketplace_officer_group"/>
+				</filter>
+            </field>
+        </record> -->
+
+
+        <record id="wk_seller_payment_method_action" model="ir.actions.act_window">
+            <field name="name">Payment Method</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">seller.payment.method</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="wk_seller_payment_method_tree_view"/>
+        </record>
+
+        <record id="wk_seller_payment_action" model="ir.actions.act_window">
+            <field name="name">Seller Payments</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">seller.payment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click here to add new seller payment.
+                </p>
+            </field>
+            <field name="view_id" ref="wk_seller_payment_tree_view"/>
+        </record>
+	</data>
+</odoo>

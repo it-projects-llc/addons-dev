@@ -1,0 +1,70 @@
+<odoo>
+    <data>
+        <!-- website views -->
+        <record id="mp_config_view_website_form" model="ir.ui.view">
+            <field name="name">website.form.mp.inherit</field>
+            <field name="model">website</field>
+            <field name="inherit_id" ref="website.view_website_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet" position="inside">
+                    <div groups="odoo_marketplace.marketplace_manager_group" id="website_mp_config_settings">
+                        <h2 style="background-color: #e9ecef;padding: 0.25rem 16px;font-size: 15px;margin-bottom: 0;padding-left: 32px;">Marketplace Settings</h2>
+                        <group>
+                            <group>
+                                <field name="mp_product_count"/>
+                                <field name="mp_shipping_address"/>
+                                <field name="mp_return_policy"/>
+                                <field name="mp_seller_t_c"/>
+                                <field name="mp_recently_product"/>
+                            </group>
+                            <group>
+                                <field name="mp_sale_count"/>
+                                <field name="mp_seller_since"/>
+                                <field name="mp_shipping_policy"/>
+                                <field name="mp_seller_contact_btn"/>
+                                <field name="mp_show_become_a_seller"/>
+                                <field name="mp_show_sell_menu_header"/>
+                                <field name="mp_show_sell_menu_footer"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Seller Review Settings" name="mp_seller_review">
+                                <field name="mp_seller_review"/>
+                                <field name="mp_review_load_no"/>
+                                <field name="mp_review_auto_publish"/>
+                            </group>
+                            <group string="Marketplace Landing Page Settings" name="mp_landing_page">
+                                <field name="mp_show_seller_shop_list"/>
+                                <field name="mp_show_seller_list"/>
+                            </group>
+                        </group>
+                        <group string="Landing Page Settings" name="seller_landing_page" col="4" class="mt24">
+            				<field name="mp_sell_page_label" help="Label for seller landing page on which seller will register."/>
+            				<field name="mp_sellers_list_label" help="Label for sellers list page on which all sellers will display."/>
+            				<field name="mp_seller_shop_list_label" help="Label for seller shop list page on which all seller's shop will display."/>
+            			</group>
+            			<group string="Seller Messages" name="seller_profile_msg" col="4">
+            				<field name="mp_seller_new_status_msg" help="This message will display inside seller profile when seller account will in New state."/>
+            				<field name="mp_seller_pending_status_msg" help="This message will display inside seller profile when seller account will in pending state."/>
+            				<!-- <field name="seller_denied_status_msg" help="This message will display inside seller profile when seller account will in denied state."/> -->
+            			</group>
+            			<group>
+            				<group string="Seller Review Settings" name="seller_review_settings">
+            					<field name="mp_message_to_publish" help="Message which will display after seller reviewing on website."/>
+            				</group>
+            				<group string="Sell Landing Page Banner" name="landing_page_banner">
+            					<label for="mp_landing_page_banner"/>
+            					<div>
+            						<field name="mp_landing_page_banner" widget="image" class="mp_config_image" help="Banner for sellers landing page. Banner size must be 1298 x 400 px for perfect view." options='{"class": "mp_config_image"}'/>
+            					</div>
+            				</group>
+            			</group>
+            			<group string="Marketplace Terms &amp; Conditions" name="mp_t_and_c">
+            				<field name="mp_term_and_condition" help="This is terms and conditions for the marketplace which will display on seller sign-up page on website."/>
+            			</group>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+	<data>
+        <record id="marketplace_product_server_action_view" model="ir.ui.view">
+            <field name="name">Marketplace Server Action Product Wizard</field>
+            <field name="model">server.action.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">       
+                <form>
+                    <field name="product_ids">
+                        <tree create="false">
+                            <field name="name" string="Product"  readonly="1"/>
+                            <field name="marketplace_seller_id" string="Seller"  readonly="1"/>
+                            <field name="categ_id"  readonly="1"/>
+                            <field name="type"  readonly="1"/>
+                            <field name="qty_available"  readonly="1"/>
+                            <field name="status"  readonly="1"/>
+                        </tree> 
+                    </field>
+                    <footer>
+                        <button name="approve_all_products" type="object" string="Approve Now" invisible="context.get('only_reject', False)" class="btn-primary"/>
+                        <button name="reject_all_products" type="object" string="Reject Now" invisible="context.get('only_approve', False)" class="btn-primary"/>
+                        <button string="Cancel" class="" special="cancel" />
+                        <div class="fa fa-exclamation-triangle label-warning pull-right" invisible="context.get('only_reject', False)" style="padding: 5px 5px 0px 5px;border-radius: 10px;">
+                            <b>
+                                <p style="padding:2px; display: inline-block;"> Only <i style="color:red">pending </i> prodcuts will get approve.</p>
+                            </b>
+                        </div>
+                    </footer>               
+                </form>
+            </field>
+        </record>
+
+        <act_window id="mp_product_approve_server_action_wizard"
+            name="Approve Products"
+            multi="True"
+            src_model="product.template"
+            res_model="server.action.wizard"
+            view_type="form" view_mode="form"
+            key2="client_action_multi" target="new"
+            context="{'only_approve': True}"
+            domain="[('marketplace_seller_id','!=',False),('status','=','pending')]"
+            groups="odoo_marketplace.marketplace_officer_group"/>
+
+        <act_window id="mp_product_reject_server_action_wizard"
+            name="Reject Products"
+            multi="True"
+            src_model="product.template"
+            res_model="server.action.wizard"
+            view_type="form" view_mode="form"
+            key2="client_action_multi" target="new"
+            context="{'only_reject': True}"
+            domain="[('marketplace_seller_id','!=',False),('status','in',['approved','pending'])]"
+            groups="odoo_marketplace.marketplace_officer_group"/>
+
+        <!-- Server Actions for Marketplace Stock-->
+
+        <!-- <record id="marketplace_marketplace_stock_server_action_view" model="ir.ui.view">
+            <field name="name">Marketplace Server Marketplace Stock Action Wizard</field>
+            <field name="model">server.action.wizard.mp.stcok</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">       
+                <form>
+                    <field name="marketplace_stock_ids">
+                        <tree string="Marketplace Product Stock" create="false" colors="green:state=='approved'; orange:state=='requested'; blue:state=='draft';red:state=='rejected'">
+                            <field name="product_temp_id"/>
+                            <field name='product_id' groups="odoo_marketplace.marketplace_officer_group" invisible="1"/>
+                            <field name='marketplace_seller_id' groups="odoo_marketplace.marketplace_officer_group"/>
+                            <field name='new_quantity'/>
+                            <field name='location_id' groups="odoo_marketplace.marketplace_officer_group"/>
+                            <field name='state'/>
+                        </tree>
+                    </field>
+                    <footer>
+                        <button name="approve_marketplace_stocks" type="object" string="Approve Now" invisible="context.get('only_reject', False)" class="btn-primary"/>
+                        <button name="reject_marketplace_stocks" type="object" string="Reject Now" invisible="context.get('only_approve', False)" class="btn-primary"/>
+                        <button string="Cancel" class="" special="cancel" />
+                        <div class="fa fa-exclamation-triangle label-warning pull-right" invisible="context.get('only_reject', False)" style="padding: 5px 5px 0px 5px;border-radius: 10px;">
+                            <b>
+                                <label string="  Only requested inventory will get approve."></label>
+                            </b>
+                        </div>
+                        <div class="fa fa-exclamation-triangle label-warning pull-right" invisible="context.get('only_approve', False)" style="padding: 5px 5px 0px 5px;border-radius: 10px;">
+                            <b>
+                                <p style="padding:2px; display: inline-block;"> Only <i style="color:red">requested </i> inventory will get reject.</p>
+                            </b>
+                        </div>
+                    </footer>               
+                </form>
+            </field>
+        </record> -->
+
+        <act_window id="mp_marketplace_stock_approve_server_action_wizard"
+            name="Approve Inventory"
+            multi="True"
+            src_model="marketplace.stock"
+            res_model="server.action.wizard.mp.stcok"
+            view_type="form" view_mode="form"
+            key2="client_action_multi" target="new"
+            context="{'only_approve': True}"
+            domain="[('marketplace_seller_id','!=',False),('status','=','requested')]"
+            groups="odoo_marketplace.marketplace_officer_group"/>
+
+        <act_window id="mp_marketplace_stock_reject_server_action_wizard"
+            name="Reject Inventory"
+            multi="True"
+            src_model="marketplace.stock"
+            res_model="server.action.wizard.mp.stcok"
+            view_type="form" view_mode="form"
+            key2="client_action_multi" target="new"
+            context="{'only_reject': True}"
+            domain="[('marketplace_seller_id','!=',False),('status','in',['approved','requested'])]"
+            groups="odoo_marketplace.marketplace_officer_group"/>
+
+        <!-- Server Actions for Seller Review and Recommendation-->
+
+        <record id="wk_seller_review_wizard_form_view" model="ir.ui.view">
+            <field name="name">seller.review.wizard.form</field>
+            <field name="model">seller.review.action.wizard</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form string="Seller Review">
+                    <field name="seller_review_ids">
+                        <tree create="false">
+                            <field name="title" string="Title"  readonly="1"/>
+                            <field name="marketplace_seller_id" string="Seller"  readonly="1"/>
+                            <field name="rating"  readonly="1"/>
+                            <field name="partner_id" string="By" readonly="1"/>
+                            <field name="state" readonly="1"/>
+                        </tree> 
+                    </field>
+                    <footer>
+                        <button name="publish_all_reviews" type="object" string="Publish Now" invisible="context.get('only_unpublish', False)" class="btn-primary"/>
+                        <button name="unpublish_all_reviews" type="object" string="Unpublish Now" invisible="context.get('only_publish', False)" class="btn-primary"/>
+                        <button string="Cancel" class="" special="cancel" />
+                    </footer>                 
+                </form>
+            </field>
+        </record>
+
+        <act_window id="mp_marketplace_seller_review_publish_action_wizard"
+            name="Publish Now"
+            multi="True"
+            src_model="seller.review"
+            res_model="seller.review.action.wizard"
+            view_type="form" view_mode="form"
+            key2="client_action_multi" target="new"
+            context="{'only_publish': True}"
+            groups="odoo_marketplace.marketplace_officer_group"/>
+
+        <act_window id="mp_marketplace_seller_review_unpublish_action_wizard"
+            name="UnPublish Now"
+            multi="True"
+            src_model="seller.review"
+            res_model="seller.review.action.wizard"
+            view_type="form" view_mode="form"
+            key2="client_action_multi" target="new"
+            context="{'only_unpublish': True}"
+            groups="odoo_marketplace.marketplace_officer_group"/>
+
+        <record id="wk_seller_recommendation_wizard_form_view" model="ir.ui.view">
+            <field name="name">seller.recommendation.wizard.form</field>
+            <field name="model">seller.recommendation.action.wizard</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form string="Seller Recommendation">
+                    <field name="seller_recommendation_ids">
+                        <tree create="false">
+                            <field name="seller_id" string="Seller"  readonly="1"/>
+                            <field name="recommend_state"  readonly="1"/>
+                            <field name="customer_id" string="By" readonly="1"/>
+                            <field name="state" readonly="1"/>
+                        </tree> 
+                    </field>
+                    <footer>
+                        <button name="publish_all_recommendations" type="object" string="Publish Now" invisible="context.get('only_unpublish', False)" class="btn-primary"/>
+                        <button name="unpublish_all_recommendations" type="object" string="Unpublish Now" invisible="context.get('only_publish', False)" class="btn-primary"/>
+                        <button string="Cancel" class="" special="cancel" />
+                    </footer>                 
+                </form>
+            </field>
+        </record>
+
+        <act_window id="mp_seller_recommendation_publish_action_wizard"
+            name="Publish Now"
+            multi="True"
+            src_model="seller.recommendation"
+            res_model="seller.recommendation.action.wizard"
+            view_type="form" view_mode="form"
+            key2="client_action_multi" target="new"
+            context="{'only_publish': True}"
+            groups="odoo_marketplace.marketplace_officer_group"/>
+
+        <act_window id="mp_seller_recommendation_unpublish_action_wizard"
+            name="UnPublish Now"
+            multi="True"
+            src_model="seller.recommendation"
+            res_model="seller.recommendation.action.wizard"
+            view_type="form" view_mode="form"
+            key2="client_action_multi" target="new"
+            context="{'only_unpublish': True}"
+            groups="odoo_marketplace.marketplace_officer_group"/>
+	</data>
+</odoo>

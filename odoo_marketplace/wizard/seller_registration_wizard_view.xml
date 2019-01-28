@@ -1,0 +1,95 @@
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+	<data>
+		<record id="seller_registration_wizard_form" model="ir.ui.view">
+			<field name="name">seller Registration Form</field>
+			<field name="model">seller.resistration.wizard</field>
+			<!-- <field name="type">form</field> -->
+			<field name="arch" type="xml">
+				<form string="Seller Registration Form">
+                    <group col="4">
+                        <group colspan="1">
+                            <h4 style="margin-top: 0px;">Auto Approval Settings</h4>
+                        </group>
+    					<group>
+                            <div colspan="2">
+                                <field name="auto_approve_seller" help="Enable this if you want to approve seller automatically."/>
+                                <label for="auto_approve_seller"/>
+                            </div>
+                            <div colspan="2">
+                                <field name="auto_product_approve" class="oe_inline" help="Enable this if you want to approve seller product automatically."/>
+                                <label for="auto_product_approve"/>
+                            </div>
+                            <div colspan="2">
+                                <field name="auto_approve_qty" help="Enable this if you want to approve product inventory automatically."/>
+                                <label for="auto_approve_qty"/>
+                            </div>
+                        </group>
+                        <group colspan="2"></group>
+                    </group>
+                    <group attrs="{'invisible': [('user_id','=',False)]}">
+						<div class="alert alert-info" role="alert">
+							<h4 style="margin: auto;"><i class="fa fa-info-circle mr8" aria-label=""/>This partner is linked with "<span class="text-capitalize"><field name="user_id" readonly="1" options="{'no_open': True}"/></span>" user. Confirm if you want to registered this user as a seller.</h4>
+						</div>
+					</group>
+                    <group attrs="{'invisible': [('user_id','!=',False)]}">
+						<div class="alert alert-warning" role="alert">
+							<h4 style="margin: auto;"><i class="fa fa-exclamation-circle mr8" aria-label=""/>There is no user associated with this partner, to register this partner as a seller a new user will be created automatically.</h4>
+                            <h4 class="text-center" style="margin: auto;">Click on confirm button to proceed.</h4>
+                        </div>
+					</group>
+					<footer>
+			          	<button name="confirm_supplier_as_seller" string="Confirm" class="oe_highlight" type="object"/>
+			          	<button special="cancel" string="Cancel"/>
+			        </footer>
+				</form>
+			</field>
+		</record>
+
+
+		<record id="registration_completed_wizard_form" model="ir.ui.view">
+			<field name="name">seller Registration Completed form</field>
+			<field name="model">seller.resistration.wizard</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form>
+                    <field name="user_id" invisible="1"/>
+					<div>
+						<h1 style="margin-bottom:0px;"><field name="partner_name_one" readonly="1" class="oe_inline" style="color:#43A047;font-family: Courier;font-style: oblique;"/> has been registered as a Seller.</h1>
+					</div>
+                    <div>
+                        <div style="text-align:left;" invisible="context.get('auto_approve_seller',False)">
+                            <h3><i class="fa fa-arrow-circle-right fa-1x" style="color:#1976D2;"></i>&#160;but not approved Now.</h3>
+                        </div>
+                        <div style="text-align:left;" invisible="not context.get('auto_approve_seller',False)">
+                            <h3><i class="fa fa-arrow-circle-right fa-1x" style="color:#1976D2;"></i>&#160;and approved as well.</h3>
+                        </div>
+                        <div style="text-align:left;" attrs="{'invisible': [('user_id','!=',False)]}">
+                            <h3><i class="fa fa-arrow-circle-right fa-1x" style="color:#1976D2;"></i>&#160;Reset password mail has been send.</h3>
+                        </div>
+                    </div>
+                    <div>
+                        <h3>view<button name="get_seller_profile" type="object" class="oe_link oe_edit_only oe_link"><h3><field name="partner_name_two" readonly="1" class="oe_link" style="margin-bottom: 12px;"/></h3></button>Seller profile.</h3>
+                    </div>
+					<footer>
+                        <button special="cancel" string="Close" class="oe_highlight"/>
+                    </footer>
+				</form>
+			</field>
+		</record>
+
+		<!-- ************Generate Repair Wizard action************** -->
+		<record id="seller_registration_wizard_action" model="ir.actions.act_window">
+			<field name="name">Register Partner As a Seller</field>
+			<field name="res_model">seller.resistration.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="odoo_marketplace.seller_registration_wizard_form"/>
+			<field name="target">new</field>
+		</record>
+
+	</data>
+</odoo>

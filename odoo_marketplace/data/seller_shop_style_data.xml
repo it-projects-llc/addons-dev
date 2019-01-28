@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+    <data noupdate="1">		
+		<record id="odoo_marketplace.seller_shop_image_promo" model="seller.shop.style">
+            <field name="name">Best Seller Ribbon</field>
+            <field name="html_class">oe_ribbon_promo</field>
+        </record>
+        <record id="odoo_marketplace.seller_shop_image_full" model="seller.shop.style">
+            <field name="name">Image Full</field>
+            <field name="html_class">oe_image_full</field>
+        </record>
+    </data>
+</odoo>

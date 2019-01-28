@@ -1,0 +1,493 @@
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+	<data>
+		<record id="wk_seller_product_template_all_products_action" model="ir.actions.act_window">
+            <field name="name">All Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('marketplace_seller_id','in',['get_marketplace_seller_id()'])]</field>
+            <field name="view_id" ref="odoo_marketplace.wk_seller_product_template_kanban_view"/>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+        <record id="wk_seller_product_template_rejected_products_action" model="ir.actions.act_window">
+            <field name="name">Seller Rejected Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('status','=','rejected'),('marketplace_seller_id','in',['get_marketplace_seller_id()'])]</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'search_default_by_marketplace_seller_id': 1}</field>
+        </record>
+        <record id="wk_seller_approved_products_action" model="ir.actions.act_window">
+            <field name="name">Seller Approved Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('status','=','approved'),('marketplace_seller_id','in',['get_marketplace_seller_id()'])]</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'search_default_by_marketplace_seller_id': 1}</field>
+        </record>
+
+
+        <record id="wk_seller_product_pending_action" model="ir.actions.act_window">
+            <field name="name">Seller Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('status','=','pending'),('marketplace_seller_id','in',['get_marketplace_seller_id()'])]</field>
+            <field name="context">{'search_default_by_marketplace_seller_id': 1}</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="wk_seller_product_template_kanban_view"/>
+        </record>
+
+        <record id="wk_seller_product_pending_template_action_for_kanban" model="ir.actions.act_window.view">
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="odoo_marketplace.wk_seller_product_template_kanban_view"/>
+            <field name="act_window_id" ref="odoo_marketplace.wk_seller_product_pending_action"/>
+        </record>
+
+        <record id="wk_seller_product_pending_template_action_for_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="odoo_marketplace.wk_seller_product_template_tree_view"/>
+            <field name="act_window_id" ref="odoo_marketplace.wk_seller_product_pending_action"/>
+        </record>
+
+        <record id="wk_seller_product_pending_template_action_for_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="odoo_marketplace.wk_seller_product_template_form_view"/>
+            <field name="act_window_id" ref="odoo_marketplace.wk_seller_product_pending_action"/>
+        </record>
+
+        <record id="wk_seller_product_approve_template_action_for_kanban" model="ir.actions.act_window.view">
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="odoo_marketplace.wk_seller_product_template_kanban_view"/>
+            <field name="act_window_id" ref="odoo_marketplace.wk_seller_approved_products_action"/>
+        </record>
+
+        <record id="wk_seller_product_approve_template_action_for_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="odoo_marketplace.wk_seller_product_template_tree_view"/>
+            <field name="act_window_id" ref="odoo_marketplace.wk_seller_approved_products_action"/>
+        </record>
+
+        <record id="wk_seller_product_approve_template_action_for_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="odoo_marketplace.wk_seller_product_template_form_view"/>
+            <field name="act_window_id" ref="odoo_marketplace.wk_seller_approved_products_action"/>
+        </record>
+
+        <record id="wk_seller_product_reject_template_action_for_kanban" model="ir.actions.act_window.view">
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="odoo_marketplace.wk_seller_product_template_kanban_view"/>
+            <field name="act_window_id" ref="odoo_marketplace.wk_seller_product_template_rejected_products_action"/>
+        </record>
+
+        <record id="wk_seller_product_reject_template_action_for_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="odoo_marketplace.wk_seller_product_template_tree_view"/>
+            <field name="act_window_id" ref="odoo_marketplace.wk_seller_product_template_rejected_products_action"/>
+        </record>
+
+        <record id="wk_seller_product_reject_template_action_for_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="odoo_marketplace.wk_seller_product_template_form_view"/>
+            <field name="act_window_id" ref="odoo_marketplace.wk_seller_product_template_rejected_products_action"/>
+        </record>
+        <record id="wk_seller_approved_action" model="ir.actions.act_window">
+            <field name="name">Sellers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('seller','=',True),('state','=','approved'),('active','=',True)]</field>
+            <field name="context">{'default_customer': 0, 'default_supplier': 0, 'default_seller':1}</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="wk_seller_kanban_view"/>
+            <field name="search_view_id" ref="wk_seller_view_filter"/>
+        </record>
+
+        <record id="wk_seller_denied_action" model="ir.actions.act_window">
+            <field name="name">Sellers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('seller','=',True),('state','=','denied'),('active','=',True)]</field>
+
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="wk_seller_kanban_view"/>
+            <field name="search_view_id" ref="wk_seller_view_filter"/>
+        </record>
+
+        <record id="wk_seller_all_sale_order_line_action" model="ir.actions.act_window">
+            <field name="name">Sale Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+           <field name="domain">[('marketplace_seller_id','!=',False),('state','not in',['draft','sent'])]</field>
+            <field name="view_id" ref="wk_seller_product_order_line_tree_view"/>
+        </record>
+
+        <record id="wk_seller_pending_action" model="ir.actions.act_window">
+            <field name="name">Sellers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('seller','=',True),('state','=','pending'),('active','=',True)]</field>
+            <field name="context">{'default_customer': 0, 'default_supplier': 0, 'default_seller':1}</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="wk_seller_kanban_view"/>
+            <field name="search_view_id" ref="wk_seller_view_filter"/>
+
+        </record>
+         <record id="wk_seller_dashboard_kanban_action" model="ir.actions.act_window.view">
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="odoo_marketplace.wk_seller_kanban_view"/>
+            <field name="act_window_id" ref="odoo_marketplace.wk_seller_pending_action"/>
+        </record>
+        <record id="wk_seller_dashboard_tree_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="odoo_marketplace.wk_seller_tree_view"/>
+            <field name="act_window_id" ref="odoo_marketplace.wk_seller_pending_action"/>
+        </record>
+         <record id="wk_seller_dashboard_form_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="odoo_marketplace.wk_seller_form_view"/>
+            <field name="act_window_id" ref="odoo_marketplace.wk_seller_pending_action"/>
+        </record>
+        <record id="wk_seller_dashboard_approve_kanban_action" model="ir.actions.act_window.view">
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="odoo_marketplace.wk_seller_kanban_view"/>
+            <field name="act_window_id" ref="odoo_marketplace.wk_seller_approved_action"/>
+        </record>
+         <record id="wk_seller_dashboard_approve_form_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="odoo_marketplace.wk_seller_form_view"/>
+            <field name="act_window_id" ref="odoo_marketplace.wk_seller_approved_action"/>
+        </record>
+
+
+        <record id="wk_seller_sale_order_line_confirm_action" model="ir.actions.act_window">
+            <field name="name">Sale Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order.line</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('state','=','sale'),('marketplace_seller_id','in',['get_marketplace_seller_id()'])]</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="wk_seller_product_order_line_tree_view"/>
+        </record>
+
+        <record id="wk_seller_sale_order_line_done_action" model="ir.actions.act_window">
+            <field name="name">Sale Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','done'),('marketplace_seller_id','in',['get_marketplace_seller_id()'])]</field>
+            <field name="view_id" ref="wk_seller_product_order_line_tree_view"/>
+        </record>
+
+        <record id="wk_seller_payment_pending_action" model="ir.actions.act_window">
+            <field name="name">Sellers Payment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">seller.payment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('seller_id','!=',False),('state','=','requested')]</field>
+
+            <field name="view_id" ref="wk_seller_payment_tree_view"/>
+        </record>
+
+        <record id="wk_seller_payment_done_action" model="ir.actions.act_window">
+            <field name="name">Sellers Payment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">seller.payment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('seller_id','!=',False),('state','=','posted')]</field>
+            <field name="view_id" ref="wk_seller_payment_tree_view"/>
+        </record>
+
+         <record id="wk_seller_requested_payment__action" model="ir.actions.act_window">
+            <field name="name">Sellers Payment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">seller.payment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('seller_id','!=',False),('state','=','requested'),('payment_mode','=','seller_payment')]</field>
+            <field name="view_id" ref="wk_seller_payment_tree_view"/>
+        </record>
+
+        <record id="wk_seller_payment_confirm_action" model="ir.actions.act_window">
+            <field name="name">Sellers Payment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">seller.payment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('seller_id','!=',False),('state','=','confirm'),('payment_mode','=','seller_payment')]</field>
+            <field name="view_id" ref="wk_seller_payment_tree_view"/>
+        </record>
+
+        <record id="wk_seller_payment_order_paid_action" model="ir.actions.act_window">
+            <field name="name">Sellers Payment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">seller.payment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('seller_id','!=',False),('payment_mode','=','order_paid')]</field>
+            <field name="view_id" ref="wk_seller_payment_tree_view"/>
+        </record>
+
+        <record id="wk_seller_payment_order_refund_action" model="ir.actions.act_window">
+            <field name="name">Sellers Payment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">seller.payment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('seller_id','!=',False),('payment_mode','=','order_refund')]</field>
+            <field name="view_id" ref="wk_seller_payment_tree_view"/>
+        </record>
+
+        <record id="wk_seller_payment_seller_payment_action" model="ir.actions.act_window">
+            <field name="name">Sellers Payment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">seller.payment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('seller_id','!=',False),('payment_mode','=','seller_payment')]</field>
+            <field name="view_id" ref="wk_seller_payment_tree_view"/>
+        </record>
+
+        <record id="wk_seller_product_draft_action" model="ir.actions.act_window">
+            <field name="name">Seller Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('status','=','draft'),('marketplace_seller_id','in',['get_marketplace_seller_id()'])]</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="wk_seller_product_template_kanban_view"/>
+        </record>
+
+
+         <record id="wk_dashboard_action1" model="ir.actions.act_window">
+            <field name="name">Seller Dashboard</field>
+            <field name="res_model">marketplace.dashboard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban</field>
+        </record>
+
+        <record id="wk_seller_product_template_kanban" model="ir.ui.view">
+            <field name="name">product.piciking.template.kanban</field>
+            <field name="model">marketplace.dashboard</field>
+            <field name="arch" type="xml">
+                <kanban class="oe_background_grey o_kanban_dashboard o_emphasize_colors o_stock_kanban" create="0">
+                    <field name="color"/>
+                    <field name="name"/>
+                    <field name="state"/>
+                    <field name="count_product_rejected"/>
+                    <field name="count_product_pending"/>
+                    <field name="count_product_approved"/>
+                    <field name="is_seller"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)}" name="mp_dashboard" attrs="{'invisible':[('is_seller','=',True),('state','=','seller')]}">
+                                <div>
+                                    <div t-attf-class="o_kanban_card_header">
+                                        <div class="o_kanban_card_header_title">
+                                            <div class="o_primary">
+                                                <!-- <a type="object" name="get_stock_picking_action_picking_type"> -->
+                                                    <field name="name"/>
+                                                <!-- </a> -->
+                                            </div>
+                                            <div class="o_secondary">
+                                                <!-- <field class="o_secondary"  name="company_id"/> -->
+                                            </div>
+                                        </div>
+                                        <!-- <div class="o_kanban_manage_button_section">
+                                            <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" /></a>
+                                        </div> -->
+                                        <div class="o_kanban_manage_button_section">
+                                            <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
+                                        </div>
+                                    </div>
+                                    <div class="container o_kanban_card_content">
+                                        <div class="row">
+                                            <div class="col-6 o_kanban_primary_left">
+                                                <div t-if="record.state.raw_value =='product'" style="color:rgb(162, 70, 137)">
+                                                    <center><i class="fa fa-tags fa-5x"></i>
+                                                    <h3>Products</h3></center>
+                                                </div>
+                                                <div t-if="record.state.raw_value =='seller'" style="color:rgb(162, 70, 137)">
+                                                    <center><i class="fa fa-users fa-5x"></i>
+                                                    <h3>Sellers</h3></center>
+                                                </div><div t-if="record.state.raw_value =='order'" style="color:rgb(162, 70, 137)">
+                                                    <center><i class="fa fa-shopping-cart fa-5x"></i>
+                                                    <h3>Orders</h3></center>
+                                                </div>
+                                                <div t-if="record.state.raw_value =='payment'" style="color:rgb(162, 70, 137)">
+                                                    <center><i class="fa fa-money fa-5x"></i>
+                                                    <h3>Payments</h3></center>
+                                                </div>
+                                            </div>
+                                            <div class="col-6 o_kanban_primary_right">
+                                                <div t-if="record.state.raw_value =='product'">
+                                                    <a class="bg-primary wk_kanban_button_box text-white" name="%(wk_seller_product_pending_action)d" type="action">
+                                                        <span class="o_value"><t t-esc="record.count_product_pending.raw_value"/></span>
+                                                        <span class="o_label">Pending</span>
+                                                    </a>
+                                                    <a class="wk_kanban_button_box text-white" name="%(wk_seller_approved_products_action)d" type="action" style="background-color:#5cb85c">
+                                                        <span class="o_value"><t t-esc="record.count_product_approved.raw_value"/></span>
+                                                        <span class="o_label">Approved</span>
+                                                    </a>
+                                                <a class="wk_kanban_button_box text-white" name="%(wk_seller_product_template_rejected_products_action)d" type="action" style="background-color:#d9534f">
+                                                        <span class="o_value"><t t-esc="record.count_product_rejected.raw_value"/></span>
+                                                        <span class="o_label" >Rejected</span>
+                                                    </a>
+                                                </div>
+
+                                                <div t-if="record.state.raw_value =='seller'">
+                                                    <a class="bg-primary wk_kanban_button_box text-white" name="%(wk_seller_pending_action)d" type="action">
+                                                        <span class="o_value"><t t-esc="record.count_product_pending.raw_value"/></span>
+                                                        <span class="o_label">Pending</span>
+                                                    </a>
+                                                    <a class="wk_kanban_button_box text-white" name="%(wk_seller_approved_action)d" type="action" style="background-color:#5cb85c">
+                                                        <span class="o_value"><t t-esc="record.count_product_approved.raw_value"/></span>
+                                                        <span class="o_label">Approved</span>
+                                                    </a>
+                                                    <a class="wk_kanban_button_box text-white" name="%(wk_seller_denied_action)d" type="action" style="background-color:#d9534f">
+                                                        <span class="o_value"><t t-esc="record.count_product_rejected.raw_value"/></span>
+                                                        <span class="o_label" >Rejected</span>
+                                                    </a>
+                                                </div>
+
+                                                <div t-if="record.state.raw_value =='order'">
+                                                    <a class="bg-primary wk_kanban_button_box text-white" name="%(wk_seller_sale_order_line_confirm_action)d" type="action">
+                                                        <span class="o_value"><t t-esc="record.count_product_pending.raw_value"/></span>
+                                                        <span class="o_label">Sale Order</span>
+                                                    </a>
+                                                    <a class="wk_kanban_button_box text-white" name="%(wk_seller_sale_order_line_done_action)d" type="action" style="background-color:#5cb85c">
+                                                        <span class="o_value"><t t-esc="record.count_product_approved.raw_value"/></span>
+                                                        <span class="o_label">Done</span>
+                                                    </a>
+                                                </div>
+
+                                                <div t-if="record.state.raw_value =='payment'">
+                                                    <a class="bg-primary wk_kanban_button_box text-white" name="%(wk_seller_payment_pending_action)d" type="action">
+                                                        <span class="o_value"><t t-esc="record.count_product_pending.raw_value"/></span>
+                                                        <span class="o_label">Requested</span>
+                                                    </a>
+                                                    <a class="wk_kanban_button_box text-white" name="%(wk_seller_payment_confirm_action)d" type="action" style="background-color:#f0ad4e">
+                                                        <span class="o_value"><t t-esc="record.count_product_rejected.raw_value"/></span>
+                                                        <span class="o_label">To Be Approved</span>
+                                                    </a>
+                                                    <a class="wk_kanban_button_box text-white" name="%(wk_seller_payment_done_action)d" type="action" style="background-color:#5cb85c">
+                                                        <span class="o_value"><t t-esc="record.count_product_approved.raw_value"/></span>
+                                                        <span class="o_label" >Approved</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
+                                                <div t-if="record.state.raw_value =='product'" class="row">
+                                                    <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                                        <div class="o_kanban_card_manage_title">
+                                                            <span style="color:#a24689">View</span>
+                                                        </div>
+                                                        <div>
+                                                            <a name="%(wk_seller_product_template_all_products_action)d" type="action">All</a>
+                                                        </div>
+                                                        <div>
+                                                            <a name="%(wk_seller_approved_products_action)d" type="action">Approved</a>
+                                                        </div>
+                                                        <div>
+                                                            <a name="%(wk_seller_product_template_rejected_products_action)d" type="action"> Rejected</a>
+                                                        </div>
+                                                        <div>
+                                                            <a name="%(wk_seller_product_pending_action)d" type="action">Pending</a>
+                                                        </div>
+                                                        <div>
+                                                            <a name="%(wk_seller_product_draft_action)d" type="action" >Draft</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_new">
+                                                        <div class="o_kanban_card_manage_title">
+                                                            <span style="color:#a24689">New</span>
+                                                        </div>
+                                                        <div>
+                                                            <a name="%(odoo_marketplace.wk_seller_new_product_create_action)d" type="action">Create Product</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div t-if="record.state.raw_value =='order'" class="row">
+                                                    <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                                        <div class="o_kanban_card_manage_title">
+                                                            <span style="color:#a24689">View</span>
+                                                        </div>
+                                                        <div>
+                                                            <a name="%(wk_seller_all_sale_order_line_action)d" type="action">All</a>
+                                                        </div>
+
+                                                        <div>
+                                                            <a name="%(wk_seller_sale_order_line_done_action)d" type="action">Done Order</a>
+                                                        </div>
+                                                        <div>
+                                                            <a name="%(wk_seller_sale_order_line_confirm_action)d" type="action">Sale Order</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_new">
+                                                    </div>
+                                                </div>
+                                                <div t-if="record.state.raw_value =='payment'" class="row">
+                                                    <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                                        <div class="o_kanban_card_manage_title">
+                                                            <span style="color:#a24689">View</span>
+                                                        </div>
+                                                        <div>
+                                                            <a name="%(wk_seller_payment_action)d" type="action">All</a>
+                                                        </div>
+                                                        <div>
+                                                            <a name="%(wk_seller_payment_pending_action)d" type="action">Requested</a>
+                                                        </div>
+                                                        <div>
+                                                            <a name="%(wk_seller_payment_confirm_action)d" type="action">Confirm</a>
+                                                        </div>
+                                                        <div>
+                                                            <a name="%(wk_seller_payment_done_action)d" type="action">Approved</a>
+                                                        </div>
+                                                        <div>
+                                                            <a name="%(wk_seller_requested_payment__action)d" type="action" > Requested Payment</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_new">
+                                                        <!-- <div class="o_kanban_card_manage_title">
+                                                            <span style="color:#a24689">New</span>
+                                                        </div>
+                                                        <div>
+                                                            <a name="%(odoo_marketplace.wk_seller_new_product_create_action)d" type="action">Create Product</a>
+                                                        </div> -->
+                                                    </div>
+                                                </div>
+                                                <div class="o_kanban_card_manage_settings row">
+                                                    <div class="col-8" role="menuitem" aria-haspopup="true">
+                                                        <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <menuitem  id="wk_seller_dashboard_menu10" parent="wk_seller_dashboard" sequence="0" name="Dashboard" action="wk_dashboard_action1"  groups="odoo_marketplace.marketplace_seller_group"/>
+
+	</data>
+</odoo>

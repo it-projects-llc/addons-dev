@@ -1,0 +1,676 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+	<data>
+
+		<record id="stock_picking_stock_tree_view_for_mp" model="ir.ui.view">
+			<field name="name">Picking Stock For Marketplace</field>
+			<field name="model">stock.picking</field>
+			<field name="arch" type="xml">
+                <tree create="0" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" decoration-danger="state not in ('cancel', 'done') and scheduled_date &lt; current_date" string="Picking list" default_order="id desc">
+                    <field name="name"/>
+                    <field name="location_dest_id"/>
+                    <field name="partner_id" string="Customer"/>
+					<field name="marketplace_seller_id" string="Seller" groups="odoo_marketplace.marketplace_officer_group"/>
+                    <field name="date" invisible="1"/>
+                    <field name="scheduled_date"/>
+                    <field name="origin"/>
+                    <field name="group_id" invisible="1"/>
+                    <field name="backorder_id"/>
+                    <field name="state"/>
+                    <field name="priority" invisible="1"/>
+                    <field name="picking_type_id" invisible="1"/>
+                </tree>
+            </field>
+		</record>
+
+		<record model="ir.ui.view" id="picking_stock_kanban_view_for_mp">
+            <field name="name">marketplace.stock.picking.kanban</field>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile" create="0">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="location_dest_id"/>
+                    <field name="state"/>
+                    <field name="date"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="o_kanban_record_top mb8">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title"><span><t t-esc="record.name.value"/></span></strong>
+                                    </div>
+                                    <strong>
+										<field name="state" widget="label_selection" options="{'classes': {'draft': 'info', 'cancel': 'info', 'none': 'danger', 'waiting': 'warning', 'confirmed': 'warning', 'partially_available': 'warning', 'done': 'success'}}"/>
+                                    </strong>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+										<strong> Customer </strong>
+                                        <t t-esc="record.partner_id.value"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <t t-esc="record.date.value and record.date.value.split(' ')[0] or False"/>
+                                    </div>
+                                </div>
+								<div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+										<strong groups="odoo_marketplace.marketplace_officer_group"> Seller: </strong>
+										<field name="marketplace_seller_id" groups="odoo_marketplace.marketplace_officer_group"/>
+									</div>
+                                    <div class="oe_kanban_bottom_right">
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+		<record id="marketplace_picking_stock_modified_form_view" model="ir.ui.view">
+			<field name="name">Marketplace Stock Picking</field>
+			<field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <form string="Transfer" create="0">
+                <header>
+                    <field name="is_locked" invisible="1"/>
+                    <field name="show_mark_as_todo" invisible="1"/>
+                    <field name="show_check_availability" invisible="1"/>
+                    <field name="show_validate" invisible="1"/>
+                    <button name="action_confirm" attrs="{'invisible': [('show_mark_as_todo', '=', False)]}" string="Mark as Todo" type="object" class="oe_highlight" groups="base.group_user"/>
+                    <button name="action_assign" attrs="{'invisible': [('show_check_availability', '=', False)]}" string="Check Availability" type="object" class="oe_highlight" groups="odoo_marketplace.marketplace_seller_group"/>
+                    <button name="button_validate" attrs="{'invisible': [('show_validate', '=', False)]}" string="Validate" groups="odoo_marketplace.marketplace_seller_group" type="object" class="oe_highlight"/>
+                    <button name="do_print_picking" string="Print" groups="stock.group_stock_user" type="object" attrs="{'invisible': ['|', ('state', 'not in', ('assigned', 'partially_available')), ('is_locked', '=', False)]}"/>
+					<button name="action_send_confirmation_email" string="Send Confirmation Email" type="object" attrs="{'invisible':['|', ('state', '!=', 'done'), ('carrier_id', '=', False)]}"/>
+                    <button name="%(stock.action_report_delivery)d" string="Print" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('is_locked', '=', False)]}" type="action" groups="odoo_marketplace.marketplace_seller_group"/>
+                    <button name="%(stock.act_stock_return_picking)d" string="Return" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('is_locked', '=', False)]}" type="action" groups="odoo_marketplace.marketplace_seller_group"/>
+                    <button name="action_cancel" attrs="{'invisible': ['|', ('state', 'not in', ('assigned', 'confirmed', 'partially_available', 'draft', 'waiting')), ('is_locked', '=', False)]}" string="Cancel" groups="odoo_marketplace.marketplace_seller_group" type="object"/>
+                    <field name="picking_type_code" invisible="1"/>
+                    <button name="do_unreserve" string="Unreserve" groups="odoo_marketplace.marketplace_officer_group" type="object" attrs="{'invisible': ['|', '|', ('picking_type_code', '=', 'incoming'), ('state', 'not in', ('assigned', 'partially_available')), ('is_locked', '=', False)]}"/>
+                    <field name="show_operations" invisible="1" readonly="1"/>
+                    <field name="move_line_exist" invisible="1"/>
+                    <field name="has_packages" invisible="1"/>
+                    <button name="action_toggle_is_locked" attrs="{'invisible': ['|', ('state', 'in', ('draft','cancel')), ('is_locked', '=', False)]}" string="Unlock" groups="stock.group_stock_manager" type="object" help="If the picking is unlocked you can edit initial demand (for a draft picking) or done quantities (for a done picking)."/>
+                    <button name="action_toggle_is_locked" attrs="{'invisible': [('is_locked', '=', True)]}" string="Lock" class="oe_highlight" groups="stock.group_stock_manager" type="object"/>
+					<button name="send_to_shipper" string="Send to Shipper" type="object" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','!=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done'))]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,partially_available,assigned,done" />
+                    <field name="picking_type_entire_packs" invisible="1"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <field name="has_scrap_move" invisible="True"/>
+                        <button name="%(stock.action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Up/Down Traceability" type="action" states="done" groups="stock.group_production_lot"/>
+						<button type="object" name="open_website_url" class="oe_stat_button" icon="fa-truck" string="Tracking" attrs="{'invisible': ['|','|',('carrier_tracking_ref','=',False),('carrier_id', '=', False),('delivery_type','=','grid')]}"/>
+                    </div>
+                    <h1 class="hidden-xs">
+                        <field name="name" attrs="{'invisible': [('name','=','/')]}" readonly="1"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="partner_id" attrs="{'invisible': [('picking_type_code', '=', 'internal')]}" context="{'show_address': 1, 'form_view_ref': 'odoo_marketplace.customer_form_view_for_marketplace'}"/>
+                            <field name="location_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}"/>
+                            <field name="location_dest_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
+                            <field name="backorder_id" readonly="1" attrs="{'invisible': [('backorder_id','=',False)]}"/>
+                        </group>
+                        <group>
+                            <field name="scheduled_date"/>
+                            <field name="origin" placeholder="e.g. PO0032" readonly="1"/>
+                            <field name="owner_id" groups="stock.group_tracking_owner"/>
+                            <div groups="stock.group_tracking_owner" colspan="2" col="2">
+                                <button name="action_assign_owner" string="Assign Owner" type="object" attrs="{'invisible': ['|',('move_line_exist', '=', False),('state', 'not in', ('draft','assigned','confirmed'))]}"
+                                    class="oe_link"/>
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Detailed Operations" attrs="{'invisible': [('show_operations', '=', False)]}">
+                            <field name="move_line_ids" attrs="{'readonly': [('state', '=', 'done'), ('is_locked', '=', True)]}" context="{'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
+                                <tree editable="bottom" decoration-muted="result_package_id or (state == 'done' and is_locked == True)" decoration-danger="qty_done&gt;product_uom_qty and state!='done'" decoration-success="qty_done==product_uom_qty and state!='done' and not result_package_id">
+                                    <field name="product_id" required="1"/>
+                                    <field name="product_uom_id" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="uom.group_uom"/>
+                                    <field name="package_id" groups="stock.group_tracking_lot"/>
+                                    <field name="location_id" groups="stock.group_stock_multi_locations,stock.group_tracking_lot" domain="[('id', 'child_of', parent.location_id)]"/>
+                                    <field name="location_dest_id" groups="stock.group_stock_multi_locations,stock.group_tracking_lot" domain="[('id', 'child_of', parent.location_dest_id)]"/>
+									<button name="manage_package_type" string="Manage Package Type" type="object" icon="fa-dropbox" groups="stock.group_tracking_lot" attrs="{'invisible': [('result_package_id','=', False)]}"/>
+                                    <field name="result_package_id" groups="stock.group_tracking_lot"/>
+                                    <field name="lots_visible" invisible="1"/>
+                                    <field name="owner_id" groups="stock.group_tracking_owner"/>
+                                    <field name="state" invisible="1"/>
+                                    <field name="lot_id" groups="stock.group_production_lot" attrs="{'invisible': [('lots_visible', '=', False)]}" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"/>
+                                    <field name="is_initial_demand_editable" invisible="1"/>
+                                    <field name="product_uom_qty" attrs="{'readonly': [('is_initial_demand_editable', '=', False)], 'required': [('product_id', '!=', False)]}"/>
+                                    <field name="is_locked" invisible="1"/>
+                                    <field name="qty_done" attrs="{'readonly': [('state', 'in', ('done', 'cancel')), ('is_locked', '=', True)]}"/>
+                                </tree>
+                            </field>
+                            <button class="oe_link oe_right" name="put_in_pack" type="object" string="&#8627;Put in Pack" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}" groups="stock.group_tracking_lot"/>
+                        </page>
+                        <page string="Operations">
+                            <field name="id" invisible="1"/>
+                            <field name="move_lines" attrs="{'readonly': ['|', ('show_operations', '=', True), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" context="{'picking_type_code': picking_type_code, 'default_picking_id': id, 'form_view_ref': 'odoo_marketplace.view_move_form_for_mp', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
+                                <tree decoration-danger="state != 'done' and quantity_done > reserved_availability and show_reserved_availability" decoration-muted="scrapped == True or state == 'cancel' or (state == 'done' and is_locked == True)" string="Stock Moves" editable="bottom">
+                                    <field name="name" invisible="1"/>
+                                    <field name="date_expected" invisible="1"/>
+                                    <field name="state" invisible="1" readonly="0"/>
+                                    <field name="picking_type_id" invisible="1"/>
+                                    <field name="location_id" invisible="1"/>
+                                    <field name="location_dest_id" invisible="1"/>
+                                    <field name="scrapped" invisible="1"/>
+                                    <field name="picking_code" invisible="1"/>
+                                    <field name="product_type" invisible="1"/>
+                                    <field name="show_details_visible" invisible="1"/>
+                                    <field name="show_reserved_availability" invisible="1"/>
+                                    <field name="show_operations" invisible="1" readonly="1"/>
+                                    <field name="additional" invisible="1"/>
+                                    <field name="is_locked" invisible="1"/>
+                                    <field name="product_id" required="1" attrs="{'readonly': ['&amp;', ('state', '!=', 'draft'), ('additional', '=', False)]}"/>
+                                    <field name="is_initial_demand_editable" invisible="1"/>
+                                    <field name="is_quantity_done_editable" invisible="1"/>
+                                    <field name="product_uom_qty" string="Initial Demand" attrs="{'readonly': [('is_initial_demand_editable', '=', False)]}"/>
+                                    <field name="reserved_availability" string="Reserved" attrs="{'column_invisible': ['|', ('parent.state','=', 'done'), ('parent.picking_type_code', '=', 'incoming')]}"/>
+                                    <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)]}"/>
+                                    <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
+                                    <button name="action_show_details" string="Register lots, packs, location" type="object" icon="fa-list" attrs="{'invisible': [('show_details_visible', '=', False)]}" options='{"warn": true}'/>
+                                </tree>
+                            </field>
+                            <button class="oe_link oe_right" name="put_in_pack" type="object" string="&#8627;Put in Pack" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}" groups="stock.group_tracking_lot"/>
+                        </page>
+                        <page string="Additional Info" name="extra">
+                            <group>
+                                <group>
+                                    <field name="picking_type_code" invisible="1"/>
+                                    <field name="move_type" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
+                                    <field name="picking_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}" widget="selection"/>
+                                </group>
+                                <group>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                    <field name="group_id" groups="base.group_no_one"/>
+                                    <field name="priority" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
+                                </group>
+                            </group>
+							<separator string="Delivery Information"/>
+							<group>
+								<group name="carrier_data">
+									<field name="carrier_id" attrs="{'readonly': [('state', '=', 'done')]}" options="{'no_create': True, 'no_open': True}" widget="selection"/>
+									<field name="delivery_type" attrs="{'invisible':True}"/>
+									<label for="carrier_tracking_ref"/>
+									<div name="tracking">
+										<field name="carrier_tracking_ref" class="oe_inline" attrs="{'readonly': [('state', '=', 'done')]}"/>
+										<button type="object" class="fa fa-arrow-right oe_link" name="cancel_shipment" string="Cancel" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done'))]}"/>
+									</div>
+								</group>
+								<group>
+									<label for="weight" string="Weight"/>
+									<div>
+										<field name="weight" class="oe_inline"/>
+										<field name="weight_uom_id" nolabel="1" class="oe_inline" style="margin-left:5px" widget="selection"/>
+									</div>
+									<field name="shipping_weight"/>
+									<!-- <field name="number_of_packages" attrs="{'readonly': [('state', '=', 'done')]}"/> -->
+								</group>
+							</group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+                </form>
+            </field>
+        </record>
+
+		<record id="stock_picking_stock_move_tree_view_for_mp" model="ir.ui.view">
+			<field name="name">Stock Move For Marketplace</field>
+			<field name="model">stock.move</field>
+			<field name="arch" type="xml">
+				<tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done')) and date > current_date" string="Moves" create="0" default_order="id desc">
+                    <field name="date" groups="base.group_no_one"/>
+                    <field name="reference"/>
+                    <field name="picking_type_id" invisible="1"/>
+                    <field name="create_date" invisible="1" groups="base.group_no_one"/>
+                    <field name="product_id"/>
+					<field name="marketplace_seller_id" groups="odoo_marketplace.marketplace_officer_group"/>
+                    <field name="location_id" groups="stock.group_stock_multi_locations" string="From"/>
+                    <field name="location_dest_id" groups="stock.group_stock_multi_locations" string="To"/>
+                    <field name="product_uom_qty"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
+					<field name="date" groups="base.group_no_one"/>
+					<field name="date_expected" invisible="context.get('scrap_move')"/>
+                    <field name="state"/>
+                </tree>
+			</field>
+		</record>
+
+		<record id="stock_move_kanban_view_for_mp" model="ir.ui.view">
+            <field name="name">stock.move.kanban</field>
+            <field name="model">stock.move</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile" create="0">
+                    <field name="name"/>
+                    <field name="product_id"/>
+                    <field name="date"/>
+                    <field name="priority"/>
+                    <field name="state"/>
+					<field name="marketplace_seller_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+								<div class="o_kanban_record_top mb8">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title"><span><field name="product_id"/></span></strong>
+                                    </div>
+                                    <strong>
+										<field name="state" widget="label_selection" options="{'classes': {'draft': 'info', 'cancel': 'danger', 'assigned': 'success', 'confirmed': 'info'}}"/>
+                                    </strong>
+                                </div>
+                                <div class="o_kanban_record_body"/>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+										<strong groups="odoo_marketplace.marketplace_officer_group"> Seller: </strong>
+										<field name="marketplace_seller_id" groups="odoo_marketplace.marketplace_officer_group"/>
+									</div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <span><field name="product_uom_qty"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+		<record id="view_move_form_for_mp" model="ir.ui.view">
+			<field name="name">stock.move.form</field>
+			<field name="model">stock.move</field>
+			<field name="arch" type="xml">
+                <form string="Stock Moves" create="0" edit="0">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" />
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <!-- <button name="action_get_account_moves" icon="fa-usd" class="oe_stat_button" string="Accounting Entries" type="object"/> -->
+                        </div>
+                        <group>
+                            <group name="main_grp" colspan="2">
+                                <group name="main_grp_col1">
+                                    <field name="reference"/>
+                                    <field name="location_id" widget="selection"/>
+                                    <field name="location_dest_id" widget="selection"/>
+                                </group>
+                                <group name="main_grp_col2">
+                                    <field name="product_id" widget="selection"/>
+                                    <field name="marketplace_seller_id" options="{'no_create': True}" context="{'form_view_ref': 'odoo_marketplace.wk_seller_form_view'}" groups="odoo_marketplace.marketplace_officer_group"/>
+                                    <label for="product_uom_qty"/>
+                                    <div class="o_row">
+                                        <field name="product_uom_qty"/>
+                                        <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
+                                    </div>
+                                    <field name="name" invisible="0"/>
+                                    <field name="date_expected" invisible="1"/>
+                                    <field name="date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                                </group>
+                            </group>
+                            <group name="origin_grp" string="Origin">
+                                <field name="origin"/>
+                                <field name="group_id" groups="base.group_no_one"/>
+                                <field name="procure_method" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="stock.group_adv_location"/>
+                            </group>
+                            <group name="linked_group" string="Linked Moves" groups="base.group_no_one" colspan="2">
+                                <field name="move_orig_ids" string="Origin Moves" readonly="1">
+                                    <tree>
+                                        <field name="location_id"/>
+                                        <field name="location_dest_id"/>
+                                        <field name="product_uom_qty"/>
+                                        <field name="product_uom"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                                <field name="move_dest_ids" string="Destination Moves" readonly="1">
+                                    <tree>
+                                        <field name="location_id"/>
+                                        <field name="location_dest_id"/>
+                                        <field name="product_uom_qty"/>
+                                        <field name="product_uom"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+		</record>
+
+		<record id="marketplace_product_stock_action2" model="ir.actions.act_window">
+			<field name="name">Marketplace Product Stock</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">marketplace.stock</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+		<record id="marketplace_product_stock_tree_view" model="ir.ui.view">
+			<field name="name">Marketplace Product Stock</field>
+			<field name="model">marketplace.stock</field>
+			<field name="arch" type="xml">
+				<tree string="Marketplace Product Stock" decoration-success="state=='approved'" decoration-warning="state=='requested'" decoration-primary="state=='draft'" decoration-danger="state=='rejected'">
+					<field name="product_temp_id"/>
+					<field name='product_id' groups="odoo_marketplace.marketplace_officer_group" invisible="1"/>
+					<field name='marketplace_seller_id' groups="odoo_marketplace.marketplace_officer_group"/>
+					<field name='new_quantity'/>
+					<field name='location_id' groups="odoo_marketplace.marketplace_officer_group"/>
+					<field name='state'/>
+					<field name='create_date'/>
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="marketplace_product_stock_kanban_view">
+            <field name="name">Marketplace Product Stock.kanban</field>
+            <field name="model">marketplace.stock</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="product_temp_id"/>
+                    <field name="product_id"/>
+                    <field name="marketplace_seller_id"/>
+                    <field name="new_quantity"/>
+                    <field name="location_id"/>
+					<field name="state"/>
+					<field name="create_date"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="o_kanban_record_top mb8">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title"><span><t t-esc="record.product_id.value"/></span></strong>
+                                    </div>
+                                    <strong>
+										<field name="state" widget="label_selection" options="{'classes': {'draft': 'info', 'rejected': 'danger', 'requested': 'warning', 'approved': 'success'}}"/>
+                                    </strong>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <t t-esc="record.location_id.value"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+										<strong>
+											<t t-esc="record.new_quantity.value"/>
+										</strong>
+                                    </div>
+                                </div>
+								<div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+										<strong groups="odoo_marketplace.marketplace_officer_group"> Seller: </strong>
+										<field name="marketplace_seller_id" groups="odoo_marketplace.marketplace_officer_group"/>
+									</div>
+                                    <div class="oe_kanban_bottom_right">
+										<t t-esc="record.create_date.value and record.create_date.value.split(' ')[0] or False"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+		<record id="marketplace_product_stock_form_view" model="ir.ui.view">
+			<field name="name">Marketplace Product Stock</field>
+			<field name="model">marketplace.stock</field>
+			<field name="arch" type="xml">
+				<form string="Marketplace Product Stock">
+					<header>
+						<button name="request" string="Request" type="object" states="draft" class="btn-primary" invisible="context.get('mp_stock', False)"/>
+						<button name="approve" string="Approve" type="object" states="requested" groups="odoo_marketplace.marketplace_officer_group" class="btn-primary"/>
+						<button name="reject" string="Reject" type="object" states="requested" groups="odoo_marketplace.marketplace_officer_group"/>
+						<button name="set_2_draft" string="Set to Draft" type="object" states="rejected" class="btn-primary"/>
+						<field name="state" widget="statusbar" statusbar_visible="draft,requested,approved,rejected"/>
+					</header>
+					<sheet>
+						<field name="product_variant_count" invisible="1"/>
+						<group>
+							<field name="name"/>
+							<field
+								name='product_temp_id'
+								string="Product Template"
+								invisible="1"
+								options="{'no_create_edit': True, 'no_quick_create':True, 'no_open': True}"
+								required="1"
+								attrs="{'readonly':[('state', 'not in', ('draft'))]}"
+								domain="[('marketplace_seller_id', '!=', False),('status','=','approved')]"/>
+							<field name='product_id' options="{'no_create_edit': True, 'no_quick_create':True, 'no_open': True}" required="1" attrs="{'readonly':[('state', 'not in', ('draft'))]}" domain="[('marketplace_seller_id', '!=', False),('status','=','approved')]"/>
+							<field name='marketplace_seller_id' readonly="1" options="{'no_open': True}" groups="odoo_marketplace.marketplace_officer_group"/>
+							<field name='new_quantity' attrs="{'readonly':[('state', 'not in', ('draft','requested'))]}"/>
+							<field name='location_id' groups="odoo_marketplace.marketplace_officer_group" options="{'no_open': True}" attrs="{'readonly':[('state', 'not in', ('draft'))]}"/>
+							<field name='create_date' attrs="{'invisible': [('create_date', '=', False)]}" readonly="1"/>
+							<field name="note" placeholder="Write note..." attrs="{'readonly':[('state', 'not in', ('draft'))]}"/>
+						</group>
+					</sheet>
+					<footer invisible="not context.get('mp_stock', False)">
+						<button name="request" string="Request" type="object" states="draft" class="btn-primary"/>
+						or
+						<button name="cancel" string="Cancel" class="btn-primary" special="cancel"/>
+					</footer>
+					<div class="oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers"/>
+						<field name="message_ids" widget="mail_thread"/>
+					</div>
+				</form>
+			</field>
+		</record>
+
+		<record id="make_carrier_writeable_to_manager" model="ir.ui.view">
+			<field name="name">Writeable Carrier</field>
+			<field name="model">stock.picking</field>
+			<field name="inherit_id" ref="odoo_marketplace.marketplace_picking_stock_modified_form_view"/>
+			<field name="groups_id" eval="[(6, 0, [ref('odoo_marketplace.marketplace_officer_group') ])]"/>
+			<field name="arch" type="xml">
+				<field name='carrier_id' position="attributes">
+					<attribute name="readonly">0</attribute>
+				</field>
+			</field>
+		</record>
+
+		<record id="add_seller_in_stock_picking_form_formview" model="ir.ui.view">
+            <field name="name">stock.picking.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <field name="origin" position="after">
+                    <field name="marketplace_seller_id" groups="odoo_marketplace.marketplace_officer_group" attrs="{'invisible':[('marketplace_seller_id','=',False)]}"/>
+                </field>
+            </field>
+        </record>
+
+		<!-- Filters -->
+		<record id="wk_marketplace_stock_search_view" model="ir.ui.view">
+			<field name="name">Marketplace Stock Search</field>
+			<field name="model">marketplace.stock</field>
+			<field name="priority" eval="100"/>
+			<field name="arch" type="xml">
+				<search string="Search Stock Request">
+                    <field name="product_id" string="Product" filter_domain="['|',('product_id','ilike',self),('product_temp_id','ilike',self)]"/>
+                    <field name="marketplace_seller_id" string="Seller"/>
+                    <field name="state" string="Status"/>
+                    <field name="new_quantity" string="Quantity"/>
+					<filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
+					<filter string="Requested " name="requested" domain="[('state', '=', 'requested')]"/>
+					<filter string="Rejected" name="rejected" domain="[('state', '=', 'rejected')]"/>
+					<group string="Group By">
+						<filter string="Status" domain="" context="{'group_by':'state'}" name="groupby_state"/>
+						<filter string="Products" name="groupby_products" context="{'group_by':'product_id'}"/>
+						<filter string="Date" name="groupby_name" context="{'group_by':'create_date'}"/>
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="wk_marketplace_stock_search_view_inherit" model="ir.ui.view">
+            <field name="name">Marketplace Stock Add Seller Group By For MP Manager</field>
+            <field name="model">marketplace.stock</field>
+            <field name="inherit_id" ref="odoo_marketplace.wk_marketplace_stock_search_view"/>
+            <field name="groups_id" eval="[(6, 0, [ref('odoo_marketplace.marketplace_officer_group') ])]"/>
+            <field name="arch" type="xml">
+				<group position="inside">
+					<filter string="Locations" name="locations_filter" context="{'group_by':'location_id'}" groups="odoo_marketplace.marketplace_officer_group"/>
+					<filter string="Seller" context="{'group_by':'marketplace_seller_id'}" name="by_marketplace_seller_id" groups="odoo_marketplace.marketplace_officer_group"/>
+				</group>
+            </field>
+        </record>
+
+		<!-- Filters -->
+		<record id="wk_mp_stock_move_search_fiew" model="ir.ui.view">
+			<field name="name">Stock Move</field>
+			<field name="model">stock.move</field>
+			<field name="priority" eval="100"/>
+			<field name="arch" type="xml">
+				<search string="Stock Moves">
+                    <field name="origin" filter_domain="['|', '|', ('origin', 'ilike', self), ('name', 'ilike', self), ('picking_id', 'ilike', self)]" string="Reference"/>
+                    <field name="date" groups="base.group_no_one"/>
+
+                    <filter string="Ready" name="ready" domain="[('state','=','assigned')]" help="Stock moves that are Available (Ready to process)"/>
+                    <filter string="To Do" name="future" domain="[('state','in',('assigned','confirmed','waiting'))]" help="Stock moves that are Confirmed, Available or Waiting"/>
+                    <filter string="Done" name="done" domain="[('state','=','done')]" help="Stock moves that have been processed"/>
+                    <separator/>
+                    <filter string="Today" name="today_filter" domain="[('date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59))), ('date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Orders processed today or scheduled for today"/>
+                    <separator/>
+                    <filter string="Incoming" name="incoming" domain="[('location_id.usage', 'not in', ('internal', 'transit')), ('location_dest_id.usage', 'in', ('internal', 'transit'))]"/>
+                    <filter string="Outgoing" name="outgoing" domain="[('location_id.usage', 'in', ('internal', 'transit')), ('location_dest_id.usage', 'not in', ('internal', 'transit'))]"/>
+                    <field name="product_id"/>
+                    <field name="name" string="Location" filter_domain="['|',('location_id','ilike',self),('location_dest_id','ilike',self)]"/>
+                    <field name="partner_id" string="Partner"  filter_domain="[('picking_id.partner_id','child_of',self)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Product" name="by_product" domain="[]"  context="{'group_by':'product_id'}"/>
+                        <filter string="Picking" name="groupby_picking_id" domain="[]"  context="{'group_by':'picking_id'}"/>
+                        <filter string="Source" name="groupby_location_id" domain="[]" context="{'group_by':'location_id'}" groups="stock.group_stock_multi_locations"/>
+                        <filter string="Destination" name="groupby_dest_location_id" domain="[]" context="{'group_by':'location_dest_id'}" groups="stock.group_stock_multi_locations"/>
+                        <filter string="Status" name="groupby_status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Creation" name="groupby_create_date" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
+                        <filter string="Scheduled" name="groupby_date" domain="[]" context="{'group_by':'date_expected'}"/>
+                    </group>
+                </search>
+			</field>
+		</record>
+
+		<record id="wk_mp_stock_move_search_fiew_inherit" model="ir.ui.view">
+            <field name="name">Stock Move Add Seller Group By For MP Manager</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="odoo_marketplace.wk_mp_stock_move_search_fiew"/>
+            <field name="groups_id" eval="[(6, 0, [ref('odoo_marketplace.marketplace_officer_group') ])]"/>
+            <field name="arch" type="xml">
+				<group position="inside">
+					<filter string="Seller" context="{'group_by':'marketplace_seller_id'}" name="by_marketplace_seller_id" groups="odoo_marketplace.marketplace_officer_group"/>
+				</group>
+            </field>
+        </record>
+
+		<record id="wk_mp_stock_picking_search_fiew" model="ir.ui.view">
+			<field name="name">Picking</field>
+			<field name="model">stock.picking</field>
+			<field name="priority" eval="100"/>
+			<field name="arch" type="xml">
+				<search string="Picking Lists">
+					<field name="name" string="Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
+					<filter name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Moves"/>
+					<filter name="available" string="Ready" domain="[('state','in',('assigned', 'partially_available'))]" help="Assigned Moves"/>
+					<filter name="waiting" string="Waiting Availability" domain="[('state','in', ('confirmed', 'waiting'))]" help="Waiting Moves"/>
+					<filter name="confirmed" string="Confirmed" domain="[('state','in', ('confirmed', 'waiting', 'assigned'))]" help="Confirmed Moves"/>
+					<filter name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
+					<separator/>
+					<filter name="late" string="Late" domain="[('scheduled_date','&lt;', time.strftime('%%Y-%%m-%%d %%H:%%M:%%S'))]" help="Pickings that are late on scheduled time"/>
+                    <separator/>
+                    <filter string="My Activities" name="activities_my"
+                        domain="[('activity_ids.user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter string="Late Activities" name="activities_overdue"
+                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which has next action date is before today"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        ]"/>
+                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
+                    <field name="product_id"/>
+                    <field name="picking_type_id"/>
+                    <field name="group_id"/>
+					<group expand="0" string="Group By">
+                        <filter string="Status" name="groupby_status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Order Date" name="groupby_orderdate" domain="[]"  context="{'group_by':'date'}"/>
+                        <filter string="Expected Date" name="groupby_exp_date" domain="[]"  context="{'group_by':'scheduled_date'}"/>
+                        <filter string="Origin" domain="[]" name="groupby_origin" context="{'group_by':'origin'}"/>
+                        <filter string="Operation Type" name="picking_type" domain="[]" context="{'group_by':'picking_type_id'}"/>
+                        <filter string="Procurement Group" name="groupby_procurement" domain="[]" context="{'group_by':'group_id'}" groups="odoo_marketplace.marketplace_officer_group"/>
+                    </group>
+				</search>
+			</field>
+		</record>
+
+		<record id="wk_mp_stock_picking_search_fiew_inherit" model="ir.ui.view">
+            <field name="name">Stock Move Add Seller Group By For MP Manager</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="odoo_marketplace.wk_mp_stock_picking_search_fiew"/>
+            <field name="groups_id" eval="[(6, 0, [ref('odoo_marketplace.marketplace_officer_group') ])]"/>
+            <field name="arch" type="xml">
+				<group position="inside">
+					<filter string="Seller" context="{'group_by':'marketplace_seller_id'}" name="by_marketplace_seller_id" groups="odoo_marketplace.marketplace_officer_group"/>
+				</group>
+            </field>
+        </record>
+
+		<record id="marketplace_stock_picking_action" model="ir.actions.act_window">
+			<field name="name">Delivery Orders</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">stock.picking</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">kanban,tree,form</field>
+			<field name="domain">[('marketplace_seller_id','in',['get_marketplace_seller_id()'])]</field>
+			<field name="view_id" ref="stock_picking_stock_tree_view_for_mp"/>
+			<field name="context">{'search_default_by_marketplace_seller_id': 1}</field>
+			<field name="search_view_id" ref="wk_mp_stock_picking_search_fiew"/>
+            <field name="view_ids"
+                eval="[(5, 0, 0),
+                    (0, 0, {'sequence': 1, 'view_mode': 'kanban','view_id': ref('picking_stock_kanban_view_for_mp')}),
+                    (0, 0, {'sequence': 2, 'view_mode': 'tree', 'view_id': ref('stock_picking_stock_tree_view_for_mp')}),
+                    (0, 0, {'sequence': 3, 'view_mode': 'form', 'view_id': ref('marketplace_picking_stock_modified_form_view')})
+                ]"/>
+		</record>
+
+		<record id="wk_seller_delivery_action" model="ir.actions.act_window">
+			<field name="name">Stock Moves</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">stock.move</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">kanban,tree,form</field>
+			<field name="domain">[('product_id.marketplace_seller_id','!=',False)]</field>
+			<field name="view_id" ref="stock_picking_stock_move_tree_view_for_mp"/>
+			<field name="context">{'search_default_by_marketplace_seller_id': 1}</field>
+			<field name="search_view_id" ref="wk_mp_stock_move_search_fiew"/>
+            <field name="view_ids"
+                eval="[(5, 0, 0),
+                    (0, 0, {'sequence': 1, 'view_mode': 'kanban','view_id': ref('stock_move_kanban_view_for_mp')}),
+                    (0, 0, {'sequence': 2, 'view_mode': 'tree', 'view_id': ref('stock_picking_stock_move_tree_view_for_mp')}),
+                    (0, 0, {'sequence': 3, 'view_mode': 'form', 'view_id': ref('view_move_form_for_mp')})
+                ]"/>
+		</record>
+
+		<record id="marketplace_product_stock_action" model="ir.actions.act_window">
+			<field name="name">Update Marketplace Product Quantity</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">marketplace.stock</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">kanban,tree,form</field>
+			<field name="context">{'search_default_by_marketplace_seller_id': 1}</field>
+		</record>
+	</data>
+</odoo>

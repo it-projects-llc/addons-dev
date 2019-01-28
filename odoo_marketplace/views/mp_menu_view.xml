@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+    <data>
+        <!-- Seller Dashboard Menus -->
+        <menuitem id="wk_seller_dashboard" name="Seller Dashboard" groups="odoo_marketplace.marketplace_draft_seller_group" web_icon="odoo_marketplace,static/description/icon.png" sequence="8"/>
+            <menuitem id="wk_seller_dashboard_menu1" name="Sellers" parent="wk_seller_dashboard" groups="odoo_marketplace.marketplace_draft_seller_group" sequence="1"/>
+                <menuitem id="wk_seller_dashboard_menu1_sub_menu1" name="Sellers" parent="wk_seller_dashboard_menu1" action="wk_seller_action" sequence="1" groups="odoo_marketplace.marketplace_draft_seller_group"/>
+                <menuitem id="wk_seller_dashboard_menu1_sub_menu2" name="Seller Shops" parent="wk_seller_dashboard_menu1" action="odoo_marketplace.wk_seller_shop_action" sequence="2" groups="odoo_marketplace.group_marketplace_seller_shop,odoo_marketplace.marketplace_officer_group"/>
+                <menuitem action="odoo_marketplace.action_seller_review" name="Seller Reviews" id="menu_seller_review" parent="wk_seller_dashboard_menu1" sequence="3" groups="marketplace_officer_group"/>
+                <menuitem action="odoo_marketplace.action_seller_recommendation" name="Seller Recommendations" id="menu_seller_recommendations" parent="wk_seller_dashboard_menu1" sequence="4" groups="marketplace_officer_group"/>
+                <menuitem id="wk_seller_dashboard_menu1_sub_menu3" name="Seller Invoices" parent="wk_seller_dashboard_menu1" action=""/>
+
+            <menuitem id="wk_seller_dashboard_menu3" name="Sales" parent="wk_seller_dashboard" groups="odoo_marketplace.marketplace_seller_group" sequence="2"/>
+                <menuitem id="wk_seller_dashboard_menu3_sub_menu2" name="Orders" sequence="2" parent="wk_seller_dashboard_menu3" action="wk_seller_slae_order_line_action" groups="odoo_marketplace.marketplace_seller_group" />
+                <menuitem id="wk_seller_payment_pay_to_seller" name="Pay To Seller" sequence="4" parent="odoo_marketplace.wk_seller_dashboard_menu3" action="wk_pay_to_seller_payment_wizard_action" groups="odoo_marketplace.marketplace_manager_group"/>
+                <menuitem id="wk_seller_payment_request" name="Request For Payment" sequence="4" parent="odoo_marketplace.wk_seller_dashboard_menu3" action="wk_seller_payment_wizard_action" groups="odoo_marketplace.marketplace_seller_group"/>
+                <menuitem id="wk_seller_payment_method" name="Seller Payments" sequence="5" parent="odoo_marketplace.wk_seller_dashboard_menu3" action="wk_seller_payment_action"/>
+                <menuitem id="wk_seller_paid_bill" name="Seller Bills" sequence="6" parent="odoo_marketplace.wk_seller_dashboard_menu3" action="odoo_marketplace.seller_invoice_action" groups="odoo_marketplace.marketplace_officer_group"/>
+                <menuitem id="wk_seller_order_analysis" name="Order Analysis" sequence="7" parent="odoo_marketplace.wk_seller_dashboard_menu3" action="odoo_marketplace.wk_seller_sale_order_line_analysis_action" groups="odoo_marketplace.marketplace_seller_group"/>
+
+            <menuitem id="wk_seller_dashboard_menu2" name="Products" parent="wk_seller_dashboard" groups="odoo_marketplace.marketplace_seller_group" sequence="3"/>
+                <menuitem id="wk_seller_dashboard_menu2_sub_menu0" name="Create New Product" parent="wk_seller_dashboard_menu2" action="wk_seller_new_product_create_action" sequence="1" groups="odoo_marketplace.marketplace_seller_group"/>
+                <menuitem id="wk_seller_dashboard_menu2_sub_menu1" name="Non-Approved Products" parent="wk_seller_dashboard_menu2" action="wk_seller_product_template_action" sequence="2"/>
+                <menuitem id="wk_seller_dashboard_menu2_sub_menu2" name="Approved Products" parent="wk_seller_dashboard_menu2" action="wk_seller_product_template_approved_products_action"  groups="odoo_marketplace.marketplace_seller_group" sequence="3"/>
+                <menuitem id="wk_seller_dashboard_menu2_sub_menu3" name="Product Variants" parent="wk_seller_dashboard_menu2" action="mp_product_product_action"  groups="product.group_product_variant" sequence="4"/>
+
+            <menuitem id="wk_seller_dashboard_menu4" name="Inventory" parent="wk_seller_dashboard" groups="odoo_marketplace.marketplace_seller_group" sequence="7"/>
+                <menuitem id="wk_seller_dashboard_menu4_sub_menu1" name="Delivery Orders" parent="wk_seller_dashboard_menu4" action="marketplace_stock_picking_action" sequence="2" groups="odoo_marketplace.marketplace_seller_group"/>
+                <menuitem id="wk_seller_dashboard_menu4_sub_menu2" name="Inventory Requests" parent="wk_seller_dashboard_menu4" action="marketplace_product_stock_action" sequence="1" groups="odoo_marketplace.marketplace_seller_group"/>
+                <menuitem id="wk_seller_dashboard_menu3_sub_menu3" name="Stock Moves" parent="wk_seller_dashboard_menu4" sequence="3" action="wk_seller_delivery_action" groups="odoo_marketplace.marketplace_seller_group"/>
+
+
+
+			<menuitem id="wk_seller_dashboard_menu8" name="Configuration" parent="wk_seller_dashboard" groups="odoo_marketplace.marketplace_seller_group" sequence="10"/>
+                <menuitem id="wk_odoo_marketplace_config_settings" name="Settings" parent="wk_seller_dashboard_menu8" action="odoo_marketplace.marketplace_base_config_settings_action" sequence="1" groups="odoo_marketplace.marketplace_manager_group"/>
+                <menuitem id="wk_seller_dashboard_menu8_sub_menu1" name="Website Categories" parent="wk_seller_dashboard_menu8" action="website_sale.product_public_category_action"/>
+                <menuitem id="wk_seller_dashboard_menu9_sub_menu1" name="Seller Payment Methods" parent="wk_seller_dashboard_menu8" action="wk_seller_payment_method_action" groups="marketplace_officer_group"/>
+                <menuitem id="wk_social_media" name="Social Media" parent="wk_seller_dashboard_menu8" action="wk_social_media_action" groups="marketplace_officer_group"/>
+
+        <record id="wk_seller_action_website" model="ir.actions.act_url">
+            <field name="name">Website</field>
+            <field name="url">/</field>
+            <field name="target">self</field>
+        </record>
+
+        <menuitem id="wk_seller_website_menu" name="Website" groups="odoo_marketplace.marketplace_draft_seller_group" web_icon="website,static/description/icon.png" action="wk_seller_action_website"/>
+    </data>
+</odoo>

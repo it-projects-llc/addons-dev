@@ -1,0 +1,36 @@
+.wk_kanban_button_box{
+    width: 100%;
+    margin: 0px 0px 5px 0px;
+    cursor: pointer;
+    text-align: center;
+    padding: 6px 5px;
+    font-size: 15px;
+    font-weight:bold;
+}
+
+div.wk_form>div.o_form_statusbar{
+    padding: 10px;
+    width: 100%;
+    position: fixed;
+    z-index: 1;
+}
+
+.url_validation{
+    margin-left: -17px;
+}
+.url-success{
+    border-color: #28a745!important;
+    box-shadow: 0 0 8px #28a745 !important;
+}
+.url-error{
+    border-color: #b24542 !important;
+    box-shadow: 0 0 8px #b24542 !important;
+}
+.mp_config_image>img{
+    height: 100px !important;
+    width: 320px !important;
+}
+.mp_shop_image>img{
+    height: 250px !important;
+    width: 825px !important;
+}

@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+	<record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.marketplace</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="1"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Marketplace" data-key="odoo_marketplace" groups="odoo_marketplace.marketplace_manager_group, base.group_system">
+                    <h2>Auto Approval Settings</h2>
+                    <div class="row mt16 o_settings_container" id="mp_approval_settings">
+                        <div class="col-12 col-lg-6 o_setting_box" title="Enable this if you want to approve seller automatically.">
+                            <div class="o_setting_left_pane">
+                                <field name="auto_approve_seller" help="Enable this if you want to approve seller automatically."/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="auto_approve_seller" string="Seller Approval"/>
+                                <div class="text-muted">
+                                    ⇒ If it is enabled then all seller's requests will be automatically approved.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" title="Enable this if you want to approve seller product automatically.">
+                            <div class="o_setting_left_pane">
+                                <field name="auto_product_approve" class="oe_inline" help="Enable this if you want to approve seller product automatically."/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="auto_product_approve" string="Product Approval"/>
+                                <div class="text-muted">
+                                    ⇒ If it is enabled then all seller's products will be automatically approved.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" title="Enable this if you want to approve product inventory automatically.">
+                            <div class="o_setting_left_pane">
+                                <field name="auto_approve_qty" help="Enable this if you want to approve product inventory automatically."/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="auto_approve_qty" string="Quantity Approval"/>
+                                <div class="text-muted">
+                                    ⇒ If it is enabled then all seller's product quantity update request will be automatically approved.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+					<h2>Other Settings</h2>
+					<div class="row mt16 o_settings_container" id="mp_other_settings" style="max-width:100%;padding-right: 32px;">
+						<notebook name="mp_config_notebook">
+							<page string="Product Terms" name="config_product_terms">
+                                <div class="row mt16 mb16">
+    								<div class="col-12 col-lg-6 o_setting_box" id="mp_product_internal_categ" title="Internal category for marketplace product.">
+    									<div class="o_setting_right_pane">
+    										<label for="internal_categ" string="Internal Category"/>
+    										<div class="text-muted">
+    											⇒ All marketplace products will belong to defined internal category.
+    										</div>
+    										<div class="text-muted">
+    											<field name="internal_categ" class="oe_inline" help="This category will be linked as a internal category for all seller products." required="1"/>
+    										</div>
+    									</div>
+    								</div>
+
+    								<div class="col-12 col-lg-6 o_setting_box">
+    									<div class="o_setting_left_pane"/>
+    									<div class="o_setting_right_pane">
+    										<label for="internal_categ" string="Warehouse/Location"/>
+    										<div class="text-muted">
+    											⇒ This will be default seller's location. Locations can be set for individual seller from seller record.
+    										</div>
+    										<div class="text-muted">
+    											<field name="warehouse_location_id" class="oe_inline" help="This location will be default location for all seller." required="1"/>
+    										</div>
+    										<div class="text-muted">
+    											⇒ This will be default seller's warehouse. You can set warehouse for individual seller in seller record.
+    										</div>
+    										<div class="text-muted">
+    											<field name="mp_default_warehouse_id" class="oe_inline" help="This warehouse will be  default warehouse for all seller." required="1"/>
+    										</div>
+    									</div>
+    								</div>
+    								<div class="col-12 col-lg-6 o_setting_box">
+    									<div class="o_setting_left_pane">
+    										<field name="group_mp_product_variant"/>
+    									</div>
+    									<div class="o_setting_right_pane">
+    										<label for="group_mp_product_variant" string="Product Variants"/>
+    										<div class="text-muted">
+    											Allow sellers for managing their product attributes, defining variants (Example: size, color,...)
+    										</div>
+    									</div>
+    								</div>
+    								<div class="col-12 col-lg-6 o_setting_box">
+    									<div class="o_setting_left_pane">
+    										<field name="group_mp_product_pricelist"/>
+    									</div>
+    									<div class="o_setting_right_pane">
+    										<label for="group_mp_product_pricelist" string="Product Pricing"/>
+    										<div class="text-muted">
+    											Allow sellers managing for Advanced pricing on product using pricelist.
+    										</div>
+    									</div>
+    								</div>
+                                    <div class="col-12 col-lg-6 o_setting_box" title="Enable for Seller Shop feature.">
+    									<div class="o_setting_left_pane">
+    										<field name="group_mp_shop_allow"/>
+    									</div>
+    									<div class="o_setting_right_pane">
+    										<label for="group_mp_shop_allow" string="Enable Seller Shop"/>
+    										<div class="text-muted">
+    											Allow sellers to manage seller shop.
+    										</div>
+    									</div>
+    								</div>
+                                </div>
+							</page>
+							<page string="Payment Terms" name="config_payment_terms">
+                                <div class="row mt16 mb16">
+    								<div class="col-12 col-lg-6 o_setting_box" title="Set global commission. You can manage this commission seller wise from seller account.">
+    									<div class="o_setting_left_pane"/>
+    									<div class="o_setting_right_pane">
+    										<label for="global_commission" string="Commission"/>
+    										<div class="text-muted">
+    											Global commission for marketplace seller.
+    										</div>
+    										<div class="text-muted">
+    											<field name="global_commission" class="oe_inline" help="Set global commission. You can manage this commission seller wise from seller account."/>%
+    										</div>
+    									</div>
+    								</div>
+    								<div class="col-12 col-lg-6 o_setting_box" title="If system has recorded any seller payment then you won't be able to change the marketplace currency.">
+    									<div class="o_setting_left_pane"/>
+    									<div class="o_setting_right_pane">
+    										<label for="mp_currency_id" string="Marketplace Currency"/>
+    										<div class="text-muted">
+    											Marketplace currency will use to pay payment to seller.
+    										</div>
+    										<div class="text-muted">
+    											<field name="mp_currency_id" class="oe_inline" help="If system has recorded any seller payment then you won't be able to change the marketplace currency." required="1"/>
+    										</div>
+    									</div>
+    								</div>
+    								<div class="col-12 col-lg-6 o_setting_box" title="Set amount limit for seller's payment request.">
+    									<div class="o_setting_left_pane"/>
+    									<div class="o_setting_right_pane">
+    										<label for="seller_payment_limit" string="Amount Limit"/>
+    										<div class="text-muted">
+    											Amount limit for seller payment request.
+    										</div>
+    										<div class="text-muted">
+    											<field name="seller_payment_limit" class="oe_inline" help="Set amount limit for seller's payment request."/>
+    										</div>
+    									</div>
+    								</div>
+    								<div class="col-12 col-lg-6 o_setting_box" title="Set minimum gap in days for next payment request.">
+    									<div class="o_setting_left_pane"/>
+    									<div class="o_setting_right_pane">
+    										<label for="next_payment_requset" string="Minimum Gap"/>
+    										<div class="text-muted">
+    											Minimum gap for next payment request.
+    										</div>
+    										<div class="text-muted">
+    											<field name="next_payment_requset" class="oe_inline" help="Set minimum gap in days for next payment request."/> Days
+    										</div>
+    									</div>
+    								</div>
+    								<div class="col-12 col-lg-6 o_setting_box" title="Set Account journal for seller payment.">
+    									<div class="o_setting_left_pane"/>
+    									<div class="o_setting_right_pane">
+    										<label for="seller_payment_journal_id"/>
+    										<div class="text-muted">
+    											Account journal for seller payment.
+    										</div>
+    										<div class="text-muted">
+    											<field name="seller_payment_journal_id" required="1" class="oe_inline" help="Account journal used for creating automatic seller payment when seller get payment via adaptive PayPal. If Seller Payment Journal is not set then adaptive PayPal acquirer Payment Journal(if set) will used for same else seller automatic payment will not generate. Note: Sellers will get payment to  there PayPal account define in seller's profile."/>
+    										</div>
+    									</div>
+    								</div>
+                                    <div class="col-12 col-lg-6 o_setting_box" title="Set Product for seller payment.">
+                                        <div class="o_setting_right_pane">
+                                            <label for="seller_payment_product_id"/>
+                                            <div class="text-muted">
+                                                Product used for creating seller payment
+                                            </div>
+                                            <div class="text-muted">
+                                                <field name="seller_payment_product_id" required="1" class="oe_inline" help="Product used for creating seller payment."/>
+                                            </div>
+                                        </div>
+    								</div>
+                                </div>
+							</page>
+							<page string="Mail &amp; Notifications" name="config_mail_notify">
+                                <div class="row mt16 mb16">
+    								<div class="col-12 col-lg-6 o_setting_box" title="Enable for notification on new seller request.">
+    									<separator string="On New Seller Request"/>
+    									<div class="o_setting_left_pane" title="Enable to notify the admin on new seller request.">
+    										<field name="enable_notify_admin_4_new_seller" class="oe_inline" help="Enable to notify the admin on new seller request."/>
+    									</div>
+    									<div class="o_setting_right_pane" title="Template to notify the admin on new seller request.">
+    										<label for="enable_notify_admin_4_new_seller" string="Enable Notification for Admin"/>
+    										<div class="content-group">
+    											<div class="row mt8">
+    												<label string="Email Template" for="notify_admin_4_new_seller_m_tmpl_id" class="col-md-3 o_light_label" attrs="{'invisible': [('enable_notify_admin_4_new_seller', '=', False)]}"/>
+    												<field name="notify_admin_4_new_seller_m_tmpl_id" attrs="{'invisible': [('enable_notify_admin_4_new_seller', '=', False)], 'required': [('enable_notify_admin_4_new_seller', '=', True)]}"/>
+    											</div>
+    										</div>
+    									</div>
+    									<div class="o_setting_left_pane" title="Enable to notify the seller for his seller request.">
+    										<field name="enable_notify_seller_4_new_seller" class="oe_inline" help="Enable to notify the seller for his seller request."/>
+    									</div>
+    									<div class="o_setting_right_pane" title="Template to notify the seller for his seller request.">
+    										<label for="enable_notify_seller_4_new_seller" string="Enable Notification for Seller"/>
+    										<div class="content-group">
+    											<div class="row mt8">
+    												<label string="Email Template" for="notify_seller_4_new_seller_m_tmpl_id" class="col-md-3 o_light_label" attrs="{'invisible': [('enable_notify_seller_4_new_seller', '=', False)]}"/>
+    												<field name="notify_seller_4_new_seller_m_tmpl_id" attrs="{'invisible': [('enable_notify_seller_4_new_seller', '=', False)], 'required': [('enable_notify_seller_4_new_seller', '=', True)]}"/>
+    											</div>
+    										</div>
+    									</div>
+    								</div>
+
+    								<div class="col-12 col-lg-6 o_setting_box" title="Enable for notification on seller approval/rejection.">
+    									<separator string="On Seller Approval/Rejection"/>
+    									<div class="o_setting_left_pane" title="Enable to notify the admin on seller approval/rejection.">
+    										<field name="enable_notify_admin_on_seller_approve_reject" class="oe_inline" help="Enable to notify the admin on seller approval/rejection."/>
+    									</div>
+    									<div class="o_setting_right_pane" title="Template to notify the admin on seller approval/rejection.">
+    										<label for="enable_notify_admin_on_seller_approve_reject" string="Enable Notification for Admin"/>
+    										<div class="content-group">
+    											<div class="row mt8">
+    												<label string="Email Template" for="notify_admin_on_seller_approve_reject_m_tmpl_id" class="col-md-3 o_light_label" attrs="{'invisible': [('enable_notify_admin_on_seller_approve_reject', '=', False)]}"/>
+    												<field name="notify_admin_on_seller_approve_reject_m_tmpl_id" attrs="{'invisible': [('enable_notify_admin_on_seller_approve_reject', '=', False)], 'required': [('enable_notify_admin_on_seller_approve_reject', '=', True)]}"/>
+    											</div>
+    										</div>
+    									</div>
+    									<div class="o_setting_left_pane" title="Enable to notify the seller about his approval/rejection.">
+    										<field name="enable_notify_seller_on_approve_reject" class="oe_inline" help="Enable to notify the seller about his approval/rejection."/>
+    									</div>
+    									<div class="o_setting_right_pane" title="Template to notify the seller about his approval/rejection.">
+    										<label for="enable_notify_seller_on_approve_reject" string="Enable Notification for Seller"/>
+    										<div class="content-group">
+    											<div class="row mt8">
+    												<label string="Email Template" for="notify_seller_on_approve_reject_m_tmpl_id" class="col-md-3 o_light_label" attrs="{'invisible': [('enable_notify_seller_on_approve_reject', '=', False)]}"/>
+    												<field name="notify_seller_on_approve_reject_m_tmpl_id" attrs="{'invisible': [('enable_notify_seller_on_approve_reject', '=', False)], 'required': [('enable_notify_seller_on_approve_reject', '=', True)]}"/>
+    											</div>
+    										</div>
+    									</div>
+    								</div>
+    								<div class="col-12 col-lg-6 o_setting_box" title="Enable for notification on seller approval/rejection.">
+    									<separator string="On Product Approval/Rejection"/>
+    									<div class="o_setting_left_pane" title="Enable to notify the admin on product approval/rejection.">
+    										<field name="enable_notify_admin_on_product_approve_reject" class="oe_inline" help="Enable to notify the admin on product approval/rejection."/>
+    									</div>
+    									<div class="o_setting_right_pane" title="Template to notify the admin on product approval/rejection.">
+    										<label for="enable_notify_admin_on_product_approve_reject" string="Enable Notification for Admin"/>
+    										<div class="content-group">
+    											<div class="row mt8">
+    												<label string="Email Template" for="notify_seller_on_product_approve_reject_m_tmpl_id" class="col-md-3 o_light_label" attrs="{'invisible': [('enable_notify_admin_on_product_approve_reject', '=', False)]}"/>
+    												<field name="notify_seller_on_product_approve_reject_m_tmpl_id" attrs="{'invisible': [('enable_notify_admin_on_product_approve_reject', '=', False)], 'required': [('enable_notify_admin_on_product_approve_reject', '=', True)]}"/>
+    											</div>
+    										</div>
+    									</div>
+    									<div class="o_setting_left_pane" title="Enable to notify the seller on product approval/rejection.">
+    										<field name="enable_notify_seller_on_product_approve_reject" class="oe_inline" help="Enable to notify the seller on product approval/rejection."/>
+    									</div>
+    									<div class="o_setting_right_pane" title="Template to notify the seller on product approval/rejection.">
+    										<label for="enable_notify_seller_on_product_approve_reject" string="Enable Notification for Seller"/>
+    										<div class="content-group">
+    											<div class="row mt8">
+    												<label string="Email Template" for="notify_seller_on_product_approve_reject_m_tmpl_id" class="col-md-3 o_light_label" attrs="{'invisible': [('enable_notify_seller_on_product_approve_reject', '=', False)]}"/>
+    												<field name="notify_seller_on_product_approve_reject_m_tmpl_id" attrs="{'invisible': [('enable_notify_seller_on_product_approve_reject', '=', False)], 'required': [('enable_notify_seller_on_product_approve_reject', '=', True)]}"/>
+    											</div>
+    										</div>
+    									</div>
+    								</div>
+    								<div class="col-12 col-lg-6 o_setting_box" title="Enable to notify the seller for newly created order.">
+									<separator string="On New Order"/>
+									<div class="o_setting_left_pane" title="Enable to notify the seller for newly created order.">
+										<field name="enable_notify_seller_on_new_order" class="oe_inline" help="Enable to notify the seller for newly created order."/>
+									</div>
+									<div class="o_setting_right_pane" title="Template to notify the seller for newly created order.">
+										<label for="enable_notify_seller_on_new_order" string="Enable Notification for Seller"/>
+										<div class="content-group">
+											<div class="row mt8">
+												<label string="Email Template" for="notify_seller_on_new_order_m_tmpl_id" class="col-md-3 o_light_label" attrs="{'invisible': [('enable_notify_seller_on_new_order', '=', False)]}"/>
+												<field name="notify_seller_on_new_order_m_tmpl_id" attrs="{'invisible': [('enable_notify_seller_on_new_order', '=', False)], 'required': [('enable_notify_seller_on_new_order', '=', True)]}"/>
+											</div>
+										</div>
+									</div>
+								</div>
+                                </div>
+							</page>
+                            <page string="Website" name="mp_webite_settings">
+                                <h2 groups="website.group_multi_website">Select the Website to Configure</h2>
+                                <div class="row mt16 o_settings_container" id="mp_website_selection_settings" groups="website.group_multi_website">
+                                    <div class="col-xs-12 col-md-6 o_setting_box" id="website">
+                                        <div class="o_setting_right_pane">
+                                            <label string="Website" for="website_id"/>
+                                            <div class="text-muted">
+                                                Settings on this page will apply to this website
+                                            </div>
+                                            <div class="mt16">
+                                                <field name="website_id" widget="selection" required="1"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h2>Website</h2>
+                                <div class="row mt16 o_settings_container" id="mp_website_settings">
+                                    <div class="col-12 col-lg-6 o_setting_box" title="Enable to show seller product count on website.">
+                                        <div class="o_setting_left_pane">
+                                            <field name="product_count" class="oe_inline" help="Enable to show seller product count on website."/>
+                                        </div>
+                                        <div class="o_setting_right_pane">
+                                            <label for="product_count" string="Product Count"/>
+                                            <div class="text-muted">
+                                                ⇒ Enable it if you want to display seller product count on website.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6 o_setting_box" title="Enable to show seller product sale count on website.">
+                                        <div class="o_setting_left_pane">
+                                            <field name="sale_count" class="oe_inline" help="Enable to show seller product sale count on website."/>
+                                        </div>
+                                        <div class="o_setting_right_pane">
+                                            <label for="sale_count" string="Sale Count"/>
+                                            <div class="text-muted">
+                                                ⇒ Enable it if you want to display seller product sale count on website.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6 o_setting_box" title="Enable to show seller address on website.">
+                                        <div class="o_setting_left_pane">
+                                            <field name="shipping_address" class="oe_inline" help="Enable to show seller address on website."/>
+                                        </div>
+                                        <div class="o_setting_right_pane">
+                                            <label for="shipping_address" string="Seller Address"/>
+                                            <div class="text-muted">
+                                                ⇒ Enable it if you want to display seller address on website.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6 o_setting_box" title="Enable to show seller since date on website.">
+                                        <div class="o_setting_left_pane">
+                                            <field name="seller_since" class="oe_inline" help="Enable to show seller since date on website."/>
+                                        </div>
+                                        <div class="o_setting_right_pane">
+                                            <label for="seller_since" string="Seller Since"/>
+                                            <div class="text-muted">
+                                                ⇒ Enable it if you want to display seller since date on website.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6 o_setting_box" title="Number to show recently product on website(max 20).">
+                                        <div class="o_setting_left_pane">
+                                            <field name="return_policy" class="oe_inline" help="Enable to show seller return policy on website."/>
+                                        </div>
+                                        <div class="o_setting_right_pane">
+                                            <label for="return_policy" string="Return Policy"/>
+                                            <div class="text-muted">
+                                                ⇒ Enable it if you want to display seller return policy on website.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6 o_setting_box" title="Number to show recently product on website(max 20).">
+                                        <div class="o_setting_left_pane">
+                                            <field name="shipping_policy" class="oe_inline" help="Enable to show seller shipping policy on website."/>
+                                        </div>
+                                        <div class="o_setting_right_pane">
+                                            <label for="shipping_policy" string="Shipping Policy"/>
+                                            <div class="text-muted">
+                                                ⇒ Enable it if you want to display seller shipping policy on website.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6 o_setting_box" title="Number to show recently product on website(max 20).">
+                                        <div class="o_setting_left_pane">
+                                            <field name="seller_t_c" class="oe_inline" help="Enable to show seller terms and condition website."/>
+                                        </div>
+                                        <div class="o_setting_right_pane">
+                                            <label for="seller_t_c" string="Terms &amp; Conditions"/>
+                                            <div class="text-muted">
+                                                ⇒ Enable it if you want to display seller term and condition on website.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6 o_setting_box" title="Enable to show seller contact button on website.">
+                                        <div class="o_setting_left_pane">
+                                            <field name="seller_contact_btn" class="oe_inline" help="Enable to show seller contact button on website."/>
+                                        </div>
+                                        <div class="o_setting_right_pane">
+                                            <label for="seller_contact_btn" string="Contact Seller Button"/>
+                                            <div class="text-muted">
+                                                ⇒ Enable it if you want to display seller contact button on website.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6 o_setting_box" title="Number to show recently product on website(max 20).">
+                                        <div class="o_setting_left_pane">
+                                        </div>
+                                        <div class="o_setting_right_pane">
+                                            <label for="recently_product" string="Recently Added Products"/>
+                                            <div class="text-muted">
+                                                ⇒ Enter the number to show recently added product on website(max 20).
+                                            </div>
+                                            <field name="recently_product"/>
+                                            <!-- <field name="recently_product" class="oe_inline" help="Number to show recently product on website(max 20)."/> -->
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6 o_setting_box" title="Enable to show Become a Seller button on my account page on website.">
+                                            <div class="o_setting_left_pane">
+                                                <field name="show_become_a_seller" class="oe_inline" help="Enable to show Become a Seller button on my account page on website."/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <label for="show_become_a_seller" string="Become a Seller Button"/>
+                                                <div class="text-muted">
+                                                    ⇒ Enable it if you want to display become a seller button on website.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <div class="col-12 col-lg-6 o_setting_box">
+                                        <separator string="Seller Review Settings"/>
+                                        <div class="o_setting_left_pane">
+                                            <field name="seller_review" class="oe_inline" help="Enable to show seller reviews tab on website."/>
+                                        </div>
+                                        <div class="o_setting_right_pane" title="Enable to show seller reviews tab on website and fill number to show/load seller reviews on every click on website.">
+                                            <label for="seller_review" string="Show Seller Review"/>
+                                            <div class="text-muted">
+                                                ⇒ Enable it if you want to display seller review on website.
+                                            </div>
+                                            <label for="review_load_no" string="Display Seller Reviews"/>
+                                            <div>
+                                                <field name="review_load_no" class="oe_inline" help="Number to show/load seller reviews on every click on website."/>
+                                                <label for="review_load_no"/>
+                                            </div>
+                                        </div>
+                                        <div class="o_setting_left_pane">
+                                            <field name="review_auto_publish" class="oe_inline" help="Enable to auto publish seller review on website."/>
+                                        </div>
+                                        <div class="o_setting_right_pane" title="Enable it if you want auto publish seller review on website.">
+                                            <label for="review_auto_publish" string="Auto Publish Seller Review"/>
+                                            <div class="text-muted">
+                                                ⇒ Enable it if you want auto publish seller review on website.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6 o_setting_box">
+                                        <separator string="Marketplace Landing Page Settings"/>
+                                        <div class="o_setting_left_pane">
+                                            <field name="show_sell_menu_header" class="oe_inline" help="Enable to display Sell menu at header."/>
+                                        </div>
+                                        <div class="o_setting_right_pane" title="Enable to display Sell menu at header.">
+                                            <label for="show_sell_menu_header" string="Header Sell Menu"/>
+                                            <div class="text-muted">
+                                                ⇒ Enable it if you want to display Sell menu in header menu on website.
+                                            </div>
+                                        </div>
+                                        <div class="o_setting_left_pane">
+                                            <field name="show_sell_menu_footer" class="oe_inline" help="Enable to display Sell menu at footer."/>
+                                        </div>
+                                        <div class="o_setting_right_pane" title="Enable to display Sell menu at footer.">
+                                            <label for="show_sell_menu_footer" string="Footer Sell Menu"/>
+                                            <div class="text-muted">
+                                                ⇒ Enable it if you want to display Sell menu in footer section on website.
+                                            </div>
+                                        </div>
+                                        <div class="o_setting_left_pane">
+                                            <field name="show_seller_list" class="oe_inline" help="Enable to display sellers list on website."/>
+                                        </div>
+                                        <div class="o_setting_right_pane" title="Enable to display Seller list.">
+                                            <label for="show_seller_list" string="Sellers List"/>
+                                            <div class="text-muted">
+                                                ⇒ Enable it if you want to display seller(s) list on website.
+                                            </div>
+                                        </div>
+                                        <div class="o_setting_left_pane" attrs="{'invisible': [('group_mp_shop_allow','=',False)]}">
+                                            <field name="show_seller_shop_list" class="oe_inline" help="Enable to display seller shop list on website."/>
+                                        </div>
+                                        <div class="o_setting_right_pane" attrs="{'invisible': [('group_mp_shop_allow','=',False)]}">
+                                            <label for="show_seller_shop_list" string="Seller Shop List"/>
+                                            <div class="text-muted">
+                                                ⇒ Enable it if you want to display seller shop list on website.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-12 o_setting_box">
+                                        <separator string="Landing Page Settings"/>
+                                    </div>
+                                    <div class="col-12 col-lg-6 o_setting_box" title="Enable for Seller Shop feature.">
+                                        <div class="o_setting_right_pane">
+                                            <div><label for="sell_page_label"/></div>
+                                            <div class="text-muted">
+                                                ⇒ Label for seller landing page on which seller will register.
+                                            </div>
+                                            <field name="sell_page_label" help="Label for seller landing page on which seller will register."/>
+                                            <div><label for="sellers_list_label"/></div>
+                                            <div class="text-muted">
+                                                ⇒ Label for sellers list page on which all sellers will display.
+                                            </div>
+                                            <field name="sellers_list_label" help="Label for sellers list page on which all sellers will display."/>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6 o_setting_box" title="Enable for Seller Shop feature.">
+                                        <div class="o_setting_right_pane">
+                                            <div><label for="seller_shop_list_label"/></div>
+                                            <div class="text-muted">
+                                                ⇒ Label for seller shop list page on which all seller's shop will display.
+                                            </div>
+                                            <field name="seller_shop_list_label" help="Label for seller shop list page on which all seller's shop will display."/>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-12 o_setting_box">
+                                        <separator string="Seller Messages"/>
+                                    </div>
+                                    <div class="col-12 col-lg-6 o_setting_box">
+                                        <div class="o_setting_right_pane">
+                                            <div><label for="seller_new_status_msg"/></div>
+                                            <div class="text-muted">
+                                                ⇒ This message will display inside seller profile when seller account will in New state.
+                                            </div>
+                                            <field name="seller_new_status_msg" help="This message will display inside seller profile when seller account will in New state."/>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6 o_setting_box">
+                                        <div class="o_setting_right_pane">
+                                            <div><label for="seller_pending_status_msg"/></div>
+                                            <div class="text-muted">
+                                                ⇒ This message will display inside seller profile when seller account will in pending state.
+                                            </div>
+                                            <field name="seller_pending_status_msg" help="This message will display inside seller profile when seller account will in pending state."/>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6 o_setting_box">
+                                        <separator string="Seller Review Settings"/>
+                                        <div class="o_setting_right_pane">
+                                            <div><label for="message_to_publish"/></div>
+                                            <div class="text-muted">
+                                                ⇒ Message which will display after seller reviewing on website.
+                                            </div>
+                                            <field name="message_to_publish" help="Message which will display after seller reviewing on website."/>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6 o_setting_box">
+                                        <separator string="Sell Landing Page Banner"/>
+                                        <div class="o_setting_right_pane">
+                                            <div><label for="landing_page_banner"/></div>
+                                            <div class="text-muted">
+                                                ⇒ Banner for sellers landing page. Banner size must be 1298 x 400 px for perfect view.
+                                            </div>
+                                            <field name="landing_page_banner" widget="image" class="mp_config_image" help="Banner for sellers landing page. Banner size must be 1298 x 400 px for perfect view." options='{"class": "mp_config_image"}'/>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-12 o_setting_box" title="Enable for Seller Shop feature.">
+                                        <separator string="Marketplace Terms &amp; Conditions"/>
+                                        <div class="o_setting_right_pane">
+                                            <div><label for="term_and_condition"/></div>
+                                            <div class="text-muted">
+                                                ⇒ This is terms and conditions for the marketplace which will display on seller sign-up page on website.
+                                            </div>
+                                            <field name="term_and_condition" help="This is terms and conditions for the marketplace which will display on seller sign-up page on website." style="width: 100%;"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </page>
+						</notebook>
+					</div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="marketplace_base_config_settings_action" model="ir.actions.act_window">
+        <field name="name">Marketplace Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_id" ref="res_config_settings_view_form"/>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'odoo_marketplace'}</field>
+    </record>
+</odoo>
