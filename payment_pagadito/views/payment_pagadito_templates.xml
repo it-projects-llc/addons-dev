@@ -4,35 +4,7 @@
 <odoo noupdate="1">
     <!-- TODO: this is copy-paste from payment_paypal and wasn't tested -->
     <template id="pagadito_acquirer_button">
-        <form t-if="acquirer.pagadito_email_account" t-att-action="tx_url" method="post" target="_self">
-            <input type="hidden" name="cmd" t-att-value="cmd"/>
-            <input type="hidden" name="business" t-att-value="business"/>
-            <input type="hidden" name="item_name" t-att-value="item_name"/>
-            <input type="hidden" name="item_number" t-att-value="item_number"/>
-            <input type="hidden" name="amount" t-att-value="amount"/>
-            <input t-if="handling" type="hidden" name="handling"
-                   t-att-value="handling"/>
-            <input type="hidden" name="currency_code" t-att-value="currency_code"/>
-            <!-- partner / address data -->
-            <input type="hidden" name="address1" t-att-value="address1"/>
-            <input type="hidden" name="city" t-att-value="city"/>
-            <input type="hidden" name="country" t-att-value="country"/>
-            <input type="hidden" name="email" t-att-value="email"/>
-            <input type="hidden" name="first_name" t-att-value="first_name"/>
-            <input type="hidden" name="last_name" t-att-value="last_name"/>
-            <input type="hidden" name="zip" t-att-value="zip_code"/>
-            <input t-if='state' type='hidden' name="state"
-                   t-att-value='state'/>
-            <!-- after payment parameters -->
-            <input t-if='custom' type='hidden' name="custom"
-                   t-att-value='custom'/>
-            <!-- URLs -->
-            <input t-if="pagadito_return" type='hidden' name='return'
-                   t-att-value="pagadito_return"/>
-            <input t-if="acquirer.pagadito_use_ipn" type='hidden' name='notify_url'
-                   t-att-value="notify_url"/>
-            <input t-if="cancel_return" type="hidden" name="cancel_return"
-                   t-att-value="cancel_return"/>
+        <form t-if="acquirer.pagadito_uid" t-att-action="pagadito_url" method="get" target="_self">
             <!-- submit -->
             <button type="submit" width="100px"
                     t-att-class="submit_class">

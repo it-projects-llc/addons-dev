@@ -11,7 +11,7 @@ Integration with Pagadito.com payment service
 Roadmap
 =======
 
-Usage over Portal is not tested and my not work properly
+* Requests to pagadito API is called before choosing Pagadito as payment method. Though it's ok when Pagadito is the only option
 
 Credits
 =======

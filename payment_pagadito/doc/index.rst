@@ -6,6 +6,10 @@ Preparation
 ===========
 
 * You will need account at https://www.pagadito.com/
+* Nagivate to pagadito dashboard. Check that you have access to *integration parameters* section.
+
+  * Under *Connection Credentials* you can find **UID** and **WSK**
+  * **Return URL** -- set to ``<odoo_instance_url>/shop/confirmation?value={value}&em_value={em_value}``, e.g. ``myshop.example.com/shop/confirmation?value={value}&em_value={em_value}``
 
 Sandbox
 =======
@@ -23,9 +27,9 @@ Configuration
 * Open menu ``[[ Invoicing ]] >> Configuration >> Payments >> Payment Acquirers``
 * Select *Pagadito* record and set following parameters:
 
-  * **Account ID** -- *El identificador del Pagadito Comercio*
-  * **WSPG key (wsk)**  --  *La clave de acceso*
-
+  * **UID** -- *El identificador del Pagadito Comercio*.
+  * **WSK**  --  *La clave de acceso*
+* Optionally, click ``[Unpublished On Website]`` button to allow pagadito at eCommerce
 
 Usage
 =====
@@ -37,9 +41,3 @@ eCommerce
 * checkout the order and select *Pagadito* as payment method
 * proceed the payment at pagadito website
 * RESULT: payment is done and processed at odoo backend
-
-Portal
-------
-TODO
-
-* install ``website_payment`` module
