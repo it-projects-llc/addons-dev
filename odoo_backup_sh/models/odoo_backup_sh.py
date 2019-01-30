@@ -15,19 +15,18 @@ except ImportError:
     import ConfigParser
 
 try:
-    import boto3
-    import botocore
     from pretty_bad_protocol import gnupg
 except ImportError as err:
     logging.getLogger(__name__).debug(err)
 
 import odoo
-from odoo import api, fields, models, exceptions
+from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import config, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.translate import _
 from ..controllers.main import BackupController, BACKUP_SERVICE_ENDPOINT
 
+config_parser = ConfigParser.ConfigParser()
 _logger = logging.getLogger(__name__)
 
 REMOTE_STORAGE_DATETIME_FORMAT = "%Y-%m-%d_%H-%M-%S"
@@ -84,8 +83,10 @@ class BackupConfig(models.Model):
         return BackupController.get_cloud_params(redirect)
 
     @api.model
-    def check_insufficient_credit(self, credit):
-        return BackupController.check_insufficient_credit(credit)
+    def get_credit_url(self):
+        data = {'params': {'account_token': self.env['iap.account'].sudo().get('odoo_backup_sh').account_token}}
+        response = requests.post(BACKUP_SERVICE_ENDPOINT + '/get_credit_url', json=data).json()
+        return response['result']['credit_url']
 
     def compute_auto_rotation_backup_dts(self, backup_dts, hourly=-1, daily=-1, weekly=-1, monthly=-1, yearly=-1):
         backup_dts = sorted(copy.deepcopy(backup_dts), reverse=True)
@@ -147,7 +148,7 @@ class BackupConfig(models.Model):
 
     @api.model
     def update_info(self, cloud_params):
-        backup_list = BackupController.load_backup_list(cloud_params)
+        backup_list = self.env['odoo_backup_sh.cloud_storage'].get_backup_list(cloud_params)
         if 'backup_list' in backup_list:
             # Create a dictionary with remote backup objects:
             # remote_backups = {
@@ -186,19 +187,11 @@ class BackupConfig(models.Model):
                             ]
                             del remote_backups[backup_config.database][backup_dt]
 
-            s3_client = boto3.client('s3', aws_access_key_id=cloud_params['amazon_access_key'],
-                                     aws_secret_access_key=cloud_params['amazon_secret_access_key'])
-
             # Delete unnecessary remote backup objects
             if remote_objects_to_delete:
-                try:
-                    s3_client.delete_objects(
-                        Bucket=cloud_params['amazon_bucket_name'], Delete={'Objects': remote_objects_to_delete})
-                    objects_names = [obj['Key'] for obj in remote_objects_to_delete]
-                    _logger.info('Following backup objects have been deleted from the remote storage: %s',
-                                 ', '.join(objects_names))
-                except botocore.exceptions.ClientError as e:
-                    raise exceptions.ValidationError(_("Amazon error: ") + e.response['Error']['Message'])
+                res = self.env['odoo_backup_sh.cloud_storage'].delete_objects(cloud_params, remote_objects_to_delete)
+                if res and 'reload_page' in res:
+                    return res
 
             # Delete unnecessary local backup info records
             backup_info_ids_to_delete = [
@@ -218,17 +211,13 @@ class BackupConfig(models.Model):
                                                                    DEFAULT_SERVER_DATETIME_FORMAT))
                     ]):
                         info_file_name = files_names[0] if files_names[0][-5:] == '.info' else files_names[1]
-                        try:
-                            info_file_object = s3_client.get_object(
-                                Bucket=cloud_params['amazon_bucket_name'],
-                                Key='%s/%s' % (cloud_params['odoo_oauth_uid'], info_file_name)
-                            )
-                        except botocore.exceptions.ClientError as e:
-                            raise exceptions.ValidationError(_("Amazon error: ") + e.response['Error']['Message'])
+                        info_file_object = self.env['odoo_backup_sh.cloud_storage'].get_object(
+                            cloud_params, info_file_name)
+                        if 'reload_page' in info_file_object:
+                            return info_file_object
                         info_file = tempfile.NamedTemporaryFile()
                         info_file.write(info_file_object['Body'].read())
                         info_file.seek(0)
-                        config_parser = ConfigParser.RawConfigParser()
                         config_parser.read(info_file.name)
                         backup_info_vals = {}
                         for (name, value) in config_parser.items('common'):
@@ -252,7 +241,8 @@ class BackupConfig(models.Model):
         dump_stream = odoo.service.db.dump_db(name, None, 'zip')
         backup_name_suffix = '.zip'
         if self.env['ir.config_parameter'].get_param('odoo_backup_sh.encrypt_backups', 'False').lower() == 'true':
-            passphrase = config.get('odoo_backup_encryption_password')
+            passphrase = self.env['odoo_backup_sh.odoo_tools_config'].get_values(
+                'options', ['odoo_backup_encryption_password'])['odoo_backup_encryption_password']
             if not passphrase:
                 raise UserError(_('Encryption password is not found. Please check your module settings.'))
             backup_name_suffix += '.enc'
@@ -282,21 +272,43 @@ class BackupConfig(models.Model):
             info_file.write(line.encode())
         info_file.seek(0)
         s3_info_file_path = '%s/%s.%s.info' % (cloud_params['odoo_oauth_uid'], name, ts)
+        # Upload two backup objects to AWS S3
+        for obj, obj_path in [[dump_stream, s3_backup_path], [info_file, s3_info_file_path]]:
+            res = self.env['odoo_backup_sh.cloud_storage'].put_object(cloud_params, obj, obj_path)
+            if res and 'reload_page' in res:
+                return res
         # Create new record with backup info data
         info_file_content['upload_datetime'] = dt
         self.env['odoo_backup_sh.backup_info'].create(info_file_content)
-        # Upload two backup objects to AWS S3
-        try:
-            s3_client = boto3.client('s3', aws_access_key_id=cloud_params['amazon_access_key'],
-                                     aws_secret_access_key=cloud_params['amazon_secret_access_key'])
-            s3_client.put_object(Body=dump_stream, Bucket=cloud_params['amazon_bucket_name'], Key=s3_backup_path)
-            s3_client.put_object(Body=info_file, Bucket=cloud_params['amazon_bucket_name'], Key=s3_info_file_path)
-            _logger.info('Following backup objects have been put in a remote storage: %s',
-                         ', '.join([s3_backup_path, s3_info_file_path]))
-        except botocore.exceptions.ClientError as e:
-            raise exceptions.ValidationError(_("Amazon error: ") + e.response['Error']['Message'])
-        self.update_info(cloud_params)
         return None
+
+    @api.model
+    def make_payment(self):
+        data = {'params': {
+            'user_key': self.env['odoo_backup_sh.odoo_tools_config'].get_values(
+                'options', ['odoo_backup_user_key'])['odoo_backup_user_key'],
+            'account_token': self.env['iap.account'].get('odoo_backup_sh').account_token,
+        }}
+        response = requests.post(BACKUP_SERVICE_ENDPOINT + '/make_payment', json=data).json()['result']
+        if 'user_key_error' in response and not self.env['odoo_backup_sh.notification'].sudo().search([
+                ('message', '=', response['user_key_error']), ('is_read', '=', False)]):
+            new_msg = self.env['odoo_backup_sh.notification'].sudo().create({'message': response['user_key_error']})
+            new_msg.create_mail_activity_record()
+            self.env['odoo_backup_sh.odoo_tools_config'].remove_options(
+                'options', ['odoo_backup_user_key', 'amazon_access_key_id', 'amazon_secret_access_key'])
+        elif 'insufficient_credit_error' in response:
+            existing_msg = self.env['odoo_backup_sh.notification'].sudo().search(
+                [('type', '=', 'insufficient_credits'), ('is_read', '=', False)])
+            notification_vals = {
+                'date_create': datetime.now(),
+                'type': 'insufficient_credits',
+                'message': response['insufficient_credit_error']
+            }
+            if existing_msg:
+                existing_msg.write(notification_vals)
+            else:
+                new_msg = self.env['odoo_backup_sh.notification'].sudo().create(notification_vals)
+                new_msg.create_mail_activity_record()
 
 
 class BackupConfigCron(models.Model):
@@ -361,7 +373,12 @@ class BackupNotification(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date_create desc'
 
-    date_create = fields.Datetime('Date', readonly=True)
+    date_create = fields.Datetime('Date', readonly=True, default=fields.Datetime.now)
+    type = fields.Selection([
+        ('insufficient_credits', 'Insufficient Credits'),
+        ('forecast_insufficient_credits', 'Forecast About Insufficient Credits'),
+        ('other', 'Other')
+    ], string='Notification Type', readonly=True, default='other')
     message = fields.Text('Message', readonly=True)
     is_read = fields.Boolean('Is Read', readonly=True)
 
@@ -371,26 +388,36 @@ class BackupNotification(models.Model):
         self.activity_ids.unlink()
         return True
 
+    @api.multi
+    def create_mail_activity_record(self):
+        self.env['mail.activity'].create({
+            'res_id': self.id,
+            'res_model_id': self.env.ref('odoo_backup_sh.model_odoo_backup_sh_notification').id,
+            'activity_type_id': self.env.ref('odoo_backup_sh.mail_activity_data_notification').id,
+            'summary': 'Please read important message.',
+            'date_deadline': datetime.today().strftime(DEFAULT_SERVER_DATE_FORMAT),
+        })
+
     @api.model
     def fetch_notifications(self):
-        config_params = self.env['ir.config_parameter'].sudo()
-        response = requests.get(
-            BACKUP_SERVICE_ENDPOINT + '/fetch_notifications',
-            params={'date_last_request': config_params.get_param('odoo_backup_sh.date_last_request', None)}
-        ).json()
+        config_params = self.env['ir.config_parameter']
+        data = {'params': {
+            'user_key': self.env['odoo_backup_sh.odoo_tools_config'].get_values(
+                'options', ['odoo_backup_user_key'])['odoo_backup_user_key'],
+            'account_token': self.env['iap.account'].get('odoo_backup_sh').account_token,
+            'date_last_request': config_params.get_param('odoo_backup_sh.date_last_request', None)
+        }}
+        response = requests.post(BACKUP_SERVICE_ENDPOINT + '/fetch_notifications', json=data).json()['result']
         config_params.set_param('odoo_backup_sh.date_last_request', response['date_last_request'])
         for n in response['notifications']:
-            new_record = self.create({
-                'date_create': n['date_create'],
-                'message': n['message'],
-            })
-            self.env['mail.activity'].create({
-                'res_id': new_record.id,
-                'res_model_id': self.env.ref('odoo_backup_sh.model_odoo_backup_sh_notification').id,
-                'activity_type_id': self.env.ref('odoo_backup_sh.mail_activity_data_notification').id,
-                'summary': 'Please read important message.',
-                'date_deadline': datetime.today().strftime(DEFAULT_SERVER_DATE_FORMAT),
-            })
+            if n.get('type') == 'forecast_insufficient_credits':
+                existing_forecast_msg = self.search([('type', '=', 'forecast_insufficient_credits')])
+                if existing_forecast_msg:
+                    if existing_forecast_msg.activity_ids:
+                        existing_forecast_msg.activity_ids.unlink()
+                    existing_forecast_msg.unlink()
+            new_record = self.create(n)
+            new_record.create_mail_activity_record()
 
 
 class BackupRemoteStorage(models.Model):
@@ -436,14 +463,7 @@ class DeleteRemoteBackupWizard(models.TransientModel):
                 }]
         # Delete unnecessary remote backup objects
         if remote_objects_to_delete:
-            s3_client = boto3.client('s3', aws_access_key_id=cloud_params['amazon_access_key'],
-                                     aws_secret_access_key=cloud_params['amazon_secret_access_key'])
-            try:
-                s3_client.delete_objects(
-                    Bucket=cloud_params['amazon_bucket_name'], Delete={'Objects': remote_objects_to_delete})
-                objects_names = [obj['Key'] for obj in remote_objects_to_delete]
-                _logger.info('Following backup objects have been deleted from the remote storage: %s',
-                             ', '.join(objects_names))
-            except botocore.exceptions.ClientError as e:
-                raise exceptions.ValidationError(_("Amazon error: ") + e.response['Error']['Message'])
+            res = self.env['odoo_backup_sh.cloud_storage'].delete_objects(cloud_params, remote_objects_to_delete)
+            if res and 'reload_page' in res:
+                raise UserError(_("Something went wrong. Please update backup dashboard page."))
         backup_info_records.unlink()

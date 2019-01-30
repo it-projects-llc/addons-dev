@@ -68,15 +68,6 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
                     });
                 }
                 self.cloud_params = cloud_params;
-            }),
-            self._rpc({
-                model: 'odoo_backup_sh.config',
-                method: 'check_insufficient_credit',
-                kwargs: {
-                    credit: 10,
-                },
-            }).done(function(response) {
-                self.show_insufficient_credit_warning = response;
             })
         );
     },
@@ -195,11 +186,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         }).then(function (result) {
             if ('reload_page' in result) {
                 window.location.reload();
-            } else if ('error' in result) {
-                self.$('.o_backup_dashboard_note_section').append(
-                    QWeb.render('odoo_backup_sh.error_msg', {error_msg: result.error}));
             }
-
             $.when(self.fetch_dashboard_data()).then(function() {
                 self.$('#graph_remote_storage_usage').empty();
                 self.$('.o_backup_dashboard_configs').empty();
@@ -217,7 +204,10 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
             kwargs: {
                 name: $(ev.currentTarget).closest('div[data-db_name]').data('db_name'),
             },
-        }).then(function () {
+        }).then(function (result) {
+            if (typeof result !== undefined && 'reload_page' in result) {
+                window.location.reload();
+            }
             self.o_dashboard_action_update_info(self.cloud_params);
         });
     },
@@ -238,10 +228,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         ev.preventDefault();
         this._rpc({
             model: 'odoo_backup_sh.config',
-            method: 'check_insufficient_credit',
-            kwargs: {
-                credit: 1000000,
-            },
+            method: 'get_credit_url',
         }, {
             async: false,
             success: function(url) {

@@ -22,11 +22,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                 </a>
                 <a href="#" class="o_box_item o_dashboard_action_up_balance" title="Up to the balance."><!-- name="odoo_backup_sh.odoo_backup_sh_backup_action"-->
                     <div class="o_inner_box o_primary">
-                        <span id="insufficient_credit_notice" t-if="widget.show_insufficient_credit_warning">
-                            Funds are insufficient for<br/>
-                            the next subscription fee!
-                        </span>
-                        <i class="fa fa-money fa-3x" id="up_to_the_balance_text" t-if="!widget.show_insufficient_credit_warning"/><br/>
+                        <i class="fa fa-money fa-3x"/><br/>
                         Go to Balance<br/>
                     </div>
                 </a>
@@ -43,7 +39,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                 </div>
                 <t t-foreach="widget.notifications" t-as="notification">
                     <div class="o_backup_dashboard_notification" t-att-data-notification_id="notification.id">
-                        <t t-esc="notification.message"/>
+                        <t t-raw="notification.message"/>
                         <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
                     </div>
                 </t>

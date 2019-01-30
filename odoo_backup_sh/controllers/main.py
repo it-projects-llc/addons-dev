@@ -2,7 +2,6 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 import jinja2
-import json
 import logging
 import os
 import random
@@ -18,24 +17,15 @@ from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.service import db
 from odoo.sql_db import db_connect
-from odoo.tools import config, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.misc import str2bool
 from odoo.addons import web
-from odoo.addons.iap import jsonrpc, InsufficientCreditError
 from odoo.addons.web.controllers.main import DBNAME_PATTERN
 
 try:
-    import boto3
-    import botocore
     from pretty_bad_protocol import gnupg
 except ImportError as err:
     logging.getLogger(__name__).debug(err)
-
-try:
-    import configparser as ConfigParser
-except ImportError:
-    import ConfigParser
-config_parser = ConfigParser.ConfigParser()
 
 path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'views'))
 loader = jinja2.FileSystemLoader(path)
@@ -56,7 +46,7 @@ class BackupDatabase(web.controllers.main.Database):
                 '<a role="button" data-toggle="modal" data-target=".o_database_restore" class="btn btn-link">'
             )
         if place_for_backup_button != -1:
-            d['list_db'] = config['list_db']
+            d['list_db'] = odoo.tools.config['list_db']
             d['databases'] = []
             try:
                 d['databases'] = http.db_list()
@@ -73,13 +63,16 @@ class BackupController(http.Controller):
 
     @classmethod
     def get_cloud_params(cls, redirect=None):
-        config_parser.read(config.rcfile)
-        cloud_params = {}
-        for name in ['odoo_backup_user_key', 'amazon_bucket_name', 'amazon_access_key', 'amazon_secret_access_key',
-                     'odoo_oauth_uid']:
-            cloud_params[name] = config_parser.get('options', name, fallback=None)
-        if None in cloud_params.values() and redirect:
-            cloud_params = cls.update_cloud_params(cloud_params, redirect)
+        cloud_params = request.env['odoo_backup_sh.odoo_tools_config'].get_values('options', [
+            'odoo_backup_user_key', 'amazon_bucket_name', 'amazon_access_key_id', 'amazon_secret_access_key',
+            'odoo_oauth_uid'])
+        if None in cloud_params.values():
+            if redirect:
+                cloud_params = cls.update_cloud_params(cloud_params, redirect)
+            else:
+                # This case occurs when we cannot pass the redirect param, ex. the request was sent by a cron
+                raise UserError(_("You don't have credentials to access to cloud storage. "
+                                  "Please go to the backup dashboard menu"))
         return cloud_params
 
     @classmethod
@@ -87,94 +80,76 @@ class BackupController(http.Controller):
         user_key = cloud_params['odoo_backup_user_key']
         if not user_key:
             user_key = ''.join(random.choice(string.hexdigits) for _ in range(30))
-            config_parser.set('options', 'odoo_backup_user_key', user_key)
-            cls.write_config(config_parser)
-        cloud_params = requests.get(
-            BACKUP_SERVICE_ENDPOINT + '/get_cloud_params',
-            params={'user_key': user_key, 'redirect': redirect}
-        ).json()
-        if 'auth_link' not in cloud_params:
-            for param_key, param_value in cloud_params.items():
-                config_parser.set('options', param_key, param_value)
-            cls.write_config(config_parser)
-            cloud_params['updated'] = True  # The mark that all params are updated
+            request.env['odoo_backup_sh.odoo_tools_config'].set_values('options', {'odoo_backup_user_key': user_key})
+        cloud_params = requests.get(BACKUP_SERVICE_ENDPOINT + '/get_cloud_params', params={
+            'user_key': user_key,
+            'redirect': redirect,
+            'account_token': request.env['iap.account'].sudo().get('odoo_backup_sh').account_token,
+        }).json()
+        if 'insufficient_credit_error' in cloud_params:
+            existing_msg = request.env['odoo_backup_sh.notification'].sudo().search(
+                [('type', '=', 'insufficient_credits'), ('is_read', '=', False)])
+            notification_vals = {
+                'date_create': datetime.now(),
+                'type': 'insufficient_credits',
+                'message': cloud_params['insufficient_credit_error']
+            }
+            if existing_msg:
+                existing_msg.write(notification_vals)
+            else:
+                request.env['odoo_backup_sh.notification'].sudo().create(notification_vals)
+        elif 'auth_link' not in cloud_params:
+            if 'date_first_payment' in cloud_params:
+                if not request.env['ir.cron'].sudo().search([('name', '=', 'Odoo-backup.sh: make next payment')]):
+                    request.env['ir.cron'].sudo().create({
+                        'name': 'Odoo-backup.sh: make next payment',
+                        'model_id': request.env.ref('odoo_backup_sh.model_odoo_backup_sh_config').id,
+                        'state': 'code',
+                        'code': 'model.make_payment()',
+                        'interval_number': 30,
+                        'interval_type': 'days',
+                        'numbercall': -1,
+                        'nextcall': (datetime.strptime(
+                            cloud_params['date_first_payment'], DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(days=30)),
+                        'doall': True,
+                        'active': True,
+                    })
+                del cloud_params['date_first_payment']
+            request.env['odoo_backup_sh.odoo_tools_config'].set_values('options', cloud_params)
+            request.env['odoo_backup_sh.notification'].sudo().search(
+                [('type', 'in', ['insufficient_credits', 'forecast_insufficient_credits']), ('is_read', '=', False)]
+            ).unlink()
         return cloud_params
-
-    @classmethod
-    def load_backup_list(cls, cloud_params):
-        try:
-            s3_client = boto3.client('s3', aws_access_key_id=cloud_params['amazon_access_key'],
-                                     aws_secret_access_key=cloud_params['amazon_secret_access_key'])
-            user_dir_name = '%s/' % cloud_params['odoo_oauth_uid']
-            s3_user_dir_info = s3_client.list_objects_v2(
-                Bucket=cloud_params['amazon_bucket_name'], Prefix=user_dir_name, Delimiter='/')
-        except botocore.exceptions.ClientError as e:
-            if isinstance(e, dict):
-                status_code = e['ResponseMetadata']['HTTPStatusCode']
-            else:
-                status_code = e.response['ResponseMetadata']['HTTPStatusCode']
-            if status_code == 403 and not cloud_params.get('updated'):
-                config_parser.read(config.rcfile)
-                # Delete local cloud parameters and receive it again to make sure they are up-to-date.
-                for key in ['amazon_bucket_name', 'amazon_access_key', 'amazon_secret_access_key', 'odoo_oauth_uid']:
-                    config_parser.remove_option('options', key)
-                cls.write_config(config_parser)
-                return {'reload_page': True}
-            else:
-                return {'error': "Amazon Web Services error: %s" % e.response['Error']['Message']}
-        backup_list = [
-            obj['Key'][len(user_dir_name):] for obj in s3_user_dir_info.get('Contents', {}) if obj.get('Size')]
-        return {'backup_list': backup_list}
-
-    @classmethod
-    def check_insufficient_credit(cls, credit):
-        user_token = request.env['iap.account'].sudo().get('odoo_backup_sh')
-        params = {
-            'account_token': user_token.account_token,
-            'cost': credit,
-        }
-        try:
-            jsonrpc(BACKUP_SERVICE_ENDPOINT + '/make_backup', params=params)
-        except InsufficientCreditError as e:
-            error_data = json.loads(e.data['message'])
-            credit_url = request.env['iap.account'].sudo().get_credits_url(
-                error_data['base_url'], error_data['service_name'], error_data['credit'])
-            return credit_url
-        return None
-
-    @classmethod
-    def write_config(cls, config_parser_obj):
-        with open(config.rcfile, 'w') as configfile:
-            config_parser_obj.write(configfile)
 
     @http.route('/web/database/backups', type='http', auth="none")
     def backup_list(self):
         cloud_params = self.get_cloud_params(request.httprequest.url)
-        if 'auth_link' in cloud_params:
-            return "<html><head><script>window.location.href = '%s';</script></head></html>" % cloud_params['auth_link']
-        backup_list = self.load_backup_list(cloud_params)
-        if 'reload_page' in backup_list:
-            return "<html><head><script>window.location.href = '%s';</script></head></html>" % request.httprequest.url
-        backup_list_wo_info = [name for name in backup_list['backup_list'] if name[-5:] != '.info']
         page_values = {
-            'backup_list': backup_list_wo_info,
-            'error': backup_list.get('error'),
+            'backup_list': [],
             'pattern': DBNAME_PATTERN,
             'insecure': odoo.tools.config.verify_admin_password('admin')
         }
+        if 'auth_link' in cloud_params:
+            return "<html><head><script>window.location.href = '%s';</script></head></html>" % cloud_params['auth_link']
+        elif 'insufficient_credit_error' in cloud_params:
+            page_values['error'] = cloud_params['insufficient_credit_error']
+            return env.get_template("backup_list.html").render(page_values)
+        backup_list = request.env['odoo_backup_sh.cloud_storage'].get_backup_list(cloud_params)
+        if 'reload_page' in backup_list:
+            page_values['error'] = 'Something went wrong. Please refresh the page.'
+            return env.get_template("backup_list.html").render(page_values)
+        page_values['backup_list'] = [name for name in backup_list['backup_list'] if name[-5:] != '.info']
         return env.get_template("backup_list.html").render(page_values)
 
     @http.route('/web/database/restore_via_odoo_backup_sh', type='http', auth="none", methods=['POST'], csrf=False)
     def restore_via_odoo_backup_sh(self, master_pwd, backup_file_name, name, copy=False):
         cloud_params = self.get_cloud_params(request.httprequest.url)
-        s3_client = boto3.client('s3', aws_access_key_id=cloud_params['amazon_access_key'],
-                                 aws_secret_access_key=cloud_params['amazon_secret_access_key'])
-        backup_file_path = '%s/%s' % (cloud_params['odoo_oauth_uid'], backup_file_name)
-        backup_object = s3_client.get_object(Bucket=cloud_params['amazon_bucket_name'], Key=backup_file_path)
+        backup_object = request.env['odoo_backup_sh.cloud_storage'].get_object(cloud_params, backup_file_name)
         backup_file = tempfile.NamedTemporaryFile()
         backup_file.write(backup_object['Body'].read())
         if backup_file_name.split('|')[0][-4:] == '.enc':
-            passphrase = config.get('odoo_backup_encryption_password')
+            passphrase = request.env['odoo_backup_sh.odoo_tools_config'].get_values(
+                'options', ['odoo_backup_encryption_password'])['odoo_backup_encryption_password']
             if not passphrase:
                 raise UserError(_(
                     'The backup are encrypted. But encryption password is not found. Please check your module settings.'

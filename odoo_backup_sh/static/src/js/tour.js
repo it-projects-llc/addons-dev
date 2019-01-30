@@ -19,8 +19,8 @@ odoo.define("odoo_backup_sh.tour", function (require) {
                 position: "bottom",
             },
             {
-                // This step have been added to make sure that the notice on the "Go to Balance" button was shown.
-                trigger: '#insufficient_credit_notice',
+                // This step have been added to make sure that the "Go to Balance" button was shown.
+                trigger: '.o_dashboard_action_up_balance',
                 run: function () {},
             }
         ]
