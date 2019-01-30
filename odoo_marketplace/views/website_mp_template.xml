@@ -333,7 +333,7 @@
 		</template>
 
 		<template id="header_footer_custom2" inherit_id="website.footer_custom" name="Footer Sell Link">
-			<xpath expr="//div[hasclass('col-lg-4')][1]//ul" position="inside">
+<!--			<xpath expr="//div[hasclass('col-lg-4')][1]//ul" position="inside">
 				<t t-if="website.env.user and not website.env.user.partner_id.seller and website.sudo().mp_show_sell_menu_footer">
 					<t t-if="website.sudo().mp_sell_page_label">
 						<li>
@@ -346,8 +346,8 @@
 						</li>
 					</t>
 				</t>
-			<!-- </xpath>
-			<xpath expr="//ul[@id='products']" position="inside"> -->
+			&lt;!&ndash; </xpath>
+			<xpath expr="//ul[@id='products']" position="inside"> &ndash;&gt;
 				<t t-if="website.sudo().mp_show_seller_list">
 					<t t-if="website.sudo().mp_sellers_list_label">
 						<li>
@@ -373,7 +373,7 @@
 						</li>
 					</t>
 				</t>
-			</xpath>
+			</xpath>-->
 		</template>
     </data>
 </odoo>

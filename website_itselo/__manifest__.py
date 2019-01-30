@@ -1,8 +1,8 @@
 # Copyright 2018 {DEVELOPER_NAME} <https://it-projects.info/team/{DEVELOPER_GITHUB_USERNAME}>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 {
-    "name": """Website Sale Customize""",
-    "summary": """Website Sale Customize""",
+    "name": """Website IT-Selo""",
+    "summary": """Website IT-Selo""",
     "category": "Website",
     "images": [],
     "version": "12.0.1.0.0",
@@ -16,15 +16,21 @@
     # "currency": "EUR",
 
     "depends": [
-        "odoo_marketplace",
+        "res_city_total_limit",
+        "res_partner_total_limit",
         "fleet",
-        "base_address_city",
+        "alan_customize",
+        "theme_alan",
+        "dadata_crm",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
+        "security/ir.model.access.csv",
+        "views/res_company_view.xml",
+        "views/res_country_view.xml",
+        "views/res_partner_view.xml",
         "views/template.xml",
         "views/website_account_template.xml",
-        # "{FILE2}.xml",
     ],
     "demo": [
     ],
