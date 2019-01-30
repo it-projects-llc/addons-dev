@@ -1,0 +1,15 @@
+<odoo>
+
+	<record id="odoo_marketplace.wk_seller_dashboard" model="ir.ui.menu">
+		<field name="load_xmlid" eval="True"/>
+	</record>
+
+    <record id="odoo_marketplace.wk_seller_dashboard_menu2_sub_menu0" model="ir.ui.menu">
+		<field name="load_xmlid" eval="True"/>
+	</record>
+
+    <record id="odoo_marketplace.wk_seller_dashboard_menu1_sub_menu1" model="ir.ui.menu">
+		<field name="load_xmlid" eval="True"/>
+	</record>
+
+</odoo>

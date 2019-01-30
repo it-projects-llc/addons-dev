@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<openerp>
+    <data noupdate="1">
+        <!--
+        Payment method
+        -->
+        <record id="marketplace_seller_payment_method_data1" model="seller.payment.method">
+            <field name="name">Cash</field>
+        </record>
+
+        <record id="marketplace_seller_payment_method_data2" model="seller.payment.method">
+            <field name="name">Cheque</field>
+        </record>
+        <record id="marketplace_seller_payment_method_data3" model="seller.payment.method">
+            <field name="name">Paypal</field>
+        </record>
+        <record id="marketplace_seller_payment_method_data4" model="seller.payment.method">
+            <field name="name">NEFT</field>
+        </record>
+        <record id="marketplace_seller_payment_method_data5" model="seller.payment.method">
+            <field name="name">Bank Transfer</field>
+        </record>
+
+        <record id="sequence_payment_seller_invoice" model="ir.sequence">
+            <field name="name">Payments seller invoices sequence</field>
+            <field name="code">account.payment.supplier.invoice</field>
+            <field name="prefix">SELLER.OUT/%(range_year)s/</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="True" name="use_date_range"/>
+            <field name="padding">4</field>
+        </record>
+        <record id="sequence_payment_seller_refund" model="ir.sequence">
+            <field name="name">Payments seller refunds sequence</field>
+            <field name="code">account.payment.supplier.refund</field>
+            <field name="prefix">SELLER.IN/%(range_year)s/</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="True" name="use_date_range"/>
+            <field name="padding">4</field>
+        </record>
+
+    </data>
+</openerp>

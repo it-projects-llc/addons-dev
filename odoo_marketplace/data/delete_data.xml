@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<openerp>
+    <data noupdate="1">
+    	<delete id="wk_seller_product_template_approved_products_action_for_tree_view" model="ir.actions.act_window.view"/>
+    	<delete id="wk_seller_product_template_approved_products_action_for_kanban_view" model="ir.actions.act_window.view"/>
+    	<delete id="wk_seller_product_template_approved_products_action_for_form_view" model="ir.actions.act_window.view"/>
+    </data>
+</openerp>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+	<template id="account_sign_up_details_id" inherit_id="odoo_marketplace.account_sign_up_details_id">
+		<xpath expr="//label[@for='mp_terms_conditions']" position="after">
+			<div>
+				<script type="text/javascript">
+					function showMe (box) {
+					var vis = (box.checked) ? "block" : "none";
+					document.getElementById('deliver').style.display = vis;
+					}
+				</script>
+				<input type="checkbox" name="is_delivery" id="is_delivery" onclick="showMe(this)"/>
+				<label for="is_delivery" class="control-label">&#160;Вы хотите стать доставщиком? </label>
+				<div id="deliver" style="display:block; display:none;">
+					<label for="fleet" class="control-label">Какой у вас автомобиль?</label>
+					<input type="text" class="form-control" name="fleet" id="fleet"/>
+				</div>
+			</div>
+
+		</xpath>
+	</template>
+	    <template id="account_sign_up_details_id" inherit_id="auth_signup.fields">
+		<xpath expr="//div[hasclass('form-group', 'field-name')]" position="after">
+			<label for="mobile" class="control-label">Mobile</label>
+			<input type="tel" class="form-control" name="mobile" id="mobile" required="required" placeholder="+7 999 999 99 99"/>
+			<label for="address_data" class="control-label">Address</label>
+			<input type="text" class="form-control" name="address_data" id="address_data" required="required"/>
+			<script type="text/javascript">
+					function join(arr /*, separator */) {
+					  var separator = arguments.length > 1 ? arguments[1] : ', ';
+					  return arr.filter(function(n){return n}).join(separator);
+					}
+
+					function geoQuality(qc_geo) {
+					  var localization = {
+						'0': 'точные',
+						'1': 'ближайший дом',
+						'2': 'улица',
+						'3': 'населенный пункт',
+						'4': 'город'
+					  };
+					  return localization[qc_geo] || qc_geo;
+					}
+
+					function showPostalCode(address) {
+					  $('#zip').val(address.postal_code);
+					}
+
+					function showRegion(address) {
+					  $('#state_id').val(join([
+						join([address.region_type, address.region], ' ')
+					  ]));
+					}
+
+					function showArea(address) {
+					  $('#district_id').val(join([
+						join([address.area_type, address.area], ' ')
+					  ]));
+					}
+
+					function showCity(address) {
+					  $('#city_id').val(join([
+						join([address.city_type, address.city], ' '),
+						join([address.settlement_type, address.settlement], ' ')
+					  ]));
+					}
+
+					function showStreet(address) {
+					  $("#street").val(
+						join([address.street_type, address.street], " ")
+					  );
+					}
+
+					function showHouse(address) {
+					  $("#house").val(join([
+						join([address.house_type, address.house], " "),
+						join([address.block_type, address.block], " ")
+					  ]));
+					}
+
+					function showFlat(address) {
+					  $("#flat").val(
+						join([address.flat_type, address.flat], " ")
+					  );
+					}
+
+					function showSelected(suggestion) {
+					  var address = suggestion.data;
+					  showPostalCode(address);
+					  showRegion(address);
+					  showArea(address);
+					  showCity(address);
+					  showStreet(address);
+					  showHouse(address);
+					  showFlat(address);
+					}
+
+					$('#address_data').suggestions({
+					  token: '130bca555739607c7635b5c6bbbdf856521c99b8',
+					  type: 'ADDRESS',
+					  onSelect: showSelected
+					});
+				</script>
+			</xpath>
+	   	</template>
+</odoo>

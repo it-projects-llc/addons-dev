@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+    <data>
+        <template id="assets_backend" name="marketplace assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/odoo_marketplace/static/src/css/mp_dashboard.css"/>
+                <script type="text/javascript" src="/odoo_marketplace/static/src/js/url_handler.js"></script>
+            </xpath>
+        </template>
+    </data>
+</odoo>

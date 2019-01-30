@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+    <data noupdate="1">
+
+    <!--    Sequences from tracking order invoice    -->
+        <record id="sequence_seller_order_invoive_paid" model="ir.sequence">
+            <field name="name">Seller Order Payment</field>
+            <field name="code">seller.order.payment</field>
+            <field name="prefix">MPO/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+    <!--    Sequences from tracking order refund invoice    -->
+        <record id="sequence_seller_order_refund" model="ir.sequence">
+            <field name="name">Seller Order Refund</field>
+            <field name="code">seller.order.refund</field>
+            <field name="prefix">REF/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+    <!--    Sequences from tracking seller payment    -->
+        <record id="sequence_seller_payment" model="ir.sequence">
+            <field name="name">Seller Payment</field>
+            <field name="code">seller.payment</field>
+            <field name="prefix">PAY/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

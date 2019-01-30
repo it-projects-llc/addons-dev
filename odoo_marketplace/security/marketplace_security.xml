@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+	<data noupdate="0">
+
+		<record id="marketplace_security_category" model="ir.module.category">
+		    <field name="name"> Marketplace </field>
+		</record>
+
+		<record id="marketplace_draft_seller_group" model="res.groups">
+		    <field name="name">Pending Seller</field>
+		    <field name="category_id" ref="marketplace_security_category"/>
+		</record>
+
+		<record id="marketplace_seller_group" model="res.groups">
+		    <field name="name">Seller</field>
+		    <field name="category_id" ref="marketplace_security_category"/>
+    		<field name="implied_ids" eval="[(4, ref('marketplace_draft_seller_group'))]"/>
+		</record>
+
+		<record id="marketplace_officer_group" model="res.groups">
+			<field name="name">Officer</field>
+			<field name="category_id" ref="marketplace_security_category"/>
+			<field name="implied_ids" eval="[(4, ref('marketplace_seller_group'))]"/>
+		</record>
+
+		<record id="marketplace_manager_group" model="res.groups">
+		    <field name="name">Manager</field>
+		    <field name="category_id" ref="marketplace_security_category"/>
+		    <field name="implied_ids" eval="[(4, ref('marketplace_officer_group'))]"/>
+		    <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+		</record>
+
+		<record id="group_marketplace_seller_shop" model="res.groups">
+		    <field name="name">Marketplace Seller Shop </field>
+        	<field name="category_id" ref="base.module_category_hidden"/>
+		</record>
+
+	</data>
+
+	<data noupdate="1">
+
+		<!-- Seller Group Rules -->
+        
+	    <record id="show_seller_product_order_line_rule" model="ir.rule">
+	        <field name="name">Seller product order line only</field>
+	        <field name="model_id" ref="model_sale_order_line"/>
+	        <field name="domain_force">[('marketplace_seller_id','=',user.partner_id.id)]</field>
+	        <field name="groups" eval="[(4, ref('marketplace_seller_group')),(4, ref('marketplace_draft_seller_group'))]"/>
+	    </record>
+
+	    <record id="show_seller_only_rule" model="ir.rule">
+	        <field name="name">Show seller only</field>
+	        <field name="model_id" ref="model_res_partner"/>
+	        <field name="domain_force">[('id', 'child_of', user.commercial_partner_id.id)]</field>
+	        <field name="perm_write" eval="1"/>
+	        <field name="perm_read" eval="1"/>
+	        <field name="groups" eval="[(4, ref('marketplace_seller_group'))]"/>
+	    </record>
+
+	    <record id="show_seller_product_rule" model="ir.rule">
+	        <field name="name">Seller Product Only</field>
+	        <field name="model_id" ref="model_product_template"/>
+	        <field name="domain_force">[('marketplace_seller_id','=',user.partner_id.id)]</field>
+	        <field name="groups" eval="[(4, ref('marketplace_seller_group'))]"/>
+	    </record>
+
+	    <record id="show_seller_product_product_rule" model="ir.rule">
+	        <field name="name">Seller Product Only</field>
+	        <field name="model_id" ref="product.model_product_product"/>
+	        <field name="domain_force">[('product_tmpl_id.marketplace_seller_id','=',user.partner_id.id)]</field>
+	        <field name="perm_unlink" eval="0"/>
+	        <field name="groups" eval="[(4, ref('marketplace_seller_group'))]"/>
+	    </record>
+
+	    <record id="show_to_seller_all_website_product_product_rule" model="ir.rule">
+	        <field name="name">All Website Product For Seller</field>
+	        <field name="model_id" ref="product.model_product_product"/>
+	        <field name="domain_force">[('website_published', '=', True), ("sale_ok", "=", True)]</field>
+	        <field name="perm_write" eval="0"/>
+	        <field name="perm_read" eval="1"/>
+	        <field name="perm_create" eval="0"/>
+	        <field name="perm_unlink" eval="0"/>
+	        <field name="groups" eval="[(4, ref('marketplace_seller_group'))]"/>
+	    </record>
+
+	    <record id="show_sellers_seller_payments_only_rule" model="ir.rule">
+	        <field name="name">Seller payments only</field>
+	        <field name="model_id" ref="model_seller_payment"/>
+	        <field name="domain_force">[('seller_id','=',user.partner_id.id)]</field>
+	        <field name="groups" eval="[(4, ref('marketplace_seller_group'))]"/>
+	    </record>
+
+	    <record id="show_sellers_inventory_only_rule" model="ir.rule">
+	        <field name="name">Seller Inventory only</field>
+	        <field name="model_id" ref="model_marketplace_stock"/>
+	        <field name="domain_force">[('product_id.marketplace_seller_id','=',user.partner_id.id)]</field>
+	        <field name="groups" eval="[(4, ref('marketplace_seller_group'))]"/>
+	    </record>
+
+	    <record id="show_sellers_stock_move_only_rule" model="ir.rule">
+	        <field name="name">Seller Stock Move only</field>
+	        <field name="model_id" ref="stock.model_stock_move"/>
+	        <field name="domain_force">[('product_id.product_tmpl_id.marketplace_seller_id','=',user.partner_id.id)]</field>
+	        <field name="groups" eval="[(4, ref('marketplace_seller_group'))]"/>
+	    </record>
+
+		<record id="show_sellers_stock_move_line_only_rule" model="ir.rule">
+	        <field name="name">Seller Stock Move Line Only</field>
+	        <field name="model_id" ref="stock.model_stock_move_line"/>
+	        <field name="domain_force">[('product_id.product_tmpl_id.marketplace_seller_id','=',user.partner_id.id)]</field>
+	        <field name="groups" eval="[(4, ref('marketplace_seller_group'))]"/>
+	    </record>
+
+	    <record id="show_seller_delivery_order_only_rule" model="ir.rule">
+	        <field name="name">Seller Delivery order only</field>
+	        <field name="model_id" ref="model_stock_picking"/>
+	        <field name="domain_force">[('marketplace_seller_id.id','=',user.partner_id.id)]</field>
+	        <field name="groups" eval="[(4, ref('marketplace_draft_seller_group'))]"/>
+	    </record>
+
+	    <record id="show_seller_shop_only_rule" model="ir.rule">
+	        <field name="name">Seller Shop only</field>
+	        <field name="model_id" ref="model_seller_shop"/>
+	        <field name="domain_force">[('seller_id.id','=',user.partner_id.id)]</field>
+	        <field name="groups" eval="[(4, ref('marketplace_draft_seller_group'))]"/>
+	    </record>
+
+	    <record id="show_to_seller_all_customer" model="ir.rule">
+	        <field name="name">All Customer For Seller</field>
+	        <field name="model_id" ref="model_res_partner"/>
+	        <field name="domain_force">[(1,'=',1)]</field>
+	        <field name="perm_write" eval="0"/>
+	        <field name="perm_read" eval="1"/>
+	        <field name="perm_create" eval="0"/>
+	        <field name="perm_unlink" eval="0"/>
+	        <field name="groups" eval="[(4, ref('marketplace_seller_group'))]"/>
+	    </record>
+
+	    <record id="show_sales_order_to_seller" model="ir.rule">
+	        <field name="name">Sales Order For Seller</field>
+	        <field name="model_id" ref="model_sale_order"/>
+	        <field name="domain_force">[("order_line.marketplace_seller_id.id","=",user.partner_id.id)]</field>
+	        <field name="perm_write" eval="1"/>
+	        <field name="perm_read" eval="1"/>
+	        <field name="perm_create" eval="0"/>
+	        <field name="perm_unlink" eval="0"/>
+	        <field name="groups" eval="[(4, ref('marketplace_seller_group'))]"/>
+	    </record>
+
+      	<record id="show_seller_carrier_delivery_product_rule" model="ir.rule">
+	        <field name="name">Carrier Delivery Product To Seller</field>
+	        <field name="model_id" ref="product.model_product_product"/>
+	        <field name="domain_force">[('type', '=', "service"),("sale_ok", "=", False)]</field>
+          	<field name="perm_write" eval="0"/>
+	        <field name="perm_read" eval="1"/>
+	        <field name="perm_create" eval="0"/>
+	        <field name="perm_unlink" eval="0"/>
+	        <field name="groups" eval="[(4, ref('marketplace_seller_group'))]"/>
+	    </record>
+
+		<record id="show_seller_carrier_delivery_product_tmpl_rule" model="ir.rule">
+			<field name="name">Carrier Delivery Product Template To Seller</field>
+			<field name="model_id" ref="product.model_product_template"/>
+			<field name="domain_force">[('type', '=', "service"),("sale_ok", "=", False)]</field>
+			<field name="perm_write" eval="0"/>
+			<field name="perm_read" eval="1"/>
+			<field name="perm_create" eval="0"/>
+			<field name="perm_unlink" eval="0"/>
+			<field name="groups" eval="[(4, ref('marketplace_seller_group'))]"/>
+		</record>
+
+        <record id="show_seller_product_invoice_order_line_rule" model="ir.rule">
+	        <field name="name">Seller invoice order line only</field>
+	        <field name="model_id" ref="model_account_invoice_line"/>
+	        <field name="domain_force">[('product_id.marketplace_seller_id','=',user.partner_id.id)]</field>
+            <field name="perm_write" eval="0"/>
+ 	        <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+	        <field name="groups" eval="[(4, ref('marketplace_seller_group')),(4, ref('marketplace_draft_seller_group'))]"/>
+	    </record>
+
+        <record id="show_draft_seller_only_rule" model="ir.rule">
+	        <field name="name">Show draft seller only</field>
+	        <field name="model_id" ref="model_res_partner"/>
+	        <field name="domain_force">[('id', 'child_of', user.commercial_partner_id.id)]</field>
+	        <field name="perm_write" eval="1"/>
+	        <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+	        <field name="groups" eval="[(4, ref('odoo_marketplace.marketplace_draft_seller_group'))]"/>
+	    </record>
+
+		<!-- Officer group rules -->
+
+		<record id="officer_show_all_sellers_product_rule" model="ir.rule">
+			<field name="name">Seller's All Products Officer</field>
+			<field name="model_id" ref="model_product_template"/>
+			<field name="domain_force">[(1,'=',1)]</field>
+			<field name="groups" eval="[(4, ref('marketplace_officer_group'))]"/>
+		</record>
+		<record id="officer_show_all_seller_product_product_rule" model="ir.rule">
+			<field name="name">Seller's All Product Variants Officer</field>
+			<field name="model_id" ref="product.model_product_product"/>
+			<field name="domain_force">[(1,'=',1)]</field>
+			<field name="groups" eval="[(4, ref('marketplace_officer_group'))]"/>
+		</record>
+		<record id="officer_show_sale_order_lines_of_sellers" model="ir.rule">
+			<field name="name">Officer Sale order line of Seller's product</field>
+			<field name="model_id" ref="model_sale_order_line"/>
+			<field name="domain_force">[('marketplace_seller_id','!=',False)]</field>
+			<field name="groups" eval="[(4, ref('marketplace_officer_group'))]"/>
+		</record>
+		<record id="officer_show_sales_order_to_mp_manager" model="ir.rule">
+			<field name="name">Sales Order For MP Officer</field>
+			<field name="model_id" ref="model_sale_order"/>
+			<field name="domain_force">[("order_line.marketplace_seller_id.id","=",user.partner_id.id)]</field>
+			<field name="perm_write" eval="0"/>
+			<field name="perm_read" eval="1"/>
+			<field name="perm_create" eval="0"/>
+			<field name="perm_unlink" eval="0"/>
+			<field name="groups" eval="[(4, ref('marketplace_officer_group'))]"/>
+		</record>
+		<record id="officer_show_all_sellers_rule" model="ir.rule">
+			<field name="name">Officer Show all sellers</field>
+			<field name="model_id" ref="model_res_partner"/>
+			<field name="domain_force">[(1, '=', 1)]</field>
+			<field name="perm_write" eval="1"/>
+			<field name="perm_read" eval="1"/>
+			<field name="groups" eval="[(4, ref('marketplace_officer_group'))]"/>
+		</record>
+		<record id="officer_show_all_seller_payments_rule" model="ir.rule">
+			<field name="name">Officer All Seller's payments</field>
+			<field name="model_id" ref="model_seller_payment"/>
+			<field name="domain_force">[]</field>
+			<field name="groups" eval="[(4, ref('marketplace_officer_group'))]"/>
+		</record>
+		<record id="officer_show_all_sellers_inventory_rule" model="ir.rule">
+			<field name="name">Officer All Seller's Inventory</field>
+			<field name="model_id" ref="model_marketplace_stock"/>
+			<field name="domain_force">[]</field>
+			<field name="groups" eval="[(4, ref('marketplace_officer_group'))]"/>
+		</record>
+		<record id="officer_show_all_sellers_stock_move_only_rule" model="ir.rule">
+			<field name="name">Seller's All Stock Move Officer</field>
+			<field name="model_id" ref="stock.model_stock_move"/>
+			<field name="domain_force">[]</field>
+			<field name="groups" eval="[(4, ref('marketplace_officer_group'))]"/>
+		</record>
+		<record id="officer_show_all_sellers_stock_move_line_only_rule" model="ir.rule">
+			<field name="name">Seller's All Stock Move Line Officer</field>
+			<field name="model_id" ref="stock.model_stock_move_line"/>
+			<field name="domain_force">[]</field>
+			<field name="groups" eval="[(4, ref('marketplace_officer_group'))]"/>
+		</record>
+		<record id="officer_show_seller_delivery_order_rule" model="ir.rule">
+			<field name="name">Seller's All Delivery order Officer</field>
+			<field name="model_id" ref="model_stock_picking"/>
+			<field name="domain_force">[]</field>
+			<field name="groups" eval="[(4, ref('marketplace_officer_group'))]"/>
+		</record>
+		<record id="officer_show_seller_shop_rule" model="ir.rule">
+			<field name="name">Seller's Shop Officer</field>
+			<field name="model_id" ref="model_seller_shop"/>
+			<field name="domain_force">[]</field>
+			<field name="groups" eval="[(4, ref('marketplace_officer_group'))]"/>
+		</record>
+
+        <record id="show_manager_product_invoice_order_line_rule" model="ir.rule">
+            <field name="name">Manager invoice order line only</field>
+            <field name="model_id" ref="model_account_invoice_line"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="groups" eval="[(4, ref('marketplace_officer_group'))]"/>
+        </record>
+
+	    <!-- Manager group rules -->
+
+	    <record id="show_all_sellers_product_rule" model="ir.rule">
+	        <field name="name">Seller's All Products</field>
+	        <field name="model_id" ref="model_product_template"/>
+	        <field name="domain_force">[(1,'=',1)]</field>
+	        <field name="groups" eval="[(4, ref('marketplace_manager_group'))]"/>
+	    </record>
+
+	    <record id="show_all_seller_product_product_rule" model="ir.rule">
+	        <field name="name">Seller's All Product Variants</field>
+	        <field name="model_id" ref="product.model_product_product"/>
+	        <field name="domain_force">[(1,'=',1)]</field>
+	        <field name="groups" eval="[(4, ref('marketplace_manager_group'))]"/>
+	    </record>
+
+	    <record id="show_sale_order_lines_of_sellers" model="ir.rule">
+	        <field name="name">Sale order line of Seller's product</field>
+	        <field name="model_id" ref="model_sale_order_line"/>
+	        <field name="domain_force">[('marketplace_seller_id','!=',False)]</field>
+	        <field name="groups" eval="[(4, ref('marketplace_manager_group'))]"/>
+	    </record>
+
+		<record id="show_sales_order_to_mp_manager" model="ir.rule">
+	        <field name="name">Sales Order For MP Manager</field>
+	        <field name="model_id" ref="model_sale_order"/>
+	        <field name="domain_force">[("order_line.marketplace_seller_id.id","=",user.partner_id.id)]</field>
+	        <field name="perm_write" eval="0"/>
+	        <field name="perm_read" eval="1"/>
+	        <field name="perm_create" eval="0"/>
+	        <field name="perm_unlink" eval="0"/>
+	        <field name="groups" eval="[(4, ref('marketplace_manager_group'))]"/>
+	    </record>
+
+	    <record id="show_all_sellers_rule" model="ir.rule">
+	        <field name="name">Show all sellers</field>
+	        <field name="model_id" ref="model_res_partner"/>
+	        <field name="domain_force">[(1, '=', 1)]</field>
+	        <field name="perm_write" eval="1"/>
+	        <field name="perm_read" eval="1"/>
+	        <field name="groups" eval="[(4, ref('marketplace_manager_group'))]"/>
+	    </record>
+	    <record id="show_all_seller_payments_rule" model="ir.rule">
+	        <field name="name">All Seller's payments</field>
+	        <field name="model_id" ref="model_seller_payment"/>
+	        <field name="domain_force">[]</field>
+	        <field name="groups" eval="[(4, ref('marketplace_manager_group'))]"/>
+	    </record>
+	    <record id="show_all_sellers_inventory_rule" model="ir.rule">
+	        <field name="name">All Seller's Inventory</field>
+	        <field name="model_id" ref="model_marketplace_stock"/>
+	        <field name="domain_force">[]</field>
+	        <field name="groups" eval="[(4, ref('marketplace_manager_group'))]"/>
+	    </record>
+	    <record id="show_all_sellers_stock_move_only_rule" model="ir.rule">
+	        <field name="name">Seller's All Stock Move</field>
+	        <field name="model_id" ref="stock.model_stock_move"/>
+	        <field name="domain_force">[]</field>
+	        <field name="groups" eval="[(4, ref('marketplace_manager_group'))]"/>
+	    </record>
+		<record id="show_all_sellers_stock_move_line_rule_manager" model="ir.rule">
+	        <field name="name">Seller's All Stock Move Line</field>
+	        <field name="model_id" ref="stock.model_stock_move_line"/>
+	        <field name="domain_force">[]</field>
+	        <field name="groups" eval="[(4, ref('marketplace_manager_group'))]"/>
+	    </record>
+	    <record id="show_seller_delivery_order_rule" model="ir.rule">
+	        <field name="name">Seller's All Delivery order</field>
+	        <field name="model_id" ref="model_stock_picking"/>
+	        <field name="domain_force">[]</field>
+	        <field name="groups" eval="[(4, ref('marketplace_manager_group'))]"/>
+	    </record>
+
+	    <record id="show_seller_shop_rule" model="ir.rule">
+	        <field name="name">Seller's Shop</field>
+	        <field name="model_id" ref="model_seller_shop"/>
+	        <field name="domain_force">[]</field>
+	        <field name="groups" eval="[(4, ref('marketplace_manager_group'))]"/>
+	    </record>
+	</data>
+</odoo>

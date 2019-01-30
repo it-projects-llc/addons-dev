@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="dadata_crm" model="ir.ui.view">
+        <field name="name">DaData CRM</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet//div//h1" position="after">
+                <button name="action_dadata_crm" string="Заполнить данные" type="object" class="btn-primary" attrs="{'invisible': [('is_company','=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="dadata_bank" model="ir.ui.view">
+        <field name="name">DaData Bank</field>
+        <field name="model">res.bank</field>
+        <field name="inherit_id" ref="base.view_res_bank_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='bic']" position="after">
+                <field name="correspondent_account"/>
+                <button name="action_dadata_bank" string="Заполнить данные" type="object" class="btn-primary"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="dadata_company" model="ir.ui.view">
+        <field name="name">DaData Company</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_document_template_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='report_header']" position="after">
+                <field name="key_datata"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

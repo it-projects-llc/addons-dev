@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+	<data noupdate="0">
+		<template id="assets_frontend_mp" inherit_id="website.assets_frontend" name="Assets Frontend Review">
+			<xpath expr="." position="inside">
+				<link rel="stylesheet" href="/odoo_marketplace/static/src/css/marketplace.css" media="all" type="text/css"/>
+				<link rel="stylesheet" href="/odoo_marketplace/static/src/css/star-rating.min.css" media="all" type="text/css"/>
+				<link rel="stylesheet" type="text/less" href="/odoo_marketplace/static/src/css/review_chatter.scss"/>
+				<script type="text/javascript" src="/odoo_marketplace/static/src/js/review_chatter.js"></script>
+			</xpath>
+		</template>
+
+		<template id="mp_sold_by_detail_in_product" inherit_id="website_sale.product" customize_show="True" active="True" name="Seller Details">
+			<xpath expr="//form[@action='/shop/cart/update']" position="after">
+				<t t-set="marketplace_seller_id" t-value="product.sudo().marketplace_seller_id"/>
+				<t t-if="marketplace_seller_id">
+					<hr class=""/>
+					<section class="container">
+						<div class="col-md-12" style="padding:0px;" id="seller_info">
+							<div class="sold-by-label mb4" style="text-transform: uppercase">Sold By</div>
+							<t t-set="mp_seller_shop_id" t-value="marketplace_seller_id.sudo().seller_shop_id"/>
+							<div class="row" id="selle_pic_name_add">
+								<div class="col-md-3">
+									<div style="">
+										<a itemprop="url" target="_blank" t-attf-href="/seller/profile/#{marketplace_seller_id.sudo().url_handler if marketplace_seller_id.sudo().url_handler else marketplace_seller_id.sudo().id}">
+											<t t-if="marketplace_seller_id.profile_image">
+												<span t-if="marketplace_seller_id.sudo().profile_image">
+        											<img t-attf-src="/marketplace/image/#{marketplace_seller_id.id}/res.partner/profile_image" style="height: 80px;width: 80px;border-radius: 4px;" t-att-alt="marketplace_seller_id.name" title="Seller"/>
+        										</span>
+											</t>
+											<t t-if="not marketplace_seller_id.profile_image">
+												<div class="" t-attf-style="background-image: url('/odoo_marketplace/static/src/img/dummy-profile-pic.png');height: 80px;width: 80px;border-radius: 4px;"/>
+											</t>
+										</a>
+									</div>
+								</div>
+								<div class="col-md-9" >
+									<div style="color: rgb(41, 121, 183);background-color: rgb(245, 245, 245);border-radius: 3px;padding: 0px 10px 0px 10px;height: 80px;overflow: auto;">
+										<div class="mt4">
+											<i class="fa fa-user"/>
+											<span class="">
+												<a itemprop="name" target="_blank" t-attf-href="/seller/profile/#{marketplace_seller_id.sudo().url_handler if marketplace_seller_id.sudo().url_handler else marketplace_seller_id.sudo().id}" t-field="marketplace_seller_id.sudo().name"/>
+											</span>
+										</div>
+										<t t-if="website.mp_seller_review">
+											<t t-set="total_reviews" t-value="len(marketplace_seller_id.fetch_active_review(marketplace_seller_id.sudo().id))"/>
+											<t t-set="avg_val" t-value="marketplace_seller_id.avg_review()"/>
+											<span class="" style="display:inline-flex;" title="Average Review">
+												<input
+													id="star-readonly"
+													class="rating form-control d-none"
+													t-attf-value="#{avg_val}"
+													data-show-clear="false"
+													data-show-caption="false"
+													data-min="0"
+													data-max="5"
+													data-step="0.1"
+													data-readonly="true"
+													data-size="xs"
+													data-symbol="&#xf005;"
+													data-glyphicon="false"
+													data-rating-class="rating-fa"/>
+												<span style="padding: 7px;">
+													( <t t-esc="avg_val"/> / 5 )
+												</span>
+											</span>
+										</t>
+										<t t-set="seller_add_state" t-value="marketplace_seller_id.state_id"/>
+										<t t-set="seller_add_country" t-value="marketplace_seller_id.country_id"/>
+										<t t-if="seller_add_state and seller_add_country">
+											<div class="pp-addrees">
+												<i class="fa fa-map-marker"/>
+												<t t-esc="seller_add_state.name"/>,
+												<t t-esc="seller_add_country.name"/>
+											</div>
+										</t>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+				</t>
+				<script src="/odoo_marketplace/static/src/js/star-rating.min.js" type="text/javascript"></script>
+			</xpath>
+		</template>
+
+		<template id="shop_recently_product" name="Seller Rececntly Product Template">
+			<div class="tab-pane active oe_website_sale">
+				<div class='row'>
+					<div class="col-lg-12" id="products_grid">
+						<table width="100%">
+							<tbody>
+								<tr t-ignore="true">
+									<td t-foreach="range(0,rows)" t-as="row" t-attf-width="#{100/rows}%"></td>
+								</tr>
+								<tr t-foreach="bins" t-as="tr_product">
+									<t t-foreach="tr_product" t-as="td_product">
+										<t t-if="td_product">
+											<t t-set="product" t-value="td_product['product']"/>
+											<td t-att-colspan="td_product['x'] != 1 and td_product['x']" t-att-rowspan="td_product['y'] != 1 and td_product['y']" t-attf-class="oe_product oe_grid oe-height-#{td_product['y']*2} #{ td_product['class'] }">
+												<div class="oe_product_cart" t-att-data-publish="product.website_published and 'on' or 'off'">
+													<t t-set="product_image_big" t-value="td_product['x']+td_product['y'] > 2"/>
+													<t t-call="website_sale.products_item"/>
+												</div>
+											</td>
+										</t>
+										<td t-if="not td_product" class="oe-height-2"/>
+									</t>
+								</tr>
+							</tbody>
+						</table>
+						<t t-if="not bins">
+							<div class="text-center text-muted oe_product">
+								<h3 class="css_editable_display">Product not found.</h3>
+							</div>
+						</t>
+					</div>
+				</div>
+			</div>
+		</template>
+
+		<!-- Extra template delete if not in use -->
+		<template id="my_message_thread">
+			<section id="discussion" class="hidden-print oe_website_portal o_website_mail_thread">
+				<t t-set="is_user_public" t-value="website.env.user == request.website.user_id"/>
+				<t t-set="can_comment" t-value="sha_in or token or not is_user_public"/>
+				<section class="hidden-print mb32" t-if="can_comment" id="seller-review-comment-box" style="display:none">
+					<form class="o_website_chatter_form" t-attf-action="/marketplace_mail/post/json" method="POST">
+						<input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+						<img class="img pull-left img-circle" t-attf-src="/web/image/res.partner/#{user_id.partner_id.id}/image_small/50x50" style="width: 30px; margin-right: 10px;"/>
+						<div class="pull-left mb8" style="width: 95%%">
+							<textarea rows="2" name="message" class="form-control" placeholder="Write a message..."></textarea>
+							<input type='hidden' name="res_model" t-att-value="object._name"/>
+							<input type='hidden' name="res_id" t-att-value="object.id"/>
+							<input type='hidden' name="token" t-att-value="token" t-if="token"/>
+							<input type='hidden' name="sha_in" t-att-value="sha_in" t-if="sha_in"/>
+							<input type='hidden' name="sha_time" t-att-value="sha_time" t-if="sha_time"/>
+							<input type='hidden' name="token_field" t-att-value="token_field" t-if="token_field"/>
+							<div class="alert alert-danger mt8 mb0 o_website_chatter_error" style="display:none;">
+								Oops! Something went wrong. Try to reload the page and to log in.
+							</div>
+							<button t-attf-class="o_portal_chatter_composer_btn btn btn-primary mt8 o_website_message_post_helper" type="submit">Send</button>
+						</div>
+					</form>
+				</section>
+				<section class="mb32 hidden-print" t-if="not can_comment">
+					<h3>Leave a comment</h3>
+					<p>You must be
+						<a t-attf-href="/web/login?redirect=#{quote_plus(request.httprequest.url + '#discussion')}">logged in</a>
+						to post a comment.</p>
+				</section>
+				<div class="clearfix mb8"/>
+				<ul class="media-list marketplace_mail_comments" id="seller-review-all-comment">
+					<t t-set="messages" t-value="object.message_ids"/>
+					<t groups="base.group_portal,base.group_public">
+						<t t-set="messages" t-value="object.message_ids.filtered(lambda m: m.subtype_id.internal == False)"/>
+					</t>
+					<t t-foreach="messages" t-as="message">
+						<t t-if="message.website_published or website.env.user.sudo(website.env.user.id).has_group('website.group_website_publisher')">
+							<li class="media" t-if="message.message_type != 'notification'" t-att-id="'message-%s' % message.id">
+								<div class="media-body">
+									<img class="media-object pull-left img-circle" t-attf-src="/mail/#{message.model}/#{message.res_id}/avatar/#{message.author_id.id}" style="width: 30px; margin-right: 10px;"/>
+									<div class="media-body">
+										<h5 class="media-heading">
+											<span t-field="message.author_id"/>
+											<small>on
+												<span t-field="message.date"/></small>
+										</h5>
+										<t t-set="object" t-value="message"/>
+										<t t-call="website.publish_short"/>
+										<div t-field="message.body"/>
+										<div class="o_mg_link_content">
+											<div class="col-md-2 col-sm-3 text-center" t-foreach='message.attachment_ids' t-as='attachment'>
+												<a t-attf-href="/web/content/#{attachment.id}?download=true" target="_blank">
+													<div class='oe_attachment_embedded o_image' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/100x80"/>
+													<div class='oe_attachment_name'><t t-raw='attachment.name'/></div>
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li>
+						</t>
+					</t>
+				</ul>
+			</section>
+		</template>
+		<template id="mp_chatter_mail_append" name="Mp Mail Append">
+			<li class="media" style="display:block">
+				<div class="media-body">
+					<img class="media-object pull-left img-circle" t-att-src="image_url" style="width: 50px; margin-right: 10px;"/>
+					<div class="media-body">
+						<h5 class="media-heading">
+							<span t-esc="author"/>
+							<small>just now</small>
+						</h5>
+						<div t-raw="body"/>
+					</div>
+				</div>
+			</li>
+		</template>
+
+	</data>
+</odoo>

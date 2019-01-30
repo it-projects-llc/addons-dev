@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+    <data noupdate="1">
+        <!--Email template for seller regarding approval-->
+        <record id="marketplace_email_template_for_seller_by_admin" model="mail.template">
+            <field name="name">Seller Request Mail By Admin To Seller</field>
+            <field name="email_from">${object.company_id.email or ''}</field>
+            <field name="subject">Your Request For seller has been received.</field>
+            <field name="email_to">${object.email or ''}</field>
+            <field name="model_id" ref="odoo_marketplace.model_res_partner"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">${object.lang}</field>
+            <field name="body_html"><![CDATA[
+                <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+
+                    <p>Hello ${object.name},</p>
+
+                    <p>Thank you! for requesting to become a seller on our shop.<br>Your request is in queue, shortly you will be updated about your request status.</p>
+
+
+                    </div>
+                </div>
+                            ]]>
+            </field>
+        </record>
+    </data>
+</odoo>

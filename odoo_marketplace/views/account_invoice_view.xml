@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+    <data>
+        <record id="seller_invoice_action" model="ir.actions.act_window">
+            <field name="name">Seller Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field eval="False" name="view_id"/>
+            <field name="domain">[('type','in',['in_invoice','in_refund']),('is_seller','!=',False),'|',('seller_payment_ids','!=',False),('mp_seller_bill','=',True)]</field>
+            <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase', 'is_seller':True, 'default_mp_seller_bill':True}</field>
+            <field name="view_id" ref="account.view_account_invoice_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new Seller invoice.
+              </p><p>
+                You can control the invoice for your Seller according to
+                what you sale.
+              </p>
+            </field>
+        </record>
+
+        <record id="seller_invoice_tree_view_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="odoo_marketplace.seller_invoice_action"/>
+        </record>
+
+        <record id="seller_invoice_form_view_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.invoice_supplier_form"/>
+            <field name="act_window_id" ref="odoo_marketplace.seller_invoice_action"/>
+        </record>
+
+        <record id="account.action_vendor_bill_template" model="ir.actions.act_window">
+            <field name="domain">[('type','=','in_invoice'),('seller_payment_ids','=',False),('mp_seller_bill','=',False)]</field>
+        </record>
+
+        <record id="action_seeller_payments_payable" model="ir.actions.act_window">
+            <field name="name">Payments</field>
+            <field name="res_model">account.payment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="context">{'default_payment_type': 'outbound'}</field>
+            <field name="domain">[('partner_type', '=', 'seller')]</field>
+            <field name="view_id" ref="account.view_account_supplier_payment_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                  Click to register a payment
+                </p><p>
+                  Payments are used to register liquidity movements (send, collect or transfer money).
+                  You can then process those payments by your own means or by using installed facilities.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="seller_invoice_menu" name="Sellers" parent="account.menu_finance" sequence="3"  />
+        <menuitem id="seller_invoice_menu_sub_menu1" name="Seller Bills" parent="seller_invoice_menu" action="seller_invoice_action" sequence="1"/>
+        <menuitem id="seller_invoice_menu_sub_menu2" action="action_seeller_payments_payable"  parent="seller_invoice_menu" sequence="2"/>
+        <menuitem id="seller_invoice_menu_sub_menu3" name="Sellers" parent="seller_invoice_menu" action="wk_seller_action" sequence="3"/>
+
+    </data>
+</odoo>

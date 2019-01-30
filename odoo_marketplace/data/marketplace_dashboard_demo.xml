@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<openerp>
+    <data noupdate="0">
+
+        <record model="marketplace.dashboard" id="product_demo">
+            <field name="name">Marketplace Products</field>
+            <field name="state">product</field>
+            <field name="color">1</field>
+        </record>
+        <record model="marketplace.dashboard" id="seller_demo" >
+            <field name="name">Marketplace Sellers</field>
+            <field name="state">seller</field>
+            <field name="color">2</field>
+        </record>
+         <record model="marketplace.dashboard" id="order_demo">
+            <field name="name">Marketplace Orders</field>
+            <field name="state">order</field>
+            <field name="color">3</field>
+        </record>
+         <record model="marketplace.dashboard" id="payment_demo">
+            <field name="name">Seller Payments</field>
+            <field name="state">payment</field>
+            <field name="color">4</field>
+        </record>
+    </data>
+</openerp>

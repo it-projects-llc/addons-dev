@@ -1,0 +1,679 @@
+/* Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) */
+/* See LICENSE file for full copyright and licensing details. */
+/* License URL : https://store.webkul.com/license.html/ */
+
+/*Sign-up page css*/
+.invalide_url{
+    box-shadow: 0 0 8px #f00 !important;
+}
+.url_info .popover{
+    width: 100%;
+    color: #fff;
+    background: #333;
+}
+.url_info .popover.right .arrow:after {
+    border-right-color: #333;
+}
+.url_info .popover-body{
+    color: #fff;
+    font-size:14px;
+}
+
+.panel.with-mp-nav-tabs .panel-heading{
+    padding: 5px 5px 0 5px;
+}
+.panel.with-mp-nav-tabs .nav-tabs{
+  border-bottom: none;
+}
+.panel.with-mp-nav-tabs .nav-justified{
+  margin-bottom: -1px;
+}
+/********************************************************************/
+/*** PANEL DEFAULT ***/
+.with-mp-nav-tabs.panel-default .nav-tabs > li > a,
+.with-mp-nav-tabs.panel-default .nav-tabs > li > a:hover,
+.with-mp-nav-tabs.panel-default .nav-tabs > li > a:focus {
+    color: #777;
+}
+.with-mp-nav-tabs.panel-default .nav-tabs > .open > a,
+.with-mp-nav-tabs.panel-default .nav-tabs > .open > a:hover,
+.with-mp-nav-tabs.panel-default .nav-tabs > .open > a:focus,
+.with-mp-nav-tabs.panel-default .nav-tabs > li > a:hover,
+.with-mp-nav-tabs.panel-default .nav-tabs > li > a:focus {
+    color: #777;
+  background-color: #ddd;
+  border-color: transparent;
+}
+.with-mp-nav-tabs.panel-default .nav-tabs > li.active > a,
+.with-mp-nav-tabs.panel-default .nav-tabs > li.active > a:hover,
+.with-mp-nav-tabs.panel-default .nav-tabs > li.active > a:focus {
+  color: #555;
+  background-color: #fff;
+  border-color: #ddd;
+  border-bottom-color: transparent;
+}
+
+
+.seller-landing-page{
+	background-image: url("/odoo_marketplace/static/src/img/mp1.jpg");
+    background-color: black;
+    opacity: 0.5;
+}
+
+
+
+.hilight h2{
+    font-family: Helvetica, Verdana;
+    color: #FFF;
+    z-index: 200;
+}
+
+.promo {
+    position: relative;
+}
+.promo img {
+    z-index: 1;
+}
+
+.hilight {
+    background-color: #000;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    opacity: 0.55;
+    font-family: Verdana, Geneva, sans-serif;
+    color: #FFF;
+    bottom: 0px;
+    z-index: 1;
+    text-align: center;
+}
+.amit {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    font-family: Verdana, Geneva, sans-serif;
+    color: #FFF;
+    bottom: 0px;
+    z-index: 1;
+    text-align: center;
+    padding: 15%;
+}
+.mp_hexagon {
+	width: 36px;
+	height: 20px;
+	background: #3b97e7;
+	position: relative;
+    color: white;
+}
+.mp_hexagon:before {
+	content: "";
+	position: absolute;
+	top: -9px;
+	left: 0;
+	width: 0;
+	height: 0;
+	border-left: 18px solid transparent;
+	border-right: 18px solid transparent;
+	border-bottom: 9px solid #3b97e7;
+}
+.mp_hexagon:after {
+	content: "";
+	position: absolute;
+	bottom: -9px;
+	left: 0;
+	width: 0;
+	height: 0;
+	border-left: 18px solid transparent;
+	border-right: 18px solid transparent;
+	border-top: 9px solid #3b97e7;
+}
+
+.feature-text{
+	font-weight: 600;
+}
+
+.seller-register{
+	font-size: 25px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    background-color: #d9edf7;
+    border-color: #6CAFBD;
+    color: #31708f;
+    border: 1px solid;
+    margin-top: -25px;
+    border-radius: 5px;
+}
+
+.seller-profile-pic{
+	max-width: 265px;
+	border: 10px solid #A4A4A4;
+	/*bottom: -85px;*/
+	position: absolute;
+	height: 200px;
+	width: 200px;
+    top: -115px;
+}
+
+/*************************************** CSS for seller Reviews************************************/
+
+div.sort {
+    font-family: robotoLight;
+}
+
+.sort {
+    line-height: 38px;
+    background: #F5F5F5;
+    /*padding: 3px 40px 0 40px;*/
+}
+
+.reviewer-imgName {
+    padding-left: 2px;
+    font-size: 25px;
+    line-height: 54px;
+    color: #fff;
+    text-align: center;
+    width: 55px;
+    height: 55px;
+    margin-top: 0px;
+    border-radius: 50%;
+    font-family: robotoRegular;
+    display: inline-block;
+}
+
+.reviewer-image {
+
+}
+
+.seller-review-bubble
+{
+position: relative;
+background: #FFFFFF;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 3px;
+border: #DDDDDD solid 1px;
+}
+
+.seller-review-bubble:after
+{
+content: '';
+position: absolute;
+border-style: solid;
+border-width: 15px 14px 15px 0;
+border-color: transparent #FFFFFF;
+display: block;
+width: 0;
+z-index: 1;
+left: -14px;
+top: 20px;
+}
+
+.seller-review-bubble:before
+{
+content: '';
+position: absolute;
+border-style: solid;
+border-width: 15px 14px 15px 0;
+border-color: transparent #DDDDDD;
+display: block;
+width: 0;
+z-index: 0;
+left: -15px;
+top: 20px;
+}
+
+/*Like Dislike Icons For Marketplace helpful/Not helpful*/
+.mp-sprite {
+        background: url("/odoo_marketplace/static/src/img/icon-like-unlike.png") no-repeat 0 0;
+}
+
+.mp-TopLeft {
+    width: 29px;
+    height: 30px;
+    display: inline-block;
+}
+.mp-TopRight {
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    background-position:-30px 0;
+}
+
+.mp-BottomLeft {
+    width: 28px;
+    height: 30px;
+    display: inline-block;
+    background-position: 0 -30px;
+}
+.mp-BottomRight {
+    width: 29px;
+    height: 30px;
+    display: inline-block;
+    background-position:-30px -30px;
+}
+
+div.mp-TopLeft:hover {
+    background-position: 0 -30px;
+    cursor: pointer;
+}
+
+div.mp-TopRight:hover {
+    background-position:-30px -30px;
+    cursor: pointer;
+    }
+
+div.mp-BottomLeft:hover {
+    background-position: 0 0px;
+    cursor: pointer;
+}
+
+div.mp-BottomRight:hover {
+    background-position:-30px 0;
+    cursor: pointer;
+    }
+.fa-icon-smaller{font-size:0.7em;}
+
+.mp-bubble
+{
+    background: #fff;
+    border: 1px solid #f4f4f4;
+    border-radius: 3px;
+    color: #c3c3c3;
+    font-size: 14px;
+    text-align: center;
+    padding: 10px 20px;
+    text-transform: uppercase;
+    font-family: "robotoRegular";
+    cursor: default;
+    width: auto;
+    cursor: default;
+    border: solid 1px #e9e9e9;
+    margin-left: 94px;
+    border-radius: 3px;
+    position: relative;
+}
+
+.mp-bubble:after
+{
+    left: -10px;
+}
+
+.mp-bubble:before
+{
+    border-width: 3px 6px 3px 5px;
+    top: 5px;
+}
+
+.seller-review-bottom
+{
+    background: whitesmoke;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    /*margin-top: 15px;*/
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+
+
+/*.middle-grey-button {
+    background: #fff;
+    border: 1px solid #DDDDDD;
+    border-radius: 3px;
+    color: #c3c3c3;
+    font-size: 14px;
+    text-align: center;
+    padding: 10px 20px;
+    text-transform: uppercase;
+    font-family: "robotoRegular";
+    cursor: default;
+    width: auto;
+    cursor: default;
+}*/
+
+.middle-grey-button:before {
+    border-width: 3px 6px 3px 5px;
+    top: 5px;
+}
+
+.middle-grey-button:before {
+    left: -10px;
+}
+
+
+
+.text {
+    position: relative;
+    height: 25px;
+
+}
+
+.middle-grey-button {
+    background: #fff;
+    border: 1px solid #DDDDDD;
+    border-radius: 3px;
+    color: #c3c3c3;
+    font-size: 14px;
+    text-align: center;
+    padding: 10px 20px;
+    text-transform: uppercase;
+    font-family: "robotoRegular";
+    cursor: default;
+    width: auto;
+    cursor: default;
+}
+
+.middle-grey-button.text:before {
+    left: -10px;
+}
+.text:before {
+    border-color: transparent #fff transparent transparent;
+    left: -19px;
+    z-index: 1;
+    position: absolute;
+    border-width: 10px;
+    content: "";
+    border-style: solid;
+    top: 26px;
+}
+.text:after {
+    border-color: transparent #DDDDDD transparent transparent;
+    left: -20px;
+    position: absolute;
+    border-width: 10px;
+    content: "";
+    border-style: solid;
+    top: 26px;
+}
+
+.middle-grey-button.text:after {
+    left: -12px;
+}
+
+.middle-grey-button.text:after, .middle-grey-button.text:before {
+    border-width: 3px 6px 3px 5px;
+    top: 8px;
+}
+
+
+
+.mp-load-more-btn{
+    background-color: whitesmoke;
+    border-color: whitesmoke;
+}
+.mp-load-more-btn:hover{
+    background-color: #DDDDDD;
+}
+
+/**********************Ratting Progress Bar*********************************/
+
+.rating-bar-star{
+    position: relative;
+    bottom: 100px;
+    left: -12px;
+    text-align: center;
+}
+
+.star-progress-bar{
+    height: 10px;
+    margin-bottom: 1px;
+    width: 70%;
+    display: -webkit-inline-box;;
+}
+
+.review-tiles{
+    border: 1px solid;
+    padding: 10px;
+    border-radius: 3px;
+    border-color: #DDDDDD;
+}
+
+.tile1-header{
+    font-family: 'Open Sans';
+    font-weight: 600;
+    font-size: 24px;
+    color: #000000;
+    text-align: center;
+    background-color: whitesmoke;
+    margin-bottom: 0px;
+}
+.hide-comment{
+    display: none;
+}
+
+.submit-error-msg{
+    border-radius: 5px;
+    padding: 6px 12px;
+    width:100%;
+}
+li>#most_helpful_tab:hover{
+    background-color: antiquewhite;
+    cursor:pointer;
+}
+li>#most_recent_tab:hover{
+    background-color: antiquewhite;
+    cursor:pointer;
+}
+
+.active-sort-tab{
+    color:#23527c;
+    border-top: 2px solid #23527c;
+    border-bottom: 2px solid #23527c;
+}
+
+a.active-sort-tab{
+    color:#23527c;
+}
+
+.default-color{
+    color:currentColor;
+}
+
+.mp-box-review_loader{
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background: url(/odoo_marketplace/static/src/img/marketplace_loader.gif) center no-repeat rgba(255, 255, 255, 0.5);
+  text-shadow: 0 1px 1px white;
+}
+
+/*For core backbone js mail_chatter*/
+/*section#seller_review_discussion section.mb32.hidden-print{
+    display: none;
+}
+
+section#seller_review_discussion ul.media-list.o_website_comments li.media{
+    display: none;
+}*/
+
+/*For direct js mail_chatter*/
+section#seller_review_discussion section.mb32.hidden-print{
+    display: none;
+}
+section#seller_review_discussion ul.media-list.marketplace_mail_comments li.media{
+    display: none;
+}
+#mp_shop_content{
+    padding: 5px 15px 24px 15px;
+}
+
+#mp_shop_content:hover #shop_products_sales{
+    visibility:hidden;
+    /*transition-delay: 0.1s;*/
+}
+#btn_seller_shop{
+    visibility:hidden;
+}
+
+#mp_shop_content:hover #btn_seller_shop{
+    position:inherit;
+    visibility:visible;
+    /*transition-delay: 0.1s;*/
+}
+
+#shop_products_sales{
+    position:absolute;
+}
+
+#mp_shop_content:hover{
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+}
+
+/*Webkul Ribbon For Seller Shop*/
+.oe_product.oe_ribbon_promo .wk_ribbon-wrapper {
+    display: block;
+}
+
+.oe_product .wk_ribbon-wrapper {
+    display: none;
+    width: 85px;
+    height: 88px;
+    z-index: 5;
+    overflow: hidden;
+    /*position: absolute;*/
+    top: 0;
+    right: 0;
+}
+
+.oe_product .wk_ribbon {
+    font: bold 15px Sans-Serif;
+    color: white;
+    text-align: center;
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    position: relative;
+    padding: 7px 0;
+    left: -30px;
+    top: 15px;
+    width: 120px;
+    cursor: default;
+    z-index: 5;
+}
+
+@media (min-width: 992px) {
+  #sellers_grid.oe-height-1 {
+    height: 95px;
+  }
+  #sellers_grid.oe-height-2 {
+    height: auto;
+  }
+  #sellers_grid.oe-height-4 {
+    height: 380px;
+  }
+  #sellers_grid.oe-height-6 {
+    height: 570px;
+  }
+  #sellers_grid.oe-height-8 {
+    height: 760px;
+  }
+  }
+}
+@media (min-width: 1200px) {
+  #sellers_grid.oe-height-1 {
+    height: 95px;
+  }
+  #sellers_grid.oe-height-2 {
+    height: auto;
+  }
+  #sellers_grid.oe-height-4 {
+    height: 380px;
+  }
+  #sellers_grid.oe-height-6 {
+    height: 570px;
+  }
+  #sellers_grid.oe-height-8 {
+    height: 760px;
+  }
+}
+
+@media (max-width: 768px) {
+  #sellers_grid table, #sellers_grid tbody, #sellers_grid tr, #sellers_grid td {
+    float: left;
+    width: 100%;
+    display: inline-block;
+  }
+}
+
+.all-seller-label{
+  font-family: Helvetica;
+  font-weight: 700;
+  font-size: 36px;
+  color: #333333;
+}
+
+.all-seller-count{
+  font-family: Helvetica;
+  font-weight: 400;
+  font-size: 14px;
+  color: #333333;
+}
+
+.all-seller-avl{
+  font-family: Helvetica;
+  font-weight: 400;
+  font-size: 14px;
+  color: #555555;
+}
+
+.grid-seller-name{
+  font-family: Helvetica;
+  font-weight: 700;
+  font-size: 16px;
+  color: #333333;
+}
+
+.grid-seller-detail{
+  font-family: Helvetica;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 12px;
+  color: #777777;
+}
+
+.seller-shop-name{
+  font-family: Helvetica;
+  font-size: 14px;
+  color: #337AB7;
+  font-weight: 700;
+}
+
+.shop-tag-line{
+  font-family: Helvetica;
+  font-size: 12px;
+  color: #333333;
+  font-weight: 700;
+}
+
+.view-profile{
+  font-family: Helvetica;
+  font-size: 12px;
+  font-style: italic;
+  color: #337AB7;
+  font-weight: 700;
+}
+
+.sold-by-label{
+  font-family: Helvetica;
+  font-weight: 700;
+  font-size: 12px;
+  color: #555555;
+}
+
+.pp-addrees{
+  font-family: Helvetica;
+  font-weight: 700;
+  font-size: 12px;
+  font-style: italic;
+  color: #333333;
+}
+
+div#shop_all_product .pagination{
+    margin-top: -8px;
+    margin-bottom: 20px;
+}

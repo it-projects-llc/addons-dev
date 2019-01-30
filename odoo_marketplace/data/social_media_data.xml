@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+	<data>
+        <record id="social_media_data1" model="social.media">
+            <field name="name">Facebook</field>
+            <field name="base_url">https://www.facebook.com/</field>
+            <field name="image" type="base64" file="odoo_marketplace/static/img/social_icons/Fb.png"/>
+        </record>
+
+        <record id="social_media_data2" model="social.media">
+            <field name="name">Google+</field>
+            <field name="base_url">https://plus.google.com/</field>
+            <field name="image" type="base64" file="odoo_marketplace/static/img/social_icons/Google+.png"/>
+        </record>
+
+        <record id="social_media_data3" model="social.media">
+            <field name="name">Twitter</field>
+            <field name="base_url">https://twitter.com/</field>
+            <field name="image" type="base64" file="odoo_marketplace/static/img/social_icons/Twitter.png"/>
+        </record>
+
+        <record id="social_media_data4" model="social.media">
+            <field name="name">YouTube</field>
+            <field name="base_url">https://www.youtube.com/user/</field>
+            <field name="image" type="base64" file="odoo_marketplace/static/img/social_icons/Youtube.png"/>
+        </record>
+
+        <record id="social_media_data5" model="social.media">
+            <field name="name">LinkedIn</field>
+            <field name="base_url">https://www.linkedin.com/in/</field>
+            <field name="image" type="base64" file="odoo_marketplace/static/img/social_icons/Linkdin.png"/>
+        </record>
+
+        <record id="social_media_data6" model="social.media">
+            <field name="name">Instagram</field>
+            <field name="base_url">http://instagram.com/</field>
+            <field name="image" type="base64" file="odoo_marketplace/static/img/social_icons/Instagram.png"/>
+        </record>
+    </data>
+</odoo>

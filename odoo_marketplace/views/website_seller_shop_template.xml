@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+	<data noupdate="0">
+        <template id="mp_seller_shop" name="Seller Shop">
+			<t t-call="website.layout">
+				<div class="oe_structure"/>
+				<div id="wrap">
+					<div style="height: 320px;">
+						<div class="carousel-inner">
+							<t t-set="shop_banner" t-value="shop_obj.sudo().shop_banner"/>
+							<t t-if="shop_banner">
+								<div class="item oe_img_bg oe_custom_bg active" t-attf-style="background-image: url('/marketplace/image/#{shop_obj.id}/seller.shop/shop_banner');width: 100%;background-size:100% 320px;height: -webkit-fill-available;"/>
+								<!-- <div class="item oe_img_bg oe_custom_bg active" t-attf-style="background-image: url('#{request.website.image_url(shop_obj.sudo(), 'shop_banner')}');width: 100%;"/> -->
+							</t>
+							<t t-if="not shop_banner">
+								<div class="item oe_img_bg oe_custom_bg active" t-attf-style="background-image: url('/odoo_marketplace/static/src/img/dummy-banner.png');width: 100%;height: -webkit-fill-available;"/>
+							</t>
+						</div>
+					</div>
+					<div class='container'>
+						<div class="col-md-12" id="" style="border:1px solid #e3e3e3;padding-top:15px;padding-bottom:15px;">
+							<div class="row">
+								<div class="col-md-12">
+									<span style="font-size:20px;">
+										<b><t t-esc="shop_obj.name"/></b>
+									</span>
+									<span style="font-weight: 600;color: #777777;">
+										<t t-esc="shop_obj.sudo().seller_id.name"/>'s Shop
+									</span>
+								</div>
+							</div>
+							<t t-if="shop_obj.description">
+								<div class="row">
+									<div class="col-md-12" style="color:#656565;">
+										<p><t t-esc="shop_obj.description"/></p>
+									</div>
+								</div>
+							</t>
+							<div class="clearfix row">
+								<ul class="list-inline col-md-12">
+									<t t-if="website.sudo().mp_product_count">
+										<li class="list-inline-item">
+											<div class="fa fa-tags" style="color:#656565;margin-left:15px; border-right:1px solid;">
+												<span style="margin-right:20px;margin-left:10px;"><t t-esc="product_count"/>
+													Products</span>
+											</div>
+										</li>
+									</t>
+									<t t-if="website.sudo().mp_sale_count">
+										<li class="list-inline-item">
+											<div class="fa fa-line-chart" style="color:#656565; border-right:1px solid;margin-left:15px;">
+												<span style="margin-right:20px;margin-left:10px;"><t t-esc="sales_count"/>
+													Sales</span>
+											</div>
+										</li>
+									</t>
+									<t t-if="website.sudo().mp_shipping_address and shop_obj.state_id and shop_obj.country_id">
+										<li class="list-inline-item">
+											<div class="fa fa-truck" style="color:#656565; border-right:1px solid;margin-left:15px;">
+												<span style="margin-right:20px;margin-left:10px;">Ship from
+													<t t-esc="shop_obj.state_id.name"/>,
+													<t t-esc="shop_obj.country_id.name"/>
+												</span>
+											</div>
+										</li>
+									</t>
+									<t t-if="website.sudo().mp_seller_since">
+										<li class="list-inline-item">
+											<div class="fa fa-clock-o" style="color:#656565;margin-left:15px;">
+												<span style="margin-right:20px;margin-left:10px;">Since
+													<b><span t-field="shop_obj.seller_id.create_date" t-options='{"format": "d MMMM y"}'/></b>
+													To till Now</span>
+											</div>
+										</li>
+									</t>
+								</ul>
+							</div>
+							<t t-if="website.sudo().mp_seller_contact_btn">
+								<div class="row">
+									<div class="col-md-2">
+										<a t-attf-href="mailto:{{ shop_obj.sudo().seller_id.email }}" class="btn btn-primary">Contact Seller</a>
+									</div>
+								</div>
+							</t>
+						</div>
+					</div>
+					<div class="oe_structure"/>
+					<div class='container'>
+						<ul class="nav nav-tabs col-md-12 mb32 mt32">
+							<li class="nav-item active">
+								<a href="#pink_panther" class="nav-link active show" data-toggle="tab">
+									All Products
+									<span class='badge badge-secondary'><t t-esc="len(products)"/>
+										Out Of
+										<t t-esc="product_count"/></span>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="#tab22" id="recently_product_tab" data-toggle="tab">
+									<input type="hidden" name="shop_id" id="shop_id" t-att-value="int(shop_obj.id)"/>
+									Recently Added Products
+								</a>
+							</li>
+							<t t-if="website.sudo().mp_seller_t_c">
+								<li class="nav-item">
+									<a class="nav-link" href="#tab3" data-toggle="tab">
+										Store T&amp;C</a>
+								</li>
+							</t>
+						</ul>
+						<div class="tab-content mt16" id="">
+							<div class="container tab-pane active show" id="pink_panther">
+								<!-- <div class="col-md-12">
+									<div class="products_pager">
+										<form t-att-action="keep('/seller/shop/%s' %shop_obj.sudo().url_handler if shop_obj else '', search=0)" method="get" class="pagination form-inline">
+											<t t-if="attrib_values">
+												<t t-foreach="attrib_values" t-as="a">
+													<input type="hidden" name="attrib" t-att-value="'%s-%s' % (a[0], a[1])"/>
+												</t>
+											</t>
+											<t t-call="website.website_search_box"/>
+										</form>
+									<t t-call="website_sale.pricelist_list"/>
+									<t t-if="int(hide_pager) &gt; 20">
+										<div class="products_pager">
+											<div class="row" style="width: 100%;">
+												<t t-call="website.pager"/>
+											</div>
+										</div>
+									</t>
+									</div>
+								</div>  -->
+								<div class="products_pager mb16">
+									<div class="row" style="justify-content: center;" id="shop_all_product">
+										<t t-call="website_sale.search">
+											<t t-set="search_class">pagination form-inline o_website_sale_search</t>
+										</t>
+										<t t-call="website_sale.pricelist_list" />
+										<t t-call="website.pager" />
+									</div>
+								</div>
+								<t t-if="search">
+									<div class="text-center text-muted fa fa-search col-md-12 mb8" style="font-size: 15px;font-weight: 600;">
+										<span style="color: red;">
+											<t t-esc="len(products)"/>
+										</span>
+										product(s) found for "
+										<span style="color: red;">
+											<t t-esc="search"/>
+										</span>
+										"
+									</div>
+								</t>
+								<t t-call="odoo_marketplace.shop_recently_product"/>
+								<t t-if="int(hide_pager) &gt; 20">
+									<div class="products_pager">
+										<div class="row" style="width: 100%;">
+											<t t-call="website.pager"/>
+										</div>
+									</div>
+								</t>
+								<t t-if="int(hide_pager) &lt; 20">
+									<div class="mt32"></div>
+								</t>
+							</div>
+							<div class="container tab-pane" id="tab22" style="margin-bottom:30px;">
+								<div class="mp-box-review_loader" style="display:none;"/>
+							</div>
+							<div class="container tab-pane col-md-12" id="tab3">
+								<span t-raw="shop_obj.shop_t_c"/>
+							</div>
+						</div>
+					</div>
+					<div class="oe_structure"/>
+				</div>
+			</t>
+		</template>
+
+        <!-- Seller Shop item used by /seller/shop -->
+		<template id="seller_shop_list_item" name="Seller Shops List Item">
+			<div itemscope="itemscope">
+				<div class="wk_ribbon-wrapper">
+					<div class="wk_ribbon btn btn-danger">Best Seller</div>
+				</div>
+				<div class="">
+					<a itemprop="url" t-att-href="keep('/seller/shop/%s' % seller_shop.url_handler, page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))">
+						<span itemprop="image" t-attf-content="{{request.httprequest.url_root}}web/image/seller.shop/{{seller_shop.id}}/300x300/shop_logo"
+							t-field="seller_shop.shop_logo" t-options="{'widget': 'image', 'resize': '300x300', 'zoom': 'image'}" t-att-alt="seller_shop.name"/>
+					</a>
+				</div>
+				<section id="mp_shop_content" style="padding-bottom:5px;">
+					<div class="mb4" id="seller-shop-name" style="text-align: center;font-weight: 600;">
+						<strong>
+							<a itemprop="name" t-att-href="keep('/seller/shop/%s' % seller_shop.url_handler, page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" t-field="seller_shop.name"/>
+						</strong>
+					</div>
+					<div class="row" id="profile_and_shop">
+						<div class="col-md-6 text-center">
+							<a t-attf-href="/seller/profile/#{seller_shop.sudo().seller_id.url_handler if seller_shop.sudo().seller_id.url_handler else seller_shop.sudo().seller_id.id}" class="btn btn-sm btn-primary">
+								<span class="fa fa-user">
+									<![CDATA[&nbsp;]]>Seller Profile</span>
+							</a>
+						</div>
+						<t t-if="website.sudo().get_group_mp_shop_allow() ">
+							<t t-if="seller_shop.sudo().active">
+								<div class="col-md-6 text-center">
+									<a t-attf-href="/seller/shop/#{seller_shop.sudo().url_handler}" class="btn btn-sm btn-success mb4">
+										<span class="fa fa-home">
+											<![CDATA[&nbsp;]]>Visit Shop</span>
+									</a>
+								</div>
+							</t>
+						</t>
+					</div>
+				</section>
+			</div>
+		</template>
+
+		<!-- /seller/shops/list seller shop listing -->
+		<template id="seller_shop_list" name="Seller Shops List">
+			<t t-call="website.layout">
+				<t t-set="additional_title">Seller Shops</t>
+				<div id="wrap" class="js_sale">
+					<div class="oe_structure"/>
+					<t t-if="not bins">
+						<div class="container">
+							<div class="text-center text-muted mt64 mb16">
+								<img src="/odoo_marketplace/static/src/img/Slice-Seller-Shop.png" alt="There is no any shop added yet!"/>
+								<h3 class="css_editable_display mt64" style="font-weight: 600;color: #969696;">There is no any shop added yet!</h3>
+							</div>
+						</div>
+					</t>
+					<div t-if="bins" class="container">
+						<br/>
+						<br/>
+						<div class="row">
+							<!-- <div class="col-md-12"> -->
+								<div class="col-md-6" style="padding:0px">
+									<div class="col-md-12 all-seller-label">Seller's Shops</div>
+								</div>
+								<div class="col-md-3" style="padding:0px">
+									<!-- <t t-call="website.pager"/>  -->
+								</div>
+								<div class="col-md-3">
+									<form t-att-action="keep('/seller/shops/list/', search=0)" method="get" t-att-class="search_class">
+										<t t-call="website.website_search_box"/>
+									</form>
+									<!-- <t t-call="website_sale.search">
+										<t t-set="search_class">pagination form-inline o_website_sale_search</t>
+									</t> -->
+								</div>
+							<!-- </div> -->
+						</div>
+						<br/>
+
+						<div class="row">
+							<div class="hidden" id="seller_shop_grid_before"></div>
+							<div class="col-md-12" id="products_grid">
+								<table width="100%" id="seller_shop_table">
+									<tbody>
+										<tr t-ignore="true">
+											<td t-foreach="range(0,rows)" t-as="row" t-attf-width="#{100/rows}%"></td>
+										</tr>
+										<tr t-foreach="bins" t-as="tr_seller_shop">
+											<t t-foreach="tr_seller_shop" t-as="td_seller_shop">
+												<t t-if="td_seller_shop">
+													<t t-set="seller_shop" t-value="td_seller_shop['product']"/>
+													<td
+														t-att-seller_shop_id="seller_shop.id"
+														t-att-colspan="td_seller_shop['x'] != 1 and td_seller_shop['x']"
+														t-att-rowspan="td_seller_shop['y'] != 1 and td_seller_shop['y']"
+														t-attf-class="oe_product oe_grid oe-height-#{td_seller_shop['y']*2} #{ td_seller_shop['class'] }">
+														<div class="oe_product_cart" t-att-data-publish="seller_shop.website_published and 'on' or 'off'">
+															<t t-set="product_image_big" t-value="td_seller_shop['x']+td_seller_shop['y'] &gt; 2"/>
+															<t t-call="odoo_marketplace.seller_shop_list_item"/>
+														</div>
+													</td>
+												</t>
+												<td t-if="not td_seller_shop" class="oe-height-2"/>
+											</t>
+										</tr>
+									</tbody>
+								</table>
+								<t t-if="not bins">
+									<div class="text-center text-muted">
+										<h3 class="css_editable_display">No seller defined.</h3>
+									</div>
+								</t>
+							</div>
+						</div>
+						<div class="products_pager">
+							<t t-call="website.pager"/>
+						</div>
+					</div>
+					<div class="oe_structure mb32"/>
+				</div>
+				<script src="/odoo_marketplace/static/src/js/star-rating.min.js" type="text/javascript"></script>
+			</t>
+		</template>
+
+		<!-- Inherit shop list item -->
+		<template id="custome_view1_shop_item_list" inherit_id="odoo_marketplace.seller_shop_list_item" active="True" customize_show="True" name="Shop Tag Line">
+		    <xpath expr="//div[@id='seller-shop-name']" position="inside">
+		        <div>
+		            <t t-esc="seller_shop.shop_tag_line"/>
+		        </div>
+		    </xpath>
+		</template>
+
+		<template id="custome_view2_shop_item_list" inherit_id="odoo_marketplace.seller_shop_list_item" active="True" customize_show="True" name="Seller Reviews">
+		    <xpath expr="//div[@id='seller-shop-name']" position="after">
+		        <t t-set="seller_reviews" t-value="len(seller_shop.seller_id.fetch_active_review(seller_shop.seller_id.id))"/>
+		        <t t-set="val" t-value="seller_shop.seller_id.avg_review()"/>
+		        <!-- <t t-if="val != 0" > -->
+		        <div class="row mb4">
+		            <div class="col-md-12">
+		                <input
+		                    id="input-5a"
+		                    class="rating form-control d-none col-md-2"
+		                    t-attf-value="#{seller_shop.seller_id.avg_review()}"
+		                    data-show-clear="false"
+		                    data-show-caption="false"
+		                    data-min="0"
+		                    data-max="5"
+		                    data-step="0.1"
+		                    data-readonly="true"
+		                    data-size="xxs"
+		                    data-symbol="&#xf005;"
+		                    data-glyphicon="false"
+		                    data-rating-class="rating-fa"/>
+		                <span>(<t t-esc="seller_reviews"/>
+		                    Ratings)</span>
+		            </div>
+		        </div>
+		        <!-- </t> -->
+		    </xpath>
+		</template>
+
+		<template id="custome_view3_shop_item_list" inherit_id="odoo_marketplace.seller_shop_list_item" active="True" customize_show="True" name="Products &amp; Sales">
+		    <xpath expr="//div[@id='profile_and_shop']" position="replace">
+		        <div class="">
+
+		            <div class="row col-md-12" id="shop_products_sales">
+		                <div class="col-md-6 col-6">
+		                    <t t-if="website.sudo().mp_product_count">
+		                        <div class="fa fa-tags badge badge-secondary col-md-12 btn-sm" style="margin-right:5px;font-size:12px;padding-top:5px;">
+		                            <span><t t-esc="len(seller_shop.seller_product_ids.filtered(lambda r: r.website_published == True))"/>
+		                                Products</span>
+		                        </div>
+		                    </t>
+		                </div>
+		                <div class="col-md-6 col-6">
+		                    <t t-if="website.sudo().mp_sale_count">
+		                        <div class="fa fa-line-chart badge badge-secondary col-md-12 btn-sm" style="margin-right:5px;font-size:12px;padding-top:5px;">
+		                            <span><t t-esc="seller_shop.seller_sales_count()"/>
+		                                Sales</span>
+		                        </div>
+		                    </t>
+		                </div>
+		            </div>
+		            <div class="row" id="btn_seller_shop">
+		                <div class="col-md-6 col-6 text-right">
+		                    <a t-attf-href="/seller/profile/#{seller_shop.sudo().seller_id.url_handler if seller_shop.sudo().seller_id.url_handler else seller_shop.sudo().seller_id.id}" class="btn btn-sm btn-primary">
+		                        <span class="fa fa-user">
+		                            <![CDATA[&nbsp;]]>Seller Profile</span>
+		                    </a>
+		                </div>
+		                <t t-if="seller_shop.sudo().active">
+		                    <div class="col-md-6 col-6 text-left">
+		                        <a t-attf-href="/seller/shop/#{seller_shop.sudo().url_handler}" class="btn btn-sm btn-success mb4">
+		                            <span class="fa fa-home">
+		                                <![CDATA[&nbsp;]]>Visit Shop</span>
+		                        </a>
+		                    </div>
+		                </t>
+		            </div>
+		        </div>
+		    </xpath>
+		</template>
+    </data>
+</odoo>

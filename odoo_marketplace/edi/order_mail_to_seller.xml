@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+    <data noupdate="1">
+        <!--Email template for seller_product_approval-->
+        <record id="marketplace_template_for_order_to_seller" model="mail.template">
+            <field name="name">Notification Mail to Seller When Order Confirmed For Marketplace Product</field>
+            <field name="email_from">${object.company_id.email or ''}</field>
+            <field name="subject">Order Confirmation</field>
+            <field name="email_to">${object.marketplace_seller_id.email or ''}</field>
+            <field name="model_id" ref="odoo_marketplace.model_sale_order_line"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">${object.lang}</field>
+            <field name="body_html"><![CDATA[
+                <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+
+                    <p>Dear, ${object.marketplace_seller_id.name},</p>
+
+                    <p>A Sale Order ${object.order_id.name} consisting of your product <b>${object.product_id.name}</b> has been confirmed.Please prepare your product for delivery.</p>
+                    <p>Thanks</>
+                    </div>
+                </div>
+                            ]]>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+<odoo>
+    <data>
+        <record id="wk_seller_status_reason_wizard_form_view" model="ir.ui.view">
+            <field name="name">seller.payment.form</field>
+            <field name="model">seller.status.reason.wizard</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form string="Seller Denied Reason">
+                    <group>
+                        <field name="seller_id" invisible="1"/>
+                        <field name="reason" required="1" placeholder="Specify reason..."/>
+                    </group>
+                    <footer>
+                        <button string="Deny Now" name="do_denied" type="object" class="btn-primary"/>                         or                        
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
+        <record id="wk_seller_statsu_reason_wizard_action" model="ir.actions.act_window">
+            <field name="name">Reason</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">seller.status.reason.wizard</field>
+            <field name="view_type">form</field>
+            <field name="target">new</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="wk_seller_status_reason_wizard_form_view"/>
+        </record>
+    </data>
+</odoo>

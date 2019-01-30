@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+
+<odoo>
+  	<data>
+  		<template id="assets_frontend_show_mp_t_and_c" inherit_id="website.assets_frontend" name="Assets Frontend show Marketplace Term and Condition">
+			<xpath expr="." position="inside">
+				<script type="text/javascript" src="/odoo_marketplace/static/src/js/marketplace.js"></script>
+			</xpath>
+	    </template>
+
+		<template id="mp_t_and_c_modal_template" name="Terms and Conditions">
+			<div class="modal fade" id="mp_t_and_c_modal" role="dialog">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close fa fa-times" data-dismiss="modal" aria-hidden="true"/>
+							<h4 class="modal-title">Terms &amp; Conditions</h4>
+						</div>
+						<div class="modal-body">
+							<div>
+								<t t-raw="mp_t_and_c"/>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</template>
+
+		<template id="account_sign_up_details_id" inherit_id="auth_signup.fields">
+			<xpath expr="//div[hasclass('form-group', 'field-confirm_password')]" position="after">
+				<input type="checkbox" name="is_seller" id="is_seller" t-att-checked="'checked' if set_seller or signup_from_seller_page else None" t-att-required="'disabled' if set_seller or signup_from_seller_page else None"/>
+				<label for="is_seller" class="control-label">&#160;Do you want to become seller/vendor? </label>
+                <div id="mp_seller_details" t-att-style="None if set_seller or signup_from_seller_page else 'display:none;'">
+                    <div class="form-group field-country">
+                        <t t-set="countries" t-value="website.get_mp_ajax_seller_countries()"/>
+                        <t t-set="country" t-value="website.user_id.sudo().partner_id.company_id.country_id"/>
+                        <label class="control-label" for="country_id">Country</label>
+                        <select id="country_id" name="country_id" class="form-control" t-att-required="'disabled' if set_seller or signup_from_seller_page else None">
+                            <option value="">Country...</option>
+                            <t t-foreach="countries" t-as="c">
+                                <option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
+                                    <t t-esc="c.name" />
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label for="profile_url" class="control-label">Profile URL</label>
+                        <span class="fa fa-info-circle text-info pull-right url_info" data-toggle="popover" data-trigger="hover" data-content="This will be used to display your public profile."/>
+                        <input type="text" name="url_handler" id="profile_url" class="form-control" placeholder="Unique Seller Profile URL handler.." t-att-required="'disabled' if set_seller or signup_from_seller_page else None"/>
+                        <span class="fa fa-pencil form-control-feedback pull-right" style="margin-top:-24px;margin-right: 10px;"></span>
+                        <div class="text-danger" id="profile_url_error" style="display:none;"></div>
+                        <input type="hidden" name="valid_profile_url" id="valid_profile_url"/>
+                    </div>
+                    <input type="checkbox" name="mp_terms_conditions" id="mp_terms_conditions" t-att-required="'disabled' if set_seller or signup_from_seller_page else None"/>
+    				<label for="mp_terms_conditions" class="form-group control-label">&#160;I Accept <a href="#" id="mp_t_and_c">Terms &amp; Conditions</a></label>
+                    <data id="mp_t_and_c_data" t-att-data-terms="website.sudo().mp_term_and_condition"/>
+                </div>
+			</xpath>
+	   	</template>
+
+		<!-- <template id="marketplace_dashboard_link" name="Link to Marketplace Dashboard" inherit_id="website.layout">
+			<xpath expr="//li[@id='o_logout']" position="before">
+				<t t-if="website.env.user.partner_id.seller">
+					<li><a href="/my/marketplace" role="menuitem">Marketplace</a></li>
+				</t>
+			</xpath>
+		</template> -->
+
+		<template id="marketplace_dashboard_link" name="Link to Marketplace Dashboard" inherit_id="portal.frontend_layout">
+			<xpath expr="//a[@id='o_logout']" position="before">
+                <t t-if="website.env.user.sudo().partner_id.seller">
+				    <a href="/my/marketplace" class="dropdown-item" role="menuitem" groups="odoo_marketplace.marketplace_draft_seller_group">Marketplace</a>
+                </t>
+			</xpath>
+		</template>
+
+        <!-- Updated Features -->
+
+		<template id="inherit_portal_layout" name="Portal layout : sales menu entries" inherit_id="portal.portal_layout" priority="25">
+			<xpath expr="//div[hasclass('o_portal_my_details')]" position="before">
+				<div id="become_seller_btn">
+					<t t-set="show_become_a_seller" t-value="website.sudo().mp_show_become_a_seller"/>
+					<a t-if="show_become_a_seller and not user_id.partner_id.seller" class="btn btn-success mb8" href="/my/marketplace/become_seller" >Become a Seller</a>
+				</div>
+			</xpath>
+		</template>
+
+		<template id="quotation_inherit_in_marketplace" name="Quotations" inherit_id="sale.sale_order_portal_content">
+			<xpath expr="//td[@id='product_name']" position="inside">
+				<t t-if="line.marketplace_seller_id">
+					<input type='hidden' id="mp_order_line" name="mp_order_line_id" t-att-value="int(line.id)"/>
+					<i class="sol-info fa fa-info-circle text-info pull-right" style="cursor:pointer"></i>
+				</t>
+			</xpath>
+		</template>
+
+		<template id="marketplace_order_line_info" name="Marketplace Orderline">
+			<div class="col-md-12" style="padding: 5px 14px 10px;">
+				<t t-if="sol_id.marketplace_state != 'cancel'">
+					<t t-if="sol_id.marketplace_state == 'new'">
+						<div class="row label-warning">
+							<div class="col-md-2">
+								<i class="fa fa-clock-o"></i>
+							</div>
+							<div class="col-md-10">
+								Waiting for seller approval.
+							</div>
+						</div>
+					</t>
+					<t t-if="sol_id.marketplace_state == 'approved'">
+						<div class="row label-success">
+							<div class="col-md-2">
+								<i class="fa fa-check-square-o"></i>
+							</div>
+							<div class="col-md-10">
+								Approved by seller.
+							</div>
+						</div>
+					</t>
+					<t t-if="sol_id.marketplace_state == 'approved' and sol_id.marketplace_state != 'shipped'">
+						<div class="row label-warning">
+							<div class="col-md-2">
+								<i class="fa fa-truck"></i>
+							</div>
+							<div class="col-md-10" style="padding-right: 0px;">
+								Waiting for shiping by seller.
+							</div>
+						</div>
+					</t>
+					<t t-if="sol_id.marketplace_state == 'shipped'">
+						<div class="row label-success">
+							<div class="col-md-2">
+								<i class="fa fa-truck"></i>
+							</div>
+							<div class="col-md-10">
+								Shipped by seller.
+							</div>
+						</div>
+					</t>
+				</t>
+				<t t-if="sol_id.marketplace_state == 'cancel'">
+					<div class="row label-danger">
+						<div class="col-md-2">
+							<i class="fa fa-window-close-o"></i>
+						</div>
+						<div class="col-md-10">
+							Canceled by seller.
+						</div>
+					</div>
+				</t>
+			</div>
+		</template>
+
+        <template id="portal_my_home_become_seller_to_home" name="Home link in become seller page" inherit_id="portal.portal_breadcrumbs" priority="20">
+            <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+                <li t-if="page_name == 'become_seller_page'" class="breadcrumb-item">
+                    <span >Marketplace Seller/Vendor Request Panel</span>
+                </li>
+            </xpath>
+        </template>
+
+		<template id="convert_user_into_seller" name="Marketplace Seller/Vendor Request Panel">
+			<t t-call="portal.portal_layout">
+                <div id="wrap">
+                    <div class="card-body bg-white mb-2 mt-3">
+        				<t t-if="not user.partner_id.seller">
+        					<form action="/my/marketplace/seller" id="" role="form" method="post" style="max-width: 350px;">
+        						<input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+        						<div id="mp_seller_details" >
+        							<div class="form-group field-country">
+        								<label class="control-label" for="country_id">Country</label>
+        								<select id="country_id" name="country_id" class="form-control" required="required">
+        									<option value="">Country...</option>
+        									<t t-foreach="countries" t-as="c">
+        										<option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
+        											<t t-esc="c.name" />
+        										</option>
+        									</t>
+        								</select>
+        							</div>
+        							<div class="form-group has-feedback">
+        								<label for="profile_url" class="control-label">Profile URL</label>
+        								<span class="fa fa-info-circle text-info pull-right url_info" data-toggle="popover" data-trigger="hover" data-content="This will be used to display your public profile."/>
+            							<input type="text" name="url_handler" id="profile_url" class="form-control" placeholder="Unique Seller Profile URL handler.." required="required"/>
+            							<span class="fa fa-pencil form-control-feedback pull-right" style="margin-top:-24px;margin-right: 10px;"></span>
+            							<div class="text-danger" id="profile_url_error" style="display:none;"></div>
+                                    </div>
+                                    <input type="hidden" name="valid_profile_url" id="valid_profile_url"/>
+                                    <div class="form-group has-feedback mt8">
+            							<input type="checkbox" name="mp_terms_conditions" id="mp_terms_conditions" required="required"/>
+            							<label for="mp_terms_conditions" class="form-group control-label">&#160;I Accept
+            								<a data-toggle="modal" href="#mp_t_and_c_modal" id="mp_t_and_c">Terms &amp; Conditions</a>
+            							</label>
+                                    </div>
+        							<data id="mp_t_and_c_data" t-att-data-terms="website.sudo().mp_term_and_condition"/>
+        							<!-- <t t-set="mp_terms_conditions_data" t-value="website.sudo().mp_term_and_condition"/>
+        							<data id="mp_t_and_c_data" t-att-data-terms="mp_terms_conditions_data"/>
+        							<div class="modal fade" id="mp_t_and_c_modal" role="dialog">
+        								<div class="modal-dialog">
+        									<div class="modal-content">
+        										<div class="modal-header">
+        											<button type="button" class="close fa fa-times" data-dismiss="modal" aria-hidden="true"/>
+        											<h4 class="modal-title">Terms &amp; Conditions</h4>
+        										</div>
+        										<div class="modal-body">
+        											<div id="show_mp_t_and_c"></div>
+        										</div>
+        										<div class="modal-footer">
+        											<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        										</div>
+        									</div>
+        								</div>
+        							</div> -->
+        						</div>
+        						<div class="clearfix oe_login_buttons">
+        							<button type="submit" class="btn btn-primary pull-left">Submit</button>
+        						</div>
+        					</form>
+        				</t>
+        				<t t-if="user.partner_id.seller">
+        					<div t-if="user.partner_id.state == 'pending'" class="alert-info" style="padding:10px;font-size:18px;">
+        						<div>
+        							<i class="fa fa-clock-o"/> Thank you for registering with us as a seller.
+        							<br/>
+        							<br/> We have received your request but to enjoy the benefits of our marketplace and to get your request approved quickly must fill your details inside profile page.
+        						</div>
+        					</div>
+        					<div t-if="user.partner_id.state == 'approved'" class="alert-success" style="padding:10px;font-size:18px;">
+        						<div>
+        							<i class="fa fa-check"/> Cheers to the new seller !
+        							<br/>
+        							<br/>We are happy to inform you that your request is been approved and now you can avail the benefits of our marketplace.
+        						</div>
+        					</div>
+        					<div t-if="user.partner_id.state == 'denied'" class="alert-danger" style="padding:10px;font-size:18px;">
+        						<div>
+        							<i class="fa fa-close"/>
+        								We are sorry to inform you that your request is been denied.
+        							<br/>
+        							<br/>Thanks for showing interest.
+        						</div>
+        					</div>
+        					<div class="text-center mt8">
+        						<a href="/my/marketplace" class="btn btn-success">
+        							<span class="fa fa-arrow-right "></span> Go to Marketplace Menu
+        						</a>
+        					</div>
+        				</t>
+                    </div>
+                </div>
+            </t>
+		</template>
+  	</data>
+</odoo>

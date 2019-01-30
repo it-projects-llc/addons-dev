@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : https://store.webkul.com/license.html/ -->
+<odoo>
+    <data>
+        <record id="wk_seller_form_view" model="ir.ui.view">
+            <field name="name">seller.form</field>
+            <field name="model">res.partner</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form string="Product" create="0">
+                    <header invisible="not context.get('default_seller')">
+                        <button name="%(odoo_marketplace.wk_seller_payment_wizard_action)d" string="Request For Payment" type="action" states="approved" groups="odoo_marketplace.marketplace_seller_group" class="btn-primary"/>
+                        <button name="approve" string="Approve" type="object" states="pending" groups="odoo_marketplace.marketplace_officer_group" class="btn-primary"/>
+                        <button name="%(odoo_marketplace.wk_seller_statsu_reason_wizard_action)d" string="Deny" type="action" states="pending,approved" groups="odoo_marketplace.marketplace_officer_group" />
+                        <button name="set_to_pending" string="Request For Approval" type="object" states="new,denied" class="btn-primary"/>
+                        <field name="state" widget="statusbar" statusbar_visible="new,pending,approved,denied"/>
+                    </header>
+                    <field name="type" invisible="1"/>
+                    <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('state', '=', 'approved')]}">
+                        <field name="status_msg" readonly="1"/>
+                    </div>
+                    <sheet>
+                        <div class="oe_button_box" name="mp_button_box" attrs="{'invisible':[('state', 'in', ('new','pending','denied'))]}">
+                            <button class="oe_inline oe_stat_button" name="" icon="fa-money" help="Available Amount" groups="odoo_marketplace.marketplace_seller_group" style="pointer-events:none">
+                                <field string="Available Amount" name="available_amount" widget="monetary" />
+                                <div class="o_stat_text">Available Amount</div>
+                            </button>
+                            <button class="oe_stat_button" name="" icon="fa-money" help="Cashable Amount" groups="odoo_marketplace.marketplace_seller_group" style="pointer-events:none">
+                                <field name="cashable_amount" string="Cashable Amount" widget="monetary"/>
+                                <div class="o_stat_text">Cashable Amount</div>
+                            </button>
+                            <button class="oe_inline oe_stat_button Smart" type="object" name="action_avg_seller_review_fun" icon="fa-star-o fa-1x">
+                                <field string="Avg Rating" name="average_rating" widget="statinfo"/>
+                            </button>
+                            <button name="toggle_website_published" type="object" class="oe_stat_button" icon="fa-globe">
+                                <field name="website_published" widget="website_button"/>
+                            </button>
+                            <button name="action_seller_sol" type="object" class="oe_stat_button" icon="fa-usd">
+                                <field string="Sales" name="sol_count" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium", "size": [90, 90]}'/>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name"/>
+                            </div>
+                            <h1>
+                                <field name="name" default_focus="1" placeholder="Name" required="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="parent_id" invisible="1"/>
+                            <field name="seller" invisible="1"/>
+                            <group>
+                                <label for="street" string="Address"/>
+                                <div>
+                                    <field name="street" placeholder="Street..."/>
+                                    <field name="street2" />
+                                    <div class="address_format">
+                                        <field name="city" placeholder="City" style="width: 40%%"/>
+                                        <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True, "no_create": True}'/>
+                                        <field name="zip" placeholder="ZIP" style="width: 22%%"/>
+                                    </div>
+                                    <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True, "no_create": True}'/>
+                                </div>
+                                <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
+                            </group>
+                            <group>
+                                <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
+                                <field name="mobile"/>
+                                <field name="user_ids" invisible="1"/>
+                                <field name="email" widget="email" attrs="{'required': [('user_ids','!=', [])]}" readonly="1"/>
+                                <field name="title" options='{"no_open": True,"no_create": True}'/>
+                            </group>
+                        </group>
+                        <group>
+                            <label for="url" string="Profile Url"/>
+                            <div>
+                                <field name="url" widget="url" style="width: 61%%" readonly="1"/>
+                                <field name="url_handler" class="oe_edit_only profile_url" style="width: 38%%;padding-right:20px;" required="1" placeholder="Unique Seller Profile URL handler..."/>
+                                <span class="fa fa-pencil url_validation oe_edit_only" aria-label="Edit" title="Edit"></span>
+                                <span class="text-danger oe_edit_only" id="profile_url_error" style="display:none;margin-left:17px;"></span>
+                                <div class="oe_edit_only oe_grey">
+                                    URL handler must be unique and do not change it frequently for the purpose of SEO.
+                                </div>
+                            </div>
+                        </group>
+                        <separator string="Marketplace Settings &amp; Details" groups="odoo_marketplace.marketplace_seller_group"/>
+                        <notebook groups="odoo_marketplace.marketplace_seller_group">
+                            <page string="General">
+                                <group>
+                                    <field name="payment_method" widget="many2many_tags" options="{'no_create': True}" attrs="{'invisible':[('seller','=',False)]}" groups="odoo_marketplace.marketplace_seller_group"/>
+                                </group>
+                                <div groups="odoo_marketplace.marketplace_officer_group">
+                                    <field name="set_seller_wise_settings" groups="odoo_marketplace.marketplace_officer_group" readonly="1"  help="Check if you want to override seller's default settings else default settings will apply."/>
+                                    <label for="set_seller_wise_settings" string="Over-ride seller's default settings" class="oe_inline" groups="odoo_marketplace.marketplace_officer_group"/>
+                                </div>
+                                <group name="payment_terms" string="Payment Terms" groups="odoo_marketplace.marketplace_seller_group">
+                                    <label for="commission"/>
+                                    <div >
+                                        <field name="commission" class="oe_inline" attrs="{'readonly':[('set_seller_wise_settings','=',False)],'required':[('set_seller_wise_settings','!=',False)]}" readonly="1"/> %
+                                    </div>
+                                </group>
+                                <group>
+                                    <field name="seller_payment_limit" string="Amount limit for seller payment request" attrs="{'readonly':[('set_seller_wise_settings','=',False)],'required':[('set_seller_wise_settings','!=',False)]}" readonly="1"/>
+                                </group>
+                                <group>
+                                    <label for="next_payment_request" string="Minimum gap for next payment request"/>
+                                    <div>
+                                        <field name="next_payment_request" string="Minimum gap for next payment request" class="oe_inline" attrs="{'readonly':[('set_seller_wise_settings','=',False)],'required':[('set_seller_wise_settings','!=',False)]}" readonly="1"/> Days
+                                    </div>
+                                </group>
+                                <group groups="odoo_marketplace.marketplace_officer_group">
+                                    <group name="approval_settings" string="Approval Settings">
+                                        <field name="auto_product_approve" attrs="{'readonly':[('set_seller_wise_settings','=',False)]}"/>
+                                        <field name="auto_approve_qty" attrs="{'readonly':[('set_seller_wise_settings','=',False)]}"/>
+                                    </group>
+                                    <group name="warehouse_location" string="Warehouse/Location">
+                                        <field name="location_id" attrs="{'readonly':[('set_seller_wise_settings','=',False)],'required':[('set_seller_wise_settings','!=',False)]}"/>
+                                        <field name="warehouse_id" attrs="{'readonly':[('set_seller_wise_settings','=',False)],'required':[('set_seller_wise_settings','!=',False)]}" options="{'no_create_edit': True}"/>
+                                    </group>
+                                </group>
+                                <group string="Seller Profile Settings" groups="odoo_marketplace.marketplace_officer_group">
+                                    <group name="seller_profile">
+                                        <label for="allow_product_variants" groups="odoo_marketplace.marketplace_officer_group"/>
+                                        <div groups="odoo_marketplace.marketplace_officer_group">
+                                            <field name="allow_product_variants" readonly="1"/>
+                                            <button name="enable_product_variant_group" string="Click to Allow" type="object" class="oe_link" attrs="{'invisible':[('allow_product_variants', '=', True)]}"/>
+                                            <button name="disable_product_variant_group" string="Click to Denied" type="object" class="oe_link" attrs="{'invisible':[('allow_product_variants', '=', False)]}"/>
+                                        </div>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Payment">
+                                <group col="4">
+                                    <field name="total_mp_payment"/>
+                                    <field name="paid_mp_payment"/>
+                                    <field name="balance_mp_payment"/>
+                                    <field name="seller_currency_id" groups="odoo_marketplace.marketplace_officer_group"/>
+                                </group>
+                            </page>
+                            <page string="Policies" name="policies">
+                                <field class="profile_or_shop_id" name="id" invisible="1"/>
+                                <group col="3" groups="odoo_marketplace.group_marketplace_seller_shop">
+                                    <field name="seller_shop_id" readonly="1"/>
+                                    <button name="%(odoo_marketplace.wk_seller_shop_action2)d" string="Create Your Shop" icon="fa-home fa-2x" class="btn-primary pull-right" type="action" attrs="{'invisible':[('seller_shop_id','!=',False)]}" style="font-weight:600" context="{'seller_id': id}"/>
+                                </group>
+                                <group>
+                                    <field name="return_policy"/>
+                                    <field name="shipping_policy"/>
+                                </group>
+                            </page>
+                            <page string="Profile Page">
+                                <group>
+                                    <div>
+                                        <separator string="Profile Image"/>
+                                    </div>
+                                    <h6 class="oe_inline oe_grey oe_right">
+                                        Profile image must be 180 x 180 px for perfect view.
+                                    </h6>
+                                </group>
+                                <group>
+                                    <div>
+                                        <field name="profile_image" widget="image" options="{'size': [180, 180]}"/>
+                                    </div>
+                                </group>
+                                <group>
+                                    <div>
+                                        <separator string="Profile Banner"/>
+                                    </div>
+                                    <h6 class="oe_inline oe_grey oe_right">
+                                        Banner image size must be 1298 x 400 px for perfect view.
+                                    </h6>
+                                </group>
+                                <group>
+                                    <div>
+                                        <field name="profile_banner" class="mp_shop_image" widget="image" options="{'size': [825, 250]}"/>
+                                    </div>
+                                </group>
+                                <group>
+                                    <div>
+                                        <separator string="Profile Message"/>
+                                    </div>
+                                    <h6 class="oe_inline oe_grey oe_right">
+                                        This message will display on your profile on web.
+                                    </h6>
+                                </group>
+                                <group>
+                                    <div>
+                                        <field name="profile_msg" placeholder="Write messger for yor profile..."/>
+                                    </div>
+                                </group>
+                                <separator string="Social Web Info"/>
+                                <div class="oe_inline oe_grey oe_right">
+                                    Add your social profile links below and publish it in your seller profile page. So that customers can directly visit your social profiles from your seller profile page.
+                                </div>
+                                <field name="social_media_link_ids">
+                                    <tree editable="bottom">
+                                        <field name="social_media_id" placeholder="Social Media" options="{'no_create_edit':True}"/>
+                                        <field name="social_profile_id" placeholder="Your Id"/>
+                                        <field name="wk_website_published" invisible="1"/>
+                                        <field name="complete_url" widget="url"/>
+                                        <button name="toggle_website_published" string="UnPublish Now" type="object" class="o_link" attrs="{'invisible':[('wk_website_published', '=', False)]}"/>
+                                        <button name="toggle_website_published" string="Publish Now" type="object" class="o_link" attrs="{'invisible':[('wk_website_published', '=', True)]}"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <!-- <page string="Customer's Reviews" name="customer_reviews"><field name="seller_review_ids" nolabel="1"><tree create="false" edit="false" editable="bottom"><field name="partner_id"/><field name="email"/><field name="title"/><field name="rating"/><field name="website_published"/><field name="create_date"/></tree></field></page> -->
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="wk_seller_kanban_view" model="ir.ui.view">
+            <field name="name">seller.kanban</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <kanban quick_create="false" create="0">
+                    <field name="id"/>
+                    <field name="color"/>
+                    <field name="display_name"/>
+                    <field name="title"/>
+                    <field name="email"/>
+                    <field name="parent_id"/>
+                    <field name="commission"/>
+                    <field name="function"/>
+                    <field name="phone"/>
+                    <field name="street"/>
+                    <field name="street2"/>
+                    <field name="zip"/>
+                    <field name="city"/>
+                    <field name="country_id"/>
+                    <field name="mobile"/>
+                    <field name="state"/>
+                    <field name="category_id"/>
+                    <field name="attachment_ids"/>
+                    <field name="displayed_image_id"/>
+                    <field name="image"/>
+                    <field name="image_small"/>
+                    <field name="seller_currency_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                                <div class="o_dropdown_kanban dropdown" groups="odoo_marketplace.marketplace_seller_group">
+									<a class="dropdown-toggle btn" data-toggle="dropdown" href="#" role='button'>
+										<span class="fa fa-bars fa-lg" aria-label="Dropdown" title="Manage"/>
+									</a>
+									<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+										<t t-if="widget.editable">
+											<li>
+												<a type="edit">Edit Seller</a>
+											</li>
+										</t>
+										<li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+									</ul>
+								</div>
+                                <div class="oe_kanban_content oe_kanban_details">
+                                    <div>
+                                        <b>
+                                            <a t-attf-href="mailto:#{record.email}">
+                                                <field name="email"/>
+                                            </a>
+                                        </b>
+                                    </div>
+                                    <div>
+                                        <div class="o_kanban_image">
+                                            <a type="open">
+                                                <t t-if="record.image_small">
+                                                    <img alt="Profile Image" t-att-src="kanban_image('res.partner', 'image_small', record.id.raw_value)"/>
+                                                </t>
+                                                <t t-if="!record.image">
+                                                    <img alt="Profile Image" t-att-src='_s + "/base/static/src/img/avatar.png"' class="o_kanban_image"/>
+                                                </t>
+                                            </a>
+                                        </div>
+                                        <div name="tags">
+                                            <ul>
+                                                <li t-if="record.email">
+                                                    <b>
+                                                        <field name="display_name"/>
+                                                    </b>
+                                                </li>
+                                                <li t-if="record.state.raw_value === 'new'">
+                                                    <b>Status: </b>
+                                                    <font color='blue'>
+                                                        <field name="state"/>
+                                                    </font>
+                                                </li>
+                                                <li t-if="record.state.raw_value === 'approved'">
+                                                    <b>Status: </b>
+                                                    <font color='green'>
+                                                        <field name="state"/>
+                                                    </font>
+                                                </li>
+                                                <li t-if="record.state.raw_value === 'pending'">
+                                                    <b>Status: </b>
+                                                    <font color='orange'>
+                                                        <field name="state"/>
+                                                    </font>
+                                                </li>
+                                                <li t-if="record.state.raw_value  === 'denied'">
+                                                    <b>Status: </b>
+                                                    <font color='red'>
+                                                        <field name="state"/>
+                                                    </font>
+                                                </li>
+                                                <li t-if="record.mobile">
+                                                    <b>Mobile: </b>
+                                                    <field name="mobile"/>
+                                                </li>
+                                                <li>
+                                                    <b>Commission: </b>
+                                                    <field name="commission"/>%
+                                                </li>
+                                                <li>
+                                                    <b>Sales: </b>
+                                                    <field name="total_mp_payment" widget="monetary"/>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div t-if="record.displayed_image_id.value">
+                                    <field name="displayed_image_id" widget="attachment_image"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <record id="wk_seller_tree_view" model="ir.ui.view">
+            <field name="name">sellers</field>
+            <field name="model">res.partner</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <tree string="Sellers"
+                    decoration-primary="state=='new'"
+					decoration-warning="state=='pending'"
+					decoration-success="state=='approved'"
+					decoration-danger="state=='denied'" create="0">
+                    <field name="name"/>
+                    <field name="email"/>
+                    <field name="phone"/>
+                    <field name="state"/>
+                    <field name="mobile"/>
+                    <field name="payment_method"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_commission_not_readonly_to_manager" model="ir.ui.view">
+            <field name="name">Readonly Commission</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="odoo_marketplace.wk_seller_form_view"/>
+            <field name="groups_id" eval="[(6, 0, [ref('odoo_marketplace.marketplace_officer_group') ])]"/>
+            <field name="arch" type="xml">
+                <field name='set_seller_wise_settings' position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </field>
+                <field name='commission' position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </field>
+                <field name='seller_payment_limit' position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </field>
+                <field name='next_payment_request' position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </field>
+                <field name='title' position="attributes">
+                    <attribute name="options">'{"no_create": True}'</attribute>
+                </field>
+                <!-- <field name='url_handler' position="attributes">
+                    <attribute name="required">0</attribute>
+                </field> -->
+                <xpath expr="//form/div[hasclass('oe_form_box_info', 'oe_text_center')]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+        <record id="seller_form_view_for_shop_group" model="ir.ui.view">
+            <field name="name">Update Policies tab Label</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="odoo_marketplace.wk_seller_form_view"/>
+            <field name="groups_id" eval="[(6, 0, [ref('odoo_marketplace.group_marketplace_seller_shop') ])]"/>
+            <field name="arch" type="xml">
+                <page name='policies' position="attributes">
+                    <attribute name="string">Shop &amp; Policies</attribute>
+                </page>
+            </field>
+        </record>
+        <!-- <record id="pending_seller_form_view_for_shop_group" model="ir.ui.view">
+            <field name="name">Update Fields Attributes For Pending Seller</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="odoo_marketplace.wk_seller_form_view"/>
+            <field name="groups_id" eval="[(6, 0, [ref('odoo_marketplace.marketplace_seller_group') ])]"/>
+            <field name="arch" type="xml">
+                <form position="attributes">
+                    <attribute name="edit">1</attribute>
+                </form>
+            </field>
+        </record> -->
+        <record id="wk_social_media_form_view" model="ir.ui.view">
+            <field name="name">Social Media</field>
+            <field name="model">social.media</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="image" widget="image" options="{'size': [44, 44]}"/>
+                        <field name="name" placeholder="Name like Facebook"/>
+                        <field name="base_url" placeholder="Complete URL like https://www.facebook.com/"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="wk_social_media_tree_view" model="ir.ui.view">
+            <field name="name">Social Media</field>
+            <field name="model">social.media</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="base_url"/>
+                </tree>
+            </field>
+        </record>
+        <!-- Filters -->
+        <record id="wk_seller_view_filter" model="ir.ui.view">
+            <field name="name">Sellers By Status</field>
+            <field name="model">res.partner</field>
+            <field name="groups_id" eval="[(6, 0, [ref('odoo_marketplace.marketplace_officer_group') ])]"/>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <field name="name" filter_domain="['|','|',('display_name','ilike',self),('ref','=',self),('email','ilike',self)]"/>
+                    <field name="mobile"/>
+                    <field name="state"/>
+                    <group string="Group By">
+                        <filter string="Status" context="{'group_by':'state'}" name="seller_status_filter" groups="odoo_marketplace.marketplace_officer_group"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <!-- Seller Dashboard Sellers Actions -->
+        <record id="wk_seller_action" model="ir.actions.act_window">
+            <field name="name">Sellers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('seller', '=', True),('state', '!=', False),('active', '=', True), ('id','in',['get_marketplace_seller_id()'])]</field>
+            <field name="context">{'default_customer': 0, 'default_supplier': 0, 'default_seller':1, 'search_default_seller_status_filter': 1}</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="wk_seller_kanban_view"/>
+            <field name="search_view_id" ref="wk_seller_view_filter"/>
+            <field name="view_ids"
+                eval="[(5, 0, 0),
+                    (0, 0, {'sequence': 1, 'view_mode': 'kanban','view_id': ref('odoo_marketplace.wk_seller_kanban_view')}),
+                    (0, 0, {'sequence': 2, 'view_mode': 'tree', 'view_id': ref('odoo_marketplace.wk_seller_tree_view')}),
+                    (0, 0, {'sequence': 3, 'view_mode': 'form', 'view_id': ref('odoo_marketplace.wk_seller_form_view')})
+                ]"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add a seller in your marketplace address book.
+                </p>
+                <p>
+                    Marketplace helps you easily track all activities related to a seller: discussions, history of sales,documents, etc.
+                </p>
+            </field>
+        </record>
+        <record id="wk_social_media_action" model="ir.actions.act_window">
+            <field name="name">Social Media</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">social.media</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add social media for your marketplace sellers.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>
