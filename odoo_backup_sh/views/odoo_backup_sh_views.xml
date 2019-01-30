@@ -14,20 +14,23 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
             <xpath expr="//div[hasclass('settings')]" position="inside">
                 <div class="app_settings_block" data-string="odoo_backup_sh" string="Odoo-backup.sh" data-key="odoo_backup_sh">
                     <h2>Odoo-backup.sh</h2>
-                    <div class="row mt16 o_settings_container" id="webmaster_settings">
-                        <div class="col-xs-12 col-md-6 o_setting_box" id="odoo_backup_sh_setting">
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="encrypt_backups"/>
+                            </div>
                             <div class="o_setting_right_pane">
-                                <label string="Encryption Settings"/>
-                                <div class="content-group">
-                                    <div class="row mt16">
-                                        <label class="col-md-3 o_light_label" string="Encrypt backups"/>
-                                        <field name="encrypt_backups"/>
-                                    </div>
-                                    <div class="row mt16">
-                                        <label class="col-md-3 o_light_label" string="Encryption Password"/>
-                                        <field name="encryption_password" password="True" attrs="{'required':[('encrypt_backups', '=', True)]}"/>
+                                <label for="encrypt_backups"/>
+                                <div class="text-muted">
+                                    Backups cannot be restored without Encryption Password
+                                </div>
+                                <div attrs="{'invisible': [('encrypt_backups', '=', False)]}">
+                                    <div class="content-group mt16">
+                                        <label for="encryption_password" class="o_light_label"/>
+                                        <field name="encryption_password" attrs="{'required':[('encrypt_backups', '=', True)]}"/>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
