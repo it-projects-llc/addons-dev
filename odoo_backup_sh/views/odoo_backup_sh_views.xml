@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
+License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+-->
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.odoo_backup_sh</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="20"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="odoo_backup_sh" string="Odoo-backup.sh" data-key="odoo_backup_sh">
+                    <h2>Odoo-backup.sh</h2>
+                    <div class="row mt16 o_settings_container" id="webmaster_settings">
+                        <div class="col-xs-12 col-md-6 o_setting_box" id="odoo_backup_sh_setting">
+                            <div class="o_setting_right_pane">
+                                <label string="Encryption Settings"/>
+                                <div class="content-group">
+                                    <div class="row mt16">
+                                        <label class="col-md-3 o_light_label" string="Encrypt backups"/>
+                                        <field name="encrypt_backups"/>
+                                    </div>
+                                    <div class="row mt16">
+                                        <label class="col-md-3 o_light_label" string="Encryption Password"/>
+                                        <field name="encryption_password" password="True" attrs="{'required':[('encrypt_backups', '=', True)]}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_backup_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'odoo_backup_sh'}</field>
+    </record>
+
+    <record id="backup_dashboard" model="ir.actions.client">
+        <field name="name">Dashboard</field>
+        <field name="tag">backup_dashboard</field>
+    </record>
+
+    <record id="ir_actions_server_backup_dashboard" model="ir.actions.server">
+        <field name="name">Backups: Dashboard</field>
+        <field name="model_id" ref="odoo_backup_sh.model_odoo_backup_sh_config"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_dashboard_redirect()</field>
+    </record>
+
+    <record id='odoo_backup_sh_backup_form' model='ir.ui.view'>
+        <field name="name">odoo_backup_sh.backup_info.form</field>
+        <field name="model">odoo_backup_sh.backup_info</field>
+        <field name="arch" type="xml">
+            <form string="Backup">
+                <sheet>
+                    <group>
+                        <field name="database"/>
+                        <field name="upload_datetime"/>
+                        <field name="encrypted"/>
+                        <field name="backup_size"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id='odoo_backup_sh_backup_tree' model='ir.ui.view'>
+        <field name="name">odoo_backup_sh.backup_info.tree</field>
+        <field name="model">odoo_backup_sh.backup_info</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="database"/>
+                <field name="upload_datetime"/>
+                <field name="encrypted"/>
+                <field name="backup_size"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id='odoo_backup_sh_backup_action' model='ir.actions.act_window'>
+        <field name="name">Backups</field>
+        <field name="res_model">odoo_backup_sh.backup_info</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="view_odoo_backup_sh_notification_kanban" model="ir.ui.view">
+        <field name="name">odoo_backup_sh.notification.kanban</field>
+        <field name="model">odoo_backup_sh.notification</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" create="false">
+                <field name="message"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <field name="message"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="view_odoo_backup_sh_notification_tree" model="ir.ui.view">
+        <field name="name">odoo_backup_sh.notification.tree</field>
+        <field name="model">odoo_backup_sh.notification</field>
+        <field name="arch" type="xml">
+            <tree create="false">
+                <field name="date_create"/>
+                <field name="message"/>
+                <field name="is_read"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_odoo_backup_sh_notification_form" model="ir.ui.view">
+        <field name="name">odoo_backup_sh.notification.form</field>
+        <field name="model">odoo_backup_sh.notification</field>
+        <field name="arch" type="xml">
+            <form create="false" edit="false">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_is_read" class="oe_stat_button" type="object" icon="fa-check">
+                            <field name="is_read" widget="boolean_button"
+                                   options='{"terminology": {"string_true": "Read", "string_false": "Unread", "hover_true": "Mark as unread", "hover_false": "Mark as read"}}'/>
+                        </button>
+                    </div>
+                    <group>
+                        <field name="date_create"/>
+                        <field name="message"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="activity_ids" widget="mail_activity"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id='action_backup_notifications' model='ir.actions.act_window'>
+        <field name="name">Notifications</field>
+        <field name="res_model">odoo_backup_sh.notification</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id='odoo_backup_sh_config_form' model='ir.ui.view'>
+        <field name="name">odoo_backup_sh.config.form</field>
+        <field name="model">odoo_backup_sh.config</field>
+        <field name="arch" type="xml">
+            <form string="Backup Configuration">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="database" class="oe_edit_only"/>
+                        <h1><field name="database"/></h1>
+                    </div>
+                    <group string="Scheduled Auto Backups">
+                        <field name="config_cron_ids" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="interval_number"/>
+                                <field name="interval_type"/>
+                                <field name="nextcall"/>
+                                <field name="active"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group string="Auto Rotation" attrs="{'invisible': [('config_cron_ids', '=', [])]}">
+                        <h3 colspan="2">
+                            How many backups for what time intervals to preserve on a remote storage.
+                        </h3>
+                        <field name="hourly"/>
+                        <field name="daily"/>
+                        <field name="weekly"/>
+                        <field name="monthly"/>
+                        <field name="yearly"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id='odoo_backup_sh_config_tree' model='ir.ui.view'>
+        <field name="name">odoo_backup_sh.config.tree</field>
+        <field name="model">odoo_backup_sh.config</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="database"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id='action_backup_config' model='ir.actions.act_window'>
+        <field name="name">Backup Configurations</field>
+        <field name="res_model">odoo_backup_sh.config</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+
+    <!-- delete remote backups wizard -->
+    <record id="delete_remote_backup_wizard_view" model="ir.ui.view">
+        <field name="name">Delete Remote Backups</field>
+        <field name="model">odoo_backup_sh.delete_remote_backup_wizard</field>
+        <field name="arch" type="xml">
+            <form string="Confirmation">
+                <div class="modal-body">Are you sure you want to delete this record from remote storage?</div>
+                <footer>
+                    <button string="Ok" name="delete_remove_backup_button" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <act_window id="delete_remote_backup_wizard_action" name="Delete Remote Backups"
+                src_model="odoo_backup_sh.backup_info" res_model="odoo_backup_sh.delete_remote_backup_wizard"
+                view_type="form" view_mode="form" key2="client_action_multi" target="new"/>
+
+    <menuitem name="Backups" id="menu_backup_root" sequence="100" web_icon="odoo_backup_sh,static/description/icon.png"/>
+    <menuitem name="Dashboard" action="odoo_backup_sh.ir_actions_server_backup_dashboard" parent="menu_backup_root"
+              id="menu_dashboard" sequence="1"/>
+    <menuitem name="Backups" parent="menu_backup_root" id="menu_backups" sequence="10"/>
+    <menuitem name="Backups" action="odoo_backup_sh_backup_action" parent="menu_backups" id="backups_menu" sequence="1"/>
+    <menuitem name="Notifications" parent="menu_backup_root" id="menu_notification" sequence="20"/>
+    <menuitem name="Notifications" action="action_backup_notifications" parent="menu_notification" id="notification_menu"/>
+    <menuitem name="Configuration" parent="menu_backup_root" id="menu_config" sequence="100"/>
+    <menuitem name="Backups" action="action_backup_config" parent="menu_config" id="menu_backup_config"/>
+    <menuitem name="Settings" action="action_backup_settings" parent="menu_config" id="menu_settings"/>
+
+</odoo>

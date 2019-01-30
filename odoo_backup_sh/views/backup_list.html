@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<!--
+Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
+License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+-->
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Odoo</title>
+  <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css">
+  <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css">
+  <script src="/web/static/lib/jquery/jquery.js" type="text/javascript"></script>
+  <script src="/web/static/lib/bootstrap/js/modal.js"></script>
+  <script src="/web/static/lib/bootstrap/js/tooltip.js"></script>
+  <script src="/web/static/lib/bootstrap/js/dropdown.js"></script>
+  <script type="text/javascript">
+  $(function() {
+      $('body').on('click','.o_database_action', function(ev) {
+          ev.preventDefault();
+          var backup = $(ev.currentTarget).data('backup');
+          var target = $(ev.currentTarget).data('target');
+          $(target).find('input[name=backup_file_name]').val(backup);
+          $(target).modal();
+      });
+      // close modal on submit
+      $('.modal').on('click','input[type="submit"]', function(ev) {
+          var modal  = $(this).parentsUntil('body', '.modal');
+          if (modal.hasClass('o_database_restore_via_odoo_backup_sh')) {
+            $(modal).modal('hide');
+            if (!$('.alert-backup-long').length) {
+              $('.list-group').before("<div class='alert alert-info alert-backup-long'>The database restore may take some time before being ready</div>");
+            }
+          }
+      });
+  });
+  </script>
+</head>
+
+{% macro master_input() -%}
+  <div class="form-group">
+    {% if insecure %}
+      <input type="hidden" name="master_pwd" class="form-control" value="admin"/>
+    {% else %}
+      <label for="master_pwd" class="control-label">Master Password</label>
+      <input id="master_pwd" type="password" name="master_pwd" class="form-control" required="required" autofocus="autofocus"/>
+    {% endif %}
+  </div>
+{%- endmacro %}
+
+<body class="container">
+  <!-- Backup List -->
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3 o_database_list">
+      <div class="text-center">
+        <img src="/web/static/src/img/logo2.png" class="img-responsive center-block"/>
+      </div>
+      {% if error %}
+        <div class="alert alert-danger">{{ error|safe }}</div>
+      {% endif %}
+      {% if backup_list %}
+        <div class="list-group">
+          {% for backup in backup_list %}
+            <div class="list-group-item">
+              {{ backup }}
+              <div class="text-right pull-right">
+                <span role="button" data-backup="{{ backup }}" data-target=".o_database_restore_via_odoo_backup_sh" class="o_database_action btn-link"><i class="fa fa-undo fa-fw"></i> Restore</span>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      <div class="text-center">
+        <a href="/web/database/manager">Manage databases</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Restore -->
+  <div class="modal fade o_database_restore_via_odoo_backup_sh" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Restore Database</h4>
+        </div>
+        <form id="form_restore_db_via_odoo_backup_sh" role="form" action="/web/database/restore_via_odoo_backup_sh" method="post" enctype="multipart/form-data">
+          <div class="modal-body">
+            {{ master_input() }}
+            <div class="form-group">
+              <label for="backup_file_name" class="control-label">Backup Name</label>
+              <input id="backup_file_name" type="text" name="backup_file_name" class="form-control" required="required" readonly="readonly"/>
+            </div>
+            <div class="form-group">
+              <label for="name" class="control-label">Database Name</label>
+              <input id="name" type="text" name="name" class="form-control" required="required" pattern="{{ pattern }}" title="Only alphanumerical characters, underscore, hyphen and dot are allowed"/>
+            </div>
+            <div class="form-group">
+                <label for="copy">This database might have been moved or copied.</label>
+                <p class="help-block">In order to avoid conflicts between databases, Odoo needs to know if this database was moved or copied.
+                If you don't know, answer "This database is a copy".</p>
+              <div class="radio">
+                <label>
+                  <input name="copy" type="radio" class="pull-right" value="true" checked="1">
+                  This database is a copy
+                </label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input name="copy" type="radio" class="pull-right" value="false">
+                  This database was moved
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <input type="submit" value="Continue" class="btn btn-primary pull-right"/>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

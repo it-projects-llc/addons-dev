@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
+License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+-->
+<templates id="template" xml:space="preserve">
+
+    <t t-name="odoo_backup_sh.BackupDashboardMain">
+        <div class="o_backup_dashboard">
+            <div class="o_backup_dashboard_header">
+                <a href="#" class="o_box_item o_dashboard_action_add_database" title="Add new database in the dashboard.">
+                    <div class="o_inner_box o_primary">
+                        <i class="fa fa-plus fa-3x"/><br/>
+                        Add Database
+                    </div>
+                </a>
+                <a href="#" class="o_box_item o_dashboard_action_update_info" title="Update backups information.">
+                    <div class="o_inner_box o_primary">
+                        <i class="fa fa-refresh fa-3x"/><br/>
+                        Update Info
+                    </div>
+                </a>
+                <a href="#" class="o_box_item o_dashboard_action_up_balance" title="Up to the balance."><!-- name="odoo_backup_sh.odoo_backup_sh_backup_action"-->
+                    <div class="o_inner_box o_primary">
+                        <i class="fa fa-money fa-3x"/><br/>
+                        Go to Balance<br/>
+                    </div>
+                </a>
+            </div>
+            <div class="o_backup_dashboard_note_section">
+                <div class="o_backup_dashboard_nocontent" t-if="widget.show_nocontent_msg">
+                    <p class="o_backup_dashboard_nocontent_create">
+                        Click to add a new Database
+                    </p>
+                    <p>
+                        The application helps you easily manage your databases:<br/>
+                        Auto/manual backup, auto rotation, remote storage for your backups, detailed statistics, etc.
+                    </p>
+                </div>
+                <t t-foreach="widget.notifications" t-as="notification">
+                    <div class="o_backup_dashboard_notification" t-att-data-notification_id="notification.id">
+                        <t t-raw="notification.message"/>
+                        <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
+                    </div>
+                </t>
+                <div class="o_backup_dashboard_inactive_warning" t-if="widget.show_inactive_warning">
+                    <strong>Warning: </strong>You have not active configs with auto backups.
+                </div>
+            </div>
+            <div class="graph_container" t-if="!widget.show_nocontent_msg">
+                <h2>COMMON REMOTE STORAGE USAGE</h2>
+                <div id="graph_remote_storage_usage"/>
+            </div>
+            <div class="o_backup_dashboard_configs o_kanban_view o_kanban_dashboard o_kanban_ungrouped"/>
+        </div>
+    </t>
+
+    <t t-name="odoo_backup_sh.config_cards">
+        <t t-foreach="configs" t-as="config">
+            <div class="o_kanban_record" t-att-data-db_name="config.database">
+                <div class="backup_card_title"><t t-esc="config.database"/></div>
+                <div class="backup_card_content">
+                    <button type="object" class="btn btn-primary btn-sm pull-left o_dashboard_action_make_backup">
+                        <span>New Backup</span>
+                    </button>
+                    <a href="#" class="pull-right o_dashboard_action_view_backups">
+                        <t t-esc="config.backups_number"/> Remotely stored backups
+                    </a>
+                </div>
+                <div class="backup_config_card_graph"/>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="odoo_backup_sh.error_msg">
+        <strong>Error: </strong><t t-value="error_msg"/>
+    </t>
+
+</templates>
