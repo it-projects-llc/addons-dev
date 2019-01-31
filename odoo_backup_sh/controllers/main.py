@@ -30,7 +30,7 @@ except ImportError as err:
 path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'views'))
 loader = jinja2.FileSystemLoader(path)
 env = jinja2.Environment(loader=loader, autoescape=True)
-BACKUP_SERVICE_ENDPOINT = 'http://odoo-backup.sh:8069'
+BACKUP_SERVICE_ENDPOINT = 'https://odoo-backup.sh'
 
 
 class BackupDatabase(web.controllers.main.Database):
