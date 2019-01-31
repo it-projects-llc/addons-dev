@@ -2,3 +2,4 @@ icalendar
 boto3
 websocket-client
 pretty_bad_protocol
+requests_mock
