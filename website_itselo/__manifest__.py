@@ -16,11 +16,11 @@
     # "currency": "EUR",
 
     "depends": [
-        "res_city_total_limit",
-        "res_partner_total_limit",
         "fleet",
-        # "theme_alan",
         "dadata_crm",
+        "base_address_city",
+        "odoo_marketplace",
+        "theme_alan",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
@@ -28,8 +28,11 @@
         "views/res_company_view.xml",
         "views/res_country_view.xml",
         "views/res_partner_view.xml",
+        "views/res_city_view.xml",
+        "views/res_district_view.xml",
         "views/template.xml",
         "views/website_account_template.xml",
+        "data/data.xml",
     ],
     "demo": [
     ],
