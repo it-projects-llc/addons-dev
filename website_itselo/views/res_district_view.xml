@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_district_view_form" model="ir.ui.view">
+        <field name="name">res.state.district</field>
+        <field name="model">res.state.district</field>
+        <field name="arch" type="xml">
+            <form string="District">
+                <sheet>
+                    <group>
+                        <field name="state_id"/>
+                        <field name="name"/>
+                        <field name="city_ids">
+                            <tree editable="bottom">
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_district_tree" model="ir.ui.view">
+        <field name="model">res.state.district</field>
+        <field name="arch" type="xml">
+            <tree string="District">
+                <field name="name"/>
+                <field name="state_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_district_filter" model="ir.ui.view">
+        <field name="model">res.state.district</field>
+        <field name="arch" type="xml">
+            <search string="Search District">
+                <field name="name" filter_domain="[('name','ilike',self)]" string="District"/>
+                <separator/>
+                <field name="state_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_district" model="ir.actions.act_window">
+        <field name="name">Districts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.state.district</field>
+        <field name="view_type">form</field>
+        <field name="help">Display and manage the list of all districts.</field>
+    </record>
+
+    <menuitem id="menu_district_partner" action="action_district" parent="contacts.menu_localisation" sequence="4"/>
+
+</odoo>

@@ -13,11 +13,8 @@ class AuthSignupHome(AuthSignupHome):
         values = {key: qcontext.get(key) for key in (
         'login', 'name', 'password', 'is_seller', 'is_delivery', 'fleet', 'state_id', 'district_id', 'city_id',
         'street', 'house', 'flat', 'zip', 'mobile', 'url_handler')}
-
         # Доставщик
-        delivery = values.get('is_delivery')
-        values['is_delivery'] = delivery
-        if delivery:
+        if values.get('is_delivery'):
             Fleet = request.env['fleet.vehicle']
             mod = request.env['fleet.vehicle.model'].sudo().search([('name', '=', 'default')])
             if mod:
@@ -42,10 +39,10 @@ class AuthSignupHome(AuthSignupHome):
         state_id = request.env['res.country.state']
         city_id = request.env['res.city']
         values['country_id'] = 190
-
+        print('------state-----')
         search_state = state_id.sudo().search([('code', '=', state)])
         search_city = city_id.sudo().search([('name', '=', city), ('state_id', '=', search_state.id)]).id
-
+        print('------------------3')
         # State
         if search_state:
             values['state_id'] = search_state.id
