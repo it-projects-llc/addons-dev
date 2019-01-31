@@ -4,6 +4,27 @@
 from odoo import fields, models, api
 
 
+class SaleOrder(models.Model):
+    _inherit = "sale.order"
+
+    amount_taken_into_account = fields.Boolean(default=False)
+
+    @api.multi
+    def action_confirm(self):
+        res = super(SaleOrder, self).action_confirm()
+        for r in self:
+            r.partner_id.city_id.update_total()
+            r.order_line.action_updated_sale_order_partner()
+        return res
+
+    @api.multi
+    def action_unlock(self):
+        super(SaleOrder, self).action_unlock()
+        for r in self:
+            r.partner_id.city_id.update_total()
+            r.order_line.action_updated_sale_order_partner()
+
+
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
@@ -29,20 +50,3 @@ class SaleOrderLine(models.Model):
                     lines.write({
                         "amount_taken_into_account_user": True
                     })
-
-
-class SaleOrder(models.Model):
-    _inherit = "sale.order"
-
-    @api.multi
-    def action_confirm(self):
-        res = super(SaleOrder, self).action_confirm()
-        for r in self:
-            r.order_line.action_updated_sale_order_partner()
-        return res
-
-    @api.multi
-    def action_unlock(self):
-        super(SaleOrder, self).action_unlock()
-        for r in self:
-            r.order_line.action_updated_sale_order_partner()

@@ -7,14 +7,94 @@
         <xpath expr="//span[@t-esc='product.website_price']" position="after">
             за <span t-esc="product.sudo().uom_id.name"/>
         </xpath>
+        <xpath expr="//div[@class='product_price']" position="after">
+            <t t-set="marketplace_seller_id" t-value="product.sudo().marketplace_seller_id"/>
+            <t t-if="marketplace_seller_id and marketplace_seller_id.seller">
+                <div style="color: #28a745">
+                    Достигнуто <t t-esc="int(round((marketplace_seller_id.total * 100.0)/marketplace_seller_id.limit))"/> %
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="product_items" name="Products" inherit_id="alan_customize.product_items">
+        <xpath expr="//span[@t-esc='product.website_price']" position="after">
+            <b> за <span t-esc="product.sudo().uom_id.name"/> </b>
+        </xpath>
     </template>
 
     <template id="product_price" inherit_id="website_sale.product_price">
         <xpath expr="//b[@class='oe_price']" position="after">
-            <b> за <span t-esc="product.sudo().uom_id.name"/> </b>
+            <b style="margin-left: -10px;"> за <span t-esc="product.sudo().uom_id.name"/> </b>
         </xpath>
         <xpath expr="//span[@t-field='product.lst_price']" position="after">
             за <span t-esc="product.sudo().uom_id.name"/>
+        </xpath>
+    </template>
+
+    <template id="payment" inherit_id="website_sale.payment" name="Payment">
+        <xpath expr="//div[@class='card']" position="before">
+            <h3 class="mb24">Информация об общей сумме заказов с вашего населенного пункта</h3>
+            <div class="card">
+                <div class="card-body">
+                    <div>
+                        <div>С Вашего населенного пункта набралось заказов на: <span style="color: #28a745" t-esc='order.partner_id.city_id.total' t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/></div>
+                        <div>Для бесплатной доставки необходимо: <span style="color: #28a745" t-esc='order.partner_id.city_id.limit' t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}' class="address-inline"/></div>
+                        <div>Ожидаемое время набора: <span class="font-weight-bold" t-esc='order.partner_id.city_id.expected_delivery_time'/><span class="font-weight-bold"> дней</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="oe_structure clearfix mt-3"/>
+        </xpath>
+    </template>
+
+    <template id="product" name="Product" inherit_id="website_sale.product">
+        <xpath expr="//h1[@t-field='product.name']" position="after">
+            <t t-set="marketplace_seller_id" t-value="product.sudo().marketplace_seller_id"/>
+            <t t-if="marketplace_seller_id and marketplace_seller_id.seller">
+                <h4 style="color: #28a745">
+                    Объем достигнут на <t t-esc="int(round((marketplace_seller_id.total * 100.0)/marketplace_seller_id.limit))"/> %
+                </h4>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="product" name="Product" inherit_id="website_sale.products">
+        <xpath expr="//div[@id='oe_structure_website_sale_products_1']" position="after">
+            <t t-call="website_itselo.total_city_limit"/>
+        </xpath>
+    </template>
+
+    <template name="Total City Limit" id="total_city_limit">
+        <t t-set="current_user" t-value="request.env.user"/>
+        <t t-if="website.user_id != user_id and current_user.partner_id.city_id">
+            <section class="s_cover parallax s_parallax_is_fixed pb0 pt0 bg-black-75" data-scroll-background-ratio="1" style="background-image: none;">
+                <span class="s_parallax_bg oe_img_bg oe_custom_bg" style="background-image: url('/web/image/website.s_cover_default_image'); background-position: 50% 0;"></span>
+                <div class="container">
+                    <div class="row s_nb_column_fixed">
+                        <div class="col-lg-12 s_text pb0 pt16" data-name="Text">
+                            <p class="lead" style="text-align: center;">
+                                <font style="font-size: 24px;">С Вашего населенного пункта набралось заказов на</font>
+                                <font style="color: rgb(148, 189, 123); font-size: 24px;">
+                                    <b><t t-esc='current_user.partner_id.city_id.total' t-options='{"widget": "monetary", "display_currency": website.currency_id}'/></b>
+                                </font>
+                                <font style="font-size: 24px;">из</font>
+                                <font style="color: rgb(107, 165, 74); font-size: 24px;">
+                                    <b><t t-esc='current_user.partner_id.city_id.limit' t-options='{"widget": "monetary", "display_currency": website.currency_id}'/></b>
+                                </font>
+                                <a href="http://coopselo.ru/zakazinfo" class="flat rounded-circle btn btn-primary rounded-circle btn-sm">Узнать подробнее</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Assets Frontend Review">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/website_itselo/static/src/css/suggestions.css" type="text/css"/>
+            <script type="text/javascript" src="/website_itselo/static/src/js/jquery.suggestions.js"/>
         </xpath>
     </template>
 

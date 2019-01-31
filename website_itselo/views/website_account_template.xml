@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <odoo>
-	<template id="account_sign_up_details_id" inherit_id="odoo_marketplace.account_sign_up_details_id">
+
+	<template id="delivery_account_sign_up_details_id" inherit_id="odoo_marketplace.account_sign_up_details_id">
 		<xpath expr="//label[@for='mp_terms_conditions']" position="after">
 			<div>
 				<script type="text/javascript">
@@ -20,12 +21,16 @@
 
 		</xpath>
 	</template>
-	    <template id="account_sign_up_details_id" inherit_id="auth_signup.fields">
+
+	<template id="account_sign_up_details_id" inherit_id="auth_signup.fields">
 		<xpath expr="//div[hasclass('form-group', 'field-name')]" position="after">
 			<label for="mobile" class="control-label">Mobile</label>
 			<input type="tel" class="form-control" name="mobile" id="mobile" required="required" placeholder="+7 999 999 99 99"/>
 			<label for="address_data" class="control-label">Address</label>
 			<input type="text" class="form-control" name="address_data" id="address_data" required="required"/>
+
+			<!--TODO: use https://confluence.hflabs.ru/pages/viewpage.action?pageId=204669103-->
+
 			<script type="text/javascript">
 					function join(arr /*, separator */) {
 					  var separator = arguments.length > 1 ? arguments[1] : ', ';
@@ -48,9 +53,7 @@
 					}
 
 					function showRegion(address) {
-					  $('#state_id').val(join([
-						join([address.region_type, address.region], ' ')
-					  ]));
+					  $('#state_id').val(address.region_type);
 					}
 
 					function showArea(address) {
@@ -101,7 +104,23 @@
 					  type: 'ADDRESS',
 					  onSelect: showSelected
 					});
-				</script>
-			</xpath>
-	   	</template>
+			</script>
+			<div style="display:none">
+				<label for="zip" class="control-label">ZIP</label>
+				<input type="text" class="form-control" name="zip" id="zip"/>
+				<label for="state_id" class="control-label">Region</label>
+				<input type="text" class="form-control" name="state_id" id="state_id"/>
+				<label for="district_id" class="control-label">District</label>
+				<input type="text" class="form-control" name="district_id" id="district_id"/>
+				<label for="city_id" class="control-label">City</label>
+				<input type="text" class="form-control" name="city_id" id="city_id"/>
+				<label for="street" class="control-label">Street</label>
+				<input type="text" class="form-control" name="street" id="street"/>
+				<label for="house" class="control-label">House</label>
+				<input type="text" class="form-control" name="house" id="house"/>
+				<label for="flat" class="control-label">Flat</label>
+				<input type="text" class="form-control" name="flat" id="flat"/>
+			</div>
+		</xpath>
+	</template>
 </odoo>

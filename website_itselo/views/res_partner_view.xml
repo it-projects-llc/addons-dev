@@ -36,6 +36,20 @@
         </field>
     </record>
 
+    <record id="add_seller_in_res_partner_formview" model="ir.ui.view">
+        <field name="name">Partner.As.Seller</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="odoo_marketplace.add_seller_in_res_partner_formview"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='register_partner_as_a_seller']" position="after">
+                <field name="send_email_to_seller" colspan="4" attrs="{'invisible':[('seller','=',False)]}"/>
+                <field name="seller_email_template_id" colspan="4" attrs="{'required': [('send_email_to_seller', '=', True)], 'invisible':['|', ('send_email_to_seller','=',False), ('seller','=',False)]}"/>
+                <field name="limit" colspan="4" attrs="{'invisible':[('seller','=',False)]}"/>
+                <field name="total" colspan="4" attrs="{'invisible':[('seller','=',False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
     <!-- Partner Kanban View -->
     <record model="ir.ui.view" id="res_partner_kanban_view">
         <field name="name">res.partner.kanban</field>
