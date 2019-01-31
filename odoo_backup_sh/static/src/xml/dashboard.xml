@@ -6,26 +6,22 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 <templates id="template" xml:space="preserve">
 
     <t t-name="odoo_backup_sh.BackupDashboardMain">
-        <div class="o_backup_dashboard">
-            <div class="o_backup_dashboard_header">
-                <a href="#" class="o_box_item o_dashboard_action_add_database" title="Add new database in the dashboard.">
-                    <div class="o_inner_box o_primary">
+        <div class="container-fluid o_backup_dashboard">
+            <div class="row o_dashboard_common">
+                <div class="col-12 o_box">
+                    <div class="o_inner_box o_dashboard_action o_dashboard_action_add_database" title="Add new database in the dashboard.">
                         <i class="fa fa-plus fa-3x"/><br/>
                         Add Database
                     </div>
-                </a>
-                <a href="#" class="o_box_item o_dashboard_action_update_info" title="Update backups information.">
-                    <div class="o_inner_box o_primary">
+                    <div class="o_inner_box o_dashboard_action o_dashboard_action_update_info" title="Update backups information.">
                         <i class="fa fa-refresh fa-3x"/><br/>
                         Update Info
                     </div>
-                </a>
-                <a href="#" class="o_box_item o_dashboard_action_up_balance" title="Up to the balance."><!-- name="odoo_backup_sh.odoo_backup_sh_backup_action"-->
-                    <div class="o_inner_box o_primary">
+                    <div class="o_inner_box o_dashboard_action o_dashboard_action_up_balance" title="Up to the balance.">
                         <i class="fa fa-money fa-3x"/><br/>
-                        Go to Balance<br/>
+                        Go to Balance
                     </div>
-                </a>
+                </div>
             </div>
             <div class="o_backup_dashboard_note_section">
                 <div class="o_backup_dashboard_nocontent" t-if="widget.show_nocontent_msg">

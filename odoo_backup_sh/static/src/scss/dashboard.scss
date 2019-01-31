@@ -2,44 +2,54 @@
 // License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 .o_backup_dashboard {
-    display: flex;
-    flex-direction: column;
-}
-
-.o_backup_dashboard_header {
-    background-color: #fff;
-    border-bottom: 1px solid #d9d7d7;
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: flex-start;
-
-    > .o_box_item {
-        @media (max-width: @screen-sm-min) {
-            flex: 1 1 200px;
-            display: block !important;
-        }
-        @media (min-width: @screen-sm-min) {
-            flex: 0 0 16.6%;
-            display: inline-block;  // it's necessary for a correct passing of tests with PhantomJS,
-                                    // otherwise it can be deleted.
-        }
+    div.o_box {
+        @include clearfix;
+        color: $o-main-color-muted;
+        background-color: $o-view-background-color;
+        background-size: cover;
+        padding-top: $o-horizontal-padding;
+        position: static;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
     }
 
-    .o_inner_box {
-        padding-top: 10px;
-        text-align: center;
-        border: 1px solid @odoo-view-background-color;
-        height: 80px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-
-        &.o_primary {
-            background-color: @odoo-brand-primary;
+    .o_dashboard_common {
+        .o_box {
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: flex-start;
+            > .o_inner_box {
+                @include media-breakpoint-down(sm) {
+                    flex: 1 1 200px;
+                    display: block !important;
+                }
+                @include media-breakpoint-up(md) {
+                    flex: 0 0 16.6%;
+                }
+            }
+        }
+        .o_inner_box {
+            padding-top: 10px;
+            text-align: center;
+            border: 1px solid $o-view-background-color;
+            height: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            cursor: pointer;
             color: white;
-
-            &:hover {
-                background-color: darken(@odoo-brand-primary, 10%);
+            background-color: $o-brand-primary;
+                &:hover {
+                    background-color: darken($o-brand-primary, 10%);
+                }
+            &.o_primary {
+                background-color: $o-brand-odoo;
+                color: white;
+                &:hover {
+                    background-color: darken($o-brand-odoo, 10%);
+                }
+            }
+            .o_highlight {
+                font-size: 27px;
             }
         }
     }
