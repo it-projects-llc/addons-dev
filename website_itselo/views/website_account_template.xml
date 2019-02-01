@@ -3,7 +3,7 @@
 <odoo>
 
 	<template id="delivery_account_sign_up_details_id" inherit_id="odoo_marketplace.account_sign_up_details_id">
-		<xpath expr="//label[@for='mp_terms_conditions']" position="after">
+		<xpath expr="//div[@id='mp_seller_details']" position="after">
 			<div>
 				<script type="text/javascript">
 					function showMe (box) {
@@ -18,8 +18,12 @@
 					<input type="text" class="form-control" name="fleet" id="fleet"/>
 				</div>
 			</div>
-
 		</xpath>
+
+		<xpath expr="//div[@class='form-group field-country']" position="attributes">
+			<attribute name="style">display:none;</attribute>
+		</xpath>
+
 	</template>
 
 	<template id="account_sign_up_details_id" inherit_id="auth_signup.fields">
@@ -28,9 +32,6 @@
 			<input type="tel" class="form-control" name="mobile" id="mobile" required="required" placeholder="+7 999 999 99 99"/>
 			<label for="address_data" class="control-label">Address</label>
 			<input type="text" class="form-control" name="address_data" id="address_data" required="required"/>
-
-			<!--TODO: use https://confluence.hflabs.ru/pages/viewpage.action?pageId=204669103-->
-
 			<script type="text/javascript">
 					function join(arr /*, separator */) {
 					  var separator = arguments.length > 1 ? arguments[1] : ', ';
@@ -53,7 +54,9 @@
 					}
 
 					function showRegion(address) {
-					  $('#state_id').val(address.region_type);
+					  $('#state_id').val(join([
+						join([address.region_type, address.region], ' ')
+					  ]));
 					}
 
 					function showArea(address) {
