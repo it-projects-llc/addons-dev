@@ -9,6 +9,10 @@ Installation
 
     pip install pretty-bad-protocol
 
+* Install `Amazon Web Services (AWS) SDK for Python <https://boto3.amazonaws.com/v1/documentation/api/latest/index.html>`__ ::
+
+    pip install boto3
+
 * `Install <https://odoo-development.readthedocs.io/en/latest/odoo/usage/install-module.html>`__ this module in a usual way
 
 Configuration
