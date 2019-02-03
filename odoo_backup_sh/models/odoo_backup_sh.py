@@ -84,7 +84,8 @@ class BackupConfig(models.Model):
 
     @api.model
     def get_credit_url(self):
-        data = {'params': {'account_token': self.env['iap.account'].sudo().get('odoo_backup_sh').account_token}}
+        data = {'params': {'user_key': self.env['odoo_backup_sh.odoo_tools_config'].get_values(
+            'options', ['odoo_backup_user_key'])['odoo_backup_user_key']}}
         response = requests.post(BACKUP_SERVICE_ENDPOINT + '/get_credit_url', json=data).json()
         return response['result']['credit_url']
 
@@ -282,34 +283,6 @@ class BackupConfig(models.Model):
         self.env['odoo_backup_sh.backup_info'].create(info_file_content)
         return None
 
-    @api.model
-    def make_payment(self):
-        data = {'params': {
-            'user_key': self.env['odoo_backup_sh.odoo_tools_config'].get_values(
-                'options', ['odoo_backup_user_key'])['odoo_backup_user_key'],
-            'account_token': self.env['iap.account'].get('odoo_backup_sh').account_token,
-        }}
-        response = requests.post(BACKUP_SERVICE_ENDPOINT + '/make_payment', json=data).json()['result']
-        if 'user_key_error' in response and not self.env['odoo_backup_sh.notification'].sudo().search([
-                ('message', '=', response['user_key_error']), ('is_read', '=', False)]):
-            new_msg = self.env['odoo_backup_sh.notification'].sudo().create({'message': response['user_key_error']})
-            new_msg.create_mail_activity_record()
-            self.env['odoo_backup_sh.odoo_tools_config'].remove_options(
-                'options', ['odoo_backup_user_key', 'amazon_access_key_id', 'amazon_secret_access_key'])
-        elif 'insufficient_credit_error' in response:
-            existing_msg = self.env['odoo_backup_sh.notification'].sudo().search(
-                [('type', '=', 'insufficient_credits'), ('is_read', '=', False)])
-            notification_vals = {
-                'date_create': datetime.now(),
-                'type': 'insufficient_credits',
-                'message': response['insufficient_credit_error']
-            }
-            if existing_msg:
-                existing_msg.write(notification_vals)
-            else:
-                new_msg = self.env['odoo_backup_sh.notification'].sudo().create(notification_vals)
-                new_msg.create_mail_activity_record()
-
 
 class BackupConfigCron(models.Model):
     _name = 'odoo_backup_sh.config.cron'
@@ -404,7 +377,6 @@ class BackupNotification(models.Model):
         data = {'params': {
             'user_key': self.env['odoo_backup_sh.odoo_tools_config'].get_values(
                 'options', ['odoo_backup_user_key'])['odoo_backup_user_key'],
-            'account_token': self.env['iap.account'].get('odoo_backup_sh').account_token,
             'date_last_request': config_params.get_param('odoo_backup_sh.date_last_request', None)
         }}
         response = requests.post(BACKUP_SERVICE_ENDPOINT + '/fetch_notifications', json=data).json()['result']

@@ -84,7 +84,6 @@ class BackupController(http.Controller):
         cloud_params = requests.get(BACKUP_SERVICE_ENDPOINT + '/get_cloud_params', params={
             'user_key': user_key,
             'redirect': redirect,
-            'account_token': request.env['iap.account'].sudo().get('odoo_backup_sh').account_token,
         }).json()
         if 'insufficient_credit_error' in cloud_params:
             existing_msg = request.env['odoo_backup_sh.notification'].sudo().search(
@@ -99,23 +98,7 @@ class BackupController(http.Controller):
             else:
                 request.env['odoo_backup_sh.notification'].sudo().create(notification_vals)
         elif 'auth_link' not in cloud_params:
-            if 'date_first_payment' in cloud_params:
-                if not request.env['ir.cron'].sudo().search([('name', '=', 'Odoo-backup.sh: make next payment')]):
-                    request.env['ir.cron'].sudo().create({
-                        'name': 'Odoo-backup.sh: make next payment',
-                        'model_id': request.env.ref('odoo_backup_sh.model_odoo_backup_sh_config').id,
-                        'state': 'code',
-                        'code': 'model.make_payment()',
-                        'interval_number': 30,
-                        'interval_type': 'days',
-                        'numbercall': -1,
-                        'nextcall': (datetime.strptime(
-                            cloud_params['date_first_payment'], DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(days=30)),
-                        'doall': True,
-                        'active': True,
-                    })
-                del cloud_params['date_first_payment']
-            request.env['odoo_backup_sh.odoo_tools_config'].set_values('options', cloud_params)
+            request.env['odoo_backup_sh.odoo_tools_config'].sudo().set_values('options', cloud_params)
             request.env['odoo_backup_sh.notification'].sudo().search(
                 [('type', 'in', ['insufficient_credits', 'forecast_insufficient_credits']), ('is_read', '=', False)]
             ).unlink()
