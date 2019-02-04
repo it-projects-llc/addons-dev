@@ -177,7 +177,7 @@ class BackupController(http.Controller):
         date_list = [date_month_before + timedelta(days=x) for x in range(30)]
         last_month_domain = [('date', '>=', datetime.strftime(date_list[0], DEFAULT_SERVER_DATE_FORMAT))]
         usage_values = {
-            datetime.strptime(r.date, DEFAULT_SERVER_DATE_FORMAT).date(): r.total_used_remote_storage for r in
+            r.date: r.total_used_remote_storage for r in
             request.env['odoo_backup_sh.remote_storage'].search(last_month_domain).sorted(key='date')
         }
         for date in date_list:
@@ -204,8 +204,7 @@ class BackupController(http.Controller):
             for backup in request.env['odoo_backup_sh.backup_info'].search([
                     ('database', '=', b_config['database']),
                     ('upload_datetime', '>=', datetime.strftime(last_week_dates[0], DEFAULT_SERVER_DATETIME_FORMAT))]):
-                graph_values[datetime.strptime(backup.upload_datetime, DEFAULT_SERVER_DATETIME_FORMAT).date()] +=\
-                    backup.backup_size
+                graph_values[backup.upload_datetime.date()] += backup.backup_size
             b_config['graph'] = [{
                 'key': 'Backups of Last 7 Days',
                 'values': [{

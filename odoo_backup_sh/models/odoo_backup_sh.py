@@ -197,8 +197,7 @@ class BackupConfig(models.Model):
             # Delete unnecessary local backup info records
             backup_info_ids_to_delete = [
                 r.id for r in self.env['odoo_backup_sh.backup_info'].search([]) if
-                (r.database not in remote_backups or
-                 datetime.strptime(r.upload_datetime, DEFAULT_SERVER_DATETIME_FORMAT) not in remote_backups[r.database])
+                (r.database not in remote_backups or r.upload_datetime not in remote_backups[r.database])
             ]
             self.env['odoo_backup_sh.backup_info'].browse(backup_info_ids_to_delete).unlink()
 
@@ -426,8 +425,7 @@ class DeleteRemoteBackupWizard(models.TransientModel):
             backup_files_suffixes = ['.zip', '.info']
             if record.encrypted:
                 backup_files_suffixes[0] += '.enc'
-            upload_datetime = datetime.strftime(datetime.strptime(
-                record.upload_datetime, DEFAULT_SERVER_DATETIME_FORMAT), REMOTE_STORAGE_DATETIME_FORMAT)
+            upload_datetime = datetime.strftime(record.upload_datetime, REMOTE_STORAGE_DATETIME_FORMAT)
             for suffix in backup_files_suffixes:
                 remote_objects_to_delete += [{
                     'Key': '%s/%s.%s%s' % (cloud_params['odoo_oauth_uid'], record.database, upload_datetime, suffix)
