@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets" inherit_id="point_of_sale.assets">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/pos_esign_event_registration/static/src/js/pos_esign_event.js"></script>
+        </xpath>
+    </template>
+
+    <template id="assets_backend" name="pos_esign_event_registration assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/pos_esign_event_registration/static/src/js/esign_mode.js"></script>
+        </xpath>
+    </template>
+
+</odoo>
