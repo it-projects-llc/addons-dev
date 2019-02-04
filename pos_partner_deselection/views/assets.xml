@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_backend" name="pos_partner_deselection_assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <!--Internal files-->
+            <script type="text/javascript" src="/pos_partner_deselection/static/src/js/partner_deselection.js"></script>
+        </xpath>
+    </template>
+
+</odoo>
