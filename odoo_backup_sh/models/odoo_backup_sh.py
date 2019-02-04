@@ -24,7 +24,7 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.translate import _
-from ..controllers.main import BackupController, BACKUP_SERVICE_ENDPOINT
+from ..controllers.main import BackupCloudStorage, BackupController, BACKUP_SERVICE_ENDPOINT
 
 config_parser = ConfigParser.ConfigParser()
 _logger = logging.getLogger(__name__)
@@ -84,7 +84,7 @@ class BackupConfig(models.Model):
 
     @api.model
     def get_credit_url(self):
-        data = {'params': {'user_key': self.env['odoo_backup_sh.odoo_tools_config'].get_values(
+        data = {'params': {'user_key': BackupController.get_config_values(
             'options', ['odoo_backup_user_key'])['odoo_backup_user_key']}}
         response = requests.post(BACKUP_SERVICE_ENDPOINT + '/get_credit_url', json=data).json()
         return response['result']['credit_url']
@@ -149,7 +149,7 @@ class BackupConfig(models.Model):
 
     @api.model
     def update_info(self, cloud_params):
-        backup_list = self.env['odoo_backup_sh.cloud_storage'].get_backup_list(cloud_params)
+        backup_list = BackupCloudStorage.get_backup_list(cloud_params)
         if 'backup_list' in backup_list:
             # Create a dictionary with remote backup objects:
             # remote_backups = {
@@ -190,7 +190,7 @@ class BackupConfig(models.Model):
 
             # Delete unnecessary remote backup objects
             if remote_objects_to_delete:
-                res = self.env['odoo_backup_sh.cloud_storage'].delete_objects(cloud_params, remote_objects_to_delete)
+                res = BackupCloudStorage.delete_objects(cloud_params, remote_objects_to_delete)
                 if res and 'reload_page' in res:
                     return res
 
@@ -212,8 +212,7 @@ class BackupConfig(models.Model):
                                                                    DEFAULT_SERVER_DATETIME_FORMAT))
                     ]):
                         info_file_name = files_names[0] if files_names[0][-5:] == '.info' else files_names[1]
-                        info_file_object = self.env['odoo_backup_sh.cloud_storage'].get_object(
-                            cloud_params, info_file_name)
+                        info_file_object = BackupCloudStorage.get_object(cloud_params, info_file_name)
                         if 'reload_page' in info_file_object:
                             return info_file_object
                         info_file = tempfile.NamedTemporaryFile()
@@ -242,7 +241,7 @@ class BackupConfig(models.Model):
         dump_stream = odoo.service.db.dump_db(name, None, 'zip')
         backup_name_suffix = '.zip'
         if self.env['ir.config_parameter'].get_param('odoo_backup_sh.encrypt_backups', 'False').lower() == 'true':
-            passphrase = self.env['odoo_backup_sh.odoo_tools_config'].get_values(
+            passphrase = BackupController.get_config_values(
                 'options', ['odoo_backup_encryption_password'])['odoo_backup_encryption_password']
             if not passphrase:
                 raise UserError(_('Encryption password is not found. Please check your module settings.'))
@@ -275,7 +274,7 @@ class BackupConfig(models.Model):
         s3_info_file_path = '%s/%s.%s.info' % (cloud_params['odoo_oauth_uid'], name, ts)
         # Upload two backup objects to AWS S3
         for obj, obj_path in [[dump_stream, s3_backup_path], [info_file, s3_info_file_path]]:
-            res = self.env['odoo_backup_sh.cloud_storage'].put_object(cloud_params, obj, obj_path)
+            res = BackupCloudStorage.put_object(cloud_params, obj, obj_path)
             if res and 'reload_page' in res:
                 return res
         # Create new record with backup info data
@@ -375,7 +374,7 @@ class BackupNotification(models.Model):
     def fetch_notifications(self):
         config_params = self.env['ir.config_parameter']
         data = {'params': {
-            'user_key': self.env['odoo_backup_sh.odoo_tools_config'].get_values(
+            'user_key': BackupController.get_config_values(
                 'options', ['odoo_backup_user_key'])['odoo_backup_user_key'],
             'date_last_request': config_params.get_param('odoo_backup_sh.date_last_request', None)
         }}
@@ -435,7 +434,7 @@ class DeleteRemoteBackupWizard(models.TransientModel):
                 }]
         # Delete unnecessary remote backup objects
         if remote_objects_to_delete:
-            res = self.env['odoo_backup_sh.cloud_storage'].delete_objects(cloud_params, remote_objects_to_delete)
+            res = BackupCloudStorage.delete_objects(cloud_params, remote_objects_to_delete)
             if res and 'reload_page' in res:
                 raise UserError(_("Something went wrong. Please update backup dashboard page."))
         backup_info_records.unlink()
