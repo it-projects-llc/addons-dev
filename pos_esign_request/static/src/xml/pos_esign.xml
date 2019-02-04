@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+<templates id="pos_esign_request_template" xml:space="preserve">
+
+    <t t-extend="PaymentScreenWidget">
+        <t t-jquery="span.button.next" t-operation="before">
+            <span class='button esign'>
+                E-Sign
+                <i class="fas fa-signature"></i>
+            </span>
+        </t>
+    </t>
+
+    <t t-extend="ClientListScreenWidget">
+        <t t-jquery="table.client-list tr" t-operation="append">
+            <th id="client-list-esign">E-Sign</th>
+        </t>
+        <t t-jquery=".button.next" t-operation="before">
+            <span id="esign_request" class="button esign">
+                E-Sign
+            </span>
+        </t>
+    </t>
+
+    <t t-extend="ClientLine">
+        <t t-jquery="tr.client-line" t-operation="append">
+            <td class="esign">
+                <t t-esc='!!(partner.sign_attachment_id) &amp;&amp; "&#10004;" || ""'/>
+            </td>
+        </t>
+    </t>
+</templates>
