@@ -213,7 +213,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
         <field name="model">odoo_backup_sh.delete_remote_backup_wizard</field>
         <field name="arch" type="xml">
             <form string="Confirmation">
-                <div class="modal-body">Are you sure you want to delete this record from remote storage?</div>
+                <div><strong>Are you sure you want to delete this record from remote storage?</strong></div>
                 <footer>
                     <button string="Ok" name="delete_remove_backup_button" type="object" class="btn-primary"/>
                     <button string="Cancel" class="btn-default" special="cancel" />
