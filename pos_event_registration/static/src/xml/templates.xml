@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+<templates id="pos_esign_request_template" xml:space="preserve">
+
+        <t t-extend="ReceiptScreenWidget">
+            <t t-jquery=".top-content" t-operation="prepend">
+                <span class='button attendee'>
+                    Open Attendee
+                    <i class='fa fa-user'></i>
+                </span>
+            </t>
+        </t>
+
+</templates>

@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+<templates id="pos_esign_request_template" xml:space="preserve">
+
+    <t t-name="AttendeeButton">
+        <div class='control-button'>
+            <i class="fa fa-user"></i> Attendees
+        </div>
+    </t>
+
+    <t t-name="AttendeeUpdateButton">
+        <div class='button next highlight'>Attendeed</div>
+    </t>
+
+    <t t-name="AttendeeLine">
+        <tr class='client-line' t-att-data-id='attendee.id'>
+            <td><t t-esc='attendee.name || attendee.partner_id[1]' /></td>
+            <td><t t-esc='attendee.partner_id[1]' /></td>
+            <td><t t-esc='attendee.date_open' /></td>
+            <td>
+                <t t-if='attendee.state'>
+                    <t t-if='attendee.state == "draft"'>
+                        <span class='detail client-phone'>Unconfirmed</span>
+                    </t>
+                    <t t-if='attendee.state == "open"'>
+                        <span class='detail client-phone'>Confirmed</span>
+                    </t>
+                    <t t-if='attendee.state == "done"'>
+                        <span class='detail client-phone'>Attended</span>
+                    </t>
+                    <t t-if='attendee.state == "cancel"'>
+                        <span class='detail client-phone'>Canceled</span>
+                    </t>
+                </t>
+            </td>
+        </tr>
+    </t>
+
+    <t t-name="AttendeeDetailsEdit">
+        <section class='client-details edit'>
+            <div class='client-picture'>
+                <t t-if='!attendee.id'>
+                    <i class='fa fa-camera'></i>
+                </t>
+                <t t-if='attendee.id'>
+                    <img t-att-src='widget.attendee_icon_url(attendee.id)' />
+                </t>
+                <input type='file' class='image-uploader'></input>
+            </div>
+            <input class='detail client-name' name='name' t-att-value='attendee.name || ""' placeholder='Name'></input>
+            <div class='edit-buttons'>
+                <div class='button undo'><i class='fa fa-undo' /></div>
+                <div class='button save'><i class='fa fa-floppy-o' /></div>
+            </div>
+            <div class='client-details-box clearfix'>
+                <div class='client-details-left'>
+                    <div class='client-detail'>
+                        <span class='label'>Street</span>
+                        <input class='detail client-address-street' name='street'       t-att-value='attendee.street || ""' placeholder='Street'></input>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>City</span>
+                        <input class='detail client-address-city'   name='city'         t-att-value='attendee.city || ""' placeholder='City'></input>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>Phone</span>
+                        <input class='detail client-phone'  name='phone'    type='tel'      t-att-value='attendee.phone || ""'></input>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>Country</span>
+                        <select class='detail client-address-country needsclick' name='country_id'>
+                            <option value=''>None</option>
+                            <t t-foreach='widget.pos.countries' t-as='country'>
+                                <option t-att-value='country.id' t-att-selected="attendee.country_id ? ((country.id === attendee.country_id[0]) ? true : undefined) : undefined">
+                                    <t t-esc='country.name'/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                </div>
+                <div class='client-details-right'>
+                    <div class='client-detail'>
+                        <span class='label'>Email</span>
+                        <input class='detail client-email' name='email' type='email' t-att-value='attendee.email || ""'></input>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>Ticket Barcode</span>
+                        <input class='detail barcode' name='barcode' t-att-value='attendee.barcode || ""'></input>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>Ticket</span>
+                        <select class='detail client-address-country needsclick' name='event_ticket_id'>
+                            <option value=''>None</option>
+                            <t t-foreach='widget.pos.db.tickets' t-as='ticket'>
+                                <option t-att-value='ticket.id' t-att-selected="attendee.event_ticket_id ? ((ticket.id === attendee.event_ticket_id[0]) ? true : undefined) : undefined">
+                                    <t t-esc='ticket.name'/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>RFID</span>
+                        <input class='detail barcode' name='rfid' t-att-value='attendee.rfid || ""'></input>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </t>
+
+    <t t-name="AttendeeDetails">
+        <section class='client-details'>
+            <div class='client-picture'>
+                <img t-att-src='widget.attendee_icon_url(attendee.id)' />
+            </div>
+            <div class='client-name' name='name'><t t-esc='attendee.name || attendee.partner_id[1]' /></div>
+            <div class='edit-buttons attendee-update-buttons'/>
+            <div class='edit-buttons'>
+                <div class='button edit'><i class='fa fa-pencil-square' /></div>
+            </div>
+            <div class='client-details-box clearfix'>
+                <div class='client-details-left'>
+                    <div class='client-detail'>
+                        <span class='label'>Address</span>
+                        <t t-set="address" t-value="attendee.address || (partner &amp;&amp; partner.address)"/>
+                        <t t-if='address'>
+                            <span class='detail client-address' name='address'><t t-esc='address' /></span>
+                        </t>
+                        <t t-if='!address'>
+                            <span class='detail client-address empty'>N/A</span>
+                        </t>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>Email</span>
+                        <t t-if='attendee.email'>
+                            <span class='detail client-email' name='email'><t t-esc='attendee.email' /></span>
+                        </t>
+                        <t t-if='!attendee.email'>
+                            <span class='detail client-email empty'>N/A</span>
+                        </t>
+                    </div>
+                    <!--<div class='client-detail'>
+                        <t t-set="phone" t-value="attendee.phone || (partner &amp;&amp; partner.phone)"/>
+                        <span class='label'>Phone</span>
+                        <t t-if='phone'>
+                            <span class='detail client-phone'><t t-esc='phone' /></span>
+                        </t>
+                        <t t-if='!phone'>
+                            <span class='detail client-phone empty'>N/A</span>
+                        </t>
+                    </div>-->
+                </div>
+                <div class='client-details-right'>
+                    <div class='client-detail'>
+                        <span class='label'>Ticket Barcode</span>
+                        <t t-if='attendee.barcode'>
+                            <span class='detail client-id' name='barcode'><t t-esc='attendee.barcode'/></span>
+                        </t>
+                        <t t-if='!attendee.barcode'>
+                            <span class='detail client-id empty'>N/A</span>
+                        </t>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>RFID</span>
+                        <t t-if='attendee.rfid'>
+                            <span class='detail client-id field' name='rfid'><t t-esc='attendee.rfid'/></span>
+                        </t>
+                        <t t-if='!attendee.rfid'>
+                            <span class='detail client-id empty'>N/A</span>
+                        </t>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>Ticket</span>
+                        <t t-if='attendee.event_ticket_id'>
+                            <span class='detail client-phone' name='event_ticket_id'><t t-esc='attendee.event_ticket_id[1]' /></span>
+                        </t>
+                        <t t-if='!attendee.event_ticket_id'>
+                            <span class='detail client-phone empty'>N/A</span>
+                        </t>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>State</span>
+                        <t t-if='attendee.state'>
+                            <t t-if='attendee.state == "draft"'>
+                                <span class='detail client-phone'>Unconfirmed</span>
+                            </t>
+                            <t t-if='attendee.state == "open"'>
+                                <span class='detail client-phone'>Confirmed</span>
+                            </t>
+                            <t t-if='attendee.state == "done"'>
+                                <span class='detail client-phone'>Attended</span>
+                            </t>
+                            <t t-if='attendee.state == "cancel"'>
+                                <span class='detail client-phone'>Canceled</span>
+                            </t>
+                        </t>
+                        <t t-if='!attendee.state'>
+                            <span class='detail client-phone empty'>N/A</span>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </t>
+
+    <t t-name="AttendeeListScreenWidget">
+        <div class="clientlist-screen screen">
+            <div class="screen-content">
+                <section class="top-content">
+                    <span class='button back'>
+                        <i class='fa fa-angle-double-left'></i>
+                        Cancel
+                    </span>
+                    <span class='searchbox'>
+                        <input placeholder='Search Customers' />
+                        <span class='search-clear'></span>
+                    </span>
+                    <span class='searchbox'></span>
+                    <!--<span class='button new-customer'>
+                        <i class='fa fa-user'></i>
+                        <i class='fa fa-plus'></i>
+                    </span> -->
+                    <span class='button attendeed highlight' style="display:none;">
+                        Attendeed
+                        <i class='fa fa-plus'></i>
+                    </span>
+                    <span class='button next oe_hidden highlight'>
+                        Select Attendee
+                        <i class='fa fa-angle-double-right'></i>
+                    </span>
+                </section>
+                <section class="full-content">
+                    <div class='window'>
+                        <section class='subwindow collapsed'>
+                            <div class='subwindow-container collapsed'>
+                                <div class='subwindow-container-fix client-details-contents'>
+                                </div>
+                            </div>
+                        </section>
+                        <section class='subwindow'>
+                            <div class='subwindow-container'>
+                                <div class='subwindow-container-fix touch-scrollable scrollable-y'>
+                                    <table class='client-list'>
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>attendee</th>
+                                                <th>Date Opened</th>
+                                                <th>State</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class='client-list-contents'>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </t>
+
+</templates>

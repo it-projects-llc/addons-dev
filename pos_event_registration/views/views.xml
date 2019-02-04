@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+<odoo>
+
+    <!-- POS CONFIG -->
+    <record id="view_pos_config_form" model="ir.ui.view">
+        <field name="name">pos.config.form</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_config_form"/>
+        <field name="arch" type="xml">
+            <group name="receipt" position="after">
+                <group name="event" string="Event" >
+                    <field name="pos_event_id"/>
+                    <field name="show_only_tickets" attrs="{'invisible':[('pos_event_id','in', [False, None])]}"/>
+                    <field name="ask_for_rfid" attrs="{'invisible':[('pos_event_id','in', [False, None])]}"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record id="view_pos_config_kanban_inherited" model="ir.ui.view">
+        <field name="name">pos.config.kanban.view</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_config_kanban"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="pos_event_id"/>
+            </field>
+            <div class="o_primary" position="inside">
+                <div class="o_secondary">
+                    <t t-esc="record.pos_event_id &amp;&amp; record.pos_event_id.value || ''"/>
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <!-- EVENT REGISTRATION -->
+    <record model="ir.ui.view" id="view_event_registration_form_inherited">
+        <field name="name">event.registration.form</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_event_registration_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="barcode"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- EVENT.EVENT VIEWS -->
+    <record model="ir.ui.view" id="view_event_form_inherited">
+        <field name="name">event.event.form</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="arch" type="xml">
+            <field name="auto_confirm" position="after">
+                <field name="mandatory_rfid"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
