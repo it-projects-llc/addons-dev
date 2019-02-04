@@ -59,7 +59,7 @@ models.load_models({
     fields: ['name','street','city','state_id','country_id','vat','phone','zip','mobile','email','barcode','write_date','property_account_position_id'],
     ids:    function(self){
         return self.config.pos_event_id
-         ? self.db.ticket_customers_ids
+         ? _.difference(self.db.ticket_customers_ids, self.db.partner_sorted) // difference exclude already downloaded partners
          : [];
     },
     loaded: function(self, partners){
