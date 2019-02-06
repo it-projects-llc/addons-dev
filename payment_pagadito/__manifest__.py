@@ -19,7 +19,7 @@
     "depends": [
         "payment",
     ],
-    "external_dependencies": {"python": [], "bin": []},
+    "external_dependencies": {"python": ["zeep"], "bin": []},
     "data": [
         "views/payment_pagadito_templates.xml",
         "views/payment_acquirer_views.xml",

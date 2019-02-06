@@ -8,11 +8,6 @@
 
 Integration with Pagadito.com payment service
 
-Roadmap
-=======
-
-* Requests to pagadito API is called before choosing Pagadito as payment method. Though it's ok when Pagadito is the only option
-
 Credits
 =======
 

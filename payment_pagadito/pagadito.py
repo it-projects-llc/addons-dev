@@ -6,15 +6,17 @@ import urllib
 import urllib2
 import json
 
-
 _logger = logging.getLogger(__name__)
+
+
+try:
+    from zeep import Client
+except ImportError as err:
+    Client = None
+    _logger.debug(err)
 
 # from WSPG section of Pagadito docs
 # https://dev.pagadito.com/index.php?mod=docs&hac=wspg
-
-WSPG_URL_SANDBOX = "https://sandbox.pagadito.com/comercios/wspg/charges.php"
-WSPG_URL = "https://comercios.pagadito.com/wspg/charges.php"
-
 
 PG_SUCCESS = "PG1001"  #	Connection successful.	X	X	Conexión exitosa del Pagadito Comercio con el WSPG.
 # PG_ = "PG1002"  #	Transaction register successful.	X	X	La transacción enviada por el Pagadito Comercio fue registrada correctamente por el WSPG.
@@ -40,22 +42,47 @@ STATUS_FAILED = "FAILED"  # La transacción ha sido registrada correctamente en 
 STATUS_CANCELED = "CANCELED"  # La transacción ha sido cancelada por el usuario en Pagadito, la transacción tiene este estado cuando el usuario hace click en el enlace de "regresar al comercio" en la pantalla de pago de Pagadito.
 STATUS_EXPIRED = "EXPIRED"  # La transacción ha expirado en Pagadito, la transacción tiene este estado cuando se termina el tiempo para completar la transacción por parte del usuario en Pagadito, el tiempo para completar la transacción en Pagadito por parte del usuario es de 10 minutos. Pagadito también se encarga de poner estado EXPIRED a todas las transacciones que no fueron completas, debido a que el usuario salio de manera inesperada del proceso de pago, por ejemplo cerrando la ventana del navegador.
 
-# Don't ask me what the hell is that -- I got it from SDK files in  "Descargas" section of the docs
-OP_CONNECT = "f3f191ce3326905ff4403bb05b0de150"
-OP_EXEC_TRANS = "41216f8caf94aaa598db137e36d4673e"
-OP_GET_STATUS = "0b50820c65b0de71ce78f6221a5cf876"
-OP_GET_EXCHANGE_RATE = "da6b597cfcd0daf129287758b3c73b76"
+SUPPORTED_CURRENCY = [
+    'USD',  # Valor por defecto. Dólares americanos.
+    'GTQ',  # Quetzales.
+    'HNL',  # Lempiras.
+    'NIO',  # Córdobas.
+    'CRC',  # Colones costarricenses.
+    'PAB',  # Balboas.
+    'DOP',  # Pesos dominicanos.
+]
+
+# operation list
+OP_CONNECT = "connect"
+OP_EXEC_TRANS = "exec_trans"
+
+SANDBOX2WSDL_URL = {
+    True: "https://sandbox.pagadito.com/comercios/wspg/charges.php?wsdl",
+    False: "https://comercios.pagadito.com/wspg/charges.php?wsdl"
+}
+sandbox2client = {}
 
 
-def call(operation, params, sandbox=True):
-    url = WSPG_URL_SANDBOX if sandbox else WSPG_URL
-    params['operation'] = operation
+def get_client(sandbox=True):
+    """Returns cached client or creates new one"""
+    global client
+    client = sandbox2client.get(sandbox)
+    if not client:
+        url = SANDBOX2WSDL_URL[sandbox]
+        client = Client(url)
+        sandbox2client[sandbox] = client
+
+    return client
+
+
+def call(operation, params=None, sandbox=True):
     params['format_return'] = 'json'
+    _logger.debug('Call "%s" in sandbox=%s with args:\n%s', operation, sandbox, params)
+    client = get_client(sandbox)
+    operation = getattr(client.service, operation)
+    params = params or {}
+    response = operation(**params)
 
-    params_encoded = urllib.urlencode(params)
-    _logger.debug('Sending request:\n%s\n%s\n%s', url, params, params_encoded)
-    res = urllib2.urlopen(url, params_encoded)
-    _logger.debug('Raw response:\n%s', res)
-
-    res_json = json.load(res)
+    _logger.debug('Raw response:\n%s', response)
+    res_json = json.loads(response)
     return res_json

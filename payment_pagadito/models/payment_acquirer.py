@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Copyright 2019 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+import json
 from odoo import models, fields, api
 from .. import pagadito
+from odoo.http import request
 
 
 class AcquirerPagadito(models.Model):
@@ -14,6 +16,11 @@ class AcquirerPagadito(models.Model):
 
     @api.multi
     def pagadito_form_generate_values(self, values):
+        reference = values['reference']
+        if reference == '/':
+            # we are on /shop/payment
+            # -- selecting payment method screen only
+            return values
         sandbox = self.environment != 'prod'
         # connect
         res = pagadito.call(pagadito.OP_CONNECT, {
@@ -22,27 +29,28 @@ class AcquirerPagadito(models.Model):
         }, sandbox=sandbox)
         token = res['value']
         # exec_trans
-        order = self._txref2order(values['reference'])
+        order = request.website.sale_get_order()
         details = self._order2pagadito_details(order)
         res = pagadito.call(pagadito.OP_EXEC_TRANS, {
             'token': token,
             'ern': order.name,
             'amount': order.amount_total,
-            'details': details,
+            'details': json.dumps(details),
+            'currency': self._currency2pagadito_code(order.currency_id),
+            'custom_params': '',  # TODO
+            'allow_pending_payments': '', # What is that?
+            'extended_expiration': False, # What is that?
         }, sandbox=sandbox)
+        # TODO: Check for errors in response here
 
         values['pagadito_url'] = res['value']
         return values
 
-    @api.multi
-    def _txref2order(self, reference):
-        tx = self.env['payment.transaction'].search([
-            ('reference', '=', reference)
-        ])
-        order = self.env['sale.order'].search([
-            ('payment_tx_id', '=', tx.id),
-        ])
-        return order
+    @api.model
+    def _currency2pagadito_code(self, currency):
+        code = currency.name
+        assert code in pagadito.SUPPORTED_CURRENCY
+        return code
 
     @api.model
     def _order2pagadito_details(self, order):
@@ -55,3 +63,4 @@ class AcquirerPagadito(models.Model):
                 'price': line.price_unit,
                 'url_product': "%s/shop/product/%s" % (base_url, line.product_id.product_tmpl_id)
             })
+        return res
