@@ -5,6 +5,7 @@ import jinja2
 import logging
 import os
 import random
+import re
 import requests
 import string
 import tempfile
@@ -47,14 +48,15 @@ class BackupDatabase(web.controllers.main.Database):
     def _render_template(self, **d):
         res = super(BackupDatabase, self)._render_template(**d)
         # Show button 'Restore via Odoo-backup.sh' on web/database/manager and web/database/selector pages
-        place_for_backup_button = res.find(
-            '<button type="button" data-toggle="modal" data-target=".o_database_restore"'
-        )
-        if place_for_backup_button == -1:
-            place_for_backup_button = res.find(
-                '<a role="button" data-toggle="modal" data-target=".o_database_restore" class="btn btn-link">'
-            )
-        if place_for_backup_button != -1:
+        place_for_backup_button = re.search('Set Master Password</button>.*\n.*</div>', res)
+        if place_for_backup_button:
+            place_for_backup_button = place_for_backup_button.end()
+        else:
+            place_for_backup_button = re.search(
+                '<a role="button" data-toggle="modal" data-target=".o_database_restore" class="btn btn-link">', res)
+            if place_for_backup_button:
+                place_for_backup_button = place_for_backup_button.start()
+        if place_for_backup_button:
             d['list_db'] = config['list_db']
             d['databases'] = []
             try:
@@ -106,7 +108,7 @@ class BackupController(http.Controller):
                 existing_msg.write(notification_vals)
             else:
                 request.env['odoo_backup_sh.notification'].sudo().create(notification_vals)
-        elif 'auth_link' not in cloud_params:
+        elif all(param not in cloud_params for param in ['auth_link', 'insufficient_credit_error']):
             cls.set_config_values('options', cloud_params)
             if call_from == 'backend':
                 request.env['odoo_backup_sh.notification'].sudo().search(
