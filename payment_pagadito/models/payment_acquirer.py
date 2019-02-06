@@ -59,8 +59,8 @@ class AcquirerPagadito(models.Model):
         for line in order.order_line:
             res.append({
                 'quantity': line.product_uom_qty,
-                'description': line.name,
+                'description': line.name.replace('\n', ' | '),
                 'price': line.price_unit,
-                'url_product': "%s/shop/product/%s" % (base_url, line.product_id.product_tmpl_id)
+                'url_product': "%s/shop/product/%s" % (base_url, line.product_id.product_tmpl_id.id)
             })
         return res
