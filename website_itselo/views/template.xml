@@ -106,6 +106,7 @@
         <xpath expr="." position="inside">
             <link rel="stylesheet" href="/website_itselo/static/src/css/suggestions.css" type="text/css"/>
             <script type="text/javascript" src="/website_itselo/static/src/js/jquery.suggestions.js"/>
+            <script type="text/javascript" src="/website_itselo/static/src/js/website_sale.js"></script>
         </xpath>
     </template>
 
