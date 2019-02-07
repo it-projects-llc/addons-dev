@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="products_item" inherit_id="website_sale.products_item" name="Products item">
-        <xpath expr="//div[@class='product_price']" position="attributes">
-            <attribute name="style">color: #28a745</attribute>
-        </xpath>
         <xpath expr="//span[@t-esc='product.website_price']" position="after">
             за <span t-esc="product.sudo().uom_id.name"/>
         </xpath>
@@ -11,21 +8,35 @@
             <t t-set="marketplace_seller_id" t-value="product.sudo().marketplace_seller_id"/>
             <t t-if="marketplace_seller_id and marketplace_seller_id.seller">
                 <div style="color: #28a745">
-                    Достигнуто <t t-esc="int(round((marketplace_seller_id.total * 100.0)/marketplace_seller_id.limit))"/> %
+                    Объем достигнут на <t t-esc="int(round((marketplace_seller_id.total * 100.0)/marketplace_seller_id.limit))"/>%
                 </div>
             </t>
         </xpath>
     </template>
 
     <template id="product_items" name="Products" inherit_id="alan_customize.product_items">
+        <xpath expr="//span[@t-esc='product.website_price']" position="before">
+            <t t-set="marketplace_seller_id" t-value="product.sudo().marketplace_seller_id"/>
+            <t t-if="marketplace_seller_id and marketplace_seller_id.seller">
+                <div style="color: #28a745">
+                    Объем достигнут на <t t-esc="int(round((marketplace_seller_id.total * 100.0)/marketplace_seller_id.limit))"/>%
+                </div>
+            </t>
+        </xpath>
         <xpath expr="//span[@t-esc='product.website_price']" position="after">
             <b> за <span t-esc="product.sudo().uom_id.name"/> </b>
         </xpath>
     </template>
 
     <template id="product_price" inherit_id="website_sale.product_price">
+        <xpath expr="//b[@class='oe_price']" position="attributes">
+            <attribute name="style">white-space: nowrap; color: #28a745;</attribute>
+        </xpath>
         <xpath expr="//b[@class='oe_price']" position="after">
-            <b style="margin-left: -10px;"> за <span t-esc="product.sudo().uom_id.name"/> </b>
+            <b style="margin-left: -10px; color: #28a745;"> за <span t-esc="product.sudo().uom_id.name"/> </b>
+        </xpath>
+        <xpath expr="//span[@t-field='product.lst_price']" position="attributes">
+            <attribute name="style">color: #28a745;</attribute>
         </xpath>
         <xpath expr="//span[@t-field='product.lst_price']" position="after">
             за <span t-esc="product.sudo().uom_id.name"/>
@@ -40,7 +51,7 @@
                     <div>
                         <div>С Вашего населенного пункта набралось заказов на: <span style="color: #28a745" t-esc='order.partner_id.city_id.total' t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/></div>
                         <div>Для бесплатной доставки необходимо: <span style="color: #28a745" t-esc='order.partner_id.city_id.limit' t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}' class="address-inline"/></div>
-                        <div>Ожидаемое время набора: <span class="font-weight-bold" t-esc='order.partner_id.city_id.expected_delivery_time'/><span class="font-weight-bold"> дней</span></div>
+                        <div>Ожидаемое время набора: <span class="font-weight-bold" t-esc='order.partner_id.city_id.expected_delivery_time'/><span class="font-weight-bold"> дня/дней</span></div>
                     </div>
                 </div>
             </div>
@@ -53,13 +64,13 @@
             <t t-set="marketplace_seller_id" t-value="product.sudo().marketplace_seller_id"/>
             <t t-if="marketplace_seller_id and marketplace_seller_id.seller">
                 <h4 style="color: #28a745">
-                    Объем достигнут на <t t-esc="int(round((marketplace_seller_id.total * 100.0)/marketplace_seller_id.limit))"/> %
+                    Объем достигнут на <t t-esc="int(round((marketplace_seller_id.total * 100.0)/marketplace_seller_id.limit))"/>%
                 </h4>
             </t>
         </xpath>
     </template>
 
-    <template id="product" name="Product" inherit_id="website_sale.products">
+    <template id="products" name="Product" inherit_id="website_sale.products">
         <xpath expr="//div[@id='oe_structure_website_sale_products_1']" position="after">
             <t t-call="website_itselo.total_city_limit"/>
         </xpath>
