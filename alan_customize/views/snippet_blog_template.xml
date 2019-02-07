@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+  <template id="assets_editor_blog" inherit_id="website.assets_editor" name="Editor assets">
+    <xpath expr="//script[last()]" position="after">
+      <script type="text/javascript" src="/alan_customize/static/src/js/website.editor.blog.js"></script>
+    </xpath>
+  </template>
+  
+  <template id="assent_front_blog_slider" inherit_id="website.assets_frontend">
+    <xpath expr="." position="inside">
+      <script type="text/javascript"  src="/alan_customize/static/src/js/website.front.blog.js"></script>
+    </xpath>
+  </template>
+
+  <template name="Latest Blog" id="latest_blog">
+    <section class="as-latest-blog web_blog_slider" data-blog-id="0" contentEditable="false">
+      <div class="seaction-head">
+        <h2>Latest Blog</h2>
+      </div>
+    </section>
+  </template>
+
+  <template id="alan_customize.blog_slider_items">
+    <div t-attf-class="tqt-blog-slide owl-carousel" t-if="blog_slider and blog_slider.blog_ids">
+      <t t-foreach="blog_slider.blog_ids" t-as="blog">
+        <div class="section-post">
+          <a t-attf-href="/blog/#{slug(blog.blog_id)}/post/#{slug(blog)}" title="" t-if="blog.cover_properties">
+            <t t-set="cover_property" t-value="json.loads(blog.cover_properties)"/>
+            <div class="section-post-media" t-attf-style="background-image: #{cover_property.get('background-image', 'none')}" t-if="blog.cover_properties">
+            </div>
+          </a>
+          <div class="section-post-body">
+            <div class="section-post-time">
+              <span t-field="blog.write_date"/>
+            </div>
+            <h4 class="section-post-title">
+              <a t-attf-href="/blog/#{slug(blog.blog_id)}/post/#{slug(blog)}" t-field="blog.name"></a>
+            </h4>
+            <p class="section-post-excerpt" t-field="blog.subtitle"></p>
+            <a t-attf-href="/blog/#{slug(blog.blog_id)}/post/#{slug(blog)}" title="" class="read-more">Read more</a>
+          </div>
+        </div>
+      </t>
+    </div>
+  </template>
+
+  <template id="blog_slider_content">
+    <div class="container" t-if="blog_slider">
+      <div class="seaction-head">
+        <t t-if="blog_slider.name">
+          <h2 t-field="blog_slider.name"/>
+        </t>
+      </div>
+      <t t-call="alan_customize.blog_slider_items"/>
+    </div>
+    <div class="container" t-if="not blog_slider">
+      <div class="seaction-head">
+        <h2>Latest Blog</h2>
+      </div>
+      <div class="alrt alrt-text">
+        No blog Found
+      </div>
+    </div>
+  </template>
+
+  <template id="snippet_options_blog" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+      <div data-js='latest_blog'
+        data-selector=".web_blog_slider">
+        <a tabindex="-1" href="#" class="dropdown-item" data-website_blog_configure="" data-no-preview="true">Modify</a>
+      </div>
+    </xpath>
+  </template>
+
+  <template id="place_into_bar_blog" inherit_id="website.snippets" name="Place Snippet into bar">
+    <xpath expr="//div[@id='snippet_structure']//div[hasclass('o_panel_body')]" position="inside">
+      <t t-snippet="alan_customize.latest_blog"
+       t-thumbnail="/alan_customize/static/src/icon/blogs.png"/>
+    </xpath>
+  </template>
+</odoo>

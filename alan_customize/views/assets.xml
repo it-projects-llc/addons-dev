@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Assets: scss, css, js -->
+  <template id="assent_front" inherit_id="website.assets_frontend">
+    <xpath expr="." position="inside">
+      <!-- scss File -->
+      <link href="/alan_customize/static/src/scss/as_variables.scss" rel="stylesheet" type="text/scss"/>
+      <t t-set="url_of_colr" t-value="request.website.get_colors_scss()"/>
+      <link t-att-href="url_of_colr" rel="stylesheet" type="text/scss"/>
+      <link href="/alan_customize/static/src/scss/as_mixin.scss" rel="stylesheet" type="text/scss"/>
+      <link href="/alan_customize/static/src/scss/as_base.scss" rel="stylesheet" type="text/scss"/>
+      <link href="/alan_customize/static/src/scss/as_custom.scss" rel="stylesheet" type="text/scss"/>
+      <link href="/alan_customize/static/src/scss/as_snippets.scss" rel="stylesheet" type="text/scss"/>
+      <link href="/alan_customize/static/src/scss/as_products.scss" rel="stylesheet" type="text/scss"/>
+      <link href="/alan_customize/static/src/scss/as_products_details.scss" rel="stylesheet" type="text/scss"/>
+      <link href="/alan_customize/static/src/scss/as_style.scss" rel="stylesheet" type="text/scss"/>
+      <link href="alan_customize/static/src/scss/as_header_a.scss" rel="stylesheet" type="text/scss"/>
+      <!-- CSS File -->
+      <link href="/alan_customize/static/src/css/owl.carousel.css" rel="stylesheet"/>
+      <link href="/alan_customize/static/src/css/slick.css" rel="stylesheet"/>
+      <link href="/alan_customize/static/src/css/magnific-popup.css" rel="stylesheet"/>
+      <link href="/alan_customize/static/src/fonts/themify-icons.css" rel="stylesheet"/>
+
+      <!-- Script File -->
+      <script type="text/javascript" src="/alan_customize/static/src/js/jquery.elevatezoom.js"></script>
+      <script type="text/javascript" src="/alan_customize/static/src/js/lib/jquery.magnific-popup.min.js"></script>
+      <script type="text/javascript" src="/alan_customize/static/src/js/owl.carousel.min.js"></script>
+      <script type="text/javascript" src="/alan_customize/static/src/js/slick.min.js"></script>
+      <script type="text/javascript" src="/alan_customize/static/src/js/clean_shopping_cart.js"></script>
+      <script type="text/javascript" src="/alan_customize/static/src/js/lib/waypoints.min.js"></script>
+      <script type="text/javascript" src="/alan_customize/static/src/js/lib/jquery.counterup.min.js"></script>
+      <script type="text/javascript" src="/alan_customize/static/src/js/jquery.countdown.min.js"></script>
+      <script type="text/javascript" src="/alan_customize/static/src/js/custom.js"></script>
+
+
+    </xpath>
+  </template>
+</odoo>

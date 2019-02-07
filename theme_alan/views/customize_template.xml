@@ -1,0 +1,1291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="option_colorPicker" name="option_colorPicker" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="." position="inside"></xpath>
+  </template>
+
+  <template id="theme_customize" inherit_id="website.theme_customize" name="theme_alan modal">
+    <xpath expr="//div" position="replace">
+    <div>
+        <!-- Layout Options -->
+        <content id="theme_customize_content_layout" string="Layout" title="Choose layout">
+            <!-- In a <more/> so that it is on a new line if themes add options before -->
+            <more data-depends="">
+                <list string="Body">
+                    <opt string="Full" data-xmlid="theme_alan.option_layout_fullwidth" data-reload="/" />
+                    <opt id="option_layout_boxed" string="Boxed" data-xmlid="theme_alan.option_layout_boxed" data-reload="/" />
+                </list>
+            </more>
+        </content>
+
+        <content id="theme_customize_content_colors" string="Colors" title="Choose theme color">
+            <opt data-xmlid="" data-color-palette="user" string="Choose your colors" id="custom_color_palate" data-reload="/"/>
+        </content>
+
+        <content id="theme_customize_content_header" string="Header" title="Choose header">
+            <!-- In a <more/> so that it is on a new line if themes add options before -->
+            <more data-depends="">
+                <list string="Header" id="customheader">                    
+                    <opt id="option_header_layout_1" string="Header option 1" data-xmlid="theme_alan.header_layout_1" data-reload="/"/>
+                    <opt id="option_header_layout_2" string="Header option 2" data-xmlid="theme_alan.header_layout_2" data-reload="/"/>
+                    <opt id="option_header_layout_3" string="Header option 3" data-xmlid="theme_alan.header_layout_3" data-reload="/"/>
+                    <opt id="option_header_layout_4" string="Header option 4" data-xmlid="theme_alan.header_layout_4" data-reload="/"/>
+                    <opt id="option_header_layout_5" string="Header option 5" data-xmlid="theme_alan.header_layout_5" data-reload="/"/>
+                </list>
+            </more>
+        </content>
+
+        <content id="theme_customize_content_footer" string="Footer" title="Choose footer">
+            <!-- In a <more/> so that it is on a new line if themes add options before -->
+            <more data-depends="">
+                <list string="Footer" id="customfooter">                    
+                    <opt id="option_footer_layout_1" string="Footer option 1" data-xmlid="theme_alan.footer_layout_1" data-reload="/"/>
+                    <opt id="option_footer_layout_2" string="Footer option 2" data-xmlid="theme_alan.footer_layout_2" data-reload="/"/>
+                    <opt id="option_footer_layout_3" string="Footer option 3" data-xmlid="theme_alan.footer_layout_3" data-reload="/"/>
+                    <opt id="option_footer_layout_4" string="Footer option 4" data-xmlid="theme_alan.footer_layout_4" data-reload="/"/>
+                </list>
+            </more>
+        </content>
+
+        <content id="theme_customize_shop_layout" string="Shop" title="Shop layout">
+          <more data-depends="">
+            <list string="Shop" id="customshop">
+              <opt id="options_shop_full_width" string="Shop full width" data-xmlid="theme_alan.options_shop_full_width" data-reload="/" />
+              <opt id="options_shop_reset" string="Shop reset" data-xmlid="theme_alan.options_shop_reset" data-reload="/" />
+            </list>
+          </more>
+        </content>
+
+        <content id="theme_customize_font_options" string="Fonts" title="Fonts option">
+          <more data-depends="">
+            <list string="Fonts" id="customfonts">
+              <opt id="options_font_work_sans" string="Work sans" data-xmlid="theme_alan.options_font_work_sans" data-reload="/" />
+              <opt id="options_font_hind" string="Hind" data-xmlid="theme_alan.options_font_hind" data-reload="/" />
+              <opt id="options_font_nunito" string="Nunito" data-xmlid="theme_alan.options_font_nunito" data-reload="/" />
+              <opt id="options_font_lato" string="Lato" data-xmlid="theme_alan.options_font_lato" data-reload="/" />
+              <opt id="options_font_quicksand" string="Quicksand" data-xmlid="theme_alan.options_font_quicksand" data-reload="/" />
+              <opt id="options_font_muli" string="Muli" data-xmlid="theme_alan.options_font_muli" data-reload="/" />
+            </list>
+          </more>
+        </content>
+
+        <content id="theme_customize_product_options" string="Product View" title="Product multi-image options">
+          <more data-depends="">
+            <list string="" id="customproduct">
+              <opt id="options_vertical_slider" string="Vertical slider" data-xmlid="theme_alan.options_vertical_slider" data-reload="/" />
+              <opt id="options_horizontal_slider" string="Horizontal slider" data-xmlid="theme_alan.options_horizontal_slider" data-reload="/" />
+            </list>
+          </more>
+        </content>
+
+
+        <content id="theme_customize_bg_options" string="Bg Options" title="Bg options">
+          <more data-depends="">
+            <list string="" id="custombg">
+              <opt id="options_bg_01" string="BG image 1" data-xmlid="theme_alan.options_bg_01" data-reload="/" />
+              <opt id="options_bg_02" string="BG image 2" data-xmlid="theme_alan.options_bg_02" data-reload="/" />
+              <opt id="options_bg_03" string="BG image 3" data-xmlid="theme_alan.options_bg_03" data-reload="/" />
+              <opt id="options_bg_04" string="BG image 4" data-xmlid="theme_alan.options_bg_04" data-reload="/" />
+              <opt id="options_bg_05" string="BG image 5" data-xmlid="theme_alan.options_bg_05" data-reload="/" />
+              <opt id="options_bg_06" string="BG color 1" data-xmlid="theme_alan.options_bg_06" data-reload="/" />
+              <opt id="options_bg_07" string="BG color 2" data-xmlid="theme_alan.options_bg_07" data-reload="/" />
+              <opt id="options_bg_08" string="BG color 3" data-xmlid="theme_alan.options_bg_08" data-reload="/" />
+              <opt id="options_bg_09" string="BG color 4" data-xmlid="theme_alan.options_bg_09" data-reload="/" />
+              <opt id="options_bg_10" string="BG color 5" data-xmlid="theme_alan.options_bg_10" data-reload="/" />
+              <opt id="options_bg_reset" string="BG reset" data-xmlid="theme_alan.options_bg_reset" data-reload="/" />
+            </list>
+          </more>
+        </content>
+
+    </div>
+    </xpath>
+  </template>
+  <!-- ===================== LAYOUT OPTIONS ======================== -->
+  <template id="option_layout_fullwidth" name="theme_alan_option_layout_fullwidth" inherit_id="website.assets_frontend" active="true">
+    <xpath expr="." position="inside"><link href="/alan_customize/static/src/scss/options/layout/full-width.scss" rel="stylesheet" type="text/scss"/></xpath>
+  </template>
+  <template id="option_layout_boxed" name="theme_alan_option_layout_boxed" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="." position="inside"><link href="/alan_customize/static/src/scss/options/layout/boxed.scss" rel="stylesheet" type="text/scss"/></xpath>
+  </template>
+
+  <!-- ===================== BG OPTIONS ======================== -->
+  <template id="options_bg_01" name="theme_alan_options_bg_01" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="." position="inside"><link href="/alan_customize/static/src/scss/options/bg/bg-1.scss" rel="stylesheet" type="text/scss"/></xpath>
+  </template>
+
+  <template id="options_bg_02" name="theme_alan_options_bg_02" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="." position="inside"><link href="/alan_customize/static/src/scss/options/bg/bg-2.scss" rel="stylesheet" type="text/scss"/></xpath>
+  </template>
+
+  <template id="options_bg_03" name="theme_alan_options_bg_03" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="." position="inside"><link href="/alan_customize/static/src/scss/options/bg/bg-3.scss" rel="stylesheet" type="text/scss"/></xpath>
+  </template>
+
+  <template id="options_bg_04" name="theme_alan_options_bg_04" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="." position="inside"><link href="/alan_customize/static/src/scss/options/bg/bg-4.scss" rel="stylesheet" type="text/scss"/></xpath>
+  </template>
+
+  <template id="options_bg_05" name="theme_alan_options_bg_05" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="." position="inside"><link href="/alan_customize/static/src/scss/options/bg/bg-5.scss" rel="stylesheet" type="text/scss"/></xpath>
+  </template>
+
+  <template id="options_bg_06" name="theme_alan_options_bg_06" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="." position="inside"><link href="/alan_customize/static/src/scss/options/bg/bg-6.scss" rel="stylesheet" type="text/scss"/></xpath>
+  </template>
+
+  <template id="options_bg_07" name="theme_alan_options_bg_07" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="." position="inside"><link href="/alan_customize/static/src/scss/options/bg/bg-7.scss" rel="stylesheet" type="text/scss"/></xpath>
+  </template>
+
+  <template id="options_bg_08" name="theme_alan_options_bg_08" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="." position="inside"><link href="/alan_customize/static/src/scss/options/bg/bg-8.scss" rel="stylesheet" type="text/scss"/></xpath>
+  </template>
+
+  <template id="options_bg_09" name="theme_alan_options_bg_09" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="." position="inside"><link href="/alan_customize/static/src/scss/options/bg/bg-9.scss" rel="stylesheet" type="text/scss"/></xpath>
+  </template>
+
+  <template id="options_bg_10" name="theme_alan_options_bg_10" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="." position="inside"><link href="/alan_customize/static/src/scss/options/bg/bg-10.scss" rel="stylesheet" type="text/scss"/></xpath>
+  </template>
+
+  <template id="options_bg_reset" name="theme_alan_options_bg_reset" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="." position="inside"><link href="/alan_customize/static/src/scss/options/bg/bg-reset.scss" rel="stylesheet" type="text/scss"/></xpath>
+  </template>
+
+  <!-- ===================== Product OPTIONS ======================== -->
+  <template id="options_vertical_slider" name="theme_alan_options_vertical_slider" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="." position="inside">
+      <link href="/alan_customize/static/src/scss/options/product-details/option-1.scss" rel="stylesheet" type="text/scss"/>
+      <script type="text/javascript" src="/alan_customize/static/src/scss/options/product-details/option-1.js"/>
+    </xpath>
+  </template>
+  <template id="options_horizontal_slider" name="theme_alan_options_horizontal_slider" inherit_id="website.assets_frontend" active="true">
+    <xpath expr="." position="inside">
+      <link href="/alan_customize/static/src/scss/options/product-details/option-2.scss" rel="stylesheet" type="text/scss"/>
+      <script type="text/javascript" src="/alan_customize/static/src/scss/options/product-details/option-2.js"/>
+    </xpath>
+  </template>
+
+
+<!-- ===================== Fonts OPTIONS ======================== -->
+
+  <template id="options_font_work_sans" name="theme_alan_options_font_work_sans" inherit_id="website.assets_frontend" active="true">
+    <xpath expr="." position="inside">
+      <link href="/alan_customize/static/src/scss/options/fonts/font-1.scss" rel="stylesheet" type="text/scss"/>
+    </xpath>
+  </template>
+
+  <template id="options_font_hind" name="theme_alan_options_font_hind" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="." position="inside">
+      <link href="/alan_customize/static/src/scss/options/fonts/font-2.scss" rel="stylesheet" type="text/scss"/>
+    </xpath>
+  </template>
+
+  <template id="options_font_nunito" name="theme_alan_options_font_nunito" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="." position="inside">
+      <link href="/alan_customize/static/src/scss/options/fonts/font-3.scss" rel="stylesheet" type="text/scss"/>
+    </xpath>
+  </template>
+
+  <template id="options_font_lato" name="theme_alan_options_font_lato" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="." position="inside">
+      <link href="/alan_customize/static/src/scss/options/fonts/font-4.scss" rel="stylesheet" type="text/scss"/>
+    </xpath>
+  </template>
+
+  <template id="options_font_quicksand" name="theme_alan_options_font_quicksand" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="." position="inside">
+      <link href="/alan_customize/static/src/scss/options/fonts/font-5.scss" rel="stylesheet" type="text/scss"/>
+    </xpath>
+  </template>
+
+  <template id="options_font_muli" name="theme_alan_options_font_muli" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="." position="inside">
+      <link href="/alan_customize/static/src/scss/options/fonts/font-6.scss" rel="stylesheet" type="text/scss"/>
+    </xpath>
+  </template>
+
+  <!-- ===================== SHOP OPTIONS ======================== -->
+  <template id="options_shop_full_width" name="theme_alan_options_shop_full_width" inherit_id="website.assets_frontend" active="true">
+    <xpath expr="." position="inside">
+      <link href="/alan_customize/static/src/scss/options/shop/shop-full-width.scss" rel="stylesheet" type="text/scss"/>
+    </xpath>
+  </template>
+
+  <template id="options_shop_reset" name="theme_alan_options_shop_reset" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="." position="inside">
+      <link href="/alan_customize/static/src/scss/options/shop/shop-full-reset.scss" rel="stylesheet" type="text/scss"/>
+    </xpath>
+  </template>
+
+  <!-- ===================== Header OPTIONS ======================== -->
+    <template id="header_layout_1_css" name="header_layout_1_scss" inherit_id="website.assets_frontend" active="True">
+        <xpath expr="." position="inside"><link href="/alan_customize/static/src/scss/options/header-option/header_style1.scss" rel="stylesheet" type="text/scss"/></xpath>
+    </template>
+    <template id="header_layout_2_css" name="header_layout_2_scss" inherit_id="website.assets_frontend" active="False">
+        <xpath expr="." position="inside"><link href="/alan_customize/static/src/scss/options/header-option/header_style2.scss" rel="stylesheet" type="text/scss"/></xpath>
+    </template>
+
+    <template id="header_layout_3_css" name="header_layout_3_scss" inherit_id="website.assets_frontend" active="False">
+        <xpath expr="." position="inside"><link href="/alan_customize/static/src/scss/options/header-option/header_style3.scss" rel="stylesheet" type="text/scss"/></xpath>
+    </template>
+
+    <template id="header_layout_4_css" name="header_layout_4_scss" inherit_id="website.assets_frontend" active="False">
+        <xpath expr="." position="inside"><link href="/alan_customize/static/src/scss/options/header-option/header_style4.scss" rel="stylesheet" type="text/scss"/></xpath>
+    </template>
+
+    <template id="header_layout_5_css" name="header_layout_5_scss" inherit_id="website.assets_frontend" active="False">
+        <xpath expr="." position="inside"><link href="/alan_customize/static/src/scss/options/header-option/header_style5.scss" rel="stylesheet" type="text/scss"/></xpath>
+    </template>
+
+   
+    <!-- ===================== Footer OPTIONS ======================== -->
+    <template id="footer_layout_1_css" name="footer_layout_1_scss" inherit_id="website.assets_frontend" active="true">
+        <xpath expr="." position="inside"><link href="/alan_customize/static/src/scss/options/footer-option/footer_style1.scss" rel="stylesheet" type="text/scss"/></xpath>
+    </template>
+
+    <template id="footer_layout_2_css" name="footer_layout_2_scss" inherit_id="website.assets_frontend" active="False">
+        <xpath expr="." position="inside"><link href="/alan_customize/static/src/scss/options/footer-option/footer_style2.scss" rel="stylesheet" type="text/scss"/></xpath>
+    </template>
+
+    <template id="footer_layout_3_css" name="footer_layout_3_scss" inherit_id="website.assets_frontend" active="False">
+        <xpath expr="." position="inside"><link href="/alan_customize/static/src/scss/options/footer-option/footer_style3.scss" rel="stylesheet" type="text/scss"/></xpath>
+    </template>
+
+    <template id="footer_layout_4_css" name="footer_layout_4_scss" inherit_id="website.assets_frontend" active="False">
+        <xpath expr="." position="inside"><link href="/alan_customize/static/src/scss/options/footer-option/footer_style4.scss" rel="stylesheet" type="text/scss"/></xpath>
+    </template>
+
+<!-- ===================== Header OPTIONS ======================== -->
+
+  <template id="header_layout_1" active="true" inherit_id="website.layout">
+    <xpath expr="//header/nav[hasclass('navbar-expand-md')]" position="before">
+      <div class="top-header">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6 d-none d-md-block">
+              <ul class="htl-social">
+                <li><a href="#"><i class="fa fa-facebook"/></a></li>
+                <li><a href="#"><i class="fa fa-twitter"/></a></li>
+                <li><a href="#"><i class="fa fa-google-plus"/></a></li>
+                <li><a href="#"><i class="fa fa-pinterest"/></a></li>
+                <li><a href="#"><i class="fa fa-instagram"/></a></li>
+              </ul>
+            </div>
+
+            <div class="col-md-6">
+                <div class="ht-right">
+                  <div class="h-col h-search">
+                    <i class="flaticon-magnifying-glass search_open"/>
+                    <div class="as-search">
+                      <form action='/shop' method="get">
+                        <i class="fa fa-times search_open"/>
+                        <input type="text" name="search" placeholder="Search" class="form-control" t-att-value="search"/>
+                        <button class="btn btn-default"><i class="fa fa-search"/></button>
+                      </form>
+                    </div>
+                  </div>
+                                       
+                  <t t-set="website_sale_order" t-value="website.sale_get_order()" />
+
+                  <div id="my_cart" class="h-col h-cart">
+                    <div class="my_cart_btn">
+                      <i class="ti-shopping-cart"/><sup t-attf-class="my_cart_quantity label label-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or 0" />
+                    </div>
+                  </div>
+    				    <t t-if="request.env.ref('alan_customize.add_to_wishlist').active">
+    				        <t t-set='wishcount' t-value="len(request.env['product.wishlist'].current())"/>
+    				        <div id="my_wish" t-att-style="not wishcount and 'display:none;'"  class="h-col h-wishlist">
+    				            <a href="/shop/wishlist">
+    				                <i class="ti-heart"/>
+                            <sup t-attf-class="my_wish_quantity o_animate_blink badge badge-primary"><t t-esc='wishcount'/></sup>
+    				            </a>
+    				        </div>
+    				    </t>
+                  <!-- h-col h-setting -->
+                  <div class="h-col h-setting">
+                    <i class="ti-settings"/>
+                    <t t-esc="current_language"/>
+                    <div class="h-col-hover">
+                      <div class="form-language hed-drop">
+                        <h4 t-if="(request.is_frontend_multilang)">Language</h4>
+                        <ul id="lang" t-if="(request.is_frontend_multilang and len(languages) &gt; 1) or editable" class="js_language_selector">
+                          <li>
+                            <label data-toggle="dropdown" type="button" data-caret="true" class="dropdown-toggle">
+                              <t t-foreach="languages" t-as="lgs">
+                                <t t-if="request.lang and request.lang==lgs[0]">
+                                  <t t-esc="lgs[1].split('/').pop()"/>
+                                </t>
+                              </t>
+                              <i class="fa fa-angle-down"/>
+                            </label>
+                            <ul role="menu" class="dropdown-menu dropdown-menu-right js_language_selector">
+                              <t t-foreach="languages" t-as="lg">
+                                <li t-att-class="'active' if request.lang== lg[0] else None">
+                                  <a t-att-data-lang="lg[0]" t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])">
+                                    <t t-esc="lg[1].split('/').pop()"/>
+                                  </a>
+                                </li>
+                              </t>
+                              <li groups="website.group_website_publisher">
+                                <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
+                                <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id}&amp;url_return=#{url_return}">
+                                  <i class="fa fa-plus-circle"/>Add...
+                                </a>
+                              </li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </div><!-- .form-language hed-drop -->
+                        
+                      <div class="price-list hed-drop">
+                        <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)"/>
+                        <div t-attf-class="#{website_sale_pricelists and len(website_sale_pricelists)>1 and 'dropdown' or 'd-none'}">
+                          <t t-set="curr_pl" t-value="website.get_current_pricelist()"/>
+                          <h4>Currency</h4>
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <t t-esc="curr_pl and curr_pl.name or ' - '" />
+                            <span class="fa fa-angle-down"/>
+                          </a>
+                          <ul class="dropdown-menu" role="menu">
+                            <li t-foreach="website_sale_pricelists" t-as="pl" >
+                              <a t-att-href="'/shop/change_pricelist/%s' % pl.id"><span class='switcher_pricelist' t-att-data-pl_id="pl.id" t-esc="pl.name"/></a>
+                            </li>
+                          </ul>
+                        </div>
+                      </div><!--.price-list hed-drop  -->
+                    </div><!--.h-col-hover  -->
+                  </div><!-- .h-col h-setting -->
+
+                </div><!-- .ht-right -->
+            </div> <!-- col -->
+
+          </div> <!-- row -->
+        </div> <!-- container -->
+      </div>
+
+      <div class="mobile-toggle">
+        <button class="mobile_toggle_menu">
+          <span/>
+          <span/>
+          <span/>
+        </button>
+        <button class="mobile_toggle_menu close-menu">
+        </button>
+      </div>
+
+      <div class="cart_lines_popup"/>
+    </xpath>
+  </template>
+
+  <template id="header_layout_2" active="False" inherit_id="website.layout">
+    <xpath expr="//header/nav[hasclass('navbar-expand-md')]" position="before">
+      <div class="top-header">
+        <div class="header-top-bar">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-9">
+                <div class="htr-info">
+                  <ul>
+                    <li><i class="fa fa-clock-o"></i> +0123 456 789</li>
+                    <li><i class="fa fa-phone"></i> 7 DAYS A WEEK FROM 10 AM TO 6 PM</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-lg-3 d-none d-lg-block">
+                <ul class="htl-social">
+                  <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                  <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                  <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                  <li><a href="#"><i class="fa fa-pinterest"></i></a></li>
+                  <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="middle-header-bar">
+        <div class="container">
+            <div class="logo">
+              <a href="/" class="navbar-brand">
+                <span t-field="res_company.logo" t-options="{'widget': 'image'}" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name" />
+              </a>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-md-6 col-lg-9">
+                <div class="h-col h-search">
+                  <i class="fa fa-search search_open"></i>
+                  <div class="as-search">
+                    <form action='/shop' method="get">
+                      <input type="text" name="search" placeholder="Search" class="form-control" t-att-value="search"/>
+                      <button class="btn btn-default oe_search_button"><i class="fa fa-search"></i></button>
+                    </form>
+                  </div>
+                </div><!-- .h-col h-search -->
+              </div> <!-- col -->
+
+              <div class="col-12 col-md-6 col-lg-3">
+                <div class="ht-right">
+                  <t t-if="request.env.ref('alan_customize.add_to_wishlist').active">
+                    <t t-set='wishcount' t-value="len(request.env['product.wishlist'].current())"/>
+                    <div id="my_wish" t-att-style="not wishcount and 'display:none;'"  class="h-col h-wishlist">
+                        <a class="hc-icon" href="/shop/wishlist">
+                            <i class="ti-heart"/>
+                            <sup t-attf-class="my_wish_quantity o_animate_blink badge badge-primary"><t t-esc='wishcount'/></sup>
+                        </a>
+                    </div>
+                  </t>
+
+                  <t t-set="website_sale_order" t-value="website.sale_get_order()" />
+                  <div id="my_cart" class="h-col h-cart">
+                    <div class="my_cart_btn hc-icon">
+                      <i class="ti-shopping-cart"></i><sup t-attf-class="my_cart_quantity label badge-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or 0" />
+                    </div>
+                  </div>
+
+                  <!-- h-col h-setting -->
+                  <div class="h-col h-setting">
+                    <i class="ti-settings hc-icon"></i>
+                    <t t-esc="current_language"/>
+                    <div class="h-col-hover">
+                      <div class="form-language hed-drop">
+                        <h4 t-if="(request.is_frontend_multilang)">Language</h4>
+                        <ul id="lang" t-if="(request.is_frontend_multilang and len(languages) &gt; 1) or editable" class="js_language_selector">
+                          <li>
+                            <label data-toggle="dropdown" type="button" data-caret="true" class="dropdown-toggle">
+                              <t t-foreach="languages" t-as="lgs">
+                                <t t-if="request.lang and request.lang==lgs[0]">
+                                  <t t-esc="lgs[1].split('/').pop()"/>
+                                </t>
+                              </t>
+                              <i class="fa fa-angle-down"></i>
+                            </label>
+                            <ul role="menu" class="dropdown-menu dropdown-menu-right js_language_selector">
+                              <t t-foreach="languages" t-as="lg">
+                                <li t-att-class="'active' if request.lang== lg[0] else None">
+                                  <a t-att-data-lang="lg[0]" t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])">
+                                    <t t-esc="lg[1].split('/').pop()"/>
+                                  </a>
+                                </li>
+                              </t>
+                              <li groups="website.group_website_publisher">
+                                <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
+                                <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id}&amp;url_return=#{url_return}">
+                                  <i class="fa fa-plus-circle"/>Add...
+                                </a>
+                              </li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </div><!-- .form-language hed-drop -->
+                        
+                      <div class="price-list hed-drop">
+                        <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)"/>
+                        <div t-attf-class="#{website_sale_pricelists and len(website_sale_pricelists)>1 and 'dropdown' or 'd-none'}">
+                          <t t-set="curr_pl" t-value="website.get_current_pricelist()"/>
+                          <h4>Currency</h4>
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <t t-esc="curr_pl and curr_pl.name or ' - '" />
+                            <span class="fa fa-angle-down"></span>
+                          </a>
+                          <ul class="dropdown-menu" role="menu">
+                            <li t-foreach="website_sale_pricelists" t-as="pl" >
+                              <a t-att-href="'/shop/change_pricelist/%s' % pl.id"><span class='switcher_pricelist' t-att-data-pl_id="pl.id" t-esc="pl.name"/></a>
+                            </li>
+                          </ul>
+                        </div>
+                      </div><!--.price-list hed-drop  -->
+                    </div><!--.h-col-hover  -->
+                  </div><!-- .h-col h-setting -->
+                  <div class="mobile-toggle">
+                    <button class="mobile_toggle_menu">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </button>
+                    <button class="mobile_toggle_menu close-menu">
+                    </button>
+                  </div>
+                </div><!-- .ht-right -->
+              </div> <!-- col -->
+            </div> <!-- row -->
+        </div>
+      </div>
+
+      <div class="cart_lines_popup"/>
+
+    </xpath>
+  </template> 
+
+  <template id="header_layout_3" active="False" inherit_id="website.layout">
+    <xpath expr="//header/nav[hasclass('navbar-expand-md')]" position="before">
+      <div class="top-header">
+        <div class="middle-header-bar">
+          <div class="container">
+            <div class="row align-items-center">
+              <div class="col-12 col-md-4 col-lg-3">
+                <div class="h-col h-search">
+                  <i class="fa flaticon-magnifying-glass search_open"></i>
+                  <div class="as-search">
+                    <form action='/shop' method="get">
+                      <input type="text" name="search" placeholder="Search" class="form-control" t-att-value="search"/>
+                      <button class="btn btn-default oe_search_button"><i class="fa fa-search"></i></button>
+                    </form>
+                  </div>
+                </div><!-- .h-col h-search -->
+              </div> <!-- col -->
+
+              <div class="col-12 col-md-4 col-lg-6 order-first order-md-0 text-center">
+                <div class="logo display-inline-block">
+                  <a href="/" class="navbar-brand">
+                    <span t-field="res_company.logo" t-options="{'widget': 'image'}" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name" />
+                  </a>
+                </div>
+              </div> <!-- col -->
+
+              <div class="col-12 col-md-4 col-lg-3 text-md-right text-center">
+                <div class="ht-right">
+                  <t t-if="request.env.ref('alan_customize.add_to_wishlist').active">
+                    <t t-set='wishcount' t-value="len(request.env['product.wishlist'].current())"/>
+                    <div id="my_wish" t-att-style="not wishcount and 'display:none;'"  class="h-col h-wishlist">
+                        <a class="hc-icon" href="/shop/wishlist">
+                            <i class="ti-heart"/>
+                            <sup t-attf-class="my_wish_quantity o_animate_blink badge badge-primary"><t t-esc='wishcount'/></sup>
+                        </a>
+                    </div>
+                  </t>
+                  
+                  <t t-set="website_sale_order" t-value="website.sale_get_order()" />
+                  <div id="my_cart" class="h-col h-cart">
+                    <div class="my_cart_btn hc-icon">
+                      <i class="ti-shopping-cart"></i><sup t-attf-class="my_cart_quantity label badge-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or 0" />
+                    </div>
+                  </div>
+
+                  <!-- h-col h-setting -->
+                  <div class="h-col h-setting">
+                    <i class="ti-settings hc-icon"></i>
+                    <t t-esc="current_language"/>
+                    <div class="h-col-hover">
+                      <div class="form-language hed-drop">
+                        <h4 t-if="(request.is_frontend_multilang)">Language</h4>
+                        <ul id="lang" t-if="(request.is_frontend_multilang and len(languages) &gt; 1) or editable" class="js_language_selector">
+                          <li>
+                            <label data-toggle="dropdown" type="button" data-caret="true" class="dropdown-toggle">
+                              <t t-foreach="languages" t-as="lgs">
+                                <t t-if="request.lang and request.lang==lgs[0]">
+                                  <t t-esc="lgs[1].split('/').pop()"/>
+                                </t>
+                              </t>
+                              <i class="fa fa-angle-down"></i>
+                            </label>
+                            <ul role="menu" class="dropdown-menu dropdown-menu-right js_language_selector">
+                              <t t-foreach="languages" t-as="lg">
+                                <li t-att-class="'active' if request.lang== lg[0] else None">
+                                  <a t-att-data-lang="lg[0]" t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])">
+                                    <t t-esc="lg[1].split('/').pop()"/>
+                                  </a>
+                                </li>
+                              </t>
+                              <li groups="website.group_website_publisher">
+                                <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
+                                <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id}&amp;url_return=#{url_return}">
+                                  <i class="fa fa-plus-circle"/>Add...
+                                </a>
+                              </li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </div><!-- .form-language hed-drop -->
+                        
+                      <div class="price-list hed-drop">
+                        <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)"/>
+                        <div t-attf-class="#{website_sale_pricelists and len(website_sale_pricelists)>1 and 'dropdown' or 'd-none'}">
+                          <t t-set="curr_pl" t-value="website.get_current_pricelist()"/>
+                          <h4>Currency</h4>
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <t t-esc="curr_pl and curr_pl.name or ' - '" />
+                            <span class="fa fa-angle-down"></span>
+                          </a>
+                          <ul class="dropdown-menu" role="menu">
+                            <li t-foreach="website_sale_pricelists" t-as="pl" >
+                              <a t-att-href="'/shop/change_pricelist/%s' % pl.id"><span class='switcher_pricelist' t-att-data-pl_id="pl.id" t-esc="pl.name"/></a>
+                            </li>
+                          </ul>
+                        </div>
+                      </div><!--.price-list hed-drop  -->
+                    </div><!--.h-col-hover  -->
+                  </div><!-- .h-col h-setting -->
+
+                  <div class="mobile-toggle">
+                    <button class="mobile_toggle_menu">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </button>
+                    <button class="mobile_toggle_menu close-menu">
+                    </button>
+                  </div>
+
+                </div><!-- .ht-right -->
+
+              </div> <!-- col -->
+            </div> <!-- row -->
+          </div><!-- .container -->
+        </div>
+      </div>
+      <div class="cart_lines_popup"/>
+    </xpath>
+  </template> 
+
+  <template id="header_layout_4" active="False" inherit_id="website.layout">
+    <xpath expr="//header/nav[hasclass('navbar-expand-md')]" position="before">
+      <div class="header-top-bar">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="ht-left">
+                <p>Welcome to our online store!</p>
+              </div>    
+            </div>
+            <div class="col-md-6">
+              <div class="ht-right">
+                  <t t-set="website_sale_order" t-value="website.sale_get_order()" />
+
+                  <!-- h-col h-setting -->
+                  <div class="h-col h-setting">
+                    <i class="ti-settings hc-icon"></i>
+                    <span class="h-col-label">Settings</span>
+                    <t t-esc="current_language"/>
+                    <div class="h-col-hover">
+                      <div class="form-language hed-drop">
+                        <h4 t-if="(request.is_frontend_multilang)">Language</h4>
+                        <ul id="lang" t-if="(request.is_frontend_multilang and len(languages) &gt; 1) or editable" class="js_language_selector">
+                          <li>
+                            <label data-toggle="dropdown" type="button" data-caret="true" class="dropdown-toggle">
+                              <t t-foreach="languages" t-as="lgs">
+                                <t t-if="request.lang and request.lang==lgs[0]">
+                                  <t t-esc="lgs[1].split('/').pop()"/>
+                                </t>
+                              </t>
+                              <i class="fa fa-angle-down"></i>
+                            </label>
+                            <ul role="menu" class="dropdown-menu dropdown-menu-right js_language_selector">
+                              <t t-foreach="languages" t-as="lg">
+                                <li t-att-class="'active' if request.lang== lg[0] else None">
+                                  <a t-att-data-lang="lg[0]" t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])">
+                                    <t t-esc="lg[1].split('/').pop()"/>
+                                  </a>
+                                </li>
+                              </t>
+                              <li groups="website.group_website_publisher">
+                                <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
+                                <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id}&amp;url_return=#{url_return}">
+                                  <i class="fa fa-plus-circle"/>Add...
+                                </a>
+                              </li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </div><!-- .form-language hed-drop -->
+                        
+                      <div class="price-list hed-drop">
+                        <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)"/>
+                        <div t-attf-class="#{website_sale_pricelists and len(website_sale_pricelists)>1 and 'dropdown' or 'd-none'}">
+                          <t t-set="curr_pl" t-value="website.get_current_pricelist()"/>
+                          <h4>Currency</h4>
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <t t-esc="curr_pl and curr_pl.name or ' - '" />
+                            <span class="fa fa-angle-down"></span>
+                          </a>
+                          <ul class="dropdown-menu" role="menu">
+                            <li t-foreach="website_sale_pricelists" t-as="pl" >
+                              <a t-att-href="'/shop/change_pricelist/%s' % pl.id"><span class='switcher_pricelist' t-att-data-pl_id="pl.id" t-esc="pl.name"/></a>
+                            </li>
+                          </ul>
+                        </div>
+                      </div><!--.price-list hed-drop  -->
+                    </div><!--.h-col-hover  -->
+                  </div><!-- .h-col h-setting -->
+
+                  <div class="h-col h-search">
+                    <i class="flaticon-magnifying-glass search_open"></i>
+                    <span class="h-col-label search_open">Search</span>
+                    <div class="as-search">
+                      <form action='/shop' method="get">
+                        <i class="fa fa-times search_open"></i>
+                        <input type="text" name="search" placeholder="Search" class="form-control" t-att-value="search"/>
+                        <button class="btn btn-default oe_search_button"><i class="flaticon-magnifying-glass"></i></button>
+                      </form>
+                    </div>
+                  </div>
+
+                  <t t-if="request.env.ref('alan_customize.add_to_wishlist').active">
+                    <t t-set='wishcount' t-value="len(request.env['product.wishlist'].current())"/>
+                    <div id="my_wish" t-att-style="not wishcount and 'display:none;'"  class="h-col h-wishlist">
+                        <a href="/shop/wishlist">
+                            <i class="ti-heart"/>
+                            <span class="h-col-label">Wishlist</span>
+                            <sup t-attf-class="my_wish_quantity o_animate_blink badge badge-primary"><t t-esc='wishcount'/></sup>
+                        </a>
+                    </div>
+                  </t>
+
+                  <div id="my_cart" class="h-col h-cart">
+                    <div class="my_cart_btn hc-icon">
+                      <i class="ti-shopping-cart"></i>
+                      <span class="h-col-label">Cart</span>
+                      <sup t-attf-class="my_cart_quantity label label-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or 0" />
+                    </div>
+                  </div>
+
+                  <div class="mobile-toggle">
+                    <button class="mobile_toggle_menu">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </button>
+                    <button class="mobile_toggle_menu close-menu">
+                    </button>
+                  </div>
+
+
+                </div><!-- .ht-right -->
+            </div>
+          </div>
+          
+        </div>
+      </div>
+
+      <div class="cart_lines_popup"/>
+    </xpath>
+  </template>
+
+  <template id="header_layout_5" active="False" inherit_id="website.layout">
+    <xpath expr="//header/nav[hasclass('navbar-expand-md')]" position="before">
+      <div class="top-header">
+        <div class="header-top-bar">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-8">
+                <div class="htr-info">
+                  <ul>
+                    <li><i class="fa fa-clock-o"></i> +0123 456 789</li>
+                    <li><i class="fa fa-phone"></i> 7 DAYS A WEEK FROM 10 AM TO 6 PM</li>
+                  </ul>
+                </div>
+              </div> <!-- cols -->
+
+              <div class="col-md-4">
+                <ul class="htl-social">
+                  <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                  <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                  <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                  <li><a href="#"><i class="fa fa-pinterest"></i></a></li>
+                  <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                </ul>
+              </div>
+
+            </div> <!-- row -->
+            
+          </div>
+        </div>
+
+        <div class="middle-header-bar">
+          <div class="container">
+            <div class="row align-items-center">
+              <div class="col-12 col-md-4 col-lg-3">
+                <div class="logo">
+                  <a href="/" class="navbar-brand">
+                    <span t-field="res_company.logo" t-options="{'widget': 'image'}" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name" />
+                  </a>
+                </div>
+              </div>
+              <div class="col-12 col-md-4 col-lg-6">
+                <div class="h-col h-search">
+                  <i class="fa fa-search search_open"></i>
+                  <div class="as-search">
+                    <form action='/shop' method="get">
+                      <input type="text" name="search" placeholder="Search" class="form-control" t-att-value="search"/>
+                      <button class="btn btn-default oe_search_button"><i class="fa fa-search"></i></button>
+                    </form>
+                  </div>
+                </div><!-- .h-col h-search -->
+              </div> <!-- col -->
+              <div class="col-12 col-md-4 col-lg-3 text-right">
+                <div class="ht-right">
+                  <t t-set="website_sale_order" t-value="website.sale_get_order()" />
+
+                  <div id="my_cart" class="h-col h-cart">
+                    <div class="my_cart_btn hc-icon">
+                      <i class="ti-shopping-cart"></i><sup t-attf-class="my_cart_quantity label badge-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or 0" />
+                    </div>
+                  </div>
+                  <t t-if="request.env.ref('alan_customize.add_to_wishlist').active">
+                    <t t-set='wishcount' t-value="len(request.env['product.wishlist'].current())"/>
+                    <div id="my_wish" t-att-style="not wishcount and 'display:none;'"  class="h-col h-wishlist">
+                      <a href="/shop/wishlist">
+                        <i class="ti-heart hc-icon"/>
+                        <sup t-attf-class="my_wish_quantity o_animate_blink badge badge-primary"><t t-esc='wishcount'/></sup>
+                      </a>
+                    </div>
+                  </t>
+
+                  <!-- h-col h-setting -->
+                  <div class="h-col h-setting">
+                    <i class="ti-settings hc-icon"></i>
+                    <t t-esc="current_language"/>
+                    <div class="h-col-hover">
+                      <div class="form-language hed-drop">
+                        <h4 t-if="(request.is_frontend_multilang)">Language</h4>
+                        <ul id="lang" t-if="(request.is_frontend_multilang and len(languages) &gt; 1) or editable" class="js_language_selector">
+                          <li>
+                            <label data-toggle="dropdown" type="button" data-caret="true" class="dropdown-toggle">
+                              <t t-foreach="languages" t-as="lgs">
+                                <t t-if="request.lang and request.lang==lgs[0]">
+                                  <t t-esc="lgs[1].split('/').pop()"/>
+                                </t>
+                              </t>
+                              <i class="fa fa-angle-down"></i>
+                            </label>
+                            <ul role="menu" class="dropdown-menu dropdown-menu-right js_language_selector">
+                              <t t-foreach="languages" t-as="lg">
+                                <li t-att-class="'active' if request.lang== lg[0] else None">
+                                  <a t-att-data-lang="lg[0]" t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])">
+                                    <t t-esc="lg[1].split('/').pop()"/>
+                                  </a>
+                                </li>
+                              </t>
+                              <li groups="website.group_website_publisher">
+                                <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
+                                <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id}&amp;url_return=#{url_return}">
+                                  <i class="fa fa-plus-circle"/>Add...
+                                </a>
+                              </li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </div><!-- .form-language hed-drop -->
+                        
+                      <div class="price-list hed-drop">
+                        <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)"/>
+                        <div t-attf-class="#{website_sale_pricelists and len(website_sale_pricelists)>1 and 'dropdown' or 'd-none'}">
+                          <t t-set="curr_pl" t-value="website.get_current_pricelist()"/>
+                          <h4>Currency</h4>
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <t t-esc="curr_pl and curr_pl.name or ' - '" />
+                            <span class="fa fa-angle-down"></span>
+                          </a>
+                          <ul class="dropdown-menu" role="menu">
+                            <li t-foreach="website_sale_pricelists" t-as="pl" >
+                              <a t-att-href="'/shop/change_pricelist/%s' % pl.id"><span class='switcher_pricelist' t-att-data-pl_id="pl.id" t-esc="pl.name"/></a>
+                            </li>
+                          </ul>
+                        </div>
+                      </div><!--.price-list hed-drop  -->
+                    </div><!--.h-col-hover  -->
+                  </div><!-- .h-col h-setting -->
+
+                </div><!-- .ht-right -->
+
+              </div> <!-- col -->
+            </div> <!-- row -->
+          </div><!-- .container -->
+        </div>
+      </div>
+      <div class="mobile-toggle">
+        <button class="mobile_toggle_menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <button class="mobile_toggle_menu close-menu">
+        </button>
+      </div>
+
+      <div class="cart_lines_popup"/>
+    </xpath>
+  </template> 
+
+
+  <template id="footer_layout_1" active="true" inherit_id="website.layout">
+    <xpath expr="//footer/div[@id='footer']" position="replace">
+      <div id="footer">
+        <div class="footer-top">
+          <div class="container">
+            <div class="align-items-center row row-b4">
+              <div class="col-12 col-md-3 text-center text-md-left md-m-20px-b">
+                <h4>NEWSLETTER SIGNUP:</h4>
+              </div> <!-- col -->
+
+              <div class="col-12 col-md-6 text-center">
+                <div class="oe_snippet_body input-group js_subscribe" data-list-id="0">
+                  <input type="email" name="email" class="js_subscribe_email form-control" placeholder="Enter your email address"/>
+                  <span class="input-group-btn">
+                    <a href="#" class="btn btn-primary m-btn m-btn-black js_subscribe_btn">Subscribe</a>
+                    <a href="#" class="btn btn-success js_subscribed_btn hidden" disabled="disabled">Thanks</a>
+                  </span>
+                  <div class="alert alert-success hidden">Thanks for your subscription!</div>
+                </div>
+              </div> <!-- col -->
+
+              <div class="col-12 col-md-3 col-12 text-center text-md-right">
+                <div class="link-follow  md-m-20px-t">
+                  <ul>
+                    <li t-if="website.social_facebook"><a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="fa fa-facebook"/></a></li>
+                    <li t-if="website.social_twitter"><a t-att-href="website.social_twitter" t-if="website.social_twitter"><i class="fa fa-twitter"/></a></li>
+                    <li t-if="website.social_googleplus"><a t-att-href="website.social_googleplus" t-if="website.social_googleplus" rel="publisher"><i class="fa fa-google-plus"/></a></li>
+                    <li t-if="website.social_youtube"><a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="fa fa-youtube-play"/></a></li>
+                    <li t-if="website.social_linkedin"><a t-att-href="website.social_linkedin" t-if="website.social_linkedin"><i class="fa fa-linkedin"/></a></li>
+                    <li t-if="website.social_github"><a t-att-href="website.social_github" t-if="website.social_github"><i class="fa fa-github"/></a></li>
+                  </ul>
+                </div>
+              </div> <!-- col -->
+            </div> <!-- row -->
+          </div>
+        </div> <!-- top-footer -->
+
+        <div class="middle-footer">
+          <div class="container">
+            <div class="row row-b4">
+              <div class="col-12 col-sm-6 col-md-3 fot-col">
+                  <h3>Information</h3>
+                  <ul>
+                    <li><a href="#">Delivery</a></li>
+                    <li><a href="#">New products</a></li>
+                    <li><a href="#">Stores</a></li>
+                    <li><a href="#">Login</a></li>
+                    <li><a href="#">My account</a></li>
+                  </ul>  
+              </div> <!-- col -->
+
+              <div class="col-12 col-sm-6 col-md-3 fot-col">
+                  <h3>Products</h3>
+                  <ul>
+                    <li><a href="#">Prices drop</a></li>
+                    <li><a href="#">New products</a></li>
+                    <li><a href="#">Best sales</a></li>
+                    <li><a href="#">Contact us</a></li>
+                    <li><a href="#">Sitemap</a></li>
+                  </ul>  
+              </div> <!-- col -->
+
+              <div class="col-12 col-sm-6 col-md-3 fot-col">
+                  <h3>Our company</h3>
+                  <ul>
+                    <li><a href="#">Delivery</a></li>
+                    <li><a href="#">Legal Notice</a></li>
+                    <li><a href="#">About us</a></li>
+                    <li><a href="#">Secure payment</a></li>
+                    <li><a href="#">Stores</a></li>
+                  </ul>  
+              </div> <!-- col -->
+
+              <div class="col-12 col-sm-6 col-md-3 fot-col">
+                <h3>Contact us</h3>
+                <address class="m-0px" itemscope="itemscope" itemtype="http://schema.org/Organization">
+                  <div t-field="res_company.partner_id" t-options='{"widget": "contact","fields": ["name", "address", "phone", "mobile", "fax", "email"]}'/>
+                </address>
+              </div> <!-- col -->
+            </div> <!-- row -->
+          </div> <!-- container -->
+        </div> <!-- middle-footer -->
+
+        <div class="footer-bottom">
+          <div class="container">
+            <div class="row row-b4 align-items-center">
+              <div class="col-12 col-md-6 text-center text-md-left md-m-15px-b">
+                <p class="copyright">Copyright  © 2018 Alan. All Rights Reserved.</p>
+              </div>
+              <div class="col-12 col-md-6 text-center text-md-right">
+                <div id="info" class="footer-payment"><img src="/theme_alan/static/src/img/payment.png" title="Alan" alt="Alan" /></div>
+              </div>
+            </div>
+          </div>
+        </div><!-- .bottom-footer -->
+      </div>
+    </xpath>
+  </template>
+
+  <template id="footer_layout_2" active="False" inherit_id="website.layout">
+    <xpath expr="//footer/div[@id='footer']" position="replace">
+      <div id="footer">
+        <div class="middle-footer">
+          <div class="container">
+            <div class="row row-b4">
+              <div class="col-12 col-sm-6 col-md-3 fot-col">
+                  <h3>Information</h3>
+                  <ul>
+                    <li><a href="#">Delivery</a></li>
+                    <li><a href="#">New products</a></li>
+                    <li><a href="#">Stores</a></li>
+                    <li><a href="#">Login</a></li>
+                    <li><a href="#">My account</a></li>
+                  </ul>  
+              </div> <!-- col -->
+
+              <div class="col-12 col-sm-6 col-md-3 fot-col">
+                  <h3>Products</h3>
+                  <ul>
+                    <li><a href="#">Prices drop</a></li>
+                    <li><a href="#">New products</a></li>
+                    <li><a href="#">Best sales</a></li>
+                    <li><a href="#">Contact us</a></li>
+                    <li><a href="#">Sitemap</a></li>
+                  </ul>  
+              </div> <!-- col -->
+
+              <div class="col-12 col-sm-6 col-md-3 fot-col">
+                  <h3>Our company</h3>
+                  <ul>
+                    <li><a href="#">Delivery</a></li>
+                    <li><a href="#">Legal Notice</a></li>
+                    <li><a href="#">About us</a></li>
+                    <li><a href="#">Secure payment</a></li>
+                    <li><a href="#">Stores</a></li>
+                  </ul>  
+              </div> <!-- col -->
+
+              <div class="col-12 col-sm-6 col-md-3 fot-col">
+                <h3>Contact us</h3>
+                <address class="m-0px" itemscope="itemscope" itemtype="http://schema.org/Organization">
+                  <div t-field="res_company.partner_id" t-options='{"widget": "contact","fields": ["name", "address", "phone", "mobile", "fax", "email"]}'/>
+                </address>
+              </div> <!-- col -->
+            </div> <!-- row -->
+          </div> <!-- container -->
+        </div> <!-- middle-footer -->
+
+        <div class="footer-bottom">
+          <div class="container">
+            <div class="row row-b4 align-items-center">
+              <div class="col-12 col-md-6 text-center text-md-left md-m-15px-b">
+                <p class="copyright">Copyright  © 2018 Alan. All Rights Reserved.</p>
+              </div>
+              <div class="col-12 col-md-6 text-center text-md-right">
+                <div class="link-follow">
+                  <ul>
+                    <li t-if="website.social_facebook"><a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="fa fa-facebook"/></a></li>
+                    <li t-if="website.social_twitter"><a t-att-href="website.social_twitter" t-if="website.social_twitter"><i class="fa fa-twitter"/></a></li>
+                    <li t-if="website.social_googleplus"><a t-att-href="website.social_googleplus" t-if="website.social_googleplus" rel="publisher"><i class="fa fa-google-plus"/></a></li>
+                    <li t-if="website.social_youtube"><a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="fa fa-youtube-play"/></a></li>
+                    <li t-if="website.social_linkedin"><a t-att-href="website.social_linkedin" t-if="website.social_linkedin"><i class="fa fa-linkedin"/></a></li>
+                    <li t-if="website.social_github"><a t-att-href="website.social_github" t-if="website.social_github"><i class="fa fa-github"/></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div><!-- .bottom-footer -->
+      </div><!-- footer -->
+    </xpath>
+  </template> 
+
+  <template id="footer_layout_3" active="False" inherit_id="website.layout">
+    <xpath expr="//footer/div[@id='footer']" position="replace">
+      <div id="footer">
+        <div class="middle-footer">
+          <div class="container">
+            <div class="row row-b4">
+              <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                <div class="fot-about">
+                  <div class="fot-logo">
+                    <img src="/theme_alan/static/src/img/alan-logo-2.png" />
+                  </div>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex.</p>
+                  <div class="link-follow">
+                    <ul>
+                      <li t-if="website.social_facebook"><a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="fa fa-facebook"/></a></li>
+                      <li t-if="website.social_twitter"><a t-att-href="website.social_twitter" t-if="website.social_twitter"><i class="fa fa-twitter"/></a></li>
+                      <li t-if="website.social_googleplus"><a t-att-href="website.social_googleplus" t-if="website.social_googleplus" rel="publisher"><i class="fa fa-google-plus"/></a></li>
+                      <li t-if="website.social_youtube"><a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="fa fa-youtube-play"/></a></li>
+                      <li t-if="website.social_linkedin"><a t-att-href="website.social_linkedin" t-if="website.social_linkedin"><i class="fa fa-linkedin"/></a></li>
+                      <li t-if="website.social_github"><a t-att-href="website.social_github" t-if="website.social_github"><i class="fa fa-github"/></a></li>
+                    </ul>
+                  </div>
+
+                </div>
+              </div>
+              <div class="col-12 col-sm-4 col-md-4 col-lg-2 fot-col">
+                  <h3>Information</h3>
+                  <ul>
+                    <li><a href="#">Delivery</a></li>
+                    <li><a href="#">New products</a></li>
+                    <li><a href="#">Stores</a></li>
+                    <li><a href="#">Login</a></li>
+                    <li><a href="#">My account</a></li>
+                  </ul>  
+              </div> <!-- col -->
+
+              <div class="col-12 col-sm-4 col-md-4 col-lg-2 fot-col">
+                  <h3>Products</h3>
+                  <ul>
+                    <li><a href="#">Prices drop</a></li>
+                    <li><a href="#">New products</a></li>
+                    <li><a href="#">Best sales</a></li>
+                    <li><a href="#">Contact us</a></li>
+                    <li><a href="#">Sitemap</a></li>
+                  </ul>  
+              </div> <!-- col -->
+
+              <div class="col-12 col-sm-4 col-md-4 col-lg-2 fot-col">
+                  <h3>Our company</h3>
+                  <ul>
+                    <li><a href="#">Delivery</a></li>
+                    <li><a href="#">Legal Notice</a></li>
+                    <li><a href="#">About us</a></li>
+                    <li><a href="#">Secure payment</a></li>
+                    <li><a href="#">Stores</a></li>
+                  </ul>  
+              </div> <!-- col -->
+
+            </div> <!-- row -->
+          </div> <!-- container -->
+        </div> <!-- middle-footer -->
+
+        <div class="footer-bottom">
+          <div class="container">
+            <div class="row row-b4 align-items-center">
+              <div class="col-12 col-md-6 text-center text-md-left md-m-15px-b">
+                <p class="copyright">Copyright  © 2018 Alan. All Rights Reserved.</p>
+              </div>
+              <div class="col-12 col-md-6 text-center text-md-right">
+                <div id="info" class="footer-payment"><img src="/theme_alan/static/src/img/payment.png" title="Alan" alt="Alan" /></div>
+              </div>
+            </div>
+          </div>
+        </div><!-- .bottom-footer -->
+      </div><!-- footer -->
+    </xpath>
+  </template> 
+
+  <template id="footer_layout_4" active="False" inherit_id="website.layout">
+    <xpath expr="//footer/div[@id='footer']" position="replace">
+      <div id="footer">
+        <div class="footer-top">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-6 col-lg-3 m-15px-tb">
+                <div class="footer-block">
+                  <div class="icon">
+                    <i class="fa fa-plane" />
+                  </div>
+                  <div class="info">
+                    <div class="title">Free Shipping</div>
+                    <p>Free on all products</p>
+                  </div>
+                </div> <!-- footer-block -->
+              </div> <!-- col -->
+
+              <div class="col-md-6 col-lg-3 m-15px-tb">
+                <div class="footer-block">
+                  <div class="icon">
+                    <i class="fa fa-shield" />
+                  </div>
+                  <div class="info">
+                    <div class="title">Secured Shopping</div>
+                    <p>We use the best security features</p>
+                  </div>
+                </div> <!-- footer-block -->
+              </div> <!-- col -->
+
+              <div class="col-md-6 col-lg-3 m-15px-tb">
+                <div class="footer-block">
+                  <div class="icon">
+                    <i class="fa fa-reply" />
+                  </div>
+                  <div class="info">
+                    <div class="title">Free Returns</div>
+                    <p>Return for free within 30 days</p>
+                  </div>
+                </div> <!-- footer-block -->
+              </div> <!-- col -->
+
+              <div class="col-md-6 col-lg-3 m-15px-tb">
+                <div class="footer-block">
+                  <div class="icon">
+                    <i class="fa fa-headphones" />
+                  </div>
+                  <div class="info">
+                    <div class="title">Support</div>
+                    <p>Effectiveand Friendly Support</p>
+                  </div>
+                </div> <!-- footer-block -->
+              </div> <!-- col -->
+
+            </div> <!-- row -->
+          </div>
+        </div>
+
+        <div class="middle-footer">
+          <div class="container">
+            <div class="row row-b4">
+              <div class="col-12 col-sm-6 col-lg-3 lg-m-15px-tb">
+                <h3 class="font-alt">My Account</h3>
+                <ul class="fot-link">
+                  <li><a href="#">My Account</a></li>
+                  <li><a href="#">Checkout</a></li>
+                  <li><a href="#">Shopping Cart</a></li>
+                  <li><a href="#">Wishlist</a></li>
+                  <li><a href="#">Custom Link</a></li>
+                </ul>
+              </div> <!-- col -->
+
+              <div class="col-12 col-sm-6 col-lg-3 lg-m-15px-tb">
+                <h3 class="font-alt">Quick Links</h3>
+                <ul class="fot-link">
+                  <li><a href="#">Store Location</a></li>
+                  <li><a href="#">My Account</a></li>
+                  <li><a href="#">Orders Tracking</a></li>
+                  <li><a href="#">Size Guide</a></li>
+                  <li><a href="#">FAQs</a></li>
+                </ul>
+              </div> <!-- col -->
+
+              <div class="col-12 col-sm-6 col-lg-3 lg-m-15px-tb">
+                <h3 class="font-alt">Information</h3>
+                <ul class="fot-link">
+                  <li><a href="#">Careers</a></li>
+                  <li><a href="#">Search</a></li>
+                  <li><a href="#">Delivery Inforamtion</a></li>
+                  <li><a href="#">Privacy Policy</a></li>
+                  <li><a href="#">Terms Condition</a></li>
+                </ul>
+              </div> <!-- col -->
+
+              <div class="col-12 col-sm-6 col-lg-3 lg-m-15px-tb">
+                <h3 class="font-alt">Customer Service</h3>
+                <ul class="fot-link">
+                  <li><a href="#">Shipping Policy</a></li>
+                  <li><a href="#">Contact Us</a></li>
+                  <li><a href="#">Returns / Refunds</a></li>
+                  <li><a href="#">Online Stores</a></li>
+                  <li><a href="#">Refunds Policy</a></li>
+                </ul>
+              </div> <!-- col -->
+            </div> <!-- row -->
+          </div> <!-- container -->
+        </div> <!-- middle-footer -->
+    
+        <div class="footer-bottom">
+          <div class="container">
+            <div class="row row-b4 align-items-center">
+              <div class="col-12 col-sm-6 text-center text-md-left sm-m-15px-b">
+                <p class="copyright m-0px">Copyright  © 2018 Alan. All Rights Reserved.</p>
+              </div>
+              <div class="col-12 col-sm-6 text-center text-md-right">
+                <div id="info" class="footer-payment"><img src="/theme_alan/static/src/img/payment.png" title="Alan" alt="Alan" /></div>
+              </div>
+            </div>
+          </div>
+        </div><!-- .bottom-footer -->
+      </div><!-- footer -->
+    </xpath>
+  </template>
+
+
+</odoo>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_blog_configure_form" model="ir.ui.view">
+    <field name="name">blog.configure.form</field>
+    <field name="model">blog.configure</field>
+    <field name="arch" type="xml">
+      <form string="Blog Slider Configuration">
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="active"/>
+          </group>
+          <group string="Select Blogs">
+            <field name="blog_ids" no_label="1"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_blog_configure" model="ir.actions.act_window">
+    <field name="name">Blog Slider Configuration</field>
+    <field name="res_model">blog.configure</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <record model="ir.ui.view" id="view_blog_post_form">
+    <field name="name">blog.post.form</field>
+    <field name="model">blog.post</field>
+    <field name="inherit_id" ref="website_blog.view_blog_post_form"></field>
+    <field name="arch" type="xml">
+      <field name="blog_id" position="after">
+        <field name="cover_properties"/>
+      </field>
+    </field>
+  </record>
+
+  <menuitem id="menu_action_blog_configure" parent="menu_action_alan_customize"
+    sequence="101" action="action_blog_configure" name="Blog Slider"/>
+</odoo>

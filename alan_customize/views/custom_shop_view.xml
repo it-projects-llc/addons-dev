@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="product_qty_per_page_tree" model="ir.ui.view">
+    <field name="name">product.qty_per_page.tree</field>
+    <field name="model">product.qty_per_page</field>
+    <field name="arch" type="xml">
+      <tree editable="bottom" default_order="sequence">
+        <field name="sequence" widget="handle"/>
+        <field name="name" required="1"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="action_product_qty_per_page" model="ir.actions.act_window">
+    <field name="name">Products Per Page</field>
+    <field name="res_model">product.qty_per_page</field>
+    <field name="view_mode">tree</field>
+  </record>
+
+  <menuitem id="menu_action_product_qty_per_page" parent="website_sale.menu_product_settings"
+  sequence="13" action="action_product_qty_per_page" name="Products Per Page"/>
+</odoo>

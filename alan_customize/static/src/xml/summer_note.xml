@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+  <t t-name="alan_customize.embeded_block">
+    <div class="summernotevvvv">
+      <textarea rows="30" cols="50" id="summernote_text">
+        <t t-esc="data"/>
+      </textarea>
+    </div>
+  </t>
+</templates>

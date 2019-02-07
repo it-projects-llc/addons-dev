@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+  <template id="feature_style" name="Feature Style" inherit_id="website.snippet_options">
+    <xpath expr="//div[@data-js='background']" position="after">
+      <div data-selector=".as-feature-columns"> <!-- Options group -->
+        <li class="dropdown-submenu">
+          <a href="#"><i class="fa fa-at"></i> Feature Style</a>
+          <ul class="dropdown-menu"> <!-- Options list -->
+            <li data-select_class="as-feature-square"><a>Square</a></li>
+            <li data-select_class="as-feature-round-square"><a>Round Square</a></li>
+            <li data-select_class="as-feature-circle"><a>Circle</a></li>
+            <li data-select_class=""><a>Reset</a></li>
+          </ul>
+        </li>
+      </div>
+    </xpath>
+  </template>
+
+  <template id="feature_positions" name="Feature Positions" inherit_id="website.snippet_options">
+    <xpath expr="//div[@data-js='background']" position="after">
+      <div data-selector=".icon-box"> <!-- Options group -->
+        <li class="dropdown-submenu">
+          <a href="#"><i class="fa fa-at"></i> Feature Positions</a>
+          <ul class="dropdown-menu"> <!-- Options list -->
+            <li data-select_class="as-feature-left"><a>Feature Left</a></li>
+            <li data-select_class="as-feature-right"><a>Feature Right</a></li>
+            <li data-select_class=""><a>Reset</a></li>
+          </ul>
+        </li>
+      </div>
+    </xpath>
+  </template>
+ </odoo>
+

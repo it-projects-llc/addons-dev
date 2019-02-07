@@ -1,0 +1,165 @@
+/*Product Details 
+---------------------------------------*/
+.prodcut-tab-wrap{
+	border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+	.aspd-tabs{
+		.pd-more-info{
+			.nav-tabs{
+				margin-top: 20px;
+			    margin-bottom: 20px;
+			    text-align: center;
+			    border: none;
+				> li {
+				    padding: 0 32px;
+				    display: inline-block;
+				    float: none;
+				    position: relative;
+				    margin: 0;
+				    + li {
+				    	&:after {
+			    		    content: "";
+						    height: 25px;
+						    width: 1px;
+						    background: #ddd;
+						    position: absolute;
+						    top: 13px;
+						    left: 0;
+				    	}
+				    }
+					> a{
+				        box-shadow: none;
+					    border-radius: 0;
+					    color: #ababab;
+					    padding: 0 0 10px;
+					    margin: 0;
+					    background: none !important;
+					    position: relative;
+					    font-size: 28px;
+					    font-weight: 400;
+					    border: none;
+						.fa{
+							margin-right: 8px;
+						}
+						&:before{
+							position: absolute;
+							left: 0;
+							bottom: -1px;
+							right: 0;
+							height: 2px;
+							content: "";
+							background: transparent;
+							margin: auto;
+							width: 0px;
+							background: #333;
+							transition: all, 0.5s, ease;
+						}
+					}
+					&:hover,
+					&.active{
+						> a {
+							    color: #333;
+							    background: #fff !important;
+							&:before{
+								width:75%;
+							}
+						}
+					}
+				}
+			}
+			.tab-content{
+				background: #fff;
+				padding: 20px;
+				.tab-pane{
+
+				}
+			}
+		}
+	}
+
+	.o_shop_discussion_rating {
+		> .container {
+			> hr {
+				display: none;
+			}
+		}
+	}
+
+	.review-meta{
+		margin: 10px 0 20px;
+		h3{
+			margin: 0;
+			padding: 0;
+			font-size: 14px;
+			font-weight: 400;
+			label{
+				margin: 0;
+				font-weight: normal;
+			}
+		}
+		.o_rating_star_card{
+			.stars{
+				margin-right: 0;
+				vertical-align: top;
+			}
+		}
+	}
+	.review-section{
+		.hidden-print{
+			&:after,
+			&:before{
+				display:table;
+				content:"";
+			}
+			&:after{
+				clear: both;
+			}
+		}
+	}
+}
+
+
+.prodcut-info-wrap {
+	padding: 20px 0 50px 0;
+	@media (max-width: 991px){
+		padding: 20px 0 20px 0;
+	}
+
+	@media(min-width: 992px){
+		.piw-right {
+			padding-left: 30px;
+		}
+	}
+}
+
+
+
+
+/* Product Details page recommended
+------------------------------------------------*/
+.accessory-section,
+.recomended-section {
+	padding: 40px 0 0;
+	.recomended-title {
+	    @include mx-section-heading;
+	}
+	@media (max-width: 991px){
+		padding: 40px 0;
+	}
+	.as-product{
+		 .pro-info {
+		 	 h3 {
+		 	 	margin: 0;
+		 	 }
+		 }
+	}
+}
+
+.as-alternative-product {
+}
+
+.as-accessory-product {
+	margin: 0 0 40px;
+}
+
+

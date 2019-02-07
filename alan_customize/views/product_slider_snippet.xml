@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+  <template id="s_product_slider" name="Product Dynamic Snippet">
+    <section class="s_product_slider" data-snippet_type="0" data-collection_id="0" data-collection_name="NO COLLECTION SELECTED" data-snippet_layout="0">
+      NO COLLECTION SELECTED
+    </section>
+  </template>
+
+  <template id="s_product_slider_options" name="Product Slider Snippet Options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+      <div data-js='product_slider_actions'
+        data-selector=".s_product_slider">
+        <a tabindex="-1" href="#" class="dropdown-item js_product_slider" data-product_slider_configure="">Modify</a>
+      </div>
+    </xpath>
+  </template>
+
+  <template id="product_slider_in_feature" name="Product Slider Snippet in Feature" inherit_id="website.snippets">
+    <xpath expr="//div[@id='snippet_feature']/div[hasclass('o_panel_body')]" position="inside">
+      <t t-snippet="alan_customize.s_product_slider" t-thumbnail="/alan_customize/static/src/icon/product_dynamic_snippet.png"/>
+    </xpath>
+  </template>
+</odoo>

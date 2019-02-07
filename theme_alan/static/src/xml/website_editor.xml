@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-extend="website.theme_customize_modal_option">
+        <t t-jquery=".o_theme_customize_color_previews" t-operation="attributes">
+        <attribute name="t-if">colorPalette &amp;&amp; id!='custom_color_palate'</attribute>    
+        </t>
+        <t t-jquery=".o_theme_customize_color_previews" t-operation="after">
+            <div t-if="colorPalette" class="o_theme_customize_color_previews custom_picker" t-att-data-depends="id">
+                <div>
+                    <h6>Theme Color</h6>
+                    <t t-foreach="{'alan': _t('Theme')}" t-as="color">
+                        <t t-call="website.theme_customize_color_palette_button">
+                          <t t-set="color_type" t-value="'theme'"/> 
+                        </t>                        
+                    </t>
+                </div>
+            </div>
+        </t>
+    </t>
+</templates>

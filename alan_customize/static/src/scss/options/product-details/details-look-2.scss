@@ -1,0 +1,269 @@
+/*Product Details 
+---------------------------------------*/
+#product_detail {
+	width: 1400px;
+	padding: 0 15px;
+	max-width: 100%;
+	.container {
+		padding: 0;
+		width: 100%;
+	}
+	.product-shop-info {
+	}
+}
+
+.prodcut-tab-wrap{
+	.aspd-tabs{
+		.pd-more-info{
+			.nav-tabs{
+				border: none;
+				> li {
+					margin: 5px 10px 5px 0px;
+					display: inline-block;
+					float: none;
+					> a{
+					    box-shadow: none;
+					    border-radius: 0;
+					    color: #424242;
+					    padding: 10px 10px;
+					    margin: 0;
+					    background: none !important;
+					    position: relative;
+					    font-size: 14px;
+					    font-weight: 400;
+					    text-transform: uppercase;
+					    border: 1px solid #ddd;
+						.fa{
+							margin-right: 8px;
+						}
+					}
+					&:hover,
+					&.active{
+						> a {
+							color: #fff;
+							background: $as-theme !important;
+							border-color: $as-theme;
+							&:before{
+								width:75%;
+							}
+						}
+					}
+				}
+			}
+			.tab-content{
+				background: #fff;
+			    padding: 20px;
+			    border: 1px solid #eee;
+			    margin-top: 10px;
+				.tab-pane{
+
+				}
+			}
+		}
+	}
+
+	.o_shop_discussion_rating {
+		> .container {
+			> hr {
+				display: none;
+			}
+		}
+	}
+
+	.review-meta{
+		margin: 10px 0 20px;
+		h3{
+			margin: 0;
+			padding: 0;
+			font-size: 14px;
+			font-weight: 400;
+			label{
+				margin: 0;
+				font-weight: normal;
+			}
+		}
+		.o_rating_star_card{
+			.stars{
+				margin-right: 0;
+				vertical-align: top;
+			}
+		}
+	}
+	.review-section{
+		.hidden-print{
+			&:after,
+			&:before{
+				display:table;
+				content:"";
+			}
+			&:after{
+				clear: both;
+			}
+		}
+	}
+}
+
+.prodcut-info-wrap {
+	margin-bottom: 30px;
+}
+
+
+/* Product Details page recommended
+------------------------------------------------*/
+.accessory-section,
+.recomended-section {
+	.recomended-title {
+	    width: 100%;
+		margin: 0 0 12px;
+	    h2 {
+            margin: 0;
+		    padding: 0;
+		    font-size: 16px;
+		    letter-spacing: normal;
+		    font-weight: 500;
+		    color: #323232;
+		    display: inline-block;
+		    vertical-align: middle;;
+	    }
+	    .btn {
+	    	padding: 0px 6px;
+	    	span {
+	    		display: none;
+	    	}
+	    }
+	}
+
+	.slick-arrow {
+        position: absolute;
+	    top: -28px;
+	    right: 0;
+	    background: #eee;
+	    border: none;
+	    color: #000;
+	    width: 20px;
+	    height: 20px;
+	    line-height: 20px;
+	    z-index: 1;
+	    margin: auto;
+	    font-size: 9px;
+	    &.prev {
+    		right: 25px;
+	    }
+	}
+
+	@media (max-width: 991px){
+		padding: 40px 0;
+	}
+	.seaction-head {
+		h2 {
+			margin: 0 0 20px;	
+		}
+	}
+}
+
+.as-accessory-product,
+.as-alternative-product {
+    margin-bottom: 20px;
+    @media(max-width: 991px){
+    	margin-bottom: 0;
+    }
+}
+.as-alternative-product {
+	@media(max-width: 600px){
+		margin-top: 30px;
+	}
+}
+
+.as-product-detail {
+	margin-bottom: 40px;
+	margin-top: 40px;
+    .container {
+    	width: 100%;
+    	padding-left: 0;
+    	padding-right: 0;
+    }
+    &:after,
+    &:before {
+	    content: " ";
+		display: table;
+    }
+    &:after {
+    	clear: both;
+    }
+
+    .as-product-detail-inner {
+	    width: calc(~"100% - 290px");
+		float: left;
+	    padding-right: 25px;
+	    border-right: 1px solid #EEE;
+		.piw-left {
+			width: 50%;
+			@media(max-width: 767px) {
+				width: 100%;
+			}
+		}
+		.piw-right {
+			width: 50%;
+			padding-left: 35px;
+			@media(max-width: 767px) {
+				width: 100%;
+				padding-left: 15px;
+				padding-top: 30px;
+			}
+		}
+		@media(max-width: 991px) {
+			width: 100%;
+			padding: 0;
+			border:none;
+		}
+    }
+    .as-product-detail-right {
+        padding: 0;
+	    width: 270px;
+	    float: left;
+	    margin-left: 20px;
+	    @media(max-width: 991px) {
+	    	width: 100%;
+	    	margin: 40px 0 0;
+	    	.col-md-12 {
+	    		width: 50%;
+	    		float: left;
+	    	}
+	    }
+	    @media(max-width: 600px){
+	    	.col-md-12 {
+	    		width: 100%;
+	    	}
+	    }
+	    .as-product {
+	    	margin-bottom: 5px;
+	    	padding: 2px;
+	    	.asp-inner {
+    		    border: 1px solid #eee;
+			    overflow: hidden;
+			    padding: 6px;
+	    	}
+	    	.pro-img {
+	    		overflow: hidden;
+			    position: relative;
+			    width: 63px;
+			    float: left;
+	    	}
+	    	.pro-info {
+	    		border-top: none;
+			    padding: 0 0 0 10px;
+			    float: left;
+			    width: calc(~"100% - 70px");
+			    font-weight: 600;
+			    h3 {
+	    	        margin: 0;
+				    padding: 0 0 12px;
+				    text-align: left;
+				    font-size: 14px;
+				    color: #696969;
+				    line-height: normal;
+			    }
+	    	}
+	    }
+    }
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="product_qv_templates" xml:space="preserve">
+  <t t-name="quick_view_template">
+    <div class="o_quick_view_panel modal fade dialog_box_popup product-quick_view-info hidden-xs css_editable_mode_hidden" role="dialog" id="my_quick_view_modal">
+      <div class="modal-content modal-dialog">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><i class="ti-close"/></button>
+          <h4>Quick View</h4>
+        </div>
+        <div class="o_quick_view_panel_content modal-body">
+          <div class="o_product_qv_details">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </t>
+</templates>

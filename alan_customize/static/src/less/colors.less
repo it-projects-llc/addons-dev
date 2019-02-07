@@ -1,0 +1,455 @@
+/* Clean Colors */
+
+@color-blue: #3498DB;
+@color-turquoise: #1ABC9C;
+@color-green: #2ECC71;
+@color-yellow: #F1C40F;
+@color-orange: #E67E22;
+@color-red: #E74C3C;
+@color-pink: #f74b94;
+@color-purple: #9B59B6;
+@color-brown: #7b5844;  
+
+@color-blue-dark: #2980B9;
+@color-turquoise-dark: #16A085;
+@color-green-dark: #27AE60;
+@color-yellow-dark: #f3ac12;
+@color-orange-dark: #D35400;
+@color-red-dark: #C0392B;
+@color-pink-dark: #ea3884;
+@color-purple-dark: #8E44AD;
+@color-brown-dark: #604434;
+
+@color-blue-light: lighten(@color-blue, 20%);
+@color-turquoise-light: lighten(@color-turquoise, 20%);
+@color-green-light: lighten(@color-green, 20%);
+@color-yellow-light: lighten(@color-yellow, 20%);
+@color-orange-light: lighten(@color-orange, 20%);
+@color-red-light: lighten(@color-red, 20%);
+@color-pink-light: lighten(@color-pink, 20%);
+@color-purple-light: lighten(@color-purple, 20%);
+@color-brown-light: lighten(@color-brown, 20%);
+
+@color-clouds: #ECF0F1;
+@color-silver: #BDC3C7;
+@color-concrete: #95A5A6;
+@color-stone: #7F8C8D;
+@color-asphalt: #34495E;
+@color-midnight: #2C3E50;  
+
+
+@color-concrete-dark: #445b5c;
+
+/* +++++ NEW COLORS +++++ */ 
+
+@color-wind: #f7f7f7;
+@color-clay: #e1dcd5; 
+@color-sand: #c5bcb1;
+@color-beach: #f3bf91;
+@color-forest: #254c3a;
+@color-twilight: #3b2c50;
+@color-burgundy: #8e362d;
+@color-marine: #212d3a;
+
+/* GRAYS --------------------------------------------------------- */ 
+
+@gray-darker:          lighten(#000, 20%);
+@gray-dark:            lighten(#000, 40%);
+@gray:                 lighten(#000, 55%);
+@gray-light:           lighten(#000, 70%);
+@gray-lighter:         lighten(#000, 80%);
+
+/* Backgrounds Colors ------------------------------------------------*/
+
+@bg-blue: background(@color-blue);
+@bg-turquoise: background(@color-turquoise);
+@bg-green: background(@color-green); 
+@bg-yellow: background(@color-yellow); 
+@bg-orange: background(@color-orange); 
+@bg-red: background(@color-red); 
+@bg-pink: background(@color-pink);
+@bg-purple: background(@color-purple); 
+@bg-brown: background(@color-brown);
+
+
+/* ---- Default Color HTML Class ---- */
+
+.bg-blue      { background-color: @color-blue;}
+.bg-turquoise { background-color: @color-turquoise;}
+.bg-green     { background-color: @color-green;}
+.bg-yellow    { background-color: @color-yellow;}
+.bg-orange    { background-color: @color-orange;}
+.bg-red       { background-color: @color-red;}
+.bg-pink      { background-color: @color-pink;}
+.bg-purple    { background-color: @color-purple;}
+.bg-brown     { background-color: @color-brown;}
+
+.text-blue      { color: @color-blue;}
+.text-turquoise { color: @color-turquoise;}
+.text-green     { color: @color-green;}
+.text-yellow    { color: @color-yellow;}
+.text-orange    { color: @color-orange;}
+.text-red       { color: @color-red;}
+.text-pink      { color: @color-pink;}
+.text-purple    { color: @color-purple;}
+.text-brown     { color: @color-brown;}
+
+
+
+/*Custome Colors */
+
+@import url(https://fonts.googleapis.com/css?family=Poppins:400,300,500,600,700);
+
+/*Font*/
+@as-font-family:		'Poppins';
+@as-font-size-base:		14px;
+@as-font-size:			14px;
+@as-title:				46px;
+@as-banner-title:		62px;
+@as-sub-title:			36px;
+
+/*Color*/
+@as-theme:				#D9121F;
+@as-grey:				#edeff6;
+@as-light:				#ffffff;
+@as-dark:				#000;
+@as-body:				#444;
+
+@as-body-color:			#333;
+@as-footer:				#121214;
+@as-footer-color:		#fff;
+						
+
+/* Fonts */
+@as-font-base:			14px;
+@as-font-size:			14px;
+@as-font-title:		22px;
+
+
+
+/*img*/
+@img-path:				'../img/';
+
+
+
+/*Common*/
+body { font-family: @as-font-family;}
+a{
+	color: @as-theme;
+	&:hover,
+	&:focus,
+	&:active{
+		color:darken(@as-theme, 15%);
+	}
+}
+
+/**/
+
+/*Shop Lise Page*/
+
+/*Side bar*/
+#products_grid_before{
+	.js_attributes{
+		.nav-stacked{
+			margin: 0 !important;
+			li{
+				padding-bottom: 20px;
+				ul{
+					margin: 0;
+					padding: 0;
+				}
+				li{
+					padding-bottom: 5px;
+				}
+			}
+			div{
+				font-size: @as-font-base + 4;
+				font-weight: 600;
+				color: darken(@as-light, 80%);
+				border-bottom: 2px solid darken(@as-light, 50%);
+				margin: 0px 0px 15px;
+				padding: 0 0 5px;
+				strong{
+					font-weight: 600;
+				}
+			}
+		}
+	}
+}
+
+#o_shop_collapse_category{
+	  > li{
+		width: 100%;
+		float: left;
+		position: relative;
+		border-top: 1px solid darken(@as-light, 20%);
+		margin: 0;
+		i.text-primary{
+			position: absolute;
+			right: 0px;
+			top: 0px;
+			z-index: 1;
+			height: 30px;
+			line-height: 30px;
+			width: 30px;
+			text-align: center;
+			background: darken(@as-light, 50%);
+			top: 5px;
+			margin: auto;
+			color: @as-light;
+			&.fa-chevron-down{
+				background: @as-theme;
+			}
+		}
+		 > a{
+			padding: 10px 15px;
+			display: block;
+			border-radius: 0;
+			min-width: 100%;
+			color: darken(@as-light, 80%);
+			font-weight: 600;
+			&:hover,
+			&:focus,
+			&:active{
+				background:none;
+				color: @as-theme;
+			}
+		}
+		&.active{
+			a{
+				background: none;
+				color: @as-theme;
+			}
+		}
+		ul{
+			margin: 0 0 15px;
+
+			li{
+				a{
+					color: darken(@as-light, 80%);
+					&:hover,
+					&:focus,
+					&:active{
+						background:none;
+						color: @as-theme;
+					}
+				}
+			}
+		}
+	}
+}
+
+
+/*Product Listing*/
+#products_grid{
+	&.col-md-9{
+		.oe_product{
+			.oe_product_image{
+				left: 0px;
+				right: 0px;
+				top: 20px;
+				bottom: 0px;
+				img{
+					top: 0;
+					bottom: auto;
+				}
+			}
+			section{
+				padding: 0px 15px 40px 10px;
+				h5{
+					width: 100%;
+					text-align: center;
+					a{
+						color: darken(@as-light, 80%);
+						font-weight: 300;
+					}
+				}
+				.product_price{
+					width: 100%;
+					left: 0;
+					bottom: 15px;
+					b{
+						width: 100%;
+						float: left;
+						font-weight: 600;
+						text-align: center;
+						color: @as-theme;
+						del{
+							font-weight: 400;
+							color: darken(@as-light, 50%);
+						}
+					}
+					.btn-default{
+						width: 40px;
+						height: 40px;
+						border-radius: 50%;
+						line-height: 35px; 
+						color: darken(@as-light, 80%);
+						border:1px solid  darken(@as-light, 80%); 
+						font-size: @as-font-base + 6;
+						position: absolute;
+						bottom: -100px;
+						left: 0;
+						right: 0;
+						margin: auto;
+						transition:all 0.5s ease;
+						-moz-transition:all 0.5s ease;
+						-webkit-transition:all 0.5s ease;
+						-o-transition:all 0.5s ease;
+						&:hover{
+							border-color:@as-theme;
+							color: @as-theme;
+						}
+					}
+				}
+				&:after{
+					content: "";
+					display: inline-block;
+					vertical-align: top;
+					width: 100%;
+					height: 100%;
+					position: absolute;
+					bottom: -100%;
+					background: @as-light;
+					left: 0;
+					transition:all 1s ease;
+					-moz-transition:all 1s ease;
+					-webkit-transition:all 1s ease;
+					-o-transition:all 1s ease;
+				}
+			}
+			.ribbon-wrapper{
+				width: auto;
+				height: auto;
+				z-index: 5;
+				position: absolute;
+				top: 10px;
+				left: 10px;
+				.ribbon{
+					text-align: center;
+					transform: rotate(0deg);
+					-moz-transform: rotate(0deg);
+					-webkit-transform: rotate(0deg);
+					-o-transform: rotate(0deg);
+					position: relative;
+					padding: 7px 20px;
+					border: none;
+					left: 0px;
+					top: 0;
+					width: auto;
+					cursor: default;
+					border-radius: 25px;
+					background: @as-theme;
+				}
+			}
+			&:hover{
+				 
+				.product_price{
+					.btn-default{
+						bottom: 15px;
+						background: @as-light;
+						z-index: 9;
+					}
+				}
+				section{
+					&:after{
+						bottom:0;
+					}
+				}
+			}
+			&.oe-height-2 {
+				height: 350px;
+			}
+
+		}
+	}
+	table{
+		tr{
+			&:first-child{
+				td{
+					border:none;
+				}
+				+ tr {
+					td{
+						border-top: none;
+					}
+				}
+			}
+			&:last-child{
+				td{
+					border-bottom: none;
+				}
+			}
+			td{
+				&:first-child{
+					border-left:none;
+				}
+				&:last-child{
+					border-right: none;
+				}
+			}
+		}
+	}
+}
+
+
+
+/*Cart pages*/
+
+.oe_cart{
+	.table-striped{
+		border: 1px solid darken(@as-light, 8%);
+		td{
+			border-left: 1px solid darken(@as-light, 8%);
+			border-bottom: 1px solid darken(@as-light, 8%);
+			border-top: none;
+			a {
+				color: @as-theme;
+			}
+			.text-muted{
+				color: darken(@as-light, 45%);
+			}
+		}
+		thead{
+			th{
+				background: darken(@as-light, 70%);
+				color: @as-light;
+				border: none;
+			}
+		}
+	}
+
+	.oe_website_spinner{
+		.js_add_cart_json{
+			border-radius: 0;
+			background: @as-theme;
+			color: @as-light;
+		}
+	}
+
+
+}
+
+
+/*Buttons*/
+.btn{
+	border-radius: 0;
+	&.btn-primary{
+		background: @as-theme;
+		border-color:  @as-theme;
+		&:hover,
+		&:focus,
+		&:active{
+			background:darken(@as-theme, 10%);
+			border-color:darken(@as-theme, 10%);
+		}
+	}
+}
+/**/
+
+
+/*Forms*/
+.form-control {
+	border-radius: 0;
+}
+/**/

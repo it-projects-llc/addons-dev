@@ -1,0 +1,42 @@
+#wrapwrap{
+	width: 85%;
+	margin: 30px auto;
+	box-shadow: 0 14px 28px rgba(0,0,0,.25),0 10px 10px rgba(0,0,0,.22);
+	max-width: 100%;
+	@media (max-width:1440px){
+		margin: 0 auto;
+		width: 1200px;
+	}
+	@media (max-width:1280px){
+		width: 100%;
+	}
+}
+ 
+header {
+	.container{
+		
+	}
+	.header-middle{
+		.container{
+			padding: 0 15px;
+		}
+	}
+	.navbar-default {
+		> .container {
+			.navbar-top-collapse{
+				padding: 0;
+			}
+		}
+	}
+}
+
+.fixed-header {
+	header {
+		.navbar-default{
+			width: 1170px;
+			margin: auto;
+			max-width: 100%;
+			top: 0;
+		}
+	}
+}

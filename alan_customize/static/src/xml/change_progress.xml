@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="alan_customize.product_slider_block">
+    <div class="modal" contenteditable="False" contentEditable="false" backdrop="false" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:2001">
+      <div class="modal-dialog">
+        <div id="s_media_block_modal" class="modal-content">
+          <div class="modal-body" contenteditable="false">
+            <div id="tab_html5" class="videoTabs">
+              <form class="form-horizontal container-fluid" role="form">
+                <div class="col-sm-12 form-group">
+                  <label for="product-label" class="col-sm-5 control-label">Slider Label</label>
+                  <div class="col-sm-7">
+                    <input type="text" class="form-control" id="product-label" placeholder="Slider Label (for e.g: Arrival,Top Selling)" />
+                  </div>
+                </div>
+                <div class="col-sm-12 form-group">
+                  <label for="slider_type" class="col-sm-5 control-label">Product Collection</label>
+                  <div class="col-sm-4">
+                    <select id="slider_type" class="form-control" name="slider_type">
+                      <option value="is_arrival">New Products</option>
+                      <option value="is_best_saller">Best Seller Products</option>
+                      <option value="is_latest_sale">Latest Sell Products</option>
+                      <option value="is_discount">Discounted Products</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-12 form-group">
+                  <label for="product-count" class="col-sm-5 control-label">Number of Products in Slider</label>
+                  <div class="col-sm-7">
+                    <select id="product-count" class="form-control">
+                    <option value="4">4</option>
+                    <option value="8">8</option>
+                    <option value="12">12</option>
+                    <option value="16">16</option>
+                    </select>
+                  </div>
+                </div> 
+                <div class="col-sm-12 form-group">
+                  <label for="product-slide" class="col-sm-5 control-label">Number of visible products in one slide</label>
+                  <div class="col-sm-7">
+                    <select id="product-slide" class="form-control">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option> 
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-12 form-group">
+                  <label for="scroll-speed" class="col-sm-5 control-label">Scroll Speed(ms)</label>
+                  <div class="col-sm-7">
+                    <input type="number" id="scroll-speed" class="form-control"/>
+                  </div>
+                </div>
+                 <div class="col-sm-12 form-group">
+                  <div class="checkbox">
+                  <label for="auto-scroll" class="col-sm-5 control-label">Auto Scroll</label>
+                    <input type="checkbox" id="auto-scroll" class="form-control"/>
+                  </div>
+                </div>
+                 <div class="col-sm-12 form-group">
+                  <div class="checkbox">
+                  <label for="show-product-name" class="col-sm-5 control-label">Show Product Name</label>
+                  <input type="checkbox" id="show-product-name" class="form-control"/>
+                  </div>
+                </div>
+                 <div class="col-sm-12 form-group">
+                  <div class="checkbox">
+                  <label for="show-product-price" class="col-sm-5 control-label">Show Product Price</label>
+                    <input type="checkbox" id="show-product-price" class="form-control"/>
+                  </div>
+                </div>
+                  <div class="col-sm-12 form-group">
+                  <div class="checkbox">
+                  <label for="show-cart" class="col-sm-5 control-label">Show Add to Cart</label>
+                    <input type="checkbox" id="show-cart" class="form-control"/>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button id="cancel" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+            <button id="sub_data" data-dismiss="modal" class="btn btn-danger">Apply</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </t>
+
+  <t t-name="alan_customize.change_progress_modal">
+    <div class="modal" contenteditable="False" contentEditable="false" backdrop="false" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:2001">
+      <div class="modal-dialog">
+        <div id="s_media_block_modal" class="modal-content">
+          <div class="modal-body" contenteditable="false">
+            <div id="tab_html5" class="videoTabs">
+              <form class="form-horizontal container-fluid" role="form">
+                <div class="col-sm-12 form-group">
+                  <label for="progress-width" class="col-sm-3 control-label">Total Count</label>
+                  <div class="col-sm-9">
+                    <input type="number" class="form-control" id="progress-width" placeholder="Enter Progress Value between [0-100]" />
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button id="cancel" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+            <button id="sub_data" data-dismiss="modal" class="btn btn-danger">Apply</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </t>
+</templates>

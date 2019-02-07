@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Snippet's Body -->
+
+  <template id="alan_customize.s_collection_configure" name="Collection coursol">
+    <div class="container h_tab_prod_snip" t-if="obj" contentEditable="false">
+      <div class="product_slide">
+        <div class="seaction-head">
+          <h2 t-field="obj.name"/>
+        </div>
+      </div>
+      <div class="multi_tab_slider">
+        <t t-if="obj and obj.tab_collection_ids">
+          <div class="pd-more-info">
+            <ul class="nav nav-tabs" role="tablist">
+              <t t-foreach="obj.tab_collection_ids" t-as="collection">
+                <li role="presentation">
+                  <a t-att-class="'active' if obj.tab_collection_ids[0].id==collection.id else ''" t-att-href="'#more_info_%s' %(collection.id)" aria-controls="more_info" role="tab" data-toggle="tab">
+                    <t t-esc="collection.name"/>
+                  </a>
+                </li>
+              </t>
+            </ul>
+            <div class="tab-content">
+              <t t-foreach="obj.tab_collection_ids" t-as="collection">
+                <div role="tabpanel"  t-att-class="'tab-pane active' if obj.tab_collection_ids[0].id==collection.id else 'tab-pane'" t-att-id="'more_info_%s' %(collection.id)">
+                  <t t-if="collection.product_ids">
+                    <div class="owl-carousel thumbnails-slides multi_slider">
+                      <t t-foreach="collection.product_ids" t-as="product_x">
+                        <t t-set="product" t-value="product_x.product_id"/>
+                        <div class="item">
+                          <t t-call="alan_customize.snippet_products_item"/>
+                        </div>
+                      </t>
+                    </div>
+                  </t>
+                </div>
+              </t>
+            </div>
+          </div>
+        </t>
+      </div>
+    </div>
+  </template>
+
+  <template id="alan_customize.snippet_products_item" name="Product Items">
+    <form action="/shop/cart/update" method="post" class="as-product">
+      <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+      <div itemscope="itemscope" itemtype="http://schema.org/Product" class="asp-inner">
+        <div class="pro-img oe_product_image">
+          <a class="preview-image" itemprop="url"
+            t-att-href="'/shop/product/%s' % slug(product)">
+            <span class="product-img" itemprop="image" t-field="product.image"
+              t-options='{"widget": "image", "resize": "300x300"}'
+              t-att-alt="product.name"/>
+          </a>
+        </div>
+        <t t-if="show_publish">
+          <div id="website_published_button" class=""
+            groups="base.group_sale_manager">
+            <t t-call="website.publish_management">
+              <t t-set="object" t-value="product"/>
+              <t t-set="publish_edit" t-value="True"/>
+              <t t-set="action" t-value="'product.product_template_action'"/>
+            </t>
+          </div>
+        </t>
+        <div class="pro-info">
+          <h3>
+            <strong>
+              <a itemprop="name"
+                t-att-href="'/shop/product/%s' % slug(product)"
+                t-field="product.name"/>
+            </strong>
+          </h3>
+          <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="product.product_variant_ids">
+            <b>
+              <t t-if="(compute_currency(product.lst_price) - product.website_price ) &gt; 0.01  and website.get_current_pricelist().discount_policy=='without_discount'">
+                <del class="text-danger mr8" style="white-space: nowrap;" t-esc="compute_currency(product.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}"/>
+              </t>
+              <span t-esc="product.website_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+              <span itemprop="price" style="display:none;" t-esc="product.website_price"/>
+              <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
+            </b>
+          </div>
+          <div class="pro-action">
+            <input name="product_id" t-att-value="product.product_variant_id.id" type="hidden"/>
+            <button class="button btn btn-cart"><span class="ti-shopping-cart"></span> <span>ADD TO CART</span></button>
+            <t t-if="product.env.ref('alan_customize.add_to_wishlist').active and product.product_variant_ids">
+               <t t-set="in_wish" t-value="product.product_variant_ids &amp; request.env['product.wishlist'].current().mapped('product_id')"/>
+               <a class="btn btn-default btn-xs o_add_wishlist" t-att-disabled='in_wish or None' title="Add to Wishlist" t-att-data-product-product-id="product.product_variant_ids[0].id" data-action="o_wishlist"><span class="ti-heart"></span></a>
+             </t>
+             <t t-if="product.env.ref('alan_customize.add_to_compare').active and product.product_variant_ids">
+               <a class="btn btn-default btn-xs o_add_compare" title="Compare" t-att-data-product-product-id="product.product_variant_ids[0].id" data-action="o_comparelist"><span class="fa fa-balance-scale"></span></a>
+             </t>
+          </div>
+        </div>
+      </div>
+    </form>
+  </template>
+
+
+  <template id="alan_customize.product_tab_content" name="Collection coursol">
+    <div class="container multi_product v_tab_prod_snip" t-if="product_obj" contentEditable="false">
+      <div class="product_slide"  t-if="product_obj">
+        <div class="seaction-head">
+          <h2 t-field="product_obj.name"/>
+        </div>
+      </div>
+      <div class="product_tab_content" t-if="product_obj.tab_collection_ids">
+        <div class="row">
+          <t t-foreach="product_obj.tab_collection_ids" t-as="collection">
+            <t t-set="len_p" t-value="len(product_obj.tab_collection_ids)"/>
+            <div t-attf-class=" product_detail #{len_p==1 and 'col-md-12' or ''} #{len_p==2 and 'col-md-6' or ''} #{len_p==3 and 'col-md-4' or ''} #{len_p>=4 and 'col-md-3' or ''}">
+              <h2 class="filter_title" t-field="collection.name"/>
+              <div class="filter_value" t-if="collection.product_ids">
+                <t t-set="max_qty" t-value="0"/>
+                <t t-foreach="collection.product_ids" t-as="product_x">
+                  <t t-set="product" t-value="product_x.product_id"/>
+                  <t t-if="max_qty&lt;=5">
+                    <div class="item">
+                      <t t-call="alan_customize.snippet_products_item"/>
+                      <t t-set="max_qty" t-value="max_qty+1"/>
+                    </div>
+                  </t>
+                </t>
+              </div>
+            </div>
+          </t>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="assets_frontend_multi_tab_slider" inherit_id="website.assets_frontend">
+    <xpath expr="." position="inside">
+      <script type="text/javascript"  src="/alan_customize/static/src/js/website_multi_front.js"></script> 
+    </xpath>
+  </template>
+  
+  <template id="assets_editor_multi_tab_slider" inherit_id="website.assets_editor" name="Editor assets">
+    <xpath expr="." position="inside">
+      <script type="text/javascript" src="/alan_customize/static/src/js/website_multi_editor.js"></script>
+    </xpath>
+  </template>
+</odoo>
