@@ -2,10 +2,14 @@
 <!-- Copyright 2019 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
      License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).-->
 <odoo noupdate="1">
-    <!-- TODO: this is copy-paste from payment_paypal and wasn't tested -->
+
     <template id="pagadito_acquirer_button">
         <form t-if="acquirer.pagadito_uid" t-att-action="pagadito_url" method="get" target="_self">
             <!-- submit -->
+            <t t-foreach="pagadito_args" t-as="a">
+                <input type="hidden" t-att-name="a" t-att-value="a_value[0]"/>
+            </t>
+ 
             <button type="submit" width="100px"
                     t-att-class="submit_class">
                 <img t-if="not submit_txt" src="/payment_pagadito/static/src/img/pagadito_icon.png"/>
