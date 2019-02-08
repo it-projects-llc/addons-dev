@@ -2,8 +2,6 @@
 # Copyright 2019 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 import logging
-import urllib
-import urllib2
 import json
 
 _logger = logging.getLogger(__name__)
