@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="alan_customize.brand_slider_block">
+    <div class="modal" contenteditable="False" contentEditable="false" backdrop="false" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:2001">
+      <div class="modal-dialog">
+        <div id="s_media_block_modal" class="modal-content">
+          <div class="modal-body" contenteditable="false">
+            <div id="tab_html5" class="videoTabs">
+              <form class="form-horizontal container-fluid" role="form">
+                <div class="col-sm-12 form-group">
+                  <label for="product-count" class="col-sm-3 control-label">Total Count</label>
+                  <div class="col-sm-9">
+                    <input type="number" class="form-control" id="brand-count" placeholder="Enter Count" />
+                  </div>
+                </div>
+                <div class="col-sm-12 form-group">
+                  <label for="product-label" class="col-sm-3 control-label">Brand Title</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" id="brand-label" placeholder="Enter Brand Title" />
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button id="cancel" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+            <button id="sub_data" data-dismiss="modal" class="btn btn-danger">Apply</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </t>
+
+</templates>
+

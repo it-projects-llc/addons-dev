@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="website.submenu" name="Submenu">
+    <t t-set="has_visible_submenu" t-value="submenu.child_id.filtered(lambda menu: menu.is_visible)"/>
+    <li t-if="submenu.is_visible and not has_visible_submenu" t-attf-class="#{item_class or ''}">
+        <a t-att-href="submenu.clean_url()"
+            t-attf-class="#{link_class or ''} #{'active' if submenu.clean_url() and unslug_url(request.httprequest.path) == unslug_url(submenu.clean_url()) else ''}"
+            role="menuitem"
+            t-ignore="true"
+            t-att-target="'_blank' if submenu.new_window else None">
+            <span t-field="submenu.name"/>
+        </a>
+    </li>
+    <li t-if="has_visible_submenu" t-attf-class="#{item_class or ''} dropdown #{
+        (submenu.clean_url() and submenu.clean_url() != '/' and any([request.httprequest.path == child.url for child in submenu.child_id if child.url]) or
+         (submenu.clean_url() and request.httprequest.path == submenu.clean_url())) and 'active'
+        }">
+        <a t-attf-class="#{link_class or ''} dropdown-toggle" data-toggle="dropdown" href="#">
+            <span t-field="submenu.name"/>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+            <t t-foreach="submenu.child_id" t-as="submenu">
+                <t t-call="website.submenu">
+                    <t t-set="item_class" t-value="None"/>
+                    <t t-set="link_class" t-value="'dropdown-item'"/>
+                </t>
+            </t>
+        </ul>
+    </li>
+  </template>
+
+  <template id="submenu" name="Submenu">
+    <li t-if="not submenu.child_id and submenu.is_mega_menu" t-att-class="'mm-mega-menu active' if submenu.url and submenu.url != '/' and request.httprequest.path == submenu.url.replace('/page/website.', '/page/') else 'mm-mega-menu'">
+      <a t-att-href="(website.menu_id.child_id[0] == submenu) and '/' or submenu.url" t-ignore="true" t-att-target="'_blank' if submenu.new_window else None">
+        <span t-field="submenu.name"/>
+      </a>
+      <t t-if="submenu.content_id">
+        <div t-att-class="'mm-maga-main %s mm-mega-list %s' %('mm-mega-cat-level' if submenu.content_id.main_content_type == 'horiz_categ_toggle' else '', submenu.content_id.no_of_columns and 'mm-mega-'+str(submenu.content_id.no_of_columns) or '')">
+          <div class="mm-maga-main-width">
+            <t t-if="submenu.content_id.is_header">
+              <t t-if="submenu.content_id.header_content">
+                <div t-field="submenu.content_id.header_content" class="o_not_editable mm-menu-head"/>
+              </t>
+              <t t-if="not(submenu.content_id.header_content)">
+                <div t-field="submenu.content_id.name" class="mm-menu-head"/>
+              </t>
+            </t>
+
+            <!-- Mega menu content start -->
+            <t t-if="submenu.content_id.main_content_type">
+              <!-- "Html menu" -->
+              <t t-if="submenu.content_id.main_content_type=='content'">
+                <div t-field="submenu.content_id.menu_content" class="o_not_editable mmc-inner mmc-inner-static-content"/>
+              </t>
+              <!-- "Html menu end" -->
+
+              <!-- Product Grid Code complete -->
+              <t t-if="submenu.content_id.main_content_type=='product_grid'">
+                <t t-if="submenu.content_id.product_ids">
+                  <div class="mmc-inner mm-product-grid">
+                    <t t-foreach="submenu.content_id.product_ids" t-as="product">
+                      <div class="mmc-item">
+                        <div class="mm-pro-op">
+                          <div class="img">
+                            <a t-att-href="'/shop/product/%s' % slug(product)">
+                              <img t-att-src="website.image_url(product,'image')"/>
+                            </a>
+                          </div>
+                          <h2><a t-att-href="'/shop/product/%s' % slug(product)">
+                            <strong><span t-field="product.name"/></strong></a>
+                          </h2>
+                        </div>
+                      </div>
+                    </t>
+                  </div>
+                </t>
+              </t>
+              <!-- Product grid Code end -->
+            
+              <!-- Product List Code start -->
+              <t t-if="submenu.content_id.main_content_type=='product_list'">
+                <t t-if="submenu.content_id.product_ids">
+                  <div class="mmc-inner">
+                    <t t-set="no_of_columns_m" t-value="submenu.content_id.no_of_columns and submenu.content_id.no_of_columns or 1"/>
+                      <ul class="mm-alone-item">
+                        <t t-foreach="submenu.content_id.product_ids" t-as="product">
+                          <li class="item">
+                            <a t-att-href="'/shop/product/%s' % slug(product)">
+                              <span t-field="product.name"/>
+                            </a>
+                          </li>
+                        </t>
+                      </ul>
+                  </div>
+                </t>
+              </t>
+              <!-- Product list code end -->
+
+              <!-- Category List Code start -->
+              <t t-if="submenu.content_id.main_content_type=='category_list'">
+                <t t-if="submenu.content_id.category_ids">
+                  <div class="mmc-inner mm-cat-list">
+                    <t t-foreach="submenu.content_id.category_ids" t-as="category">
+                      <t t-if="not category.parent_id">
+                        <ul class="item">
+                          <li class="mm-label">
+                            <a t-att-href="'/shop/category/%s' % slug(category)">
+                              <span t-field="category.name"/>
+                            </a>
+                          </li>
+                          <t t-foreach="submenu.content_id.category_ids" t-as="category1">
+                            <t t-if="category1.parent_id and category1.parent_id.id==category.id">
+                              <li>
+                                <a t-att-href="'/shop/category/%s' % slug(category1)">
+                                  <span t-field="category1.name"/>
+                                </a>
+                              </li>
+                            </t>
+                          </t>
+                        </ul>
+                      </t>
+                    </t>
+                  </div>
+                </t>
+              </t>
+              <!-- Category list code end -->
+
+              <!-- Category List Code start -->
+              <t t-if="submenu.content_id.main_content_type=='category_grid'">
+                <t t-if="submenu.content_id.category_ids">
+                <div class="mmc-inner mm-product-grid">
+                  <t t-foreach="submenu.content_id.category_ids" t-as="category">
+                    <div class="mmc-item">
+                      <div class="mm-pro-op">
+                        <div class="img"><a t-att-href="'/shop/category/%s' % slug(category)">
+                          <img t-att-src="website.image_url(category,'image')"/></a>
+                        </div>
+                        <h2><a t-att-href="'/shop/category/%s' % slug(category)"><span t-field="category.name"/></a></h2>
+                      </div>
+                    </div>
+                  </t>
+                </div>
+                </t>
+              </t>
+              <!-- Category list code end -->
+
+              <!-- Mixed list code start -->
+              <t t-if="submenu.content_id.main_content_type == 'mixed_list'">
+                <t t-set="imgUrl" t-value="'%s'%(website.image_url(submenu.content_id, 'background_image'),)"/>
+                <t t-if="submenu.content_id.background_image_pos == 'left'">
+                  <img class="mixed-list_back-img" t-att-src="imgUrl" t-att-style="'left:0px;'"/>
+                </t>
+                <t t-elif="submenu.content_id.background_image_pos == 'right'">
+                  <img class="mixed-list_back-img" t-att-src="imgUrl" t-att-style="'right:0px;'"/>
+                </t>
+                <t t-else="">
+                </t>
+                <t t-if="submenu.content_id.link_ids or submenu.content_id.content_section_ids">
+                  <div class="mmc-inner mm-mixed-listing">
+                    <t t-foreach="range(1, int(submenu.content_id.no_of_columns) + 1)" t-as="current_col">
+                      <t t-set="currColLinkIDs" t-value="None"/>
+                      <t t-if="current_col == 1">
+                        <t t-set="currColLinkIDs" t-value="submenu.content_id.link_ids.search([('megamenu_id','=',submenu.content_id.id),('pos_column','&lt;=',current_col)], order='pos_column, pos_row')"/>
+                      </t>
+                      <t t-elif="current_col &gt;= int(submenu.content_id.no_of_columns)">
+                        <t t-set="currColLinkIDs" t-value="submenu.content_id.link_ids.search([('megamenu_id','=',submenu.content_id.id),('pos_column','&gt;=',current_col)], order='pos_column, pos_row')"/>
+                      </t>
+                      <t t-else="">
+                        <t t-set="currColLinkIDs" t-value="submenu.content_id.link_ids.search([('megamenu_id','=',submenu.content_id.id),('pos_column','=',current_col)], order='pos_column, pos_row')"/>
+                      </t>
+                      <ul t-att-class="'mm-mixed-item resize_col_%s' % (submenu.content_id.no_of_columns,)">
+                        <t t-if="submenu.content_id.column_headline_ids">
+                          <t t-set="headline_object" t-value="submenu.content_id.column_headline_ids.search([('megamenu_id','=',submenu.content_id.id),('pos_column','=',current_col)], limit=1)"/>
+                          <t t-if="headline_object">
+                            <li class="mm-mixed-item-heading">
+                              <a t-if="headline_object.headline_link" t-att-href="headline_object.headline_link">
+                                <h2 class="font-alt" t-esc="headline_object.name"/>
+                                <div class="mm-mixed-desc" t-esc="headline_object.description"/>
+                              </a>
+                              <t t-else="">
+                                <h2 class="font-alt" t-esc="headline_object.name"/>
+                                <div class="mm-mixed-desc" t-esc="headline_object.description"/>
+                              </t>
+                            </li>
+                          </t>
+                        </t>
+                        <t t-set="position_list" t-value="list()"/>
+                        <t t-foreach="submenu.content_id.content_section_ids" t-as="content_sec">
+                          <t t-esc="position_list.append(content_sec.content_section_pos)"/>
+                        </t>
+                        <t t-if="current_col in position_list">
+                          <t t-foreach="submenu.content_id.content_section_ids" t-as="each_content">
+                            <t t-if="current_col == each_content.content_section_pos">
+                              <div class="mm-mixed-content o_not_editable" t-field="each_content.content_html" />
+                            </t>
+                          </t>
+                        </t>
+                        <t t-else="">
+                          <t t-foreach="currColLinkIDs" t-as="links">
+                            <li class="mm-mixed-item-img">
+                              <div t-if="links.image" class="mm-mi-img">
+                                <a t-att-href="'%s'%(links.url,)">
+                                  <img class="page_image" t-att-src="website.image_url(links, 'image')"/>
+                                </a>
+                              </div>
+                              <div class="mm-mi-desc">
+                                <a t-att-href="'%s'%(links.url,)">
+                                  <h4 class="page_name" t-esc="links.name"/>
+                                </a>
+                                <p t-esc="links.description"/>
+                              </div>
+                            </li>
+                          </t>
+                        </t>
+                      </ul>
+                    </t>
+                  </div>
+                </t>
+              </t>
+              <!-- Mixed list code end -->
+
+              <t t-if="submenu.content_id.main_content_type == 'horiz_categ_toggle'">
+                <t t-if="submenu.content_id.category_first_level">
+                  <ul class="mm-category-level">
+                    <t t-foreach="submenu.content_id.category_first_level" t-as="lvl1_each_categ">
+                      <li class="mm-cat-level-1">
+                        <div class="cat-level-title">
+                          <a t-att-href="'/shop/category/%s' %(slug(lvl1_each_categ.name),)">
+                            <span class="icon">
+                              <img t-att-src="website.image_url(lvl1_each_categ, 'image')" t-att-alt="lvl1_each_categ.name.name" />
+                            </span>
+                            <span t-esc="lvl1_each_categ.name.name"/>
+                          </a>
+                        </div>
+                        <div class="mm-cat-level-2">
+                          <div class="mm-cat-level-2-inner">
+                            <t t-if="submenu.content_id.category_second_level">
+                              <!-- <t t-set="c_lvl2_set" t-value="list({each_line.name.id for each_line in submenu.content_id.category_second_level if })"/> -->
+                              <!-- <t t-set="c_lvl3_set" t-value="list({each_line.name.id for each_line in submenu.content_id.category_third_level})"/> -->
+                              
+                              <t t-foreach="submenu.content_id.category_second_level" t-as="lvl2_each_categ">
+                                <t t-if="lvl2_each_categ.name.parent_id.id == lvl1_each_categ.name.id">
+                                  <ul class="mm-cat-list">
+                                    <li class="mm-heading">
+                                      <a t-att-href="'/shop/category/%s' %(slug(lvl2_each_categ.name),)">
+                                        <!-- <span class="icon">
+                                          <img t-att-src="website.image_url(lvl2_each_categ, 'image')" t-att-alt="lvl2_each_categ.name.name" />
+                                        </span> -->
+                                        <span t-esc="lvl2_each_categ.name.name"/>
+                                      </a>
+                                    </li>
+                                    <t t-if="submenu.content_id.category_third_level">
+                                      <t t-foreach="submenu.content_id.category_third_level" t-as="lvl3_each_categ">
+                                        <t t-if="lvl3_each_categ.name.parent_id.id == lvl2_each_categ.name.id">
+                                          <li>
+                                            <a t-att-href="'/shop/category/%s' %(slug(lvl3_each_categ.name),)">
+                                              <span t-esc="lvl3_each_categ.name.name"/>
+                                            </a>
+                                          </li>
+                                        </t>
+                                      </t>
+                                    </t>
+                                  </ul>
+                                </t>
+                              </t>
+
+                            </t>
+                          </div>
+                        </div>
+                      </li>
+                    </t>
+                  </ul>
+                </t>
+              </t>
+            </t>
+            <!-- Mega menu content end -->
+            <t t-if="submenu.content_id.is_footer">
+              <div class="mm-menu-fot o_not_editable" t-field="submenu.content_id.footer_content">
+              </div>
+            </t>
+          </div><!-- mm-maga-main-width -->
+        </div>
+      </t>
+    </li>
+    <li t-if="(not submenu.child_id) and not(submenu.is_mega_menu)" t-att-class="
+      'active' if submenu.url and submenu.url != '/' and request.httprequest.path == submenu.url.replace('/page/website.', '/page/') else None
+      ">
+      <a t-att-href="submenu.url if submenu.url else '#'" t-ignore="true" t-att-target="'_blank' if submenu.new_window else None">
+        <span t-field="submenu.name"/>
+      </a>
+    </li>
+    <li t-if="submenu.child_id" t-attf-class="dropdown #{
+      (submenu.url and submenu.url != '/' and any([request.httprequest.path == child.url.replace('/page/website.', '/page/') for child in submenu.child_id if child.url]) or
+       (submenu.url and request.httprequest.path == submenu.url.replace('/page/website.', '/page/'))) and 'active'
+      }">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+        <span t-field="submenu.name"/> <span class="caret" t-ignore="true"></span>
+      </a>
+      <ul class="dropdown-menu" role="menu">
+        <t t-foreach="submenu.child_id" t-as="submenu">
+          <t t-call="website.submenu"/>
+        </t>
+      </ul>
+    </li>
+  </template>  
+
+  <template id="layout_1" inherit_id="website.layout">
+    <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="replace">
+      <t t-foreach="website.menu_id.child_id" t-as="submenu">
+        <t t-call="alan_customize.submenu"/>
+      </t>
+    </xpath>
+  </template>
+
+  <template id="megamenu_assets_backend" inherit_id="web.assets_backend" name="Megamenu Assets Backend JS">
+    <xpath expr="." position="inside">
+      <script type="text/javascript" src="/alan_customize/static/src/js/megamenu_backend_js.js"></script>
+    </xpath>
+  </template>
+</odoo>
+

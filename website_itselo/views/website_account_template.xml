@@ -126,4 +126,130 @@
 			</div>
 		</xpath>
 	</template>
+
+	<template id="address" name="Address" inherit_id="website_sale.address">
+		<xpath expr="//input[@name='street']/.." position="attributes">
+			<attribute name="style">display: none</attribute>
+		</xpath>
+		<xpath expr="//input[@name='street2']/.." position="attributes">
+			<attribute name="style">display: none</attribute>
+		</xpath>
+		<xpath expr="(//input[@name='zip'])[1]/.." position="attributes">
+			<attribute name="style">display: none</attribute>
+		</xpath>
+		<xpath expr="(//input[@name='zip'])[2]/.." position="attributes">
+			<attribute name="style">display: none</attribute>
+		</xpath>
+		<xpath expr="//select[@name='country_id']/.." position="attributes">
+			<attribute name="style">display: none</attribute>
+		</xpath>
+		<xpath expr="//input[@name='company_name']/.." position="attributes">
+			<attribute name="style">display: none</attribute>
+		</xpath>
+		<xpath expr="//select[@name='state_id']/.." position="attributes">
+			<attribute name="style">display: none</attribute>
+			<attribute name="t-att-style">'display: none'</attribute>
+		</xpath>
+		<xpath expr="//input[@name='vat']/.." position="attributes">
+			<attribute name="style">display: none</attribute>
+		</xpath>
+		<xpath expr="//input[@name='city']/.." position="attributes">
+			<attribute name="style">display: none</attribute>
+		</xpath>
+		<xpath expr="//input[@name='city']/.." position="after">
+			<div t-attf-class="form-group #{error.get('address') and 'o_has_error' or ''} col-lg-12" id="div_address">
+				<label class="col-form-label" for="address">Ваш город/село и АДРЕС</label>
+				<input required="required" name="address" t-attf-class="form-control #{error.get('address') and 'is-invalid' or ''}" t-att-value="'address' in checkout and checkout['address']" />
+			</div>
+		</xpath>
+		<xpath expr="//input[@name='phone']" position="attributes">
+			<attribute name="placeholder">+7 999 999 99 99</attribute>
+		</xpath>
+		<xpath expr="//input[@name='field_required']" position="attributes">
+			<attribute name="t-att-value">'phone,name,address'</attribute>
+		</xpath>
+		<xpath expr="//div[@class='form-row']" position="inside">
+			<script type="text/javascript">
+					function join(arr /*, separator */) {
+					  var separator = arguments.length > 1 ? arguments[1] : ', ';
+					  return arr.filter(function(n){return n}).join(separator);
+					}
+
+					function geoQuality(qc_geo) {
+					  var localization = {
+						'0': 'точные',
+						'1': 'ближайший дом',
+						'2': 'улица',
+						'3': 'населенный пункт',
+						'4': 'город'
+					  };
+					  return localization[qc_geo] || qc_geo;
+					}
+
+					function showPostalCode(address) {
+				      $("input[name='zip']").val(address.postal_code)
+					}
+					function showArea(address) {
+					  $('#district_id').val(join([
+						join([address.area_type, address.area], ' ')
+					  ]));
+					}
+					function showCity(address) {
+				      $("input[name='city']").val(join([
+						join([address.city_type, address.city], ' '),
+						join([address.settlement_type, address.settlement], ' ')
+					  ]));
+					}
+					function showStreet(address) {
+					  $("input[name='street']").val(
+						join([address.street_type, address.street], " ")
+					  );
+					}
+					function showHouse(address) {
+					  $("#house").val(join([
+						join([address.house_type, address.house], " "),
+						join([address.block_type, address.block], " ")
+					  ]));
+					}
+
+					function showFlat(address) {
+					  $("#flat").val(
+						join([address.flat_type, address.flat], " ")
+					  );
+					}
+					function showRegion(address) {
+					  $('#state').val(join([
+						join([address.region_type, address.region], ' ')
+					  ]));
+					}
+
+					function showSelected(suggestion) {
+					  var address = suggestion.data;
+					  showPostalCode(address);
+					  showRegion(address);
+					  showArea(address);
+					  showCity(address);
+					  showStreet(address);
+					  showHouse(address);
+					  showFlat(address);
+					}
+					$("input[name='address']").suggestions({
+					  token: '130bca555739607c7635b5c6bbbdf856521c99b8',
+					  type: 'ADDRESS',
+					  onSelect: showSelected
+					});
+			</script>
+
+			<div style="display:none">
+				<label for="state" class="control-label">Region</label>
+				<input type="text" class="form-control" name="state" id="state"/>
+				<label for="district_id" class="control-label">District</label>
+				<input type="text" class="form-control" name="district_id" id="district_id"/>
+				<label for="house" class="control-label">House</label>
+				<input type="text" class="form-control" name="house" id="house"/>
+				<label for="flat" class="control-label">Flat</label>
+				<input type="text" class="form-control" name="flat" id="flat"/>
+			</div>
+		</xpath>
+	</template>
 </odoo>

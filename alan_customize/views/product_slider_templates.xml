@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="assets_editor_product_slider" inherit_id="website.assets_editor" name="Editor assets">
+    <xpath expr="." position="inside">
+      <script type="text/javascript" src="/alan_customize/static/src/js/website.editor.js" ></script>       
+    </xpath>
+  </template>
+  
+  <template id="assent_front_product" inherit_id="website.assets_frontend">
+    <xpath expr="." position="inside">
+      <script type="text/javascript"  src="/alan_customize/static/src/js/website.front.js"></script>          
+    </xpath>
+  </template>
+
+
+  <template id="asp_inner" name="ASP inner">
+    
+    <div class="asp-inner">
+      <div class="pro-img">
+        <a t-attf-href="/shop/product/#{slug(product)}">
+          <img t-att-src="website.image_url(product, 'image', '300x300')" title="" alt="" />
+        </a>
+        <t t-if="product.env.ref('website_sale_wishlist.add_to_wishlist').active">
+          <t t-set="in_wish" t-value="product.product_variant_ids &amp; request.env['product.wishlist'].current().mapped('product_id')"/>
+          <a class="btn btn-default btn-lg mt8 o_add_wishlist_dyn" t-att-disabled='in_wish or None' title="Add to Wishlist" t-att-data-product-product-id="product.product_variant_ids[0].id" data-action="o_wishlist">
+            <span class="ti-heart"></span>
+          </a>
+        </t>
+      </div>
+      <div class="pro-info">
+        <h3>
+          <a t-attf-href="/shop/product/#{slug(product)}">
+            <t t-esc="product.name"/>
+          </a>
+        </h3>
+
+        <t t-if="product.env.ref('alan_customize.average_rating').active">
+          <div t-set="rating_avg_val" t-value="round(product.rating_get_stats().get('avg') * 2) / 2"/>
+          <div class="prod_rating">
+            <t t-set="curr_rate" t-value="0"/>
+            <t t-set="half_flag" t-value="0"/>
+            <t t-foreach="range(0, 5)" t-as="each_rate">
+              <t t-set="curr_rate" t-value="curr_rate + 1"/>
+              <t t-if="curr_rate &lt;= int(rating_avg_val // 1)">
+                <i class="fa fa-star"/>
+              </t>
+              <t t-else="">
+                <t t-if="rating_avg_val % 1 == 0.5 and half_flag == 0">
+                  <i class="fa fa-star-half-o"/>
+                  <t t-set="half_flag" t-value="1"/>
+                </t>
+                <t t-else="">
+                  <i class="fa fa-star-o"/>
+                </t>
+              </t>
+            </t>
+            <span t-esc="str(rating_avg_val) + ' / 5'"/>
+          </div>
+        </t>
+
+        <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="product.product_variant_ids">
+            <b> 
+              <t t-if="(compute_currency(product.lst_price) - product.website_price ) &gt; 0.01  and website.get_current_pricelist().discount_policy=='without_discount'">
+                <del class="text-danger mr8" style="white-space: nowrap;" t-esc="compute_currency(product.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
+              </t>
+              <span t-esc="product.website_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+              <span itemprop="price" style="display:none;" t-esc="product.website_price" />
+              <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
+            </b>
+        </div>
+
+
+        <div class="pro-action">
+          <div class="pro-icons">
+            <form action="/shop/cart/update" method="post">
+              <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+              <input name="product_id" t-att-value="product.product_variant_id.id" type="hidden"/>
+              <button class="button btn btn-cart"><span class="ti-shopping-cart"></span> <span>ADD TO CART</span></button>
+              <t t-if="product.env.ref('alan_customize.add_to_wishlist').active and product.product_variant_ids">
+               <t t-set="in_wish" t-value="product.product_variant_ids &amp; request.env['product.wishlist'].current().mapped('product_id')"/>
+               <a class="btn btn-default btn-xs o_add_wishlist" t-att-disabled='in_wish or None' title="Add to Wishlist" t-att-data-product-product-id="product.product_variant_ids[0].id" data-action="o_wishlist"><span class="ti-heart"></span></a>
+             </t>
+             <t t-if="product.env.ref('alan_customize.add_to_compare').active and product.product_variant_ids">
+               <a class="btn btn-default btn-xs o_add_compare" title="Compare" t-att-data-product-product-id="product.product_variant_ids[0].id" data-action="o_comparelist"><span class="fa fa-balance-scale"></span></a>
+             </t>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <!-- Product Slider Block -->
+  <template name="Product Slider" id="product_slider_content">
+    <div t-att-class="'container%sprod_slider'%('-fluid fw_' if full_width else ' ')" contentEditable="false">
+      <div class="quality_product_slide">
+        <t t-if="product_collection">
+          <div class="seaction-head">
+            <h2><t t-esc="product_collection.name"/></h2>
+          </div>
+        </t>
+        <t t-if="product_collection">
+          <t t-set="products" t-value="product_collection.product_ids"/>
+          <t t-if="limit">
+            <t t-set="products" t-value="product_collection.product_ids.search([],limit=int(limit))"/>
+          </t>
+        </t>
+        <div t-attf-class="tqt-pro-slide owl-carousel" t-if="products">
+          <t t-foreach="products" t-as="product_x">
+            <div class="as-product">  
+              <t t-set="product" t-value="product_x.product_id"/>
+              <t t-call="alan_customize.asp_inner"/>
+            </div>
+          </t>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="latest_p_content" name="Product Content">
+    <t t-if="tab_obj">
+      <div t-att-class="'container%sprod_grid'%('-fluid fw_' if full_width else ' ',)">
+        <div class="seaction-head">
+          <h2 t-esc="tab_obj.name"/>
+        </div>
+
+        <div class="row" t-if="tab_obj.product_ids">
+          <t t-set="curr_count" t-value="0"/>
+          <t t-foreach="tab_obj.product_ids" t-as="each_tab_prod_line">
+            <t t-set="curr_count" t-value="curr_count + 1"/>
+            <t t-if="curr_count &lt;= 8">
+              <div class="col-12 col-md-6 col-lg-3 col-sm-6">
+                <div class="as-product">
+                  <t t-set="product" t-value="each_tab_prod_line.product_id"/>
+                  <t t-call="alan_customize.asp_inner"/>
+                </div>
+              </div> <!-- col -->
+            </t>
+          </t>
+          <!-- Product Data here -->
+        </div> <!-- row -->
+      </div> <!-- container -->
+    </t>
+  </template>
+
+  <template id="product_slider_2_content" name="">
+    <section class="category-product-snippet prod_slider_img_left">
+      <div class="container">
+        <div class="row no-gutters">
+          <div class="col-md-3">
+            <div class="p-slider2-head_block" t-att-style="'background: url(%s)' %(website.image_url(product_collection, 'image'),)">
+              <div class="p-slider2-section_name" t-esc="product_collection.name"/>
+              <div class="p-slider2-see_all">
+                <a t-att-href="'/shop/?product_collection=%s' %(product_collection.id,)">SEE ALL PRODUCTS</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-9">
+            <div class="p-slider-content_block oe_website_sale">
+              <t t-if="product_collection.product_ids">
+                <div class="owl-carousel">
+                  <t t-foreach="product_collection.product_ids" t-as="each_prod_line">
+                    <div class="as-product">
+                      <t t-set="product" t-value="each_prod_line.product_id"/>
+                      <t t-call="alan_customize.asp_inner"/>
+                    </div>
+                  </t>
+                </div>
+              </t>
+              <t t-else="">
+                NO PRODUCTS AVAILABLE
+              </t>
+            </div>
+          </div>
+
+        </div> <!-- row -->
+
+      </div>
+    </section>
+  </template>
+  
+  <!-- End Product Slider -->
+
+
+  <template id="blog_content" name="Blog Content">
+    <t t-if="latest_blogs">
+      <div class="container" t-if="len(latest_blogs.ids)">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="as-bo-big" style="background-image: url(/alan_customize/static/src/img/blog9.jpg);" t-if="latest_blogs[0]">
+              <div class="as-bo-text">
+                <h3 t-field="latest_blogs[0].name"/>
+                <p t-field="latest_blogs[0].teaser" />
+                <span t-field="latest_blogs[0].post_date"/>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6" t-if="len(latest_blogs.ids)&gt;1">
+            <div class="as-bo-list">
+              <div class="as-bo-title">
+                <h4>Latest Blog</h4>
+                <a href="/blog">View All</a>
+              </div>
+              <ul>
+                <li t-if="latest_blogs[1]">
+                  <span t-field="latest_blogs[1].post_date"/>
+                  <h3 t-field="latest_blogs[1].name"/>
+                  <p t-field="latest_blogs[1].teaser" />
+                </li>
+                <li t-if="len(latest_blogs.ids)&gt;2">
+                  <span t-field="latest_blogs[2].post_date"/>
+                  <h3 t-field="latest_blogs[2].name"/>
+                  <p t-field="latest_blogs[2].teaser" />
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </t>
+  </template>
+
+
+</odoo>

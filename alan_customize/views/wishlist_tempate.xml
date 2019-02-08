@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Wishlist Assets -->
+  <template id="assent_front_wishlist" inherit_id="website.assets_frontend" priority="50">
+    <xpath expr="." position="inside">
+      <script type="text/javascript"  src="/alan_customize/static/src/js/wishlist.js"></script>
+    </xpath>
+  </template>
+</odoo>

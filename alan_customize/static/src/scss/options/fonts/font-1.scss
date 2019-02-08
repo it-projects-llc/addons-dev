@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css?family=Work+Sans:100,200,300,400,500,600,700,800,900');
+
+/*Font*/
+$as-font-alt:			'Work Sans', sans-serif;
+$as-font-main:			'Work Sans', sans-serif;
+
+body { 
+	font-family:$as-font-main; 
+	line-height: 1.7;
+    color: #828282;
+    font-size: 15px;
+    font-weight: 400;
+}

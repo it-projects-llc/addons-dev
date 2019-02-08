@@ -207,3 +207,7 @@
   height: 20px;
   vertical-align: bottom;
 }
+/* Website sale product price */
+.as-product .pro-info .product_price {
+  color: #28a745;
+}

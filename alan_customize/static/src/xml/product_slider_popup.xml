@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="product_slider_templates" xml:space="preserve">
+  <t t-name="alan_customize.p_slider_popup_template">
+    <div class="p_slider_panel modal fade dialog_box_popup product-slider-info" role="dialog" id="product_slider_modal">
+      <div class="modal-content modal-dialog">
+        <div class="modal-header">
+          <h4>Configure Product Slider</h4>
+          <button type="button" class="close" data-dismiss="modal"><i class="ti-close"/></button>
+        </div>
+        <div class="o_product_slider_panel_content modal-body">
+          <div class="o_product_slider_config_details">
+          	<form class="form-horizontal container-fluid" role="form">
+              <div class="row form-group align-items-center">
+                <label for="slider_type" class="col-sm-3 m-0 control-label">Slider Type</label>
+                <div class="col-sm-9">
+                  <select class="form-control" name="slider_type">
+                  	<option value="single">Single Tab Snippets</option>
+                  	<option value="multi">Multi Tab Snippets</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row align-items-center form-group s_tab_collection_container">
+                <label for="s_tab_collection" class="col-sm-3 m-0 control-label">Collections</label>
+                <div class="col-sm-9">
+                  <select class="form-control" name="s_tab_collection"/>
+                </div>
+              </div>
+              <div class="row align-items-center form-group m_tab_collection_container">
+                <label for="m_tab_collection" class="col-sm-3 m-0 control-label">Collections</label>
+                <div class="col-sm-9">
+                  <select class="form-control" name="m_tab_collection"/>
+                </div>
+              </div>
+              <div class="row align-items-center form-group s_tab_collection_container">
+                <label for="s_tab_layout" class="col-sm-3 m-0 control-label">Layouts</label>
+                <div class="col-sm-9">
+                  <select class="form-control" name="s_tab_layout">
+                    <option value="slider">Slider</option>
+                    <option value="fw_slider">Full Width Slider</option>
+                    <option value="slider_img_left">Slider With Image</option>
+                    <option value="grid">Grid</option>
+                    <option value="fw_grid">Full Width Grid</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row align-items-center form-group m_tab_collection_container">
+                <label for="m_tab_layout" class="col-sm-3 m-0 control-label">Layouts</label>
+                <div class="col-sm-9">
+                  <select class="form-control" name="m_tab_layout">
+                    <option value="horiz_tab">Horizontal Tab Layout</option>
+                    <option value="vertic_tab">Vertical Tab Layout</option>
+                  </select>
+                </div>
+              </div>
+              <div class="p_slider_sample_view" style="padding-left: calc(25% + 10px);">
+                <img class="snip_sample_img" src="alan_customize/static/src/img/snippets/slider.png"/>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn_close" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary btn_apply" data-dismiss="modal">Apply</button>
+        </div>
+      </div>
+    </div>
+  </t>
+</templates>

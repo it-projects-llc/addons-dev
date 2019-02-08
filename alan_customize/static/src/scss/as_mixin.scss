@@ -1,0 +1,341 @@
+/*Mixin*/
+
+@mixin css_quantity {
+    width: 90px;
+    padding: 0;
+    position: relative;
+    margin-right: 12px;
+    float: left;
+	@media (max-width: 767px){
+		float: none;
+		margin-bottom: 15px;
+	}
+	.input-group-addon{
+		border-radius: 0;
+	    position: absolute;
+	    right: 1px;
+	    top: auto;
+	    bottom: 1px;
+	    z-index: 3;
+	    border: none;
+	    width: 25px;
+	    height: 22px;
+	    text-align: center;
+	    padding: 0;
+	    line-height: 23px;
+	    border-left: 1px solid #ddd;
+	    margin: 0 !important;
+	    background: #ffffff;
+		.fa-minus {
+			&:before {
+				content: "\f0d7";
+			}
+		}
+		.fa-plus {
+			&:before {
+				content: "\f0d8";
+			}
+		}
+
+		&.float_left  {
+			top: 1px;
+		    bottom: auto;
+		    border-bottom: 1px solid #ddd;
+		}
+	}
+	.input-group-append,
+	.input-group-prepend {
+		border-radius: 0;
+	    position: absolute;
+	    right: 1px;
+	    z-index: 3;
+	    border: none;
+	    width: 25px;
+	    height: 22px;
+	    text-align: center;
+	    padding: 0;
+	    line-height: 23px;
+	    border-left: 1px solid #ddd;
+	    margin: 0 !important;
+	    background: #ffffff;
+	    .fa-minus {
+			&:before {
+				content: "\f0d7";
+			}
+		}
+		.fa-plus {
+			&:before {
+				content: "\f0d8";
+			}
+		}
+	 	.btn {
+	 		background:#fff;
+	 		border:none;
+	 		color:$as-theme;
+	 		padding:0;
+	 		box-shadow:none;
+	 		width:100%;
+	 	}
+	} 
+	.input-group-append {
+		border-bottom: 1px solid #eee;
+		top: 1px;
+	}
+	.input-group-prepend {
+	    bottom: 1px;
+	    top: auto;
+	    border-top: 1px solid #eee;
+	}
+	.form-control{
+	    text-align: center;
+	    height: 45px;
+	    padding: 0 30px 0 0px;
+	    box-shadow: none;
+	    border: 1px solid #ddd;
+	    z-index:1;
+	}
+}
+
+@mixin transition($all, $s, $ease){
+		transition: $all $s $ease;
+-webkit-transition: $all $s $ease;
+	 -moz-transition: $all $s $ease;
+		 -o-transition: $all $s $ease;
+}
+
+@mixin transform-img-hover($scale){
+	transform: scale($scale);
+	-moz-transform: scale($scale);
+	-webkit-transform: scale($scale);
+	-o-transform: scale($scale);
+}
+
+@mixin as-dropdown-if{
+	box-shadow: 0 1px 3px rgba(0,0,0,.1);
+	position: absolute;
+	top: 100%;
+	right: 0;
+	-webkit-transform-origin: top;
+	   -moz-transform-origin: top;
+			transform-origin: top;
+	-webkit-animation-fill-mode: forwards;
+	   -moz-animation-fill-mode: forwards;
+			animation-fill-mode: forwards;
+	-webkit-transform: scale(1,0);
+	   -moz-transform: scale(1,0);
+			transform: scale(1,0);
+	-webkit-transition: all .2s linear;
+	   -moz-transition: all .2s linear;
+			transition: all .2s linear;
+}
+@mixin as-dropdown-if-hover{
+	opacity: 1;
+	-webkit-transform: scale(1,1);
+	   -moz-transform: scale(1,1);
+			transform: scale(1,1);
+}
+
+/* Hover menu*/
+@mixin menu-hover-effect($padding){
+	position: absolute;
+	top: 100%;
+	left: 0;
+	width: 100%;
+	background: $as-light;
+	@include transition(all, 0.4s, ease);
+	padding: $padding;
+	-webkit-transform: rotateX(90deg);
+	   -moz-transform: rotateX(90deg);
+		    transform: rotateX(90deg);
+	-webkit-transform-origin: 0 0;
+	   -moz-transform-origin: 0 0;
+			transform-origin: 0 0;
+}
+@mixin menu-hover-effect-open{
+	opacity: 1;
+	visibility: visible;
+	-webkit-transition-delay: 200ms;
+	   -moz-transition-delay: 200ms;
+		    transition-delay: 200ms;
+	-webkit-transform: rotateX(0deg);
+	   -moz-transform: rotateX(0deg);
+			transform: rotateX(0deg);
+}
+
+@mixin menu-hover-left-effect($padding){
+	visibility: hidden;
+	position: absolute;
+	top: 0;
+	right: -110%;
+	opacity: 0;
+	background: $as-light;
+	@include transition(all, 0.2s, ease);
+	padding: $padding;
+	border-top: 5px solid $as-theme;
+}
+@mixin menu-hover-effect-left-open{
+ 	visibility: visible;
+	opacity: 1;
+	right: -60%; 
+}
+
+@mixin mx-megamenu-a-tag {
+	padding: 5px 0;
+    font-size: 14px;
+    color: #555555;
+    font-weight: 500;
+    line-height: 22px;
+    display: inline-block;
+    vertical-align: top;
+    background: none;
+    strong {
+    	font-weight: 500;
+    }
+}
+
+/* Menu Hover
+-------------*/
+
+@mixin mx-as-pro-img {
+	@include transition(all, 0.1s, ease);
+	@include transform-img-hover(1);
+	display: block;
+	width: 100%;
+}
+@mixin mx-as-pro-img-2d {
+	@include transition(all, 0.5s, ease);
+    left: 0;
+    right: 0px;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+}
+
+/*Product List description*/
+@mixin mx-as-pro-desc {
+	max-height: 50px;
+	overflow: hidden;
+	position: relative;
+	@media(max-width: 1025px) {
+	   padding-left: 15px;
+	}
+	&:after {
+		content: "";
+		position: absolute;
+		background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%);
+		background: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%);
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 55px;
+	}
+}
+/*Section Heading */
+@mixin mx-section-heading{
+	border: none;
+    text-align: center;
+    padding: 0 0 40px;
+    h2 {
+        margin: 0;
+	    font-size: 40px;
+	    color: #323232;
+	    font-weight: 400;
+	    display: inline-block;
+	    vertical-align: middle;
+    }
+    .btn {
+	    display: inline-block;
+	    vertical-align: middle;
+	    margin-left: 10px;
+    }
+}
+
+/*Product Common code*/
+@mixin mx-as-product-common {
+	.as-product {
+		.pro-action {
+		    position: absolute;
+		    top: -69px;
+		    width: 100%;
+		    text-align: center;
+		    background: rgba(255,255,255,.7);
+		    border-bottom: 1px solid #eee;
+		    padding: 5px 0;
+		    @include transition(all, 0.3s, ease);
+		    opacity: 0;
+		    left: -25px;
+		    box-shadow: 0 -10px 29px -10px rgba(0, 0, 0, 0.3);
+		    @media(max-width: 991px) {
+		    	opacity: 1;
+		    	left: 0px;
+		    }
+		    .btn-cart,
+		    .a-submit {
+		    	span {
+		    		+ span {
+		    			display: none;
+		    		}
+		    	}
+		    }
+		    .btn {
+	    	    background: #333;
+			    margin: 4px;
+			    text-align: center;
+			    padding: 0;
+			    color: #fff;
+			    border: none;
+			    font-size: 20px;
+			    line-height: 50px;
+			    padding:0;
+			    width: 50px;
+			    border-radius: 50% !important;
+			    height: 50px;
+			    @include transition(all, 0.3s, ease);
+		        -webkit-transform: rotateY(180deg);
+			       -moz-transform: rotateY(180deg);
+			    		transform: rotateY(180deg);
+			    &:hover {
+			    	color:#fff;
+			    	background: $as-theme;
+			    }
+		    }
+		}
+
+		.oe_subdescription {
+			color: #000;
+			@include mx-as-pro-desc;
+		}
+
+		&:hover {
+			.pro-action {
+				opacity: 1;
+				left: 0;
+				.btn {
+					@include transition(all, 0.3s, ease);
+				    -webkit-transform: rotateY(0deg);
+				       -moz-transform: rotateY(0deg);
+				    	    transform: rotateY(0deg);
+				}
+			}
+
+			.pro-img {
+				.product-1st-img {
+					img {
+						@include transform-img-hover(1.04);
+					}
+				}
+				.product-hover-img {
+					img {
+						opacity: 1;
+					}
+				}
+			}	
+		}
+
+	}
+}
+
+/**/

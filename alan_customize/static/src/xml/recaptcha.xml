@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+  <!-- reCaptcha Status -->
+  <t t-name="website_form.status_recaptcha">
+    <span id="o_website_form_result" class="text-danger ml8">
+      <i class="fa fa-close mr4"/> Capcha are missing.
+    </span>
+  </t>
+</templates>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="product_tab_heads_form" model="ir.ui.view">
+    <field name="name">product.tab_heads.form</field>
+    <field name="model">product.tab_heads</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="active"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="product_tab_heads_tree" model="ir.ui.view">
+    <field name="name">product.tab_heads.tree</field>
+    <field name="model">product.tab_heads</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="name"/>
+        <field name="active"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="product_tabs_form" model="ir.ui.view">
+    <field name="name">product.tabs.form</field>
+    <field name="model">product.tabs</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group colspan="4" col="4">
+            <field name="name" required="1"/>
+            <field name="product_tmpl_id" required="1"/>
+            <field name="active"/>
+            <field name="tab_order"/>
+          </group>
+          <group>
+            <field name="tab_content"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="product_tabs_tree" model="ir.ui.view">
+    <field name="name">product.tabs.tree</field>
+    <field name="model">product.tabs</field>
+    <field name="arch" type="xml">
+      <tree string="Product Tabs">
+        <field name="name"/>
+        <field name="active"/>
+        <field name="tab_order"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="product_tabs_in_template_only_form" model="ir.ui.view">
+    <field name="name">product.template.form</field>
+    <field name="model">product.template</field>
+    <field name="inherit_id" ref="product.product_template_only_form_view"/>
+    <field name="arch" type="xml">
+      <xpath expr="//page[@name='general_information']" position="after">
+        <page name="product_tabs" string="Product Tabs">
+          <group>
+            <field name="tab_ids" nolabel="1">
+              <form>
+                <sheet>
+                  <group colspan="4" col="4">
+                    <field name="name" required="1"/>
+                    <field name="active"/>
+                    <field name="tab_order"/>
+                  </group>
+                  <group>
+                    <field name="tab_content"/>
+                  </group>
+                </sheet>
+              </form>
+              <tree>
+                <field name="name"/>
+                <field name="active"/>
+                <field name="tab_order"/>
+              </tree>
+            </field>
+          </group>
+        </page>
+      </xpath>
+    </field>
+  </record>
+
+  <record id="product_tab_heads_action"  model="ir.actions.act_window">
+    <field name="name">Product Tab Heads</field>
+    <field name="res_model">product.tab_heads</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <record id="product_tabs_action" model="ir.actions.act_window">
+    <field name="name">Product Tabs</field>
+    <field name="res_model">product.tabs</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <menuitem id="menu_product_tab_heads" name="Product Tab Heads" action="alan_customize.product_tab_heads_action" parent="website_sale.menu_catalog" sequence="10"/>
+  <menuitem id="menu_product_tabs" name="Product Tabs" action="alan_customize.product_tabs_action" parent="website_sale.menu_catalog" sequence="11"/>
+</odoo>

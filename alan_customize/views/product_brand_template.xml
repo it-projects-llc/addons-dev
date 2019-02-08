@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+  <template name="Brand Slider" id="product_brand_slider">
+    <section class="tqt-product-brand-slider">
+      <div class="tqt_product_brand_slider" data-brand-count="0" data-label="">
+        <div class="container">
+            <div class="shopper_brand_slider" contentEditable="false">
+              <div class="col-md-12">
+                <div class="seaction-head">
+                  <h2>Brands</h2>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </template>
+
+  <template id="snippet_options_brand" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+      <div data-js='product_brand_slider'
+        data-selector=".tqt-product-brand-slider">
+        <a tabindex="-1" href="#" class="dropdown-item js_brand_slider" data-brand_slider_configure="">Modify</a>
+      </div>
+    </xpath>
+  </template>
+
+  <!-- Brand Slider Block -->
+  <template name="Brand Slider" id="brand_slider_content">
+    <div class="container" contentEditable="false">
+      <div class="shopper_brand_slide">
+        <t t-if="header">
+          <div class="seaction-head">
+            <h2><t t-esc="header"/></h2>
+          </div>
+        </t>
+        <t t-if="not header">
+          <div class="seaction-head">
+            <h2>Our Brand</h2>
+          </div>                
+        </t>
+        <div id="as_our_brand" class="owl-carousel" t-if="brands">
+          <t t-foreach="brands" t-as="brand">
+            <a t-att-href="'/shop?brand=%s'%brand.id">
+              <div class="brand-img">
+                <span class="brand_img_span">
+                  <img t-att-src="website.image_url(brand,'logo','300x300')" t-att-title="brand.name" t-att-alt="brand.name" />
+                </span>
+              </div>
+            </a>
+          </t>
+        </div>
+        <div t-if="not(brands)"> 
+          <span> No Brand available</span>
+        </div>
+      </div>
+    </div>
+  </template>
+  <!-- End Brand Slider -->
+
+  <template id="place_into_bar_brand_slider" inherit_id="website.snippets" name="Place Snippet into bar">
+    <xpath expr="//div[@id='snippet_structure']//div[hasclass('o_panel_body')]" position="inside">
+      <t t-snippet="alan_customize.product_brand_slider"
+       t-thumbnail="/alan_customize/static/src/icon/brand-slider.png"/>
+    </xpath>
+  </template>
+</odoo>

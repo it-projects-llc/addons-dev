@@ -1,0 +1,70 @@
+.btn:focus, 
+.btn:active:focus, 
+.btn.active:focus, 
+.btn.focus, 
+.btn:active.focus,
+.btn.active.focus{
+	outline: none;
+	outline-offset: inherit;
+}
+/*Buttons*/
+.btn{
+	text-transform: uppercase;
+	font-weight: 600;
+	border-radius: 0;
+	letter-spacing: 1px;
+	&.btn-primary{
+		background: @as-theme;
+		border-color:  @as-theme;
+		&:hover,
+		&:focus,
+		&:active{
+			background:darken(@as-theme, 10%);
+			border-color:darken(@as-theme, 10%);
+		}
+	}
+	&.btn-danger{
+		background-color: #d9534f;
+		border-color: #d43f3a;
+		&:hover,
+		&:focus,
+		&:active{
+			background:#d75450;
+			border-color:#d75450;
+		}
+	}
+	&.btn-success{
+		background-color: #5cb85c;
+		border-color: #5cb85c;
+		&:hover,
+		&:focus,
+		&:active{
+			background:#5aba5a;
+			border-color:#5aba5a;
+		}
+	}
+	&.btn-warning{
+		background-color: #f0ad4e;
+		border-color: #eea236;
+		&:hover,
+		&:focus,
+		&:active{
+			background:#f2ad4d;
+			border-color:#f2ad4d;
+		}
+	}
+	&.btn-info{
+		background-color: #5bc0de;
+		border-color: #46b8da;
+		&:hover,
+		&:focus,
+		&:active{
+			background:#5abbd8;
+			border-color:#5abbd8;
+		}
+	}
+}
+.label-primary{
+	background-color: @as-theme;
+}
+

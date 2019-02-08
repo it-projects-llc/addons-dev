@@ -6,6 +6,7 @@ from odoo.exceptions import UserError
 from odoo.tools.translate import _
 from odoo.addons.odoo_marketplace.controllers.main import AuthSignupHome
 from odoo.addons.odoo_marketplace.controllers.main import website_marketplace_dashboard
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 
 class AuthSignupHome(AuthSignupHome):
@@ -65,15 +66,15 @@ class AuthSignupHome(AuthSignupHome):
         city_obj = request.env['res.city']
         city = city_obj.sudo().search([('name', '=', values.get('city_id')), ('state_id', '=', state.id)])
 
-        if not district:
+        if not district and values.get('district_id'):
             district = district_obj.sudo().create({
                 'name': values.get('district_id'),
                 'state_id': state.id,
             })
-        else:
+        if district:
             city = city_obj.sudo().search([('name', '=', values.get('city_id')), ('state_id', '=', state.id),
                                            ('district_id', '=', district.id)])
-        values['district_id'] = district.id
+        values['district_id'] = district.id if district else ''
 
         if not city:
             city = city_obj.sudo().create({
@@ -104,3 +105,65 @@ class WebsiteMarketplaceDashboard(website_marketplace_dashboard):
             'is_seller': True,
         }
         return request.render('odoo_marketplace.convert_user_into_seller', values)
+
+
+class WebsiteSaleExtended(WebsiteSale):
+
+    @http.route(['/shop/address'], type='http', methods=['GET', 'POST'], auth="public", website=True)
+    def address(self, **kw):
+        address_super = super(WebsiteSaleExtended, self).address(**kw)
+        address_super.qcontext.update({
+            'country': request.env.ref('base.ru')
+        })
+        return address_super
+
+    def values_preprocess(self, order, mode, values):
+        state_obj = request.env['res.country.state']
+        state = state_obj.sudo().search([('code', '=', values.get('state'))])
+        if not state:
+            state = state_obj.sudo().create({
+                'name': values.get('state'),
+                'country_id': values.get('country_id'),
+                'code': values.get('state'),
+            })
+        values['state_id'] = state.id
+        return super(WebsiteSaleExtended, self).values_preprocess(order, mode, values)
+
+    def values_postprocess(self, order, mode, values, errors, error_msg):
+        state = request.env['res.country.state'].sudo().browse(values.get('state_id'))
+        district_obj = request.env['res.state.district']
+        district = district_obj.sudo().search([('name', '=', values.get('district_id')), ('state_id', '=', state.id)])
+
+        city_obj = request.env['res.city']
+        city = city_obj.sudo().search([('name', '=', values.get('city')), ('state_id', '=', state.id)])
+
+        if not district and values.get('district_id'):
+            district = district_obj.sudo().create({
+                'name': values.get('district_id'),
+                'state_id': state.id,
+            })
+        if district:
+            city = city_obj.sudo().search([('name', '=', values.get('city')), ('state_id', '=', state.id),
+                                           ('district_id', '=', district.id)])
+
+        values['district_id'] = district.id if district else ''
+
+        if not city:
+            city = city_obj.sudo().create({
+                'name': values.get('city'),
+                'state_id': state.id,
+                'district_id': district.id,
+                'country_id': values.get('country_id')
+            })
+        values['city_id'] = city.id
+        return super(WebsiteSaleExtended, self).values_postprocess(order, mode, values, errors, error_msg)
+
+    def _checkout_form_save(self, mode, checkout, all_values):
+        partner_id = super(WebsiteSaleExtended, self)._checkout_form_save(mode, checkout, all_values)
+        request.env['res.partner'].browse(partner_id).sudo().write({
+            'house': all_values.get('house'),
+            'flat': all_values.get('flat'),
+            'city_id': all_values.get('city_id'),
+            'city_id': all_values.get('district_id'),
+        })
+        return partner_id

@@ -1,0 +1,136 @@
+footer {
+	&.o_footer {
+		background:none !important;
+		#footer {
+			border:none !important;
+		}
+	}
+}
+
+body footer {
+	background: none;
+	#footer {
+		padding: 0;
+	}
+}
+
+.middle-footer {
+	background: #141414;
+	padding: 50px 0;
+	@media(max-width: 991px){
+		padding: 30px 0 20px 0;
+	}
+	.fot-col {
+		padding-top: 15px;
+		padding-bottom: 15px;
+
+		h3 {
+	        font-size: 16px;
+		    font-weight: 600;
+		    color: #fff;
+		    margin: 0 0 25px;
+		    padding: 0 0 15px;
+		    letter-spacing: 1px;
+		    text-transform: uppercase;
+		    position: relative;
+		    &:after {
+		    	width: 35px;
+			    height: 1px;
+			    background: #fff;
+			    position: absolute;
+			    bottom: 0;
+			    left: 0;
+			    content: "";
+		    }
+		}
+
+		address {
+		    color: rgba(255, 255, 255, 0.7);
+		    font-weight: 400;
+		    font-size: 14px;
+			> div {
+				 > span {
+				    font-size: 15px;
+				    margin-bottom: 10px;
+				    display: block;
+				    letter-spacing: 0.5px;
+				}
+			}
+			> div > div {
+			    position: relative;
+			    padding-left: 30px;
+			    margin-bottom: 10px;
+			    i {
+		    	    position: absolute;
+				    top: 4px;
+				    left: 0;
+				    color: #fff;
+			    }
+			}
+		}
+
+		ul {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			li {
+				position: relative;
+			    padding: 0;
+			    margin: 4px 0;
+			    display: inline-block;
+			    vertical-align: top;
+			    width: 100%;
+				a {
+					color: rgba(255,255,255,0.7);
+				    font-weight: 300;
+				    font-size: 15px;
+					&:hover {
+						color:$as-light;
+					}
+				}
+			}
+		}
+	}
+}
+#footer .footer-bottom {
+	border-top: 1px solid #5b5b5b;
+	background: #141414;
+    padding: 20px 0;
+	.copyright {
+		margin: 0;
+	    color: rgba(255, 255, 255, 0.7);
+	    font-weight: 400;
+	    font-size: 14px;
+	    letter-spacing: 0.96px;
+	}
+
+	.link-follow {
+		display: inline-block;
+		ul {
+			margin: 0;
+			padding: 0;
+			li {
+				list-style-type: none;
+				display: inline-block;
+				vertical-align: middle;
+				margin-left: 5px;
+				a {
+					font-size: 16px;
+					line-height: 36px;
+					color: #fff;
+					width: 35px;
+					height: 35px;
+					background: rgba(255, 255, 255, 0.1);
+					display: block;
+					text-align: center;
+					border-radius: 50%;
+					transition: all, 0.4s, ease; 
+					&:hover {
+						background: rgba(0,0,0,0.9);
+						color: $as-light;
+					}
+				}
+			}
+		}
+	}
+}

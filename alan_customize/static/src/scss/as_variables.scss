@@ -1,0 +1,44 @@
+.container {
+	width: 1400px;
+	max-width: 100%;
+}
+
+/*Font*/
+$as-font-alt:			'Work Sans', serif;
+$as-font-main:			'Work Sans', sans-serif;
+
+/*Color*/
+$as-theme:				#42d6c3;
+$as-light:				#ffffff;
+$as-dark:  				#000;
+$body-color:			#828282;
+
+
+/*H1*/
+
+$h1color:				#000;
+$h2color:				#000;
+$h3color:				#000;
+$h4color:				#000;
+$h5color:				#000;
+$h6color:				#000;
+
+
+h1 {
+	color: $h1color;
+}
+h2 {
+	color: $h2color;
+}
+h3 {
+	color: $h3color;
+}
+h4 {
+	color: $h4color;
+}
+h5 {
+	color: $h5color;
+}
+h6 {
+	color: $h6color;
+}

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+  <!-- Counter -->
+  <template id="alan_stats_section" name="Alan Counter">
+    <section class="as-stats-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="stats-box">
+              <label class="stats-icon">
+                <i class="fa fa-picture-o" />
+              </label>
+              <span class="counter-s"><span class="counter counter-portfolio">500</span>+</span>
+              <p class="stats-label">Portfolio Layouts </p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stats-box">
+              <label class="stats-icon">
+                <i class="fa fa-pencil" />
+              </label>
+              <span class="counter-s"><span class="counter counter-blog-template">1000</span>+</span>
+              <p class="stats-label">Blog Templates</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stats-box">
+              <label class="stats-icon">
+                <i class="fa fa-puzzle-piece" />
+              </label>
+              <span class="counter-s"><span class="counter counter-shortcut">500</span>+</span>
+              <p class="stats-label">Shortcodes</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stats-box">
+              <label class="stats-icon">
+                <i class="fa fa-file-text-o" />
+              </label>
+              <span class="counter-s"><span class="counter counter-like">2000</span>+</span>
+              <p class="stats-label">Likes</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </template> 
+  <!-- End  -->
+
+  <!-- Progress Bar -->
+  <template id="progress_bar" name="Progress Bar">
+    <section class="section progress-bar-theme">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="font-alt font-w-800 font-28 color-extra-dark-gray m-10px-b">Show Off Your Skills</div>
+            <div class="font-w-700 font-16 color-extra-dark-gray m-5px-b">Lorem ipsum dolor sit amet</div>
+            <p class="w-85 sm-w-100">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
+            <p class="w-85 sm-w-100">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+          </div> <!--  -->
+          <div class="col-md-6">
+            <div class="pb-bar-inner">
+              <section class="progress">
+                <div class="progress-bar progress-bar-gray" role="progressbar" data-animate-width="80%">
+                  <span class="object-non-visible" data-effect-delay="200">Design</span>
+                </div>
+              </section>
+              <section class="progress">
+                <div class="progress-bar progress-bar-gray" role="progressbar" data-animate-width="90%">
+                  <span class="object-non-visible" data-effect-delay="200">Development</span>
+                </div>
+              </section>
+              <section class="progress">
+                <div class="progress-bar progress-bar-gray" role="progressbar" data-animate-width="75%">
+                  <span class="object-non-visible" data-effect-delay="200">Photoshop</span>
+                </div>
+              </section>
+              <section class="progress">
+                <div class="progress-bar progress-bar-gray" role="progressbar" data-animate-width="85%">
+                  <span class="object-non-visible" data-effect-delay="200">Odoo</span>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </template>
+
+  <template id="options_progress" inherit_id="website.snippets" name="Customize Options">
+    <xpath expr="//div[@id='snippet_options']" position="inside">
+      <div data-js='theme_progressbar'
+        data-selector=".progress-bar">
+        <a tabindex="-1" href="#" class="dropdown-item" data-change_progress="" data-no-preview="true">Change Progress</a>
+      </div>
+    </xpath>
+  </template>
+  <!-- End -->
+
+
+
+
+  <template id="add_snippets" inherit_id="website.snippets" name="Add Custom snippet">
+    <xpath expr="//div[@id='snippet_feature']//t[@t-snippet][last()]" position="after">
+      <t t-snippet="alan_customize.alan_stats_section"
+         t-thumbnail="/alan_customize/static/src/icon/as_stats_section.png"/>
+      <t t-snippet="alan_customize.progress_bar"
+         t-thumbnail="/alan_customize/static/src/icon/progress_bar.png"/>
+
+    </xpath>
+  </template>
+
+
+</odoo>

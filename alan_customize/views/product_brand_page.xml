@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+  <template id="product_brands" name="Brands">
+    <t t-call="website.layout">
+      <t t-set="additional_title">Product Brands</t>
+      <div id="wrap" t-attf-class="wrapper">
+			<t t-if="not website.is_breadcum">
+		    <t t-if="website.breadcum_background_image">
+			<nav class="is-breadcrumb shop-breadcrumb" role="navigation" aria-label="breadcrumbs" t-attf-style="background:none;background-color:#{website.breadcrumb_color};padding:#{website.breadcrumb_height};">
+		          <div class="container">
+		            <h1><span t-attf-style="color:#{website.breadcrumb_text_color}">Brands</span></h1>
+		            <ul class="breadcrumb" t-if="brand">
+		                 <li><span t-attf-style="color:#{website.breadcrumb_text_color}">Brands</span></li>
+		                <li class="active"><a href="/shop/brands" t-attf-style="color:#{website.breadcrumb_text_color}"><t t-esc="brand.name"/></a></li>  
+		            </ul>
+		          </div>
+		    </nav> 
+		    </t>
+		 	<t t-if="not website.breadcum_background_image">
+		    <t t-set="bread_cum" t-value="website.image_url(website,'bread_cum_image')"/>
+			<nav class="is-breadcrumb shop-breadcrumb" role="navigation" aria-label="breadcrumbs" t-attf-style="background-image:url(#{bread_cum}#);padding:#{website.breadcrumb_height};">
+		      <div class="container">
+		        <h1><span t-attf-style="color:#{website.breadcrumb_text_color}">Confirmation</span></h1>
+		        <ul class="breadcrumb">
+		            <li><a href="/" t-attf-style="color:#{website.breadcrumb_text_color}">Home</a></li>  
+		            <li class="active"><span t-attf-style="color:#{website.breadcrumb_text_color}">Confirmation</span></li>
+		        </ul>
+		      </div>
+		    </nav> 
+		</t> 
+		</t>
+        <section class="brands-section">
+          <div class="container">
+            <div class="brands-search">
+              <form action="/shop/brands" class="form-horizontal" method="post" >
+                <div class="input-group">
+                  <input type="text" name="search" class="form-control" placeholder="Search..." t-att-value='search'/>
+                  <button class="btn btn-primary"><i class="fa fa-search"></i></button>
+                </div>
+              </form>
+            </div>
+            <section class="brands-list">
+              <div class="row">
+                <t t-if='brand_rec'>
+                  <t t-foreach="brand_rec" t-as="o">
+                    <div class="col-md-3 col-sm-3 col-xs-12">
+                      <div class="brnd-col">
+                        <a t-att-href="keep('/shop',brand = o.id)">
+                          <div class='brd-img'>
+                            <img itemprop="image" class="img" t-attf-src="/website/image/product.brand/#{o.id}/logo#{'?max_width=300&amp;max_height=300'}"/>
+                          </div>
+                          <div class='brd-label'>
+                            <t t-esc='o.name' />
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </t>
+                </t>
+              </div>
+              <t t-if='not brand_rec'>
+                <div class="brand-no">
+                  <h3 class="css_editable_display">No Brands Found.</h3>
+                </div>
+              </t>
+            </section>
+          </div>
+        </section>
+      </div>
+    </t>
+  </template>
+</odoo>

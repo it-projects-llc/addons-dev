@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="menu_tree_inherit" model="ir.ui.view">
+    <field name="name">website.menu.tree</field>
+    <field name="model">website.menu</field>
+    <field name="inherit_id" ref="website.menu_tree"/>
+    <field name="arch" type="xml">
+      <field name="name" position="after">
+        <field name="is_mega_menu"/>
+        <field name="content_id" attrs="{'invisible':[('is_mega_menu','=',False)]}"/>
+      </field>
+    </field>
+  </record>
+
+  <record id="website_menus_form_viewinherit" model="ir.ui.view">
+    <field name="name">website.menu.form.mega</field>
+    <field name="model">website.menu</field>
+    <field name="inherit_id" ref="website.website_menus_form_view"/>
+    <field name="arch" type="xml">
+      <field name="name" position="after">
+        <field name="is_mega_menu"/>
+        <field name="content_id" attrs="{'invisible':[('is_mega_menu','=',False)]}"/>
+      </field>
+    </field>
+  </record>  
+  
+
+  <record id="view_megamenu_content_form" model="ir.ui.view">
+    <field name="name">megamenu.content.form</field>
+    <field name="model">megamenu.content</field>
+    <field name="arch" type="xml">
+      <form string="Mega Menu Configuration">
+        <sheet>
+          <group>
+            <field name="name" required="True"/>
+            <field name="active"/>
+            <field name="is_header" attrs="{'invisible':[('main_content_type','==', 'horiz_categ_toggle')]}"/>
+            <field name="is_footer" attrs="{'invisible':[('main_content_type','==', 'horiz_categ_toggle')]}"/>
+            <field name="main_content_type"/>
+            <field name="no_of_columns"/>
+            <field name="background_image" attrs="{'invisible':[('main_content_type','!=','mixed_list')]}"/>
+            <field name="background_image_pos" attrs="{'invisible':[('main_content_type','!=','mixed_list')]}"/>
+          </group>
+          <notebook>
+            <page string="Product Configuration" attrs="{'invisible':[('main_content_type','not in',['product_grid','product_list'])]}">
+              <group>
+                <field name="product_ids" />
+              </group>
+            </page>
+            <page string="Category Configuration" attrs="{'invisible':[('main_content_type','not in',['category_grid','category_list'])]}">
+              <group>
+                <field name="category_ids"/>
+              </group>
+            </page>
+            <page string="Links Configuration" attrs="{'invisible':[('main_content_type','!=','mixed_list')]}">
+              <group>
+                <field name="link_ids">
+                  <form>
+                    <sheet>
+                      <group colspan="4">
+                        <field name="link_type"/>
+                        <field name="link_category" class="oe_edit_only" attrs="{'invisible':[('link_type','!=','product.public.category')]}"/>
+                        <field name="link_events" class="oe_edit_only" attrs="{'invisible':[('link_type','!=','event.event')]}"/>
+                        <field name="link_pages" class="oe_edit_only" attrs="{'invisible':[('link_type','!=','website.page')]}"/>
+                        <field name="link_products" class="oe_edit_only" attrs="{'invisible':[('link_type','!=','product.template')]}"/>
+                      </group>
+                      <group colspan="4" col="4">
+                        <field name="name"/>
+                        <field name="url"/>
+                        <field name="description"/>
+                        <field name="pos_row"/>
+                        <field name="pos_column"/>
+                        <field name="image" filename="image_name"/>
+                        <field name="image_name" invisible="True"/>
+                      </group>
+                    </sheet>
+                  </form>
+                  <tree>
+                    <field name="link_type"/>
+                    <field name="name"/>
+                    <field name="url"/>
+                    <field name="description"/>
+                    <field name="pos_row"/>
+                    <field name="pos_column"/>
+                    <field name="image_name" invisible="True"/>
+                    <field name="image" filename="image_name" context="{'act_model':'megamenu_extended.links'}"/>
+                  </tree>
+                </field>
+              </group>
+            </page>
+            <page string="Categories Menu Lines" attrs="{'invisible':[('main_content_type','!=','horiz_categ_toggle')]}">
+              <group>
+                <field name="category_first_level" context="{'default_level': 1}">
+                  <tree editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name" domain="[('parent_id','=',False)]"/>
+                    <field name="image_name" invisible="True"/>
+                    <field name="image" filename="image_name" context="{'act_model':'megamenu_extended.links'}"/> 
+                    <field name="level" invisible="True"/>
+                    <field name="megamenu_id" invisible="True"/>
+                  </tree>
+                </field>
+              </group>
+              <group>
+                <field name="category_second_level" context="{'default_level': 2}">
+                  <tree editable="bottom" save="1">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name" domain="[('parent_id.parent_id','=',False)]"/>
+                    <field name="image_name" invisible="True"/>
+                    <field name="image" filename="image_name" context="{'act_model':'megamenu_extended.links'}" invisible="True"/> 
+                    <field name="level" invisible="True"/>
+                    <field name="megamenu_id" invisible="True"/>
+                  </tree>
+                </field>
+              </group>
+              <group>
+                <field name="category_third_level" context="{'default_level': 3}">
+                  <tree editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name" domain="[('parent_id.parent_id.parent_id','=',False)]"/>
+                    <field name="image_name" invisible="True"/>
+                    <field name="image" filename="image_name" context="{'act_model':'megamenu_extended.links'}" invisible="True"/> 
+                    <field name="level" invisible="True"/>
+                    <field name="megamenu_id" invisible="True"/>
+                  </tree>
+                </field>
+              </group>
+            </page>
+            <page string="Header Content" attrs="{'invisible':[('is_header','=',False)]}">
+              <field name="header_content" nolabel="1"/>
+            </page>
+            <page string="Footer Content" attrs="{'invisible':[('is_footer','=',False)]}">
+              <field name="footer_content" nolabel="1"/>
+            </page>   
+            <page string="Menu Content" attrs="{'invisible':[('main_content_type','!=','content')]}">
+              <field name="menu_content" />
+            </page>
+            <page string="Content Configuration" attrs="{'invisible':[('main_content_type','!=','mixed_list')]}">
+              <group>
+                <field name="content_section_ids">
+                  <form>
+                    <sheet>
+                      <group colspan="4" col="4">
+                        <field name="name"/>
+                        <field name="content_section_pos"/>
+                      </group>
+                      <group>
+                        <field name="content_html"/>
+                      </group>
+                    </sheet>
+                  </form>
+                  <tree>
+                    <field name="name"/>
+                    <field name="content_section_pos"/>
+                  </tree>
+                </field>
+              </group>
+            </page>
+            <page string="Column Headlines" attrs="{'invisible':[('main_content_type','!=','mixed_list'),('main_content_type','!=','pages_list')]}">
+              <group>
+                <field name="column_headline_ids">
+                  <form>
+                    <sheet>
+                      <group colspan="4" col="4">
+                        <field name="name"/>
+                        <field name="headline_link"/>
+                        <field name="description"/>
+                        <field name="pos_column"/>
+                      </group>
+                    </sheet>
+                  </form>
+                  <tree>
+                    <field name="name"/>
+                    <field name="headline_link"/>
+                    <field name="pos_column"/>
+                  </tree>
+                </field>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_megamenu_tree" model="ir.ui.view">
+    <field name="name">megamenu.content.tree</field>
+    <field name="model">megamenu.content</field>
+    <field name="arch" type="xml">
+      <tree string="Megamenu COnfiguration">
+        <field name="name"/>
+        <field name="active"/>
+        <field name="main_content_type"/>
+      </tree>
+    </field>
+  </record>
+  
+  <record id="action_website_menu" model="ir.actions.act_window">
+    <field name="name">Website Menu</field>
+    <field name="res_model">website.menu</field>
+    <field name="context">{'search_default_my_websites':1}</field>
+  </record>          
+  
+  <record id="action_megamenu_configuration" model="ir.actions.act_window">
+    <field name="name">Megamenu Configuration</field>
+    <field name="res_model">megamenu.content</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+  
+  <menuitem id="menu_action_website_menu" parent="website.menu_website_configuration"
+    sequence="101" action="action_website_menu" name="Website Menu"/>
+
+  <menuitem id="menu_action_alan_customize" parent="website.menu_website_global_configuration"
+    sequence="101" name="Theme Alan"/>
+    
+  <menuitem id="menu_action_megamenu_configuration" parent="menu_action_alan_customize"
+    sequence="101" action="action_megamenu_configuration" name="Megamenu Configuration"/>
+</odoo>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <template id="newly_loaded_products" name="Newly Loaded Products">
+    <t t-if="products">
+      <t t-foreach="products" t-as="product">
+        <div class="col-md-4 col-sm-6 oe_product_cart">
+          <t t-call="alan_customize.product_items"/>
+        </div>
+      </t>
+    </t>
+  </template>
+
+  <template id="product_attribute" name="Product Attribute's Filters" inherit_id="website_sale.products_attributes">
+    <xpath expr="//form[hasclass('js_attributes')]" position="inside">
+      <input type="hidden" name="ppg" t-att-value="quantities_per_page[0].name if quantities_per_page else '18'"/>
+    </xpath>
+  </template>
+
+  <template id="assets_custom_shop" inherit_id="website.assets_frontend">
+    <xpath expr="." position="inside">
+      <link rel="stylesheet" href="/alan_customize/static/src/css/bootstrap-slider.min.css"/>
+      <script type="text/javascript" src="/alan_customize/static/src/js/bootstrap-slider.min.js"/>
+      <script type="text/javascript" src="/alan_customize/static/src/js/custom_shop.js"/>
+    </xpath>
+  </template>
+
+  <template id="collapsible_filters" name="Collapsible Attribute Filters" inherit_id="website_sale.products_attributes" customize_show="True" active="False">
+    <xpath expr="//form[hasclass('js_attributes')]//ul[hasclass('nav')]/t[@t-foreach='attributes']/li" position="replace">
+      <li t-if="a.value_ids and len(a.value_ids) &gt; 1">
+        <t t-set="attr_section_open" t-value="False"/>
+        <t t-foreach="a.value_ids" t-as="v">
+          <t t-if="v.id in attrib_set">
+            <t t-set="attr_section_open" t-value="True"/>
+          </t>
+        </t>
+        <div t-att-class="'collapsible_attr_name%s' %(' section_open' if attr_section_open else '',)">
+          <a><strong t-field="a.name"/> <span class="icon" /> </a>
+          <t t-if="request.env.ref('alan_customize.clear_attribute_filter').active and attr_section_open">
+            <span class="clear_attr_filter" t-att-data-attr_id="a.id"><i class="fa fa-times"/>Clear</span>
+          </t>
+        </div>
+        <div class="collapsible_attr_value">
+          <t t-if="a.type == 'select'">
+            <select class="form-control" name="attrib">
+              <option value=""/>
+              <t t-foreach="a.value_ids" t-as="v">
+                <option t-att-value="'%s-%s' % (a.id,v.id)" t-esc="v.name" t-att-selected="v.id in attrib_set"/>
+              </t>
+            </select>
+          </t>
+          <t t-if="a.type == 'radio'">
+            <ul class="nav nav-pills nav-stacked">
+              <t t-foreach="a.value_ids" t-as="v">
+                <li t-att-class="'active' if v.id in attrib_set else None">
+                  <label style="margin: 0 20px;" t-att-data-attrib_id="v.id">
+                    <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None" />
+                    <span style="font-weight: normal" t-field="v.name"/>
+                  </label>
+                </li>
+              </t>
+            </ul>
+          </t>
+          <t t-if="a.type == 'color'">
+            <t t-foreach="a.value_ids" t-as="v">
+              <label t-attf-style="background-color:#{v.html_color or v.name}" t-attf-class="css_attribute_color #{'active' if v.id in attrib_set else ''}" t-att-data-attrib_id="v.id">
+                <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None" t-att-title="v.name"/>
+              </label>
+            </t>
+          </t>
+        </div>
+      </li>
+    </xpath>
+  </template>
+
+  <template id="clear_attribute_filter" name="Clear Filter Option" inherit_id="website_sale.products_attributes" customize_show="True" active="False">
+    <xpath expr="//li[@t-if='a.value_ids and len(a.value_ids) &gt; 1']/*[1]" position="before">
+      <t t-if="not request.env.ref('alan_customize.collapsible_filters').active">
+        <t t-set="attr_section_open" t-value="False"/>
+        <t t-foreach="a.value_ids" t-as="v">
+          <t t-if="v.id in attrib_set">
+            <t t-set="attr_section_open" t-value="True"/>
+          </t>
+        </t>
+      </t>
+    </xpath>
+    <xpath expr="//li[@t-if='a.value_ids and len(a.value_ids) &gt; 1']/div//strong[@t-field='a.name']" position="attributes">
+      <attribute name="t-att-data-attr_id">a.id</attribute>
+    </xpath>
+    <xpath expr="//li[@t-if='a.value_ids and len(a.value_ids) &gt; 1']/div//strong[@t-field='a.name']" position="after">
+      <t t-if="not request.env.ref('alan_customize.collapsible_filters').active and attr_section_open">
+        <span class="clear_attr_filter"><i class="fal fa-times"/>Clear</span>
+      </t>
+    </xpath>
+  </template>
+
+  <template id="pricefilter_product" name="Price Filter" inherit_id="website_sale.products_attributes">
+    <xpath expr="//form[hasclass('js_attributes')]" position="after">
+      <div class="slider-price-filter">
+        <div class="div_class_price_filter_heading spf-title">
+          <h2 class="refined-by-attr">Price</h2>
+        </div>
+        <div class="form_class price_filter_main spf-box">
+          <div data-role="rangeslider">
+            <t t-set="custom_min_val" t-value="custom_min_val or min_val"/>
+            <t t-set="custom_max_val" t-value="custom_max_val or max_val"/>
+            <div id="slider-range">
+              <input name="price_filter" id="price_filter_input" type="text" class="span2" value="" t-att-data-slider-min="floor(min_val)" t-att-data-slider-max="ceil(max_val)" data-slider-step="1" t-att-data-slider-value="[custom_min_val,custom_max_val]" t-att-data-value="custom_min_val,custom_max_val" data-provide="slider"/>
+            </div>
+            <div id="priceform" class="spf-action">
+              <div class="price_filter_details">
+                <span class="text_min_val" t-esc="round(custom_min_val)"/>
+                <span>&amp;nbsp;-&amp;nbsp;</span>
+                <span class="text_max_val" t-esc="round(custom_max_val)"/>
+              </div>
+              <button class="apply_price_filter">Apply</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </xpath>
+    <xpath expr="//form[hasclass('js_attributes')]" position="inside">
+      <input type="hidden" name="min_val" t-att-value="custom_min_val" id="min_val"/>
+      <input type="hidden" name="max_val" t-att-value="custom_max_val" id="max_val"/>
+    </xpath>
+  </template>
+
+</odoo>
