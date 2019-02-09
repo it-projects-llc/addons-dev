@@ -92,12 +92,23 @@ pos_event.AttendeeListScreenWidget.include({
             attendeed_button.hide();
         }
     },
+
     action_show_attendeed_button: function(){
         var $button_attendee = this.$('.button.attendeed.highlight');
-        if(this.current_attendee && this.current_attendee.signed_terms){
+        if(this.current_attendee){
             this._super();
         } else {
             $button_attendee.hide();
+        }
+    },
+
+    display_client_details: function(visibility,attendee,clickpos){
+        var self = this;
+        this._super(visibility,attendee,clickpos);
+        if(visibility === 'show'){
+            this.current_attendee = attendee;
+            this.action_show_attendeed_button();
+            this.$el.find('.button.esign').show();
         }
     },
 });

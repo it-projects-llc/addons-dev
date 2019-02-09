@@ -121,6 +121,7 @@ devices.BarcodeReader.include({
         var attendeelist = this.pos.gui.screen_instances.attendeelist;
         this.pos.gui.show_screen('attendeelist');
         attendeelist.display_client_details('show',attendee);
+        attendeelist.current_attendee = attendee;
     },
 });
 
@@ -154,17 +155,14 @@ models.PosModel = models.PosModel.extend({
         var fields = _.find(this.models,function(model){
             return model.model === 'event.registration';
         }).fields;
-        new Model('event.registration')
-            .query(fields)
-            .filter([['event_id', '=', self.config.pos_event_id[0]]])
-            .all({'timeout':3000, 'shadow': true})
-            .then(function(attendees){
-                if (self.db.add_attendees(attendees)) { // check if the attendees we got were real updates
-                    def.resolve();
-                } else {
-                    def.reject();
-                }
-            }, function(err,event){ event.preventDefault(); def.reject(); });
+        new Model('event.registration').call("search_read", [[['event_id', '=', self.config.pos_event_id[0]]], fields])
+        .then(function(attendees){
+            if (self.db.add_attendees(attendees)) { // check if the attendees we got were real updates
+                def.resolve();
+            } else {
+                def.reject();
+            }
+        }, function(err,event){ event.preventDefault(); def.reject(); });
         return def;
     },
 
