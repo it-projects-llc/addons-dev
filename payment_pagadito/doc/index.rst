@@ -9,7 +9,7 @@ Preparation
 * Nagivate to pagadito dashboard. Check that you have access to *integration parameters* section.
 
   * Under *Connection Credentials* you can find **UID** and **WSK**
-  * **Return URL** -- set to ``<odoo_instance_url>/shop/confirmation?value={value}&em_value={em_value}``, e.g. ``myshop.example.com/shop/confirmation?value={value}&em_value={em_value}``
+  * **Return URL** -- set to ``<odoo_instance_url>/payment/pagadito/confirmation?value={value}&ern_value={ern_value}``, e.g. ``myshop.example.com/payment/pagadito/confirmation?value={value}&ern_value={ern_value}``
 
 Sandbox
 =======

@@ -2,12 +2,16 @@
 # Copyright 2019 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 import json
+import logging
 from zeep import xsd
 import urlparse
 
 from odoo import models, fields, api, exceptions
-from .. import pagadito
 from odoo.http import request
+from .. import pagadito
+
+
+_logger = logging.getLogger(__name__)
 
 
 class AcquirerPagadito(models.Model):
@@ -18,36 +22,47 @@ class AcquirerPagadito(models.Model):
     pagadito_wsk = fields.Char('WSK', help='La clave de acceso', required_if_provider='pagadito')
 
     @api.multi
+    def _pagadito_connect(self, sandbox=True):
+        res = self._pagadito_call(pagadito.OP_CONNECT, {
+            'uid': self.pagadito_uid,
+            'wsk': self.pagadito_wsk,
+        })
+        if res.get('code') != pagadito.PG_CONNECT_SUCCESS:
+            raise exceptions.UserError("Method Connect doesn't work. Wrong credentials?\n%s", res.get('message'))
+        return res['value']
+
+    @api.multi
+    def _pagadito_call(self, operation, params):
+        sandbox = self.environment != 'prod'
+        return pagadito.call(operation, params, sandbox=sandbox)
+
+    @api.multi
     def pagadito_form_generate_values(self, values):
         reference = values['reference']
         if reference == '/':
             # we are on /shop/payment
             # -- selecting payment method screen only
             return values
-        sandbox = self.environment != 'prod'
         # connect
-        res = pagadito.call(pagadito.OP_CONNECT, {
-            'uid': self.pagadito_uid,
-            'wsk': self.pagadito_wsk,
-        }, sandbox=sandbox)
-        if res.get('code') != pagadito.PG_CONNECT_SUCCESS:
-            raise exceptions.UserError("Method Connect doesn't work. Wrong credentials?\n%s", res.get('message'))
-        token = res['value']
+        token = self._pagadito_connect()
         # exec_trans
         order = request.website.sale_get_order()
         details = self._order2pagadito_details(order)
-        res = pagadito.call(pagadito.OP_EXEC_TRANS, {
+        custom_params = {
+            'param1': order.name
+        }
+        res = self._pagadito_call(pagadito.OP_EXEC_TRANS, {
             'token': token,
-            'ern': order.name,
+            'ern': reference,
             'amount': order.amount_total,
             'details': json.dumps(details),
             'currency': self._currency2pagadito_code(order.currency_id),
-            'custom_params': '{}',  # TODO
+            'custom_params': json.dumps(custom_params),
             'allow_pending_payments': 'false',  # TODO: What is that?
             'extended_expiration': xsd.SkipValue,
-        }, sandbox=sandbox)
+        })
         if res.get('code') != pagadito.PG_EXEC_TRANS_SUCCESS:
-            raise exceptions.UserError("Method Connect doesn't work. Wrong credentials?\n%s", res.get('message'))
+            raise exceptions.UserError("Method Connect doesn't work:\n%s" % res.get('message'))
         raw_url = res['value']
         parsed = urlparse.urlparse(raw_url)
         pagadito_url = raw_url.split('?')[0]
