@@ -35,12 +35,12 @@ class TransactionPagadito(models.Model):
             raise exceptions.UserError("Method get_status doesn't work:\n%s", status_data.get('message'))
 
         status = status_data['value'].get('status')
-        date_trans = status_data.get('date_trans')
+        date_trans = status_data['value'].get('date_trans')
         if date_trans:
             date_trans = dateutil.parser.parse(date_trans)
             # TODO: shall we fix timezone?
         vals = {
-            'acquirer_reference': status_data.get('reference'),
+            'acquirer_reference': status_data['value'].get('reference'),
         }
         if status in [pagadito.STATUS_COMPLETED]:
             _logger.info('Validated Pagadito payment for tx %s: set as done' % (self.reference))
