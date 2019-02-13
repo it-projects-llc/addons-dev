@@ -2,7 +2,6 @@
 <!-- Copyright 2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
 License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
 <odoo>
-    <data>
         <record id="res_users_form_view" model="ir.ui.view">
             <field name="name">res.users.form.view</field>
             <field name="model">res.users</field>
@@ -17,5 +16,4 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
                 </xpath>
             </field>
         </record>
-    </data>
 </odoo>
