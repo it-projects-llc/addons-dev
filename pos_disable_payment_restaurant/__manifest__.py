@@ -26,6 +26,7 @@
     "data": [
         "views/template.xml",
         "views/view.xml",
+        "views/assets_demo.xml",
     ],
     "qweb": [
     ],

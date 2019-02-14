@@ -6,7 +6,7 @@ import odoo.tests
 @odoo.tests.common.post_install(True)
 class TestUi(odoo.tests.HttpCase):
 
-    def test_01_pos_is_loaded(self):
+    def test_pos_dis_pay_rest(self):
         self.phantom_js(
             '/web',
 
