@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+<odoo>
+
+    <template id="assets" inherit_id="point_of_sale.assets">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/pos_esign_request/static/src/js/pos_esign.js"></script>
+        </xpath>
+    </template>
+
+    <template id="assets_backend" name="stock_barcode assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <!--External libs-->
+            <script type="text/javascript" src="/web/static/lib/jSignature/jSignatureCustom.js"></script>
+            <!--Internal files-->
+            <link rel="stylesheet" href='/pos_esign_request/static/src/css/esign.css'/>
+            <script type="text/javascript" src="/pos_esign_request/static/src/js/esign_mode.js"></script>
+        </xpath>
+    </template>
+
+</odoo>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).-->
+<template xml:space="preserve">
+
+    <t t-name="ESTKioskMode">
+        <div class="est_kiosk_mode_container">
+            <div class="est_kiosk_mode">
+
+                <h1><t t-esc="widget.company_name"/></h1>
+                <img t-attf-src="{{widget.company_image_url}}" alt="Company Logo"/>
+                <!--Not Sure Is this stuff is needed-->
+                <h3>EST Session: <t t-esc="widget.action.context.session_name"/></h3>
+                <h3>Related to Barcode Interface# <t t-esc="widget.action.context.barcode_interface"/></h3>
+                <h3>Started At <t t-esc="widget.action.context.start_at"/></h3>
+                <br id="br"/>
+                <h1 class="greeting_message">Waiting for a sign request</h1>
+                <div class="panel panel-default mt16 mb0 terms_container">
+                    <h2 class="panel-heading unfold_terms">Click to unfold the Terms and Conditions</h2>
+                    <h2 class="panel-heading fold_terms fold_terms_start">Terms and Conditions</h2>
+                    <div class="terms_text">
+                        <p>
+                            <t t-raw="widget.action.context.terms_to_sign"/>
+                        </p>
+                    </div>
+                    <h2 class="fold_terms fold_terms_end">Click to fold Terms and Conditions</h2>
+                </div>
+                <!--<h2>Scan your badge</h2>-->
+                <!--<h4>or</h4>-->
+                <!--<button class="o_hr_attendance_button_partners btn btn-primary btn-lg">Select Partner</button>-->
+
+                <div class="panel panel-default mt16 mb0" id="drawsign" style="display: none;">
+                    <div class="panel-heading">
+                        <div class="pull-right">
+                            <a id="sign_clean" class="btn btn-xs">Clear</a>
+                        </div>
+                        <strong>Draw your signature</strong>
+                    </div>
+                    <div id="signature" class="panel-body" style="padding: 0"/>
+                    <button class="btn btn-primary btn-lg" id="submit_sign">Submit Sign</button>
+                    <button class="btn btn-primary btn-lg" id="reject_sign">Reject</button>
+                </div>
+
+            </div>
+            <!--<div class="o_hr_attendance_clock"></div>-->
+        </div>
+    </t>
+
+    <!--<t t-name="SignForm">-->
+        <!--<div class="panel panel-default mt16 mb0" id="drawsign">-->
+            <!--<div class="panel-heading">-->
+                <!--<div class="pull-right">-->
+                    <!--<a id="sign_clean" class="btn btn-xs">Clear</a>-->
+                <!--</div>-->
+                <!--<strong>Draw your signature</strong>-->
+            <!--</div>-->
+            <!--<div id="signature" class="panel-body" style="padding: 0"/>-->
+        <!--</div>-->
+    <!--</t>-->
+
+    <t t-extend="ListView.buttons">
+        <t t-jquery="button.o_list_button_add" t-operation="replace">
+          <button t-if="widget.model == 'est.session'"
+                  class="btn btn-primary btn-sm o_list_tender_button_create"
+                  type="object"
+                  name="open_session">Start New Session</button>
+          <button t-if="widget.model != 'est.session'" class="btn btn-primary btn-sm o_list_button_add" type="button">Create</button>
+        </t>
+    </t>
+</template>

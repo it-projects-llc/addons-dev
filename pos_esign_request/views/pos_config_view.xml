@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+<odoo>
+
+    <record id="view_pos_config_form" model="ir.ui.view">
+        <field name="name">pos.config.form</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_config_form"/>
+        <field name="arch" type="xml">
+            <field name="iface_display_categ_images" position="after">
+                <field name="ask_for_sign"/>
+                <field name="terms_to_sign" widget="ace" options="{'mode': 'xml'}"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_pos_config_kanban_inherited" model="ir.ui.view">
+        <field name="name">pos.config.kanban.view</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_config_kanban"/>
+        <field name="arch" type="xml">
+            <button name="open_session_cb" position="after">
+                <button t-if="record.current_session_state.raw_value === 'opened' || record.pos_session_username.value" class="btn btn-default" name="open_esign_kiosk" type="object">E-Sign</button>
+            </button>
+        </field>
+    </record>
+
+</odoo>

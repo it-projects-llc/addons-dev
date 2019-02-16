@@ -1,0 +1,50 @@
+.est_kiosk_mode_container {
+
+    background: url("../../../../web_enterprise/static/src/img/application-switcher-bg.jpg") no-repeat center center fixed;
+    background-size: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+}
+
+.est_kiosk_mode {
+    width: 100%;
+    text-align: center;
+    position: relative;
+    background-color: #fff;
+    padding: 2em;
+
+    h1 {
+        margin: 0 0 2rem 0;
+    }
+
+    .message_demo_barcodes {
+        font-size: 0.9em;
+        margin: 0;
+    }
+
+    img {
+        overflow:hidden; // prevent margins colapsing with h1
+        margin-top: 3rem;
+        width: 200px;
+    }
+
+    p {
+        text-align: left;
+        margin: 3rem 0;
+    }
+
+    > button {
+        font-size: 1.2em;
+        margin-bottom: 2rem;
+        width: 100%;
+    }
+
+    > button:last-child {
+        margin-bottom: 0;
+    }
+
+}

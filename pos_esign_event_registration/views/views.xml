@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- EVENT.REGISTRATION VIEWS -->
+    <record model="ir.ui.view" id="view_event_registration_form_inherited">
+        <field name="name">event.registration.form</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_event_registration_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='event']" position="after">
+                <group string="Attendee Information" name="event">
+                    <field name="sign_attachment_id"/>
+                    <field name="signed_terms"/>
+                    <field name="signature_request_id"/>
+                    <field name="completed_document"/>
+                </group>
+            </xpath>
+
+            <xpath expr="//header/button[@name='do_draft']" position="after">
+                <button name="send_term_request" string="Send Term Request" states="draft,open" type="object" class="oe_highlight"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- EVENT.EVENT VIEWS -->
+    <record model="ir.ui.view" id="view_event_form_inherited">
+        <field name="name">event.event.form</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Event Terms and Conditions">
+                    <group>
+                        <field name="mandatory_esign"/>
+                        <field name="signature_template_id" attrs="{'required':[('mandatory_esign','=',True)]}"/>
+                        <field name="terms_to_sign" attrs="{'required':[('mandatory_esign','=',True)]}"
+                               widget="ace" options="{'mode': 'xml'}"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <menuitem id="est_menu" sequence="50" name="EST" parent="event.event_main_menu"/>
+    <menuitem id="attendee_signature_request_menu" name="Signature Requests" parent="est_menu" action="website_sign.signature_request_action"/>
+
+    <record id="view_pos_config_form" model="ir.ui.view">
+        <field name="name">pos.config.form</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_config_form"/>
+        <field name="arch" type="xml">
+            <group name="event" position="inside">
+                <field name="ask_attendees_for_esign" attrs="{'invisible':[('pos_event_id','in', [False, None])]}"/>
+            </group>
+        </field>
+    </record>
+
+</odoo>
