@@ -28,6 +28,11 @@ odoo.define('pos_disable_payment_restaurant.tour', function(require) {
         content: "Move on <b>Point of Sale</b> tab",
         position: "top"
     }, {
+        trigger: 'label:contains("Allow decrease quantity on order line")',
+        extra_trigger: 'input[name="allow_decrease_amount"]:propChecked({disabled: true})',
+        content: "Uncheck the box <b>Allow decrease quantity on order line</b>",
+        position: "right"
+    }, {
         trigger: 'label:contains("Allow change Qty for kitchen orders")',
         extra_trigger: 'input[name="allow_decrease_kitchen"]:propChecked({disabled: true})',
         content: "Uncheck the box <b>Allow change Qty for kitchen orders</b>",
@@ -49,8 +54,8 @@ odoo.define('pos_disable_payment_restaurant.tour', function(require) {
         trigger: '.table:not(.oe_invisible .neworder-button), .order-button.selected',
         position: "bottom"
     }, {
-        trigger: '.product-list .product',
-        content: "Add the first product",
+        trigger: '.product-list .product[data-product-id="40"]',
+        content: "Add the product",
         position: "top"
     }, {
         trigger: '.control-buttons .order-submit',
