@@ -2,7 +2,7 @@
 <!-- Copyright 2019 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
      License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).-->
 <odoo>
-    <template id="payment_confirmation_status" inherit_id="payment_confirmation_status">
+    <template id="payment_confirmation_status" inherit_id="website_sale.payment_confirmation_status">
         <xpath expr="." position="inside">
             <t t-if="order.payment_acquirer_id.provider == 'pagadito'">
                 <div class="alert alert-success" role="alert">
