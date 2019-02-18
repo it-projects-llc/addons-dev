@@ -25,6 +25,7 @@
         "views/payment_pagadito_templates.xml",
         "views/payment_acquirer_views.xml",
         "views/website_templates.xml",
+        "views/report_templates.xml",
         "data/payment_acquirer_data.xml",
     ],
     "demo": [
