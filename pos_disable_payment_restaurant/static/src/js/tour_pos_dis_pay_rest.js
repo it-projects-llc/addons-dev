@@ -28,11 +28,6 @@ odoo.define('pos_disable_payment_restaurant.tour', function(require) {
         content: "Move on <b>Point of Sale</b> tab",
         position: "top"
     }, {
-        trigger: 'label:contains("Allow decrease quantity on order line")',
-        extra_trigger: 'input[name="allow_decrease_amount"]:propChecked({disabled: true})',
-        content: "Uncheck the box <b>Allow decrease quantity on order line</b>",
-        position: "right"
-    }, {
         trigger: 'label:contains("Allow change Qty for kitchen orders")',
         extra_trigger: 'input[name="allow_decrease_kitchen"]:propChecked({disabled: true})',
         content: "Uncheck the box <b>Allow change Qty for kitchen orders</b>",
@@ -65,8 +60,8 @@ odoo.define('pos_disable_payment_restaurant.tour', function(require) {
         content: "Hidden",
         trigger: '.pads',
         run: function(){
-            if ($('.mode-button[data-mode="quantity"]').hasClass("disable")) {
-                console.log("The option to change Qty for kitchen orders is blocked");
+            if ($('.input-button .number-char').hasClass("disable")) {
+                console.log("The buttons to change quantity of kitchen order lines are blocked");
             } else {
                 console.log("error", "The button is not disabled");
             }
