@@ -117,10 +117,20 @@ class WebsiteSaleExtended(WebsiteSale):
         })
         return address_super
 
+    def _get_mandatory_billing_fields(self):
+        res = super(WebsiteSaleExtended, self)._get_mandatory_billing_fields()
+        res.remove('street')
+        return res
+
+    def _get_mandatory_shipping_fields(self):
+        res = super(WebsiteSaleExtended, self)._get_mandatory_shipping_fields()
+        res.remove('street')
+        return res
+
     def values_preprocess(self, order, mode, values):
         state_obj = request.env['res.country.state']
         state = state_obj.sudo().search([('code', '=', values.get('state'))])
-        if not state:
+        if not state and values.get('state'):
             state = state_obj.sudo().create({
                 'name': values.get('state'),
                 'country_id': values.get('country_id'),
@@ -148,7 +158,7 @@ class WebsiteSaleExtended(WebsiteSale):
 
         values['district_id'] = district.id if district else ''
 
-        if not city:
+        if not city and values.get('city'):
             city = city_obj.sudo().create({
                 'name': values.get('city'),
                 'state_id': state.id,
@@ -164,6 +174,6 @@ class WebsiteSaleExtended(WebsiteSale):
             'house': all_values.get('house'),
             'flat': all_values.get('flat'),
             'city_id': all_values.get('city_id'),
-            'city_id': all_values.get('district_id'),
+            'district_id': all_values.get('district_id'),
         })
         return partner_id
