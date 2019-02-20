@@ -60,7 +60,7 @@ odoo.define('pos_disable_payment_restaurant.tour', function(require) {
         content: "Hidden",
         trigger: '.pads',
         run: function(){
-            if ($('.input-button .number-char').hasClass("disable")) {
+             if ($('button:contains("1")').hasClass("disable")) {
                 console.log("The buttons to change quantity of kitchen order lines are blocked");
             } else {
                 console.log("error", "The button is not disabled");
