@@ -65,14 +65,14 @@ odoo.define('pos_disable_payment_restaurant.tour', function(require) {
         position: "top"
     }, {
         trigger: '.pads',
-	content: "The option to change Qty for kitchen orders is blocked",
-	timeout: 20000,
+        content: "The option to change Qty for kitchen orders is blocked",
+        timeout: 20000,
         run: function(){
               if ($('button:contains("1")').hasClass("disable")) {
                 console.log("The option to change Qty for kitchen orders is blocked");
              } else {
                 console.log("error", "The button is not disabled");
-	     }
+             }
         }
     }
 
