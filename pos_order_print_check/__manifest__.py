@@ -48,6 +48,6 @@
     "demo_url": "pos-order-print-check",
     "demo_summary": "Check the connection to PosBox before printing POS orders",
     "demo_images": [
-    "images/pos_order_print_check_main.jpg",
+        "images/pos_order_print_check_main.jpg",
     ]
 }
