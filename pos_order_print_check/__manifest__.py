@@ -6,7 +6,7 @@
     "summary": """Check the connection to PosBox before printing to avoid loosing the orders""",
     "category": "Point of Sale",
     "live_test_url": "http://apps.it-projects.info/shop/product/pos-order-print-check?version=10.0",
-    "images": ["images/pos_order_print_check_main.png"],
+    "images": ["images/pos_order_print_check_main.jpg"],
     "version": "10.0.1.0.0",
     "application": False,
 
