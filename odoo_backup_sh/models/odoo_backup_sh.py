@@ -56,7 +56,7 @@ class BackupConfig(models.Model):
         ('database_unique', 'unique (database)', "Settings for this database already exist!"),
     ]
 
-    @api.depends('config_cron_ids', 'config_cron_ids.active')
+    @api.depends('config_cron_ids', 'config_cron_ids.ir_cron_id.active')
     @api.multi
     def _compute_active(self):
         for backup_config in self:
