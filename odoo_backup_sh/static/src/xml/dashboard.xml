@@ -44,7 +44,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                 </div>
             </div>
             <div class="graph_container" t-if="!widget.show_nocontent_msg">
-                <h2>COMMON REMOTE STORAGE USAGE</h2>
+                <h2>TOTAL REMOTE STORAGE USAGE</h2>
                 <div id="graph_remote_storage_usage"/>
             </div>
             <div class="o_backup_dashboard_configs o_kanban_view o_kanban_dashboard o_kanban_ungrouped"/>
