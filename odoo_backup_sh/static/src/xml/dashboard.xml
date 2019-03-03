@@ -21,6 +21,10 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                         <i class="fa fa-money fa-3x"/><br/>
                         Go to Balance
                     </div>
+                    <div class="o_inner_box o_dashboard_action o_dashboard_action_backup_configs" title="Set up schedules and rotations.">
+                        <i class="fa fa-cogs fa-3x"/><br/>
+                        Schedules and Rotations
+                    </div>
                 </div>
             </div>
             <div class="o_backup_dashboard_note_section">

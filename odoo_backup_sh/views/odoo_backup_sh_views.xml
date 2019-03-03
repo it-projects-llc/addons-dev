@@ -241,7 +241,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
     <menuitem name="Notifications" parent="menu_backup_root" id="menu_notification" sequence="20"/>
     <menuitem name="Notifications" action="action_backup_notifications" parent="menu_notification" id="notification_menu"/>
     <menuitem name="Configuration" parent="menu_backup_root" id="menu_config" sequence="100"/>
-    <menuitem name="Backups" action="action_backup_config" parent="menu_config" id="menu_backup_config"/>
+    <menuitem name="Schedules and Rotations" action="action_backup_config" parent="menu_config" id="menu_backup_config"/>
     <menuitem name="Settings" action="action_backup_settings" parent="menu_config" id="menu_settings"/>
 
 </odoo>
