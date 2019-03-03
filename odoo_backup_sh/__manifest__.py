@@ -6,7 +6,7 @@
     "category": "Backup",
     # "live_test_url": "",
     "images": [],
-    "version": "11.0.1.0.0",
+    "version": "12.0.1.0.0",
     "application": False,
 
     "author": "IT-Projects LLC, Stanislav Krotov",
