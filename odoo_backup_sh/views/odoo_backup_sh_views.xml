@@ -175,9 +175,16 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                         </field>
                     </group>
                     <group string="Auto Rotation" attrs="{'invisible': [('config_cron_ids', '=', [])]}">
-                        <h3 colspan="2">
-                            How many backups for what time intervals to preserve on a remote storage.
-                        </h3>
+                        <p colspan="2">
+                            By default all your backups will be stored in a remote storage for an unlimited time.
+                            But you can set up how many backups to preserve for certain time frames. <br/>
+                            Example: The module makes auto backup your database every 2 hours.
+                            You want to preserve 2 daily backups and 1 weekly only.
+                            Just put these numbers in appropriate fields. And put zeros in all other fields.
+                            Then you will have one last backup of last week and two last backups of two last
+                            days (one for each of the two last days). <br/>
+                            A negative value indicates no limit for a corresponding time frame.
+                        </p>
                         <field name="hourly"/>
                         <field name="daily"/>
                         <field name="weekly"/>
