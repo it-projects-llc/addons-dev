@@ -9,6 +9,7 @@ import re
 import requests
 import string
 import tempfile
+import time
 from contextlib import closing
 from datetime import datetime, timedelta
 
@@ -110,7 +111,11 @@ class BackupController(http.Controller):
                 request.env['odoo_backup_sh.notification'].sudo().create(notification_vals)
         elif all(param not in cloud_params for param in ['auth_link', 'insufficient_credit_error']):
             cls.set_config_values('options', cloud_params)
-            if call_from == 'backend':
+            if call_from == 'frontend':
+                # After creating a new IAM user we have to make a delay for the AWS.
+                # Otherwise AWS don't determine the user just created by it and returns an InvalidAccessKeyId error.
+                time.sleep(20)
+            else:
                 request.env['odoo_backup_sh.notification'].sudo().search(
                     [('type', 'in', ['insufficient_credits', 'forecast_insufficient_credits']), ('is_read', '=', False)]
                 ).unlink()
