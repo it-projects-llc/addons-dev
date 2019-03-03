@@ -147,7 +147,10 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
                 .showValues(true)
                 .showYAxis(false)
                 .color(['#7c7bad'])
-                .margin({'left': 0, 'right': 0, 'top': 12, 'bottom': 20});
+                .margin({'left': 0, 'right': 0, 'top': 10, 'bottom': 42});
+
+            chart.xAxis
+                .axisLabel('Backups of Last 7 Days, MB');
 
             d3.select('div[data-db_name="' + db_name + '"] .backup_config_card_graph')
                 .append("svg")
