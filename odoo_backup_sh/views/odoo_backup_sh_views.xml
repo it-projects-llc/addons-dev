@@ -5,40 +5,6 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
 
-    <record id="res_config_settings_view_form" model="ir.ui.view">
-        <field name="name">res.config.settings.view.form.inherit.odoo_backup_sh</field>
-        <field name="model">res.config.settings</field>
-        <field name="priority" eval="20"/>
-        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('settings')]" position="inside">
-                <div class="app_settings_block" data-string="odoo_backup_sh" string="Odoo-backup.sh" data-key="odoo_backup_sh">
-                    <h2>Odoo-backup.sh</h2>
-                    <div class="row mt16 o_settings_container">
-                        <div class="col-12 col-lg-6 o_setting_box">
-                            <div class="o_setting_left_pane">
-                                <field name="encrypt_backups"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="encrypt_backups"/>
-                                <div class="text-muted">
-                                    Backups cannot be restored without Encryption Password
-                                </div>
-                                <div attrs="{'invisible': [('encrypt_backups', '=', False)]}">
-                                    <div class="content-group mt16">
-                                        <label for="encryption_password" class="o_light_label"/>
-                                        <field name="encryption_password" attrs="{'required':[('encrypt_backups', '=', True)]}"/>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </xpath>
-        </field>
-    </record>
-
     <record id="action_backup_settings" model="ir.actions.act_window">
         <field name="name">Settings</field>
         <field name="type">ir.actions.act_window</field>
@@ -164,6 +130,18 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                         <label for="database" class="oe_edit_only"/>
                         <h1><field name="database"/></h1>
                     </div>
+                    <group col="2" string="Backups Encryption">
+                        <p colspan="4">
+                            Warning: Don't forget the encryption password.
+                            Without it you cannot restore the database from the encrypted backup.
+                        </p>
+                        <group>
+                            <field name="encrypt_backups"/>
+                        </group>
+                        <group>
+                            <field name="encryption_password" attrs="{'invisible': [('encrypt_backups', '=', False)]}"/>
+                        </group>
+                    </group>
                     <group string="Scheduled Auto Backups">
                         <field name="config_cron_ids" nolabel="1">
                             <tree editable="bottom">
