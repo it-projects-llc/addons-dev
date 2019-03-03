@@ -229,7 +229,6 @@ class BackupController(http.Controller):
                     } for date in last_week_dates]
                 }]
             })
-        dashboard_data['configs'] = backup_configs
         dashboard_data.update({
             'configs': backup_configs,
             'notifications': request.env['odoo_backup_sh.notification'].search_read(
