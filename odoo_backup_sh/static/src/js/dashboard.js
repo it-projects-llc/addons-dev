@@ -170,6 +170,9 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
             views: [[false, "form"]],
             res_model: 'odoo_backup_sh.config',
             target: 'current',
+        },
+        {
+            clear_breadcrumbs: true,
         });
     },
 
@@ -222,6 +225,9 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
             res_model: 'odoo_backup_sh.backup_info',
             target: 'current',
             domain: [['database', '=', $(ev.currentTarget).closest('div[data-db_name]').data('db_name')]],
+        },
+        {
+            clear_breadcrumbs: true,
         });
     },
 
