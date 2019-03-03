@@ -158,7 +158,8 @@ class BackupController(http.Controller):
             decrypted_backup_file = tempfile.NamedTemporaryFile()
             decrypted_backup_file_name = decrypted_backup_file.name
             os.unlink(decrypted_backup_file_name)
-            gnupg.GPG().decrypt_file(backup_file, passphrase=passphrase, output=decrypted_backup_file_name)
+            backup_file.seek(0)
+            gnupg.GPG().decrypt_file(backup_file, passphrase=encryption_password, output=decrypted_backup_file_name)
             backup_file = open(decrypted_backup_file_name, 'rb')
         try:
             db.restore_db(name, backup_file.name, str2bool(copy))
