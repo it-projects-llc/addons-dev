@@ -239,9 +239,9 @@ class BackupConfig(models.Model):
             return None
         dump_stream = odoo.service.db.dump_db(name, None, 'zip')
         backup_name_suffix = '.zip'
-        if self.env['ir.config_parameter'].get_param('odoo_backup_sh.encrypt_backups', 'False').lower() == 'true':
-            passphrase = BackupController.get_config_values(
-                'options', ['odoo_backup_encryption_password'])['odoo_backup_encryption_password']
+        icp_get_param = self.env['ir.config_parameter'].get_param
+        if icp_get_param('odoo_backup_sh.encrypt_backups', 'False').lower() == 'true':
+            passphrase = icp_get_param('odoo_backup_sh.encryption_password')
             if not passphrase:
                 raise UserError(_('Encryption password is not found. Please check your module settings.'))
             backup_name_suffix += '.enc'

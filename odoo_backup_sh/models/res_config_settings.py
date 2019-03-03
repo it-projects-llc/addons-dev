@@ -14,18 +14,17 @@ class ResConfigSettings(models.TransientModel):
     @api.model
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
+        icp_get_param = self.env['ir.config_parameter'].sudo().get_param
         res.update({
-            'encrypt_backups': self.env['ir.config_parameter'].get_param(
-                'odoo_backup_sh.encrypt_backups', 'False').lower() == 'true',
-            'encryption_password': BackupController.get_config_values(
-                'options', ['odoo_backup_encryption_password'])['odoo_backup_encryption_password']
+            'encrypt_backups': icp_get_param('odoo_backup_sh.encrypt_backups', 'False').lower() == 'true',
+            'encryption_password': icp_get_param('odoo_backup_sh.encryption_password'),
         })
         return res
 
     @api.multi
     def set_values(self):
+        icp_set_param = self.env['ir.config_parameter'].sudo().set_param
         # we store the repr of the value, since the value of the parameter is a required string
-        self.env['ir.config_parameter'].set_param('odoo_backup_sh.encrypt_backups', repr(self.encrypt_backups))
-        BackupController.set_config_values(
-            'options', {'odoo_backup_encryption_password': (self.encryption_password or '').strip()})
+        icp_set_param('odoo_backup_sh.encrypt_backups', repr(self.encrypt_backups))
+        icp_set_param('odoo_backup_sh.encryption_password', self.encryption_password)
         super(ResConfigSettings, self).set_values()

@@ -142,15 +142,13 @@ class BackupController(http.Controller):
         return env.get_template("backup_list.html").render(page_values)
 
     @http.route('/web/database/restore_via_odoo_backup_sh', type='http', auth="none", methods=['POST'], csrf=False)
-    def restore_via_odoo_backup_sh(self, master_pwd, backup_file_name, name, copy=False):
+    def restore_via_odoo_backup_sh(self, master_pwd, backup_file_name, name, encryption_password, copy=False):
         cloud_params = self.get_cloud_params(request.httprequest.url, call_from='frontend')
         backup_object = BackupCloudStorage.get_object(cloud_params, backup_file_name)
         backup_file = tempfile.NamedTemporaryFile()
         backup_file.write(backup_object['Body'].read())
         if backup_file_name.split('|')[0][-4:] == '.enc':
-            passphrase = self.get_config_values(
-                'options', ['odoo_backup_encryption_password'])['odoo_backup_encryption_password']
-            if not passphrase:
+            if not encryption_password:
                 raise UserError(_(
                     'The backup are encrypted. But encryption password is not found. Please check your module settings.'
                 ))
