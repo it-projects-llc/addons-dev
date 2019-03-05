@@ -45,7 +45,7 @@ odoo.define('pos_sale_coupons.screens', function (require) {
                 } else {
                     this.gui.show_popup('error', {
                         'title': _t('Error: Unable to sell the coupon'),
-                        'body': _t('POS product is not specified for this coupon.')
+                        'body': _t('Unable to find an associated POS product for the coupon.')
                     });
                 }
             }
@@ -102,7 +102,7 @@ odoo.define('pos_sale_coupons.screens', function (require) {
                     // Unable to consume the coupon
                     return this.gui.show_popup('error', {
                         'title': _t('Error: Unable to consume the coupon'),
-                        'body': _t('This coupon has been consume.')
+                        'body': _t('This coupon has been consumed.')
                     });
                 }
                 if (!coupon.sold_via_order_id || coupon.state !== 'reserved') {
@@ -120,7 +120,7 @@ odoo.define('pos_sale_coupons.screens', function (require) {
                     }
                     return this.gui.show_popup('error', {
                         'title': _t('Error: Unable to consume the coupon'),
-                        'body': _t('Coupon partner does not match the order partner.')
+                        'body': _t('The partner selected does not match to the partner purchased the coupon.')
                     });
                 }
                 return coupon;
