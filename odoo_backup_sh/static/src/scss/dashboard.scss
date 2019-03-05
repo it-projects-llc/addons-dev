@@ -17,6 +17,7 @@
             display: flex;
             flex-flow: row wrap;
             justify-content: flex-start;
+            padding: 8px 32px 0;
             > .o_inner_box {
                 @include media-breakpoint-down(sm) {
                     flex: 1 1 200px;
@@ -63,7 +64,7 @@
 
 .o_backup_dashboard_nocontent {
     padding: 15px;
-    margin-top: 0;
+    margin-top: 12px;
     color: #777777;
     font-size: 125%;
     max-width: 700px;
@@ -120,7 +121,7 @@
     border: 1px solid #d9d7d7;
     color: #7c7bad;
     margin: 16px 16px 0;
-    padding: 8px 16px;
+    padding: 12px 16px;
 }
 
 .backup_card_title {

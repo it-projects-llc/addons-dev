@@ -11,7 +11,7 @@ The application allows managing database backups via a cloud, without a need to 
 In-App Purchase
 ===============
 
-The service **Odoo-backup.sh** provides a way to store backups in a cloud. Payments for the service is managed by proprietary module, which implements `In-App Purchase <https://www.odoo.com/documentation/11.0/webservices/iap.html>`__ -- payments platform provided by *Odoo S.A.*.
+The service **Odoo-backup.sh** provides a way to store backups in a cloud. Payments for the service is managed by proprietary module, which implements `In-App Purchase <https://www.odoo.com/documentation/12.0/webservices/iap.html>`__ -- payments platform provided by *Odoo S.A.*.
 
 Personal cloud
 ==============
@@ -26,7 +26,7 @@ Additionally to the cloud provided by **Odoo-backup.sh** it's possible to store 
 * TODO Yandex.Disk
 * TODO ftp
 
-Posibility of using personal cloud *only* can be unlocked by purchasing module `odoo_backup_sh_private <https://apps.odoo.com/apps/modules/11.0/odoo_backup_sh_private/>`_
+Posibility of using personal cloud *only* can be unlocked by purchasing module `odoo_backup_sh_private <https://apps.odoo.com/apps/modules/12.0/odoo_backup_sh_private/>`_
 
 Implementation details
 ======================
@@ -72,12 +72,12 @@ Maintainers
 Further information
 ===================
 
-Demo: http://runbot.it-projects.info/demo/misc-addons/11.0
+Demo: http://runbot.it-projects.info/demo/misc-addons/12.0
 
-HTML Description: https://apps.odoo.com/apps/modules/11.0/odoo_backup_sh/
+HTML Description: https://apps.odoo.com/apps/modules/12.0/odoo_backup_sh/
 
 Usage instructions: `<doc/index.rst>`_
 
 Changelog: `<doc/changelog.rst>`_
 
-Tested on Odoo 11.0 71d5425c83edd212b4acf00f1d55bd5ee5f96761
+Tested on Odoo 12.0 483b6024cd44fcc6e2b987505beb739014b51856

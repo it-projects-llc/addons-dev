@@ -27,6 +27,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         'click .o_dashboard_action_update_info': 'o_dashboard_action_update_info',
         'click .o_dashboard_action_make_backup': 'o_dashboard_action_make_backup',
         'click .o_dashboard_action_up_balance': 'o_dashboard_action_up_balance',
+        'click .o_dashboard_action_backup_configs': 'o_dashboard_action_backup_configs',
         'click .o_dashboard_action_view_backups': 'o_dashboard_action_view_backups',
         'click .o_backup_dashboard_notification .close': 'close_dashboard_notification',
     },
@@ -147,7 +148,10 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
                 .showValues(true)
                 .showYAxis(false)
                 .color(['#7c7bad'])
-                .margin({'left': 0, 'right': 0, 'top': 12, 'bottom': 20});
+                .margin({'left': 0, 'right': 0, 'top': 10, 'bottom': 42});
+
+            chart.xAxis
+                .axisLabel('Backups of Last 7 Days, MB');
 
             d3.select('div[data-db_name="' + db_name + '"] .backup_config_card_graph')
                 .append("svg")
@@ -170,6 +174,9 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
             views: [[false, "form"]],
             res_model: 'odoo_backup_sh.config',
             target: 'current',
+        },
+        {
+            clear_breadcrumbs: true,
         });
     },
 
@@ -222,6 +229,9 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
             res_model: 'odoo_backup_sh.backup_info',
             target: 'current',
             domain: [['database', '=', $(ev.currentTarget).closest('div[data-db_name]').data('db_name')]],
+        },
+        {
+            clear_breadcrumbs: true,
         });
     },
 
@@ -235,6 +245,21 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
             success: function(url) {
                 window.open(url.result);
             },
+        });
+    },
+
+    o_dashboard_action_backup_configs: function (ev) {
+        ev.preventDefault();
+        this.do_action({
+            name: "Schedules and Rotations",
+            type: 'ir.actions.act_window',
+            views: [[false, 'list'], [false, 'form']],
+            res_model: 'odoo_backup_sh.config',
+            target: 'current',
+            context: {active_test: false},
+        },
+        {
+            clear_breadcrumbs: true,
         });
     },
 

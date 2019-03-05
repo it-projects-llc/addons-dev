@@ -34,7 +34,13 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
           ev.preventDefault();
           var backup = $(ev.currentTarget).data('backup');
           var target = $(ev.currentTarget).data('target');
+          var encryption_password_section = $('#encryption_password').parent();
           $(target).find('input[name=backup_file_name]').val(backup);
+          if (backup.endsWith('.enc')) {
+              encryption_password_section.show();
+          } else {
+              encryption_password_section.hide();
+          }
           $(target).modal();
       });
       // close modal on submit
@@ -108,6 +114,10 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
             <div class="form-group">
               <label for="name" class="col-form-label">Database Name</label>
               <input id="name" type="text" name="name" class="form-control" required="required" pattern="{{ pattern }}" title="Only alphanumerical characters, underscore, hyphen and dot are allowed"/>
+            </div>
+            <div class="form-group">
+              <label for="encryption_password" class="col-form-label">Encryption Password</label>
+              <input id="encryption_password" type="text" name="encryption_password" class="form-control"/>
             </div>
             <div class="form-group">
               <label for="copy">This database might have been moved or copied.</label>

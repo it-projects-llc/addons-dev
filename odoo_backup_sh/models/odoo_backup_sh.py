@@ -40,6 +40,8 @@ class BackupConfig(models.Model):
 
     active = fields.Boolean('Active', compute='_compute_active', inverse='_inverse_active', store=True)
     database = fields.Selection(selection=DATABASE_NAMES, string='Database', required=True, copy=False)
+    encrypt_backups = fields.Boolean(string="Encrypt Backups")
+    encryption_password = fields.Char(string='Encryption Password')
     config_cron_ids = fields.One2many('odoo_backup_sh.config.cron', 'backup_config_id', string='Scheduled Auto Backups')
     hourly = fields.Integer(
         'Hourly', default=-1, help='How many hourly backups to preserve, a negative number indicates no limit.')
@@ -56,7 +58,7 @@ class BackupConfig(models.Model):
         ('database_unique', 'unique (database)', "Settings for this database already exist!"),
     ]
 
-    @api.depends('config_cron_ids', 'config_cron_ids.active')
+    @api.depends('config_cron_ids', 'config_cron_ids.ir_cron_id.active')
     @api.multi
     def _compute_active(self):
         for backup_config in self:
@@ -239,18 +241,15 @@ class BackupConfig(models.Model):
             return None
         dump_stream = odoo.service.db.dump_db(name, None, 'zip')
         backup_name_suffix = '.zip'
-        if self.env['ir.config_parameter'].get_param('odoo_backup_sh.encrypt_backups', 'False').lower() == 'true':
-            passphrase = BackupController.get_config_values(
-                'options', ['odoo_backup_encryption_password'])['odoo_backup_encryption_password']
-            if not passphrase:
-                raise UserError(_('Encryption password is not found. Please check your module settings.'))
+        config_record = self.with_context({'active_test': False}).search([('database', '=', name)])
+        if config_record.encrypt_backups:
             backup_name_suffix += '.enc'
             # GnuPG ignores the --output parameter with an existing file object as value
             backup_encrpyted = tempfile.NamedTemporaryFile()
             backup_encrpyted_name = backup_encrpyted.name
             os.unlink(backup_encrpyted_name)
-            gnupg.GPG().encrypt(
-                dump_stream, symmetric=True, passphrase=passphrase, encrypt=False, output=backup_encrpyted_name)
+            gnupg.GPG().encrypt(dump_stream, symmetric=True, passphrase=config_record.encryption_password,
+                                encrypt=False, output=backup_encrpyted_name)
             dump_stream = open(backup_encrpyted_name, 'rb')
         backup_size = dump_stream.seek(0, 2) / 1024 / 1024
         dump_stream.seek(0)

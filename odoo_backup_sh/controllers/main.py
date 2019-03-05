@@ -9,6 +9,7 @@ import re
 import requests
 import string
 import tempfile
+import time
 from contextlib import closing
 from datetime import datetime, timedelta
 
@@ -110,7 +111,11 @@ class BackupController(http.Controller):
                 request.env['odoo_backup_sh.notification'].sudo().create(notification_vals)
         elif all(param not in cloud_params for param in ['auth_link', 'insufficient_credit_error']):
             cls.set_config_values('options', cloud_params)
-            if call_from == 'backend':
+            if call_from == 'frontend':
+                # After creating a new IAM user we have to make a delay for the AWS.
+                # Otherwise AWS don't determine the user just created by it and returns an InvalidAccessKeyId error.
+                time.sleep(20)
+            else:
                 request.env['odoo_backup_sh.notification'].sudo().search(
                     [('type', 'in', ['insufficient_credits', 'forecast_insufficient_credits']), ('is_read', '=', False)]
                 ).unlink()
@@ -137,15 +142,13 @@ class BackupController(http.Controller):
         return env.get_template("backup_list.html").render(page_values)
 
     @http.route('/web/database/restore_via_odoo_backup_sh', type='http', auth="none", methods=['POST'], csrf=False)
-    def restore_via_odoo_backup_sh(self, master_pwd, backup_file_name, name, copy=False):
+    def restore_via_odoo_backup_sh(self, master_pwd, backup_file_name, name, encryption_password, copy=False):
         cloud_params = self.get_cloud_params(request.httprequest.url, call_from='frontend')
         backup_object = BackupCloudStorage.get_object(cloud_params, backup_file_name)
         backup_file = tempfile.NamedTemporaryFile()
         backup_file.write(backup_object['Body'].read())
         if backup_file_name.split('|')[0][-4:] == '.enc':
-            passphrase = self.get_config_values(
-                'options', ['odoo_backup_encryption_password'])['odoo_backup_encryption_password']
-            if not passphrase:
+            if not encryption_password:
                 raise UserError(_(
                     'The backup are encrypted. But encryption password is not found. Please check your module settings.'
                 ))
@@ -153,7 +156,8 @@ class BackupController(http.Controller):
             decrypted_backup_file = tempfile.NamedTemporaryFile()
             decrypted_backup_file_name = decrypted_backup_file.name
             os.unlink(decrypted_backup_file_name)
-            gnupg.GPG().decrypt_file(backup_file, passphrase=passphrase, output=decrypted_backup_file_name)
+            backup_file.seek(0)
+            gnupg.GPG().decrypt_file(backup_file, passphrase=encryption_password, output=decrypted_backup_file_name)
             backup_file = open(decrypted_backup_file_name, 'rb')
         try:
             db.restore_db(name, backup_file.name, str2bool(copy))
@@ -225,7 +229,6 @@ class BackupController(http.Controller):
                     } for date in last_week_dates]
                 }]
             })
-        dashboard_data['configs'] = backup_configs
         dashboard_data.update({
             'configs': backup_configs,
             'notifications': request.env['odoo_backup_sh.notification'].search_read(

@@ -42,7 +42,7 @@ Fill required fields:
 - Auto Rotation: If you have set up the auto backup, you can specify how many backups to preserve for certain time
   frames.
   Example: The module makes auto backup your database every 2 hours. You want to preserve 2 daily backups and 1 weekly.
-  Just put this numbers in appropriate fields. Then you will have one last backup of last week and two last backups of
+  Just put these numbers in appropriate fields. Then you will have one last backup of last week and two last backups of
   two last days (one for each of the two last days).
 
 After all required fields will be filled, click on the ``[Save]`` button.
