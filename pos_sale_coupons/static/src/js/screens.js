@@ -98,7 +98,7 @@ odoo.define('pos_sale_coupons.screens', function (require) {
         get_coupon_by_code: function(code) {
             var coupon = this.pos.db.get_sale_coupon_by_code(code);
             if (coupon) {
-                if (coupon.pos_order_id) {
+                if (coupon.pos_order_id || this.pos.db.coupon_is_old(coupon)) {
                     // Unable to consume the coupon
                     return this.gui.show_popup('error', {
                         'title': _t('Error: Unable to consume the coupon'),
@@ -110,17 +110,6 @@ odoo.define('pos_sale_coupons.screens', function (require) {
                     return this.gui.show_popup('error', {
                         'title': _t('Error: Unable to consume the coupon'),
                         'body': _t('This coupon has not been sold.')
-                    });
-                }
-                if (coupon.partner_id) {
-                    var order = this.pos.get_order();
-                    var partner = order.get_client() || false;
-                    if (partner && coupon.partner_id[0] === partner.id) {
-                        return coupon;
-                    }
-                    return this.gui.show_popup('error', {
-                        'title': _t('Error: Unable to consume the coupon'),
-                        'body': _t('The partner selected does not match to the partner purchased the coupon.')
                     });
                 }
                 return coupon;

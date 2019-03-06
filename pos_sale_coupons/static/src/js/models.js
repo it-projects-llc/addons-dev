@@ -49,7 +49,20 @@ odoo.define('pos_sale_coupons.models', function (require) {
                     self.db.add_sale_coupons([coupon]);
                 }
             });
-        }
+        },
+        delete_current_order: function() {
+            var self = this;
+            var order = this.get_order();
+            if (order) {
+                var coupons_lines = order.get_orderlines().filter(function(line) {
+                    return line.coupon && line.coupon.id;
+                });
+                _.each(coupons_lines, function(line) {
+                    self.db.remove_old_coupon_id(line.coupon.id);
+                })
+            }
+            _super_posmodel.delete_current_order.apply(this, arguments);
+        },
     });
 
     var _super_order = models.Order.prototype;
@@ -122,6 +135,7 @@ odoo.define('pos_sale_coupons.models', function (require) {
                 }
             }
             this.add_product(discount_product, {price: -discount_price});
+            this.pos.db.update_old_coupon_ids(coupon.id);
         },
         apply_product_reward_program: function(coupon, program) {
             var reward_product = this.pos.db.product_by_id[program.reward_product_id[0]];
@@ -132,6 +146,7 @@ odoo.define('pos_sale_coupons.models', function (require) {
                 };
                 // add free product
                 this.add_product(reward_product, {quantity: program.reward_product_quantity, price: 0});
+                this.pos.db.update_old_coupon_ids(coupon.id);
             } else {
                 this.pos.gui.show_popup('error', {
                     'title': _t('Error: Unable to apply the coupon'),
@@ -155,18 +170,33 @@ odoo.define('pos_sale_coupons.models', function (require) {
             return this.get_orderlines().find(function(line) {
                return line.product.id === product.id;
             });
-        }
+        },
+        remove_orderline: function( line ) {
+            this.assert_editable();
+            if (line.coupon) {
+                this.pos.db.remove_old_coupon_id(line.coupon.id);
+            }
+            _super_order.remove_orderline.apply(this, arguments);
+        },
+        add_orderline: function(line){
+            _super_order.add_orderline.apply(this, arguments);
+            if (line.coupon && line.coupon.id) {
+                this.pos.db.update_old_coupon_ids(line.coupon.id);
+            }
+        },
     });
 
     var _super_orderline = models.Orderline.prototype;
     models.Orderline = models.Orderline.extend({
         initialize: function(attr,options){
             _super_orderline.initialize.apply(this, arguments);
-            if (options.product && options.product.coupon) {
+            if (options.product && options.product.coupon && options.product.coupon.id) {
                 this.coupon = {
                     id: options.product.coupon.id,
                     state: options.product.coupon.state
                 };
+                // update old coupon ids after reload page
+                this.pos.db.update_old_coupon_ids(this.coupon.id);
             }
         },
         can_be_merged_with: function(orderline) {
@@ -184,10 +214,12 @@ odoo.define('pos_sale_coupons.models', function (require) {
             return data;
         },
         init_from_JSON: function(json) {
-            this.coupon = {
-                id: json.coupon_id,
-                state: json.coupon_state
-            };
+            if (json.coupon_id) {
+                this.coupon = {
+                    id: json.coupon_id,
+                    state: json.coupon_state
+                };
+            }
             _super_orderline.init_from_JSON.call(this, json);
         },
         //  Read more about this function in pos_multi_session module
@@ -195,9 +227,9 @@ odoo.define('pos_sale_coupons.models', function (require) {
             if (_super_orderline.apply_ms_data) {
                 _super_orderline.apply_ms_data.apply(this, arguments);
             }
-            this.coupon = data.coupon;
+            this.coupon = data.coupon || false;
             this.trigger('change', this);
-        },
+        }
     });
 
     return models;

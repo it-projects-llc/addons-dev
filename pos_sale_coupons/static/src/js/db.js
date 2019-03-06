@@ -12,6 +12,7 @@ odoo.define('pos_sale_coupons.db', function (require) {
             this.sale_coupons_by_id = {};
             this.sale_coupon_programs = [];
             this.sale_coupon_programs_by_id = {};
+            this.sale_old_coupons_list = [];
         },
         add_sale_coupons: function (coupons) {
             var self = this;
@@ -32,6 +33,20 @@ odoo.define('pos_sale_coupons.db', function (require) {
                 // Update old coupon to new
                 self.sale_coupons[index] = coupon;
             });
+        },
+        update_old_coupon_ids: function(id) {
+            if (id && this.sale_old_coupons_list.indexOf(id) === -1) {
+                this.sale_old_coupons_list.push(id);
+            }
+        },
+        remove_old_coupon_id: function(id) {
+            var index = this.sale_old_coupons_list.indexOf(id);
+            if (index !== -1) {
+                this.sale_old_coupons_list.splice(index, 1);
+            }
+        },
+        coupon_is_old: function(coupon) {
+            return this.sale_old_coupons_list.indexOf(coupon.id) !== -1;
         },
         get_sale_coupon_by_id: function(id) {
             return this.sale_coupons_by_id[id];
