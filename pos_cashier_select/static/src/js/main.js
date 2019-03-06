@@ -151,6 +151,7 @@ odoo.define('pos_choosing_cashier', function(require){
                     list.push({
                         'label': user.name,
                         'item':  user,
+                        'selected': this.pos.get_cashier().id === user.id,
                     });
                 }
             }
@@ -183,5 +184,10 @@ odoo.define('pos_choosing_cashier', function(require){
         },
 
     });
+
+    return {
+        Gui: Gui,
+        CashierSelectionPopupWidget: CashierSelectionPopupWidget
+    };
 
 });
