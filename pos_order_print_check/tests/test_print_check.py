@@ -5,11 +5,15 @@
 import odoo.tests
 
 
-@odoo.tests.common.at_install(False)
+@odoo.tests.common.at_install(True)
 @odoo.tests.common.post_install(True)
 class TestUi(odoo.tests.HttpCase):
 
-    def test_pos_dis_pay_rest(self):
+    def test_pos_print_check(self):
+
+        env = self.env
+        env['ir.module.module'].search([('name', '=', 'pos_order_print_check')], limit=1).state = 'installed'
+        
         self.phantom_js(
             '/web',
 
