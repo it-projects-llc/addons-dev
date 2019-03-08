@@ -19,6 +19,8 @@ class PagaditoController(http.Controller):
     def pagadito_confirmation(self, **data):
         _logger.debug('Pagadito confirmation data: %s', data)
         request.env['payment.transaction'].sudo().form_feedback(data, 'pagadito')
-        base_url = request.env['ir.config_parameter'].get_param('web.base.url')
-        payment_validate_url = "%s%s" % (base_url, '/shop/payment/validate')
+        payment_validate_url = '/shop/payment/validate'
+        # # following code requires website=True in http.route, but in later case form_feedback doesn't work (missed user id in sql request)
+        # base_url = request.env['ir.config_parameter'].get_param('web.base.url')
+        # payment_validate_url = "%s%s" % (base_url, '/shop/payment/validate')
         return werkzeug.utils.redirect(payment_validate_url)

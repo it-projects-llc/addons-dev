@@ -8,6 +8,11 @@
 
 Integration with Pagadito.com payment service
 
+Roadmap
+=======
+
+* Split module to exclude ``website_portal_sale`` dependency
+
 Credits
 =======
 
