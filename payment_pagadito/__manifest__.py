@@ -19,6 +19,7 @@
     "depends": [
         "payment",
         "website_sale",
+        "website_portal_sale",
     ],
     "external_dependencies": {"python": ["zeep"], "bin": []},
     "data": [
@@ -26,6 +27,7 @@
         "views/payment_acquirer_views.xml",
         "views/website_templates.xml",
         "views/report_templates.xml",
+        "views/portal_templates.xml",
         "data/payment_acquirer_data.xml",
     ],
     "demo": [

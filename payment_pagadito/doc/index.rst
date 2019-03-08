@@ -42,6 +42,7 @@ Configuration
 Mail notification
 -----------------
 Pagadito requires to send confirmation codes by email. In order to do that:
+
 * `Activate Developer Mode <https://odoo-development.readthedocs.io/en/latest/odoo/usage/debug-mode.html>`__
 * Open menu ``[[ Settings ]] >> Technical >> Email >> Templates``
 * Open template ``Sales Order - Send by Email``
