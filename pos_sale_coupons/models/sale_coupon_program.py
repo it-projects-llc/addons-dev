@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import fields, models, api, _
 
 
 CHANNEL = 'pos_sale_coupons'
@@ -10,6 +10,24 @@ class SaleCouponProgram(models.Model):
     pos_product_id = fields.Many2one('product.product', string='POS Product',
                                      domain="[('available_in_pos', '=', True), ('sale_ok', '=', True)]",
                                      help='The product used to model the discount.')
+    pos_order_count = fields.Integer(compute='_compute_pos_order_count')
+
+    @api.depends('coupon_ids.pos_order_id')
+    def _compute_order_count(self):
+        for program in self:
+            orders = program.coupon_ids.filtered(lambda c: c.pos_order_id is not False).mapped('pos_order_id')
+            program.pos_order_count = len(orders) or 0
+
+    def action_view_pos_orders(self):
+        self.ensure_one()
+        orders = self.coupon_ids.filtered(lambda c: c.pos_order_id is not False).mapped('pos_order_id')
+        return {
+            'name': _('POS Orders'),
+            'view_mode': 'tree,form',
+            'res_model': 'pos.order',
+            'type': 'ir.actions.act_window',
+            'domain': [('id', 'in', orders.ids)]
+        }
 
 
 class SaleCoupon(models.Model):
