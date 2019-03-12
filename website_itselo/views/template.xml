@@ -6,7 +6,7 @@
         </xpath>
         <xpath expr="//div[@class='product_price']" position="after">
             <t t-set="marketplace_seller_id" t-value="product.sudo().marketplace_seller_id"/>
-            <t t-if="marketplace_seller_id and marketplace_seller_id.seller">
+            <t t-if="marketplace_seller_id and marketplace_seller_id.seller and marketplace_seller_id.limit > 0">
                 <div style="color: #28a745">
                     Объем достигнут на <t t-esc="int(round((marketplace_seller_id.total * 100.0)/marketplace_seller_id.limit))"/>%
                 </div>
@@ -17,7 +17,7 @@
     <template id="product_items" name="Products" inherit_id="alan_customize.product_items">
         <xpath expr="//span[@t-esc='product.website_price']" position="before">
             <t t-set="marketplace_seller_id" t-value="product.sudo().marketplace_seller_id"/>
-            <t t-if="marketplace_seller_id and marketplace_seller_id.seller">
+            <t t-if="marketplace_seller_id and marketplace_seller_id.seller and marketplace_seller_id.limit > 0">
                 <div style="color: #28a745">
                     Объем достигнут на <t t-esc="int(round((marketplace_seller_id.total * 100.0)/marketplace_seller_id.limit))"/>%
                 </div>
@@ -62,7 +62,7 @@
     <template id="product" name="Product" inherit_id="website_sale.product">
         <xpath expr="//h1[@t-field='product.name']" position="after">
             <t t-set="marketplace_seller_id" t-value="product.sudo().marketplace_seller_id"/>
-            <t t-if="marketplace_seller_id and marketplace_seller_id.seller">
+            <t t-if="marketplace_seller_id and marketplace_seller_id.seller and marketplace_seller_id.limit > 0">
                 <h4 style="color: #28a745">
                     Объем достигнут на <t t-esc="int(round((marketplace_seller_id.total * 100.0)/marketplace_seller_id.limit))"/>%
                 </h4>
