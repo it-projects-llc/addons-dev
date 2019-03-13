@@ -8,7 +8,7 @@
         <field name="inherit_id" ref="sale_coupon.sale_coupon_program_view_form"/>
         <field name="arch" type="xml">
             <group name='reward' position="inside">
-                <field name="pos_product_id" attrs="{'invisible': [('reward_type', '!=', 'discount')]}"/>
+                <field name="pos_product_id"/>
             </group>
             <xpath expr="//field[@name='order_count']/.." position="after">
                 <button class="oe_stat_button" type="object" icon="fa-usd" name="action_view_pos_orders">

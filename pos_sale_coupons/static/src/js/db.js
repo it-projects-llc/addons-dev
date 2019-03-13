@@ -32,6 +32,7 @@ odoo.define('pos_sale_coupons.db', function (require) {
                 var index = self.sale_coupons.indexOf(old_coupon);
                 // Update old coupon to new
                 self.sale_coupons[index] = coupon;
+                self.remove_old_coupon_id(coupon.id);
             });
         },
         update_old_coupon_ids: function(id) {

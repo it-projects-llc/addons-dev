@@ -62,7 +62,7 @@ odoo.define('pos_sale_coupons.models', function (require) {
                 })
             }
             _super_posmodel.delete_current_order.apply(this, arguments);
-        },
+        }
     });
 
     var _super_order = models.Order.prototype;
