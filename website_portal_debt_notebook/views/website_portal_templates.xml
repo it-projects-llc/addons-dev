@@ -1,0 +1,82 @@
+<odoo>
+<!--Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Website Portal Sale">
+      <xpath expr="." position="inside">
+          <link rel='stylesheet' href='/website_portal_sale/static/src/less/website_portal_sale.less'/>
+      </xpath>
+    </template>
+
+    <template id="portal_my_home_menu_debt" name="Portal layout : debt menu entry" inherit_id="website_portal.portal_layout" priority="5">
+        <xpath expr="//ul[contains(@class,'o_portal_submenu')]" position="inside">
+            <li>
+                <a href="/my/debt_history">Debt / Credit History</a>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_sale_debt" name="Portal My Home : debt menu entry" inherit_id="website_portal.portal_my_home" priority="5">
+        <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
+            <h3 class="page-header">
+                <a href="/my/debt_history">Debt / Credit History</a>
+            </h3>
+        </xpath>
+    </template>
+
+    <template id="portal_my_debt_history" name="My Debt History">
+        <t t-call="website_portal.portal_layout">
+            <h3 class="page-header">Credits</h3>
+            <table class="table table-hover o_my_status_table client-list">
+                <thead>
+                    <tr>
+                        <th>Journal</th>
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+                <tbody class='client-list-contents'>
+                    <t t-foreach="debts" t-as="deb">
+                        <tr class='debt-line'>
+                            <td><t t-esc='deb["journal_id"][1]' /></td>
+                            <td><t t-esc='deb["balance"]' /></td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+
+            <h3 class="page-header">Credit Transaction History</h3>
+            <t t-if="not history">
+                <p>There are currently no credit transactions.</p>
+            </t>
+            <t t-if="history">
+                <table class="table table-hover o_my_status_table client-list">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Journal</th>
+                            <th>Products</th>
+                            <th>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody class='client-list-contents'>
+                        <t t-foreach="history" t-as="hist">
+                            <tr class='history-line'>
+                                <td><t t-esc='hist["date"]' /></td>
+                                <td><t t-esc='hist["journal_id"][1]' /></td>
+                                <td><t t-esc='hist["product_list"]' /></td>
+                                <td><t t-esc='hist["balance"]' /></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+                <t t-if="records_count_all > records_count">
+                    <a t-attf-href="#{'/my/debt_history/' + str(records_count + 20)}" class="btn btn-primary btn">Load More</a>
+                    <a t-attf-href="#{'/my/debt_history/' + str(records_count_all + 20)}" class="btn btn-primary btn">Load All</a>
+                </t>
+                <div t-if="pager" class="o_portal_pager text-center">
+                  <t t-call="website.pager"/>
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>
