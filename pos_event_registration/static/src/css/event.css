@@ -1,0 +1,11 @@
+.button.attendee {
+    left: 0px;
+}
+
+.button.attendeed {
+    right: 10px;
+}
+
+.pos .clientlist-screen .client-name {
+    cursor: pointer;
+}

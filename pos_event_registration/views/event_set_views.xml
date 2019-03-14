@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+<odoo>
+
+    <!-- POS EVENT SET -->
+    <record id="view_pos_event_set_form" model="ir.ui.view">
+        <field name="name">pos.event.set.form</field>
+        <field name="model">pos.event.set</field>
+        <field name="arch" type="xml">
+            <form string="Views">
+                  <sheet>
+                    <field name="name"/>
+                    <field name="pos_ticket_ids"/>
+                  </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- POS EVENT TICKET -->
+    <record id="view_pos_event_ticket_form" model="ir.ui.view">
+        <field name="name">pos.event.ticket.form</field>
+        <field name="model">pos.event.ticket</field>
+        <field name="arch" type="xml">
+            <form string="Tickets">
+                <sheet>
+                    <field name="name"/>
+                    <group name="event">
+                        <group name="event" string="Event" >
+                            <field name="event_id"/>
+                            <field name="ticket_id" attrs="{'invisible':[('event_id','in', [False, None])]}"/>
+                            <field name="product_id" attrs="{'invisible':[('event_id','in', [False, None])]}"/>
+                        </group>
+                        <group>
+                            <field name="ask_for_rfid"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>
