@@ -94,7 +94,8 @@ models.load_models({
     fields: ['name','street','city','state_id','country_id','vat','phone','zip','mobile','email','barcode','write_date','property_account_position_id'],
     ids:    function(self){
         return self.config.pos_event_set_id
-         ? _.difference(self.db.ticket_customers_ids, self.db.partner_sorted) // difference excludes already downloaded partners
+         ? _.difference(self.db.ticket_customers_ids, self.db.partner_sorted)
+            // difference excludes already downloaded partners
          : [];
     },
     loaded: function(self, partners){
@@ -158,8 +159,7 @@ devices.BarcodeReader.include({
 screens.ProductListWidget.include({
     set_product_list: function(product_list){
         // filters out non ticket products TODO: make it customizable
-        var product_ids = this.pos.
-        get_event_ticket_data_ids('product_id');
+        var product_ids = this.pos.get_event_ticket_data_ids('product_id');
         if (this.pos.config.pos_event_set_id && this.pos.config.show_only_tickets) {
             var self = this;
             product_list = _.filter(product_list, function(p){
@@ -199,12 +199,16 @@ models.PosModel = models.PosModel.extend({
             request = new Model('event.registration').call("search_read", [[['event_id', 'in', this.get_event_ticket_data_ids('event_id')]], fields], {}, {'shadow': true});
         }
         request.then(function(attendees){
-            if (self.db.add_attendees(attendees)) { // check if the attendees we got were real updates
+            if (self.db.add_attendees(attendees)) {
+                // check if the attendees we got were real updates
                 def.resolve();
             } else {
                 def.reject();
             }
-        }, function(err,event){ event.preventDefault(); def.reject(); });
+        }, function(err,event){
+            event.preventDefault();
+            def.reject();
+        });
         return def;
     },
 
@@ -227,7 +231,7 @@ models.PosModel = models.PosModel.extend({
 
         return _.find(orderlines, function(ol){
             return _.contains(self.get_event_ticket_data_ids('product_id'), ol.product.id);
-        })
+        });
     },
     get_event_ticket_data_ids: function(key){
         var pos_ticket_ids = this.event_set.pos_ticket_ids;
@@ -236,7 +240,7 @@ models.PosModel = models.PosModel.extend({
             .map(key)
             .map('0')
             .map(function(i){
-                return parseInt(i)
+                return parseInt(i);
             })
             .unique().value()
         : [];
@@ -260,7 +264,9 @@ PosDB.include({
     /* ATTENDEE */
 
     get_attendees_sorted: function(max_count){
-        max_count = max_count ? Math.min(this.attendee_sorted.length, max_count) : this.attendee_sorted.length;
+        max_count = max_count
+        ? Math.min(this.attendee_sorted.length, max_count)
+        : this.attendee_sorted.length;
         var attendees = [];
         for (var i = 0; i < max_count; i++) {
             attendees.push(this.attendee_by_id[this.attendee_sorted[i].id]);
@@ -284,7 +290,8 @@ PosDB.include({
     add_attendees: function(attendees){
         var updated_count = 0;
         var new_write_date = '';
-        var attendee;
+        var self = this;
+        var attendee = false;
         for(var i = 0, len = attendees.length; i < len; i++){
             attendee = attendees[i];
 
@@ -295,7 +302,7 @@ PosDB.include({
 
             updated_count += 1;
             var db_attendee = _.find(this.attendees, function(a){
-                return a.id = attendee.id;
+                return a.id === attendee.id;
             });
 
             if (!db_attendee) {
@@ -304,26 +311,27 @@ PosDB.include({
         }
 
         if (updated_count) {
-            // If there were updates, we need to completely 
+            // If there were updates, we need to completely
             // rebuild the search string and the barcode indexing
 
             this.attendee_search_string = "";
             this.attendee_by_barcode = {};
 
-            for (var id in this.attendee_by_id) {
-                attendee = this.attendee_by_id[id];
-
-                if(attendee.barcode){
-                    this.attendee_by_barcode[attendee.barcode] = attendee;
-                }
-                this.attendee_search_string += this._attendee_search_string(attendee);
-            }
+            _.chain(this.attendee_by_id)
+                .keys('product')
+                .each(function(id){
+                    attendee = self.attendee_by_id[parseInt(id)];
+                    if(attendee.barcode){
+                        self.attendee_by_barcode[attendee.barcode] = attendee;
+                    }
+                    self.attendee_search_string += self._attendee_search_string(attendee);
+                }).value();
         }
         return updated_count;
     },
 
     _attendee_search_string: function(attendee){
-        var str =  attendee.name;
+        var str = attendee.name;
         if(attendee.barcode){
             str += '|' + attendee.barcode;
         }
@@ -333,7 +341,7 @@ PosDB.include({
         if(attendee.email){
             str += '|' + attendee.email.split(' ').join('');
         }
-        str = '' + attendee.id + ':' + str.replace(':','') + '\n';
+        str = '' + String(attendee.id) + ':' + str.replace(':','') + '\n';
         return str;
     },
 
@@ -423,7 +431,7 @@ screens.PaymentScreenWidget.include({
                         return true;
                     }
                 });
-                if (same_product_lines.length > 1 || (same_product_lines.length == 1 && same_product_lines[0].quantity > 1)){
+                if (same_product_lines.length > 1 || (same_product_lines.length === 1 && same_product_lines[0].quantity > 1)){
                     result = true;
                 }
             }
@@ -544,7 +552,7 @@ var AttendeeListScreenWidget = screens.ScreenWidget.extend({
             var error_body = _t('Your Internet connection is probably down.');
             if (err.data) {
                 var except = err.data;
-                error_body = except.arguments && except.arguments[0] || except.message || error_body;
+                error_body = (except.arguments && except.arguments[0]) || except.message || error_body;
             }
             self.gui.show_popup('error',{
                 'title': _t('Error: Could not Save Changes'),
@@ -574,7 +582,7 @@ var AttendeeListScreenWidget = screens.ScreenWidget.extend({
     },
 
     perform_search: function(query, associate_result){
-        var customers;
+        var customers = false;
         if(query){
             customers = this.pos.db.search_attendee(query);
             this.display_client_details('hide');
@@ -601,7 +609,7 @@ var AttendeeListScreenWidget = screens.ScreenWidget.extend({
         for(var i = 0, len = Math.min(attendees.length,1000); i < len; i++){
             var attendee = attendees[i];
             if (!attendee){
-                // TODO: why here comes undefined attendeees
+                // TODO: why here comes undefined attendeees?
                 continue;
             }
             var clientline = this.attendee_cache.get_node(attendee.id);
@@ -740,7 +748,7 @@ var AttendeeListScreenWidget = screens.ScreenWidget.extend({
             var error_body = _t('Your Internet connection is probably down.');
             if (err.data) {
                 var except = err.data;
-                error_body = except.arguments && except.arguments[0] || except.message || error_body;
+                error_body = (except.arguments && except.arguments[0]) || except.message || error_body;
             }
             self.gui.show_popup('error',{
                 'title': _t('Error: Could not Save Changes'),

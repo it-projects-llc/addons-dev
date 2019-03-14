@@ -1,8 +1,9 @@
+# coding: utf-8` or `# -*- coding: utf-8 -*-
 # Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 {
     "name": """Register Event Attendees""",
-    "summary": """Process Attendees and Sell Tickets""",
+    "summary": """Process Attendees and Sell Tickets via POS""",
     "category": "Point of Sale",
     # "live_test_url": "http://apps.it-projects.info/shop/product/DEMO-URL?version=10.0",
     "images": [],
