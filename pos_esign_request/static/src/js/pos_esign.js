@@ -48,8 +48,8 @@ screens.PaymentScreenWidget.include({
 
 
         this.pos.bind('changed:partner_esign', function(res){
-            var client = self.pos.get_client();
-            if (client && client.id === res.partner_id && client.sign_attachment_id) {
+            var customer = self.pos.get_client();
+            if (customer && customer.id === res.partner_id && customer.sign_attachment_id) {
                 next_button.show();
             }
         });
@@ -75,9 +75,7 @@ gui.Gui.prototype.screen_classes.filter(function(el) {
         var self = this;
 
         var esign_button = this.$el.find('.button.esign');
-        if (!this.pos.config.ask_for_sign) {
-            esign_button.hide();
-        } else {
+        if (this.pos.config.ask_for_sign) {
             esign_button.off().on('click', function(e){
                 var partner = self.new_client || self.old_client;
                 if (!partner) {
@@ -91,6 +89,8 @@ gui.Gui.prototype.screen_classes.filter(function(el) {
                     },
                 });
             });
+        } else {
+            esign_button.hide();
         }
 
         this.pos.bind('changed:partner_esign', function(res){

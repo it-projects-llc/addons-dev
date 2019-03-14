@@ -32,7 +32,9 @@ var AcceptModalKiosk = Widget.extend({
         var $confirm_btn = $('button#submit_sign');
         ev.preventDefault();
         var values = this.compose_vals();
-        var is_empty = values.signature ? this.empty_sign[1] == values.signature[1] : false;
+        var is_empty = values.signature
+        ? this.empty_sign[1] === values.signature[1]
+        : false;
         $('#drawsign').toggleClass('panel-danger', is_empty).toggleClass('panel-default', !is_empty);
         if (is_empty){
             setTimeout(function () {
@@ -56,13 +58,14 @@ var AcceptModalKiosk = Widget.extend({
         var signature = $drawsign.find("#signature").jSignature("getData",'image');
         return {
             'partner_id': this.kiosk.partner.partner_id,
-            'sign': signature?JSON.stringify(signature[1]):false,
+            'sign': signature
+                ? JSON.stringify(signature[1])
+                : false,
             'config_id': this.kiosk.action.context.config_id,
         };
     },
 
 });
-
 
 
 var KioskMode = Widget.extend(BarcodeHandlerMixin, {
@@ -102,11 +105,11 @@ var KioskMode = Widget.extend(BarcodeHandlerMixin, {
         this.bus = bus.bus;
         this.bus.stop_polling();
         var channel_name = 'pos.sign_request.to_est';
-        this.esign_channel_name = this.get_full_channel_name(channel_name, this.action.context.config_id + '');
+        this.esign_channel_name = this.get_full_channel_name(channel_name, String(this.action.context.config_id) + '');
         this.bus.add_channel(this.esign_channel_name);
         this.force_start_polling();
         this.bus.on("notification", this.bus, function(data){
-            var check;
+            var check = false;
             try {
                 check = data && data.length && JSON.parse(data[0][0])[1] === channel_name;
             } catch(error) {
@@ -158,8 +161,8 @@ var KioskMode = Widget.extend(BarcodeHandlerMixin, {
         // TODO: Clean it
         var self = this;
         var res_company = new Model('res.company');
-        res_company.query(['name']).
-           filter([['id', '=', self.session.company_id]]).all().then(function (companies){
+        res_company.query(['name'])
+            .filter([['id', '=', self.session.company_id]]).all().then(function (companies){
                 self.company_name = companies[0].name;
                 self.company_image_url = self.session.url('/web/image', {model: 'res.company', id: self.session.company_id, field: 'logo',});
 
@@ -193,9 +196,11 @@ var KioskMode = Widget.extend(BarcodeHandlerMixin, {
 
             var el = document.documentElement;
             var requestMethod = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullScreen;
-            if (requestMethod) { // Native full screen.
+            if (requestMethod) {
+                // Native full screen.
                 requestMethod.call(el);
-            } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+            } else if (typeof window.ActiveXObject !== "undefined") {
+                // Older IE.
                 var wscript = new ActiveXObject("WScript.Shell");
                 if (wscript !== null) {
                     wscript.SendKeys("{F11}");
@@ -244,8 +249,8 @@ var KioskMode = Widget.extend(BarcodeHandlerMixin, {
     on_barcode_scanned: function(barcode) {
         var self = this;
         var hr_employee = new Model('res.partner');
-        hr_employee.call('attendance_scan', [barcode, ]).
-            then(function (result) {
+        hr_employee.call('attendance_scan', [barcode, ])
+            .then(function (result) {
                 if (result.action) {
                     self.do_action(result.action);
                 } else if (result.warning) {
