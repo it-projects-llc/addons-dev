@@ -41,11 +41,8 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
             PosModelSuper.prototype.initialize.apply(this, arguments);
             this.bus.add_channel_callback("wechat.miniprogram", this.on_wechat_miniprogram, this);
             this.ready.then(function() {
-
                 var mp_orders = self.get('orders').filter(function(order) {
-                    if (order.miniprogram_order && order.miniprogram_order.id) {
-                        return order.miniprogram_order;
-                    }
+                    return order.miniprogram_order && order.miniprogram_order.id;
                 });
 
                 var not_found = mp_orders.map(function(r) {
@@ -73,9 +70,7 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
         },
         on_wechat_miniprogram: function(message) {
             var order = this.get('orders').find(function(item) {
-                if (item.miniprogram_order) {
-                    return item.miniprogram_order.id === message.id;
-                }
+                return item.miniprogram_order && item.miniprogram_order.id === message.id;
             });
             if (order) {
                 this.update_miniprogram_order(order, message);
