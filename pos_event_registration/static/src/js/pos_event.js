@@ -206,6 +206,9 @@ models.PosModel = models.PosModel.extend({
                 def.reject();
             }
         }, function(err,event){
+            if (err) {
+                console.log(err.stack);
+            }
             event.preventDefault();
             def.reject();
         });
@@ -608,24 +611,24 @@ var AttendeeListScreenWidget = screens.ScreenWidget.extend({
         contents.innerHTML = "";
         for(var i = 0, len = Math.min(attendees.length,1000); i < len; i++){
             var attendee = attendees[i];
-            if (!attendee){
-                // TODO: why here comes undefined attendeees?
-                continue;
+            // TODO: why here comes undefined attendeees?
+            // 'continue' is a lint
+            if (attendee){
+                var clientline = this.attendee_cache.get_node(attendee.id);
+                if(!clientline){
+                    var clientline_html = QWeb.render('AttendeeLine',{widget: this, attendee:attendees[i]});
+                    clientline = document.createElement('tbody');
+                    clientline.innerHTML = clientline_html;
+                    clientline = clientline.childNodes[1];
+                    this.attendee_cache.cache_node(attendee.id,clientline);
+                }
+                if( attendee === this.old_attendee ){
+                    clientline.classList.add('highlight');
+                }else{
+                    clientline.classList.remove('highlight');
+                }
+                contents.appendChild(clientline);
             }
-            var clientline = this.attendee_cache.get_node(attendee.id);
-            if(!clientline){
-                var clientline_html = QWeb.render('AttendeeLine',{widget: this, attendee:attendees[i]});
-                clientline = document.createElement('tbody');
-                clientline.innerHTML = clientline_html;
-                clientline = clientline.childNodes[1];
-                this.attendee_cache.cache_node(attendee.id,clientline);
-            }
-            if( attendee === this.old_attendee ){
-                clientline.classList.add('highlight');
-            }else{
-                clientline.classList.remove('highlight');
-            }
-            contents.appendChild(clientline);
         }
     },
     save_changes: function(){
