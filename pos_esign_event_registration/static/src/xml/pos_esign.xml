@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+<templates id="pos_esign_request_template" xml:space="preserve">
+
+    <t t-extend="AttendeeLine">
+        <t t-jquery="tr.client-line" t-operation="append">
+            <td class="esign">
+                <t t-esc='!!(attendee.signed_terms) &amp;&amp; "&#10004;" || ""'/>
+            </td>
+        </t>
+    </t>
+
+    <t t-extend="AttendeeListScreenWidget">
+        <t t-jquery="table.client-list thead tr" t-operation="append">
+            <td id="client-line-esign">E-Sign</td>
+        </t>
+
+        <t t-jquery=".button.attendeed" t-operation="after">
+            <t t-call="ESignButton"/>
+        </t>
+    </t>
+
+    <t t-extend="AttendeeDetails">
+        <t t-jquery=".client-details-right" t-operation="append">
+            <div class='client-detail esign_div'>
+                <span class='label'>E-Sign</span>
+                <t t-if='attendee.signed_terms'>
+                    <span class='detail client-phone' name='event_ticket_id'><t t-esc='"&#10004;"' /></span>
+                </t>
+                <t t-if='!attendee.signed_terms'>
+                    <span class='detail client-phone empty'>N/A</span>
+                </t>
+            </div>
+        </t>
+    </t>
+
+</templates>
