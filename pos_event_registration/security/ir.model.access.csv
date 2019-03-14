@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_event_bracelet,access_event_bracelet,model_event_bracelet,point_of_sale.group_pos_user,1,1,1,1
+access_pos_event_set,access_pos_event_set,model_pos_event_set,point_of_sale.group_pos_user,1,1,1,1
+access_pos_event_ticket,access_pos_event_ticket,model_pos_event_ticket,point_of_sale.group_pos_user,1,1,1,1
