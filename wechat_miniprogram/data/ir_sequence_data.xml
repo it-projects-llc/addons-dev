@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2019 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+<odoo noupdate="1">
+
+    <record id="wechat_miniprogram_app_id" model="ir.config_parameter">
+        <field name="key">wechat.miniprogram_app_id</field>
+        <field name="value"></field>
+    </record>
+
+    <record id="wechat_miniprogram_app_secret" model="ir.config_parameter">
+        <field name="key">wechat.miniprogram_app_secret</field>
+        <field name="value"></field>
+    </record>
+
+</odoo>

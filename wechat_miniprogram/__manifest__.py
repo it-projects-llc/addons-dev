@@ -22,6 +22,7 @@
     "external_dependencies": {"python": [], "bin": []},
     "data": [
         "data/module_data.xml",
+        "data/ir_sequence_data.xml",
         "security/wechat_security.xml",
         "security/ir.model.access.csv",
     ],
