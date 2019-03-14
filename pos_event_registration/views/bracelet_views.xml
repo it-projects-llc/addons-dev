@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+<odoo>
+
+    <record id="view_event_bracelet_tree" model="ir.ui.view">
+        <field name="name">event.bracelet.tree</field>
+        <field name="model">event.bracelet</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="rfid" />
+                <field name="creation_time" />
+                <field name="config_id"/>
+                <field name="event_id"/>
+                <field name="session_id"/>
+                <field name="event_registration_id"/>
+                <field name="event_ticket_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_bracelets">
+      <field name="name">Bracelets</field>
+      <field name="res_model">event.bracelet</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form,pivot,graph</field>
+    </record>
+
+    <menuitem name="Bracelets"
+            id="menu_action_registration" parent="event.event_main_menu"
+            action="action_bracelets"/>
+
+</odoo>
