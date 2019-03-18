@@ -37,25 +37,31 @@ class BackupConfig(models.Model):
     _description = 'Backup Configurations'
 
     DATABASE_NAMES = [(db, db) for db in odoo.service.db.list_dbs() if db != 'session_store']
+    ROTATION_OPTIONS = [('unlimited', 'Unlimited'), ('limited', 'Limited'), ('disabled', 'Disabled')]
 
     active = fields.Boolean('Active', compute='_compute_active', inverse='_inverse_active', store=True)
     database = fields.Selection(selection=DATABASE_NAMES, string='Database', required=True, copy=False)
     encrypt_backups = fields.Boolean(string="Encrypt Backups")
     encryption_password = fields.Char(string='Encryption Password')
     config_cron_ids = fields.One2many('odoo_backup_sh.config.cron', 'backup_config_id', string='Scheduled Auto Backups')
-    hourly = fields.Integer(
-        'Hourly', default=-1, help='How many hourly backups to preserve, a negative number indicates no limit.')
-    daily = fields.Integer(
-        'Daily', default=-1, help='How many daily backups to preserve, a negative number indicates no limit.')
-    weekly = fields.Integer(
-        'Weekly', default=-1, help='How many weekly backups to preserve, a negative number indicates no limit.')
-    monthly = fields.Integer(
-        'Monthly', default=-1, help='How many monthly backups to preserve, a negative number indicates no limit.')
-    yearly = fields.Integer(
-        'Yearly', default=-1, help='How many yearly backups to preserve, a negative number indicates no limit.')
+    hourly_rotation = fields.Selection(selection=ROTATION_OPTIONS, string='Hourly', default='unlimited')
+    daily_rotation = fields.Selection(selection=ROTATION_OPTIONS, string='Daily', default='unlimited')
+    weekly_rotation = fields.Selection(selection=ROTATION_OPTIONS, string='Weekly', default='unlimited')
+    monthly_rotation = fields.Selection(selection=ROTATION_OPTIONS, string='Monthly', default='unlimited')
+    yearly_rotation = fields.Selection(selection=ROTATION_OPTIONS, string='Yearly', default='unlimited')
+    hourly_limit = fields.Integer('Hourly limit', default=1, help='How many hourly backups to preserve.')
+    daily_limit = fields.Integer('Daily limit', default=1, help='How many daily backups to preserve.')
+    weekly_limit = fields.Integer('Weekly limit', default=1, help='How many weekly backups to preserve.')
+    monthly_limit = fields.Integer('Monthly limit', default=1, help='How many monthly backups to preserve.')
+    yearly_limit = fields.Integer('Yearly limit', default=1, help='How many yearly backups to preserve.')
 
     _sql_constraints = [
         ('database_unique', 'unique (database)', "Settings for this database already exist!"),
+        ('hourly_limit_positive', 'check (hourly_limit > 0)', 'The hourly limit must be positive!'),
+        ('daily_limit_positive', 'check (daily_limit > 0)', 'The daily limit must be positive!'),
+        ('weekly_limit_positive', 'check (weekly_limit > 0)', 'The weekly limit must be positive!'),
+        ('monthly_limit_positive', 'check (monthly_limit > 0)', 'The monthly limit must be positive!'),
+        ('yearly_limit_positive', 'check (yearly_limit > 0)', 'The yearly limit must be positive!'),
     ]
 
     @api.depends('config_cron_ids', 'config_cron_ids.ir_cron_id.active')
@@ -91,7 +97,7 @@ class BackupConfig(models.Model):
         response = requests.post(BACKUP_SERVICE_ENDPOINT + '/get_credit_url', json=data).json()
         return response['result']['credit_url']
 
-    def compute_auto_rotation_backup_dts(self, backup_dts, hourly=-1, daily=-1, weekly=-1, monthly=-1, yearly=-1):
+    def compute_auto_rotation_backup_dts(self, backup_dts, hourly=0, daily=0, weekly=0, monthly=0, yearly=0):
         backup_dts = sorted(copy.deepcopy(backup_dts), reverse=True)
         last_backup_dt = backup_dts.pop(0)
         # We always take the last backup and based on its upload time we compute time frames
@@ -176,12 +182,16 @@ class BackupConfig(models.Model):
             # Compute remote backup objects to delete according to auto rotation parameters.
             remote_objects_to_delete = []
             for backup_config in self.search([('active', '=', True)]):
-                if (backup_config.hourly > 0 or backup_config.daily > 0 or backup_config.weekly > 0 or
-                        backup_config.monthly > 0 or backup_config.yearly > 0):
+                limits = {}
+                for time_frame in ('hourly', 'daily', 'weekly', 'monthly', 'yearly'):
+                    limit_option = getattr(backup_config, time_frame + '_rotation')
+                    if limit_option == 'limited':
+                        limits[time_frame] = getattr(backup_config, time_frame + '_limit')
+                    elif limit_option == 'unlimited':
+                        limits[time_frame] = 1000000
+                if limits:
                     backup_dts = copy.deepcopy(remote_backups[backup_config.database])
-                    needed_backup_dts = self.compute_auto_rotation_backup_dts(
-                        backup_dts, backup_config.hourly, backup_config.daily,
-                        backup_config.weekly, backup_config.monthly, backup_config.yearly)
+                    needed_backup_dts = self.compute_auto_rotation_backup_dts(backup_dts, **limits)
                     for backup_dt in backup_dts:
                         if backup_dt not in needed_backup_dts:
                             remote_objects_to_delete += [
@@ -278,6 +288,8 @@ class BackupConfig(models.Model):
         # Create new record with backup info data
         info_file_content['upload_datetime'] = dt
         self.env['odoo_backup_sh.backup_info'].create(info_file_content)
+        if init_by_cron_id:
+            self.update_info(cloud_params)
         return None
 
 
