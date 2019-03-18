@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<!--
+Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
+License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+-->
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Odoo</title>
+  <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+  <p style="text-align: center; margin-top: 100px">
+    Within seconds you will be redirected to the Odoo IAP recharge page.
+    If it doesn't happen please click on the link.</br>
+    <a id="credit_url" href="{{ credit_url }}">{{ credit_url }}</a>
+  </p>
+</body>
+
+<script type="text/javascript">
+  document.getElementById("credit_url").click();
+</script>
+</html>

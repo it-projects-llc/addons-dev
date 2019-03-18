@@ -90,13 +90,6 @@ class BackupConfig(models.Model):
     def get_cloud_params(self, redirect):
         return BackupController.get_cloud_params(redirect)
 
-    @api.model
-    def get_credit_url(self):
-        data = {'params': {'user_key': BackupController.get_config_values(
-            'options', ['odoo_backup_user_key'])['odoo_backup_user_key']}}
-        response = requests.post(BACKUP_SERVICE_ENDPOINT + '/get_credit_url', json=data).json()
-        return response['result']['credit_url']
-
     def compute_auto_rotation_backup_dts(self, backup_dts, hourly=0, daily=0, weekly=0, monthly=0, yearly=0):
         backup_dts = sorted(copy.deepcopy(backup_dts), reverse=True)
         last_backup_dt = backup_dts.pop(0)

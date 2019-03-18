@@ -236,6 +236,14 @@ class BackupController(http.Controller):
         })
         return dashboard_data
 
+    @http.route('/odoo_backup_sh/open_iap_recharge', type='http', auth="user")
+    def open_iap_recharge(self, **kwargs):
+        data = {'params': {'user_key': BackupController.get_config_values(
+            'options', ['odoo_backup_user_key'])['odoo_backup_user_key']}}
+        response = requests.post(BACKUP_SERVICE_ENDPOINT + '/get_credit_url', json=data).json()
+        return env.get_template("iap_recharge.html").render({'credit_url': response['result']['credit_url']})
+
+
     @classmethod
     def get_config_values(cls, section, options_list):
         """

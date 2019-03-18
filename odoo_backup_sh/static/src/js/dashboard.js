@@ -237,14 +237,11 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
 
     o_dashboard_action_up_balance: function (ev) {
         ev.preventDefault();
-        this._rpc({
-            model: 'odoo_backup_sh.config',
-            method: 'get_credit_url',
-        }, {
-            async: false,
-            success: function(url) {
-                window.open(url.result);
-            },
+        this.do_action({
+            name: "Open Odoo IAP recharge page",
+            target: 'new',
+            type: 'ir.actions.act_url',
+            url: '/odoo_backup_sh/open_iap_recharge',
         });
     },
 
