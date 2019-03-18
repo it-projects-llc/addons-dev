@@ -21,10 +21,6 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                         <i class="fa fa-money fa-3x"/><br/>
                         Go to Balance
                     </div>
-                    <div class="o_inner_box o_dashboard_action o_dashboard_action_backup_configs" title="Set up schedules and rotations.">
-                        <i class="fa fa-cogs fa-3x"/><br/>
-                        Schedules and Rotations
-                    </div>
                 </div>
             </div>
             <div class="o_backup_dashboard_note_section">
@@ -58,7 +54,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
     <t t-name="odoo_backup_sh.config_cards">
         <t t-foreach="configs" t-as="config">
             <div class="o_kanban_record" t-att-data-db_name="config.database">
-                <div class="backup_card_title"><t t-esc="config.database"/></div>
+                <div class="backup_card_title o_dashboard_action_backup_config" t-att-data-res_id="config.id" title="Set up schedules and rotations."><t t-esc="config.database"/></div>
                 <div class="backup_card_content">
                     <button type="object" class="btn btn-primary btn-sm pull-left o_dashboard_action_make_backup">
                         <span>New Backup</span>
