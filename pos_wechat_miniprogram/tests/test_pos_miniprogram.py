@@ -62,7 +62,7 @@ class TestQCloudSMS(HttpCase):
             'table_id': 1,
             'floor_id': 1,
             'customer_count': 4,
-            'packingMethods': 'indoors',
+            'packing_methods': 'eat_in',
             'to_invoice': True,
         }
 
@@ -171,7 +171,7 @@ class TestQCloudSMS(HttpCase):
             'number_verified': True
         })
         # Pay method ('now' - Pay from mini-program, 'later' - Pay from POS)
-        self.create_vals['pay_method'] = 'now'
+        self.create_vals['payment_method'] = 'instant_payment'
         res = self._create_from_miniprogram_ui(create_vals=self.create_vals, lines=self.lines)
         order = self.Order.search([('wechat_order_id', '=', res.get('order_id'))])
         self.assertEqual(order.state, 'draft', 'Just created order has wrong state. ')
@@ -183,7 +183,7 @@ class TestQCloudSMS(HttpCase):
         self.user.write({
             'number_verified': True
         })
-        # Pay method ('now' - Pay from mini-program, 'later' - Pay from POS)
-        self.create_vals['pay_method'] = 'later'
+        # Pay method ('instant_payment' - Pay from mini-program, 'deffered_payment' - Pay from POS)
+        self.create_vals['payment_method'] = 'deffered_payment'
         order = self._create_from_miniprogram_ui(create_vals=self.create_vals, lines=self.lines)
         self.assertEqual(order.state, 'draft', 'Just created order has wrong state. ')

@@ -39,7 +39,7 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
             var self = this;
             this.unconfirmed_miniprogram_orders_ids = [];
             PosModelSuper.prototype.initialize.apply(this, arguments);
-            this.bus.add_channel_callback("wechat.miniprogram", this.on_wechat_miniprogram, this);
+            this.bus.add_channel_callback("pos.wechat.miniprogram", this.on_wechat_miniprogram, this);
             this.ready.then(function() {
                 var mp_orders = self.get('orders').filter(function(order) {
                     return order.miniprogram_order && order.miniprogram_order.id;

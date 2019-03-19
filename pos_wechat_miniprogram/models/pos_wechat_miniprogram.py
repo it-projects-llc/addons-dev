@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
-CHANNEL_NAME = "wechat.miniprogram"
+CHANNEL_NAME = "pos.wechat.miniprogram"
 
 
 class PosWeChatMiniProgramOrder(models.Model):
@@ -22,6 +22,7 @@ class PosWeChatMiniProgramOrder(models.Model):
     name = fields.Char('Name', readonly=True, copy=False)
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True,
                                  default=lambda self: self.env.user.company_id)
+    multi_session_id = fields.Many2one('pos.multi_session', 'Multi-session')
     date_order = fields.Datetime(string='Order Date', readonly=True, index=True, default=fields.Datetime.now)
     partner_id = fields.Many2one('res.partner', string='Customer', index=True, states={'draft': [('readonly', False)]})
     amount_total = fields.Float(compute='_compute_amount_all', string='Total', digits=0)
@@ -41,17 +42,16 @@ class PosWeChatMiniProgramOrder(models.Model):
     floor_id = fields.Many2one('restaurant.floor', string='Floor')
     customer_count = fields.Integer(string='Guests',
                                     help='The amount of customers that have been served by this order.')
-    pay_method = fields.Selection([
-        ('now', 'Pay from mini-program'),
-        ('later', 'Pay from POS')
-    ], string='Pay method', default='now')
+    payment_method = fields.Selection([
+        ('instant_payment', 'Instant Payment from Mini-Program'),
+        ('deffered_payment', 'Deffered Payment from POS')
+    ], string='Payment Method', default='instant_payment')
     to_invoice = fields.Boolean(string="Invoice", default=False)
     confirmed_from_pos = fields.Boolean(string="Order Confirmed from POS", default=False)
     user_id = fields.Many2one(related='order_id.user_id', store=True)
-    packingMethods = fields.Selection([
-        ('takeout', 'Takeout'),
-        ('indoors', 'Indoors'),
-        ('delivery', 'Delivery')
+    packing_methods = fields.Selection([
+        ('take_away', 'Take Away'),
+        ('eat_in', 'Eat In')
     ], string='Packing method')
 
     @api.depends('lines_ids.amount_total', 'lines_ids.discount')
@@ -60,8 +60,8 @@ class PosWeChatMiniProgramOrder(models.Model):
             order.amount_total = sum(line.amount_total for line in order.lines_ids)
 
     @api.model
-    def get_user_pos_miniprogram_orders(self):
-        orders = self.search([('partner_id', '=', self.env.user.partner_id.id)])
+    def get_user_pos_miniprogram_orders(self, multi_session_id):
+        orders = self.search([('partner_id', '=', self.env.user.partner_id.id), ('multi_session_id', '=', multi_session_id)])
         return [o._prepare_mp_message() for o in orders]
 
     @api.model
@@ -89,14 +89,14 @@ class PosWeChatMiniProgramOrder(models.Model):
         order = self.sudo().create(vals)
 
         _logger.debug('Mini-program Order: %s', order)
-        _logger.debug('Order Pay method: %s', order.pay_method)
+        _logger.debug('Order Pay method: %s', order.payment_method)
 
-        if order.pay_method == 'now':
+        if order.payment_method == 'instant_payment':
             create_vals['miniprogram_order_ids'] = [(4, order.id)]
             return self.env['wechat.order'].create_jsapi_order(lines, create_vals)
 
         order._send_message_to_pos()
-        return order
+        return order._prepare_mp_message()
 
     @api.multi
     def _update_order_state(self):
@@ -127,7 +127,10 @@ class PosWeChatMiniProgramOrder(models.Model):
     def _send_message_to_pos(self):
         self.ensure_one()
         message = self._prepare_mp_message()
-        for pos in self.env['pos.config'].search([('allow_message_from_miniprogram', '=', True), ('company_id', '=', self.company_id.id)]):
+        for pos in self.env['pos.config'].search([('allow_message_from_miniprogram', '=', True),
+                                                  ('multi_session_id', '=', self.multi_session_id.id),
+                                                  ('company_id', '=', self.company_id.id)]):
+            _logger.debug('SEND MESSAGE: %s, FOR POS: %s, CHANNEL: %s', message, pos.id, CHANNEL_NAME)
             self.env['pos.config']._send_to_channel_by_id(self._cr.dbname, pos.id, CHANNEL_NAME, message)
 
     @api.model

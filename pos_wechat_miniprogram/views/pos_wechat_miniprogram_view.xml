@@ -17,7 +17,7 @@
                     <field name="partner_id"/>
                     <field name="customer_count"/>
                     <field name="confirmed_from_pos"/>
-                    <field name="company_id"/>
+                    <field name="multi_session_id"/>
                     <field name="table_id"/>
                     <field name="floor_id"/>
                 </group>
@@ -54,8 +54,8 @@
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="user_id"/>
                             <field name="to_invoice"/>
-                            <field name="pay_method"/>
-                            <field name="packingMethods"/>
+                            <field name="payment_method"/>
+                            <field name="packing_methods"/>
                         </group>
                         <group string="POS Order">
                             <group>
@@ -86,7 +86,7 @@
                 <field name="partner_id"/>
                 <field name="date_order"/>
                 <field name="user_id"/>
-                <field name="company_id"/>
+                <field name="multi_session_id"/>
                 <field name="amount_total" sum="Amount total" widget="monetary"/>
                 <field name="state"/>
                 <field name="confirmed_from_pos"/>
