@@ -26,7 +26,6 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         'click .o_dashboard_action_add_database': 'o_dashboard_action_add_database',
         'click .o_dashboard_action_update_info': 'o_dashboard_action_update_info',
         'click .o_dashboard_action_make_backup': 'o_dashboard_action_make_backup',
-        'click .o_dashboard_action_up_balance': 'o_dashboard_action_up_balance',
         'click .o_dashboard_action_backup_config': 'o_dashboard_action_backup_config',
         'click .o_dashboard_action_view_backups': 'o_dashboard_action_view_backups',
         'click .o_backup_dashboard_notification .close': 'close_dashboard_notification',
@@ -48,6 +47,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
                 self.remote_storage_usage_graph_values = results.remote_storage_usage_graph_values;
                 self.configs = results.configs;
                 self.notifications = results.notifications;
+                self.up_balance_url = results.up_balance_url;
                 self.show_nocontent_msg = results.configs.length === 0;
                 self.show_inactive_warning = !self.show_nocontent_msg &&
                     results.configs.every(function (config) {
@@ -232,16 +232,6 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         },
         {
             clear_breadcrumbs: true,
-        });
-    },
-
-    o_dashboard_action_up_balance: function (ev) {
-        ev.preventDefault();
-        this.do_action({
-            name: "Open Odoo IAP recharge page",
-            target: 'new',
-            type: 'ir.actions.act_url',
-            url: '/odoo_backup_sh/open_iap_recharge',
         });
     },
 
