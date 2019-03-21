@@ -232,7 +232,11 @@ class BackupController(http.Controller):
         dashboard_data.update({
             'configs': backup_configs,
             'notifications': request.env['odoo_backup_sh.notification'].search_read(
-                [('is_read', '=', False)], ['id', 'date_create', 'message'])
+                [('is_read', '=', False)], ['id', 'date_create', 'message']),
+            'up_balance_url': '%s/open_iap_recharge?user_key=%s' % (
+                BACKUP_SERVICE_ENDPOINT,
+                self.get_config_values('options', ['odoo_backup_user_key'])['odoo_backup_user_key']
+            ),
         })
         return dashboard_data
 

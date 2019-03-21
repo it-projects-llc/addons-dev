@@ -153,21 +153,44 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                         </field>
                     </group>
                     <group string="Auto Rotation" attrs="{'invisible': [('config_cron_ids', '=', [])]}">
-                        <p colspan="2">
+                        <p colspan="4">
                             By default all your backups will be stored in a remote storage for an unlimited time.
                             But you can set up how many backups to preserve for certain time frames. <br/>
                             Example: The module makes auto backup your database every 2 hours.
                             You want to preserve 2 daily backups and 1 weekly only.
-                            Just put these numbers in appropriate fields. And put zeros in all other fields.
-                            Then you will have one last backup of last week and two last backups of two last
-                            days (one for each of the two last days). <br/>
-                            A negative value indicates no limit for a corresponding time frame.
+                            Set up Daily and Weekly rotation options as Limited and put the numbers in limit fields.
+                            All other options mark as Disabled.
                         </p>
-                        <field name="hourly"/>
-                        <field name="daily"/>
-                        <field name="weekly"/>
-                        <field name="monthly"/>
-                        <field name="yearly"/>
+                        <group>
+                            <field name="hourly_rotation"/>
+                        </group>
+                        <group>
+                            <field name="hourly_limit" attrs="{'invisible': [('hourly_rotation', '!=', 'limited')]}"/>
+                        </group>
+                        <group>
+                            <field name="daily_rotation"/>
+                        </group>
+                        <group>
+                            <field name="daily_limit" attrs="{'invisible': [('daily_rotation', '!=', 'limited')]}"/>
+                        </group>
+                        <group>
+                            <field name="weekly_rotation"/>
+                        </group>
+                        <group>
+                            <field name="weekly_limit" attrs="{'invisible': [('weekly_rotation', '!=', 'limited')]}"/>
+                        </group>
+                        <group>
+                            <field name="monthly_rotation"/>
+                        </group>
+                        <group>
+                            <field name="monthly_limit" attrs="{'invisible': [('monthly_rotation', '!=', 'limited')]}"/>
+                        </group>
+                        <group>
+                            <field name="yearly_rotation"/>
+                        </group>
+                        <group>
+                            <field name="yearly_limit" attrs="{'invisible': [('yearly_rotation', '!=', 'limited')]}"/>
+                        </group>
                     </group>
                 </sheet>
             </form>

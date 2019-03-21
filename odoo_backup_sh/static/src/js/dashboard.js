@@ -26,8 +26,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         'click .o_dashboard_action_add_database': 'o_dashboard_action_add_database',
         'click .o_dashboard_action_update_info': 'o_dashboard_action_update_info',
         'click .o_dashboard_action_make_backup': 'o_dashboard_action_make_backup',
-        'click .o_dashboard_action_up_balance': 'o_dashboard_action_up_balance',
-        'click .o_dashboard_action_backup_configs': 'o_dashboard_action_backup_configs',
+        'click .o_dashboard_action_backup_config': 'o_dashboard_action_backup_config',
         'click .o_dashboard_action_view_backups': 'o_dashboard_action_view_backups',
         'click .o_backup_dashboard_notification .close': 'close_dashboard_notification',
     },
@@ -48,6 +47,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
                 self.remote_storage_usage_graph_values = results.remote_storage_usage_graph_values;
                 self.configs = results.configs;
                 self.notifications = results.notifications;
+                self.up_balance_url = results.up_balance_url;
                 self.show_nocontent_msg = results.configs.length === 0;
                 self.show_inactive_warning = !self.show_nocontent_msg &&
                     results.configs.every(function (config) {
@@ -235,28 +235,16 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         });
     },
 
-    o_dashboard_action_up_balance: function (ev) {
-        ev.preventDefault();
-        this._rpc({
-            model: 'odoo_backup_sh.config',
-            method: 'get_credit_url',
-        }, {
-            async: false,
-            success: function(url) {
-                window.open(url.result);
-            },
-        });
-    },
-
-    o_dashboard_action_backup_configs: function (ev) {
+    o_dashboard_action_backup_config: function (ev) {
         ev.preventDefault();
         this.do_action({
-            name: "Schedules and Rotations",
+            name: "Backup Configuration",
             type: 'ir.actions.act_window',
-            views: [[false, 'list'], [false, 'form']],
+            views: [[false, 'form']],
+            view_mode: 'form',
             res_model: 'odoo_backup_sh.config',
+            res_id: $(ev.currentTarget).data('res_id'),
             target: 'current',
-            context: {active_test: false},
         },
         {
             clear_breadcrumbs: true,
