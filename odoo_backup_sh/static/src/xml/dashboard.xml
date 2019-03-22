@@ -17,7 +17,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                         <i class="fa fa-refresh fa-3x"/><br/>
                         Update Info
                     </div>
-                    <a t-att-href="widget.up_balance_url" class="o_inner_box o_dashboard_action" title="Up to the balance.">
+                    <a target="_blank" t-att-href="widget.up_balance_url" class="o_inner_box o_dashboard_action" title="Up to the balance.">
                         <i class="fa fa-money fa-3x"/><br/>
                         Go to Balance
                     </a>
