@@ -84,6 +84,7 @@ class AuthSignupHome(AuthSignupHome):
                 'country_id': country_russia.id
             })
         values['city_id'] = city.id
+        values['city'] = city.name
         self._signup_with_values(qcontext.get('token'), values)
         request.env.cr.commit()
 
@@ -120,6 +121,7 @@ class WebsiteSaleExtended(WebsiteSale):
     def _get_mandatory_billing_fields(self):
         res = super(WebsiteSaleExtended, self)._get_mandatory_billing_fields()
         res.remove('street')
+        res.append('city_id')
         return res
 
     def _get_mandatory_shipping_fields(self):
