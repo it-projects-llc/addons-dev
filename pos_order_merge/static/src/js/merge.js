@@ -124,13 +124,22 @@ odoo.define('pos_order_merge.merge', function (require) {
 
             this.mergeorders = [];
 
+            var $mergemethods = this.$('.mergemethods');
+            $mergemethods.children().hide();
+            var $merge_buttons = $mergemethods.find('.button');
+
             this.$('.merge-orders').on('click','.order', function(){
                 var uid = $(this).data('uid');
                 var $el = $(this);
                 self.orderselect($el, uid);
+                if (self.mergeorders.length) {
+                    $merge_buttons.show();
+                } else {
+                    $merge_buttons.hide();
+                }
             });
 
-            this.$('.mergemethods .button').click(function(){
+            $merge_buttons.click(function(){
                 self.merge();
             });
         },

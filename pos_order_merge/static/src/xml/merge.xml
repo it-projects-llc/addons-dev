@@ -46,6 +46,10 @@
                                 <img class="plus-square" src="/pos_order_merge/static/src/img/svg/table.svg"/>
                                 <t t-esc="widget.pos.merge_table.name"/>
                             </span>
+                            <span>
+                                <i class='fa fa-list-alt' />
+                                <t t-esc="widget.pos.main_order_uid"/>
+                            </span>
                         </h2>
                     </t>
                 </div>
