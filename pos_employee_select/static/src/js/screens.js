@@ -47,6 +47,12 @@ odoo.define('pos_employee_select.screens', function(require){
     });
 
     CashierSelectionPopupWidget.include({
+        show: function(options){
+            this._super(options);
+            if (options.employee) {
+                this.$('.popup-selection').addClass('employee');
+            }
+        },
         get_grouped_list: function() {
             var grouped_list = [];
             // height of selection item
