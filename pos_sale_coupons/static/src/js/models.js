@@ -86,7 +86,8 @@ odoo.define('pos_sale_coupons.models', function (require) {
             }
         },
         apply_discount_program: function(coupon, program) {
-            var discount_product = this.pos.db.product_by_id[program.pos_product_id[0]];
+            var discount_product = this.pos.db.product_by_id[program.discount_line_product_id[0]];
+
             if (!discount_product) {
                 return this.pos.gui.show_popup('error', {
                     'title': _t('No coupon product found'),

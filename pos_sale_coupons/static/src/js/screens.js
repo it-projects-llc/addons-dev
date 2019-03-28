@@ -105,7 +105,8 @@ odoo.define('pos_sale_coupons.screens', function (require) {
                         'body': _t('This coupon has been consumed.')
                     });
                 }
-                if (!coupon.sold_via_order_id || coupon.state !== 'reserved') {
+                var program = this.pos.db.get_sale_coupon_program_by_id(coupon.program_id[0]);
+                if (program.force_sale_before_consumption && (!coupon.sold_via_order_id || coupon.state !== 'reserved')) {
                     // Unable to consume the coupon
                     return this.gui.show_popup('error', {
                         'title': _t('Error: Unable to consume the coupon'),

@@ -10,6 +10,9 @@ class SaleCouponProgram(models.Model):
     pos_product_id = fields.Many2one('product.product', string='POS Product',
                                      domain="[('available_in_pos', '=', True), ('sale_ok', '=', True)]",
                                      help='The product used to model the discount.')
+    force_sale_before_consumption = fields.Boolean(string="Force sale the coupon", default=True,
+                                                   help="Force sale the coupons before consumption"
+                                                        "(for POS only)")
     pos_order_count = fields.Integer(compute='_compute_pos_order_count')
 
     @api.depends('coupon_ids.pos_order_id')
