@@ -14,14 +14,18 @@ from odoo import api
 _logger = logging.getLogger(__name__)
 
 
-class TestQCloudSMS(HttpCase):
+class TestPOSMiniProgram(HttpCase):
     at_install = True
     post_install = True
 
     def setUp(self):
-        super(TestQCloudSMS, self).setUp()
+        super(TestPOSMiniProgram, self).setUp()
         self.phantom_env = api.Environment(self.registry.test_cr, self.uid, {})
         self.user = self.phantom_env.user
+        self.user.write({
+            'number_verified': True
+        })
+
         self.partner = self.user.partner_id
 
         self.partner.write({
@@ -79,10 +83,6 @@ class TestQCloudSMS(HttpCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
-    def _check_verification_code(self):
-        code = self.user.verification_code
-        return self.user.check_verification_code(code)
-
     def _patch_post_requests(self, response_json, patch_url):
 
         def api_request(url=None, req=None, httpclient=None):
@@ -92,32 +92,6 @@ class TestQCloudSMS(HttpCase):
         patcher = patch(patch_url, wraps=api_request)
         patcher.start()
         self.addCleanup(patcher.stop)
-
-    def _sms_template_mobile_number_verification(self, mobile):
-        response_json = {
-            "result": 0,
-            "errmsg": "OK",
-            "ext": "",
-            "fee": 1,
-            "sid": "xxxxxxx"
-        }
-        patch_url = 'qcloudsms_py.util.api_request'
-        self._patch_post_requests(response_json, patch_url)
-
-        return self.user.template_sms_mobile_number_verification(mobile)
-
-    def _sms_mobile_number_verification(self, mobile):
-        response_json = {
-            "result": 0,
-            "errmsg": "OK",
-            "ext": "",
-            "fee": 1,
-            "sid": "xxxxxxx"
-        }
-        patch_url = 'qcloudsms_py.util.api_request'
-        self._patch_post_requests(response_json, patch_url)
-
-        return self.user.sms_mobile_number_verification(mobile)
 
     def _create_from_miniprogram_ui(self, create_vals, lines):
         post_result = {
@@ -140,37 +114,11 @@ class TestQCloudSMS(HttpCase):
 
         return self.phantom_env['pos.miniprogram.order'].create_from_miniprogram_ui(lines, create_vals)
 
-    def test_sms_mobile_number_verification(self):
-        mobile = '+1234567890'
-        response = self._sms_mobile_number_verification(mobile)
-        self.assertEquals(response.get('result'), 0, 'Could not send message')
-        res = self._check_verification_code()
-        self.assertTrue(res.get('result'), res.get('message'))
-
-    def test_template_sms_mobile_number_verification(self):
-        mobile = '+1234567890'
-
-        template = self.phantom_env['qcloud.sms.template'].create({
-            'name': 'Verification by sms template',
-            'domestic_sms_template_ID': '123',
-            'domestic_sms_sign': 'Test',
-            'international_sms_template_ID': '321',
-            'international_sms_sign': 'Test'
-        })
-        self.phantom_env['ir.config_parameter'].sudo().set_param('qcloud.sms_template', template.id)
-        response = self._sms_template_mobile_number_verification(mobile)
-        self.assertEquals(response.get('result'), 0, 'Could not send message')
-        res = self._check_verification_code()
-        self.assertTrue(res.get('result'), res.get('message'))
-
     def test_create_and_pay_from_miniprogram_ui(self):
         """
         Create order from mini-program UI, pay, and send the Order to POS
         """
-        self.user.write({
-            'number_verified': True
-        })
-        # Pay method ('now' - Pay from mini-program, 'later' - Pay from POS)
+        # Pay method ('instant_payment' - Pay from mini-program, 'deffered_payment' - Pay from POS)
         self.create_vals['payment_method'] = 'instant_payment'
         res = self._create_from_miniprogram_ui(create_vals=self.create_vals, lines=self.lines)
         order = self.Order.search([('wechat_order_id', '=', res.get('order_id'))])
@@ -180,9 +128,6 @@ class TestQCloudSMS(HttpCase):
         """
         Create order from mini-program UI and send the Order to POS
         """
-        self.user.write({
-            'number_verified': True
-        })
         # Pay method ('instant_payment' - Pay from mini-program, 'deffered_payment' - Pay from POS)
         self.create_vals['payment_method'] = 'deffered_payment'
         order = self._create_from_miniprogram_ui(create_vals=self.create_vals, lines=self.lines)

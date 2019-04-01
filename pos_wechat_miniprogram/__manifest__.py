@@ -18,7 +18,6 @@
 
     "depends": [
         "wechat_miniprogram",
-        "qcloud_sms",
         "pos_multi_session_restaurant",
         "pos_order_note",
         "pos_wechat",
@@ -26,14 +25,12 @@
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
-        "security/wechat_security.xml",
         "security/ir.model.access.csv",
         "views/product_view.xml",
         "views/pos_wechat_miniprogram_view.xml",
         "views/template.xml",
         "views/pos_config_view.xml",
         "views/pos_restaurant_view.xml",
-        "views/res_config_settings_view.xml",
         "views/multi_session_view.xml",
         "wizard/qrcode.xml",
         "wizard/pos_payment_views.xml",

@@ -6,7 +6,6 @@ from . import pos_restaurant
 from . import pos_wechat_miniprogram
 from . import product
 from . import res_company
-from . import res_config_settings
 from . import res_users
 from . import wechat_order
 from . import pos_multi_session_models
