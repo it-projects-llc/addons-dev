@@ -19,7 +19,9 @@
     "depends": [
         'wechat',
     ],
-    "external_dependencies": {"python": [], "bin": []},
+    "external_dependencies": {"python": [
+        "wechatpy"
+    ], "bin": []},
     "data": [
         "data/module_data.xml",
         "data/ir_sequence_data.xml",
