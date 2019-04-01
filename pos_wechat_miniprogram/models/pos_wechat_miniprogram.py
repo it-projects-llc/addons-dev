@@ -162,6 +162,8 @@ class PosWeChatMiniProgramOrderLine(models.Model):
     create_date = fields.Datetime(string='Creation Date', readonly=True)
     amount_total = fields.Float(compute='_compute_amount_all', string='Total', digits=0)
     note = fields.Text(string='Note')
+    confirmed_from_pos = fields.Boolean(related="order_id.confirmed_from_pos", readonly=True)
+    company_id = fields.Many2one('res.company', related="order_id.company_id", readonly=True)
 
     @api.depends('price', 'quantity', 'discount', 'product_id')
     def _compute_amount_all(self):

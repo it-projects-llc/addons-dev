@@ -59,22 +59,15 @@ odoo.define('pos_wechat_miniprogram.screens', function(require){
 
     screens.ActionpadWidget.include({
         click_validate_paid_order: function() {
-            var order = this.pos.get_order();
-            var message = {
-                'title': _t('Order Validate')
-            };
-            if(order.hasChangesToPrint()) {
-                message.body = _t('You have not printed products in the kitchen. Validate without print?');
-            } else {
-                message.body = _t('Confirm the paid order?');
-            }
-            this.show_validate_popup(message);
-        },
-        show_validate_popup: function(message) {
             var self = this;
+            var order = this.pos.get_order();
+            var title = _t('Order Validate');
+            var body = order.hasChangesToPrint()
+                ? _t('You have not printed products in the kitchen. Validate without print?')
+                : _t('Confirm the paid order?');
             this.pos.gui.show_popup('confirm', {
-                'title': message.title,
-                'body':  message.body,
+                'title': title,
+                'body':  body,
                 confirm: function() {
                     self.validate_paid_order();
                 },

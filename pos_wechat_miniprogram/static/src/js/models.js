@@ -4,78 +4,101 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
     "use strict";
 
     var models = require('point_of_sale.models');
+    var multi_session = require('pos_multi_session');
     var rpc = require('web.rpc');
+    var core = require('web.core');
+    var _t = core._t;
 
     models.load_fields('account.journal', ['wechat']);
 
+    // load WeChat Mini-Program Orders
     models.load_models({
         model: 'pos.miniprogram.order',
         fields: [],
         domain: function(self) {
           return [['confirmed_from_pos', '=', false], ['company_id', '=', self.config.company_id[0]]];
         },
+        condition: function(self) {
+            return self.config.allow_message_from_miniprogram;
+        },
         loaded: function(self, orders) {
-            if (self.config.allow_message_from_miniprogram) {
-                // load not confirmed orders
-                orders.forEach(function (order) {
-                    self.unconfirmed_miniprogram_orders_ids.push(order.id);
-                    order.lines_ids = [];
-                    self.get_miniprogram_order_lines_by_order_id(order.id).then(function (lines) {
-                        if (Array.isArray(lines)) {
-                            order.lines_ids = order.lines_ids.concat(lines);
-                        } else {
-                            order.lines_ids.push(lines);
-                        }
-                        self.on_wechat_miniprogram(order);
-                    });
-                });
-            }
+            // Mini-Program Orders
+            self.miniprogram_orders = orders;
+            self.miniprogram_orders_by_id = {};
+            orders.forEach(function(order) {
+                self.miniprogram_orders_by_id[order.id] = order;
+            });
+        },
+    });
+
+    // load WeChat Mini-Program Order lines
+    models.load_models({
+        model: 'pos.miniprogram.order.line',
+        fields: [],
+        domain: function(self) {
+          return [['confirmed_from_pos', '=', false], ['company_id', '=', self.config.company_id[0]]];
+        },
+        condition: function(self) {
+            return self.config.allow_message_from_miniprogram;
+        },
+        loaded: function(self, lines) {
+            // Mini-Program Orderlines
+            self.miniprogram_order_lines = lines;
+            self.miniprogram_order_lines_by_id = {};
+            lines.forEach(function(line) {
+                self.miniprogram_order_lines_by_id[line.id] = line;
+            });
         },
     });
 
     var PosModelSuper = models.PosModel;
     models.PosModel = models.PosModel.extend({
         initialize: function() {
-            var self = this;
-            this.unconfirmed_miniprogram_orders_ids = [];
             PosModelSuper.prototype.initialize.apply(this, arguments);
+            // add new channel to bus
             this.bus.add_channel_callback("pos.wechat.miniprogram", this.on_wechat_miniprogram, this);
-            this.ready.then(function() {
-                var mp_orders = self.get('orders').filter(function(order) {
-                    return order.miniprogram_order && order.miniprogram_order.id;
-                });
-
-                var not_found = mp_orders.map(function(r) {
-                    return r.miniprogram_order.id;
-                });
-
-                self.unconfirmed_miniprogram_orders_ids.forEach(function(id) {
-                    not_found = _.without(not_found, id);
-                });
-
-                _.each(not_found, function(id) {
-                    var order = self.get('orders').find(function(r){
-                        return r.miniprogram_order && id === r.miniprogram_order.id;
-                    });
-                    order.destroy({'reason':'abandon'});
-                });
-            });
         },
-        get_miniprogram_order_lines_by_order_id: function (id) {
-            return rpc.query({
-                model: 'pos.miniprogram.order.line',
-                method: 'search_read',
-                args: [[['order_id', '=', id]], []]
+        after_load_server_data: function() {
+            var self = this;
+            var res = PosModelSuper.prototype.after_load_server_data.apply(this, arguments);
+            var done = new $.Deferred();
+
+            $.when(res).then(function() {
+                self.chrome.loading_skip();
+                var progress = (self.models.length - 0.5) / self.models.length;
+                self.chrome.loading_message(_t('Update Mini-Program Orders'), progress);
+                var orders = self.miniprogram_orders;
+                orders.forEach(function(order) {
+                    order.lines_ids = self.miniprogram_order_lines.filter(function(line){
+                        return line.order_id[0] === order.id;
+                    });
+                });
+                self.on_wechat_miniprogram(orders);
+                done.resolve();
             });
+            return done;
         },
         on_wechat_miniprogram: function(message) {
-            var order = this.get('orders').find(function(item) {
-                return item.miniprogram_order && item.miniprogram_order.id === message.id;
-            });
-            if (order) {
-                this.update_miniprogram_order(order, message);
+            var self = this;
+            if (Array.isArray(message)) {
+                _.each(message, function(msg) {
+                    self.do_miniprogram_order(msg);
+                });
             } else {
-                this.create_miniprogram_order(message);
+                self.do_miniprogram_order(message);
+            }
+        },
+        do_miniprogram_order: function(msg_info) {
+            var exist_order = this.get('orders').find(function(o) {
+                return o.miniprogram_order && o.miniprogram_order.id === msg_info.id;
+            });
+            if (exist_order) {
+                // update exist mini-program order
+                this.update_miniprogram_order(exist_order, msg_info);
+
+            } else {
+                // create new mini-program order
+                this.create_miniprogram_order(msg_info);
             }
         },
         update_miniprogram_order: function(order, data) {
@@ -83,27 +106,21 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
             var not_found = order.orderlines.map(function(r) {
                 return r.miniprogram_line.id;
             });
-
-            data.lines_ids.forEach(function(l) {
+            data.lines_ids.forEach(function(line_data) {
                 var line = order.orderlines.find(function(r){
                     // search by mini-program orderline id
-                    return l.id === r.miniprogram_line.id;
+                    return line_data.id === r.miniprogram_line.id;
                 });
-
-                not_found = _.without(not_found, l.id);
+                not_found = _.without(not_found, line_data.id);
 
                 if (line) {
-                    // update line
-                    line.apply_updates_miniprogram_line(l);
+                    // update orderline
+                    line.apply_updates_miniprogram_line(line_data);
                 } else {
                     // create new line and add to the Order
-                    line = self.create_orderline_by_miniprogram_data(order, l);
-                    if (line) {
-                        order.orderlines.add(line);
-                    }
+                    order.create_miniprogram_line(line_data);
                 }
             });
-
             // remove old lines
             _.each(not_found, function(id){
                 var line = order.orderlines.find(function(r){
@@ -111,7 +128,6 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
                 });
                 order.orderlines.remove(line);
             });
-
             // update exist order
             order.apply_updates_miniprogram_order(data);
         },
@@ -122,7 +138,7 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
             // create new order
             var order = new models.Order({}, {mp_data: data, pos: this});
             // get and set partner
-            if(typeof data.partner_id === 'undefined') {
+            if (typeof data.partner_id === 'undefined') {
                 order.set_client(null);
             } else {
                 var client = order.pos.db.get_partner_by_id(data.partner_id[0]);
@@ -134,16 +150,10 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
                 }
                 order.set_client(client);
             }
-
             this.get('orders').add(order);
-            // set current order
             this.set('selectedOrder', current_order);
-            // create orderlines
-            data.lines_ids.forEach(function(l) {
-                var line = self.create_orderline_by_miniprogram_data(order, l);
-                if (line) {
-                    order.orderlines.add(line);
-                }
+            data.lines_ids.forEach(function(line_data) {
+                order.create_miniprogram_line(line_data);
             });
 
             // update floor screen
@@ -151,56 +161,11 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
             if (floor_screen && this.gui.get_current_screen() === "floors") {
                 floor_screen.renderElement();
             }
-
             // auto print payed orders
             if(this.printers.length && order.hasChangesToPrint() && this.config.auto_print_miniprogram_orders && order.miniprogram_order && order.miniprogram_order.state === "done"){
                 order.printChanges();
                 order.saveChanges();
             }
-        },
-        create_orderline_by_miniprogram_data: function(order, data) {
-            var product = this.db.get_product_by_id(data.product_id[0]);
-            if (product) {
-                var line = new models.Orderline({}, {pos: this, order: order, product: product, mp_data: data});
-                if (typeof data.quantity !== 'undefined' && data.quantity !== line.quantity){
-                    line.set_quantity(data.quantity);
-                }
-                if (typeof data.price !== 'undefined' && data.price !== line.price) {
-                    line.set_unit_price(data.price);
-                }
-                return line;
-            }
-            return false;
-        },
-        load_new_partners_by_id: function(partner_id){
-            var self = this;
-            var def = new $.Deferred();
-            var fields = _.find(this.models,function(model){
-                return model.model === 'res.partner';
-            }).fields;
-
-            var domain = [['id','=',partner_id]];
-            rpc.query({
-                    model: 'res.partner',
-                    method: 'search_read',
-                    args: [domain, fields],
-                }, {
-                    timeout: 3000,
-                    shadow: true,
-                }).then(function(partners){
-                     // check if the partners we got were real updates
-                    if (self.db.add_partners(partners)) {
-                        def.resolve();
-                    } else {
-                        def.reject();
-                    }
-                }, function(type,err){
-                    if (err) {
-                        console.log(err);
-                    }
-                    def.reject();
-                });
-            return def;
         },
         get_mp_cashregister: function() {
             return this.cashregisters.find(function(c) {
@@ -208,6 +173,8 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
             });
         },
         ms_create_order: function(options) {
+            // ignore the function (for mini-program orders we have another callback function)
+            // TODO: check it
             var data = options.data;
             var json = options.json;
             if (data && data.miniprogram_order && data.miniprogram_order.id) {
@@ -234,7 +201,7 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
             // all mini-program data
             this.miniprogram_order = data;
 
-            // common data for the order and for the order of mini-program
+            // common data between POS Order and Order of mini-program
             this.table = this.pos.tables_by_id[data.table_id[0]];
             this.floor = this.pos.floors_by_id[data.floor_id[0]] || null;
             this.customer_count = data.customer_count || 1;
@@ -243,6 +210,24 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
 
             // save to db
             this.trigger('change', this);
+        },
+        create_miniprogram_line: function(data) {
+            var product = this.pos.db.get_product_by_id(data.product_id[0]);
+            if (product) {
+                var line = new models.Orderline({}, {pos: this.pos, order: this, product: product, mp_data: data});
+                if (typeof data.quantity !== 'undefined' && data.quantity !== line.quantity){
+                    line.set_quantity(data.quantity);
+                }
+                if (typeof data.price !== 'undefined' && data.price !== line.price) {
+                    line.set_unit_price(data.price);
+                }
+                if (data.note) {
+                    line.set_note(data.note);
+                }
+                this.orderlines.add(line);
+                return line;
+            }
+            return false;
         },
         export_as_JSON: function() {
             var data = OrderSuper.prototype.export_as_JSON.apply(this, arguments);
