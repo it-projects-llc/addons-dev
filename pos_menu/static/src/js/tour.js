@@ -29,10 +29,8 @@ odoo.define('pos_menu.tour', function(require) {
         trigger: '.table:not(.oe_invisible .neworder-button), .order-button.selected',
         position: "bottom"
     }, {
-        trigger: '.product-list .product-name:contains('Boni Oranges')',
+        trigger: '.product-list .product-name:contains("Boni Oranges")',
         content: "Add the product",
         position: "top"
-    }
-	
-    ]);
+    }]);
 });
