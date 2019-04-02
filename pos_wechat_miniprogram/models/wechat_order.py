@@ -13,6 +13,6 @@ class WeChatOrder(models.Model):
 
     def on_notification(self, data):
         order = super(WeChatOrder, self).on_notification(data)
-        if order.miniprogram_order_ids:
+        if order and order.miniprogram_order_ids:
             order.miniprogram_order_ids.on_notification_wechat_order()
         return order
