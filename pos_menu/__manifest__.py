@@ -26,7 +26,9 @@
         "views/pos_menu_template.xml",
     ],
     "qweb": [],
-    "demo": [],
+    "demo": [
+        "demo/product_set_demo.xml"
+    ],
 
     "post_load": None,
     "pre_init_hook": None,
