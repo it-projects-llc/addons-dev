@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 {
-    "name": """POS Menu""",
-    "summary": """Own set of products for each POS""",
-    "category": "point_of_sale",
-    # "live_test_url": "",
-    "images": [],
+    "name": """Product Sets for POS""",
+    "summary": """Add own set of products per each POS""",
+    "category": "Point Of Sale",
+    "images": ["images/pos_menu_main.jpg"],
     "version": "10.0.1.0.0",
     "application": False,
 
@@ -12,8 +11,8 @@
     "support": "apps@it-projects.info",
     "website": "https://it-projects.info/team/GabbasovDinar",
     "license": "LGPL-3",
-    # "price": 9.00,
-    # "currency": "EUR",
+    "price": 89.00,
+    "currency": "EUR",
 
     "depends": [
         "point_of_sale",
