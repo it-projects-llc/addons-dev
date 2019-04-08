@@ -1,0 +1,11 @@
+.heatmap_widget {
+	width: 100%;
+	padding: 10px 0px;
+}
+.o_field_heatmap {
+	padding: 10px;
+	width: 100%;
+}
+.o_field_heatmap .cal-heatmap-container {
+    margin: 0 auto;
+}
