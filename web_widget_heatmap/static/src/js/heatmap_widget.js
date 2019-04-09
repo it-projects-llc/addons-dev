@@ -33,7 +33,7 @@ odoo.define('web_widget_heatmap.widget', function (require) {
                 } else if (domain === 'day') {
                     max_date.setDate(max_date.getDate() + range);
                 } else if (domain === 'week') {
-                    max_date.setDate(max_date.getDate() + range * 7);
+                    max_date.setDate(max_date.getDate() + (range * 7));
                 } else if (domain === 'month') {
                     max_date.setMonth(max_date.getMonth() + range);
                 } else if (domain === 'year') {
@@ -69,33 +69,18 @@ odoo.define('web_widget_heatmap.widget', function (require) {
                 data: _.chain(timestamps).countBy().value(),
                 dataType: 'json',
                 minDate: start_date,
-	            maxDate: max_date,
+                maxDate: max_date,
                 controls: controls,
                 range: range,
                 domain: domain,
-	            subDomain: "hour",
+                subDomain: "hour",
                 domainGutter: 0,
                 highlight: "now",
                 onClick: this.onClickHeatMap.bind(this),
                 label: {
                     position: "top"
                 }
-            }
-        },
-        get_elemets_by_date: function(date) {
-            var options = this.heatmap_options;
-            date = moment(date);
-            if (options.domain === 'hour') {
-
-            } else if (options.domain === 'day') {
-
-            } else if (options.domain === 'week') {
-
-            } else if (options.domain === 'month') {
-
-            } else if (options.domain === 'year') {
-
-            }
+            };
         },
         _render: function () {
             var elements = this.value ? _.pluck(this.value.data, 'data') : [];
@@ -136,9 +121,8 @@ odoo.define('web_widget_heatmap.widget', function (require) {
                         return duration.years() === 0 && duration.months() === 0;
                     } else if (options.domain === 'year') {
                         return duration.years() === 0;
-                    } else {
-                        return false;
                     }
+                    return false;
                 }).map(function(el) {
                     return el.id;
                 });

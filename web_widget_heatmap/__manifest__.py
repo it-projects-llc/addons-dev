@@ -18,8 +18,6 @@
 
     "depends": [
         "web",
-        # TEMP DEPENDS
-        "sale",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
