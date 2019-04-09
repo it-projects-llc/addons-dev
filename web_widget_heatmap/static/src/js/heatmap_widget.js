@@ -83,12 +83,16 @@ odoo.define('web_widget_heatmap.widget', function (require) {
             };
         },
         _render: function () {
+            var self = this;
             var elements = this.value ? _.pluck(this.value.data, 'data') : [];
             var options = this.generate_element_options(elements);
             this.controls = options.controls;
             this.renderElement();
             var nodeOptions = this.nodeOptions || {};
-            this.heatmap_options = _.extend(nodeOptions, options, {itemSelector: this.$el.find('.o_field_heatmap')[0]});
+            this.heatmap_options = _.extend(options, {itemSelector: this.$el.find('.o_field_heatmap')[0]});
+            _.each(nodeOptions, function(value, key) {
+                self.heatmap_options[key] = value;
+            });
             this.heatmap = new CalHeatMap();
             this.heatmap.init(this.heatmap_options);
         },
