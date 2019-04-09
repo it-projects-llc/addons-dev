@@ -1,5 +1,8 @@
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright 2016 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
+    Copyright 2019 Artem Rafailov <https://it-projects.info/team/Ommo73/>
+    License LGPL-3.0 (https://www.gnu.org/licenses/lgpl.html).-->
+<odoo>
         <record id="crm_case_form_view_oppor" model="ir.ui.view">
             <field name="model">crm.lead</field>
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
@@ -18,5 +21,4 @@
                 </field>
             </field>
         </record>
-    </data>
-</openerp>
+</odoo>
