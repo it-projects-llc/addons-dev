@@ -47,13 +47,13 @@ odoo.define('web_widget_heatmap.widget', function (require) {
             return false;
         },
         generate_element_options: function(elements) {
-            var start_date = elements.length ? elements[0].create_date.toDate() : false;
+            var start_date = elements.length ? elements[0].create_date.toDate() : new Date();
             var timestamps = elements.map(function(el) {
                 return el.create_date.unix();
             });
             var domain = "day";
             var range = 16;
-            var end_date = elements.length ? elements[elements.length - 1].create_date.toDate() : false;
+            var end_date = elements.length ? elements[elements.length - 1].create_date.toDate() : null;
             var max_date = this.get_max_date({
                 start_date: start_date,
                 end_date: end_date,
@@ -76,9 +76,25 @@ odoo.define('web_widget_heatmap.widget', function (require) {
 	            subDomain: "hour",
                 domainGutter: 0,
                 highlight: "now",
+                onClick: this.onClickHeatMap.bind(this),
                 label: {
                     position: "top"
                 }
+            }
+        },
+        get_elemets_by_date: function(date) {
+            var options = this.heatmap_options;
+            date = moment(date);
+            if (options.domain === 'hour') {
+
+            } else if (options.domain === 'day') {
+
+            } else if (options.domain === 'week') {
+
+            } else if (options.domain === 'month') {
+
+            } else if (options.domain === 'year') {
+
             }
         },
         _render: function () {
@@ -87,9 +103,9 @@ odoo.define('web_widget_heatmap.widget', function (require) {
             this.controls = options.controls;
             this.renderElement();
             var nodeOptions = this.nodeOptions || {};
-            options = _.extend(nodeOptions, options, {itemSelector: this.$el.find('.o_field_heatmap')[0]});
+            this.heatmap_options = _.extend(nodeOptions, options, {itemSelector: this.$el.find('.o_field_heatmap')[0]});
             this.heatmap = new CalHeatMap();
-            this.heatmap.init(options);
+            this.heatmap.init(this.heatmap_options);
         },
         renderElement: function() {
             this._super();
@@ -101,7 +117,43 @@ odoo.define('web_widget_heatmap.widget', function (require) {
         },
         previousHeatMap: function() {
             this.heatmap.previous();
-        }
+        },
+        onClickHeatMap: function(date, items_count) {
+            date = moment(date);
+            var options = this.heatmap_options;
+            var elements = this.value ? _.pluck(this.value.data, 'data') : [];
+            if (elements && elements.length) {
+                // TODO: make faster
+                var current_elements_ids = elements.filter(function(el) {
+                    var duration = moment.duration(date.diff(el.create_date));
+                    if (options.domain === 'hour') {
+                        return duration.years() === 0 && duration.months() === 0 && duration.weeks() === 0 && duration.days() === 0 && duration.hours() === 0;
+                    } else if (options.domain === 'day') {
+                        return duration.years() === 0 && duration.months() === 0 && duration.weeks() === 0 && duration.days() === 0;
+                    } else if (options.domain === 'week') {
+                        return duration.years() === 0 && duration.months() === 0 && duration.weeks() === 0;
+                    } else if (options.domain === 'month') {
+                        return duration.years() === 0 && duration.months() === 0;
+                    } else if (options.domain === 'year') {
+                        return duration.years() === 0;
+                    } else {
+                        return false;
+                    }
+                }).map(function(el) {
+                    return el.id;
+                });
+                var action = {
+                    name: date.format('YYYY-MM-DD HH:mm'),
+                    type: 'ir.actions.act_window',
+                    res_model: this.value.model,
+                    view_mode: 'list,form',
+                    views: [[false, 'list'], [false, 'form']],
+                    view_type: 'list',
+                    domain: [['id', 'in', current_elements_ids]],
+                };
+                return this.do_action(action);
+            }
+        },
     });
 
     registry.add('heatmap', HeatMapWidget);
