@@ -3,10 +3,10 @@
    :alt: License: LGPL-3
 
 ==================
- Deselect Partner
+Partner deselection
 ==================
 
-POS Partner deselection after a defined time interval
+Partner is deselected after a defined time interval inside Point of Sales (POS)
 
 
 Credits
