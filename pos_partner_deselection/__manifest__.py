@@ -2,8 +2,8 @@
 # Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 {
-    "name": """Deselect Partner""",
-    "summary": """POS Partner deselection after a defined time interval""",
+    "name": """Partner deselection""",
+    "summary": """Invoke when a POS Partner has been deselected by the user after a defined time interval""",
     "category": "Point of Sale",
     # "live_test_url": "http://apps.it-projects.info/shop/product/DEMO-URL?version=10.0",
     "images": [],
