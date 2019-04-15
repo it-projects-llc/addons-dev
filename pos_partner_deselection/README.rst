@@ -3,7 +3,7 @@
    :alt: License: LGPL-3
 
 ====================
-Partner  Deselection
+Partner  deselection
 ====================
 
 Invoke when a POS Partner has been deselected by the user after a defined time interval. 
