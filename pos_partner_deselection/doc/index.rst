@@ -15,8 +15,6 @@ Configuration
 Usage
 =====
 
-{Instruction for daily usage. It should describe how to check that module works. What shall user do and what would user get.} 
-
 * Open a POS
 * Click ``Customers``
 * Select a customer
