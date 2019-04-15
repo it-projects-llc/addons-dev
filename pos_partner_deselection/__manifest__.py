@@ -3,7 +3,7 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 {
     "name": """Partner deselection""",
-    "summary": """Invoke when a POS Partner has been deselected by the user after a defined time interval""",
+    "summary": """The module allows to deselect partner in opened POSes by the user after a defined time interval""",
     "category": "Point of Sale",
     # "live_test_url": "http://apps.it-projects.info/shop/product/DEMO-URL?version=10.0",
     "images": [],
