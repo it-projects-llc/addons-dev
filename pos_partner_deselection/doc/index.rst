@@ -1,5 +1,5 @@
 ==================
- Deselect Partner
+Partner deselection
 ==================
 
 Configuration
@@ -7,19 +7,18 @@ Configuration
 
 * Go to ``Point of Sale >> Configuration >> Point of Sale``
 
-  * Select a POS
-  * Click on ``[Edit]``
+  * Select a Point of Sale (POS)
+  * Click on ``[More]`` then ``[Settings]``
+  * Go to ``[Features]`` section
   * Specify a **Customer Deselection Interval** in seconds
   * Click ``[Save]``
 
 Usage
 =====
 
-{Instruction for daily usage. It should describe how to check that module works. What shall user do and what would user get.} 
-
-* Open a POS
+* Open a Point of Sale (POS)
 * Click ``Customers``
 * Select a customer
 * Click ``Set Customer``
-* Wait time you set in configuration
-* RESULT: Customer is Deselected
+* Wait for amount of time which you set up as Deselection interval
+* **RESULT:** Customer is Deselected
