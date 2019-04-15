@@ -1,6 +1,6 @@
-==================
-Partner Deselection
-==================
+===================
+Partner deselection
+===================
 
 Configuration
 =============
