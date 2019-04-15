@@ -6,7 +6,7 @@
 Partner  Deselection
 ====================
 
-Invoked when a POS Partner has been deselected by the user after a defined time interval. 
+Invoke when a POS Partner has been deselected by the user after a defined time interval. 
 
 
 Credits
