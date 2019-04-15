@@ -2,11 +2,11 @@
    :target: https://www.gnu.org/licenses/lgpl
    :alt: License: LGPL-3
 
-==================
- Deselect Partner
-==================
+====================
+Partner  Deselection
+====================
 
-POS Partner deselection after a defined time interval
+Invoked when a POS Partner has been deselected by the user after a defined time interval. 
 
 
 Credits
