@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
 {
     "name": """POS Mobile UI for Waiters""",
     "summary": """Your Restaurant in the Mobile Version""",
     "category": "Point of Sale",
-    "live_test_url": "http://apps.it-projects.info/shop/product/pos-mobile-ui?version=10.0",
+    # "live_test_url": "http://apps.it-projects.info/shop/product/pos-mobile-ui?version=10.0",
     "images": ["images/pos_mobile_restaurant.png"],
     "version": "10.0.1.3.8",
     "application": False,
