@@ -1,4 +1,5 @@
 /* Copyright 2019 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
+   Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). */
 odoo.define('pos_debt_notebook_custom.must_have_product', function(require){
     var models = require('point_of_sale.models');
@@ -86,8 +87,8 @@ odoo.define('pos_debt_notebook_custom.must_have_product', function(require){
                     && ol.price >= ol.product.list_price;
             });
             var mhp_product = this.db.get_product_by_id(this.must_have_product[0].product_id.id);
-            if (mhp_in_order || partner.has_must_have_product_order_id ||
-            (mhp_product && partner.debts[self.must_have_product[0].journal_id[0]].balance < 2 * mhp_product.list_price)) {
+            var has_enough_credits = mhp_product && partner.debts[self.must_have_product[0].journal_id[0]].balance >= mhp_product.list_price;
+            if (mhp_in_order || partner.has_must_have_product_order_id || !has_enough_credits) {
                 return false;
             }
             return true;
