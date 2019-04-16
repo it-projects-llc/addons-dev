@@ -1,6 +1,19 @@
-`5.1.4`
+`5.3.1`
 -------
 - **Improvement:** Simplify extending module in other custom modules
+
+`5.3.0`
+-------
+- **Improvement:** New Balance is amount for selected journal,  not for total Credits.
+
+`5.2.0`
+-------
+- **ADD:** Button on the ``Write-off Credits`` form. Adds all partners with debt according to the selected journal
+- **ADD:** Availability to write-off credits via ``Manual Credit Updates``
+
+`5.1.4`
+-------
+- **FIX:** Payment mistakes on in case SERIALIZATION_FAILURE in order processing
 
 `5.1.3`
 -------

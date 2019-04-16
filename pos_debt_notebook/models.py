@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2014-2018 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
+# Copyright 2014-2019 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 # Copyright 2015 Alexis de Lattre <https://github.com/alexis-via>
 # Copyright 2016-2017 Stanislav Krotov <https://it-projects.info/team/ufaks>
 # Copyright 2016 Florent Thomas <https://it-projects.info/team/flotho>
@@ -8,6 +8,7 @@
 # Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
+import copy
 from odoo import models, fields, api, SUPERUSER_ID
 from datetime import datetime
 from pytz import timezone
@@ -481,6 +482,9 @@ class PosOrder(models.Model):
 
     @api.model
     def _process_order(self, pos_order):
+        # Don't change original dict, because in case of SERIALIZATION_FAILURE
+        # the method will be called again
+        pos_order = copy.deepcopy(pos_order)
         credit_updates = []
         amount_via_discount = 0
         for payment in pos_order['statement_ids']:
@@ -611,12 +615,13 @@ class PosCreditUpdate(models.Model):
         return -balance + new_balance
 
     def update_balance(self, vals):
-        partner_id = vals.get('partner_id', self.partner_id.id)
+        partner = vals.get('partner_id') and self.env['res.partner'].browse(vals.get('partner_id')) or self.partner_id
         new_balance = vals.get('new_balance', self.new_balance)
         state = vals.get('state', self.state) or 'draft'
         update_type = vals.get('update_type', self.update_type)
         if (state == 'draft' and update_type == 'new_balance'):
-            credit_balance = self.partner_id.browse(partner_id).credit_balance
+            data = partner._compute_partner_journal_debt(self.journal_id.id)
+            credit_balance = data[partner.id].get('balance', 0)
             vals['balance'] = self.get_balance(credit_balance, new_balance)
 
     @api.model
