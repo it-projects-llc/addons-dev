@@ -17,7 +17,7 @@
     # "currency": "EUR",
 
     "depends": [
-        "pos_barcode_sync",
+        "pos_partner_sync",
         "pos_debt_notebook_sync",
     ],
     "external_dependencies": {"python": [], "bin": []},
