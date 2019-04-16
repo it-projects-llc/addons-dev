@@ -14,7 +14,7 @@ odoo.define('pos_debt_notebook_custom.must_have_product', function(require){
         template: 'MustHaveProductButton',
         button_click: function () {
             var pos = this.pos;
-            var mhp = pos.must_have_product[0]
+            var mhp = pos.must_have_product[0];
             pos.get_order().add_product(pos.db.get_product_by_id(mhp.product_id.id));
         },
     });
@@ -43,7 +43,7 @@ odoo.define('pos_debt_notebook_custom.must_have_product', function(require){
 
         update_must_have_product: function(){
             var self = this;
-            cashregisters_ids = _.filter(this.cashregisters, function(cr){
+            var cashregisters_ids = _.filter(this.cashregisters, function(cr){
                 return cr.journal.must_have_product_id;
             });
             this.must_have_product = [];
@@ -64,9 +64,9 @@ odoo.define('pos_debt_notebook_custom.must_have_product', function(require){
         update_must_have_product_button: function(){
             var self = this;
             if (this.check_mast_have_product_button()){
-                this.gui.screen_instances.products.action_buttons.must_have_product.$el.show()
+                this.gui.screen_instances.products.action_buttons.must_have_product.$el.show();
             } else if (this.gui.screen_instances.products) {
-                this.gui.screen_instances.products.action_buttons.must_have_product.$el.hide()
+                this.gui.screen_instances.products.action_buttons.must_have_product.$el.hide();
             }
         },
 
@@ -83,8 +83,8 @@ odoo.define('pos_debt_notebook_custom.must_have_product', function(require){
             });
             var mhp_in_order = _.find(orderlines, function(ol){
                 return _.contains(possible_products, ol.product.id)
-                    && ol.quantity > 0
-                    && ol.price >= ol.product.list_price;
+                && ol.quantity > 0
+                && ol.price >= ol.product.list_price;
             });
             var mhp_product = this.db.get_product_by_id(this.must_have_product[0].product_id.id);
             var has_enough_credits = mhp_product && partner.debts[self.must_have_product[0].journal_id[0]].balance >= mhp_product.list_price;
