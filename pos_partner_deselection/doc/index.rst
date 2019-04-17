@@ -10,11 +10,11 @@ Installation
 Configuration
 =============
 
-* Go to `` Point of Sale ``
+* Go ``Point of Sale`` 
 
   * Select a Point of Sale (POS)
-  * Click on ``[More]`` at the right corner of this POS and then select  ``[Settings] inside a POS``
-  * Go to the ``[Features]`` section
+  * Click on ``[More]`` at the right corner of this POS and then select  ``[Settings]`` inside a POS
+  * Go to the ``Features`` section
   * Specify a **Customer Deselection Interval** in seconds
   * Click ``[Save]``
 
