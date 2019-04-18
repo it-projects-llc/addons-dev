@@ -6,7 +6,7 @@
     "summary": """The module deselects a partner in opened POS on expiry the predefined time interval after the customer was set.""",
     "category": "Point of Sale",
     # "live_test_url": "http://apps.it-projects.info/shop/product/DEMO-URL?version=10.0",
-    "images": [images/pos_partner_deselection.jpg],
+    "images": ['images/pos_partner_deselection.jpg'],
     "version": "10.0.1.0.0",
     "application": False,
 
