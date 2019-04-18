@@ -8,6 +8,7 @@ class ResPartner(models.Model):
 
     def _split_vat(self, vat):
         vat_country = vat[:3].lower()
+        # Panamanian VaT numbers start with 'RUC'
         if vat_country == 'ruc':
             return 'pacustom', vat
         return super(ResPartner, self)._split_vat(vat)

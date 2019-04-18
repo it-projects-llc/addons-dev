@@ -8,7 +8,7 @@
 
 Customizes VAT check according to Panama rules
 
-Allows to proceed all TIN/RUC numbers as soon as they start with 'RUC'
+Allows to proceed any TIN/RUC numbers as soon as they start with 'RUC'
 
 Credits
 =======
