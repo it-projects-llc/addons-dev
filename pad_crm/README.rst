@@ -1,16 +1,9 @@
-.. image:: https://img.shields.io/badge/license-LGPL--3-blue.png
-   :target: https://www.gnu.org/licenses/lgpl
-   :alt: License: LGPL-3
+=============
+ Pad support
+=============
 
-============================
- Pad on Leads\Opportunities
-============================
-
-Adds a pad to the lead in CRM to the description tab.
-
-Adds an ability for collaborative editing of internal notes and saves the history of changes.
-
-This module can add padding to pad in modules that use it.
+This module adds a Pad to the lead in CRM along with collaborative editing of internal notes and maintains the versions history.
+Also it automatically increases the left and top indents of the existing text in the modules that use it.
 
 Credits
 =======
