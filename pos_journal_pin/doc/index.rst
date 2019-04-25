@@ -1,6 +1,6 @@
-============================
- Ask Manager to use journal
-============================
+===============================
+ POS Payments by Manager's PIN
+===============================
 
 Installation
 ============
@@ -35,4 +35,4 @@ Usage
   * Enter his password
   * Click ``[Ok]``
 
-* RESULT: Payment line with selected payment method is added
+* RESULT: Payment line with selected payment method is added.
