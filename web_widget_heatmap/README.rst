@@ -2,11 +2,11 @@
    :target: https://www.gnu.org/licenses/lgpl
    :alt: License: LGPL-3
 
-====================
- Web Widget HeatMap
-====================
+================
+ HeatMap Widget
+================
 
-Displaying your records in calendar HeatMap.
+The technical module that adds new Heatmap widget
 
 Credits
 =======

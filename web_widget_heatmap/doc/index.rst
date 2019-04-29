@@ -1,6 +1,6 @@
-====================
- Web Widget HeatMap
-====================
+================
+ HeatMap Widget
+================
 
 Installation
 ============
@@ -10,7 +10,7 @@ Installation
 Usage
 =====
 
-In the view declaration, put widget='heatmap' attribute in the field tag::
+In the view declaration, put ``widget='heatmap'`` attribute within the field tag: ::
 
     ...
     <field name="arch" type="xml">
@@ -22,9 +22,9 @@ In the view declaration, put widget='heatmap' attribute in the field tag::
     </field>
     ...
 
-All options of the widget available `here <https://cal-heatmap.com/>`__
+All options of the widget are available `here <https://cal-heatmap.com/>`__
 
-To use the options in the view declaration, specify 'options' attribute in the field tag::
+To use the associated options in the view declaration, specify ``options`` attribute: ::
 
     ...
     <field name="arch" type="xml">
