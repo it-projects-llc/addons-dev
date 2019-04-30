@@ -2,7 +2,7 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 {
     "name": """HeatMap Widget""",
-    "summary": """Use new HeatMap widget to display your records""",
+    "summary": """ Adds new widget "heatmap" """,
     "category": "Extra Tools",
     "images": [],
     "version": "11.0.1.0.0",
