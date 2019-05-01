@@ -3,7 +3,7 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 {
     "name": """POS Payments by Manager's PIN""",
-    "summary": """Ask for manager permission before use the journal""",
+    "summary": """The module requires managers permission, which can be attained by entering PIN prior the usage of the journal.""",
     "category": "Point of Sale",
     # "live_test_url": "http://apps.it-projects.info/shop/product/DEMO-URL?version=10.0",
     "images": [],
@@ -38,13 +38,13 @@
     "auto_install": False,
     "installable": True,
 
-    # "demo_title": "Ask Manager to use journal",
+    # "demo_title": "POS Payments by Manager's PIN",
     # "demo_addons": [
     # ],
     # "demo_addons_hidden": [
     # ],
     # "demo_url": "DEMO-URL",
-    # "demo_summary": "Ask Manager to use journal",
+    # "demo_summary": "The module requires managers permission, which can be attained by entering PIN prior the usage of the journal.",
     # "demo_images": [
     #    "images/MAIN_IMAGE",
     # ]

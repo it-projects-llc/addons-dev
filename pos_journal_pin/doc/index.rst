@@ -31,8 +31,8 @@ Usage
 
   * Click ``[Payment]``
   * Select and click a payment method with enabled **Manager's Permission** option
-  * Select a manager from appeared list
-  * Enter his password
+  * Select a manager from the appeared list
+  * Enter his/her password
   * Click ``[Ok]``
 
 * RESULT: Payment line with selected payment method is added.
