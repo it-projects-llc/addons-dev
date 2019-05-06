@@ -21,7 +21,7 @@ Journal
 
   * Open ``[[Point of Sale]] >> Payment Methods`` menu
   * Choose a journal or create one, be sure the journal is active in POS
-  * Activate **Manager's Permission** field
+  * Activate **POS Manager's Permission** field
 
 Usage
 =====
@@ -30,8 +30,8 @@ Usage
 * Open a POS session
 
   * Click ``[Payment]``
-  * Select and click a payment method with enabled **Manager's Permission** option
-  * Select a manager from the appeared list
+  * Select and click a payment method with enabled **POS Manager's Permission** option
+  * Select a POS manager from the appeared list
   * Enter his/her password
   * Click ``[Ok]``
 
