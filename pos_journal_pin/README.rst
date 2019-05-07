@@ -6,9 +6,7 @@
  POS Payments by Manager's PIN
 ===============================
 
-Ask for manager permission before use the journal
-
-The module requires managers PIN to be entered to use the journal
+The module requires POS manager's permission, which can be attained by entering PIN prior the usage of the journal.
 
 Credits
 =======
