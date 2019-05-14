@@ -6,7 +6,7 @@
     "summary": """Ask for manager permission before use the journal""",
     "category": "Point of Sale",
     # "live_test_url": "http://apps.it-projects.info/shop/product/DEMO-URL?version=10.0",
-    "images": ['images/pos_journal_pin.png'],
+    "images": ['images/pos_journal_pin.jpg'],
     "version": "10.0.1.0.0",
     "application": False,
 
