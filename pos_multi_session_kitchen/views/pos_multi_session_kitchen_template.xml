@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="point_of_sale_assets" name="pos_multi_session_kitchen assets" inherit_id="point_of_sale.assets">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/pos_multi_session_kitchen/static/src/js/chrome.js"></script>
+                <script type="text/javascript" src="/pos_multi_session_kitchen/static/src/js/models.js"></script>
+                <script type="text/javascript" src="/pos_multi_session_kitchen/static/src/js/screens.js"></script>
+                <script type="text/javascript" src="/pos_multi_session_kitchen/static/src/js/floors.js"></script>
+                <link rel='stylesheet' href='/pos_multi_session_kitchen/static/lib/css/bootstrap-grid.css'/>
+                <link rel="stylesheet" href="/pos_multi_session_kitchen/static/src/css/pos_multi_session_kitchen.css"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>

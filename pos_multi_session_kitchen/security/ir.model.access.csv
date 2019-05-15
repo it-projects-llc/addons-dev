@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_pos_order_line_state,access_pos_order_line_state,model_pos_order_line_state,point_of_sale.group_pos_user,1,1,1,1
+access_pos_order_line_button,access_pos_order_line_button,model_pos_order_line_button,point_of_sale.group_pos_user,1,1,1,1
+access_pos_order_button,access_pos_order_button,model_pos_order_button,point_of_sale.group_pos_user,1,1,1,1
+access_pos_order_tag,access_pos_order_tag,model_pos_order_tag,point_of_sale.group_pos_user,1,1,1,1
+access_pos_kitchen_category_settings,access_pos_kitchen_category_settings,model_pos_kitchen_category_settings,point_of_sale.group_pos_user,1,1,1,1

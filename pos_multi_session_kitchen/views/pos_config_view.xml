@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_pos_config_form">
+            <field name="name">pos.config.form.view.inherit</field>
+            <field name="model">pos.config</field>
+            <field name="inherit_id" ref="pos_multi_session.view_pos_config_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='features']" position="after">
+                    <group string="Display">
+                        <field name="screen"/>
+                        <field name="cat_ids" widget="many2many_tags" attrs="{'required': [('screen','=', 'kitchen')], 'invisible':[('screen', '!=', 'kitchen')]}"/>
+                        <!--<field name="show_all_kitchen_lines" attrs="{'invisible':[('screen', '!=', 'kitchen')]}"/>-->
+                        <field name="is_restaurant_installed" invisible="1"/>
+                        <field name="show_floors_plan" attrs="{'invisible':['|',('screen', '!=', 'kitchen'),('is_restaurant_installed', '!=', True)]}"/>
+                        <field name="custom_button_ids" attrs="{'invisible':[('screen', '!=', 'waiter')]}"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

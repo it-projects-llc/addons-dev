@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="OrderWidget">
+        <t t-jquery=".summary" t-operation="before">
+            <div class="order-tags">
+                <t t-foreach="order.get_tags()" t-as="tag">
+                    <span class="tag" t-attf-style="background: #{tag.background_color}; color: #{tag.name_color}">
+                        <t t-esc='tag.name'/>
+                    </span>
+                </t>
+            </div>
+        </t>
+    </t>
+
+    <t t-extend="Orderline">
+        <t t-jquery=".info-list" t-operation="after">
+            <div class="states-list">
+                <t t-if="line.states" t-foreach="line.states" t-as="state">
+                    <t t-if="state.active and state.show_for_waiters">
+                        <span class="state active" t-attf-data-id="#{state.id}"><t t-esc='state.name'/></span> <i class='fa fa-angle-right active'/>
+                    </t>
+                    <t t-if="!state.active">
+                        <span class="state and state.show_for_waiters" t-attf-data-id="#{state.id}"><t t-esc='state.name'/></span> <i class='fa fa-angle-right'/>
+                    </t>
+                </t>
+            </div>
+            <div t-if="line.current_state" class="state_timer">
+                <t t-if="!line.current_state.action_close">
+                    <t t-if="!line.current_state || !line.current_state.run_timer_date">
+                        <p class="time">00:00:00</p>
+                    </t>
+                    <t t-if="line.current_state.run_timer_date">
+                        <p class="time"><t t-esc='line.get_formatted_time(line.current_state.run_timer_date)'/></p>
+                    </t>
+                </t>
+            </div>
+            <div class="buttons-list">
+                <t t-foreach="line.line_buttons" t-as="button">
+                    <t t-if="button.show_for_waiters and !button.hide and !line.current_state.action_close">
+                        <button class="line-button" t-attf-data-id="#{button.id}" t-attf-style="background: #{button.background_color}; color: #{button.name_color}"><t t-esc='button.name'/></button>
+                    </t>
+                </t>
+            </div>
+        </t>
+    </t>
+
+    <t t-extend="Chrome">
+        <t t-jquery=".pos-logo" t-operation="after">
+            <t t-if="widget.pos.config and widget.pos.config.screen === 'kitchen'">
+                <div class="clock">
+                    <p class="date"></p>
+                    <p class="time"></p>
+                </div>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="KitchenScreenWidget">
+        <div class='kitchen-screen screen'>
+            <div class='screen-content-flexbox'>
+                <div class='window'>
+                    <section class='subwindow collapsed'>
+                        <div class='subwindow-container collapsed'>
+                            <div class='subwindow-container-fix touch-scrollable scrollable-y'>
+                                <div class="row order-list-contents">
+
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="KitchenOrder">
+        <div class="order-block col-md-6" t-attf-data-uid="#{order.uid}" t-attf-data-priority="#{order.get_priority()}">
+            <div class="order-kitchen">
+                <table class='kitchen-order'>
+                    <thead>
+                        <tr>
+                            <th class="img">Image</th>
+                            <th>Product</th>
+                            <th>Quantity </th>
+                            <th>Time</th>
+                            <th>Action</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr class='order-info'>
+                            <th colspan="2">Order №<t t-esc='order.sequence_number'/></th>
+                            <th colspan="2">
+                                <t t-if="order.get_client()"><t t-esc='order.get_client().name'/></t>
+                            </th>
+                            <th colspan="2">
+                                <t t-if="order.table"><t t-esc='order.table.floor.name'/></t>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class='order-line-list-contents'>
+                    </tbody>
+                </table>
+                <div class="order-details">
+                    <t t-if="order.note || order.custom_notes">
+                        <div class="order-note">
+                            <span class="label">Note:</span>
+                            <span class="value">
+                                <t t-esc="order.note" />
+                                <t t-foreach="order.custom_notes" t-as="custom_note">
+                                    <t t-if="custom_note_last">
+                                        <t t-esc="custom_note.name"/>
+                                    </t>
+                                    <t t-if="!custom_note_last">
+                                        <t t-esc="custom_note.name"/>,
+                                    </t>
+                                </t>
+                            </span>
+                        </div>
+                    </t>
+                    <div t-if="order.get_tags().length" class="order-tags">
+                        <t t-foreach="order.get_tags()" t-as="tag">
+                            <span class="tag" t-attf-style="background: #{tag.background_color}; color: #{tag.name_color}">
+                                <t t-esc='tag.name'/>
+                            </span>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="KitchenOrderLine">
+        <tr class='line' t-attf-data-uid="#{line.uid}">
+            <td class="img"><img t-att-src="image_url" /> </td>
+            <td class="product-display-name"><t t-esc='line.product.display_name'/>
+                <t t-if="line.note || line.custom_notes">
+                    <ul class="info-list">
+                        <li class="info kitchen-orderline-note">
+                            <i class='fa fa-tag'/><t t-esc="line.get_note()" />
+                            <t t-foreach="line.custom_notes" t-as="custom_note">
+                                <i class='fa fa-tag'/><t t-esc="custom_note.name"/>
+                            </t>
+                        </li>
+                    </ul>
+                </t>
+            </td>
+            <td><span class="qty"><t t-esc='line.quantityStr'/></span></td>
+            <td><div class="state_timer">
+                <t t-if="!line.current_state.action_close">
+                    <t t-if="!line.current_state || !line.current_state.run_timer_date">
+                        <p class="time">00:00:00</p>
+                    </t>
+                    <t t-if="line.current_state.run_timer_date">
+                        <p class="time"><t t-esc='line.get_formatted_time(line.current_state.run_timer_date)'/></p>
+                    </t>
+                </t>
+            </div></td>
+            <td>
+                <t t-if="!line.current_state.action_close">
+                    <t t-foreach="line.line_buttons" t-as="button">
+                        <t t-if="button.show_in_kitchen and !button.hide">
+                            <button class="line-button" t-attf-data-id="#{button.id}" t-attf-style="background: #{button.background_color}; color: #{button.name_color}">
+                                <t t-esc='button.name'/>
+                            </button>
+                        </t>
+                    </t>
+                </t>
+            </td>
+            <td><t t-esc='line.current_state.name'/></td>
+        </tr>
+    </t>
+
+    <t t-name="OrderCustomButtons">
+        <t t-foreach="widget.get_custom_buttons()" t-as="button">
+            <div class='control-button' t-attf-data-id="#{button.id}" t-attf-style="background: #{button.background_color}; color: #{button.name_color}">
+                <i class='fa fa-tag' /> <t t-esc='button.name'/>
+            </div>
+        </t>
+    </t>
+
+</templates>

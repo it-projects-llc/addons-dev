@@ -1,0 +1,175 @@
+.pos .order .order-tags {
+    text-align: right;
+    margin: 15px;
+}
+.pos .order .order-tags .tag, .pos.kitchen .order-tags .tag {
+    position: relative;
+    padding: 5px;
+    margin-left: 7px;
+    padding-left: 15px;
+    display: inline-block;
+}
+.pos .order .order-tags .tag:after,  .pos.kitchen .order-tags .tag:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 15px solid;
+    border-color: white;
+    border-right-color: transparent;
+    top: 0%;
+    left: 0%;
+    margin-left: -10px;
+    color: transparent;
+}
+.pos .order .orderline .states-list {
+    font-size: 14px;
+    color: #939393;
+    padding: 5px;
+}
+.pos .order .orderline .states-list .active{
+    font-size: 14px;
+    color: blue;
+}
+.pos .order .orderline .buttons-list {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+}
+.pos .order .orderline .buttons-list .line-button {
+    margin: 3px;
+    font-size: 14px;
+    -webkit-flex-grow: 1;
+    flex-grow: 1;
+    max-width: 50%;
+}
+.pos .order .orderline .buttons-list .line-button:focus {
+    background: black;
+}
+
+/* =========== KITCHEN SCREEN ========== */
+.pos.kitchen .order-selector .square, .pos.kitchen .order-selector .select-order {
+    display: none;
+}
+.pos.kitchen .clock {
+    background: #393939;
+    background: radial-gradient(ellipse at center, #173765 0%, #393939 70%);
+    background-size: 100%;
+    font-family: 'Share Tech Mono', monospace;
+    color: #ffffff;
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    color: #daf6ff;
+    text-shadow: 0 0 20px #0aafe6, 0 0 20px rgba(10, 175, 230, 0);
+}
+.pos.kitchen .clock p {
+    margin: 0;
+    padding: 0;
+}
+.pos.kitchen .clock .time {
+    letter-spacing: 0.05em;
+    font-size: 24px;
+    padding: 5px 0;
+}
+.pos.kitchen .clock .date {
+    letter-spacing: 0.1em;
+    font-size: 8px;
+}
+/* =========== KitchenScreenWidget =========== */
+.pos.kitchen .kitchen-screen {
+    box-sizing: border-box;
+}
+.pos.kitchen .kitchen-screen *,
+.pos.kitchen .kitchen-screen *::before,
+.pos.kitchen .kitchen-screen *::after {
+  box-sizing: inherit;
+}
+.pos.kitchen .kitchen-screen .kitchen-order {
+    width: 100%;
+    text-align: center;
+    margin: 0px;
+    flex-grow: 1;
+}
+.pos.kitchen .kitchen-screen .kitchen-order .img{
+    width: 100px;
+}
+.pos.kitchen .kitchen-screen .kitchen-order thead {
+    font-size: 20px;
+    background: white;
+}
+.pos.kitchen .kitchen-screen .kitchen-order thead th{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: calc(100% / 6);
+}
+.pos.kitchen .kitchen-screen .order-line-list-contents td {
+    text-align: center;
+    width: calc(100% / 6);
+}
+.pos.kitchen .kitchen-screen .order-info {
+    font-size: 18px;
+    color: white;
+    background: #875a7b;
+    text-align: center;
+}
+.pos.kitchen .kitchen-screen .line {
+    font-size: 16px;
+}
+.pos.kitchen .kitchen-screen .info-list {
+    color: #888;
+    font-weight: normal;
+}
+.pos.kitchen .kitchen-screen .product-display-name {
+    font-weight: bolder;
+}
+.pos.kitchen .kitchen-screen .line-button {
+    font-size: 13px;
+    width: 70px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.pos.kitchen .kitchen-screen .line-button:active {
+    border: 1px solid #616161;
+    -webkit-transition-property: background, border;
+    -webkit-transition-duration: 0.2s;
+    -webkit-transition-timing-function: ease-out;
+}
+.pos.kitchen .order-line-list-contents .line .qty {
+    padding: 10px;
+    border: 2px solid #87597a;
+    border-radius: 100%;
+    color: #87597a;
+    font-weight: bolder;
+}
+.pos.kitchen .order-kitchen {
+    height: 100%;
+    background: white;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+.pos.kitchen .order-note {
+    float: left;
+}
+.pos.kitchen .order-tags {
+    float: right;
+}
+.pos.kitchen .order-note {
+    font-size: 20px;
+    padding-top: 10px;
+}
+.pos.kitchen .order-tags {
+    font-size: 16px;
+    padding-top: 10px;
+}
+@media (min-width: 768px) {
+    .col-md-6 {
+        padding-top: 20px;
+    }
+}
