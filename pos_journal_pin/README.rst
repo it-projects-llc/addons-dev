@@ -25,7 +25,7 @@ Maintainers
 
       To get a guaranteed support
       you are kindly requested to purchase the module
-      at `odoo apps store <https://apps.odoo.com/apps/modules/10.0/journal_pin/>`__.
+      at `odoo apps store <https://apps.odoo.com/apps/modules/10.0/pos_journal_pin/>`__.
 
       Thank you for understanding!
 
@@ -36,7 +36,7 @@ Further information
 
 Demo: http://runbot.it-projects.info/demo/pos-addons/10.0
 
-HTML Description: https://apps.odoo.com/apps/modules/10.0/pos_pin/
+HTML Description: https://apps.odoo.com/apps/modules/10.0/pos_journal_pin/
 
 Usage instructions: `<doc/index.rst>`_
 
