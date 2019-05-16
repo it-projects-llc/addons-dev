@@ -13,7 +13,7 @@ Configuration
 Manager's PIN
 -------------
 
-Set a PIN for a POS manager as it's explained in ``Confirm POS action by PIN`` module.
+Set a PIN for a POS manager as it's explained in `Confirm POS action by PIN <https://apps.odoo.com/apps/modules/10.0/pos_pin/>`_  module.
 As Administrator please follow next scenario:
 
 Journal
