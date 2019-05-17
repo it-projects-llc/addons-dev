@@ -1,6 +1,6 @@
-=============
- Pad support
-=============
+======================================
+ Pad support in Lead's Internal notes
+======================================
 
 Installation
 ============
@@ -13,4 +13,4 @@ Usage
 * Open ``[CRM]``
 * Click on any lead
 * Click on the ``[Edit]`` button
-* RESULT: now in the ``[Internal Notes]`` tab you can use the Pad
+* RESULT: now in the ``[Internal Notes]`` tab you can use the Pad.

@@ -2,9 +2,9 @@
 # Copyright 2019 Artem Rafailov <https://it-projects.info/team/Ommo73/>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html)
 {
-    "name": """Pad support""",
-    "summary": """This module adds a Pad to the lead in CRM along with collaborative editing of internal notes and maintains the versions history. Also it automatically increases the left and top indents of the existing text in the modules that use it.""",
-    "category": "Customer Relationship Management",
+    "name": """Pad support in Lead's Internal notes""",
+    "summary": """This module allows collaborative editing with *html support* in Lead's Internal notes and maintains the versions history.""",
+    "category": "Project",
     # "live_test_url": "http://apps.it-projects.info/shop/product/DEMO-URL?version=12.0",
     "images": ['images/pad_crm_2.jpg'],
     "version": "12.0.1.0.0",

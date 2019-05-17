@@ -1,9 +1,8 @@
-=============
- Pad support
-=============
+======================================
+ Pad support in Lead's Internal notes
+======================================
 
-This module adds a Pad to the lead in CRM along with collaborative editing of internal notes and maintains the versions history.
-Also it automatically increases the left and top indents of the existing text in the modules that use it.
+This module allows collaborative editing with *html support* in Lead's Internal notes and maintains the versions history.
 
 Credits
 =======
