@@ -1,7 +1,5 @@
 .popup.popup-selection.cashier  .selection.scrollable-y.touch-scrollable.cashier {
-	display: table;
     width: 100%;
-	height: calc(90% - 61px);
 	padding-bottom: 0;
 }
 
@@ -13,4 +11,8 @@
 .pos .popup.popup-selection.employee .footer {
     background: #596fb2;
 	color: white;
+}
+.pos .popup.popup-selection .employee-table {
+	display: table;
+	width: 100%;
 }
