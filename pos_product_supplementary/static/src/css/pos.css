@@ -1,0 +1,20 @@
+.supplementary_product_line div {
+    display: inline-block;
+}
+
+.supp_qty_input {
+    float: right;
+    width: 90px;
+}
+
+.supplementary_product_info span{
+    font-weight: normal !important;
+}
+
+.supplementary_product_info .product-name{
+    width: 70% !important;
+}
+
+.supplementary_product_info .price.qty{
+    float: none !important;
+}

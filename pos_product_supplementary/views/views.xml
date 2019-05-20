@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+<odoo>
+    <record id="pos_config_view_form_inherited" model="ir.ui.view">
+    <field name="name">pos.config.form.view</field>
+    <field name="model">pos.config</field>
+    <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//div[@id='inventory_location']" position="inside">
+            <div class="col-12 col-lg-6 o_setting_box" title="Supplementary Products.">
+                <div class="o_setting_right_pane">
+                    <label for="supplementary_products" string="Supplementary Products"/>
+                    <div class="content-group mt16">
+                        <field name="supplementary_products"/>
+                    </div>
+                </div>
+
+                <div class="o_setting_right_pane" attrs="{'invisible' : [('supplementary_products', '=', False)]}">
+                    <label for="show_supplementary_products" string="Show Supplementary Products"/>
+                    <div class="text-muted">
+                        All supplementary products will be displayed in POS even if the option `Available in POS` is disabled
+                    </div>
+                    <div class="content-group mt16">
+                        <field name="show_supplementary_products"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </field>
+</record>
+</odoo>
