@@ -4,7 +4,7 @@ from odoo import models, fields, api
 
 
 class Product(models.Model):
-    _inherit = 'product.product'
+    _inherit = 'product.template'
 
     is_supplementary_product = fields.Boolean('Supplementary Product')
     supplementary_product_child_ids = fields.Many2many('product.product', 'product_product_supplementary_product',
@@ -20,7 +20,5 @@ class Product(models.Model):
 
     @api.onchange('is_supplementary_product')
     def _onchange_is_supplementary_product(self):
-        if self.is_supplementary_product:
-            self.supplementary_product_parent_ids = False
-        else:
-            self.supplementary_product_child_ids = False
+        self.supplementary_product_parent_ids = False
+        self.supplementary_product_child_ids = False
