@@ -48,7 +48,6 @@ class WechatMiniProgramController(http.Controller):
             city = user_info.get('city')
 
             user = User.create({
-                'company_id': request.env.ref("base.main_company").id,
                 'name': name,
                 'image': base64.b64encode(requests.get(user_info.get('avatarUrl')).content) if user_info.get('avatarUrl') else None,
                 'openid': openid,
