@@ -7,7 +7,7 @@ class PosConfig(models.Model):
     _inherit = 'pos.config'
 
     supplementary_products = fields.Boolean('Sell Supplementary Products')
-    show_supplementary_products = fields.Boolean('Show Supplementary Products',
+    hide_supplementary_products = fields.Boolean('Hide Supplementary Products',
                                                  help='All supplementary products will be displayed in POS'
                                                       'even if the option `Available in POS` is disabled')
 

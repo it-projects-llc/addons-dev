@@ -12,7 +12,7 @@ odoo.define('pos_product_supplementary.pos', function (require) {
 
     models.load_fields('product.product', ['is_supplementary_product', 'supplementary_product_child_ids', 'available_in_pos']);
 
-    models.load_models({
+    models.load_models([{
         model: 'product.product',
         fields: function(self) {
             var product_model = _.find(self.models, function(m){
@@ -31,9 +31,9 @@ odoo.define('pos_product_supplementary.pos', function (require) {
             var product_model = _.find(self.models, function(m){
                 return m.model === 'product.product';
             });
-            return product_model.loaded(self,products);
+            return product_model.loaded(self, products);
         },
-    });
+    }], {'after':"product.product"});
 
     PosDb.include({
         get_supplementary_products_by_parent_id: function(pid) {
@@ -112,6 +112,26 @@ odoo.define('pos_product_supplementary.pos', function (require) {
             return result;
         },
 
+        check_for_supplementary_and_repeat_for_them: function(func, obj, args) {
+            if (obj.supplementary_line_ids && obj.supplementary_line_ids.length) {
+                _.each(obj.get_supplementary_orderlines(), function(line){
+                    func.apply(line, args);
+                });
+            }
+        },
+
+        set_quantity: function(quantity, keep_price){
+            var super_method = _super_orderline.set_quantity
+            this.check_for_supplementary_and_repeat_for_them(super_method, this, arguments);
+            super_method.apply(this, arguments);
+        },
+
+        set_discount: function(discount){
+            var super_method = _super_orderline.set_discount
+            this.check_for_supplementary_and_repeat_for_them(super_method, this, arguments);
+            super_method.apply(this, arguments);
+        },
+
     });
 
     var _super_order = models.Order.prototype;
@@ -124,14 +144,13 @@ odoo.define('pos_product_supplementary.pos', function (require) {
             }
 
             if (product && product.supplementary_product_child_ids && product.supplementary_product_child_ids.length) {
+                var options = options || {};
                 var supplementary_line_ids = [];
                 _.each(this.pos.db.get_supplementary_products_by_parent_id(product.id), function(p) {
-                    self.add_product(p, {
-                        merge: false,
-                    });
+                    self.add_product(p, {merge: false,});
                     supplementary_line_ids.push(self.get_last_orderline().id);
                 });
-                _super_order.add_product.apply(this,arguments);
+                _super_order.add_product.apply(this, [product, _.extend(options, {merge: false,})]);
                 var parented_orderline = self.get_last_orderline();
                 parented_orderline.supplementary_line_ids = supplementary_line_ids;
                 _.each(parented_orderline.get_supplementary_orderlines(), function(l){
@@ -243,7 +262,7 @@ odoo.define('pos_product_supplementary.pos', function (require) {
 
     screens.ProductListWidget.include({
         set_product_list: function(product_list){
-            if (!this.pos.config.show_supplementary_products) {
+            if (this.pos.config.hide_supplementary_products) {
                 product_list = _.filter(product_list, function(p){
                     return p.available_in_pos;
                 });

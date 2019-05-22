@@ -17,12 +17,12 @@
                 </div>
 
                 <div class="o_setting_right_pane" attrs="{'invisible' : [('supplementary_products', '=', False)]}">
-                    <label for="show_supplementary_products" string="Show Supplementary Products"/>
+                    <label for="hide_supplementary_products" string="Hide Supplementary Products"/>
                     <div class="text-muted">
-                        All supplementary products will be displayed in POS even if the option `Available in POS` is disabled
+                        All supplementary products with  `Available in POS` option will be hidden in POS
                     </div>
                     <div class="content-group mt16">
-                        <field name="show_supplementary_products"/>
+                        <field name="hide_supplementary_products"/>
                     </div>
                 </div>
             </div>
