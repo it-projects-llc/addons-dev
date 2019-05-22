@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="ReceiptScreenWidget">
+        <t t-jquery=".button.print" t-operation="after">
+            <t t-if="widget.pos.config.send_receipt_by_mail">
+                <div class="button mail_receipt">
+                    <i class='fa fa-paper-plane'></i> Mail Receipt
+                </div>
+            </t>
+        </t>
+    </t>
+
+</templates>
