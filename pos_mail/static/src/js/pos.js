@@ -29,23 +29,21 @@ odoo.define('pos_mail.pos', function (require) {
             var self = this;
             if (this.pos.config.send_receipt_by_mail) {
                 this.$('.button.mail_receipt').click(function(){
-                    var receipt  = self.get_receipt_xml();
+
                     var partner = self.pos.get_order().get_client();
                     if (partner) {
-                        self.send_mail_receipt(partner.id, receipt);
+                        self.send_mail_receipt(partner.id);
                     } else {
-                        console.log('SET PARTNER BASTARD')
+                        self.set_mail_customer = true;
+                        self.$el.zIndex(-6);
+                        self.pos.gui.screen_instances.clientlist.show();
                     }
-                    console.log('AAAAA', receipt)
                 });
             }
         },
 
-        get_receipt_xml: function() {
-            return QWeb.render('PosTicket', this.get_receipt_render_env());
-        },
-
-        send_mail_receipt: function(partner_id, receipt) {
+        send_mail_receipt: function(partner_id) {
+            var receipt  = QWeb.render('PosTicket', this.get_receipt_render_env());
             return rpc.query({
                 model: 'pos.config',
                 method: 'send_receipt_via_mail',
@@ -53,8 +51,35 @@ odoo.define('pos_mail.pos', function (require) {
             }, {
                 shadow: true,
             }).then(function (res) {
-                console.log('THEN AFTER SENDING')
+                console.log('THEN AFTER SENDING');
             });
         }
-    })
+    });
+
+    screens.ClientListScreenWidget.include({
+        back: function() {
+            if (this.pos.get_order().finalized) {
+                // means we came there from the receipt screen
+                this.close();
+                var receipt_screen = this.pos.gui.screen_instances.receipt;
+                receipt_screen.show();
+                receipt_screen.$el.zIndex(0);
+            } else {
+                this._super();
+            }
+        },
+
+        save_changes: function(){
+            var order = this.pos.get_order();
+            if( this.has_client_changed() &&
+                this.pos.config.send_receipt_by_mail &&
+                this.gui.current_screen.set_mail_customer) {
+
+                this.gui.screen_instances.receipt.send_mail_receipt(this.new_client.id);
+            } else {
+                this._super();
+            }
+        },
+    });
+
 });
