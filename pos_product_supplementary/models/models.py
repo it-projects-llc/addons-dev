@@ -24,4 +24,6 @@ class PosOrderLine(models.Model):
             del values['parented_orderline']
         if values.get('supplementary_line_ids'):
             del values['supplementary_line_ids']
+        if values.get('qty_per_pack'):
+            del values['qty_per_pack']
         return super(PosOrderLine, self).create(values)

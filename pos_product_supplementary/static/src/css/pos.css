@@ -3,7 +3,10 @@
 }
 
 .supplementary_product_line .name {
-    width: 80%;
+    width: 60%;
+}
+.supplementary_product_line .price {
+    width: 20%;
 }
 
 .supp_qty_input {

@@ -6,22 +6,22 @@
 
     <t t-name="SupplementaryProducts">
         <t t-foreach="line.get_supplementary_orderlines()" t-as="ol">
-            <t t-if="ol.quantity != 0">
+            <t t-if="ol &amp;&amp; ol.quantity != 0">
                 <li class="supplementary_product_info info">
                     <span class="product-name">
                         <t t-esc="ol.product.name"/>
                     </span>
 
                     <span class="price qty">
-                        <t t-esc="ol.quantity"/>
+                        <t t-esc="ol.qty_per_pack || 0"/>
                     </span>
                     <span class="price qty">
                         <t t-esc="line.get_unit().name" />
                     </span>
 
-                    <span class="price">
-                        <t t-esc="widget.format_currency(ol.product.lst_price)"/>
-                    </span>
+<!--                    <span class="price">-->
+<!--                        <t t-esc="widget.format_currency(ol.product.lst_price)"/>-->
+<!--                    </span>-->
                 </li>
             </t>
         </t>
@@ -49,11 +49,14 @@
                     <t t-foreach="widget.list || []" t-as="item">
                         <div t-attf-class="selection-item {{widget.is_selected.call(widget, item.item) ? 'selected' : '' }}" t-att-data-item-index='item_index' t-att-olid='item.id'>
                             <div class="supplementary_product_line">
-                                <div class=" name">
+                                <div class="name">
                                     <t t-esc='item.product.display_name'/>
                                 </div>
+                                <div class="price">
+                                    <t t-esc="widget.format_currency(item.product.lst_price)"/>
+                                </div>
                                 <div class="supp_qty_input">
-                                    <input class='detail client-name' name='quantity' t-att-value='item.quantity' t-att-olid='item.id'></input>
+                                    <input class='detail client-name' name='quantity' t-att-value='item.qty_per_pack || 0' t-att-olid='item.id'></input>
                                 </div>
                             </div>
                         </div>
@@ -72,15 +75,3 @@
     </t>
 
 </templates>
-
-<!--                                <div class="iter_widget">-->
-<!--                                    <div class="minus"><center>-->
-<!--                                        - -->
-<!--                                    </center></div>-->
-<!--                                    <span class="qty">-->
-<!--                                         <t t-esc='item.quantity'/>-->
-<!--                                    </span>-->
-<!--                                    <div class="plus"><center>-->
-<!--                                        +-->
-<!--                                    </center></div>-->
-<!--                                </div>-->

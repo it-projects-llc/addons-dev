@@ -95,6 +95,30 @@ odoo.define('pos_product_supplementary.pos', function (require) {
             return result;
         },
 
+        get_unit_display_price: function() {
+            if (this.supplementary_line_ids && this.supplementary_line_ids.length) {
+                var price = 0;
+                if (this.pos.config.iface_tax_included === 'total') {
+                    var quantity = this.quantity;
+                    this.quantity = 1.0;
+                    price = this.get_all_prices().priceWithTax;
+                    this.quantity = quantity;
+                } else {
+                    price =  this.get_unit_price();
+                }
+                var sol_price = _.chain(this.get_supplementary_orderlines())
+                    .map(function(ol){
+                        return ol.get_unit_display_price() * (ol.qty_per_pack || 0);
+                    })
+                    .reduce(function(memo, num){
+                        return memo + num;
+                    }, 0).value();
+                return price + sol_price;
+            } else {
+                return _super_orderline.get_unit_display_price.apply(this,arguments);
+            }
+        },
+
         export_as_JSON: function() {
             var result = _super_orderline.export_as_JSON.apply(this,arguments);
             if (this.parented_orderline){
@@ -102,6 +126,9 @@ odoo.define('pos_product_supplementary.pos', function (require) {
             }
             if (this.supplementary_line_ids){
                 result.supplementary_line_ids = this.supplementary_line_ids;
+            }
+            if (this.qty_per_pack){
+                result.qty_per_pack = this.qty_per_pack;
             }
             return result;
         },
@@ -114,6 +141,9 @@ odoo.define('pos_product_supplementary.pos', function (require) {
             if (json.supplementary_line_ids){
                 this.supplementary_line_ids = json.supplementary_line_ids;
             }
+            if (json.qty_per_pack){
+                this.qty_per_pack = json.qty_per_pack;
+            }
             return result;
         },
 
@@ -125,11 +155,24 @@ odoo.define('pos_product_supplementary.pos', function (require) {
             }
         },
 
-//        set_quantity: function(quantity, keep_price){
-//            var super_method = _super_orderline.set_quantity;
-//            this.check_for_supplementary_and_repeat_for_them(super_method, this, arguments);
-//            super_method.apply(this, arguments);
-//        },
+        set_quantity: function(quantity, keep_price){
+            var self = this;
+            if (this.supplementary_line_ids && this.supplementary_line_ids.length) {
+                var lines = this.get_supplementary_orderlines();
+                if (quantity === 'remove') {
+                    _.each(lines, function(ol){
+                        self.order.remove_orderline(ol);
+                    })
+                } else {
+                    _.each(lines, function(line){
+                        var qty = quantity * line.qty_per_pack;
+                        line.set_quantity(qty, keep_price);
+                    });
+                }
+            }
+
+            _super_orderline.set_quantity.apply(this, arguments);
+        },
 
         set_discount: function(discount){
             var super_method = _super_orderline.set_discount;
@@ -159,9 +202,10 @@ odoo.define('pos_product_supplementary.pos', function (require) {
                 var parented_orderline = self.get_last_orderline();
                 parented_orderline.supplementary_line_ids = supplementary_line_ids;
                 _.each(parented_orderline.get_supplementary_orderlines(), function(l){
+                    l.qty_per_pack = 0;
                     l.parented_orderline = parented_orderline.id;
                 });
-                parented_orderline.set_quantity(1);
+//                parented_orderline.set_quantity(1);
                 self.pos.gui.screen_instances.products.order_widget.rerender_orderline(parented_orderline);
             } else {
                 _super_order.add_product.apply(this,arguments);
@@ -175,6 +219,18 @@ odoo.define('pos_product_supplementary.pos', function (require) {
             }
             return _super_order.select_orderline.apply(this,arguments);
         },
+
+//        remove_orderline: function( line ){
+//            var self = this;
+//            if (line.supplementary_line_ids && line.supplementary_line_ids.length) {
+//                _.each(line.get_supplementary_orderlines(), function(ol){
+//                    if (ol) {
+//                        self.remove_orderline(ol);
+//                    }
+//                })
+//            }
+//            _super_order.remove_orderline.apply(this,arguments);
+//        },
     });
 
     screens.OrderWidget.include({
@@ -236,7 +292,10 @@ odoo.define('pos_product_supplementary.pos', function (require) {
     var SupplementaryPopupWidget = PopupWidget.extend({
         template: 'SupplementaryPopupWidget',
         events: _.chain({})
-            .extend(PopupWidget.prototype.events, {'click .selection-item .name': 'click_item',})
+            .extend(PopupWidget.prototype.events, {
+                'click .selection-item .name': 'click_item',
+                'click .selection-item .price': 'click_item',
+            })
             // we get rid of 'click .selection-item' because otherwise clicking on input triggers the handler for line
             .omit('click .selection-item').value(),
 
@@ -265,7 +324,10 @@ odoo.define('pos_product_supplementary.pos', function (require) {
             _.each(lines, function(l){
                 var olid = parseInt(l.getAttribute('olid') || 0);
                 var qty = parseInt(l.value) || 0;
-                order.get_orderline(olid).set_quantity(qty);
+                var orderline = order.get_orderline(olid);
+                var parented_orderline = order.get_orderline(orderline.parented_orderline);
+                orderline.qty_per_pack = qty;
+                orderline.set_quantity(orderline.qty_per_pack * parented_orderline.quantity);
             });
             this.rerender_orderline(this.list[0].parented_orderline);
         },
@@ -273,7 +335,9 @@ odoo.define('pos_product_supplementary.pos', function (require) {
         click_item: function(event) {
             var olid = parseInt(event.target.parentElement.parentElement.getAttribute('olid'));
             var orderline = this.pos.get_order().get_orderline(olid);
-            orderline.set_quantity(orderline.quantity + 1);
+            var parented_orderline = this.pos.get_order().get_orderline(orderline.parented_orderline);
+            orderline.qty_per_pack = (orderline.qty_per_pack || 0) + 1;
+            orderline.set_quantity(orderline.qty_per_pack * parented_orderline.quantity);
             this.gui.close_popup();
             this.rerender_orderline(orderline.parented_orderline);
         },
