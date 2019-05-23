@@ -2,6 +2,10 @@
     display: inline-block;
 }
 
+.supplementary_product_line .name {
+    width: 80%;
+}
+
 .supp_qty_input {
     float: right;
     width: 90px;

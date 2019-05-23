@@ -10,7 +10,8 @@ odoo.define('pos_product_supplementary.pos', function (require) {
     var PopupWidget = require('point_of_sale.popups');
     var gui = require('point_of_sale.gui');
 
-    models.load_fields('product.product', ['is_supplementary_product', 'supplementary_product_child_ids', 'available_in_pos']);
+    models.load_fields('product.product', ['is_supplementary_product', 'supplementary_product_child_ids',
+                                           'available_in_pos', 'name']);
 
     models.load_models([{
         model: 'product.product',
@@ -75,7 +76,11 @@ odoo.define('pos_product_supplementary.pos', function (require) {
             }
             return _.chain(lines)
                 .map(function(l){
-                    return self.order.get_orderline(l).get_display_price();
+                    var ol = self.order.get_orderline(l);
+                    if (!ol) {
+                        return 0;
+                    }
+                    return ol.get_display_price();
                 })
                 .reduce(function(memo, num){
                     return memo + num;
@@ -120,14 +125,14 @@ odoo.define('pos_product_supplementary.pos', function (require) {
             }
         },
 
-        set_quantity: function(quantity, keep_price){
-            var super_method = _super_orderline.set_quantity
-            this.check_for_supplementary_and_repeat_for_them(super_method, this, arguments);
-            super_method.apply(this, arguments);
-        },
+//        set_quantity: function(quantity, keep_price){
+//            var super_method = _super_orderline.set_quantity;
+//            this.check_for_supplementary_and_repeat_for_them(super_method, this, arguments);
+//            super_method.apply(this, arguments);
+//        },
 
         set_discount: function(discount){
-            var super_method = _super_orderline.set_discount
+            var super_method = _super_orderline.set_discount;
             this.check_for_supplementary_and_repeat_for_them(super_method, this, arguments);
             super_method.apply(this, arguments);
         },
@@ -137,17 +142,17 @@ odoo.define('pos_product_supplementary.pos', function (require) {
     var _super_order = models.Order.prototype;
     models.Order = models.Order.extend({
 
-        add_product: function(product, options){
+        add_product: function(product, options) {
             var self = this;
             if (!this.pos.config.supplementary_products) {
                 return _super_order.add_product.apply(this,arguments);
             }
 
             if (product && product.supplementary_product_child_ids && product.supplementary_product_child_ids.length) {
-                var options = options || {};
+                options = options || {};
                 var supplementary_line_ids = [];
                 _.each(this.pos.db.get_supplementary_products_by_parent_id(product.id), function(p) {
-                    self.add_product(p, {merge: false,});
+                    self.add_product(p, {quantity:0, merge:false,});
                     supplementary_line_ids.push(self.get_last_orderline().id);
                 });
                 _super_order.add_product.apply(this, [product, _.extend(options, {merge: false,})]);
@@ -201,7 +206,11 @@ odoo.define('pos_product_supplementary.pos', function (require) {
 
         button_click: function(){
             var self = this;
-            var line_ids = this.pos.get_order().get_selected_orderline().supplementary_line_ids;
+            var selected_orderline = this.pos.get_order().get_selected_orderline();
+            if (!selected_orderline) {
+                return;
+            }
+            var line_ids = selected_orderline.supplementary_line_ids;
             if (!line_ids || !line_ids.length){
                 return;
             }
@@ -226,6 +235,10 @@ odoo.define('pos_product_supplementary.pos', function (require) {
 
     var SupplementaryPopupWidget = PopupWidget.extend({
         template: 'SupplementaryPopupWidget',
+        events: _.chain({})
+            .extend(PopupWidget.prototype.events, {'click .selection-item .name': 'click_item',})
+            // we get rid of 'click .selection-item' because otherwise clicking on input triggers the handler for line
+            .omit('click .selection-item').value(),
 
         show: function(options){
             var self = this;
@@ -254,20 +267,54 @@ odoo.define('pos_product_supplementary.pos', function (require) {
                 var qty = parseInt(l.value) || 0;
                 order.get_orderline(olid).set_quantity(qty);
             });
-            var parented_orderline = order.get_orderline(this.list[0].parented_orderline);
-            this.pos.chrome.screens.products.order_widget.rerender_orderline(parented_orderline);
+            this.rerender_orderline(this.list[0].parented_orderline);
         },
+
+        click_item: function(event) {
+            var olid = parseInt(event.target.parentElement.parentElement.getAttribute('olid'));
+            var orderline = this.pos.get_order().get_orderline(olid);
+            orderline.set_quantity(orderline.quantity + 1);
+            this.gui.close_popup();
+            this.rerender_orderline(orderline.parented_orderline);
+        },
+
+        rerender_orderline: function(olid) {
+            var orderline = this.pos.get_order().get_orderline(olid);
+            this.pos.chrome.screens.products.order_widget.rerender_orderline(orderline);
+        },
+
     });
     gui.define_popup({name:'supplementary', widget: SupplementaryPopupWidget});
 
     screens.ProductListWidget.include({
         set_product_list: function(product_list){
+            product_list = _.filter(product_list, function(p){
+                return p.available_in_pos;
+            });
             if (this.pos.config.hide_supplementary_products) {
                 product_list = _.filter(product_list, function(p){
-                    return p.available_in_pos;
+                    return !p.is_supplementary_product;
                 });
             }
             return this._super(product_list);
+        },
+
+    });
+
+     screens.PaymentScreenWidget.include({
+
+        finalize_validation: function() {
+            var self = this;
+            var order = this.pos.get_order(),
+            orderlines = order.get_orderlines();
+            // removes excessive child orderlines. Big refactoring is needed to avoid this overriding / behavior
+            var zero_qty_supplementary_orderlines = _.filter(orderlines, function(ol){
+                return ol.parented_orderline && ol.quantity === 0;
+            });
+            _.each(zero_qty_supplementary_orderlines, function(ol){
+                order.remove_orderline(ol);
+            })
+            this._super();
         },
     });
 

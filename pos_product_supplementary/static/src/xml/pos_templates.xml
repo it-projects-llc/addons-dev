@@ -6,22 +6,24 @@
 
     <t t-name="SupplementaryProducts">
         <t t-foreach="line.get_supplementary_orderlines()" t-as="ol">
-            <li class="supplementary_product_info info">
-                <span class="product-name">
-                    <t t-esc="ol.product.display_name"/>
-                </span>
+            <t t-if="ol.quantity != 0">
+                <li class="supplementary_product_info info">
+                    <span class="product-name">
+                        <t t-esc="ol.product.name"/>
+                    </span>
 
-                <span class="price qty">
-                    <t t-esc="ol.quantity"/>
-                </span>
-                <span class="price qty">
-                    <t t-esc="line.get_unit().name" />
-                </span>
+                    <span class="price qty">
+                        <t t-esc="ol.quantity"/>
+                    </span>
+                    <span class="price qty">
+                        <t t-esc="line.get_unit().name" />
+                    </span>
 
-                <span class="price">
-                    <t t-esc="widget.format_currency(ol.product.lst_price)"/>
-                </span>
-            </li>
+                    <span class="price">
+                        <t t-esc="widget.format_currency(ol.product.lst_price)"/>
+                    </span>
+                </li>
+            </t>
         </t>
     </t>
 
@@ -45,10 +47,9 @@
                 <header class="title"><t t-esc=" widget.options.title || 'Select' " /></header>
                 <div class='selection scrollable-y touch-scrollable'>
                     <t t-foreach="widget.list || []" t-as="item">
-                        <div t-attf-class="{{ widget.is_selected.call(widget, item.item) ? 'selected' : '' }}" t-att-data-item-index='item_index' t-att-olid='item.id'>
+                        <div t-attf-class="selection-item {{widget.is_selected.call(widget, item.item) ? 'selected' : '' }}" t-att-data-item-index='item_index' t-att-olid='item.id'>
                             <div class="supplementary_product_line">
-
-                                <div class="name">
+                                <div class=" name">
                                     <t t-esc='item.product.display_name'/>
                                 </div>
                                 <div class="supp_qty_input">
