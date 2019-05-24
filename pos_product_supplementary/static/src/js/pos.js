@@ -238,6 +238,9 @@ odoo.define('pos_product_supplementary.pos', function (require) {
     screens.OrderWidget.include({
 
         rerender_orderline: function(order_line) {
+            if (!order_line) {
+                return;
+            }
             this._super(order_line);
             if (order_line.parented_orderline) {
                 order_line.hide_orderline();
