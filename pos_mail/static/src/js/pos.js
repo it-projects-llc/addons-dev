@@ -45,8 +45,12 @@ odoo.define('pos_mail.pos', function (require) {
         },
 
         handle_auto_print: function() {
-            if (this.check_autosend_mail_receipt()) {
+            if (this.check_autosend_mail_receipt() && !this.return_from_client_list) {
+                this.return_from_client_list = false;
                 this.mail_receipt_action();
+                if (this.should_close_immediately()){
+                    this.click_next();
+                }
             } else {
                 this._super();
             }
@@ -101,8 +105,7 @@ odoo.define('pos_mail.pos', function (require) {
                 receipt_screen.set_mail_customer = false;
                 if (receipt_screen.check_autosend_mail_receipt()) {
                     // back button was click when auto print option is enabled
-                    receipt_screen.click_next();
-                    return;
+                    receipt_screen.return_from_client_list = true;
                 }
                 receipt_screen.show();
                 receipt_screen.$el.zIndex(0);
