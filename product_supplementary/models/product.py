@@ -12,7 +12,7 @@ class Product(models.Model):
                                                        'supplementary_product_parent_ids',
                                                        string='Supplementary Products',
                                                        help='List of Supplementary Products')
-    supplementary_product_parent_ids = fields.Many2many('product.product', 'product_product_supplementary_product',
+    supplementary_product_parent_ids = fields.Many2many('product.template', 'product_product_supplementary_product',
                                                         'supplementary_product_parent_ids',
                                                         'supplementary_product_child_ids',
                                                         string='Parented Products',
