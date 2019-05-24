@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_apps_odoo_com_purchase,access_apps_odoo_com_purchase,model_apps_odoo_com_purchase,apps_odoo_com.apps_odoo_com_group_user,1,0,0,0
+access_apps_odoo_com_user,access_apps_odoo_com_user,model_apps_odoo_com_user,apps_odoo_com.apps_odoo_com_group_user,1,0,0,0
+access_apps_odoo_com_module,access_apps_odoo_com_module,model_apps_odoo_com_module,apps_odoo_com.apps_odoo_com_group_user,1,0,0,0

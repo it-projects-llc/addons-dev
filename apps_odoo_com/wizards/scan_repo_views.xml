@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright 2017 IT-Projects LLC (<https://it-projects.info>)
+ License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+-->
+<openerp>
+<data>
+
+<record id="scan_repo_view_form" model="ir.ui.view">
+    <field name="name">scan_repo_view_form</field>
+    <field name="model">apps_odoo_com.scan_repo</field>
+    <field name="arch" type="xml">
+        <form string="Scan Repo">
+            <group>
+                <field name="repo"/>
+            </group>
+            <footer>
+                <button name="apply"
+                        type="object"
+                        string="Scan Repo"
+                        class="oe_highlight"/>
+                or
+                <button special="cancel"
+                        string="Cancel"/>
+            </footer>
+        </form>
+    </field>
+</record>
+
+<record id="scan_repo_action" model="ir.actions.act_window">
+    <field name="name">Scan Repo</field>
+    <field name="res_model">apps_odoo_com.scan_repo</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+</record>
+
+<record id="scan_repo_menu" model="ir.ui.menu">
+    <field name="action" ref="scan_repo_action"/>
+</record>
+
+</data>
+</openerp>
