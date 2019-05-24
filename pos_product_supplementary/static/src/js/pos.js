@@ -104,19 +104,21 @@ odoo.define('pos_product_supplementary.pos', function (require) {
                     price = this.get_all_prices().priceWithTax;
                     this.quantity = quantity;
                 } else {
-                    price =  this.get_unit_price();
+                    price = this.get_unit_price();
                 }
                 var sol_price = _.chain(this.get_supplementary_orderlines())
                     .map(function(ol){
+                        if (!ol) {
+                            return 0;
+                        }
                         return ol.get_unit_display_price() * (ol.qty_per_pack || 0);
                     })
                     .reduce(function(memo, num){
                         return memo + num;
                     }, 0).value();
                 return price + sol_price;
-            } else {
-                return _super_orderline.get_unit_display_price.apply(this,arguments);
             }
+            return _super_orderline.get_unit_display_price.apply(this,arguments);
         },
 
         export_as_JSON: function() {
@@ -162,7 +164,7 @@ odoo.define('pos_product_supplementary.pos', function (require) {
                 if (quantity === 'remove') {
                     _.each(lines, function(ol){
                         self.order.remove_orderline(ol);
-                    })
+                    });
                 } else {
                     _.each(lines, function(line){
                         var qty = quantity * line.qty_per_pack;
@@ -377,7 +379,7 @@ odoo.define('pos_product_supplementary.pos', function (require) {
             });
             _.each(zero_qty_supplementary_orderlines, function(ol){
                 order.remove_orderline(ol);
-            })
+            });
             this._super();
         },
     });
