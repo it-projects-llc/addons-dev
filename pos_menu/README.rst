@@ -2,7 +2,7 @@
  POS Menu
 ==========
 
-Own set of products for each POS
+Own set of products for each POS.
 
 Credits
 =======
