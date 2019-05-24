@@ -34,7 +34,8 @@ odoo.define('pos_mail.pos', function (require) {
         },
 
         send_mail_receipt: function(partner_id) {
-            var receipt = QWeb.render('PosTicket', this.get_receipt_render_env());
+            var receipt = QWeb.render('XmlReceipt', this.get_receipt_render_env());
+            var receipt = this.create_pdf();
             return rpc.query({
                 model: 'pos.config',
                 method: 'send_receipt_via_mail',
@@ -58,7 +59,23 @@ odoo.define('pos_mail.pos', function (require) {
 
         check_autosend_mail_receipt: function() {
             return this.should_auto_print() && this.pos.config.send_receipt_by_mail;
-        }
+        },
+
+        create_pdf: function(){
+            var specialElementHandlers = {
+                '#ignoreContent': function (element, renderer) {
+                    return true;
+                }
+            };
+            var pdfdoc = new jsPDF();
+            pdfdoc.fromHTML($('.pos-sale-ticket').html(), 10, 10, {
+                'width': 110,
+                'elementHandlers': specialElementHandlers,
+            });
+            console.log(pdfdoc);
+            var data = pdfdoc.output('datauristring');
+            return data.substring(data.indexOf(',') + 1, data.length);;
+        },
     });
 
     screens.ClientListScreenWidget.include({
@@ -95,7 +112,7 @@ odoo.define('pos_mail.pos', function (require) {
                 // means we came there from the receipt screen
                 var receipt_screen = this.screen_instances.receipt;
                 var clientlist_screen = this.screen_instances.clientlist;
-                if (!clientlist_screen.new_client.email) {
+                if (!clientlist_screen.new_client || !clientlist_screen.new_client.email) {
                     // set customer button was clicked and client has no email
                     // happend when auto print option is enabled
                     return;

@@ -13,16 +13,12 @@ class PosConfig(models.Model):
     def send_receipt_via_mail(self, partner_id, body):
 
         partner = self.env['res.partner'].browse(partner_id)
-        pdf = self.env['ir.actions.report']._run_wkhtmltopdf(
-            [body.encode()],
-            landscape=True,
-            specific_paperformat_args={'data-report-margin-top': 10, 'data-report-header-spacing': 10}
-        )
+
         name = partner.name + ' POS Receipt'
         attachment = self.env['ir.attachment'].create({
             'name': name,
             'type': 'binary',
-            'db_datas': pdf,
+            'db_datas': body,
             'res_id': partner.id,
         })
 
