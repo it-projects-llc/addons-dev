@@ -35,6 +35,7 @@ REMOTE_STORAGE_DATETIME_FORMAT = "%Y-%m-%d_%H-%M-%S"
 class BackupConfig(models.Model):
     _name = 'odoo_backup_sh.config'
     _description = 'Backup Configurations'
+    _rec_name = 'database'
 
     DATABASE_NAMES = [(db, db) for db in odoo.service.db.list_dbs() if db != 'session_store']
     ROTATION_OPTIONS = [('unlimited', 'Unlimited'), ('limited', 'Limited'), ('disabled', 'Disabled')]
@@ -329,6 +330,7 @@ class BackupConfigCron(models.Model):
 class BackupInfo(models.Model):
     _name = 'odoo_backup_sh.backup_info'
     _description = 'Information About Backups'
+    _rec_name = 'database'
 
     database = fields.Char(string='Database Name', readonly=True)
     upload_datetime = fields.Datetime(string='Upload Datetime', readonly=True)
@@ -353,6 +355,7 @@ class BackupNotification(models.Model):
     _description = 'Backup Notifications'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date_create desc'
+    _rec_name = 'date_create'
 
     date_create = fields.Datetime('Date', readonly=True, default=fields.Datetime.now)
     type = fields.Selection([
