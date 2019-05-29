@@ -183,15 +183,21 @@ class BackupConfig(models.Model):
                     elif limit_option == 'unlimited':
                         limits[time_frame] = 1000000
                 if limits:
-                    backup_dts = copy.deepcopy(remote_backups[backup_config.database])
-                    needed_backup_dts = self.compute_auto_rotation_backup_dts(backup_dts, **limits)
-                    for backup_dt in backup_dts:
-                        if backup_dt not in needed_backup_dts:
-                            remote_objects_to_delete += [
-                                {'Key': '%s/%s' % (cloud_params['odoo_oauth_uid'], file_name)} for file_name in
-                                remote_backups[backup_config.database][backup_dt]
-                            ]
-                            del remote_backups[backup_config.database][backup_dt]
+                    # TODO: check it (I fixed the error below)
+                    # File "/mnt/addons/it-projects-llc/misc-addons/odoo_backup_sh/models/odoo_backup_sh.py", line 186, in update_info
+                    # backup_dts = copy.deepcopy(remote_backups[backup_config.database])
+                    # KeyError: 'backup'
+                    remote_db = remote_backups.get(backup_config.database, False)
+                    if remote_db:
+                        backup_dts = copy.deepcopy(remote_db)
+                        needed_backup_dts = self.compute_auto_rotation_backup_dts(backup_dts, **limits)
+                        for backup_dt in backup_dts:
+                            if backup_dt not in needed_backup_dts:
+                                remote_objects_to_delete += [
+                                    {'Key': '%s/%s' % (cloud_params['odoo_oauth_uid'], file_name)} for file_name in
+                                    remote_backups[backup_config.database][backup_dt]
+                                ]
+                                del remote_backups[backup_config.database][backup_dt]
 
             # Delete unnecessary remote backup objects
             if remote_objects_to_delete:
