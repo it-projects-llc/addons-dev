@@ -78,7 +78,7 @@ class BackupController(http.Controller):
         cloud_params = cls.get_config_values('options', [
             'odoo_backup_user_key', 'amazon_bucket_name', 'amazon_access_key_id', 'amazon_secret_access_key',
             'odoo_oauth_uid'])
-        if None in cloud_params.values():
+        if None or '' in cloud_params.values():
             if redirect:
                 cloud_params = cls.update_cloud_params(cloud_params, redirect, call_from)
             else:
@@ -93,10 +93,17 @@ class BackupController(http.Controller):
         if not user_key:
             user_key = ''.join(random.choice(string.hexdigits) for _ in range(30))
             cls.set_config_values('options', {'odoo_backup_user_key': user_key})
-        cloud_params = requests.get(BACKUP_SERVICE_ENDPOINT + '/get_cloud_params', params={
-            'user_key': user_key,
-            'redirect': redirect,
-        }).json()
+
+        # If your website does not have a certificate and you are not sending sensitive data,
+        # you can set the verify parameter to False and requests will ignore SSL verification.
+        try:
+            cloud_params = requests.get(BACKUP_SERVICE_ENDPOINT + '/get_cloud_params', params={
+                'user_key': user_key,
+                'redirect': redirect,
+            }, verify=False).json()
+        except Exception:
+            _logger.exception('Failed to load cloud params')
+
         if 'insufficient_credit_error' in cloud_params and call_from == 'backend':
             existing_msg = request.env['odoo_backup_sh.notification'].sudo().search(
                 [('type', '=', 'insufficient_credits'), ('is_read', '=', False)])
@@ -254,7 +261,7 @@ class BackupController(http.Controller):
     @classmethod
     def set_config_values(cls, section, options_dict):
         for option, value in options_dict.items():
-            config_parser.set(section, option, value)
+            config_parser.set(section, option, value or '')
         with open(config.rcfile, 'w') as configfile:
             config_parser.write(configfile)
 
