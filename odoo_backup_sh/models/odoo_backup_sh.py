@@ -1,4 +1,5 @@
 # Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
+# Copyright 2019 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 import copy
@@ -35,6 +36,7 @@ REMOTE_STORAGE_DATETIME_FORMAT = "%Y-%m-%d_%H-%M-%S"
 class BackupConfig(models.Model):
     _name = 'odoo_backup_sh.config'
     _description = 'Backup Configurations'
+    _rec_name = 'database'
 
     DATABASE_NAMES = [(db, db) for db in odoo.service.db.list_dbs() if db != 'session_store']
     ROTATION_OPTIONS = [('unlimited', 'Unlimited'), ('limited', 'Limited'), ('disabled', 'Disabled')]
@@ -54,6 +56,7 @@ class BackupConfig(models.Model):
     weekly_limit = fields.Integer('Weekly limit', default=1, help='How many weekly backups to preserve.')
     monthly_limit = fields.Integer('Monthly limit', default=1, help='How many monthly backups to preserve.')
     yearly_limit = fields.Integer('Yearly limit', default=1, help='How many yearly backups to preserve.')
+    storage_service = fields.Selection(selection=[('s3', 'Amazon S3')], default='s3', required=True)
 
     _sql_constraints = [
         ('database_unique', 'unique (database)', "Settings for this database already exist!"),
@@ -183,7 +186,10 @@ class BackupConfig(models.Model):
                     elif limit_option == 'unlimited':
                         limits[time_frame] = 1000000
                 if limits:
-                    backup_dts = copy.deepcopy(remote_backups[backup_config.database])
+                    remote_db = remote_backups.get(backup_config.database, False)
+                    if not remote_db:
+                        continue
+                    backup_dts = copy.deepcopy(remote_db)
                     needed_backup_dts = self.compute_auto_rotation_backup_dts(backup_dts, **limits)
                     for backup_dt in backup_dts:
                         if backup_dt not in needed_backup_dts:
@@ -215,7 +221,9 @@ class BackupConfig(models.Model):
                         ('upload_datetime', '<', datetime.strftime(backup_dt + relativedelta(seconds=1),
                                                                    DEFAULT_SERVER_DATETIME_FORMAT))
                     ]):
-                        info_file_name = files_names[0] if files_names[0][-5:] == '.info' else files_names[1]
+                        info_file_name = files_names[0] if files_names[0][-5:] == '.info' else files_names[1] if len(files_names) == 2 else False
+                        if not info_file_name:
+                            continue
                         info_file_object = BackupCloudStorage.get_object(cloud_params, info_file_name)
                         if 'reload_page' in info_file_object:
                             return info_file_object
@@ -256,6 +264,7 @@ class BackupConfig(models.Model):
             dump_stream = open(backup_encrpyted_name, 'rb')
         backup_size = dump_stream.seek(0, 2) / 1024 / 1024
         dump_stream.seek(0)
+
         cloud_params = BackupController.get_cloud_params()
         dt = datetime.utcnow()
         ts = dt.strftime(REMOTE_STORAGE_DATETIME_FORMAT)
@@ -267,6 +276,7 @@ class BackupConfig(models.Model):
             'encrypted': True if '.enc' in backup_name_suffix else False,
             'upload_datetime': ts,
             'backup_size': backup_size,
+            'storage_service': config_record.storage_service
         }
         for key, value in info_file_content.items():
             line = key + ' = ' + str(value) + '\n'
@@ -323,11 +333,13 @@ class BackupConfigCron(models.Model):
 class BackupInfo(models.Model):
     _name = 'odoo_backup_sh.backup_info'
     _description = 'Information About Backups'
+    _rec_name = 'database'
 
     database = fields.Char(string='Database Name', readonly=True)
     upload_datetime = fields.Datetime(string='Upload Datetime', readonly=True)
     encrypted = fields.Boolean(string='Encrypted', readonly=True)
     backup_size = fields.Integer(string='Backup Size, MB', readonly=True)
+    storage_service = fields.Selection(selection=[('s3', 'Amazon S3')], readonly=True)
 
     @api.model
     def create(self, vals):
@@ -347,6 +359,7 @@ class BackupNotification(models.Model):
     _description = 'Backup Notifications'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date_create desc'
+    _rec_name = 'date_create'
 
     date_create = fields.Datetime('Date', readonly=True, default=fields.Datetime.now)
     type = fields.Selection([
