@@ -78,7 +78,7 @@ class BackupController(http.Controller):
         cloud_params = cls.get_config_values('options', [
             'odoo_backup_user_key', 'amazon_bucket_name', 'amazon_access_key_id', 'amazon_secret_access_key',
             'odoo_oauth_uid'])
-        if None or '' in cloud_params.values():
+        if not all(cloud_params.values()):
             if redirect:
                 cloud_params = cls.update_cloud_params(cloud_params, redirect, call_from)
             else:
@@ -94,13 +94,12 @@ class BackupController(http.Controller):
             user_key = ''.join(random.choice(string.hexdigits) for _ in range(30))
             cls.set_config_values('options', {'odoo_backup_user_key': user_key})
 
-        # If your website does not have a certificate and you are not sending sensitive data,
-        # you can set the verify parameter to False and requests will ignore SSL verification.
+        # You can set the verify parameter to False and requests will ignore SSL verification.
         try:
             cloud_params = requests.get(BACKUP_SERVICE_ENDPOINT + '/get_cloud_params', params={
                 'user_key': user_key,
                 'redirect': redirect,
-            }, verify=False).json()
+            }, verify=True).json()
         except Exception:
             _logger.exception('Failed to load cloud params')
 
