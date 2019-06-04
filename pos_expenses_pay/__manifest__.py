@@ -8,7 +8,7 @@
     "summary": """Paying HR expenses in POS""",
     "category": "Point of Sale",
     # "live_test_URL": "",
-    "images": [],
+    "images": ["images/pay_exp1.jpg"],
     "version": "11.0.1.0.0",
     "application": False,
 
