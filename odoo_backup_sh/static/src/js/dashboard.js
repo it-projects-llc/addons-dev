@@ -1,4 +1,5 @@
 // Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
+// Copyright 2019 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
 // License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 odoo.define('odoo_backup_sh.dashboard', function (require) {
@@ -8,8 +9,8 @@ var AbstractAction = require('web.AbstractAction');
 var ajax = require('web.ajax');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
-var Widget = require('web.Widget');
 var QWeb = core.qweb;
+var _t = core._t;
 
 var Dashboard = AbstractAction.extend(ControlPanelMixin, {
     template: 'odoo_backup_sh.BackupDashboardMain',
@@ -29,6 +30,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         'click .o_dashboard_action_backup_config': 'o_dashboard_action_backup_config',
         'click .o_dashboard_action_view_backups': 'o_dashboard_action_view_backups',
         'click .o_backup_dashboard_notification .close': 'close_dashboard_notification',
+        'click .kanban_group_buttons .btn': 'click_group_buttons',
     },
 
     willStart: function() {
@@ -45,6 +47,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
                 route: '/odoo_backup_sh/fetch_dashboard_data',
             }).done(function(results) {
                 self.remote_storage_usage_graph_values = results.remote_storage_usage_graph_values;
+                self.services_storage_usage_graph_values = results.services_storage_usage_graph_values;
                 self.configs = results.configs;
                 self.notifications = results.notifications;
                 self.up_balance_url = results.up_balance_url;
@@ -77,6 +80,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
     start: function() {
         var self = this;
         return this._super().then(function() {
+            self.set_service('total');
             if (!self.show_nocontent_msg) {
                 self.render_remote_storage_usage_graph();
             }
@@ -84,8 +88,37 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         });
     },
 
-    render_remote_storage_usage_graph: function() {
-        var chart_values = this.remote_storage_usage_graph_values;
+    set_active_button: function($el) {
+        $el.parent().find('.btn-primary').removeClass('btn-primary').addClass('btn-secondary');
+        $el.removeClass('btn-secondary');
+        $el.addClass('btn-primary');
+    },
+
+    click_group_buttons: function(e) {
+        e.preventDefault();
+        var $el = $(e.target);
+        var service = $el.data('service');
+        this.set_service(service);
+        if (service === 'odoo_backup_sh') {
+            this.render_remote_storage_usage_graph(this.services_storage_usage_graph_values[service])
+        } else {
+            this.render_remote_storage_usage_graph();
+        }
+        this.set_active_button($el);
+    },
+
+    set_service: function(service) {
+        this.service = service;
+    },
+
+    get_service: function() {
+        return this.service;
+    },
+
+    render_remote_storage_usage_graph: function(chart_values) {
+        this.$('#graph_remote_storage_usage').empty();
+        this.$('h2[class="graph_title"]').text(_t(this.get_service() + ' remote storage usage'));
+        var chart_values = chart_values || this.remote_storage_usage_graph_values;
         var self = this;
 
         nv.addGraph(function() {
@@ -132,13 +165,13 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         var $o_backup_dashboard_configs = self.$('.o_backup_dashboard_configs').append(
             QWeb.render('odoo_backup_sh.config_cards', {configs: self.configs}));
         _.each($o_backup_dashboard_configs.find('.o_kanban_record'), function(record) {
-            self.render_backup_config_card_graph(record.dataset.db_name);
+            self.render_backup_config_card_graph(record.dataset.db_name, record.dataset.service);
         });
     },
 
-    render_backup_config_card_graph: function(db_name) {
+    render_backup_config_card_graph: function(db_name, service) {
         var chart_values = this.configs.filter(function (config) {
-            return config.database === db_name;
+            return config.database === db_name && config.storage_service === service;
         })[0].graph;
 
         nv.addGraph(function() {
@@ -153,7 +186,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
             chart.xAxis
                 .axisLabel('Backups of Last 7 Days, MB');
 
-            d3.select('div[data-db_name="' + db_name + '"] .backup_config_card_graph')
+            d3.select('div[data-db_name="' + db_name + '"][data-service="' + service + '"] .backup_config_card_graph')
                 .append("svg")
                 .attr("height", '10em')
                 .datum(chart_values)
@@ -206,11 +239,13 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
     o_dashboard_action_make_backup: function (ev) {
         ev.preventDefault();
         var self = this;
+        var service = $(ev.currentTarget).closest('div[data-service]').data('service');
         this._rpc({
             model: 'odoo_backup_sh.config',
             method: 'make_backup',
             kwargs: {
                 name: $(ev.currentTarget).closest('div[data-db_name]').data('db_name'),
+                service: service,
             },
         }).then(function (result) {
             if (typeof result !== "undefined" && 'reload_page' in result) {
@@ -228,7 +263,8 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
             views: [[false, 'list'], [false, 'form']],
             res_model: 'odoo_backup_sh.backup_info',
             target: 'current',
-            domain: [['database', '=', $(ev.currentTarget).closest('div[data-db_name]').data('db_name')]],
+            domain: [['database', '=', $(ev.currentTarget).closest('div[data-db_name]').data('db_name')],
+                ['storage_service', '=', $(ev.currentTarget).closest('div[data-service]').data('service')]],
         },
         {
             clear_breadcrumbs: true,

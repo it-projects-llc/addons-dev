@@ -16,7 +16,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                 <div class="app_settings_block" data-string="Backups" string="Backups" data-key="odoo_backup_sh" groups="base.group_system">
                     <h2>Backup Services</h2>
                     <div class="row mt16 o_settings_container" name="backup_services">
-                        <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="col-12 col-lg-12 o_setting_box">
                             <div class="o_setting_left_pane">
                                 <field name="module_odoo_backup_sh_google_disk"/>
                             </div>
@@ -30,7 +30,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="col-12 col-lg-12 o_setting_box">
                             <div class="o_setting_left_pane">
                                 <field name="module_odoo_backup_sh_dropbox" />
                             </div>

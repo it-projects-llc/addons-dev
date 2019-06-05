@@ -1,4 +1,5 @@
 # Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
+# Copyright 2019 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 import jinja2
@@ -188,9 +189,9 @@ class BackupController(http.Controller):
         date_month_before = datetime.now().date() - timedelta(days=29)
         date_list = [date_month_before + timedelta(days=x) for x in range(30)]
         last_month_domain = [('date', '>=', datetime.strftime(date_list[0], DEFAULT_SERVER_DATE_FORMAT))]
+        values = request.env['odoo_backup_sh.remote_storage'].search(last_month_domain).sorted(key='date')
         usage_values = {
-            r.date: r.total_used_remote_storage for r in
-            request.env['odoo_backup_sh.remote_storage'].search(last_month_domain).sorted(key='date')
+            r.date: r.total_used_remote_storage for r in values
         }
         for date in date_list:
             if date not in usage_values:
@@ -207,15 +208,35 @@ class BackupController(http.Controller):
                 } for day in date_list]
             }]
         }
+        s3_usage_values = {
+            r.date: r.s3_used_remote_storage for r in values
+        }
+        for date in date_list:
+            if date not in s3_usage_values:
+                if date_list.index(date) == 0:
+                    s3_usage_values[date] = 0
+                else:
+                    s3_usage_values[date] = s3_usage_values.get(date_list[date_list.index(date) - 1], 0)
+
+        dashboard_data['services_storage_usage_graph_values'] = {
+            'odoo_backup_sh': [{
+                'key': 'Remote S3 Storage Usage',
+                'values': [{
+                    0: fields.Date.to_string(day),
+                    1: s3_usage_values[day]
+                } for day in date_list]
+            }]
+        }
 
         last_week_dates = date_list[-7:]
         backup_configs = request.env['odoo_backup_sh.config'].with_context({'active_test': False}).search_read(
-            [], ['database', 'active'])
+            [], ['database', 'active', 'storage_service'])
         for b_config in backup_configs:
             graph_values = {date: 0 for date in last_week_dates}
             for backup in request.env['odoo_backup_sh.backup_info'].search([
                     ('database', '=', b_config['database']),
-                    ('upload_datetime', '>=', datetime.strftime(last_week_dates[0], DEFAULT_SERVER_DATETIME_FORMAT))]):
+                    ('upload_datetime', '>=', datetime.strftime(last_week_dates[0], DEFAULT_SERVER_DATETIME_FORMAT)),
+                    ('storage_service', '=', b_config['storage_service'])]):
                 graph_values[backup.upload_datetime.date()] += backup.backup_size
             b_config['graph'] = [{
                 'key': 'Backups of Last 7 Days',
@@ -226,7 +247,7 @@ class BackupController(http.Controller):
             }]
             b_config.update({
                 'backups_number': request.env['odoo_backup_sh.backup_info'].search_count([
-                    ('database', '=', b_config['database'])]),
+                    ('database', '=', b_config['database']), ('storage_service', '=', b_config['storage_service'])]),
                 'graph': [{
                     'key': 'Backups of Last 7 Days',
                     'values': [{
@@ -302,8 +323,8 @@ class BackupCloudStorage(http.Controller):
         user_dir_name = '%s/' % cloud_params['odoo_oauth_uid']
         list_objects = amazon_s3_client.list_objects_v2(
             Bucket=cloud_params['amazon_bucket_name'], Prefix=user_dir_name, Delimiter='/')
-        return {'backup_list': [
-            obj['Key'][len(user_dir_name):] for obj in list_objects.get('Contents', {}) if obj.get('Size')]}
+        return {'backup_list': [(obj['Key'][len(user_dir_name):], 'odoo_backup_sh') for obj in
+                                list_objects.get('Contents', {}) if obj.get('Size')]}
 
     @classmethod
     @access_control
