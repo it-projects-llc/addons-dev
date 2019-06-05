@@ -100,7 +100,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         var service = $el.data('service');
         this.set_service(service);
         if (service === 'odoo_backup_sh') {
-            this.render_remote_storage_usage_graph(this.services_storage_usage_graph_values[service])
+            this.render_remote_storage_usage_graph(this.services_storage_usage_graph_values[service]);
         } else {
             this.render_remote_storage_usage_graph();
         }
@@ -118,7 +118,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
     render_remote_storage_usage_graph: function(chart_values) {
         this.$('#graph_remote_storage_usage').empty();
         this.$('h2[class="graph_title"]').text(_t(this.get_service() + ' remote storage usage'));
-        var chart_values = chart_values || this.remote_storage_usage_graph_values;
+        chart_values = chart_values || this.remote_storage_usage_graph_values;
         var self = this;
 
         nv.addGraph(function() {

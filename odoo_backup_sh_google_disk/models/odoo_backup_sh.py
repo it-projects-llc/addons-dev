@@ -154,9 +154,9 @@ class BackupConfig(models.Model):
             db_mimetype = "application/zip"
             info_mimetype = "text/plain"
             for obj, mimetype, metadata in [[dump_stream, db_mimetype, db_metadata],
-                                                [info_file, info_mimetype, info_metadata]]:
+                                            [info_file, info_mimetype, info_metadata]]:
                 media = MediaIoBaseUpload(obj, mimetype, resumable=True)
-                res = GoogleDriveService.files().create(body=metadata, media_body=media, fields="id").execute()
+                GoogleDriveService.files().create(body=metadata, media_body=media, fields="id").execute()
 
             # Create new record with backup info data
             info_file_content['upload_datetime'] = dt
@@ -203,8 +203,7 @@ class DeleteRemoteBackupWizard(models.TransientModel):
 
     @api.multi
     def delete_remove_backup_button(self):
-        record_ids = (self._context.get('active_model') == 'odoo_backup_sh.backup_info' and
-                      self._context.get('active_ids') or [])
+        record_ids = (self._context.get('active_model') == 'odoo_backup_sh.backup_info' and self._context.get('active_ids') or [])
         backup_info_records = self.env['odoo_backup_sh.backup_info'].search([('id', 'in', record_ids)])
         GoogleDriveService = self.env['ir.config_parameter'].get_google_drive_service()
         backup_google_drive_info_records = backup_info_records.filtered(lambda r: r.storage_service == 'google_drive')

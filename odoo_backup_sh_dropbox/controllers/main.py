@@ -2,9 +2,9 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 from datetime import datetime, timedelta
-from odoo import exceptions, fields, http, _
+from odoo import fields, http
 from odoo.http import request
-from odoo.tools import config, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.addons.odoo_backup_sh.controllers.main import BackupController
 
 

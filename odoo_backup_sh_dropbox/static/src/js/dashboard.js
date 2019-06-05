@@ -19,7 +19,7 @@ odoo.define('odoo_backup_sh_dropbox.dashboard', function (require) {
             if ($el.data('service') === 'dropbox') {
                 this.set_active_button($el);
                 this.set_service(service);
-                this.render_remote_storage_usage_graph(this.services_storage_usage_graph_values[service])
+                this.render_remote_storage_usage_graph(this.services_storage_usage_graph_values[service]);
             } else {
                 this._super(e);
             }

@@ -198,8 +198,7 @@ class DeleteRemoteBackupWizard(models.TransientModel):
 
     @api.multi
     def delete_remove_backup_button(self):
-        record_ids = (self._context.get('active_model') == 'odoo_backup_sh.backup_info' and
-                      self._context.get('active_ids') or [])
+        record_ids = (self._context.get('active_model') == 'odoo_backup_sh.backup_info' and self._context.get('active_ids') or [])
         backup_info_records = self.env['odoo_backup_sh.backup_info'].search([('id', 'in', record_ids)])
         folder_path = self.env['ir.config_parameter'].get_param("odoo_backup_sh_dropbox.dropbox_folder_path")
         DropboxService = self.env['ir.config_parameter'].get_dropbox_service()
