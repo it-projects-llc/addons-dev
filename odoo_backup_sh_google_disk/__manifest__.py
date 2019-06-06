@@ -19,7 +19,7 @@
     "depends": [
         "odoo_backup_sh",
     ],
-    "external_dependencies": {"python": ["google", "googleapiclient"], "bin": []},
+    "external_dependencies": {"python": ["googleapiclient"], "bin": []},
     "data": [
         "views/odoo_backup_sh_views.xml",
         "views/odoo_backup_sh_google_drive_templates.xml",
