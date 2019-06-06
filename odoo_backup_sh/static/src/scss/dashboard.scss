@@ -68,6 +68,19 @@
     margin: 8px 0 4px;
 }
 
+.o_backup_dashboard_configs .o_kanban_record:hover .backup_config_edit {
+    opacity: 1;
+    -webkit-transition: 0.2s ease-in-out;
+    -o-transition: 0.2s ease-in-out;
+    transition: 0.2s ease-in-out;
+}
+
+.backup_config_edit {
+    float: right;
+    cursor: pointer;
+    opacity: 0;
+}
+
 .o_backup_dashboard_nocontent {
     padding: 15px;
     margin-top: 12px;
@@ -135,7 +148,6 @@
 
 .backup_card_title {
     color: #7c7bad;
-    cursor: pointer;
     font-size: 18px;
 }
 

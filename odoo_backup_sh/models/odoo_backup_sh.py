@@ -344,7 +344,7 @@ class BackupConfigCron(models.Model):
         })
         res = super(BackupConfigCron, self).create(vals)
         res.write({
-            'code': 'model.make_backup("%s", %s, init_by_cron_id=%s)' % (config.database, config.storage_service, res.ir_cron_id.id),
+            'code': 'model.make_backup("%s", "%s", init_by_cron_id=%s)' % (config.database, config.storage_service, res.ir_cron_id.id),
         })
         return res
 

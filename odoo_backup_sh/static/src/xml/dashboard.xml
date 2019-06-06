@@ -58,7 +58,12 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
     <t t-name="odoo_backup_sh.config_cards">
         <t t-foreach="configs" t-as="config">
             <div class="o_kanban_record" t-att-data-db_name="config.database" t-att-data-service="config.storage_service">
-                <div class="backup_card_title o_dashboard_action_backup_config" t-att-data-res_id="config.id" title="Set up schedules and rotations."><t t-esc="config.database"/></div>
+                <div class="backup_card_title" title="Set up schedules and rotations.">
+                    <t t-esc="config.database"/>
+                    <span class="backup_config_edit o_dashboard_action_backup_config" t-att-data-res_id="config.id">
+                        <i class="fa fa-pencil" title="Edit Backup Config"/>
+                    </span>
+                </div>
                 <div class="backup_storage_service_title o_hidden" title="Backup Storage Service">
                     <t t-if="config.storage_service == 'odoo_backup_sh'">
                         Odoo Backup sh

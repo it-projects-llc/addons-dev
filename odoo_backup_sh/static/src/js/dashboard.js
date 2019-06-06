@@ -262,6 +262,9 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
             type: 'ir.actions.act_window',
             views: [[false, 'list'], [false, 'form']],
             res_model: 'odoo_backup_sh.backup_info',
+            context: {
+                'search_default_group_upload_datetime': 1
+            },
             target: 'current',
             domain: [['database', '=', $(ev.currentTarget).closest('div[data-db_name]').data('db_name')],
                 ['storage_service', '=', $(ev.currentTarget).closest('div[data-service]').data('service')]],

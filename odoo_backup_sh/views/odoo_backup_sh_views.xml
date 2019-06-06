@@ -110,11 +110,36 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
         </field>
     </record>
 
+    <record model="ir.ui.view" id="odoo_backup_sh_backup_search">
+        <field name="name">odoo_backup_sh.backup_info.search</field>
+        <field name="model">odoo_backup_sh.backup_info</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="database"/>
+                <field name="upload_datetime" />
+                <field name="encrypted"/>
+                <field name="backup_size"/>
+                <field name="storage_service"/>
+                <group string="Group By">
+                    <filter name="group_database" string="Database" domain="[]" context="{'group_by':'database'}"/>
+                    <filter name="group_encrypted" string="Encrypted" domain="[]" context="{'group_by':'encrypted'}"/>
+                    <filter name="group_upload_datetime" string="Upload Datetime" domain="[]" context="{'group_by':'upload_datetime'}"/>
+                    <filter name="group_backup_size" string="Size" domain="[]" context="{'group_by':'backup_size'}"/>
+                    <filter name="group_storage_service" string="Storage Service" domain="[]" context="{'group_by':'storage_service'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <record id='odoo_backup_sh_backup_action' model='ir.actions.act_window'>
         <field name="name">Backups</field>
         <field name="res_model">odoo_backup_sh.backup_info</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="context">{
+            'search_default_group_storage_service': 1
+            }
+        </field>
     </record>
 
     <record id="view_odoo_backup_sh_notification_kanban" model="ir.ui.view">
