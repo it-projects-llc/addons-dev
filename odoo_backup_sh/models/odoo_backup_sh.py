@@ -9,6 +9,8 @@ import requests
 import tempfile
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+from odoo.exceptions import UserError
+
 
 try:
     import configparser as ConfigParser
@@ -21,7 +23,7 @@ except ImportError as err:
     logging.getLogger(__name__).debug(err)
 
 import odoo
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.translate import _
@@ -153,7 +155,11 @@ class BackupConfig(models.Model):
 
     @api.model
     def get_backup_list(self, cloud_params):
-        return BackupCloudStorage.get_backup_list(cloud_params)
+        try:
+            return BackupCloudStorage.get_backup_list(cloud_params)
+        except Exception as e:
+            _logger.exception('Failed to load backups')
+            raise UserError(_("Failed to load backups: %s") % e)
 
     @api.model
     def get_info_file_object(self, cloud_params, info_file_name, storage_service):
