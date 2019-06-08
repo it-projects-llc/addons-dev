@@ -14,75 +14,69 @@ Installation
 Configuration
 =============
 
-Creating Service Account Key
-----------------------------
+Creating a Service Account Key
+------------------------------
 
-Note: You need to have a Google Account
+*Note: You need to have a Google account*
 
-* Open the GCP Console. https://console.cloud.google.com/
-* Login to Google.
-* В верхнем меню нажмите "Выберете проект"
-* В открывшемся окне нажмите "СОЗДАТЬ ПРОЕКТ"
-* Укажите название проекта и Местоположение при необходимости
-* Нажмите "создать"
-* В верхнем меню выберете созданный проект из списка проектов
-* Откройте меню навигации (Верхняя левая кнопка)
-* Выберете API и Сервисы >> Библиотека
-* В Поиске найдите Google Drive API и включите его
-* Перейдите в раздел Учетные данные в меню слева
-* На кнопке "Создать учетные данные" выберете "Ключ сервисного аккаунта"
-* Укажите "Сервисный аккаунт" или создайте новый
-  * При создании нового сервисного аккаунта укажите роль "Проект" >> "Владелец"
-  * Укажите Название сервисного аккаунта
-  * Start Odoo with ``--load=web,odoo_backup_sh`` or set the ``server_wide_modules`` option in the Odoo configuration file:
-* Укажите тип ключа JSON
-* Нажмите "Создать" (ключ автоматически скачается)
-* Откроется страница "Учетные данные" нажмите на "Управление сервисными аккаунтами"
-* Запомните Электронную почту Сервисного аккаунта.
+* Open the `GCP Console. <https://console.cloud.google.com/>`__
+* Login to your Google account
+* Press `Projects` button on the Top menu
+* In Popup window choose `New Project`
+* Define the Name and Location (if needed) of Project
+* Click on `Create` button
+* In Top menu choose your New project
+* Open navigation menu (*Burger menu in the Left corner*)
+* Choose APIs and ``[[Services]] >> Library``
+* Choose Google Drive API and turn it on
+* Go to `Service account` inside *IAM& admin*
+* Click on `Create` and add the Private key
+* Choose `Service account` or create a new one
+  * If you create a new one please define ``[[Project]] >> Owner``
+  * Define the name of Service account
+  * Start Odoo with ``--load=web,odoo_backup_sh`` or set the ``server_wide_modules`` option in the Odoo configuration file
+* Define a key type as *JSON*
+* Click `Create` (key is created automatically)
+* In opened page *IAM& admin* click on `Service account`
+* Remember the e-mail of your service account
 
-Set rights to Folder in Google Drive
-------------------------------------
+Access rights to Google Folder
+------------------------------
 
-* Откройте Google Drive https://www.google.com/drive/
-* Создайте новую папку и новозите "Backups"
-* Правой кнопкой мыши нажмите на эту папку и выберете "Открыть Доступ"
-* В открывшемся окне укажите email Сервисного аккаунта
-* Нажмите готово.
+* Go to `Google Drive <https://www.google.com/drive/>`__
+* Create a new folder `Backups`
+* Click the right mouse button on this folder and choose `Share+`
+* In Pop up window fill in e-mail of created service account
+* Confirm your action
 
-Установка закрытого ключа сервисного Аккаунта на сервер
--------------------------------------------------------
+Installation of Private key on server
+-------------------------------------
+In the Example below you can see the Server, which is launched with Docker
 
-(Ниже приведен пример для сервера запущенного с помощью Docker)
-
-* Скопируйте ключ в Docker контейнер::
+* Copy this path to the Docker container::
 
   docker cp PATH_FROM/YOU_FILE_NAME.JSON CONTAINER_NAME:/PATH_TO
 
-Настройка Сервера
+
+Server Deployment
 -----------------
 
-* `Activate Developer Mode <https://odoo-development.readthedocs.io/en/latest/odoo/usage/debug-mode.html>`__
-* Откройте меню Backups >> Configuration >> Settings
-* Укажите Google Drive
-* Нажмите Save
+* Activate `Developer Mode <https://odoo-development.readthedocs.io/en/latest/odoo/usage/debug-mode.html>`__
+* Go to ``[[Backups]] >> Configuration >> Settings``
+* Choose Google Drive
+* Click on `Save`
 
 Usage
 =====
 
-Open the menu ``[[ Backups ]] >> Dashboard``
+* Open the menu ``[[ Backups ]] >> Dashboard``
+* Proceed with ``[[ Backups ]] >> Backups`` where Google drive databases are presented
+* ``[[ Backups ]] >> Backups``
+* Go to ``[[Backup]] >> Configuration >> Schedules and Rotations``
+* See ``[[Backup]] >> Notifications`` if new one is displayed
 
-Top window is a general statistics of all your backups are stored on a remote server.
 
-.. todo:: Add a description of top window when interfaces are ready.
+RESULT: You can see the main Graph with the general statistics of all your backups are stored on a remote server. After this window a special form for managing and controlling backups of your databases specially *for Google drive* is located.
+In addition to auto backup, you can make new backups manually at any time. Backups *taken by hand* are not involved in auto rotation conditions.
 
-Below are the forms for managing and controlling backups of your databases.
-In addition to auto backup, you can make new backup manually at any time.
-Backups taken by hand are not involved in auto rotation conditions.
 
-.. todo:: Add the section when interfaces are ready.
-
-{Instruction for daily usage. It should describe how to check that module works. What shall user do and what would user get.}
-
-* Open menu ``{Menu} >> {Submenu} >> {Subsubmenu}``
-* Click ``[{Button Name}]``
-* RESULT: {what user gets, how the modules changes default behaviour}

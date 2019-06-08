@@ -5,7 +5,7 @@
     "summary": """Your backups to Google Drive""",
     "category": "Backup",
     # "live_test_url": "",
-    "images": [],
+    "images": ['images/backup_google.jpg'],
     "version": "12.0.1.0.0",
     "application": False,
 

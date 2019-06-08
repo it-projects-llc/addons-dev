@@ -5,7 +5,7 @@
     "summary": """Your backups to Dropbox""",
     "category": "Backup",
     # "live_test_url": "",
-    "images": [],
+    "images": ['images/backup_dropbox.jpg'],
     "version": "12.0.1.0.0",
     "application": False,
 

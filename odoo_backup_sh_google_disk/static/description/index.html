@@ -1,0 +1,197 @@
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h2 class="oe_slogan">Backups to Google disk</h2>
+            <h3 class="oe_slogan">Manage database backups via your Google drive</h3>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <p class="oe_mt32">
+                Main feature: no need to download and upload a database archive via a browser.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h3 class="oe_slogan">Configuration</h3>
+            <br class="oe_mt32">
+                Before starting backup jobs you need to make some configuration.</br>
+                <i>Note: You need to have a Google account</i>
+            <br>
+                <li>Creating a Service Account Key</li>
+                - Open the GCP Console <a href="https://console.cloud.google.com/">https://console.cloud.google.com</a> <br/>
+                - Login to your Google account <br/>
+                - Press <b>Projects</b> button on the Top menu<br/>
+                - In Popup window choose <i>New Project</i> <br/>
+                - Define the Name and Location (if needed) of Project <br/>
+                - Click on <b>Create</b> button <br/>
+                - In Top menu choose your New project <br/>
+                - Open navigation menu (<b>Burger menu in the Left corner</b>) <br/>
+                - Choose APIs and <em>Services &rarr; Library</em> <br/>
+                - Choose Google Drive API and turn it on <br/>
+                - Go to <em>IAM& admin &rarr; Service account</em> <br/>
+                - Click on <b>Create</b> and add the <i>Private key</i> <br/>
+                - Choose the <i>Service account</i> or create a new one <br/>
+                - If you create a new one please define <em>Project &rarr; Owner</em> <br/>
+                - Define the name of Service account <br/>
+                - Start Odoo with <code>--load=web,odoo_backup_sh</code> or set the <code>server_wide_modules</code> option in the Odoo configuration file <br/>
+                - Define a key type as <i>JSON</i> <br/>
+                - Click <b>Create</b> (key is created automatically) <br/>
+                - In opened page *IAM& admin* click on <b>Service account</b> <br/>
+                - Remember the e-mail of your service account
+                <div class="oe_demo oe_picture oe_screenshot">
+                    <img src="service_account.png"/>
+                </div>
+                <li>Access rights to Google Folder</li>
+                - Go to Google Drive <a href="https://www.google.com/drive/">https://www.google.com/drive</a> </br>
+                - Create a new folder <i>Backups</i> </br>
+                - Click the right mouse button on this folder and choose <b>Share+</b> </br>
+                - In Pop up window fill in e-mail of created service account </br>
+                - Confirm your action
+            <div class="oe_demo oe_picture oe_screenshot">
+                <img src="share.png"/>
+            </div>
+                <li>Installation of Private key on server</li>
+                <code>docker cp PATH_FROM/YOU_FILE_NAME.JSON CONTAINER_NAME:/PATH_TO</code>
+                <li>Server Deployment</li>
+                - Activate Deveopler mode <a href="https://odoo-development.readthedocs.io/en/latest/odoo/usage/debug-mode.html">https://odoo-development.readthedocs.io/en/latest/odoo/usage/debug-mode.html</a> </br>
+                - Go to <em>Backups &rarr; Configuration &rarr; Settings</em> </br>
+                - Choose Google Drive </br>
+                - Click on <b>Save</b> </br>
+                <div class="oe_demo oe_picture oe_screenshot">
+                    <img src="developer_mode.png"/>
+                </div>
+                <div class="oe_demo oe_picture oe_screenshot">
+                    <img src="google_drive.png"/>
+                </div>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <h3 class="oe_slogan">How it works</h3>
+            <p class="oe_mt32">
+                Go to <b>Backup Dashboard</b> and press <i>Add</i> button
+            </p>
+            <div class="oe_demo oe_picture oe_screenshot">
+                <img src="add_button.png"/>
+            </div>
+            <p class="oe_mt32">
+                Make configuration depending on your needs
+            </p>
+            <div class="oe_demo oe_picture oe_screenshot">
+                <img src="add_database.png"/>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <p class="oe_mt32">
+            <ul>
+                <li>Define the <i>Name</i> </li>
+                <li>Create the <i>Password</i> if you want to encrypt the Backup</li>
+                <li>Schedule Auto Backups</li>
+                <li>Set up how many backups to preserve for certain time frames</li>
+            </ul>
+            </p>
+            <div class="oe_demo oe_picture oe_screenshot">
+                <img src="backup_config.png"/>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <p class="oe_mt32">
+                You can see details of your backups in the <i>Table format</i>
+            </p>
+            <div class="oe_demo oe_picture oe_screenshot">
+                <img src="table.png"/>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <p class="oe_mt32">
+                You can see a <i>Visual representation</i> of your backups</i>
+            </p>
+            <div class="oe_demo oe_picture oe_screenshot">
+                <img src="dashboard.png"/>
+            </div>
+            <div class="oe_demo oe_picture oe_screenshot">
+                <img src="graph.png"/>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span8">
+            <h2>Need our service?</h2>
+            <p class="oe_mt32">Contact us by <a href="mailto:apps@it-projects.info">email</a> or fill out <a href="https://www.it-projects.info/page/website.contactus " target="_blank">request form</a></p>
+            <ul>
+                <li><a href="mailto:apps@it-projects.info">apps@it-projects.info <i class="fa fa-envelope-o"></i></a></li>
+                <li><a href="https://www.it-projects.info/page/website.contactus " target="_blank">https://www.it-projects.info/page/website.contactus <i class="fa fa-list-alt"></i></a></li>
+                <li><a href="https://m.me/itprojectsllc" target="_blank">https://m.me/itprojectsllc <i class="fa fa-facebook-square"></i></a></li>
+                <li>skype@it-projects.info <i class="fa fa-skype"></i></li>
+            </ul>
+        </div>
+        <div class="oe_span4">
+            <div class="stamp" style="width:200px;">
+                <div style="margin-top: 15px;
+                            position: relative;
+                            font-family:'Vollkorn', serif;
+                            font-size: 16px;
+                            line-height: 25px;
+                            text-transform: uppercase;
+                            font-weight: bold;
+                            color: #75526b;
+                            border: 3px dashed #75526b;
+                            float: left;
+                            padding: 4px 12px;
+                            -webkit-transform: rotate(6deg);
+                            -o-transform: rotate(6deg);
+                            -moz-transform: rotate(6deg);
+                            -ms-transform: rotate(6deg);">
+                    Tested on Odoo<br/>12.0 community
+                </div>
+                <div style="margin-top: 15px;
+                            position: relative;
+                            font-family:'Vollkorn', serif;
+                            font-size: 16px;
+                            line-height: 25px;
+                            text-transform: uppercase;
+                            font-weight: bold;
+                            color: #75526b;
+                            border: 3px dashed #75526b;
+                            float: left;
+                            padding: 4px 12px;
+                            -webkit-transform: rotate(-3deg);
+                            -o-transform: rotate(-3deg);
+                            -moz-transform: rotate(-3deg);
+                            -ms-transform: rotate(-3deg);">
+                    Tested on Odoo<br/>12.0 enterprise
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
