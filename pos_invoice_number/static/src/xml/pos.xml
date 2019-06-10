@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).-->
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="PosTicket">
+        <t t-jquery='.pos-center-align' t-operation='append'>
+            <t t-if="order.invoice_name">
+                Invoice: <t t-esc="order.invoice_name"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-extend="XmlReceipt">
+        <t t-jquery='t[t-esc*="receipt.name"]' t-operation='after'>
+            <t t-if='order.invoice_name'>
+                <div>Invoice: <t t-esc='order.invoice_name' /></div>
+            </t>
+        </t>
+    </t>
+
+</templates>

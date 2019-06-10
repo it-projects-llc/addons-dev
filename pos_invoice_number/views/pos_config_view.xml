@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).-->
+<odoo>
+    <record id="view_pos_config_form" model="ir.ui.view">
+        <field name="name">pos.config.form.inherit</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_config_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='receipt_footer']" position="after">
+                <field name="invoice_prefix"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
