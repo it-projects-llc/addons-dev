@@ -325,9 +325,13 @@ class BackupConfig(models.Model):
         s3_info_file_path = '%s/%s.%s.info' % (cloud_params['odoo_oauth_uid'], name, ts)
         # Upload two backup objects to AWS S3
         for obj, obj_path in [[dump_stream, s3_backup_path], [info_file, s3_info_file_path]]:
-            res = BackupCloudStorage.put_object(cloud_params, obj, obj_path)
-            if res and 'reload_page' in res:
-                return res
+            try:
+                res = BackupCloudStorage.put_object(cloud_params, obj, obj_path)
+                if res and 'reload_page' in res:
+                    return res
+            except Exception as e:
+                _logger.exception('Failed to load backups')
+                raise UserError(_("Failed to load backups: %s") % e)
         # Create new record with backup info data
         info_file_content['upload_datetime'] = dt
         self.env['odoo_backup_sh.backup_info'].create(info_file_content)
