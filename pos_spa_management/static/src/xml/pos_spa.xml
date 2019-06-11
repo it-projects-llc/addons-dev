@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ClientSelectionPopup">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup popup-client">
+                <p class="title">Type partners phone number</p>
+                <div class="body">
+                    <div class="popup_phone_input">
+                        <input class='detail client-phone' name='phone' placeholder='+79171212123'></input>
+                    </div>
+                    <button class="btn btn-primary check_partner_presence" name="check_partner_presence" type="object">Check Client</button>
+                    <div class="popup_name_input">
+                        <input class='detail client-name' name='name'/>
+                    </div>
+                </div>
+                <div class="footer">
+                    <div class="button confirm">
+                        Ok
+                    </div>
+                    <div class="button cancel">
+                        Cancel
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+
+</templates>
