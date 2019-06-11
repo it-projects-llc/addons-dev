@@ -110,6 +110,17 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
         </field>
     </record>
 
+    <record id="odoo_backup_sh_backup_graph" model="ir.ui.view">
+        <field name="name">odoo_backup_sh.backup_info.graph</field>
+        <field name="model">odoo_backup_sh.backup_info</field>
+        <field name="arch" type="xml">
+            <graph type="bar">
+                <field name="database" type="row"/>
+                <field name="backup_size" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="odoo_backup_sh_backup_search">
         <field name="name">odoo_backup_sh.backup_info.search</field>
         <field name="model">odoo_backup_sh.backup_info</field>
@@ -123,7 +134,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                 <group string="Group By">
                     <filter name="group_database" string="Database" domain="[]" context="{'group_by':'database'}"/>
                     <filter name="group_encrypted" string="Encrypted" domain="[]" context="{'group_by':'encrypted'}"/>
-                    <filter name="group_upload_datetime" string="Upload Datetime" domain="[]" context="{'group_by':'upload_datetime'}"/>
+                    <filter name="group_upload_datetime" string="Upload Datetime" domain="[]" context="{'group_by':'upload_datetime:day'}"/>
                     <filter name="group_backup_size" string="Size" domain="[]" context="{'group_by':'backup_size'}"/>
                     <filter name="group_storage_service" string="Storage Service" domain="[]" context="{'group_by':'storage_service'}"/>
                 </group>
@@ -135,9 +146,10 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
         <field name="name">Backups</field>
         <field name="res_model">odoo_backup_sh.backup_info</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,graph</field>
         <field name="context">{
-            'search_default_group_storage_service': 1
+            'search_default_group_database': 1,
+            'search_default_group_upload_datetime': 1,
             }
         </field>
     </record>

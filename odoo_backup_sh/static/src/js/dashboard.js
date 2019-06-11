@@ -260,7 +260,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         this.do_action({
             name: "Backups",
             type: 'ir.actions.act_window',
-            views: [[false, 'list'], [false, 'form']],
+            views: [[false, 'list'], [false, 'form'], [false, 'graph']],
             res_model: 'odoo_backup_sh.backup_info',
             context: {
                 'search_default_group_upload_datetime': 1
