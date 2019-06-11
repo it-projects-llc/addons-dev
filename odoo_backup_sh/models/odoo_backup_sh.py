@@ -9,7 +9,6 @@ import requests
 import tempfile
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from odoo.exceptions import UserError
 
 
 try:
@@ -33,6 +32,8 @@ config_parser = ConfigParser.ConfigParser()
 _logger = logging.getLogger(__name__)
 
 REMOTE_STORAGE_DATETIME_FORMAT = "%Y-%m-%d_%H-%M-%S"
+BACKUP_NAME_SUFFIX = ".zip"
+BACKUP_NAME_ENCRYPT_SUFFIX = BACKUP_NAME_SUFFIX + ".enc"
 
 
 class BackupConfig(models.Model):
@@ -279,15 +280,11 @@ class BackupConfig(models.Model):
         return backup_list
 
     @api.model
-    def make_backup(self, name, service, init_by_cron_id=None):
-        if init_by_cron_id and not self.env['ir.cron'].browse(init_by_cron_id).active:
-            # The case when an auto backup was initiated by an inactive backup config.
-            return None
+    def get_dump_stream_and_info_file(self, name, service, ts):
         dump_stream = odoo.service.db.dump_db(name, None, 'zip')
-        backup_name_suffix = '.zip'
-        config_record = self.with_context({'active_test': False}).search([('database', '=', name), ('storage_service', '=', service)])
+        config_record = self.with_context({'active_test': False}).search([('database', '=', name),
+                                                                          ('storage_service', '=', service)])
         if config_record.encrypt_backups:
-            backup_name_suffix += '.enc'
             # GnuPG ignores the --output parameter with an existing file object as value
             backup_encrpyted = tempfile.NamedTemporaryFile()
             backup_encrpyted_name = backup_encrpyted.name
@@ -297,16 +294,11 @@ class BackupConfig(models.Model):
             dump_stream = open(backup_encrpyted_name, 'rb')
         backup_size = dump_stream.seek(0, 2) / 1024 / 1024
         dump_stream.seek(0)
-
-        cloud_params = BackupController.get_cloud_params()
-        dt = datetime.utcnow()
-        ts = dt.strftime(REMOTE_STORAGE_DATETIME_FORMAT)
-        s3_backup_path = '%s/%s.%s%s' % (cloud_params['odoo_oauth_uid'], name, ts, backup_name_suffix)
         info_file = tempfile.TemporaryFile()
         info_file.write('[common]\n'.encode())
         info_file_content = {
             'database': name,
-            'encrypted': True if '.enc' in backup_name_suffix else False,
+            'encrypted': True if config_record.encrypt_backups else False,
             'upload_datetime': ts,
             'backup_size': backup_size,
             'storage_service': config_record.storage_service
@@ -315,6 +307,21 @@ class BackupConfig(models.Model):
             line = key + ' = ' + str(value) + '\n'
             info_file.write(line.encode())
         info_file.seek(0)
+        return dump_stream, info_file, info_file_content
+
+    @api.model
+    def make_backup(self, name, service, init_by_cron_id=None):
+        if init_by_cron_id and not self.env['ir.cron'].browse(init_by_cron_id).active:
+            # The case when an auto backup was initiated by an inactive backup config.
+            return None
+        dt = datetime.utcnow()
+        ts = dt.strftime(REMOTE_STORAGE_DATETIME_FORMAT)
+        dump_stream, info_file, info_file_content = self.get_dump_stream_and_info_file(name, service, ts)
+        dump_stream.seek(0)
+        info_file.seek(0)
+        cloud_params = BackupController.get_cloud_params()
+        s3_backup_path = '%s/%s.%s%s' % (cloud_params['odoo_oauth_uid'], name, ts,
+                                         BACKUP_NAME_ENCRYPT_SUFFIX if info_file_content.get('encrypted') else BACKUP_NAME_SUFFIX)
         s3_info_file_path = '%s/%s.%s.info' % (cloud_params['odoo_oauth_uid'], name, ts)
         # Upload two backup objects to AWS S3
         for obj, obj_path in [[dump_stream, s3_backup_path], [info_file, s3_info_file_path]]:

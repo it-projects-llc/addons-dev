@@ -2,15 +2,9 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 import logging
-import os
 import tempfile
 import io
 from datetime import datetime
-
-try:
-    from pretty_bad_protocol import gnupg
-except ImportError as err:
-    logging.getLogger(__name__).debug(err)
 
 try:
     from googleapiclient.http import MediaIoBaseDownload, MediaIoBaseUpload
@@ -18,9 +12,9 @@ try:
 except ImportError as err:
     logging.getLogger(__name__).debug(err)
 
-import odoo
 from odoo import api, models, fields
 from odoo.addons.odoo_backup_sh.models.odoo_backup_sh import REMOTE_STORAGE_DATETIME_FORMAT
+from odoo.addons.odoo_backup_sh.models.odoo_backup_sh import BACKUP_NAME_SUFFIX, BACKUP_NAME_ENCRYPT_SUFFIX
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
@@ -111,40 +105,14 @@ class BackupConfig(models.Model):
             if init_by_cron_id and not self.env['ir.cron'].browse(init_by_cron_id).active:
                 # The case when an auto backup was initiated by an inactive backup config.
                 return None
-            dump_stream = odoo.service.db.dump_db(name, None, 'zip')
-            backup_name_suffix = '.zip'
-            if config_record.encrypt_backups:
-                backup_name_suffix += '.enc'
-                # GnuPG ignores the --output parameter with an existing file object as value
-                backup_encrpyted = tempfile.NamedTemporaryFile()
-                backup_encrpyted_name = backup_encrpyted.name
-                os.unlink(backup_encrpyted_name)
-                gnupg.GPG().encrypt(dump_stream, symmetric=True, passphrase=config_record.encryption_password,
-                                    encrypt=False, output=backup_encrpyted_name)
-                dump_stream = open(backup_encrpyted_name, 'rb')
-            backup_size = dump_stream.seek(0, 2) / 1024 / 1024
-            dump_stream.seek(0)
             dt = datetime.utcnow()
             ts = dt.strftime(REMOTE_STORAGE_DATETIME_FORMAT)
-            info_file = tempfile.TemporaryFile()
-            info_file.write('[common]\n'.encode())
-            info_file_content = {
-                'database': name,
-                'encrypted': True if '.enc' in backup_name_suffix else False,
-                'upload_datetime': ts,
-                'backup_size': backup_size,
-                'storage_service': config_record.storage_service
-            }
-            for key, value in info_file_content.items():
-                line = key + ' = ' + str(value) + '\n'
-                info_file.write(line.encode())
-            info_file.seek(0)
-
+            dump_stream, info_file, info_file_content = self.get_dump_stream_and_info_file(name, service, ts)
             # Upload two backup objects to Google Drive
             GoogleDriveService = self.env['ir.config_parameter'].get_google_drive_service()
             folder_id = self.env['ir.config_parameter'].get_param("odoo_backup_sh_google_disk.google_disk_folder_id")
             db_metadata = {
-                "name": "%s.%s%s" % (name, ts, backup_name_suffix),
+                "name": "%s.%s%s" % (name, ts, BACKUP_NAME_ENCRYPT_SUFFIX if info_file_content.get('encrypted') else BACKUP_NAME_SUFFIX),
                 "parents": [folder_id],
             }
             info_metadata = {
@@ -153,6 +121,8 @@ class BackupConfig(models.Model):
             }
             db_mimetype = "application/zip"
             info_mimetype = "text/plain"
+            dump_stream.seek(0)
+            info_file.seek(0)
             for obj, mimetype, metadata in [[dump_stream, db_mimetype, db_metadata],
                                             [info_file, info_mimetype, info_metadata]]:
                 media = MediaIoBaseUpload(obj, mimetype, resumable=True)
