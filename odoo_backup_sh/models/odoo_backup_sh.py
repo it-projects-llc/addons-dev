@@ -60,6 +60,10 @@ class BackupConfig(models.Model):
     monthly_limit = fields.Integer('Monthly limit', default=1, help='How many monthly backups to preserve.')
     yearly_limit = fields.Integer('Yearly limit', default=1, help='How many yearly backups to preserve.')
     storage_service = fields.Selection(selection=[('odoo_backup_sh', 'Odoo Backup sh')], default='odoo_backup_sh', required=True)
+    unlimited_time_frame = fields.Char(default="hour")
+    common_rotation = fields.Selection(selection=ROTATION_OPTIONS, default='unlimited')
+    max_backups = fields.Integer(readonly=True, compute=lambda self: 0)
+    backup_simulation = fields.Boolean(string="Demo Backup Simulation", default=False)
 
     _sql_constraints = [
         ('database_unique', 'unique (database, storage_service)', "Settings for this database already exist!"),
@@ -69,6 +73,52 @@ class BackupConfig(models.Model):
         ('monthly_limit_positive', 'check (monthly_limit > 0)', 'The monthly limit must be positive!'),
         ('yearly_limit_positive', 'check (yearly_limit > 0)', 'The yearly limit must be positive!'),
     ]
+
+    @api.onchange('config_cron_ids', 'hourly_rotation', 'daily_rotation', 'weekly_rotation', 'monthly_rotation', 'yearly_rotation')
+    def _onchange_common_rotation(self):
+        if self.config_cron_ids:
+            rotation_list = [self.hourly_rotation, self.daily_rotation, self.weekly_rotation, self.monthly_rotation, self.yearly_rotation]
+            if 'unlimited' in rotation_list:
+                self.common_rotation = 'unlimited'
+            elif 'unlimited' not in rotation_list and 'disabled' not in rotation_list:
+                self.common_rotation = 'limited'
+            elif 'unlimited' not in rotation_list and 'limited' not in rotation_list:
+                self.common_rotation = 'disabled'
+            else:
+                self.common_rotation = 'limited'
+            self.set_unlimited_time_frame()
+        else:
+            self.common_rotation = None
+
+    def set_unlimited_time_frame(self):
+        if self.hourly_rotation == 'unlimited':
+            self.unlimited_time_frame = "hour"
+        elif self.daily_rotation == 'unlimited':
+            self.unlimited_time_frame = "day"
+        elif self.weekly_rotation == 'unlimited':
+            self.unlimited_time_frame = "week"
+        elif self.monthly_rotation == 'unlimited':
+            self.unlimited_time_frame = "month"
+        elif self.yearly_rotation == 'unlimited':
+            self.unlimited_time_frame = "year"
+        else:
+            self.unlimited_time_frame = None
+
+    @api.onchange('common_rotation', 'hourly_limit', 'daily_limit', 'weekly_limit', 'monthly_limit', 'yearly_limit')
+    def _onchange_max_backups(self):
+        if self.common_rotation == 'limited':
+            max_backups = 0
+            if self.hourly_rotation == 'limited':
+                max_backups += self.hourly_limit
+            if self.daily_rotation == 'limited':
+                max_backups += self.daily_limit
+            if self.weekly_rotation == 'limited':
+                max_backups += self.weekly_limit
+            if self.monthly_rotation == 'limited':
+                max_backups += self.monthly_limit
+            if self.yearly_rotation == 'limited':
+                max_backups += self.yearly_limit
+            self.max_backups = max_backups
 
     @api.depends('config_cron_ids', 'config_cron_ids.ir_cron_id.active')
     @api.multi
@@ -82,6 +132,12 @@ class BackupConfig(models.Model):
             backup_config.config_cron_ids.write({
                 'active': backup_config.active
             })
+
+    @api.multi
+    def write(self, vals):
+        if vals.get('common_rotation') == 'disabled':
+            raise UserError(_("You cannot save the settings where all rotation options are disabled."))
+        return super(BackupConfig, self).write(vals)
 
     @api.multi
     def unlink(self):
@@ -382,7 +438,7 @@ class BackupInfo(models.Model):
     database = fields.Char(string='Database Name', readonly=True)
     upload_datetime = fields.Datetime(string='Upload Datetime', readonly=True)
     encrypted = fields.Boolean(string='Encrypted', readonly=True)
-    backup_size = fields.Integer(string='Backup Size, MB', readonly=True)
+    backup_size = fields.Float(string='Backup Size, MB', readonly=True)
     storage_service = fields.Selection(selection=[('odoo_backup_sh', 'Odoo Backup sh')], readonly=True)
 
     @api.model

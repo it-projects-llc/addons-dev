@@ -89,7 +89,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                         <field name="storage_service" invisible="1"/>
                         <field name="upload_datetime"/>
                         <field name="encrypted"/>
-                        <field name="backup_size"/>
+                        <field name="backup_size" widget="float"/>
                     </group>
                 </sheet>
             </form>
@@ -105,7 +105,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                 <field name="storage_service" invisible="1"/>
                 <field name="upload_datetime"/>
                 <field name="encrypted"/>
-                <field name="backup_size"/>
+                <field name="backup_size" sum="Total Size" widget="float"/>
             </tree>
         </field>
     </record>
@@ -248,15 +248,14 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                             </tree>
                         </field>
                     </group>
+                    <group attrs="{'invisible': [('config_cron_ids', '!=', [])]}">
+                        <div class="text-warning">
+                            Backups will not be made until you configure schedule
+                        </div>
+                    </group>
                     <group string="Auto Rotation" attrs="{'invisible': [('config_cron_ids', '=', [])]}">
-                        <p colspan="4">
-                            By default all your backups will be stored in a remote storage for an unlimited time.
-                            But you can set up how many backups to preserve for certain time frames. <br/>
-                            Example: The module makes auto backup your database every 2 hours.
-                            You want to preserve 2 daily backups and 1 weekly only.
-                            Set up Daily and Weekly rotation options as Limited and put the numbers in limit fields.
-                            All other options mark as Disabled.
-                        </p>
+                        <field name="unlimited_time_frame" invisible="1"/>
+                        <field name="common_rotation" invisible="1"/>
                         <group>
                             <field name="hourly_rotation"/>
                         </group>
@@ -264,29 +263,63 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                             <field name="hourly_limit" attrs="{'invisible': [('hourly_rotation', '!=', 'limited')]}"/>
                         </group>
                         <group>
-                            <field name="daily_rotation"/>
+                            <field name="daily_rotation" attrs="{'invisible': [('common_rotation', '!=', 'limited'), ('unlimited_time_frame', '=', 'hour')]}"/>
                         </group>
                         <group>
                             <field name="daily_limit" attrs="{'invisible': [('daily_rotation', '!=', 'limited')]}"/>
                         </group>
                         <group>
-                            <field name="weekly_rotation"/>
+                            <field name="weekly_rotation" attrs="{'invisible': [('common_rotation', '!=', 'limited'), ('unlimited_time_frame', 'in', ['hour', 'day'])]}"/>
                         </group>
                         <group>
                             <field name="weekly_limit" attrs="{'invisible': [('weekly_rotation', '!=', 'limited')]}"/>
                         </group>
                         <group>
-                            <field name="monthly_rotation"/>
+                            <field name="monthly_rotation" attrs="{'invisible': [('common_rotation', '!=', 'limited'), ('unlimited_time_frame', 'in', ['day', 'hour', 'week'])]}"/>
                         </group>
                         <group>
                             <field name="monthly_limit" attrs="{'invisible': [('monthly_rotation', '!=', 'limited')]}"/>
                         </group>
                         <group>
-                            <field name="yearly_rotation"/>
+                            <field name="yearly_rotation" attrs="{'invisible': [('common_rotation', '!=', 'limited'), ('unlimited_time_frame', 'in', ['day', 'hour', 'week', 'month'])]}"/>
                         </group>
                         <group>
                             <field name="yearly_limit" attrs="{'invisible': [('yearly_rotation', '!=', 'limited')]}"/>
                         </group>
+                        <p colspan="4" attrs="{'invisible': [('common_rotation', '!=', 'unlimited')]}">
+                            Unlilmited option is enabled. Number of backups will increase infinitly.
+                            <span attrs="{'invisible': [('unlimited_time_frame', '!=', 'hour')]}">
+                                From every hour at least one backup is preserved. If backups are made at least every hour,
+                                in three years you would have at least 26280 backups (=3*365*24).
+                            </span>
+                            <span attrs="{'invisible': [('unlimited_time_frame', '!=', 'day')]}">
+                                From every day at least one backup is preserved. If backups are made at least every day,
+                                in three years you would have at least 1095 backups (=3*365).
+                            </span>
+                            <span attrs="{'invisible': [('unlimited_time_frame', '!=', 'week')]}">
+                                From every week at least one backup is preserved. If backups are made at least every week,
+                                in three years you would have at least 156 backups (=3*56+3).
+                            </span>
+                            <span attrs="{'invisible': [('unlimited_time_frame', '!=', 'month')]}">
+                                From every month at least one backup is preserved. If backups are made at least every month,
+                                in three years you would have at least 36 backups (=3*12).
+                            </span>
+                            <span attrs="{'invisible': [('unlimited_time_frame', '!=', 'year')]}">
+                                From every year at least one backup is preserved. If backups are made at least every year,
+                                in three years you would have at least 3 backups.
+                            </span>
+                            You can restrict how many backups to preserve for certain time frames.
+                            Example: The module makes auto backup database every 2 hours. You want to preserve 2 daily backups
+                            (from today and from yesterday) and 1 weekly (additional backup from last week).
+                            Set up Daily and Weekly rotation options as <em>Limited</em> and put the numbers in limit fields
+                            (<em>2</em> in <b> Hourly</b>, <em>1</em> in <b>Weekly</b>). All other options mark as Disabled.
+                        </p>
+                        <p colspan="4" attrs="{'invisible': [('common_rotation', '!=', 'limited')]}">
+                            Number of preserved backups are limited. After rotation there would not be more than <field class="oe_inline" name="max_backups" nolabel="1" readonly="1"/> backups.
+                        </p>
+                        <p class="text-warning" colspan="4" attrs="{'invisible': [('common_rotation', '!=', 'disabled')]}">
+                            You cannot save the settings where all rotation options are disabled.
+                        </p>
                     </group>
                 </sheet>
             </form>
