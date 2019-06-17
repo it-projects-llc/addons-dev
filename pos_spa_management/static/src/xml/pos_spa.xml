@@ -13,10 +13,10 @@
                     </div>
                     <button class="btn btn-primary check_partner_presence" name="check_partner_presence" type="object">
                         <t t-if="widget.options.mode &amp;&amp; widget.options.mode == 'referrer'">
-                            Check Referrer
+                            Find Referrer
                         </t>
                         <t t-else="">
-                            Check Client
+                            Find Client
                         </t>
                     </button>
                     <div class="popup_name_input">
