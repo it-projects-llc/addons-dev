@@ -2,8 +2,8 @@
  * License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). */
 odoo.define('pos_spa_management', function(require){
 
-    var screens = require('pos_restaurant_base.screens');
-    var models = require('pos_restaurant_base.models');
+    var screens = require('point_of_sale.screens');
+    var models = require('point_of_sale.models');
     var PopupWidget = require('point_of_sale.popups');
     var floors = require('pos_restaurant.floors');
     var gui = require('point_of_sale.gui');
@@ -14,11 +14,27 @@ odoo.define('pos_spa_management', function(require){
     models.load_fields('product.product',['duration']);
 
     screens.ActionpadWidget.include({
+        init: function(parent, options) {
+            var self = this;
+            this._super(parent, options);
+
+            this.pos.bind('change:referrer', function() {
+                self.renderElement();
+            });
+        },
+
         renderElement: function() {
             var self = this;
             this._super();
             this.$('.set-customer').off().click(function(){
-                self.gui.show_popup('client_popup', {});
+                self.gui.show_popup('client_popup', {
+                    mode: 'client',
+                });
+            });
+            this.$('.set-referrer').off().click(function(){
+                self.gui.show_popup('client_popup', {
+                    mode: 'referrer',
+                });
             });
         },
     });
@@ -55,7 +71,9 @@ odoo.define('pos_spa_management', function(require){
         },
 
         click_confirm: function() {
-            if (this.client) {
+            if (this.client && this.check_referrer_mode()) {
+                this.pos.get_order().set_referrer(this.client);
+            } else if (this.client) {
                 this.pos.get_order().set_client(this.client);
             } else {
                 var inputs = this.$el.find('input');
@@ -64,6 +82,10 @@ odoo.define('pos_spa_management', function(require){
                 }
             }
             this.gui.close_popup();
+        },
+
+        check_referrer_mode: function() {
+            return this.options.mode && this.options.mode == 'referrer';
         },
 
         create_new_customer: function(phone, name) {
@@ -83,7 +105,11 @@ odoo.define('pos_spa_management', function(require){
                 self.gui.screen_instances.clientlist.reload_partners().then(function(res){
                     var pos = self.pos;
                     var new_partner = self.pos.db.get_partner_by_id(partner_id);
-                    pos.get_order().set_client(new_partner);
+                    if (self.check_referrer_mode()) {
+                        pos.get_order().set_referrer(new_partner);
+                    } else {
+                        pos.get_order().set_client(new_partner);
+                    }
                 });
             },function(err,ev){
                 ev.preventDefault();
@@ -101,6 +127,55 @@ odoo.define('pos_spa_management', function(require){
     });
     gui.define_popup({name:'client_popup', widget: ClientSelectionPopup});
 
+    var PosModelSuper = models.PosModel.prototype;
+    models.PosModel = models.PosModel.extend({
+        set_referrer: function(partner) {
+            this.get_order().referrer = partner;
+        },
+
+        get_referrer: function() {
+            return this.get_order()
+            ? this.get_order().get_referrer()
+            : false;
+        },
+    });
+
+    var _super_order = models.Order.prototype;
+    models.Order = models.Order.extend({
+        export_as_JSON: function() {
+            var data = _super_order.export_as_JSON.apply(this, arguments);
+            data.referrer_id = this.pos.get_referrer().id;
+            return data;
+        },
+        init_from_JSON: function(json) {
+            _super_order.init_from_JSON.call(this, json);
+            this.set_referrer(json.referrer_id);
+        },
+        set_referrer: function(partner) {
+            this.referrer = partner;
+            this.pos.trigger('change:referrer');
+        },
+
+        get_referrer: function() {
+            return this.referrer || false;
+        },
+
+        get_executors: function() {
+            return _.chain(this.get_orderlines())
+                .pluck('ms_info').pluck('created').pluck('user')
+                .uniq().value();
+        },
+    });
+
+    var _super_orderline = models.Orderline.prototype;
+    models.Orderline = models.Orderline.extend({
+        export_as_JSON: function() {
+            var data = _super_orderline.export_as_JSON.apply(this, arguments);
+            data.user_id = this.ms_info.created.user.id;
+            return data;
+        },
+    });
+
     screens.PaymentScreenWidget.include({
         finalize_validation: function() {
             var self = this;
@@ -110,10 +185,11 @@ odoo.define('pos_spa_management', function(require){
             table.duration = this.total_order_duration() * 60 * 1000;
             table.start_time = new Date().getTime();
             table.last_order_name = order.name;
+            table.executors = order.get_executors();
             if (this.gui.screen_instances.receipt.should_close_immediately()){
                 this.gui.screen_instances.receipt.click_next();
             } else {
-                this.gui.screen_instances.receipt.click_next();
+                //this.gui.screen_instances.receipt.click_next();
             }
         },
 
@@ -129,6 +205,10 @@ odoo.define('pos_spa_management', function(require){
     });
 
     floors.TableWidget.include({
+        get_current_time: function() {
+            return new Date().getTime();
+        },
+
         renderElement: function(){
             this._super();
 
@@ -137,16 +217,19 @@ odoo.define('pos_spa_management', function(require){
                 element.textContent = '';
                 return;
             }
-            var current_time = new Date().getTime();
             if (this.check_table_availability()) {
                 var duration = 0;
             } else {
-                var time_left = this.table.duration - (current_time - this.table.start_time);
-                this.start_spa_timer(parseInt(time_left/1000), element);
+                var time_left = this.table.duration - (this.get_current_time() - this.table.start_time);
+                this.show_pause_button();
+                this.start_spa_timer(parseInt(time_left/1000));
             }
         },
 
-        start_spa_timer(duration, element) {
+        start_spa_timer(duration) {
+            var element = this.$el.find('.table-seats')[0];
+            element.textContent = '';
+
             var timer = duration, minutes, seconds;
             var self = this;
             this.countdown_timer = setInterval(function () {
@@ -162,16 +245,53 @@ odoo.define('pos_spa_management', function(require){
                     self.gui.play_sound('error')
                 }
 
+                if (minutes === '00' && seconds === '00') {
+                    self.remove_timer();
+                }
+
                 if (--timer < 0) {
                     timer = duration;
                 }
             }, 1000);
         },
 
+        remove_timer: function() {
+            clearInterval(this.countdown_timer);
+            this.countdown_timer = false;
+        },
+
+        show_pause_button: function (visible) {
+            var self = this;
+            var $label = this.$el.find('.label');
+            $label[0].innerHTML += ' <i class="fa fa-pause"></i> <i class="fa fa-play"></i>';
+            $label.find('i.fa-pause').off().on('click', function(ev) {
+                ev.stopPropagation();
+                self.click_pause(ev);
+            });
+            $label.find('i.fa-play').off().hide().on('click', function(ev) {
+                ev.stopPropagation();
+                self.click_play(ev);
+            });
+        },
+
+        click_pause: function(ev) {
+            this.time_left = this.table.duration - (this.get_current_time() - this.table.start_time);
+            this.remove_timer();
+            this.$el.find('i.fa-pause').hide();
+            this.$el.find('i.fa-play').show();
+            console.log(this);
+        },
+
+        click_play: function(ev) {
+            this.table.start_time = new Date().getTime();
+            this.start_spa_timer(parseInt(this.time_left/1000));
+            this.$el.find('i.fa-play').hide();
+            this.$el.find('i.fa-pause').show();
+        },
+
         check_table_availability: function(){
             var table = this.table;
-            var current_time = new Date().getTime();
-            if (!table.duration || !table.start_time || (table.duration + table.start_time < current_time)) {
+            if (!table.duration || !table.start_time || (table.duration + table.start_time < this.get_current_time())) {
                 return true;
             }
             return false;
@@ -193,20 +313,53 @@ odoo.define('pos_spa_management', function(require){
                 'title': _t('Can not open the Table'),
                 'body': _t('The room is occupied. Click `Confirm` if you want to change the executor'),
                 'confirm': function () {
-                    self.gui.select_user().done(function(user){
-                        return self.change_executor(user.id);
+                    self.gui.select_changed_executor(table).done(function(previous_user_id){
+                        return self.gui.select_user().done(function(user){
+                            _.chain(table.executors.push(user))
+                            .reject(function(u){
+                                return previous_user_id.id == u.id;
+                            })
+                            .uniq().value();
+                            return self.change_executor(user.id, previous_user_id.id);
+                        });
                     });
                 },
             });
         },
 
-        change_executor: function(user_id) {
+        change_executor: function(user_id, previous_user_id) {
             return rpc.query({
                 model: 'pos.order',
                 method: 'change_executor',
-                args: [user_id, this.table.last_order_name],
+                args: [user_id, this.table.last_order_name, previous_user_id],
             });
         },
     });
 
+
+    gui.Gui.include({
+        select_changed_executor: function(table){
+            var self = this;
+            var def  = new $.Deferred();
+
+            var list = _.map(table.executors, function(user) {
+                return {
+                    'label': user.name,
+                    'item':  user,
+                }
+            });
+
+            this.show_popup('selection',{
+                title: _t('Select Current Executor'),
+                list: list,
+                confirm: function(user){ def.resolve(user); },
+                cancel: function(){ def.reject(); },
+                is_selected: function(user){ return user === self.pos.get_cashier(); },
+            });
+
+            return def.then(function(user){
+                return user;
+            });
+        },
+    });
 });

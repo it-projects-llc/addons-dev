@@ -2,3 +2,7 @@
 	background: none;
 	color: black;
 }
+
+.pos .actionpad .button.pay {
+    height: 108px;
+}

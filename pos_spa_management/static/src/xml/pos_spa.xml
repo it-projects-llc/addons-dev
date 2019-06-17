@@ -11,7 +11,14 @@
                     <div class="popup_phone_input">
                         <input class='detail client-phone' name='phone' placeholder='+79171212123'></input>
                     </div>
-                    <button class="btn btn-primary check_partner_presence" name="check_partner_presence" type="object">Check Client</button>
+                    <button class="btn btn-primary check_partner_presence" name="check_partner_presence" type="object">
+                        <t t-if="widget.options.mode &amp;&amp; widget.options.mode == 'referrer'">
+                            Check Referrer
+                        </t>
+                        <t t-else="">
+                            Check Client
+                        </t>
+                    </button>
                     <div class="popup_name_input">
                         <input class='detail client-name' name='name'/>
                     </div>
@@ -28,5 +35,18 @@
         </div>
     </t>
 
+    <t t-extend="ActionpadWidget">
+        <t t-jquery='button:first' t-operation="after">
+            <button t-attf-class='button set-referrer #{ ( widget.pos.get_referrer() and widget.pos.get_referrer().name.length > 10) ? "decentered" : "" }' >
+                <i class='fa fa-user' role="img" aria-label="Referrer" title="Referrer"/>
+                <t t-if="widget.pos.get_referrer()">
+                    <t t-esc="widget.pos.get_referrer().name" />
+                </t>
+                <t t-if="!widget.pos.get_referrer()">
+                    Referrer
+                </t>
+            </button>
+        </t>
+    </t>
 
 </templates>
