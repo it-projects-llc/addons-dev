@@ -6,7 +6,7 @@ from odoo import models, fields, api
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
-    duration = fields.Integer('Duration', default=0)
+    duration = fields.Integer('Duration (min)', default=0)
 
 
 class PosOrder(models.Model):
@@ -14,16 +14,16 @@ class PosOrder(models.Model):
 
     user_id = fields.Many2one(states={})
     referrer_id = fields.Many2one(comodel_name='res.partner', string='Referrer Person')
-    executor_ids = fields.Many2many('res.users', string='Executors')
+    executor_ids = fields.Many2many('res.users', string='Cancelled Executors')
 
     @api.model
     def change_executor(self, user_id, order_ref, previous_user_id):
         order = self.search([('pos_reference', '=', order_ref)])
         vals = {
             'user_id': user_id,
-            'executor_ids': [(4, user_id)],
+            'executor_ids': [(4, previous_user_id)],
         }
-        order.lines.filtered(lambda ol: ol.user_id == previous_user_id).write(vals)
+        order.lines.filtered(lambda ol: ol.user_id.id == previous_user_id).write(vals)
         order.write(vals)
         return order.id
 
@@ -31,7 +31,7 @@ class PosOrder(models.Model):
     def _order_fields(self, ui_order):
         data = super(PosOrder, self)._order_fields(ui_order)
         data['referrer_id'] = ui_order.get('referrer_id', False)
-        data['executor_ids'] = [(4, data['user_id'])]
+        # data['executor_ids'] = [(4, data['user_id'])]
         return data
 
 

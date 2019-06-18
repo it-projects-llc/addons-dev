@@ -9,11 +9,8 @@
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_normal_form_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='purchase_ok']/.." position="after">
-                <div>
-                    <field name="duration"/>
-                    <label for="duration"/>
-                </div>
+            <xpath expr="//field[@name='to_weight']" position="after">
+                <field name="duration" attrs="{'invisible': [('available_in_pos', '=', False)]}"/>
             </xpath>
         </field>
     </record>
@@ -24,8 +21,10 @@
         <field name="model">pos.order</field>
         <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='user_id']" position="after">
+            <xpath expr="//field[@name='fiscal_position_id']" position="after">
                 <field name="referrer_id"/>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="after">
                 <field name="executor_ids" widget="many2many_tags"/>
             </xpath>
             <xpath expr="//field[@name='price_subtotal_incl']" position="after">

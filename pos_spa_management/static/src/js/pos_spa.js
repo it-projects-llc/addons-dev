@@ -13,6 +13,26 @@ odoo.define('pos_spa_management', function(require){
 
     models.load_fields('product.product',['duration']);
 
+    var ConfirmPopupWidgetInherited = PopupWidget.extend({
+        template: 'ConfirmPopupWidgetInherited',
+        show: function(options){
+            this._super(options);
+            var self = this;
+            this.$el.find('.third').on('click', function(){
+                self.click_third();
+            });
+        },
+
+        click_third: function(){
+            this.gui.close_popup();
+            if (this.options.third) {
+                this.options.third.call(this);
+            }
+        },
+    });
+    gui.define_popup({name:'confirm_triple', widget: ConfirmPopupWidgetInherited});
+
+
     screens.ActionpadWidget.include({
         init: function(parent, options) {
             var self = this;
@@ -44,6 +64,7 @@ odoo.define('pos_spa_management', function(require){
         show: function(options){
             this._super(options);
             var self = this;
+            this.client = false;
             var inputs = self.$el.find('input');
             this.$el.find('.btn-primary').off().on('click', function(ev){
                 self.request_get_name_by_phone(inputs[0].value).done(function(res){
@@ -51,12 +72,10 @@ odoo.define('pos_spa_management', function(require){
                         inputs[1].value = res[1];
                         self.client = self.pos.db.get_partner_by_id(res[0]);
                     } else {
-                        self.client = false;
-                        inputs[1].placeholder = 'Client not found';
+                        self.action_request_failed();
                     }
                 }).fail(function(res) {
-                    self.client = false;
-                    inputs[1].placeholder = 'Client not found';
+                    self.action_request_failed();
                 });
             });
         },
@@ -71,6 +90,29 @@ odoo.define('pos_spa_management', function(require){
         },
 
         click_confirm: function() {
+            var self = this;
+            if (this.client) {
+                this.action_confirm();
+            }
+            this.request_get_name_by_phone(this.$el.find('input')[0].value).done(function(res){
+                if (res) {
+                    self.client = self.pos.db.get_partner_by_id(res[0]);
+                    self.action_confirm();
+                } else {
+                    self.action_request_failed();
+                }
+
+            }).fail(function(){
+                self.action_request_failed();
+            });
+        },
+
+        action_request_failed: function() {
+            this.client = false;
+            this.$el.find('input')[1].placeholder = 'Client not found';
+        },
+
+        action_confirm: function () {
             if (this.client && this.check_referrer_mode()) {
                 this.pos.get_order().set_referrer(this.client);
             } else if (this.client) {
@@ -138,6 +180,15 @@ odoo.define('pos_spa_management', function(require){
             ? this.get_order().get_referrer()
             : false;
         },
+
+        save_timer: function(table) {
+            localStorage['table_' + table.id] = JSON.stringify({
+                'duration': table.duration,
+                'start_time': table.start_time,
+                'executors': table.executors,
+                'last_order_name': table.last_order_name,
+            });
+        },
     });
 
     var _super_order = models.Order.prototype;
@@ -145,11 +196,13 @@ odoo.define('pos_spa_management', function(require){
         export_as_JSON: function() {
             var data = _super_order.export_as_JSON.apply(this, arguments);
             data.referrer_id = this.pos.get_referrer().id;
+            data.beyond_timer_addition = this.beyond_timer_addition;
             return data;
         },
         init_from_JSON: function(json) {
             _super_order.init_from_JSON.call(this, json);
             this.set_referrer(json.referrer_id);
+            this.beyond_timer_addition = json.beyond_timer_addition;
         },
         set_referrer: function(partner) {
             this.referrer = partner;
@@ -162,7 +215,7 @@ odoo.define('pos_spa_management', function(require){
 
         get_executors: function() {
             return _.chain(this.get_orderlines())
-                .pluck('ms_info').pluck('created').pluck('user')
+                .pluck('ms_info').pluck('created').pluck('user').pluck('id')
                 .uniq().value();
         },
     });
@@ -171,7 +224,9 @@ odoo.define('pos_spa_management', function(require){
     models.Orderline = models.Orderline.extend({
         export_as_JSON: function() {
             var data = _super_orderline.export_as_JSON.apply(this, arguments);
-            data.user_id = this.ms_info.created.user.id;
+            if (this.ms_info && this.ms_info.created) {
+                data.user_id = this.ms_info.created.user.id;
+            }
             return data;
         },
     });
@@ -181,15 +236,16 @@ odoo.define('pos_spa_management', function(require){
             var self = this;
             this._super();
             var order = this.pos.get_order();
-            var table = order.table;
-            table.duration = this.total_order_duration() * 60 * 1000;
-            table.start_time = new Date().getTime();
-            table.last_order_name = order.name;
-            table.executors = order.get_executors();
-            if (this.gui.screen_instances.receipt.should_close_immediately()){
-                this.gui.screen_instances.receipt.click_next();
-            } else {
-                //this.gui.screen_instances.receipt.click_next();
+            if (order && !order.beyond_timer_addition) {
+                var table = order.table;
+                table.duration = this.total_order_duration() * 60 * 1000;
+                table.start_time = new Date().getTime();
+                table.last_order_name = order.name;
+                table.executors = order.get_executors();
+                this.pos.save_timer(table);
+                if (this.gui.screen_instances.receipt.should_close_immediately()){
+                    this.gui.screen_instances.receipt.click_next();
+                }
             }
         },
 
@@ -202,9 +258,39 @@ odoo.define('pos_spa_management', function(require){
                     return memo + num;
                 }, 0).value();
         },
+
+        renderElement: function() {
+            var self = this;
+            this._super();
+
+            this.$('.js_set_customer').off().hide().click(function(){
+                self.gui.show_popup('client_popup', {
+                    mode: 'client',
+                });
+            });
+        },
     });
 
     floors.TableWidget.include({
+        init: function(parent, options){
+            this._super(parent, options);
+            var saved_data = localStorage['table_' + options.table.id];
+            if (!saved_data) {
+                return;
+            }
+            saved_data = JSON.parse(saved_data);
+            var duration = saved_data.duration;
+            if (!saved_data.duration || saved_data.start_time + saved_data.duration <= this.get_current_time()) {
+                return;
+            }
+            this.table.start_time = saved_data.start_time;
+            this.table.duration = saved_data.duration;
+            this.table.executors = saved_data.executors;
+            this.table.last_order_name = saved_data.last_order_name;
+            var time_left = this.table.duration - (this.get_current_time() - this.table.start_time);
+            // this.start_spa_timer(time_left);
+        },
+
         get_current_time: function() {
             return new Date().getTime();
         },
@@ -217,11 +303,12 @@ odoo.define('pos_spa_management', function(require){
                 element.textContent = '';
                 return;
             }
+
             if (this.check_table_availability()) {
                 var duration = 0;
             } else {
                 var time_left = this.table.duration - (this.get_current_time() - this.table.start_time);
-                this.show_pause_button();
+                this.render_play_buttons();
                 this.start_spa_timer(parseInt(time_left/1000));
             }
         },
@@ -229,7 +316,6 @@ odoo.define('pos_spa_management', function(require){
         start_spa_timer(duration) {
             var element = this.$el.find('.table-seats')[0];
             element.textContent = '';
-
             var timer = duration, minutes, seconds;
             var self = this;
             this.countdown_timer = setInterval(function () {
@@ -241,12 +327,13 @@ odoo.define('pos_spa_management', function(require){
 
                 element.textContent = minutes + ":" + seconds;
 
-                if ((minutes === 15 || minutes === '00') && seconds === '00') {
+                if (!this.stopped_timer && (minutes === 15 || minutes === '00') && seconds === '00') {
                     self.gui.play_sound('error')
                 }
 
                 if (minutes === '00' && seconds === '00') {
                     self.remove_timer();
+                    this.stopped_timer = true;
                 }
 
                 if (--timer < 0) {
@@ -258,13 +345,15 @@ odoo.define('pos_spa_management', function(require){
         remove_timer: function() {
             clearInterval(this.countdown_timer);
             this.countdown_timer = false;
+            var element = this.$el.find('.table-seats')[0];
+            element.textContent = '';
         },
 
-        show_pause_button: function (visible) {
+        render_play_buttons: function (visible) {
             var self = this;
             var $label = this.$el.find('.label');
             $label[0].innerHTML += ' <i class="fa fa-pause"></i> <i class="fa fa-play"></i>';
-            $label.find('i.fa-pause').off().on('click', function(ev) {
+            $label.find('i.fa-pause').off().hide().on('click', function(ev) {
                 ev.stopPropagation();
                 self.click_pause(ev);
             });
@@ -279,14 +368,15 @@ odoo.define('pos_spa_management', function(require){
             this.remove_timer();
             this.$el.find('i.fa-pause').hide();
             this.$el.find('i.fa-play').show();
-            console.log(this);
         },
 
         click_play: function(ev) {
             this.table.start_time = new Date().getTime();
+            this.table.duration = this.time_left;
             this.start_spa_timer(parseInt(this.time_left/1000));
             this.$el.find('i.fa-play').hide();
-            this.$el.find('i.fa-pause').show();
+            this.pos.save_timer(this.table);
+            // this.$el.find('i.fa-pause').show();
         },
 
         check_table_availability: function(){
@@ -308,21 +398,29 @@ odoo.define('pos_spa_management', function(require){
             if (!table || this.check_table_availability()) {
                 return this._super();
             }
-
-            return this.gui.show_popup('confirm',{
+            var super_method = self._super;
+            return this.gui.show_popup('confirm_triple', {
                 'title': _t('Can not open the Table'),
-                'body': _t('The room is occupied. Click `Confirm` if you want to change the executor'),
+                'body': _t('The room is occupied. Click `Confirm` if you want to change the executor. Click `Add Order` if you want to sell non-durable products'),
                 'confirm': function () {
+                    self.click_pause();
                     self.gui.select_changed_executor(table).done(function(previous_user_id){
                         return self.gui.select_user().done(function(user){
-                            _.chain(table.executors.push(user))
-                            .reject(function(u){
-                                return previous_user_id.id == u.id;
+                            table.executors.push(user.id);
+                            table.executors = _.chain(table.executors)
+                            .reject(function(uid){
+                                return previous_user_id.id == uid;
                             })
                             .uniq().value();
+                            self.pos.save_timer(table);
                             return self.change_executor(user.id, previous_user_id.id);
                         });
                     });
+                },
+                'third': function () {
+                    _.bind(super_method, self)()
+                    this.pos.get_order().beyond_timer_addition = true;
+                    return;
                 },
             });
         },
@@ -342,7 +440,10 @@ odoo.define('pos_spa_management', function(require){
             var self = this;
             var def  = new $.Deferred();
 
-            var list = _.map(table.executors, function(user) {
+            var list = _.map(table.executors, function(uid) {
+                var user = _.find(self.pos.users, function(u) {
+                    return uid === u.id;
+                });
                 return {
                     'label': user.name,
                     'item':  user,
@@ -352,8 +453,12 @@ odoo.define('pos_spa_management', function(require){
             this.show_popup('selection',{
                 title: _t('Select Current Executor'),
                 list: list,
-                confirm: function(user){ def.resolve(user); },
-                cancel: function(){ def.reject(); },
+                confirm: function(user){
+                    def.resolve(user);
+                },
+                cancel: function(){
+                    def.reject();
+                },
                 is_selected: function(user){ return user === self.pos.get_cashier(); },
             });
 

@@ -37,7 +37,7 @@
 
     <t t-extend="ActionpadWidget">
         <t t-jquery='button:first' t-operation="after">
-            <button t-attf-class='button set-referrer #{ ( widget.pos.get_referrer() and widget.pos.get_referrer().name.length > 10) ? "decentered" : "" }' >
+            <button t-attf-class='button set-referrer #{ ( widget.pos.get_referrer() and widget.pos.get_referrer().name and widget.pos.get_referrer().name.length > 10) ? "decentered" : "" }' >
                 <i class='fa fa-user' role="img" aria-label="Referrer" title="Referrer"/>
                 <t t-if="widget.pos.get_referrer()">
                     <t t-esc="widget.pos.get_referrer().name" />
@@ -47,6 +47,26 @@
                 </t>
             </button>
         </t>
+    </t>
+
+    <t t-name="ConfirmPopupWidgetInherited">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup popup-confirm">
+                <header class="title"><t t-esc="widget.options.title || 'Confirm ?' "/></header>
+                <main class="body"><t t-esc="widget.options.body || '' "/></main>
+                <footer class="footer">
+                    <div class="button third">
+                        Add Order
+                    </div>
+                    <div class="button confirm">
+                        Change Executor
+                    </div>
+                    <div class="button cancel">
+                        Cancel
+                    </div>
+                </footer>
+            </div>
+        </div>
     </t>
 
 </templates>
