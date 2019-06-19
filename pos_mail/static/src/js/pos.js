@@ -32,12 +32,12 @@ odoo.define('pos_mail.pos', function (require) {
         },
 
         send_mail_receipt: function(partner_id) {
-//            var receipt = QWeb.render('XmlReceipt', this.get_receipt_render_env());
             var receipt = QWeb.render('PosMailTicket', this.get_receipt_render_env());
+            var order_name = this.pos.get_order().name;
             return rpc.query({
                 model: 'pos.config',
                 method: 'send_receipt_via_mail',
-                args: [partner_id, receipt],
+                args: [partner_id, receipt, order_name],
             }, {
                 shadow: true,
             });

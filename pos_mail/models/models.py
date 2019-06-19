@@ -11,7 +11,7 @@ class PosConfig(models.Model):
     send_receipt_by_mail = fields.Boolean('Mail a Receipt')
 
     @api.model
-    def send_receipt_via_mail(self, partner_id, body_from_ui):
+    def send_receipt_via_mail(self, partner_id, body_from_ui, pos_reference):
 
         partner = self.env['res.partner'].browse(partner_id)
 
@@ -23,11 +23,15 @@ class PosConfig(models.Model):
             specific_paperformat_args={'data-report-margin-top': 10, 'data-report-header-spacing': 10}
         )
 
+        order = self.env['pos.order'].search([('pos_reference', '=', pos_reference)])
+
         attachment = self.env['ir.attachment'].create({
             'name': name,
+            'datas_fname': name + '.pdf',
             'type': 'binary',
             'db_datas': base64.encodestring(base64_pdf),
-            'res_id': partner.id,
+            'res_model': 'pos.order',
+            'res_id': order and order.id or False,
         })
 
         # wizard model creation

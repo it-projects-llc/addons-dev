@@ -13,6 +13,16 @@
 
     <t t-name="PosMailTicket">
         <div>
+            <div align='center'>
+                <t t-if='widget.pos.company.logo'>
+                    <img t-att-src='receipt.company.logo' alt="Logo"/>
+                    <br/>
+                </t>
+                    <t t-if='!widget.pos.company.logo'>
+                    <h1><t t-esc='receipt.company.name' /></h1>
+                        <br/>
+                </t>
+            </div>
 
             <div align='center'><t t-esc="order.formatted_validation_date"/> <t t-esc="order.name"/></div>
             <br />
@@ -47,7 +57,7 @@
                             </div>
                         </t>
                     </td>
-                    <td align='right'>
+                    <td align='left'>
                         <t t-esc="orderline.get_quantity_str_with_unit()"/>
                     </td>
                     <td align='right'>
@@ -55,6 +65,8 @@
                     </td>
                 </tr>
             </table>
+
+            <div align='right'>--------------------------------</div>
             <br />
             <table align='center' width='100%'>
                 <tr>
