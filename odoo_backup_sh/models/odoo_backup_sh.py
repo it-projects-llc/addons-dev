@@ -370,12 +370,26 @@ class BackupConfig(models.Model):
         if init_by_cron_id and not self.env['ir.cron'].browse(init_by_cron_id).active:
             # The case when an auto backup was initiated by an inactive backup config.
             return None
+        cloud_params = BackupController.get_cloud_params()
         dt = datetime.utcnow()
         ts = dt.strftime(REMOTE_STORAGE_DATETIME_FORMAT)
         dump_stream, info_file, info_file_content = self.get_dump_stream_and_info_file(name, service, ts)
         dump_stream.seek(0)
         info_file.seek(0)
-        cloud_params = BackupController.get_cloud_params()
+        cust_method_name = 'make_backup_%s' % service
+        if hasattr(self, cust_method_name):
+            method = getattr(self, cust_method_name)
+            method(ts, name, dump_stream, info_file, info_file_content, cloud_params)
+
+        # Create new record with backup info data
+        info_file_content['upload_datetime'] = dt
+        self.env['odoo_backup_sh.backup_info'].create(info_file_content)
+        if init_by_cron_id:
+            self.update_info(cloud_params)
+        return None
+
+    @api.model
+    def make_backup_odoo_backup_sh(self, ts, name, dump_stream, info_file, info_file_content, cloud_params):
         s3_backup_path = '%s/%s.%s%s' % (cloud_params['odoo_oauth_uid'], name, ts,
                                          BACKUP_NAME_ENCRYPT_SUFFIX if info_file_content.get('encrypted') else BACKUP_NAME_SUFFIX)
         s3_info_file_path = '%s/%s.%s.info' % (cloud_params['odoo_oauth_uid'], name, ts)
@@ -388,12 +402,6 @@ class BackupConfig(models.Model):
             except Exception as e:
                 _logger.exception('Failed to load backups')
                 raise UserError(_("Failed to load backups: %s") % e)
-        # Create new record with backup info data
-        info_file_content['upload_datetime'] = dt
-        self.env['odoo_backup_sh.backup_info'].create(info_file_content)
-        if init_by_cron_id:
-            self.update_info(cloud_params)
-        return None
 
 
 class BackupConfigCron(models.Model):
