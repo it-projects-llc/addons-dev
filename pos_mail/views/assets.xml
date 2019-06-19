@@ -6,7 +6,7 @@
     <template id="assets" inherit_id="point_of_sale.assets">
         <xpath expr="." position="inside">
             <script type="text/javascript" src="/pos_mail/static/src/js/pos.js"></script>
-            <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.debug.js"></script>
+            <link rel="stylesheet" href="/pos_mail/static/src/css/pos.css"/>
         </xpath>
     </template>
 
