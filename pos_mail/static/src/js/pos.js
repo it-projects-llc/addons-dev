@@ -7,15 +7,13 @@ odoo.define('pos_mail.pos', function (require) {
     var rpc = require('web.rpc');
     var core = require('web.core');
     var QWeb = core.qweb;
-    var _t  = core._t;
+    var _t = core._t;
 
     screens.ReceiptScreenWidget.include({
         renderElement: function() {
             this._super();
             var self = this;
             if (this.pos.config.send_receipt_by_mail) {
-                this.$('.button.print').hide();
-
                 this.$('.button.mail_receipt').click(function(){
                     self.mail_receipt_action();
                 });
@@ -34,8 +32,8 @@ odoo.define('pos_mail.pos', function (require) {
         },
 
         send_mail_receipt: function(partner_id) {
-            var receipt = QWeb.render('XmlReceipt', this.get_receipt_render_env());
-            var receipt = this.create_pdf();
+//            var receipt = QWeb.render('XmlReceipt', this.get_receipt_render_env());
+            var receipt = QWeb.render('PosMailTicket', this.get_receipt_render_env());
             return rpc.query({
                 model: 'pos.config',
                 method: 'send_receipt_via_mail',
@@ -59,22 +57,6 @@ odoo.define('pos_mail.pos', function (require) {
 
         check_autosend_mail_receipt: function() {
             return this.should_auto_print() && this.pos.config.send_receipt_by_mail;
-        },
-
-        create_pdf: function(){
-            var specialElementHandlers = {
-                '#ignoreContent': function (element, renderer) {
-                    return true;
-                }
-            };
-            var pdfdoc = new jsPDF();
-            pdfdoc.fromHTML($('.pos-sale-ticket').html(), 10, 10, {
-                'width': 110,
-                'elementHandlers': specialElementHandlers,
-            });
-            console.log(pdfdoc);
-            var data = pdfdoc.output('datauristring');
-            return data.substring(data.indexOf(',') + 1, data.length);;
         },
     });
 
