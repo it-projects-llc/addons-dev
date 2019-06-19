@@ -63,6 +63,7 @@ class BackupConfig(models.Model):
     unlimited_time_frame = fields.Char(default="hour")
     common_rotation = fields.Selection(selection=ROTATION_OPTIONS, default='unlimited')
     max_backups = fields.Integer(readonly=True, compute=lambda self: 0)
+    # TODO: help
     backup_simulation = fields.Boolean(string="Demo Backup Simulation", default=False)
 
     _sql_constraints = [
@@ -242,7 +243,6 @@ class BackupConfig(models.Model):
 
     @api.model
     def update_info(self, cloud_params):
-        # FIXME: We need to get ('backup.name', 'backup.service')
         backup_list = self.get_backup_list(cloud_params)
         if 'backup_list' in backup_list:
             # Create a dictionary with remote backup objects:
@@ -294,9 +294,9 @@ class BackupConfig(models.Model):
                 if res and 'reload_page' in res:
                     return res
 
-            # Delete unnecessary local backup info records
+            # Delete unnecessary local backup info records (not need delete simulation backup info records)
             backup_info_ids_to_delete = [
-                r.id for r in self.env['odoo_backup_sh.backup_info'].search([]) if
+                r.id for r in self.env['odoo_backup_sh.backup_info'].search([('backup_simulation', '=', False)]) if
                 (r.database not in remote_backups or r.upload_datetime not in remote_backups[r.database])
             ]
             self.env['odoo_backup_sh.backup_info'].browse(backup_info_ids_to_delete).unlink()
@@ -337,10 +337,14 @@ class BackupConfig(models.Model):
 
     @api.model
     def get_dump_stream_and_info_file(self, name, service, ts):
-        dump_stream = odoo.service.db.dump_db(name, None, 'zip')
         config_record = self.with_context({'active_test': False}).search([('database', '=', name),
                                                                           ('storage_service', '=', service)])
-        if config_record.encrypt_backups:
+        if config_record.backup_simulation:
+            dump_stream = tempfile.TemporaryFile()
+        else:
+            dump_stream = odoo.service.db.dump_db(name, None, 'zip')
+
+        if config_record.encrypt_backups and config_record.backup_simulation is False:
             # GnuPG ignores the --output parameter with an existing file object as value
             backup_encrpyted = tempfile.NamedTemporaryFile()
             backup_encrpyted_name = backup_encrpyted.name
@@ -348,7 +352,9 @@ class BackupConfig(models.Model):
             gnupg.GPG().encrypt(dump_stream, symmetric=True, passphrase=config_record.encryption_password,
                                 encrypt=False, output=backup_encrpyted_name)
             dump_stream = open(backup_encrpyted_name, 'rb')
-        backup_size = dump_stream.seek(0, 2) / 1024 / 1024
+
+        # simulation backup size is 1 MB
+        backup_size = dump_stream.seek(0, 2) / 1024 / 1024 if config_record.backup_simulation is False else 1
         dump_stream.seek(0)
         info_file = tempfile.TemporaryFile()
         info_file.write('[common]\n'.encode())
@@ -370,6 +376,12 @@ class BackupConfig(models.Model):
         if init_by_cron_id and not self.env['ir.cron'].browse(init_by_cron_id).active:
             # The case when an auto backup was initiated by an inactive backup config.
             return None
+
+        config_record = self.with_context({'active_test': False}).search([('database', '=', name),
+                                                                          ('storage_service', '=', service)])
+        if not config_record:
+            return None
+
         cloud_params = BackupController.get_cloud_params()
         dt = datetime.utcnow()
         ts = dt.strftime(REMOTE_STORAGE_DATETIME_FORMAT)
@@ -377,7 +389,8 @@ class BackupConfig(models.Model):
         dump_stream.seek(0)
         info_file.seek(0)
         cust_method_name = 'make_backup_%s' % service
-        if hasattr(self, cust_method_name):
+        # make a backup if it is not a simulation
+        if hasattr(self, cust_method_name) and config_record.backup_simulation is False:
             method = getattr(self, cust_method_name)
             method(ts, name, dump_stream, info_file, info_file_content, cloud_params)
 
@@ -402,6 +415,30 @@ class BackupConfig(models.Model):
             except Exception as e:
                 _logger.exception('Failed to load backups')
                 raise UserError(_("Failed to load backups: %s") % e)
+
+    @api.model
+    def install_demo_data(self):
+        # create new simulation backup config
+        config = self.create({
+            'database': self._cr.dbname,
+            'encrypt_backups': False,
+            'storage_service': 'odoo_backup_sh',
+            'backup_simulation': True
+        })
+        # create lot of backup info files (fake backups)
+        info_obj = self.env['odoo_backup_sh.backup_info']
+        number_of_backups = 1000
+        upload_datetime = datetime.now()
+        for index in range(number_of_backups):
+            info_obj.create({
+                'database': config.database,
+                'upload_datetime': upload_datetime,
+                'encrypted': False,
+                'backup_size': 1,
+                'storage_service': config.storage_service,
+                'backup_simulation': True
+            })
+            upload_datetime -= relativedelta(hours=4)
 
 
 class BackupConfigCron(models.Model):
@@ -448,6 +485,7 @@ class BackupInfo(models.Model):
     encrypted = fields.Boolean(string='Encrypted', readonly=True)
     backup_size = fields.Float(string='Backup Size, MB', readonly=True)
     storage_service = fields.Selection(selection=[('odoo_backup_sh', 'Odoo Backup sh')], readonly=True)
+    backup_simulation = fields.Boolean(default=False, readonly=True)
 
     @api.model
     def create(self, vals):

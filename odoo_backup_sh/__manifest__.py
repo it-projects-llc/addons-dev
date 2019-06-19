@@ -28,6 +28,7 @@
     'qweb': ['static/src/xml/dashboard.xml'],
     "demo": [
         'demo/tour_views.xml',
+        'demo/demo.xml',
     ],
 
     "post_load": None,
