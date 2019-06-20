@@ -13,7 +13,8 @@ odoo.define('pos_invoice_number.models', function (require) {
         generate_unique_invoice_id: function() {
             // Generates a public identification number for the order invoice.
             // The generated number must be unique and sequential.
-            return this.pos.config.invoice_prefix + '-' + this.generate_unique_id();
+            var uniq_id = this.generate_unique_id().split('-').join('');
+            return this.pos.config.invoice_prefix + '-' + uniq_id.substring(uniq_id.length - 9, uniq_id.length);
         },
 
         generate_unique_invoice_access_key: function() {
