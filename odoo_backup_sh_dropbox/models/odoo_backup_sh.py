@@ -97,7 +97,7 @@ class BackupConfig(models.Model):
         for obj, obj_name, file_size in \
                 [[dump_stream, "%s.%s%s" % (name, ts,
                                             BACKUP_NAME_ENCRYPT_SUFFIX if info_file_content.get('encrypted')
-                                            else BACKUP_NAME_SUFFIX), info_file_content.get("backup_size")],
+                                            else BACKUP_NAME_SUFFIX), info_file_content.get("backup_size") * 1024 * 1024],
                  [info_file, "%s.%s%s" % (name, ts, '.info'), info_file_size]]:
             # The full path to upload the file to, including the file name
             full_path = "{folder_path}/{file_name}".format(
