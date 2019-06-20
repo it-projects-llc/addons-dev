@@ -212,9 +212,36 @@ class BackupConfig(models.Model):
         return needed_backup_dts
 
     @api.model
+    def get_simulation_backup_list(self, config):
+        info_records = self.env['odoo_backup_sh.backup_info'].search([('backup_simulation', '=', True),
+                                                                      ('storage_service', '=', config.storage_service),
+                                                                      ('database', '=', config.database)])
+        simulation_backup_list = []
+        for r in info_records:
+            simulation_backup_list.append(('%s.%s.info' % (r.database,
+                                                           r.upload_datetime.strftime(REMOTE_STORAGE_DATETIME_FORMAT)),
+                                           config.storage_service))
+            simulation_backup_list.append(('%s.%s.zip' % (r.database,
+                                                          r.upload_datetime.strftime(REMOTE_STORAGE_DATETIME_FORMAT)),
+                                           config.storage_service))
+        return simulation_backup_list
+
+    @api.model
     def get_backup_list(self, cloud_params):
         try:
-            return BackupCloudStorage.get_backup_list(cloud_params)
+            backup_list = BackupCloudStorage.get_backup_list(cloud_params)
+
+            # if the simulation configuration exists, we need to get
+            # all the simulation info files and convert them to backup format
+            config = self.env['odoo_backup_sh.config'].search([('storage_service', '=', 'odoo_backup_sh'),
+                                                               ('backup_simulation', '=', True),
+                                                               ('database', '=', self._cr.dbname)])
+            if config:
+                simulation_backup_list = self.get_simulation_backup_list(config)
+                backup_list.update({
+                    'backup_list': backup_list['backup_list'] + simulation_backup_list
+                })
+            return backup_list
         except Exception as e:
             _logger.exception('Failed to load backups')
             raise UserError(_("Failed to load backups: %s") % e)
@@ -236,6 +263,14 @@ class BackupConfig(models.Model):
     def delete_remote_objects(self, cloud_params, remote_objects):
         odoo_backup_sh_objects = []
         for file in remote_objects:
+            # ignore deletion of objects from the storage server if the file is a simulation object
+            file_name = file[0]
+            file_name_parts = file_name.split('.')
+            backup_dt_part_index = -3 if file_name_parts[-1] == 'enc' else -2
+            db_name = '.'.join(file_name_parts[:backup_dt_part_index])
+            config = self.search([('database', '=', db_name), ('storage_service', '=', 'odoo_backup_sh')])
+            if config.backup_simulation:
+                continue
             odoo_backup_sh_objects += [{'Key': '%s/%s' % (cloud_params['odoo_oauth_uid'], file[0])}]
         if odoo_backup_sh_objects:
             return BackupCloudStorage.delete_objects(cloud_params, odoo_backup_sh_objects)
@@ -281,11 +316,17 @@ class BackupConfig(models.Model):
                     remote_db = remote_backups.get(backup_config.database, False)
                     if not remote_db:
                         continue
+                    # filter current dict by service name
+                    remote_db = {rem_db: remote_db[rem_db] for rem_db in remote_db if
+                                 remote_db[rem_db][0][1] == backup_config.storage_service}
+                    if not remote_db:
+                        continue
                     backup_dts = copy.deepcopy(remote_db)
                     needed_backup_dts = self.compute_auto_rotation_backup_dts(backup_dts, **limits)
                     for backup_dt in backup_dts:
                         if backup_dt not in needed_backup_dts:
-                            remote_objects_to_delete += [file in remote_backups[backup_config.database][backup_dt]]
+                            if file in remote_backups[backup_config.database][backup_dt]:
+                                remote_objects_to_delete.append(file)
                             del remote_backups[backup_config.database][backup_dt]
 
             # Delete unnecessary remote backup objects
@@ -294,12 +335,19 @@ class BackupConfig(models.Model):
                 if res and 'reload_page' in res:
                     return res
 
-            # Delete unnecessary local backup info records (not need delete simulation backup info records)
-            backup_info_ids_to_delete = [
-                r.id for r in self.env['odoo_backup_sh.backup_info'].search([('backup_simulation', '=', False)]) if
-                (r.database not in remote_backups or r.upload_datetime not in remote_backups[r.database])
-            ]
-            self.env['odoo_backup_sh.backup_info'].browse(backup_info_ids_to_delete).unlink()
+            # Delete unnecessary local backup info records
+            backup_info_ids_to_delete = []
+            for r in self.env['odoo_backup_sh.backup_info'].search([('active', '=', True)]):
+                if remote_backups.get(r.database, False) is False or \
+                        remote_backups[r.database].get(r.upload_datetime.replace(microsecond=0), False) is False:
+                    backup_info_ids_to_delete.append(r.id)
+
+            # Archive old records
+            self.env['odoo_backup_sh.backup_info'].browse(backup_info_ids_to_delete).write({
+                'active': False
+            })
+            # Compute total remote storage after archive
+            self.env['odoo_backup_sh.remote_storage'].compute_total_used_remote_storage()
 
             # Create missing local backup info records
             for db_name, backup_dts in remote_backups.items():
@@ -416,27 +464,36 @@ class BackupConfig(models.Model):
                 _logger.exception('Failed to load backups')
                 raise UserError(_("Failed to load backups: %s") % e)
 
+    @api.multi
+    def action_create_simulation_data(self):
+        self.install_demo_data()
+        return True
+
     @api.model
-    def install_demo_data(self):
-        # create new simulation backup config
+    def install_simulation(self):
+        # when installing with demo data we create new simulation backup config (for creating simulation records)
         config = self.create({
             'database': self._cr.dbname,
             'encrypt_backups': False,
             'storage_service': 'odoo_backup_sh',
             'backup_simulation': True
         })
+        config.install_demo_data()
+
+    @api.multi
+    def install_demo_data(self):
         # create lot of backup info files (fake backups)
         info_obj = self.env['odoo_backup_sh.backup_info']
         number_of_backups = 1000
         upload_datetime = datetime.now()
         for index in range(number_of_backups):
             info_obj.create({
-                'database': config.database,
+                'database': self.database,
                 'upload_datetime': upload_datetime,
                 'encrypted': False,
                 'backup_size': 1,
-                'storage_service': config.storage_service,
-                'backup_simulation': True
+                'storage_service': self.storage_service,
+                'backup_simulation': self.backup_simulation
             })
             upload_datetime -= relativedelta(hours=4)
 
@@ -486,6 +543,8 @@ class BackupInfo(models.Model):
     backup_size = fields.Float(string='Backup Size, MB', readonly=True)
     storage_service = fields.Selection(selection=[('odoo_backup_sh', 'Odoo Backup sh')], readonly=True)
     backup_simulation = fields.Boolean(default=False, readonly=True)
+    active = fields.Boolean('Active', default=True, help="If the active field is set to False, it will allow you to "
+                                                         "hide the record without removing it.")
 
     @api.model
     def create(self, vals):

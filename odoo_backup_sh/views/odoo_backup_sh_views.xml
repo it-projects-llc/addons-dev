@@ -216,11 +216,16 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
         <field name="model">odoo_backup_sh.config</field>
         <field name="arch" type="xml">
             <form string="Backup Configuration">
+                <header>
+                    <button name="action_create_simulation_data" string="Create Fake Backups" type="object" class="btn-secondary" attrs="{'invisible': [('backup_simulation', '=', False)]}"/>
+                </header>
                 <sheet>
                     <div class="oe_title">
                         <label for="database" class="oe_edit_only"/>
                         <h1><field name="database"/></h1>
                     </div>
+                    <field nolabel="1" class="oe_inline" name="backup_simulation" readonly="1" attrs="{'invisible': [('backup_simulation', '=', False)]}"/>
+                    <label for="backup_simulation" class="text-warning" attrs="{'invisible': [('backup_simulation', '=', False)]}"/>
                     <group name="storage_service" invisible="1">
                         <group>
                             <field name="storage_service"/>

@@ -4,7 +4,5 @@ Copyright 2019 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
 License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <data>
-        <function name="install_demo_data" model="odoo_backup_sh.config"/>
-    </data>
+    <function name="install_simulation" model="odoo_backup_sh.config"/>
 </odoo>
