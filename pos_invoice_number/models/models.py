@@ -34,7 +34,14 @@ class PosOrder(models.Model):
                 self.env['account.invoice'].search([('origin', '=', order_record.name)]).write({
                     'number': order_data.get('invoice_name'),
                     'reference': order_data.get('invoice_name'),
+                    'access_key': order_data.get('access_key'),
                     # 'name': order_data.get('invoice_name'),
                 })
 
         return res
+
+
+class AccountInvoice(models.Model):
+    _inherit = 'account.invoice'
+
+    access_key = fields.Char('Invoice Access Number')

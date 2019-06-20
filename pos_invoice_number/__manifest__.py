@@ -23,6 +23,8 @@
     "data": [
         "views/pos_config_view.xml",
         "views/assets.xml",
+        "views/account_views.xml",
+        "report/invoice_report.xml",
     ],
     "demo": [
     ],

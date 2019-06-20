@@ -16,9 +16,39 @@ odoo.define('pos_invoice_number.models', function (require) {
             return this.pos.config.invoice_prefix + '-' + this.generate_unique_id();
         },
 
+        generate_unique_invoice_access_key: function() {
+            // Generates a access key number for the order invoice.
+            var date = new Date();
+            // length 4
+            var year = '' + date.getFullYear();
+            // length 2
+            var month = date.getMonth() + 1;
+            month = month >= 10
+            ? '' + month
+            : '0' + month;
+            // length 2
+            var day = date.getDate();
+            day = day >= 10
+            ? '' + day
+            : '0' + day;
+            date = year + month + day;
+
+            var random_number = function(length) {
+               var result           = '';
+               var characters       = '0123456789';
+               var charactersLength = characters.length;
+               for ( var i = 0; i < length; i++ ) {
+                  result += characters.charAt(Math.floor(Math.random() * charactersLength));
+               }
+               return result;
+            }
+            return date + random_number(49 - 8);
+        },
+
         set_to_invoice: function(to_invoice) {
             _super_order.set_to_invoice.apply(this, arguments);
             this.invoice_name = this.generate_unique_invoice_id();
+            this.access_key = this.generate_unique_invoice_access_key();
         },
 
         export_as_JSON: function() {
@@ -26,6 +56,7 @@ odoo.define('pos_invoice_number.models', function (require) {
             var is_to_invoice = this.is_to_invoice();
             if (is_to_invoice) {
                 data.invoice_name = this.invoice_name;
+                data.access_key = this.access_key;
             }
             // we duplicate this argument because _save_to_server method uses one option parameter `to_invoice` for all orders to save
             data.to_invoice = is_to_invoice;
@@ -36,6 +67,7 @@ odoo.define('pos_invoice_number.models', function (require) {
             _super_order.init_from_JSON.apply(this, arguments);
             if (json.to_invoice) {
                 this.invoice_name = json.invoice_name;
+                this.access_key = json.access_key;
             }
             this.to_invoice = json.to_invoice || false;
         },
