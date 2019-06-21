@@ -230,12 +230,15 @@ class BackupConfig(models.Model):
     def get_backup_list(self, cloud_params):
         try:
             backup_list = BackupCloudStorage.get_backup_list(cloud_params)
-
             # if the simulation configuration exists, we need to get
             # all the simulation info files and convert them to backup format
-            config = self.env['odoo_backup_sh.config'].search([('storage_service', '=', 'odoo_backup_sh'),
-                                                               ('backup_simulation', '=', True),
-                                                               ('database', '=', self._cr.dbname)])
+            domain = [('storage_service', '=', 'odoo_backup_sh'), ('backup_simulation', '=', True), ('database', '=', self._cr.dbname)]
+            # first search with rotation
+            config = self.env['odoo_backup_sh.config'].search(domain)
+            # if the config does not exist, we need to find the config without rotation
+            if not config:
+                domain.append(('active', '=', False))
+                config = self.env['odoo_backup_sh.config'].search(domain)
             if config:
                 simulation_backup_list = self.get_simulation_backup_list(config)
                 backup_list.update({

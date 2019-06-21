@@ -227,7 +227,6 @@ class BackupController(http.Controller):
                 } for day in date_list]
             }]
         }
-
         last_week_dates = date_list[-7:]
         backup_configs = request.env['odoo_backup_sh.config'].with_context({'active_test': False}).search_read(
             [], ['database', 'active', 'storage_service'])
