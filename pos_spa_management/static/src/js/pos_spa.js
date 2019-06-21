@@ -92,7 +92,7 @@ odoo.define('pos_spa_management', function(require){
         click_confirm: function() {
             var self = this;
             if (this.client) {
-                this.action_confirm();
+                return this.action_confirm();
             }
             this.request_get_name_by_phone(this.$el.find('input')[0].value).done(function(res){
                 if (res) {
@@ -109,19 +109,21 @@ odoo.define('pos_spa_management', function(require){
 
         action_request_failed: function() {
             this.client = false;
+            var inputs = this.$el.find('input');
+            if (inputs[0].value && inputs[1].value) {
+                var phone = inputs[0].value;
+                var name = inputs[1].value;
+                this.gui.close_popup();
+                return this.create_new_customer(phone, name);
+            }
             this.$el.find('input')[1].placeholder = 'Client not found';
         },
 
         action_confirm: function () {
             if (this.client && this.check_referrer_mode()) {
                 this.pos.get_order().set_referrer(this.client);
-            } else if (this.client) {
-                this.pos.get_order().set_client(this.client);
             } else {
-                var inputs = this.$el.find('input');
-                if (inputs[0].value && inputs[1].value) {
-                    this.create_new_customer(inputs[0].value, inputs[1].value);
-                }
+                this.pos.get_order().set_client(this.client);
             }
             this.gui.close_popup();
         },
@@ -280,15 +282,13 @@ odoo.define('pos_spa_management', function(require){
             }
             saved_data = JSON.parse(saved_data);
             var duration = saved_data.duration;
-            if (!saved_data.duration || saved_data.start_time + saved_data.duration <= this.get_current_time()) {
+            if (!duration || saved_data.start_time + duration <= this.get_current_time()) {
                 return;
             }
             this.table.start_time = saved_data.start_time;
-            this.table.duration = saved_data.duration;
+            this.table.duration = duration;
             this.table.executors = saved_data.executors;
             this.table.last_order_name = saved_data.last_order_name;
-            var time_left = this.table.duration - (this.get_current_time() - this.table.start_time);
-            // this.start_spa_timer(time_left);
         },
 
         get_current_time: function() {
@@ -299,13 +299,14 @@ odoo.define('pos_spa_management', function(require){
             this._super();
 
             var element = this.$el.find('.table-seats')[0];
+            element.textContent = '';
             if (!this.table.duration) {
                 element.textContent = '';
                 return;
             }
 
             if (this.check_table_availability()) {
-                var duration = 0;
+                this.table.duration = 0;
             } else {
                 var time_left = this.table.duration - (this.get_current_time() - this.table.start_time);
                 this.render_play_buttons();
@@ -318,6 +319,7 @@ odoo.define('pos_spa_management', function(require){
             element.textContent = '';
             var timer = duration, minutes, seconds;
             var self = this;
+            this.stopped_timer = false;
             this.countdown_timer = setInterval(function () {
                 minutes = parseInt(timer / 60, 10);
                 seconds = parseInt(timer % 60, 10);
@@ -335,10 +337,10 @@ odoo.define('pos_spa_management', function(require){
                     self.remove_timer();
                     this.stopped_timer = true;
                 }
-
                 if (--timer < 0) {
                     timer = duration;
                 }
+
             }, 1000);
         },
 
@@ -403,7 +405,6 @@ odoo.define('pos_spa_management', function(require){
                 'title': _t('Can not open the Table'),
                 'body': _t('The room is occupied. Click `Confirm` if you want to change the executor. Click `Add Order` if you want to sell non-durable products'),
                 'confirm': function () {
-                    self.click_pause();
                     self.gui.select_changed_executor(table).done(function(previous_user_id){
                         return self.gui.select_user().done(function(user){
                             table.executors.push(user.id);
@@ -413,6 +414,7 @@ odoo.define('pos_spa_management', function(require){
                             })
                             .uniq().value();
                             self.pos.save_timer(table);
+                            self.click_pause();
                             return self.change_executor(user.id, previous_user_id.id);
                         });
                     });

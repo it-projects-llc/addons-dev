@@ -6,3 +6,11 @@
 .pos .actionpad .button.pay {
     height: 108px;
 }
+
+.floor-map .table .table-seats {
+    background: none;
+    color: black;
+    font-size: x-large;
+    left: 30px;
+    font-weight: bold;
+}
