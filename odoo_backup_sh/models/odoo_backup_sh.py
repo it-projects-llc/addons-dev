@@ -63,8 +63,9 @@ class BackupConfig(models.Model):
     unlimited_time_frame = fields.Char(default="hour")
     common_rotation = fields.Selection(selection=ROTATION_OPTIONS, default='unlimited')
     max_backups = fields.Integer(readonly=True, compute=lambda self: 0)
-    # TODO: help
-    backup_simulation = fields.Boolean(string="Demo Backup Simulation", default=False)
+    backup_simulation = fields.Boolean(string="Demo Backup Simulation", default=False,
+                                       help="If the setting is enabled then new backups of current database will not "
+                                            "be sent to the storage server")
 
     _sql_constraints = [
         ('database_unique', 'unique (database, storage_service)', "Settings for this database already exist!"),
@@ -545,7 +546,9 @@ class BackupInfo(models.Model):
     encrypted = fields.Boolean(string='Encrypted', readonly=True)
     backup_size = fields.Float(string='Backup Size, MB', readonly=True)
     storage_service = fields.Selection(selection=[('odoo_backup_sh', 'Odoo Backup sh')], readonly=True)
-    backup_simulation = fields.Boolean(default=False, readonly=True)
+    backup_simulation = fields.Boolean(default=False, readonly=True,
+                                       help="If this option is enabled, the backup information will not be deleted "
+                                            "after updating the backup list.")
     active = fields.Boolean('Active', default=True, help="If the active field is set to False, it will allow you to "
                                                          "hide the record without removing it.")
 
