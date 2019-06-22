@@ -329,13 +329,13 @@ odoo.define('pos_spa_management', function(require){
 
                 element.textContent = minutes + ":" + seconds;
 
-                if (!this.stopped_timer && (minutes === 15 || minutes === '00') && seconds === '00') {
+                if (!self.stopped_timer && (minutes === 15 || minutes === '00') && seconds === '00') {
                     self.gui.play_sound('error')
                 }
 
                 if (minutes === '00' && seconds === '00') {
                     self.remove_timer();
-                    this.stopped_timer = true;
+                    self.stopped_timer = true;
                 }
                 if (--timer < 0) {
                     timer = duration;

@@ -11,6 +11,8 @@
     background: none;
     color: black;
     font-size: x-large;
-    left: 30px;
     font-weight: bold;
+    width: 100%;
+    text-align: left;
+    margin-left: -30px;
 }
