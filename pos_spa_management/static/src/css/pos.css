@@ -10,9 +10,9 @@
 .floor-map .table .table-seats {
     background: none;
     color: black;
-    font-size: x-large;
+    font-size: xx-large;
     font-weight: bold;
     width: 100%;
     text-align: left;
-    margin-left: -30px;
+    margin-left: -40px;
 }
