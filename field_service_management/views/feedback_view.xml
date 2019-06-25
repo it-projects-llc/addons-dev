@@ -43,18 +43,18 @@
                     <field name="user_id"/>
                     <field name="task_id"/>
                     <field name="rating"/>
-                    <filter string="Happy" domain="[('rating', '&gt;=', 5)]"/>
-                    <filter string="Okay" domain="[('rating', '&gt;', 1), ('rating', '&lt;', 5)]"/>
-                    <filter string="Unhappy" domain="[('rating', '=', 1)]"/>
+                    <filter string="Happy" name="happy" domain="[('rating', '&gt;=', 5)]"/>
+                    <filter string="Okay" name="okay" domain="[('rating', '&gt;', 1), ('rating', '&lt;', 5)]"/>
+                    <filter string="Unhappy" name="unhappy" domain="[('rating', '=', 1)]"/>
                     <separator/>
                     <group expand="0" string="Group By">
-                        <filter string="Task" name="task" context="{'group_by':'task_id'}"/>
-                        <filter string="Customer" name="customer" context="{'group_by':'partner_id'}"/>
-                        <filter string="Serviceman" name="serviceman" context="{'group_by':'user_id'}"/>
-                        <filter string="Rating" name="rating" context="{'group_by':'rating'}"/>
-                        <filter string="Day" context="{'group_by':'create_date:day'}"/>
-                        <filter string="Month" context="{'group_by':'create_date:month'}"/>
-                        <filter string="Year" context="{'group_by':'create_date:year'}"/>
+                        <filter string="Task" name="task" domain="[]" context="{'group_by':'task_id'}"/>
+                        <filter string="Customer" name="customer" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Serviceman" name="serviceman" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Rating" name="rating" domain="[]" context="{'group_by':'rating'}"/>
+                        <filter string="Day" name="day"  domain="[]" context="{'group_by':'create_date:day'}"/>
+                        <filter string="Month" name="month" domain="[]" context="{'group_by':'create_date:month'}"/>
+                        <filter string="Year" name="year" domain="[]" context="{'group_by':'create_date:year'}"/>
                     </group>
                 </search>
             </field>

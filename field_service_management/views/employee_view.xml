@@ -22,12 +22,12 @@
                         groups='field_service_management.group_operator'/>
                 </header>
             </xpath>
-            <xpath expr="//sheet/notebook/page[@name='public']" position="inside">
+            <xpath expr="//page[@name='public']" position="inside">
                 <group>
                     <field name="feedback_efficiency"/>
                 </group>
             </xpath>
-            <xpath expr="//sheet/notebook/page[@name='hr_settings']"
+            <xpath expr="//page[@name='hr_settings']"
                 position="before">
                 <page string="Services">
                     <field name="emp_skill_ids">

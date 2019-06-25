@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models
 
@@ -11,7 +10,7 @@ class ResUser(models.Model):
                 access_rights_uid=None):
         # if select a service immediate service person are visible and suggest
         context = self._context
-        if context.has_key('assign_job'):
+        if 'assign_job' in context:
             if context.get('assign_job'):
                 user_ids = self.env['emp.skill.line'].get_users_by_skill(
                     context.get('assign_job'))

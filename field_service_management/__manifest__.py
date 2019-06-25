@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -9,17 +8,17 @@
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "website": "http://www.serpentcs.com",
     "description": """
-This module allows you to create a new field service management system.
-======================================================================
-
-Field Service (formerly Service Online) drives profitability by automating 
-the process of dispatching field technicians to service calls in remote 
-locations. Field Service improves customer satisfaction by more accurately 
-predicting a window to promise for service delivery, and it contains the Assignment 
-automatically to eliminate guesswork surrounding qualification, availability and
-suggest the best service person of each field service technician.
-    """,
-    "depends": ["hr", "project", "crm", "sale_timesheet", "hr_timesheet","document"],
+        This module allows you to create a new field service management system.
+        ======================================================================
+        
+        Field Service (formerly Service Online) drives profitability by automating 
+        the process of dispatching field technicians to service calls in remote 
+        locations. Field Service improves customer satisfaction by more accurately 
+        predicting a window to promise for service delivery, and it contains the Assignment 
+        automatically to eliminate guesswork surrounding qualification, availability and
+        suggest the best service person of each field service technician.
+            """,
+    "depends": ["hr", "project", "crm", "sale_timesheet", "hr_timesheet", "document"],
     "demo": [
         "demo/service_skill_demo.xml",
         "demo/res_users_demo.xml",

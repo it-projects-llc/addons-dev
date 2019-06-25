@@ -354,7 +354,7 @@ action = {
         id="product_uom_categ_menu"
         name="Unit of Measure Categories"
         parent="fsm_products_menu"
-        action="product.product_uom_categ_form_action"
+        action="uom.product_uom_categ_form_action"
         sequence="24"/>
 
     <!-- Field Service Localization Parent Menu -->

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 import json
@@ -160,8 +159,8 @@ class Job(models.Model):
                              store=True)
     feedback_count = fields.Integer(
         compute='_compute_feedback_count', string='# of Feedback')
-    invoice_check=fields.Boolean("invoice")
-    site_check=fields.Boolean("Site Visit")
+    invoice_check=fields.Boolean(string="invoice")
+    site_check=fields.Boolean(string="Site Visit")
 
 
     @api.multi
