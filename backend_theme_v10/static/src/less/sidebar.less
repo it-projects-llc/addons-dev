@@ -5,17 +5,11 @@
 
 @odoo-sidebar-width: 76px;
 
-.o-flex(@grow, @schrink, @basis) {
-    -ms-flex: @grow @schrink @basis;
-    -moz-flex: @grow @schrink @basis;
-    -webkit-box-flex: @grow;
-    -webkit-flex: @grow @schrink @basis;
-
-    flex: @grow @schrink @basis;
-}
-
 .app-sidebar-panel {
-    .o-flex(0, 0, @odoo-sidebar-width);
+    -ms-flex: 0 0 76px;
+    -moz-flex: 0 0  76px;
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 76px;
     background-color: @gray-base;
     height: 100% !important;
     overflow-y: auto;
@@ -25,7 +19,10 @@
 }
 
 //.app-sidebar-panel:hover {
-//    .o-flex(0, 0, @odoo-sidebar-width);
+//  -ms-flex: 0 0 @odoo-sidebar-width;
+//  -moz-flex: 0 0  @odoo-sidebar-width;
+//  -webkit-box-flex: 0;
+//  -webkit-flex: 0 0 @odoo-sidebar-width;
 //}
 
 .app-sidebar {
@@ -67,4 +64,11 @@
 
 .toggle-sidebar {
     margin-left: 0px - @odoo-sidebar-width;
+}
+
+a.navbar-collapse.collapse {
+    @media (min-width: @screen-sm-min) {
+        padding-bottom: 32;
+        padding-top: 16;
+    }
 }

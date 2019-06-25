@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 # Copyright 2016, 2017 Openworx
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
 from odoo import models, fields
+
 
 class ResUsers(models.Model):
 
