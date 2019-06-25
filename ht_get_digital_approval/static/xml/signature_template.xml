@@ -1,0 +1,19 @@
+<template id="template" xml:space="preserve">
+
+<t t-name="DigitalSignature">
+    <div id="signature-pad" class="m-signature-pad">
+        <group>
+            <group>
+                <span class="save_sign">
+                </span>
+                <canvas/>
+            </group>
+            <group style="align:right">
+                <button type="button" class="button clear" data-action="clear">
+                    <span>Clear</span>
+                </button>
+            </group>
+        </group>
+    </div>
+</t>
+</template>

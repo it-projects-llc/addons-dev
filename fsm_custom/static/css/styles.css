@@ -1,0 +1,4 @@
+input.opt_required.text-warning{
+   background-color: #D2D2FF !important;
+   color: rgb(31, 31, 31) !important; /*We don't want the text to actually have the warning color, so we keep it the usual*/
+}

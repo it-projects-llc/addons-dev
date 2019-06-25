@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Demo Data for City -->
+        <record id="job_city_1" model="city.city">
+            <field name="name">Los Angeles</field>
+            <field name="state_id" ref="base.state_us_as"/>
+        </record>
+
+        <record id="job_city_2" model="city.city">
+            <field name="name">Chicago</field>
+            <field name="state_id" ref="base.state_us_as"/>
+        </record>
+
+        <record id="job_city_3" model="city.city">
+            <field name="name">Phoenix</field>
+            <field name="state_id" ref="base.state_us_as"/>
+        </record>
+
+        <record id="job_city_4" model="city.city">
+            <field name="name">San Antonio</field>
+            <field name="state_id" ref="base.state_us_as"/>
+        </record>
+
+        <record id="job_city_5" model="city.city">
+            <field name="name">San Diego</field>
+            <field name="state_id" ref="base.state_us_as"/>
+        </record>
+
+        <record id="job_city_6" model="city.city">
+            <field name="name">San Jose</field>
+            <field name="state_id" ref="base.state_us_as"/>
+        </record>
+
+        <record id="job_city_7" model="city.city">
+            <field name="name">Austin</field>
+            <field name="state_id" ref="base.state_us_as"/>
+        </record>
+
+        <record id="job_city_8" model="city.city">
+            <field name="name">Columbus</field>
+            <field name="state_id" ref="base.state_us_as"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- ======== Employee Configuration Form View ======== -->
+    <record id="view_emp_form_inherited" model="ir.ui.view">
+        <field name="name">view.employee.form.inherited</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form/*" position="before">
+                <header>
+                    <button name="create_user"
+                        type="object"
+                        string="Create User"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('user_id','!=', False)]}"
+                        groups='field_service_management.group_operator'/>
+                    <button name="open_user"
+                        type="object"
+                        string="Open User"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('user_id','=', False)]}"
+                        groups='field_service_management.group_operator'/>
+                </header>
+            </xpath>
+            <xpath expr="//sheet/notebook/page[@name='public']" position="inside">
+                <group>
+                    <field name="feedback_efficiency"/>
+                </group>
+            </xpath>
+            <xpath expr="//sheet/notebook/page[@name='hr_settings']"
+                position="before">
+                <page string="Services">
+                    <field name="emp_skill_ids">
+                        <tree string="Skill" editable="bottom">
+                            <field name="project_id"/>
+                            <field name="rate_card"/>
+                            <field name="express_service_rate"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Zone">
+                    <group>
+                        <field name="zone_ids" widget="many2many_tags"/>
+                    </group>
+                </page>
+                <page string="States">
+                    <group>
+                        <field name="state_ids" widget="many2many_tags"/>
+                    </group>
+                </page>
+                <page string="City">
+                    <group>
+                        <field name="city_ids" widget="many2many_tags"/>
+                    </group>
+                </page>
+                <page string="Area">
+                    <group>
+                        <field name="area_ids" widget="many2many_tags"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

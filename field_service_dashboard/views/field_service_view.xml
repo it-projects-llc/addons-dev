@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- My Invoice Action -->
+    <record id="action_my_invoices" model="ir.actions.act_window">
+        <field name="name">My Invoices</field>
+        <field name="res_model">account.invoice</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <!-- Open Invoices Action -->
+    <record id="action_open_invoices" model="ir.actions.act_window">
+        <field name="name">Open Invoices</field>
+        <field name="res_model">account.invoice</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,kanban</field>
+    </record>
+</odoo>

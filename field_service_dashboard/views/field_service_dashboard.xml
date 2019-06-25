@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- KanBan View Of Fsm Dashboard -->
+    <record id="field_service_dashboard_view" model="ir.ui.view">
+        <field name="name">fsm.dashboard.view</field>
+        <field name="model">fsm.dashboard</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_kanban_dashboard o_hr_kanban" js_class='field_service_dashboard_view' create="0">
+                <field name="name"/>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ***********Action Dashboard ************* -->
+    <record id="fsm_dashboard_act" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="res_model">fsm.dashboard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban</field>
+        <field name="context">{'field_service_dashboard_view_view_ref':
+                    'field_service_dashboard.hr_dashboard_view'}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+            </p>
+        </field>
+    </record>
+
+    <!-- *********** Menuitem Dashboard *********** -->
+    <menuitem id="menu_fsm_dashboard" name="Dashboard"
+        action="fsm_dashboard_act" sequence="-1" parent="field_service_management.field_service_main_menu"
+        icon="fa-dashboard" web_icon="field_service_dashboard,static/description/dashboard.png"/>
+</odoo>

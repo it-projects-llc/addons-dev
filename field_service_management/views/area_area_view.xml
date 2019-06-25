@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Area Form View -->
+    <record id="area_area_form_view" model="ir.ui.view">
+        <field name="name">area.area.form.view</field>
+        <field name="model">area.area</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="city_id"/>
+                        <field name="is_serviceable"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Area Tree View -->
+    <record id="area_area_tree_view" model="ir.ui.view">
+        <field name="name">area.area.tree.view</field>
+        <field name="model">area.area</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="name"/>
+                <field name="city_id"/>
+                <field name="is_serviceable"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Area Action View -->
+    <record id="action_area_area" model="ir.actions.act_window">
+        <field name="name">Areas</field>
+        <field name="res_model">area.area</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Area Menuitem -->
+    <menuitem
+        id="area_area_menu"
+        action="action_area_area"
+        parent="localization_main_menu"/>
+</odoo>

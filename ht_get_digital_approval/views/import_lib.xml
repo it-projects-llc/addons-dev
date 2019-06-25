@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="ht_get_digital_approval" name="even signature assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/ht_get_digital_approval/static/src/css/signature-pad.css"/>
+                <script type="text/javascript" src="/ht_get_digital_approval/static/lib/signature_pad.js"></script>
+                <script type="text/javascript" src="/ht_get_digital_approval/static/js/digi_signature.js"></script>
+            </xpath>
+        </template>
+    </data>
+</odoo>

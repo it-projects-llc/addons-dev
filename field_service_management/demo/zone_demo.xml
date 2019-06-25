@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate='1'>
+        <record id="zone_south" model="zone.zone">
+            <field name="name">South</field>
+        </record>
+
+        <record id="zone_north" model="zone.zone">
+            <field name="name">North</field>
+        </record>
+
+        <record id="zone_west" model="zone.zone">
+            <field name="name">West</field>
+        </record>
+
+        <record id="zone_east" model="zone.zone">
+            <field name="name">East</field>
+        </record>
+
+        <record id="zone_central" model="zone.zone">
+            <field name="name">Central</field>
+        </record>
+    </data>
+</odoo>

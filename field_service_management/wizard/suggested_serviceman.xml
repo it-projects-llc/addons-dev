@@ -1,0 +1,29 @@
+<odoo>
+    <!-- Form view of Suggest Serviceman Form -->
+    <record id="wiz_suggest_serviceman_view" model="ir.ui.view">
+        <field name="name">wiz.suggest.serviceman.view</field>
+        <field name="model">suggest.serciceman.job</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="user_ids"/>
+                </group>
+                    <footer>
+                        <button string="Cancel" class="oe_default"
+                            special="cancel"/>
+                    </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Res Users Action View Inherited -->
+    <record id="action_view_res_user_tree_inherited" model="ir.actions.act_window">
+        <field name="name">Suggest Serviceman</field>
+        <field name="res_model">suggest.serciceman.job</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_res_user_tree_inherited"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

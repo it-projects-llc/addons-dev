@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+        <record id="email_template_installation_details_email" model="mail.template">
+            <field name="name">Installation Details</field>
+            <field name="email_from">${(object.user_id.email or '')|safe}</field>
+            <field name="subject">Installation Details</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="auto_delete" eval="False"/>
+            <!--<field name="report_template" ref="action_report_custom"/>-->
+            <!--<field name="report_name">${(object.name or '')}</field>-->
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+
+		<p>Hello,</p>
+
+		<p>
+            Please find details for job <strong>${object.job_sequence or ''}</strong> of SO <strong>${object.name or ''}</strong>  attached with this email
+       </p>
+
+       <p>Best regards,</p>
+
+
+</div>
+
+            ]]></field>
+        </record>
+
+
+
+        <record id="email_template_damages_details_email" model="mail.template">
+            <field name="name">Damages Details</field>
+            <field name="email_from">${(object.user_id.email or '')|safe}</field>
+            <field name="subject">Damages Details</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="auto_delete" eval="False"/>
+            <!--<field name="report_template" ref="pos_email_receipt.action_report_pos_receipt"/>-->
+            <!--<field name="report_name">${(object.name or '').replace('/','_')}</field>-->
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+
+		<p>Hello,</p>
+        <table>
+                <tr>
+                    <td>Signature : ${object.signature_damage or ''}</td>
+                </tr>
+
+                <tr>
+                    <td>Description : ${object.text_damage or ''}</td>
+                </tr>
+        </table>
+
+
+
+</div>
+<br/><br/>
+<p>Best regards,</p>
+            ]]></field>
+        </record>
+
+        <record id="email_template_feedback_email" model="mail.template">
+            <field name="name">Job Feedback</field>
+            <field name="email_from">${(object.user_id.email or '')|safe}</field>
+            <field name="subject">Regarding Feedback</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="auto_delete" eval="False"/>
+            <!--<field name="report_template" ref="pos_email_receipt.action_report_pos_receipt"/>-->
+            <!--<field name="report_name">${(object.name or '').replace('/','_')}</field>-->
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+
+		<p>Hello,</p>
+		<p>
+            Please find the feedback of job <strong>${object.job_sequence or ''}</strong> of SO <strong>${object.name or ''}</strong>  attached with this email
+       </p>
+		<p>
+		    Rating :${object.rating_feedback() or ''}
+		</p>
+		<p>
+		    Feedback :${object.give_feedback or ''}
+		</p>
+		<br/><br/>
+		<p>Best regards,</p>
+
+
+
+</div>
+            ]]></field>
+        </record>
+
+        <record id="email_template_modification_lines" model="mail.template">
+            <field name="name">Modification Line</field>
+            <field name="email_from">${(object.user_id.email or '')|safe}</field>
+            <field name="subject">Regarding Modification</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="auto_delete" eval="False"/>
+            <!--<field name="report_template" ref="pos_email_receipt.action_report_pos_receipt"/>-->
+            <!--<field name="report_name">${(object.name or '').replace('/','_')}</field>-->
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+            <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+
+		        <p>Hello,</p>
+		        <p>
+                Please find the Modification Lines <strong>${object.job_sequence or ''}</strong> of SO <strong>${object.name or ''}</strong>  attached with this email
+                </p>
+
+
+		        <br/><br/>
+		        <p>Best regards,</p>
+            </div>
+            ]]></field>
+        </record>
+
+
+
+
+    </data>
+
+
+</odoo>

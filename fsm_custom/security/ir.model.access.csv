@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_image_damage,access.image.damage,model_image_damage,,1,1,1,1
+access_modify_line,access.modify.line,model_modify_line,,1,1,1,1
+access_image_line,access.image.line,model_image_line,,1,1,1,1

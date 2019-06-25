@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_custom_document_feedback">
+        <t t-call="report.external_layout">
+            <div class="page">
+                <div class="row">
+                    <div class="center-block">
+                        <h2 colspan="4" col="4" style="color:#2E86C1">
+                            <span t-field="doc.job_sequence"/>
+                        </h2>
+                        <h2 colspan="4" col="4" style="color:#2E86C1">
+                            <span t-field="doc.name"/>
+                        </h2>
+                    </div>
+                    <div class="center-block"  style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 20px; color: rgb(34, 34, 34); background-color: #FFF; ">
+
+                        <table style="border-collapse:separate;
+                border-spacing:0 15px;">
+                            <tr>
+                                <td>Rating :<t t-esc="doc.rating_feedback()"/></td>
+                            </tr>
+                            <tr>
+                                <td>Feedback :<t t-esc="doc.give_feedback"/></td>
+                            </tr>
+                             <tr>
+                                <td>Signature :<t t-if="doc.feedback_signature_image">
+                                    <div>
+                                        <img t-att-src="'data:image/png;base64,'+ doc.feedback_signature_image" width="200" height="150"/>
+                                    </div>
+                                </t>
+                                </td>
+
+                            </tr>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </t>
+
+    </template>
+
+
+    <template id="report_custom_template_feedback">
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="fsm_custom.report_custom_document_feedback" t-lang="doc.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+</odoo>

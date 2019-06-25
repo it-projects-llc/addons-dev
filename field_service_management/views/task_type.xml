@@ -1,0 +1,40 @@
+<odoo>
+<!-- Inherit project.task.type form view to add user_ids and state -->
+    <record id="view_project_task_type_users_form" model="ir.ui.view">
+        <field name="name">project.task.type.form.view.inherit</field>
+        <field name="model">project.task.type</field>
+        <field name="inherit_id" ref="project.task_type_edit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group/group[1]/field[@name='name']" position="after">
+                <field name="state"/>
+            </xpath>
+            <field name='fold' position='after'>
+                <field name="auto_assign"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Inherit project.task.type Tree view to add state -->
+    <record id ="project_task_type_stage_feature_inherit_tree_view" model="ir.ui.view">
+        <field name="name">project.task.stage.feature.tree.extended</field>
+        <field name="model">project.task.type</field>
+        <field name ="inherit_id" ref="project.task_type_tree"/>
+        <field name="arch" type ="xml">
+            <xpath expr="//tree/field[2]" position="after">
+                <field name="state"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- inherited view of search view for task type  -->
+    <record id ="project_task_search_view_inherit" model="ir.ui.view">
+        <field name="name">project.task.search.view.inherit</field>
+        <field name="model">project.task</field>
+        <field name ="inherit_id" ref="project.view_task_search_form"/>
+        <field name="arch" type ="xml">
+            <xpath expr ="/search/field[@name = 'stage_id']" position ="after">
+                <field name="id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

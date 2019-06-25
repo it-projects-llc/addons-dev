@@ -1,0 +1,41 @@
+<odoo>
+    <!-- calendar -->
+    <menuitem
+        id="calendar.mail_menu_calendar"
+        name="Calendar"
+        action="calendar.action_calendar_event"
+        web_icon="calendar,static/description/icon.png"
+        groups="-base.group_user,field_service_management.group_menu_visible"
+        sequence="2"/>
+
+    <!--Project  -->
+    <menuitem
+        id="project.menu_main_pm"
+        name="Project"
+        groups="-project.group_project_manager,-project.group_project_user,field_service_management.group_menu_visible"
+        web_icon="project,static/description/icon.png"
+        sequence="50"/>
+
+    <!--Employees  -->
+    <menuitem
+        id="hr.menu_hr_root"
+        name="Employees"
+        groups="-hr.group_hr_manager,-hr.group_hr_user,-base.group_user,field_service_management.group_menu_visible"
+        web_icon="hr,static/description/icon.png"
+        sequence="75"/>
+
+    <!-- Link Tracker -->
+    <menuitem
+        id="utm.menu_link_tracker_root"
+        name="Link Tracker"
+        groups="-base.group_no_one,field_service_management.group_menu_visible"
+        sequence="30"/>
+
+    <!-- Timesheets -->
+    <menuitem
+        id="hr_timesheet.timesheet_menu_root"
+        name="Timesheets"
+        groups="-base.group_user,field_service_management.group_menu_visible"
+        web_icon="hr_timesheet,static/description/icon_timesheet.png"
+        sequence="55"/>
+</odoo>

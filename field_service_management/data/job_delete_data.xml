@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <delete id="project.project_task_1" model="project.task"/>
+        <delete id="project.project_task_2" model="project.task"/>
+        <delete id="project.project_task_3" model="project.task"/>
+        <delete id="project.project_task_4" model="project.task"/>
+        <delete id="project.project_task_5" model="project.task"/>
+        <delete id="project.project_task_6" model="project.task"/>
+        <delete id="project.project_task_7" model="project.task"/>
+        <delete id="project.project_task_8" model="project.task"/>
+        <delete id="project.project_task_9" model="project.task"/>
+        <delete id="project.project_task_10" model="project.task"/>
+        <delete id="project.project_task_11" model="project.task"/>
+        <delete id="project.project_task_12" model="project.task"/>
+        <delete id="project.project_task_13" model="project.task"/>
+        <delete id="project.project_task_14" model="project.task"/>
+        <delete id="project.project_task_15" model="project.task"/>
+        <delete id="project.project_task_16" model="project.task"/>
+        <delete id="project.project_task_17" model="project.task"/>
+        <delete id="project.project_task_18" model="project.task"/>
+        <delete id="project.project_task_19" model="project.task"/>
+        <delete id="project.project_task_20" model="project.task"/>
+        <delete id="project.project_task_21" model="project.task"/>
+        <delete id="project.project_task_22" model="project.task"/>
+        <delete id="project.project_task_23" model="project.task"/>
+        <delete id="project.project_task_24" model="project.task"/>
+        <delete id="project.project_task_25" model="project.task"/>
+        <delete id="project.project_task_26" model="project.task"/>
+
+        <delete id="project.project_project_1" model="project.project"/>
+        <delete id="project.project_project_2" model="project.project"/>
+        <delete id="project.project_project_3" model="project.project"/>
+        <delete id="project.project_project_4" model="project.project"/>
+        <delete id="project.project_project_5" model="project.project"/>
+        <delete id="sale_timesheet.project_GAP" model="project.project"/>
+
+        <delete id="project.project_stage_0" model="project.task.type"/>
+        <delete id="project.project_stage_1" model="project.task.type"/>
+        <delete id="project.project_stage_2" model="project.task.type"/>
+        <delete id="project.project_stage_3" model="project.task.type"/>
+        <delete id="project.project_stage_data_1" model="project.task.type"/>
+        <delete id="project.project_stage_data_0" model="project.task.type"/>
+        <delete id="project.project_stage_data_2" model="project.task.type"/>
+    </data>
+</odoo>

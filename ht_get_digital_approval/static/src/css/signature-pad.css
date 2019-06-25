@@ -1,0 +1,176 @@
+
+body {
+  background-colo:white;
+  font-family: Helvetica, Sans-Serif;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+.m-signature-pad {
+  position: relative;
+  font-size: 10px;
+  width: auto !important;
+  height: auto !important;
+  left: 50%;
+  margin-left: -350px;
+  border: 1px solid black;
+  background-color: white;
+}
+
+.m-signature-pad:before, .m-signature-pad:after {
+	width: 40%;
+	height: 10px;
+	left: 20px;
+	bottom: 10px;
+	background: transparent;
+	-webkit-transform: skew(-3deg) rotate(-3deg);
+	-moz-transform: skew(-3deg) rotate(-3deg);
+	-ms-transform: skew(-3deg) rotate(-3deg);
+	-o-transform: skew(-3deg) rotate(-3deg);
+	transform: skew(-3deg) rotate(-3deg);
+	box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
+}
+
+.m-signature-pad:after {
+	left: auto;
+	right: 20px;
+	-webkit-transform: skew(3deg) rotate(3deg);
+	-moz-transform: skew(3deg) rotate(3deg);
+	-ms-transform: skew(3deg) rotate(3deg);
+	-o-transform: skew(3deg) rotate(3deg);
+	transform: skew(3deg) rotate(3deg);
+}
+
+.m-signature-pad--body {
+    position: absolute;
+    left: 0px;
+    right: 20px;
+    top: 0px;
+    bottom: 80px;
+    height: auto;
+    width: auto;
+    border: 1px solid #f4f4f4;
+}
+
+.m-signature-pad--body
+  canvas {
+    left: 0;
+    top: 0;
+    width: auto;
+    height: auto;
+  }
+
+.m-signature-pad--footer {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  height: 60px;
+}
+
+.m-signature-pad--footer
+  .description {
+    color: #C3C3C3;
+    text-align: center;
+    font-size: 1.2em;
+    margin-top: 1em;
+  }
+
+.m-signature-pad--footer
+  .left, .right {
+    position: absolute;
+    bottom: 0;
+  }
+
+.m-signature-pad--footer
+  .left {
+    left: 0;
+  }
+
+.m-signature-pad--footer
+  .right {
+    right: 0;
+  }
+
+@media screen and (max-width: 1024px) {
+  .m-signature-pad {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    height: auto;
+    min-width: 250px;
+    min-height: 140px;
+    margin: 5%;
+  }
+  #github {
+    display: none;
+  }
+}
+
+@media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  .m-signature-pad {
+    margin: 10%;
+  }
+}
+
+@media screen and (max-height: 320px) {
+  .m-signature-pad--body {
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 32px;
+  }
+  .m-signature-pad--footer {
+    left: 20px;
+    right: 20px;
+    bottom: 4px;
+    height: 28px;
+  }
+  .m-signature-pad--footer
+    .description {
+      font-size: 1em;
+      margin-top: 1em;
+    }
+}
+
+.o_kanban_view .o_kanban_record .oe_kanban_avatar_smallbox {
+    height: 100px !important;
+    width: 100px !important;
+    box-shadow: 0 1px 4px #777777;
+    float: left;
+    margin-right: 5px;
+}
+
+.o_kanban_view .o_kanban_record .kanban_photo {
+    height: 350px;
+    width: 350px;
+    min-height: 350px;
+    min-width: 350px;
+    max-height: 350px;
+    max-width: 350px;
+    box-shadow: 0 1px 4px #777777;
+    float: left;
+    margin-right: 5px;
+}
+
+.rotate90 {
+    -webkit-transform: rotate(20deg);
+    -moz-transform: rotate(20deg);
+    -o-transform: rotate(20deg);
+    -ms-transform: rotate(20deg);
+    transform: rotate(20deg);
+}
+
+.roate_image {
+        -moz-transform: scaleX(-1);
+        -o-transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
+        filter: FlipH;
+        -ms-filter: "FlipH";
+
+}
+

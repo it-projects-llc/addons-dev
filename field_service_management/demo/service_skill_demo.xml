@@ -1,0 +1,68 @@
+<odoo>
+    <data noupdate="1">
+        <record id="service_ac_repair" model="project.project">
+            <field name="name">Ac Repair</field>
+            <field name="icon" type="base64" file="field_service_management/static/image/AC_repair.png"/>
+            <field name="use_tasks" eval="1"/>
+            <field name="label_tasks">Jobs</field>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="alias_model">project.task</field>
+        </record>
+
+        <record id="service_plumbing" model="project.project">
+            <field name="name">Plumbing</field>
+            <field name="icon" type="base64" file="field_service_management/static/image/plumbing.png"/>
+            <field name="use_tasks" eval="1"/>
+            <field name="label_tasks">Jobs</field>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="alias_model">project.task</field>
+        </record>
+
+        <record id="service_vehicle_repair" model="project.project">
+            <field name="name">Vehicle Repair</field>
+            <field name="icon" type="base64" file="field_service_management/static/image/vahicle_repair.png"/>
+            <field name="use_tasks" eval="1"/>
+            <field name="label_tasks">Jobs</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="alias_model">project.task</field>
+        </record>
+
+        <record id="service_electronics_repair" model="project.project">
+            <field name="name">Electronics Repair</field>
+            <field name="icon" type="base64" file="field_service_management/static/image/electrician.png"/>
+            <field name="use_tasks" eval="1"/>
+            <field name="label_tasks">Jobs</field>
+            <field name="alias_model">project.task</field>
+        </record>
+
+        <record id="service_gardening" model="project.project">
+            <field name="name">Gardener</field>
+            <field name="icon" type="base64" file="field_service_management/static/image/gardener.png"/>
+            <field name="use_tasks" eval="1"/>
+            <field name="label_tasks">Jobs</field>
+            <field name="alias_model">project.task</field>
+        </record>
+
+        <record id="service_mobile_repair" model="project.project">
+            <field name="name">Mobile Repair</field>
+            <field name="icon" type="base64" file="field_service_management/static/image/mobile_repair.png"/>
+            <field name="use_tasks" eval="1"/>
+            <field name="label_tasks">Jobs</field>
+            <field name="alias_model">project.task</field>
+        </record>
+
+        <record id="service_house_keeper" model="project.project">
+            <field name="name">House Keeper</field>
+            <field name="icon" type="base64" file="field_service_management/static/image/house_kepper.png"/>
+            <field name="use_tasks" eval="1"/>
+            <field name="label_tasks">Jobs</field>
+        </record>
+
+        <record id="service_welding" model="project.project">
+            <field name="name">Welding</field>
+            <field name="icon" type="base64" file="field_service_management/static/image/welding.png"/>
+            <field name="use_tasks" eval="1"/>
+            <field name="label_tasks">Jobs</field>
+        </record>
+    </data>
+</odoo>

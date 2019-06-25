@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+         <record id="invoice_form_inherit" model="ir.ui.view">
+            <field name="name">inherited.account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/notebook/page[@name='other_info']/group/group[2]/field[@name='name']"
+                       position="after">
+                        <separator string="Signature" colspan="2" col="2"/>
+                        <field name="signature_image" widget="image" options='{"size": [200, 80]}'
+                             attrs ="{'invisible':[('signature_added','=',False)]}" readonly="1" />
+                        <field name="signature_added" invisible="1"/>
+                </xpath>
+                <xpath expr="//form/header/button[@name='action_invoice_open']" position="after">
+                     <button type="action" name="%(action_digital_signature)d"
+                            string="Add Signature" class="oe_highlight"
+                            attrs="{'invisible':[('signature_image','!=',False)]}"
+                            groups="account.group_account_manager,base.group_system"/>
+                </xpath>
+            </field>
+         </record>
+
+          <record id="invoice_suuplier_form_inherit" model="ir.ui.view">
+            <field name="name">inherited.account.invoice.supplier.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/notebook/page[2]/group/group[2]/field[@name='company_id']"
+                       position="after">
+                        <separator string="Signature" colspan="2" col="2"/>
+                        <field name="signature_image" widget="image" options='{"size": [200, 80]}'
+                             attrs ="{'invisible':[('signature_added','=',False)]}" readonly="1" />
+                        <field name="signature_added" invisible="1"/>
+                </xpath>
+                <xpath expr="//form/header/button[@name='action_invoice_open']" position="after">
+                     <button type="action" name="%(action_digital_signature)d"
+                            string="Add Signature" class="oe_highlight"
+                            attrs="{'invisible':[('signature_image','!=',False)]}"
+                            groups="account.group_account_manager,base.group_system"/>
+                </xpath>
+            </field>
+         </record>
+    </data>
+</odoo>

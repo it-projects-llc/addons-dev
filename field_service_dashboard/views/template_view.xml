@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="fsm assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/field_service_dashboard/static/src/css/field_service_dashboard.css"/>
+            <link rel="stylesheet" href="/field_service_dashboard/static/src/less/field_service_dashboard.less"/>
+            <script type="text/javascript" src="/field_service_dashboard/static/src/js/field_service_dashboard.js"></script>
+        </xpath>
+    </template>
+</odoo>

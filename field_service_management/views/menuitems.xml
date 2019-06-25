@@ -1,0 +1,390 @@
+<odoo>
+    <!-- MenuItem Of Field service management -->
+    <!-- Field Service Parent Menu  -->
+    <menuitem
+        id="field_service_main_menu"
+        name="FSM"
+        web_icon="field_service_management,static/description/icon.png"/>
+
+    <!-- Field Service Child Menu -->
+    <menuitem
+        id="service_menu"
+        name="Service Calls"
+        parent="field_service_main_menu"
+        sequence="1"/>
+
+    <!-- Field Service Invoice Main Menu -->
+    <menuitem
+        id="invoice_menu"
+        name="Invoices"
+        parent="field_service_main_menu"
+        sequence="2"/>
+
+    <!-- Field Service Customer Main Menu -->
+    <menuitem
+        id="customers_menu"
+        name="Customers"
+        parent="field_service_main_menu"
+        groups='group_operator'
+        sequence="3"/>
+
+    <!-- Field Service Employee Main Menu -->
+    <menuitem
+        id="employees_menu"
+        name="Employees"
+        parent="field_service_main_menu"
+        sequence="4"/>
+    
+    <record id="action_view_job" model="ir.actions.act_window">
+        <field name="name">Jobs</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">kanban,tree,form,calendar</field>
+        <field name="domain">[('copy_check', '=', False)]</field>
+
+    </record>
+
+    <record id="action_view_my_job" model="ir.actions.act_window">
+        <field name="name">My Jobs</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">kanban,tree,form,calendar</field>
+        <field name="context">{'search_default_my_tasks': 1}</field>
+    </record>
+
+    <record id="action_view_unassigned_job" model="ir.actions.act_window">
+        <!--<field name="name">Assigned Jobs</field>-->
+        <field name="name">All Jobs</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
+        <field name="domain">[('copy_check', '=', False)]</field>
+        <!--<field name="domain">[('user_id','=',False)]</field>-->
+    </record>
+
+    <record id="action_view_rejected_job" model="ir.actions.act_window">
+        <field name="name">Rejected Jobs</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
+        <field name="domain">[('jobs_rejected','=',True)]</field>
+    </record>
+
+    <record id="action_view_cancelled_job" model="ir.actions.act_window">
+        <field name="name">Cancelled Jobs</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
+        <field name="domain">[('stage_id.state', '=', 'cancelled')]</field>
+    </record>
+
+    <record id="action_view_reports" model="ir.actions.act_window">
+        <field name="name">Jobs Analysis</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">pivot,graph</field>
+    </record>
+
+    <!-- Field Service Jobs Parent Menu -->
+    <menuitem
+        id="jobs_menu"
+        name="Jobs"
+        parent="service_menu"
+        groups='group_operator'
+        action="action_view_job"
+        sequence="5"/>
+
+    <!-- Field Service Customer My Jobs -->
+    <menuitem
+        id="my_jobs_menu"
+        name="My Jobs"
+        parent="service_menu"
+        groups='group_customer,group_serviceman'
+        action="action_view_my_job"
+        sequence="6"/>
+
+    <!-- Field Service Customer Unassigned Jobs -->
+    <menuitem
+        id="unassigned_jobs_menu"
+        name="Unassigned Jobs"
+        parent="service_menu"
+        action="action_view_unassigned_job"
+        groups='group_operator'
+        sequence="7"/>
+
+    <!-- Field Service Customer Rejected Jobs -->
+    <menuitem
+        id="rejected_jobs_menu"
+        name="Rejected Jobs"
+        parent="service_menu"
+        action="action_view_rejected_job"
+        groups='group_operator'
+        sequence="8"/>
+
+    <!-- Field Service Customer Cancelled Jobs -->
+    <menuitem
+        id="cancelled_jobs_menu"
+        name="Cancelled Jobs"
+        parent="service_menu"
+        action="action_view_cancelled_job"
+        groups='group_operator'
+        sequence="9"/>
+
+    <!-- Field Service Customers Child menu -->
+    <menuitem
+        id="customer_menu"
+        name="Customers"
+        parent="customers_menu"
+        action="base.action_partner_form"
+        sequence="9"/>
+
+    <!-- Field Service Customer Invoices Menu -->
+    <menuitem
+        id="customer_invoice_menu"
+        name="Customer Invoices"
+        parent="invoice_menu"
+        groups='group_operator'
+        action="account.action_invoice_tree1"
+        sequence="10"/>
+
+    <!-- Field Service Customers My Invoices Menu -->
+    <menuitem
+        id="my_invoice_menu"
+        name="My Invoices"
+        parent="invoice_menu"
+        action="account.action_invoice_tree1"
+        groups='group_customer,group_serviceman'
+        sequence="11"/>
+
+    <!-- Serviceman Action -->
+    <record id="action_serviceman_employee_list" model="ir.actions.act_window">
+        <field name="name">Servicemen</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('is_serviceman','=',True)]</field>
+        <field name="context">{'default_is_serviceman':1}</field>
+        <field name="view_id" eval="False"/>
+        <field name="search_view_id" ref="hr.view_employee_filter"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+            Click to add a new Serviceman.
+            </p>
+        </field>
+    </record>
+
+    <!-- Serviceman Menu -->
+    <menuitem
+        id="serviceman_menu"
+        name="Servicemen"
+        parent="employees_menu"
+        groups='group_operator,group_serviceman'
+        action="action_serviceman_employee_list"
+        sequence="12"/>
+        
+    <!-- Available Serviceman Action -->
+    <record id="action_available_serviceman_employee_server" model="ir.actions.server">
+         <field name="name">Available Resources</field>
+         <field name="type">ir.actions.server</field>
+         <field name="context">{'default_is_serviceman':1,'avail_resource':True}</field>
+         <field name="domain">[('is_serviceman','=',True)]</field>
+         <field name="model_id" ref="field_service_management.model_hr_employee"/>
+         <field name="code">emps_ids = []
+end_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+for emp in env['hr.employee'].search([]):
+    if emp.user_id:
+        tasks = env['project.task'].search([('user_id', '=', emp.user_id.id),('schedule_date','&lt;=',end_date),
+        ('date_deadline','&gt;=',end_date),('stage_id.state','=','open')])
+        if not tasks:
+            emps_ids.append(emp.id)
+action = {
+    "type": "ir.actions.act_window",
+    "res_model": 'hr.employee',
+    "view_mode": "tree,form",
+    "view_type": "form",
+    "target": "current",
+    "name":"Available Resource",
+    "domain":[('is_serviceman','=',True),('id', 'in', emps_ids)]
+}
+         </field>
+        </record>
+
+    <!-- Available Serviceman Menu -->
+    <menuitem
+        id="action_available_serviceman_list"
+        parent="employees_menu"
+        groups='group_operator,group_serviceman'
+        action="action_available_serviceman_employee_server"
+        sequence="12"/>
+
+    <!-- Field Service Operator Menu -->
+    <record id="action_operator_employee_list" model="ir.actions.act_window">
+        <field name="name">Operators</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('is_operator','=',True)]</field>
+        <field name="context">{'default_is_operator':1}</field>
+        <field name="view_id" eval="False"/>
+        <field name="search_view_id" ref="hr.view_employee_filter"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+            Click to add a new Operator.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="operator_menu"
+        name="Operators"
+        parent="employees_menu"
+        groups='group_operator'
+        action="action_operator_employee_list"
+        sequence="13"/>
+
+    <!-- Managers Menu -->
+    <record id="action_manager_employee_list" model="ir.actions.act_window">
+        <field name="name">Managers</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('is_manager','=',True)]</field>
+        <field name="context">{'default_is_manager':1}</field>
+        <field name="view_id" eval="False"/>
+        <field name="search_view_id" ref="hr.view_employee_filter"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+            Click to add a new Manager.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="managers_menu"
+        name="Managers"
+        parent="employees_menu"
+        groups='group_fsm_manager'
+        action="action_manager_employee_list"
+        sequence="14"/>
+
+    <!-- Field Service Employees Menu -->
+    <record id="action_normal_employee_list" model="ir.actions.act_window">
+        <field name="name">Employees</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('is_serviceman','!=',True),('is_operator','!=',True),('is_manager','!=',True)]</field>
+        <field name="view_id" eval="False"/>
+        <field name="search_view_id" ref="hr.view_employee_filter"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+            Click to add a new Employee.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="normal_employees_menu"
+        name="Employees"
+        parent="employees_menu"
+        groups='group_operator'
+        action="action_normal_employee_list"
+        sequence="15"/>
+
+    <!-- Field Service Products Parent Menu -->
+    <menuitem
+        id="products_main_menu"
+        name="Products"
+        parent="field_service_main_menu"
+        sequence="16"/>
+
+    <!-- Field Service Products Child Menu -->
+    <menuitem
+        id="product_menu"
+        name="Products"
+        parent="products_main_menu"
+        groups='group_operator'
+        action="product.product_template_action_all"
+        sequence="17"/>
+
+    <!-- Field Service Analysis Report Parent Menu -->
+    <menuitem
+        id="report_main_menu"
+        name="Reports"
+        groups='group_operator'
+        parent="field_service_main_menu"
+        sequence="18"/>
+
+    <!-- Field Service Analysis Report Child Menu -->
+    <menuitem
+        id="analysis_report_menu"
+        name="Jobs Analysis"
+        parent="report_main_menu"
+        action="action_view_reports"
+        sequence="19"/>
+
+    <!-- Field Service Configuration Menu -->
+    <menuitem
+        id="fsm_products_config_menu"
+        name="Configuration"
+        parent="field_service_main_menu"
+        action="product.product_template_action_all"
+        groups='group_operator'
+        sequence="20"/>
+
+    <!-- Field Service Configuration Parent Products Menu -->
+    <menuitem
+        id="fsm_products_menu"
+        name="Products"
+        parent="fsm_products_config_menu"
+        sequence="21"/>
+
+    <!-- Field Service Stages Menu  -->
+    <menuitem
+        id="stages_menu"
+        name="Stages"
+        parent="fsm_products_config_menu"
+        action="project.open_task_type_form"
+        sequence="22"/>
+
+    <!-- Field Service Products Category Menu  -->
+    <menuitem
+        id="products_categ_menu"
+        name="Product categories"
+        parent="fsm_products_menu"
+        action="product.product_category_action_form"
+        sequence="23"/>
+
+    <!-- Field Service Products Unit Of Measure Category Menu -->
+    <menuitem
+        id="product_uom_categ_menu"
+        name="Unit of Measure Categories"
+        parent="fsm_products_menu"
+        action="product.product_uom_categ_form_action"
+        sequence="24"/>
+
+    <!-- Field Service Localization Parent Menu -->
+    <menuitem
+        id="localization_main_menu"
+        name="Localization"
+        parent="fsm_products_config_menu"
+        sequence="25"/>
+
+    <!-- Field Service Localization Countries Menu -->
+    <menuitem
+        id="countries_menu"
+        name="Countries"
+        parent="localization_main_menu"
+        action="base.action_country"
+        sequence="26"/>
+
+    <!-- Field Service Localization States Menu -->
+    <menuitem
+        id="states_menu"
+        name="States"
+        parent="localization_main_menu"
+        action="base.action_country_state"
+        sequence="27"/>
+
+    <!-- Field Service Localization Country Menu -->
+    <menuitem
+        id="country_group_menu"
+        name="Country Group"
+        parent="localization_main_menu"
+        action="base.action_country_group"
+        sequence="28"/>
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- ======== Res Users Tree View ======== -->
+    <record id="view_res_user_tree_inherited" model="ir.ui.view">
+        <field name="name">view.res.user.tree.inherited</field>
+        <field name="model">res.users</field>
+        <field name="arch" type="xml">
+            <tree string="Users">
+                <field name="name"/>
+                <field name="login"/>
+                <button name="set_serviceman" type="object"
+                    string="Set" class="oe_highlight"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

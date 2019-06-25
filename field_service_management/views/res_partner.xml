@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- ======== Res Partner form Configuration Form View Inherited ======== -->
+    <record id="view_res_partner_form_inherited" model="ir.ui.view">
+        <field name="name">view.res.partner.form.inherited</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form/*" position="before">
+                <header>
+                    <button name="create_user" 
+                        type="object"
+                        string="Create User"
+                        attrs="{'invisible': [('partner_user_id','!=', False)]}"
+                        class="oe_highlight"
+                        groups='field_service_management.group_operator'/>
+                    <button name="open_user"
+                        type="object"
+                        string="Open User"
+                        attrs="{'invisible': [('partner_user_id','=', False)]}"
+                        class="oe_highlight"
+                        groups='field_service_management.group_operator'/>
+                </header>
+            </xpath>
+            <xpath expr="//field[@name='mobile']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='fax']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='function']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='lang']" position="after">
+                <field name="partner_user_id" invisible="1"/>
+            </xpath>
+            <xpath expr="//form/sheet/notebook/page[2]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_invoice_form_inherited" model="ir.ui.view">
+        <field name="name">view.invoice.form.inherited</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/header/button[@name='action_invoice_sent']" position="attributes">
+                <attribute name="groups">field_service_management.group_operator,-base.group_user</attribute>
+            </xpath>
+            <xpath expr="//field[@name='team_id']" position="after">
+               <field name="job_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

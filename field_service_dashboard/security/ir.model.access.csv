@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_fsm_dashboard_manager,access_fsm_dashboard,model_fsm_dashboard,field_service_management.group_fsm_manager,1,1,1,1
+access_fsm_dashboard_customer,access_fsm_dashboard,model_fsm_dashboard,field_service_management.group_customer,1,1,0,0
+access_fsm_dashboard_serviceman,access_fsm_dashboard,model_fsm_dashboard,field_service_management.group_serviceman,1,0,0,0
+access_fsm_dashboard,access_fsm_dashboard,model_fsm_dashboard,,1,0,0,0

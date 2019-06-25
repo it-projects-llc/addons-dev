@@ -1,0 +1,57 @@
+@include media-breakpoint-down(sm) {
+.o_control_panel {
+.breadcrumb, .o_cp_buttons, .o_cp_left, .o_cp_right, .o_cp_searchview {
+flex: 1 1 100%;
+@include media-breakpoint-up(md) {
+flex-basis: 50%;
+}
+}
+.breadcrumb {
+max-width: 80%;
+overflow: hidden;
+display: block;
+white-space: nowrap;
+text-overflow: ellipsis;
+}
+.o_cp_searchview {
+overflow: hidden;
+max-width: 20%;
+min-width: 20%;
+text-align: right;
+.o_searchview {
+border: none;
+padding: 3.5px 5px;
+.o_enable_searchview {
+margin-left: 0;
+box-shadow: none;
+&:before {
+padding-right: 5px;
+}
+}
+}
+}
+.o_cp_left, .o_cp_right {
+width: auto;
+flex: 1 1 auto;
+}
+.o_cp_buttons .btn.d-block:not(.d-none) {
+display: inline-block !important;
+}
+.o_cp_switch_buttons.show {
+.dropdown-menu {
+align-content: center;
+display: flex;
+flex-direction: row;
+justify-content: space-around;
+padding: 0;
+.btn {
+border: {
+bottom: 0;
+radius: 0;
+top: 0;
+}
+}
+}
+}
+}
+}

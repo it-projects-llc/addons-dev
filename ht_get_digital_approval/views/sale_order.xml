@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="view_order_form_inherit" model="ir.ui.view">
+            <field name="name">inherited.sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/notebook/page[2]/group/group[@name='sale_pay']/field[@name='invoice_status']"
+                       position="after">
+                        <separator string="Signature" colspan="2" col="2"/>
+                        <field name="signature_image" widget="image" options='{"size": [200, 80]}'
+                             attrs ="{'invisible':[('signature_added','=',False)]}" readonly="1" />
+                        <field name="signature_added" invisible="1"/>
+                </xpath>
+                <xpath expr="//form/header/button[@name='print_quotation']" position="after">
+                     <button type="action" name="%(action_digital_signature)d"
+                            string="Add Signature" class="oe_highlight"
+                            attrs="{'invisible':[('signature_image','!=',False)]}"
+                            groups="sales_team.group_sale_manager,base.group_system"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
+

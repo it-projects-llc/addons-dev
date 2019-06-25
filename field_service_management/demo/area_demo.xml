@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Demo Data for Area -->
+    <data noupdate="1">
+        <record id="job_area_1" model="area.area">
+            <field name="name">Central Alabama</field>
+            <field name="city_id" ref="field_service_management.job_city_1"/>
+        </record>
+
+        <record id="job_area_2" model="area.area">
+            <field name="name">Bahamas</field>
+            <field name="city_id" ref="field_service_management.job_city_2"/>
+        </record>
+
+        <record id="job_area_3" model="area.area">
+            <field name="name">Anguilla</field>
+            <field name="city_id" ref="field_service_management.job_city_3"/>
+        </record>
+
+        <record id="job_area_4" model="area.area">
+            <field name="name">Delaware</field>
+            <field name="city_id" ref="field_service_management.job_city_4"/>
+        </record>
+
+        <record id="job_area_5" model="area.area">
+            <field name="name">Wyoming</field>
+            <field name="city_id" ref="field_service_management.job_city_5"/>
+        </record>
+
+        <record id="job_area_6" model="area.area">
+            <field name="name">Inbound International</field>
+            <field name="city_id" ref="field_service_management.job_city_6"/>
+        </record>
+
+        <record id="job_area_7" model="area.area">
+            <field name="name">Medford</field>
+            <field name="city_id" ref="field_service_management.job_city_7"/>
+        </record>
+
+        <record id="job_area_8" model="area.area">
+            <field name="name">Greater Atlanta Metropolitan Area</field>
+            <field name="city_id" ref="field_service_management.job_city_8"/>
+        </record>
+    </data>
+</odoo>

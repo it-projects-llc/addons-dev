@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_custom_document_install">
+        <t t-call="report.external_layout">
+            <div class="page">
+                <div class="row">
+                    <h2 colspan="4" col="4" style="color:#2E86C1">
+                        <span t-field="doc.job_sequence"/>
+                    </h2>
+                    <h2 colspan="4" col="4" style="color:#2E86C1">
+                        <span t-field="doc.name"/>
+                    </h2>
+                </div>
+                <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+
+
+
+                    <p style="font-size:15px;margin-left:-10px">
+                        The blocks below ensure the installer has completed the installation as required. Check all blocks that pertain to the installation.
+                    </p>
+
+                    <div>
+
+                        <table style="width:100%" class="row">
+
+
+                            <tr style="font-size:30px;color:#2E86C1" >
+
+                                <td colspan="4" col="4">Dishwasher:&#160;<t t-if="doc.dishwasher"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Washer: &#160;<t t-if="doc.washer"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Dryer:&#160;<t t-if="doc.dryer"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Appliance Secured:&#160;<t t-if="doc.appliance_secure_1"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Appliance Secured:&#160;<t t-if="doc.appliance_secure_2"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Appliance Secured:&#160;<t t-if="doc.appliance_secure_3"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Supply Line Connected(HOT):&#160;<t t-if="doc.supply_line_connected_1"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Supply Line Connected/<br/>Duck Connected:&#160;<t t-if="doc.supply_line_connected_2"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Supply Line Connected/<br/>Duck Connected:&#160;<t t-if="doc.supply_line_connected_3"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Checked Function:&#160;<t t-if="doc.checked_function_1"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Checked Function:&#160;<t t-if="doc.checked_function_2"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Checked Function:&#160;<t t-if="doc.checked_function_3"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Operations Explained:&#160;<t t-if="doc.operation_explained_1"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Operations Explained:&#160;<t t-if="doc.operation_explained_2"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Operations Explained:&#160;<t t-if="doc.operation_explained_3"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Drain Connected:&#160;<t t-if="doc.drain_connected_1"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Drain Connected:&#160;<t t-if="doc.drain_connected_2"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Drain Connected:&#160;<t t-if="doc.drain_connected_3"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Toe Click Installed:&#160;<t t-if="doc.tci"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Shipping Struts Removed:&#160;<t t-if="doc.shipping_struts_removed_2"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Shipping Struts Removed:&#160;<t t-if="doc.shipping_struts_removed_3"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Packing Material Removed:&#160;<t t-if="doc.packing_material_removed_1"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Packing Material Removed:&#160;<t t-if="doc.packing_material_removed_2"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Packing Material Removed:&#160;<t t-if="doc.packing_material_removed_3"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+
+
+
+
+
+                        </table>
+                        <table style="width:100%" class="row">
+
+
+                            <tr style="font-size:30px;color:#2E86C1">
+
+                                <td colspan="4" col="4">Cooktop:&#160;<t t-if="doc.cooktop"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Range: &#160;<t t-if="doc.range"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Downdraft:&#160;<t t-if="doc.downdraft"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Appliance Secured:&#160;<t t-if="doc.appliance_secure_4"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Appliance Secured:&#160;<t t-if="doc.appliance_secure_5"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Appliance Secured:&#160;<t t-if="doc.appliance_secure_6"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Electrical Connected:&#160;<t t-if="doc.electrical_connected_4"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Electrical Connected:&#160;<t t-if="doc.electrical_connected_5"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Raise/Lowers:&#160;<t t-if="doc.raise_lowers_6"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Gas Connected:&#160;<t t-if="doc.gas_connected_4"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Gas Connected:&#160;<t t-if="doc.gas_connected_5"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Remote Mounted:&#160;<t t-if="doc.remote_mounted_6"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Operation Explained:&#160;<t t-if="doc.operation_explained_4"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Operation Explained:&#160;<t t-if="doc.operation_explained_5"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Filters Installed:&#160;<t t-if="doc.filters_installed_6"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">All Burners Ignite:&#160;<t t-if="doc.all_bnr_ignite_4"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">All Burners Ignite:&#160;<t t-if="doc.all_bnr_ignite_5"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Electrical Connected:&#160;<t t-if="doc.electrical_connected_6"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Packing Material Removed:&#160;<t t-if="doc.packing_material_removed_4"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Packing Material Removed:&#160;<t t-if="doc.packing_material_removed_5"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Operations Explained:&#160;<t t-if="doc.operation_explained_6"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Grates and Knobs Present:&#160;<t t-if="doc.grates_knob_4"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Grates and Knobs Present:&#160;<t t-if="doc.grates_knob_5"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Grates and Knobs Present:&#160;<t t-if="doc.packing_material_removed_6"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+
+
+
+
+
+                        </table>
+
+                        <table style="width:100%" class="row">
+
+
+                            <tr style="font-size:30px;color:#2E86C1">
+
+                                <td colspan="4" col="4">Ice Machine:&#160;<t t-if="doc.ice_machine"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Refrigerator: &#160;<t t-if="doc.refrigerator"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Freezer:&#160;<t t-if="doc.freezer"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Appliance Secured:&#160;<t t-if="doc.appliance_secure_7"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Appliance Secured:&#160;<t t-if="doc.appliance_secure_8"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Appliance Secured:&#160;<t t-if="doc.appliance_secure_9"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Electrical Connected:&#160;<t t-if="doc.electrical_connected_7"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Anti Tip Mounted:&#160;<t t-if="doc.anti_tip_mounted_8"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Anti Tip Mounted:&#160;<t t-if="doc.anti_tip_mounted_9"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Supply Line Connected:&#160;<t t-if="doc.supply_line_connected_7"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Electrical Connected:&#160;<t t-if="doc.electrical_connected_8"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Electrical Connected:&#160;<t t-if="doc.electrical_connected_9"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Drain Line Connected:&#160;<t t-if="doc.drain_line_connected_7"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Water Line Connected:&#160;<t t-if="doc.water_line_connected_8"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Water Line Connected:&#160;<t t-if="doc.water_line_connected_9"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Functions  Properly:&#160;<t t-if="doc.functions_properly_7"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Operation Explained:&#160;<t t-if="doc.operation_explained_8"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Operation Explained:&#160;<t t-if="doc.operation_explained_9"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Panel Installed:&#160;<t t-if="doc.panel_installed_7"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Water Purged:&#160;<t t-if="doc.water_purged_8"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Water Purged:&#160;<t t-if="doc.water_purged_9"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <!--<td colspan="4" col="4"></td>-->
+                                <td colspan="4" col="4">Pump Working:&#160;<t t-if="doc.pump_working_7"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Ice Maker On:&#160;<t t-if="doc.ice_maker_on_8"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Ice Maker On:&#160;<t t-if="doc.ice_maker_on_9"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+
+
+
+
+
+                        </table>
+
+                        <table style="width:100%" class="row">
+
+
+                            <tr style="font-size:30px;color:#2E86C1">
+
+                                <td colspan="4" col="4">Hood:&#160;<t t-if="doc.hood"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Microwave Oven: &#160;<t t-if="doc.microwave_oven"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Other:&#160;<t t-if="doc.other"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Appliance Secured:&#160;<t t-if="doc.appliance_secure_10"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Trim Kit Installed/Open Closes:&#160;<t t-if="doc.trim_kit_open_11"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Appliance Secured:&#160;<t t-if="doc.appliance_secure_12"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Electrical Connected:&#160;<t t-if="doc.electrical_connected_10"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Appliance Secured:&#160;<t t-if="doc.appliance_secure_11"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Power /Water:&#160;<t t-if="doc.power_water_12"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Duct Connected and Sealed:&#160;<t t-if="doc.duct_connected_sealed_10"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Electrical Connected:&#160;<t t-if="doc.electrical_connected_11"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Trim Kit Installed:&#160;<t t-if="doc.trim_kit_12"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Functions  Properly:&#160;<t t-if="doc.functions_properly_10"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Trim Kit Installed:&#160;<t t-if="doc.trim_kit_11"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Operations Explained:&#160;<t t-if="doc.operation_explained_12"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Packing Material Removed:&#160;<t t-if="doc.packing_material_removed_10"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Packing Material Removed:&#160;<t t-if="doc.packing_material_removed_11"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Packing Material Removed:&#160;<t t-if="doc.packing_material_removed_12"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4">Grates Installed:&#160;<t t-if="doc.grates_installed_10"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Operations Explained:&#160;<t t-if="doc.operation_explained_11"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Description:&#160;<t t-if="doc.description"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                            </tr>
+                            <tr style="font-size:15px">
+
+                                <td colspan="4" col="4">Flow Test:&#160;<t t-if="doc.flow_test_10"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Opens/Closes:&#160;<t t-if="doc.open_closes_11"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4"></td>
+                            </tr>
+                            <tr style="font-size:15px">
+                                <td colspan="4" col="4"></td>
+
+                                <td colspan="4" col="4">Functions  Properly:&#160;<t t-if="doc.functions_properly_11"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4"></td>
+                            </tr>
+
+
+
+
+
+                        </table>
+
+
+
+                    </div>
+                    <br/> <br/>
+
+
+                    <div style="margin-left:-10px">
+
+                        <table>
+                            <tr style="font-size:15px">
+                                <td>
+                                    THE APPLIANCE(S) HAVE BEEN INSTALLED IN ACCORDANCE WITH ALL LOCAL CODES AND PER MANUFACTURER SPECIFICATIONS BY AUTHORIZED INSTALLER. ADDITIONALLY, THE APPLIANCE(S) HAVE BEEN CHECKED FOR PROPER OPERATION. THE OPERATION AND USAGE OF THE APPLIANCE HAS BEEN EXPLAINED TO THE CUSTOMER OR AUTHORIZED VERIFYING AGENT. CUSTOMER MAY INCURE ADDTIONAL CHARGES FOR ANY ADDITIONAL WORK AND/OR RETURN TRIP FOR CONNECTIONS NOT AVAILABLE AT TIME OF INSTALL.
+                                </td>
+                            </tr>
+                        </table>
+                        <table>
+                            <tr style="font-size:15px">
+
+
+                                <td>Description:<t t-esc="doc.description"/></td>
+
+
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div>
+                        <table style="width:100%" class="row">
+                            <tr style="font-size:20px;color:#2E86C1">
+                                <td colspan="3" col="3">Customer Signature:&#160;<t t-if="doc.signature_cust_install_image">
+                                    <div>
+                                        <img t-att-src="'data:image/png;base64,'+ doc.signature_cust_install_image" width="200" height="150"/>
+                                    </div>
+                                </t></td>
+
+                                <td colspan="4" col="4">Signature:&#160;<t t-if="doc.signature_signature_install_image">
+                                    <div>
+                                        <img t-att-src="'data:image/png;base64,'+ doc.signature_signature_install_image" width="200" height="150"/>
+                                    </div>
+                                </t></td>
+                                <!--<td colspan="4" col="4">Dealer:&#160;<t t-if="doc.signature_dealer_install_image">-->
+                                    <!--<div>-->
+                                        <!--<img t-att-src="'data:image/png;base64,'+ doc.signature_dealer_install_image" width="200" height="150"/>-->
+                                    <!--</div>-->
+                                <!--</t></td>-->
+                            </tr>
+                        </table>
+                    </div>
+
+
+                </div>
+            </div>
+        </t>
+
+    </template>
+
+
+    <template id="report_custom_template_install">
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="fsm_custom.report_custom_document_install" t-lang="doc.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+</odoo>

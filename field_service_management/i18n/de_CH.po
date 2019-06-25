@@ -1,0 +1,1265 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* field_service_management
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-10-17 14:04+0000\n"
+"PO-Revision-Date: 2017-10-17 21:35+0200\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: de_CH\n"
+"X-Generator: Poedit 2.0.1\n"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_feedback_count
+msgid "# of Feedback"
+msgstr "# of Feedback"
+
+#. module: field_service_management
+#: model:mail.template,body_html:field_service_management.notify_customer_jobs_mail_template
+msgid ""
+"<p>\n"
+"            Hello,Greeting!!,\n"
+"            This is to inform you that your notify jobs has been submitted\n"
+"            to the Customer for assigning user and Customer can raise Job\n"
+"            requests and track its status or Customer can check his invoices\n"
+"            for the completed jobs.\n"
+"            </p>"
+msgstr ""
+"<p>\n"
+"            Guten Tage,\n"
+"            Wir teilen Ihnen mit, dass der angekündigte Job dem Kunden vorgelegt wurde.\n"
+"            damit dieser Aufgaben anlegen und Rechnungen für erledigte Jobs einsehen kann"
+"            </p>"
+
+#. module: field_service_management
+#: model:mail.template,body_html:field_service_management.notify_serviceman_jobs_mail_template
+msgid ""
+"<p>\n"
+"            Hello,Greeting!!,\n"
+"            This is to inform you that your notify jobs has been submitted\n"
+"            to the Customer for assigning user and Serviceman can set his\n"
+"            per hour rate and express rate for various services He can see\n"
+"            the jobs assigned to him and manage its lifecycle He can view his\n"
+"            invoices and check his earnings\n"
+"            </p>"
+msgstr ""
+"<p>\n"
+"            Guten Tag\n"
+"            Wir teilen Ihnen mit, dass dass der angekündigte Job dem Service-Mitarbeiter vorgelegt wurde,\n"
+"            damit dieser seine Stundenansätze für von ihm geleistete Arbeiten sowie \n"
+"            ihm zugeteilte Aufgaben und deren Fortschritte verwalten kann.\n"  
+"            </p>"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_emp_skill_line_express_service_rate
+msgid "Additional charges that will be             added to the invoice if customer             wants the service in emergency."
+msgstr "Additional charges that will be             added to the invoice if customer             wants the service in emergency."
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_jobs_form
+msgid "Address"
+msgstr "Adresse"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_hr_employee_area_ids
+#: model:ir.ui.view,arch_db:field_service_management.view_emp_form_inherited
+#: model:ir.ui.view,arch_db:field_service_management.view_jobs_form
+msgid "Area"
+msgstr "Gebiet"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_area_area_name
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_area_id
+msgid "Area Name"
+msgstr "Gebietsbezeichnung"
+
+#. module: field_service_management
+#: model:ir.actions.act_window,name:field_service_management.action_area_area
+#: model:ir.ui.menu,name:field_service_management.area_area_menu
+msgid "Areas"
+msgstr "Gebiete"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_hr_employee_area_ids
+msgid "Areas that belong to the person"
+msgstr "Personenbezogenes Gebiet"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_res_company_automatically_assign_jobs
+msgid "Assign job automatically"
+msgstr "Automatische Job-Zuweisung"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.fsm_job_report
+msgid "Assigned to"
+msgstr "Zugewiesen an"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_job_feedback_partner_id
+msgid "Author of the rating"
+msgstr "Einstufungs-Generator"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_type_auto_assign
+msgid "Auto-assign to new project?"
+msgstr "Selbst-Zuweisung zu neuem Projekt?"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_res_company_automatic_fetch_address
+msgid "Automatically Fetch Address"
+msgstr "Automatische Adressensuche"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_project_project_is_available_for_service
+#: model:ir.ui.view,arch_db:field_service_management.project_project_form_inherited
+msgid "Available for Service"
+msgstr "Servicebereit"
+
+#. module: field_service_management
+#: selection:job.feedback,rating:0
+msgid "Average"
+msgstr "Durchschnitt"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.wiz_suggest_serviceman_view
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#. module: field_service_management
+#: model:project.task.type,name:field_service_management.fsm_jobs_cancelled
+#: selection:project.task.type,state:0
+msgid "Cancelled"
+msgstr "Abgebrochen"
+
+#. module: field_service_management
+#: model:ir.actions.act_window,name:field_service_management.action_city_city
+#: model:ir.ui.menu,name:field_service_management.city_city_menu
+msgid "Cities"
+msgstr "Städte"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_area_area_city_id
+#: model:ir.model.fields,field_description:field_service_management.field_hr_employee_city_ids
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_city_id
+#: model:ir.ui.view,arch_db:field_service_management.view_emp_form_inherited
+#: model:ir.ui.view,arch_db:field_service_management.view_jobs_form
+msgid "City"
+msgstr "Stadt"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_city_city_name
+msgid "City Name"
+msgstr "Name der Stadt"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_hr_employee_city_ids
+msgid "City that belong to the person."
+msgstr "Personenbezogene Stadt"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_project_task_signature
+msgid "Click on signature widget open."
+msgstr "Visierfeld zum öffnen anklicken"
+
+#. module: field_service_management
+#: model:ir.actions.act_window,help:field_service_management.action_normal_employee_list
+msgid "Click to add a new Employee."
+msgstr "Klicken, um Mitarbeiter hinzuzufügen"
+
+#. module: field_service_management
+#: model:ir.actions.act_window,help:field_service_management.action_manager_employee_list
+msgid "Click to add a new Manager."
+msgstr "Klicken, um Manager hinzuzufügen"
+
+#. module: field_service_management
+#: model:ir.actions.act_window,help:field_service_management.action_operator_employee_list
+msgid "Click to add a new Operator."
+msgstr "Klicken, um Operator hinzuzufügen"
+
+#. module: field_service_management
+#: model:ir.actions.act_window,help:field_service_management.action_serviceman_employee_list
+msgid "Click to add a new Serviceman."
+msgstr "Klicken, um Service-Techniker hinzuzufügen"
+
+#. module: field_service_management
+#: model:ir.model,name:field_service_management.model_res_company
+msgid "Companies"
+msgstr "Unternehmen"
+
+#. module: field_service_management
+#: model:ir.ui.menu,name:field_service_management.fsm_products_config_menu
+msgid "Configuration"
+msgstr "Konfiguration"
+
+#. module: field_service_management
+#: model:ir.ui.menu,name:field_service_management.countries_menu
+msgid "Countries"
+msgstr "Länder"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_country_id
+#: model:ir.ui.view,arch_db:field_service_management.view_jobs_form
+msgid "Country"
+msgstr "Land"
+
+#. module: field_service_management
+#: model:ir.ui.menu,name:field_service_management.country_group_menu
+msgid "Country Group"
+msgstr "Ländergruppe"
+
+#. module: field_service_management
+#: model:ir.model,name:field_service_management.model_res_country_state
+msgid "Country state"
+msgstr "Kanton"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_jobs_form
+msgid "Create Invoice"
+msgstr "Rechnung erstellen"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_emp_form_inherited
+#: model:ir.ui.view,arch_db:field_service_management.view_res_partner_form_inherited
+msgid "Create User"
+msgstr "Nutzer anlegen"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_area_area_create_uid
+#: model:ir.model.fields,field_description:field_service_management.field_city_city_create_uid
+#: model:ir.model.fields,field_description:field_service_management.field_emp_skill_line_create_uid
+#: model:ir.model.fields,field_description:field_service_management.field_job_feedback_create_uid
+#: model:ir.model.fields,field_description:field_service_management.field_job_line_create_uid
+#: model:ir.model.fields,field_description:field_service_management.field_suggest_serciceman_job_create_uid
+#: model:ir.model.fields,field_description:field_service_management.field_zone_zone_create_uid
+msgid "Created by"
+msgstr "Erstellt von"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_area_area_create_date
+#: model:ir.model.fields,field_description:field_service_management.field_city_city_create_date
+#: model:ir.model.fields,field_description:field_service_management.field_emp_skill_line_create_date
+#: model:ir.model.fields,field_description:field_service_management.field_job_feedback_create_date
+#: model:ir.model.fields,field_description:field_service_management.field_job_line_create_date
+#: model:ir.model.fields,field_description:field_service_management.field_suggest_serciceman_job_create_date
+#: model:ir.model.fields,field_description:field_service_management.field_zone_zone_create_date
+msgid "Created on"
+msgstr "Angelegt am"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_project_task_schedule_date
+msgid "Current system Datetime display."
+msgstr "Genutzte Datumsanzeige"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_job_feedback_partner_id
+#: model:ir.ui.view,arch_db:field_service_management.fsm_job_report
+#: model:ir.ui.view,arch_db:field_service_management.view_job_feedback_search
+#: model:ir.ui.view,arch_db:field_service_management.view_jobs_form
+#: model:res.groups,name:field_service_management.group_customer
+msgid "Customer"
+msgstr "Kunde"
+
+#. module: field_service_management
+#: model:ir.ui.menu,name:field_service_management.customer_invoice_menu
+msgid "Customer Invoices"
+msgstr "Ausgangsrechnungen"
+
+#. module: field_service_management
+#: model:mail.template,subject:field_service_management.notify_customer_jobs_mail_template
+msgid "Customer Send notify job"
+msgstr "Kundenmitteilung Aufgabe"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_res_partner_partner_user_id
+#: model:ir.model.fields,field_description:field_service_management.field_res_users_partner_user_id
+msgid "Customer user id"
+msgstr "Nutzer-ID Kunde"
+
+#. module: field_service_management
+#: model:ir.ui.menu,name:field_service_management.customer_menu
+#: model:ir.ui.menu,name:field_service_management.customers_menu
+msgid "Customers"
+msgstr "Kunden"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.fsm_job_report
+msgid "Date"
+msgstr "Datum"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_job_feedback_search
+msgid "Day"
+msgstr "Tag"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.fsm_job_report
+msgid "Deadline"
+msgstr "Deadline"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_res_company_default_password
+msgid "Default Password"
+msgstr "Vorgegebenes Passwort"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.fsm_job_report
+msgid "Description"
+msgstr "Beschreibung"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_project_task_formatted_address
+msgid "Display Formatted address"
+msgstr "Display Formatted address"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_area_area_display_name
+#: model:ir.model.fields,field_description:field_service_management.field_city_city_display_name
+#: model:ir.model.fields,field_description:field_service_management.field_emp_skill_line_display_name
+#: model:ir.model.fields,field_description:field_service_management.field_job_feedback_display_name
+#: model:ir.model.fields,field_description:field_service_management.field_job_line_display_name
+#: model:ir.model.fields,field_description:field_service_management.field_suggest_serciceman_job_display_name
+#: model:ir.model.fields,field_description:field_service_management.field_zone_zone_display_name
+msgid "Display Name"
+msgstr "Anzeigename"
+
+#. module: field_service_management
+#: model:project.task.type,name:field_service_management.fsm_jobs_done
+#: selection:project.task.type,state:0
+msgid "Done"
+msgstr "Done"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.fsm_job_report
+msgid "Duration"
+msgstr "Dauer"
+
+#. module: field_service_management
+#: model:ir.model,name:field_service_management.model_hr_employee
+#: model:ir.model.fields,field_description:field_service_management.field_emp_skill_line_employee_id
+msgid "Employee"
+msgstr "Mitarbeiter"
+
+#. module: field_service_management
+#: model:ir.model,name:field_service_management.model_emp_skill_line
+msgid "Employee Skill Lines"
+msgstr "Mitarbeiter Qualifikations Zeilen"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_hr_employee_emp_skill_ids
+msgid "Employee Skills"
+msgstr "Mitarbeiter Qualifikation"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_emp_skill_line_employee_id
+msgid "Employee of the hr employee"
+msgstr "Mitarbeiter HR  Mitarbeiter"
+
+#. module: field_service_management
+#: model:ir.actions.act_window,name:field_service_management.action_normal_employee_list
+#: model:ir.ui.menu,name:field_service_management.employees_menu
+#: model:ir.ui.menu,name:field_service_management.normal_employees_menu
+msgid "Employees"
+msgstr "Personal"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_res_company_automatically_assign_jobs
+msgid "Enable this option to automatically             assign jobs to the Serviceman based             on the service, area and city"
+msgstr "Aktivieren Sie diese Option, um dem Servicemitarbeiter  Jobs automatisch nach Ort und Bereich zuzuordnen."
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_emp_skill_line_express_service_rate
+msgid "Express Service Rate (per hour)"
+msgstr "Express Service Rate (pro Stunde)"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_is_express_service
+msgid "Express service"
+msgstr "Express-Service"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.fsm_job_report
+msgid "Express service rate"
+msgstr "Express-Service Gebühr"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_jobs_form
+msgid "Extra Info"
+msgstr "Weitere Information"
+
+#. module: field_service_management
+#: model:ir.ui.menu,name:field_service_management.field_service_main_menu
+msgid "FSM"
+msgstr "FSM"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_job_feedback_feedback
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_feedback_line_ids
+msgid "Feedback"
+msgstr "Feedback"
+
+#. module: field_service_management
+#: code:addons/field_service_management/models/task.py:148
+#: model:ir.ui.view,arch_db:field_service_management.view_jobs_form
+#, python-format
+msgid "Feedbacks"
+msgstr "Feedbacks"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_jobs_form
+msgid "Fetch address"
+msgstr "Adresse einlesen"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_formatted_address
+msgid "Formatted Address"
+msgstr "Addresse formatieren"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_project_task_job_sequence
+msgid "Gives the sequence order when displaying a list of jobs."
+msgstr "Jobs werden nach Sequenz gelistet"
+
+#. module: field_service_management
+#: selection:job.feedback,rating:0
+msgid "Good"
+msgstr "Gut"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_job_feedback_search
+msgid "Group By"
+msgstr "Gruppiert nach..."
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_job_feedback_search
+#: selection:job.feedback,rating:0
+msgid "Happy"
+msgstr "Happy"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_area_area_id
+#: model:ir.model.fields,field_description:field_service_management.field_city_city_id
+#: model:ir.model.fields,field_description:field_service_management.field_emp_skill_line_id
+#: model:ir.model.fields,field_description:field_service_management.field_job_feedback_id
+#: model:ir.model.fields,field_description:field_service_management.field_job_line_id
+#: model:ir.model.fields,field_description:field_service_management.field_suggest_serciceman_job_id
+#: model:ir.model.fields,field_description:field_service_management.field_zone_zone_id
+msgid "ID"
+msgstr "ID"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_project_project_icon
+msgid "Icon"
+msgstr "Icon"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_project_project_icon
+msgid "Icon of the service. This icon will be             shown in the android phone."
+msgstr "Icon des  Service für Android "
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_res_company_automatic_fetch_address
+msgid "If checked the address will be             automatically fetched from the google             maps based on the latitude longitude             in the Job"
+msgstr "Wenn angewählt, wird die Adresse für den Job automatisch aus Google-Maps aufgrund der Positions übernommen"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_project_task_jobs_rejected
+msgid "If checked the job is rejected."
+msgstr "Anwählen um Job abzulehnen"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_project_project_is_available_for_service
+msgid "If checked the service is enabled and             will be shown in the android app"
+msgstr ""
+"If checked the service is enabled and             will be shown in the android app\n"
+"Wenn angewählt, wird der Service aktiviert und in Android-App gezeigt"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_area_area_is_serviceable
+#: model:ir.model.fields,help:field_service_management.field_city_city_is_service
+msgid "If the fields is default true."
+msgstr "Felder sind vorgabemässig aktiviert. "
+
+#. module: field_service_management
+#: model:project.task.type,name:field_service_management.fsm_jobs_in_Progress
+#: selection:project.task.type,state:0
+msgid "In Progress"
+msgstr "In Bearbeitung"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.fsm_job_report
+msgid "Initially Planned Hours"
+msgstr "Stunden nach Vorgabe"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_invoice_id
+msgid "Invoice"
+msgstr "Rechnung"
+
+#. module: field_service_management
+#: model:ir.ui.menu,name:field_service_management.invoice_menu
+msgid "Invoices"
+msgstr "Rechnungen"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_job_feedback_task_id
+#: model:ir.model.fields,field_description:field_service_management.field_job_line_job_id
+msgid "Job"
+msgstr "Job"
+
+#. module: field_service_management
+#: model:ir.model,name:field_service_management.model_job_feedback
+#: model:ir.ui.view,arch_db:field_service_management.view_job_feedback_form
+#: model:ir.ui.view,arch_db:field_service_management.view_job_feedback_tree
+msgid "Job Feedback"
+msgstr "Job Feedback"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_order_line_ids
+msgid "Job Line"
+msgstr "Job-Zeile"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.fsm_job_report
+msgid "Job Report"
+msgstr "Job-Bericht"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_job_sequence
+msgid "Job Sequence"
+msgstr "Job-Reihenfolge"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_jobs_form
+msgid "Job Title..."
+msgstr "Job Titel"
+
+#. module: field_service_management
+#: model:ir.actions.report.xml,name:field_service_management.report_fsm_job
+msgid "Job report"
+msgstr "Job-Bericht"
+
+#. module: field_service_management
+#: model:ir.actions.act_window,name:field_service_management.action_view_job
+#: model:ir.ui.menu,name:field_service_management.jobs_menu
+#: model:ir.ui.view,arch_db:field_service_management.view_project_form
+msgid "Jobs"
+msgstr "Jobs"
+
+#. module: field_service_management
+#: model:ir.actions.act_window,name:field_service_management.action_view_reports
+#: model:ir.ui.menu,name:field_service_management.analysis_report_menu
+msgid "Jobs Analysis"
+msgstr "Jobs-Analyse"
+
+#. module: field_service_management
+#: model:project.task.type,description:field_service_management.fsm_jobs_cancelled
+msgid "Jobs Cancelled"
+msgstr "Gelöschte Jobs"
+
+#. module: field_service_management
+#: model:project.task.type,description:field_service_management.fsm_jobs_done
+msgid "Jobs Done"
+msgstr "Erledigte Jobs"
+
+#. module: field_service_management
+#: model:project.task.type,description:field_service_management.fsm_jobs_in_Progress
+msgid "Jobs Inprogress"
+msgstr "Jobs in Arbeit"
+
+#. module: field_service_management
+#: model:project.task.type,description:field_service_management.fsm_jobs_lead
+msgid "Jobs Lead"
+msgstr "Jobs Lead"
+
+#. module: field_service_management
+#: model:project.task.type,description:field_service_management.fsm_jobs_pending
+msgid "Jobs Pending"
+msgstr "Pendente Jobs"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_area_area___last_update
+#: model:ir.model.fields,field_description:field_service_management.field_city_city___last_update
+#: model:ir.model.fields,field_description:field_service_management.field_emp_skill_line___last_update
+#: model:ir.model.fields,field_description:field_service_management.field_job_feedback___last_update
+#: model:ir.model.fields,field_description:field_service_management.field_job_line___last_update
+#: model:ir.model.fields,field_description:field_service_management.field_suggest_serciceman_job___last_update
+#: model:ir.model.fields,field_description:field_service_management.field_zone_zone___last_update
+msgid "Last Modified on"
+msgstr "Zuletzt geändert am"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_area_area_write_uid
+#: model:ir.model.fields,field_description:field_service_management.field_city_city_write_uid
+#: model:ir.model.fields,field_description:field_service_management.field_emp_skill_line_write_uid
+#: model:ir.model.fields,field_description:field_service_management.field_job_feedback_write_uid
+#: model:ir.model.fields,field_description:field_service_management.field_job_line_write_uid
+#: model:ir.model.fields,field_description:field_service_management.field_suggest_serciceman_job_write_uid
+#: model:ir.model.fields,field_description:field_service_management.field_zone_zone_write_uid
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert durch"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_area_area_write_date
+#: model:ir.model.fields,field_description:field_service_management.field_city_city_write_date
+#: model:ir.model.fields,field_description:field_service_management.field_emp_skill_line_write_date
+#: model:ir.model.fields,field_description:field_service_management.field_job_feedback_write_date
+#: model:ir.model.fields,field_description:field_service_management.field_job_line_write_date
+#: model:ir.model.fields,field_description:field_service_management.field_suggest_serciceman_job_write_date
+#: model:ir.model.fields,field_description:field_service_management.field_zone_zone_write_date
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_latitude
+#: model:ir.ui.view,arch_db:field_service_management.fsm_job_report
+msgid "Latitude"
+msgstr "Breitengrad"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_project_task_latitude
+msgid "Latitude of the place."
+msgstr "Breitengrad des Ortes"
+
+#. module: field_service_management
+#: model:project.task.type,name:field_service_management.fsm_jobs_lead
+msgid "Lead"
+msgstr "Lead"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_project_task_feedback_line_ids
+msgid "Links all the feedback received for the job."
+msgstr "Verknüpft alle für den Job erhaltenen Feedback"
+
+#. module: field_service_management
+#: model:ir.ui.menu,name:field_service_management.localization_main_menu
+msgid "Localization"
+msgstr "Lokalisierung"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_longitude
+#: model:ir.ui.view,arch_db:field_service_management.fsm_job_report
+msgid "Longitude"
+msgstr "Längengrad"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_project_task_longitude
+msgid "Longitude of the place."
+msgstr "Längengrad des Ortes"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_hr_employee_is_manager
+#: model:ir.model.fields,field_description:field_service_management.field_res_partner_is_manager
+#: model:ir.model.fields,field_description:field_service_management.field_res_users_is_manager
+#: model:res.groups,name:field_service_management.group_fsm_manager
+msgid "Manager"
+msgstr "Manager"
+
+#. module: field_service_management
+#: model:ir.actions.act_window,name:field_service_management.action_manager_employee_list
+#: model:ir.ui.menu,name:field_service_management.managers_menu
+msgid "Managers"
+msgstr "Managers"
+
+#. module: field_service_management
+#: model:res.groups,name:field_service_management.group_menu_visible
+msgid "Menu Visible"
+msgstr "Menu sichtbar"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_job_feedback_search
+msgid "Month"
+msgstr "Monat"
+
+#. module: field_service_management
+#: model:ir.ui.menu,name:field_service_management.my_invoice_menu
+msgid "My Invoices"
+msgstr "Meine Rechnungen"
+
+#. module: field_service_management
+#: model:ir.actions.act_window,name:field_service_management.action_view_my_job
+#: model:ir.ui.menu,name:field_service_management.my_jobs_menu
+msgid "My Jobs"
+msgstr "Meine Jobs"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.fsm_job_report
+msgid "Name"
+msgstr "Name"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_zone_zone_name
+msgid "Name of the Zone"
+msgstr "Zonenname"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_area_area_name
+msgid "Name of the area."
+msgstr "Bereichsname"
+
+#. module: field_service_management
+#: model:project.task.type,name:field_service_management.fsm_jobs_new
+#: selection:project.task.type,state:0
+msgid "New"
+msgstr "Neu"
+
+#. module: field_service_management
+#: model:project.task.type,description:field_service_management.fsm_jobs_new
+msgid "New Jobs"
+msgstr "Neue Jobs"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_jobs_form
+msgid "Notify to Customer"
+msgstr "Mitteilung an Kunden"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_jobs_form
+msgid "Notify to Serviceman"
+msgstr "Mitteilung an Service-Mitarbeiter"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_job_feedback_search
+msgid "Okay"
+msgstr "Ok"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_jobs_form
+msgid "Open Invoice"
+msgstr "Rechnung öffnen"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_emp_form_inherited
+#: model:ir.ui.view,arch_db:field_service_management.view_res_partner_form_inherited
+msgid "Open User"
+msgstr "User öffnen"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_hr_employee_is_operator
+#: model:ir.model.fields,field_description:field_service_management.field_res_partner_is_operator
+#: model:ir.model.fields,field_description:field_service_management.field_res_users_is_operator
+#: model:res.groups,name:field_service_management.group_operator
+msgid "Operator"
+msgstr "Operator"
+
+#. module: field_service_management
+#: model:ir.actions.act_window,name:field_service_management.action_operator_employee_list
+#: model:ir.ui.menu,name:field_service_management.operator_menu
+msgid "Operators"
+msgstr "Operators"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_job_line_order_id
+msgid "Order Reference"
+msgstr "Auftragsreferenz"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.fsm_job_report
+msgid "Ordered Qty"
+msgstr "Bestellte Anzahl"
+
+#. module: field_service_management
+#: model:ir.model,name:field_service_management.model_res_partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: field_service_management
+#: model:project.task.type,name:field_service_management.fsm_jobs_pending
+#: selection:project.task.type,state:0
+msgid "Pending"
+msgstr "Pendent"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_emp_skill_line_rate_card
+msgid "Per hour work rate of employee for the specified service."
+msgstr "Mitarbeiter-Stundenansatz für diesen Service"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_phone
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_project_task_type_state
+msgid "Process of Job."
+msgstr "Job-Fortschritt"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.fsm_job_report
+msgid "Product"
+msgstr "Produkt"
+
+#. module: field_service_management
+#: model:ir.ui.menu,name:field_service_management.products_categ_menu
+msgid "Product categories"
+msgstr "Produkte-Kategorien"
+
+#. module: field_service_management
+#: model:ir.ui.menu,name:field_service_management.fsm_products_menu
+#: model:ir.ui.menu,name:field_service_management.product_menu
+#: model:ir.ui.menu,name:field_service_management.products_main_menu
+#: model:ir.ui.view,arch_db:field_service_management.fsm_job_report
+msgid "Products"
+msgstr "Produkte"
+
+#. module: field_service_management
+#: model:ir.model,name:field_service_management.model_project_project
+msgid "Project"
+msgstr "Projekte"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_job_feedback_rating
+#: model:ir.ui.view,arch_db:field_service_management.view_job_feedback_search
+msgid "Rating"
+msgstr "Bewertung"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_job_feedback_search
+msgid "Ratings"
+msgstr "Bewertungen"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_project_task_rejected_reason
+msgid "Reason for job rejection."
+msgstr "Grund der Ablehnung"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_job_feedback_feedback
+msgid "Reason of the rating"
+msgstr "Begründung der Bewertung"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_rejected_reason
+msgid "Reject reason"
+msgstr "Ablehnungsgrund"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_jobs_rejected
+#: model:ir.ui.view,arch_db:field_service_management.fsm_job_report
+msgid "Rejected Job"
+msgstr "Abgelehnter Job"
+
+#. module: field_service_management
+#: model:ir.actions.act_window,name:field_service_management.action_view_rejected_job
+#: model:ir.ui.menu,name:field_service_management.rejected_jobs_menu
+msgid "Rejected Jobs"
+msgstr "Abgelehnte Jobs"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.fsm_job_report
+msgid "Rejected Reason"
+msgstr "Ablehnungsgrund"
+
+#. module: field_service_management
+#: model:res.groups,name:field_service_management.group_project_reporting_manager
+msgid "Reporting Manager"
+msgstr "Berichtender Manager"
+
+#. module: field_service_management
+#: model:ir.ui.menu,name:field_service_management.report_main_menu
+msgid "Reports"
+msgstr "Berichte"
+
+#. module: field_service_management
+#: selection:job.feedback,rating:0
+msgid "Satisfied"
+msgstr "Befriedigt"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_schedule_date
+msgid "Schedule on"
+msgstr "Geplant um"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_emp_skill_line_project_id
+#: model:ir.ui.view,arch_db:field_service_management.fsm_job_report
+#: model:ir.ui.view,arch_db:field_service_management.view_jobs_form
+msgid "Service"
+msgstr "Service"
+
+#. module: field_service_management
+#: model:ir.ui.menu,name:field_service_management.service_menu
+msgid "Service Calls"
+msgstr "Service-Anforderung"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_emp_skill_line_rate_card
+msgid "Service Rate (per hour)"
+msgstr "Service Stundenansatz"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_area_area_is_serviceable
+#: model:ir.model.fields,field_description:field_service_management.field_city_city_is_service
+msgid "Serviceable"
+msgstr "Reparierbar"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_hr_employee_is_serviceman
+#: model:ir.model.fields,field_description:field_service_management.field_job_feedback_user_id
+#: model:ir.model.fields,field_description:field_service_management.field_res_partner_is_serviceman
+#: model:ir.model.fields,field_description:field_service_management.field_res_users_is_serviceman
+#: model:ir.ui.view,arch_db:field_service_management.view_job_feedback_search
+#: model:ir.ui.view,arch_db:field_service_management.view_jobs_form
+#: model:res.groups,name:field_service_management.group_serviceman
+msgid "Serviceman"
+msgstr "Service-Mitarbeiter"
+
+#. module: field_service_management
+#: model:mail.template,subject:field_service_management.notify_serviceman_jobs_mail_template
+msgid "Serviceman Send notify job"
+msgstr "Mitteilung an Service-Mitarbeiter"
+
+#. module: field_service_management
+#: model:ir.actions.act_window,name:field_service_management.action_serviceman_employee_list
+#: model:ir.ui.menu,name:field_service_management.serviceman_menu
+msgid "Servicemen"
+msgstr "Service-Mitarbeiter"
+
+#. module: field_service_management
+#: model:ir.ui.menu,name:field_service_management.menu_project_services
+#: model:ir.ui.view,arch_db:field_service_management.view_emp_form_inherited
+msgid "Services"
+msgstr "Dienstleistungen"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_res_user_tree_inherited
+msgid "Set"
+msgstr "Set"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_signature
+msgid "Signature"
+msgstr "Visum"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_emp_form_inherited
+msgid "Skill"
+msgstr "Fähigkeit"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_emp_skill_line_project_id
+msgid "Skill of the Serviceman"
+msgstr "Befähigung des Service-Mitarbeiters"
+
+#. module: field_service_management
+#: model:ir.ui.menu,name:field_service_management.stages_menu
+msgid "Stages"
+msgstr "Phasen"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_city_city_state_id
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_state
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_state_id
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_type_state
+#: model:ir.ui.view,arch_db:field_service_management.view_jobs_form
+msgid "State"
+msgstr "Status"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_hr_employee_state_ids
+#: model:ir.ui.menu,name:field_service_management.states_menu
+#: model:ir.ui.view,arch_db:field_service_management.view_emp_form_inherited
+msgid "States"
+msgstr "Phasen"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_hr_employee_state_ids
+msgid "States that belong to the person."
+msgstr "Der Person zugeordnete Phasen"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_street
+msgid "Street"
+msgstr "Straße"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_jobs_form
+msgid "Street 2..."
+msgstr "Straße2..."
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_jobs_form
+msgid "Street..."
+msgstr "Straße..."
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_street2
+msgid "Street2"
+msgstr "Straße 2"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.fsm_job_report
+msgid "Subtotal"
+msgstr "Subtotal"
+
+#. module: field_service_management
+#: model:ir.actions.act_window,name:field_service_management.action_view_res_user_tree_inherited
+msgid "Suggest Serviceman"
+msgstr "Service-Mitarbeiter vorschlagen"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_jobs_form
+msgid "Suggest best Serviceman"
+msgstr "Geeignetsten Service-Mitarbeiter vorschlagen"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.fsm_job_report
+msgid "Tags"
+msgstr "Stichwörter"
+
+#. module: field_service_management
+#: model:ir.model,name:field_service_management.model_project_task
+#: model:ir.ui.view,arch_db:field_service_management.view_job_feedback_search
+msgid "Task"
+msgstr "Aufgabe"
+
+#. module: field_service_management
+#: model:ir.model,name:field_service_management.model_project_task_type
+msgid "Task Stage"
+msgstr "Aufgabenphase"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_job_feedback_task_id
+msgid "Task on which the rating is given."
+msgstr "Beurteilte Aufgabe"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_area_area_city_id
+msgid "The city where the area is located."
+msgstr "Stadt in der sich der Bereich befindet"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_project_task_area_id
+msgid "The name of the area."
+msgstr "Bereichsnae"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_city_city_name
+#: model:ir.model.fields,help:field_service_management.field_project_task_city_id
+msgid "The name of the city."
+msgstr "Stadt"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_project_task_country_id
+msgid "The name of the country."
+msgstr "Land"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_project_task_state_id
+msgid "The name of the state."
+msgstr "The name of the state."
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_project_task_zip
+msgid "The name of the zip code."
+msgstr "Postleitzahl"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_project_task_zone_id
+msgid "The name of the zone."
+msgstr "Zone"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_hr_employee_emp_skill_ids
+msgid "The services provided by the serviceman."
+msgstr "Durch den Service-Mitarbeiter erbrachte Leistung"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_city_city_state_id
+msgid "The state where the city is located."
+msgstr "Kanton des Ortes"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_res_country_state_zone_id
+msgid "The zone where the state is located."
+msgstr "Zone des Kantons"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_project_task_is_express_service
+msgid "This field True Extra charges add in job lines"
+msgstr "Fügt Extragebühren in Auftragszeilen ein"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_project_task_invoice_id
+msgid "This field invisible but create            invoice to visible field invoice."
+msgstr "Unsichtbares Rechnungsfeld macht Rechnungsfeld sichtbar ?????"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_job_line_job_id
+msgid "This field is a related to jobs view in create a jobs"
+msgstr "Verknüpfung der Ansicht eines Jobs bei der Job-Erstellung "
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_suggest_serciceman_job_user_ids
+msgid "This field is a related user in suggest            best serviceman for user record."
+msgstr "Verknüpfung mit einem Nutzer beim Vorschlag eines geeigneten Service-Mitarbeiters"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_job_line_order_id
+msgid "This field is a sale order reference field"
+msgstr "Verknüpfung mit Verkaufsauftrag"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_timesheet_count
+#: model:ir.ui.view,arch_db:field_service_management.fsm_job_report
+msgid "Timesheet"
+msgstr "Zeiterfassung"
+
+#. module: field_service_management
+#: model:ir.actions.act_window,name:field_service_management.action_view_unassigned_job
+#: model:ir.ui.menu,name:field_service_management.unassigned_jobs_menu
+msgid "Unassigned Jobs"
+msgstr "Nicht zugeteilte Jobs"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_job_feedback_search
+#: selection:job.feedback,rating:0
+msgid "Unhappy"
+msgstr "Unglücklich"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.fsm_job_report
+msgid "Unit Price"
+msgstr "Preis pro Einheit"
+
+#. module: field_service_management
+#: model:ir.ui.menu,name:field_service_management.product_uom_categ_menu
+msgid "Unit of Measure Categories"
+msgstr "Masseinheiten für Kategorien"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.fsm_job_report
+msgid "User"
+msgstr "Benutzer"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_suggest_serciceman_job_user_ids
+msgid "User ids"
+msgstr "User IDs"
+
+#. module: field_service_management
+#: model:ir.model,name:field_service_management.model_res_users
+#: model:ir.ui.view,arch_db:field_service_management.view_res_user_tree_inherited
+msgid "Users"
+msgstr "Benutzer"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_project_task_state
+msgid "Which type state select base on scenario"
+msgstr "Statuswahl aufgrund des Szenarios"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_job_feedback_search
+msgid "Year"
+msgstr "Jahr"
+
+#. module: field_service_management
+#: code:addons/field_service_management/models/task.py:139
+#, python-format
+msgid "You can only delete draft and cancelled jobs."
+msgstr "Nur Job-Entwürfe oder abgebrochene Jobs können gelöscht werden"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_jobs_form
+msgid "ZIP"
+msgstr "Postleitzahl"
+
+#. module: field_service_management
+#: model:ir.ui.view,arch_db:field_service_management.view_jobs_form
+msgid "ZONE"
+msgstr "Zone"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_zip
+msgid "Zip"
+msgstr "Postleitzahl"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_hr_employee_zone_ids
+#: model:ir.model.fields,field_description:field_service_management.field_res_country_state_zone_id
+#: model:ir.ui.view,arch_db:field_service_management.view_emp_form_inherited
+msgid "Zone"
+msgstr "Zone"
+
+#. module: field_service_management
+#: model:ir.model.fields,field_description:field_service_management.field_project_task_zone_id
+#: model:ir.model.fields,field_description:field_service_management.field_zone_zone_name
+msgid "Zone Name"
+msgstr "Zonen-Name"
+
+#. module: field_service_management
+#: model:ir.actions.act_window,name:field_service_management.action_zone_zone
+#: model:ir.ui.menu,name:field_service_management.zone_zone_menu
+msgid "Zones"
+msgstr "Zonen"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_hr_employee_zone_ids
+msgid "Zones that belong to the person."
+msgstr "Zone zu welcher die Person gehört"
+
+#. module: field_service_management
+#: model:ir.model,name:field_service_management.model_area_area
+msgid "area.area"
+msgstr "area.area"
+
+#. module: field_service_management
+#: model:ir.model,name:field_service_management.model_city_city
+msgid "city.city"
+msgstr "city.city"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_project_task_order_line_ids
+msgid "create the product name,price and quantity"
+msgstr "Wähle Produkte-Name, Preis und Anzahl"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_project_task_timesheet_count
+msgid "if Display the Timesheet Count            for the Jobs Kanban view."
+msgstr "Zeige Zeittotal in der Kanban-Ansicht"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_hr_employee_is_manager
+#: model:ir.model.fields,help:field_service_management.field_res_partner_is_manager
+#: model:ir.model.fields,help:field_service_management.field_res_users_is_manager
+msgid "if checked the partner is a manager."
+msgstr "Wenn angewählt ist Partner ein Manager"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_hr_employee_is_serviceman
+msgid "if checked the partner is a serviceman"
+msgstr "Wenn angewählt ist Partner ein Service-Mitarbeiter"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_res_partner_is_serviceman
+#: model:ir.model.fields,help:field_service_management.field_res_users_is_serviceman
+msgid "if checked the partner is a serviceman."
+msgstr "Wenn angewählt ist Partner ein Service-Mitarbeiter"
+
+#. module: field_service_management
+#: model:ir.model.fields,help:field_service_management.field_hr_employee_is_operator
+#: model:ir.model.fields,help:field_service_management.field_res_partner_is_operator
+#: model:ir.model.fields,help:field_service_management.field_res_users_is_operator
+msgid "if checked the partner is an operator."
+msgstr "Wenn angewählt ist Partner ein Operator"
+
+#. module: field_service_management
+#: model:ir.model,name:field_service_management.model_job_line
+msgid "job.line"
+msgstr "job.line"
+
+#. module: field_service_management
+#: model:ir.model,name:field_service_management.model_suggest_serciceman_job
+msgid "suggest.serciceman.job"
+msgstr "schlage Service-Mitarbeiter-Job vor"
+
+#. module: field_service_management
+#: model:ir.model,name:field_service_management.model_zone_zone
+msgid "zone.zone"
+msgstr "zone.zone"

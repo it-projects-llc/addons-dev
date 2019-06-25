@@ -1,0 +1,86 @@
+<odoo>
+    <data>
+        <!-- Jobs Stages -->
+        <!--<record id="fsm_jobs_lead" model="project.task.type">-->
+            <!--<field name="name">New</field>-->
+            <!--<field name="sequence">1</field>-->
+            <!--<field name="description">Jobs Lead</field>-->
+
+            <!--<field name="auto_assign" eval='1'/>-->
+        <!--</record>-->
+
+        <record id="fsm_jobs_new" model="project.task.type">
+            <field name="name">New</field>
+            <field name="sequence">1</field>
+            <field name="description">New Jobs</field>
+            <field name="state">draft</field>
+            <field name="auto_assign" eval='1'/>
+        </record>
+
+        <record id="fsm_jobs_reserved_01" model="project.task.type">
+            <field name="name">Reserved</field>
+            <field name="sequence">2</field>
+            <field name="state">reserved</field>
+            <field name="auto_assign" eval='1'/>
+        </record>
+
+
+        <record id="fsm_jobs_scheduled" model="project.task.type">
+            <field name="name">Scheduled</field>
+            <field name="sequence">3</field>
+            <field name="state">scheduled</field>
+            <field name="auto_assign" eval='1'/>
+        </record>
+
+         <record id="fsm_jobs_in_progress" model="project.task.type">
+            <field name="name">In Progress</field>
+            <field name="sequence">4</field>
+             <field name="state">open</field>
+            <field name="auto_assign" eval='1'/>
+        </record>
+
+        <record id="fsm_jobs_in_complete" model="project.task.type">
+            <field name="name">Complete</field>
+            <field name="sequence">5</field>
+            <field name="description">Jobs Done</field>
+            <field name="state">done</field>
+            <field name="auto_assign" eval='1'/>
+        </record>
+
+        <record id="fsm_jobs_partially" model="project.task.type">
+            <field name="name">Partially Complete</field>
+            <field name="sequence">6</field>
+            <field name="description">Jobs Pending</field>
+            <field name="state">partial</field>
+            <field name="auto_assign" eval='1'/>
+        </record>
+
+
+
+        <record id="fsm_jobs_invoiced" model="project.task.type">
+            <field name="name">Invoiced</field>
+            <field name="sequence">7</field>
+            <field name="description">Jobs Done</field>
+            <field name="state">invoiced</field>
+            <field name="auto_assign" eval='1'/>
+        </record>
+
+         <!--<record id="fsm_jobs_invoiced" model="project.task.type">-->
+            <!--<field name="name">Invoiced</field>-->
+            <!--<field name="sequence">6</field>-->
+            <!--<field name="auto_assign" eval='1'/>-->
+        <!--</record>-->
+
+        <record id="fsm_jobs_cancelled" model="project.task.type">
+            <field name="name">Cancelled</field>
+            <field name="sequence">8</field>
+            <field name="description">Jobs Cancelled</field>
+            <field name="state">cancelled</field>
+            <field name="auto_assign" eval='1'/>
+        </record>
+
+
+
+
+    </data>
+</odoo>

@@ -1,0 +1,13 @@
+<odoo>
+    <!-- Sequence of a Jobs -->
+    <data noupdate="1">
+        <record id="job_sequence" model="ir.sequence">
+            <field name="name">Job Sequence</field>
+            <field name="code">project</field>
+            <field name="prefix">JOB%(year)s</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="padding">5</field>
+        </record>
+    </data>
+</odoo>

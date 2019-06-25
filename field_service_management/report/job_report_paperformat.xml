@@ -1,0 +1,19 @@
+<odoo>
+    <!-- Paper Format -->
+    <record id="job_paperformat_qweb" model="report.paperformat">
+        <field name="name">Job Details Paper Format</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">50</field>
+        <field name="margin_bottom">20</field>
+        <field name="margin_left">15</field>
+        <field name="margin_right">15</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">45</field>
+        <field name="dpi">90</field>
+        <field name="report_ids" eval="[(4, ref('field_service_management.report_fsm_job'))]"/>
+    </record>
+</odoo>
