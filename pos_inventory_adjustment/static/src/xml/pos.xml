@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).-->
+
+<templates id="template" xml:space="preserve">
+
+    <t t-name="NewStageButton">
+        <div class='control-button'>
+            <i class='fa fa-list-alt'/> New Stage
+        </div>
+    </t>
+
+    <t t-name="UpdateStageButton">
+        <div class='control-button'>
+            <i class='fa fa-list-alt'/> Update Stage
+        </div>
+    </t>
+
+    <t t-name="InventorySelectionPopupWidget">
+        <div class="modal-dialog inventory">
+            <div class="popup popup-selection inventory">
+                <p class="title"><t t-esc=" widget.options.title || 'Select' " /></p>
+                <div class='selection scrollable-y touch-scrollable inventory'>
+                    <div class="selection inventory">
+                        <t t-foreach="widget.list || []" t-as="item">
+                            <div class='selection-item' t-att-data-item-index='item_index'>
+                                <t t-esc='item.name'/>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+                <div class="footer inventory">
+                    <div class="button cancel">
+                        Cancel
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-extend="ActionpadWidget">
+        <t t-jquery='button.button.pay' t-operation='replace'>
+            <button class='button pay'>
+                <div class='pay-circle'>
+                    <i class='fa fa-chevron-right' />
+                </div>
+                Validate
+            </button>
+        </t>
+    </t>
+
+    <t t-extend="NumpadWidget">
+        <t t-jquery="button.mode-button[data-mode='discount']" t-operation='replace'>
+            <button class="mode-button disable" data-mode='discount'></button>
+        </t>
+        <t t-jquery="button.mode-button[data-mode='price']" t-operation='replace'>
+            <button class="mode-button disable" data-mode='price'></button>
+        </t>
+        <t t-jquery="button.numpad-minus" t-operation='replace'>
+            <button class="input-button disable numpad-minus" ></button>
+        </t>
+    </t>
+
+    <t t-name="NewInventoryPopupWidget">
+        <div class="modal-dialog inventory">
+            <div class="popup popup-selection inventory">
+                <p class="title"><t t-esc=" widget.options.title || 'New Inventory Stage' " /></p>
+                <div class='selection scrollable-y touch-scrollable inventory'>
+                    <div class="selection inventory">
+                        <div>
+                            Select an Inventory
+                            <select class='popup_selection inventory' name='inventoriy_ids'>
+                                <option value=''>None</option>
+                                <t t-foreach='widget.pos.db.inventories' t-as='l'>
+                                    <option t-att-value='l.id'>
+                                        <t t-esc='l.name'/>
+                                    </option>
+                                </t>
+                            </select>
+                        </div>
+                        Select a User
+                        <div>
+                            <select class='popup_selection user' name='user_ids'>
+                                <option value=''>None</option>
+                                <t t-foreach='widget.pos.users' t-as='u'>
+                                    <option t-att-value='u.id'>
+                                        <t t-esc='u.name'/>
+                                    </option>
+                                </t>
+                            </select>
+                        </div>
+                        Type a Name
+                        <div>
+                            <input class="name" type='text' t-att-value="widget.options.value || ''"></input>
+                        </div>
+                        Note
+                        <div>
+                            <input class="note" type='text' t-att-value="widget.options.value || ''"></input>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer inventory">
+                    <div class="button confirm">
+                        Ok
+                    </div>
+                    <div class="button cancel">
+                        Cancel
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-extend="ProductCategoriesWidget">
+        <t t-jquery="div.breadcrumbs" t-operation='after'>
+            <div class="breadcrumbs inventory_name">
+                <t t-if="widget.pos.get_order().inventory_adjustment_stage_name">
+                    <span class="breadcrumb">
+                        <span class=" breadcrumb-button breadcrumb-home js-category-switch">
+                            <t t-esc="widget.pos.get_order().inventory_adjustment_stage_name"/>
+                        </span>
+                    </span>
+                </t>
+            </div>
+        </t>
+    </t>
+
+</templates>

@@ -1,0 +1,110 @@
+/* Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+ * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). */
+odoo.define('pos_inventory_adjustment.models', function (require) {
+    "use strict";
+
+    var PopupWidget = require('point_of_sale.popups');
+    var screens = require('point_of_sale.screens');
+    var models = require('point_of_sale.models');
+    var gui = require('point_of_sale.gui');
+    var Model = require('web.DataModel');
+    var core = require('web.core');
+    var _t = core._t;
+
+    models.load_models({
+        model: 'stock.inventory',
+        condition: function (self) {
+            return self.config.inventory_adjustment;
+        },
+        fields: ['name'],
+        domain: [['filter','=','staged'], ['state','=','draft']],
+        loaded: function(self, inventories){
+            self.db.inventories = inventories;
+        },
+    });
+
+
+    var _super_posmodel = models.PosModel.prototype;
+    models.PosModel = models.PosModel.extend({
+        initialize: function (session, attributes) {
+            var product_model = _.find(this.models, function(model) {
+                return model.model === 'product.product';
+            });
+            var product_domain = product_model.domain;
+            product_model.domain = function (self) {
+                return self.config.inventory_adjustment
+                ? []
+                : product_domain;
+            };
+            return _super_posmodel.initialize.call(this, session, attributes);
+        },
+
+        get_inventory_stages: function (ids) {
+            var self = this;
+            if (ids) {
+                return new Model('stock.inventory.stage').call('search_read', [[['id', 'in', ids]]],
+                    {fields: ['name', 'inventory_id', 'user_id', 'line_ids']}).then(function (inv_stages) {
+                    return inv_stages;
+                }, function (err) {
+                    console.log(err);
+                });
+            }
+            return new Model('stock.inventory.stage').call('search_read', [[['state', '=', 'open']]],
+                {fields: ['name', 'inventory_id', 'user_id', 'line_ids']}).then(function (inv_stages) {
+                return inv_stages;
+            }, function (err) {
+                console.log(err);
+            });
+        },
+
+        get_inventory_stage_lines: function (ids) {
+            var self = this;
+            return new Model('stock.inventory.stage.line').call('read', [ids]).then(function (lines) {
+                return lines;
+            }, function (err) {
+                console.log(err);
+            });
+        },
+
+        create_inventory_order: function(stage, options) {
+            var self = this;
+            var order = new models.Order({}, {
+                pos: this,
+            });
+            this.get('orders').add(order);
+            this.set_order(order);
+            order.inventory_adjustment_stage_id = stage.id;
+            order.inventory_adjustment_stage_name = stage.name;
+            this.gui.screen_instances.products.product_categories_widget.renderElement();
+
+            if (!options) {
+                return;
+            }
+            var product = false;
+            _.each(options.inv_adj_lines, function(l) {
+                product = self.db.get_product_by_id(l.product_id[0]);
+                order.add_product(product, {
+                    quantity: l.qty,
+                });
+            });
+        },
+    });
+
+
+    var _super_order = models.Order.prototype;
+    models.Order = models.Order.extend({
+        export_as_JSON: function() {
+            var data = _super_order.export_as_JSON.apply(this, arguments);
+            data.inventory_adjustment_stage_id = this.inventory_adjustment_stage_id;
+            data.inventory_adjustment_stage_name = this.inventory_adjustment_stage_name;
+            return data;
+        },
+
+        init_from_JSON: function(json) {
+            _super_order.init_from_JSON.call(this, json);
+            this.inventory_adjustment_stage_id = json.inventory_adjustment_stage_id;
+            this.inventory_adjustment_stage_name = json.inventory_adjustment_stage_name;
+        },
+    });
+
+});
