@@ -20,7 +20,7 @@ Creating a Service Account Key
 *Note: You need to have a Google account*
 
 * Open the `GCP Console. <https://console.cloud.google.com/>`__
-* Login to your Google account
+* Login into your Google account
 * Press `Projects` button on the Top menu
 * In Popup window choose `New Project`
 * Define the Name and Location (if needed) of Project

@@ -1,8 +1,8 @@
 # Copyright 2019 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 {
-    "name": """Backups to Google Drive""",
-    "summary": """Your backups to Google Drive""",
+    "name": """Backups into Google Drive""",
+    "summary": """Your backups into Google Drive""",
     "category": "Backup",
     # "live_test_url": "",
     "images": ['images/backup_google.jpg'],

@@ -1,5 +1,5 @@
 ====================
- Backups to Dropbox
+ Backups into Dropbox
 ====================
 
 Installation
@@ -20,7 +20,7 @@ Creating Access Token
 *Note: You need to have a Dropbox account*
 
 * Open the `App Console <https://www.dropbox.com/developers/apps>`__
-* Login/Register to Dropbox account.
+* Login/Register into Dropbox account.
 * Click on `Create app`
 * Choose an API e.g. `Dropbox API`
 * Choose the type of access e.g. `App folder`
