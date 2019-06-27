@@ -100,8 +100,6 @@ odoo.define('pos_mail.pos', function (require) {
                 var receipt_screen = this.gui.screen_instances.receipt;
                 receipt_screen.send_mail_receipt(this.new_client.id);
                 receipt_screen.$el.zIndex(0);
-                receipt_screen.click_next();
-                receipt_screen.set_mail_customer = false;
                 this.$el.zIndex(-1);
             } else {
                 this._super();
@@ -117,18 +115,9 @@ odoo.define('pos_mail.pos', function (require) {
                 // means we came there from the receipt screen
                 var receipt_screen = this.screen_instances.receipt;
                 var clientlist_screen = this.screen_instances.clientlist;
-                if (!clientlist_screen.new_client || !clientlist_screen.new_client.email) {
-                    // set customer button was clicked and client has no email
-                    // happend when auto print option is enabled
-                    return;
-                }
                 clientlist_screen.close();
                 clientlist_screen.$el.zIndex(-1);
                 receipt_screen.set_mail_customer = false;
-                if (receipt_screen.check_autosend_mail_receipt()) {
-                    // back button was click when auto print option is enabled
-                    receipt_screen.return_from_client_list = true;
-                }
                 receipt_screen.show();
                 receipt_screen.$el.zIndex(0);
             } else {
