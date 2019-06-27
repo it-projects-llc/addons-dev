@@ -20,8 +20,8 @@ TODO: this part is not implemented yet.
 
 Additionally to the cloud provided by **Odoo-backup.sh** it's possible to store backups on a personal cloud. In that case user has to arrange credentials himself. Supported cloud providers and protocols are as following:
 
-* TODO Dropbox
-* TODO Google Drive
+* Dropbox
+* Google Drive
 * TODO S3
 * TODO Yandex.Disk
 * TODO ftp
