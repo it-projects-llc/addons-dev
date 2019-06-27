@@ -15,13 +15,21 @@ odoo.define('pos_inventory_adjustment.ui', function (require) {
     var NewStageButton = screens.ActionButtonWidget.extend({
         template: 'NewStageButton',
         button_click: function () {
-            var self = this;
+            var pos = this.pos;
             this.gui.show_popup('invadjnew',{
                 'title': _t('New Stage'),
                 'confirm': function(data){
+                    console.log('asdsad')
                     return new Model('stock.inventory.stage').call('create', [data]).then(function (res) {
-                        return self.pos.get_inventory_stages([res]).then(function(stage){
-                            create_inventory_order(stage, {});
+                        return pos.get_inventory_stages([res]).then(function(stage){
+                            var order = pos.get_order();
+                            if (order.inventory_adjustment_stage_id) {
+                                return pos.create_inventory_order(stage, {});
+                            }
+                            stage = stage[0];
+                            order.inventory_adjustment_stage_id = stage.id;
+                            order.inventory_adjustment_stage_name = stage.name;
+                            pos.gui.screen_instances.products.product_categories_widget.renderElement();
                         });
                     }, function (err) {
                         console.log(err);
@@ -29,7 +37,7 @@ odoo.define('pos_inventory_adjustment.ui', function (require) {
                 },
                 'cancel':  function(){
                     this.gui.close_popup();
-                }
+                },
             });
         },
     });
@@ -51,6 +59,12 @@ odoo.define('pos_inventory_adjustment.ui', function (require) {
                     'title': _t('Select Inventory Stage'),
                     'list': list,
                     'confirm': function(inv){
+                        var order = _.find(posmodel.get_order_list(), function(o){
+                            return o.inventory_adjustment_stage_id === inv.id;
+                        });
+                        if (order) {
+                            return pos.set_order(order);
+                        }
                         var lines = pos.get_inventory_stage_lines(inv.line_ids).then(function(lines){
                             pos.create_inventory_order(inv, {
                                 inv_adj_lines: lines,
@@ -59,9 +73,13 @@ odoo.define('pos_inventory_adjustment.ui', function (require) {
                     },
                     'cancel':  function(){
                         pos.gui.close_popup();
-                    }
+                    },
                 });
             })
+        },
+
+        check_order_presence: function(inv_id) {
+
         },
     });
     screens.define_action_button({
@@ -83,13 +101,14 @@ odoo.define('pos_inventory_adjustment.ui', function (require) {
             this.list = options.list || [];
             this.renderElement();
         },
+
         click_item : function(event) {
             this.gui.close_popup();
             if (this.options.confirm) {
                 var item = this.list[parseInt($(event.target).data('item-index'))];
                 this.options.confirm.call(self,item);
             }
-        }
+        },
     });
     gui.define_popup({name:'invadj', widget: InventorySelectionPopupWidget});
 
@@ -103,13 +122,35 @@ odoo.define('pos_inventory_adjustment.ui', function (require) {
 
             this.list = options.list || [];
             this.renderElement();
+            console.log('asdasdasd')
+
+            this.$el.find('select').on('change', function() {
+                var selections = self.$el.find('select');
+                var take_text = function(el) {
+                    return el.options[el.selectedIndex].text
+                }
+                self.$el.find('input.name').val(take_text(selections[0]) + '-' + take_text(selections[1]));
+            });
         },
+
         click_confirm : function(event) {
             var data = {
                 inventory_id: parseInt(this.$el.find('select.inventory').val()),
                 user_id: parseInt(this.$el.find('select.user').val()),
                 name: this.$el.find('input.name').val(),
                 note: this.$el.find('input.note').val(),
+            }
+            if (!data.inventory_id) {
+                return this.gui.show_popup('error',{
+                    'title': _t('Error: Could not Save Changes'),
+                    'body': 'Unable to proceed with unselected inventory',
+                });
+            }
+            if (!data.name) {
+                return this.gui.show_popup('error',{
+                    'title': _t('Error: Could not Save Changes'),
+                    'body': 'Unable to proceed without any name',
+                });
             }
             this.gui.close_popup();
             if (this.options.confirm) {
@@ -144,14 +185,59 @@ odoo.define('pos_inventory_adjustment.ui', function (require) {
                 self.gui.show_popup('confirm',{
                     'title': _t('Inventory Validation'),
                     'body':  _t('Are you sure you want to Validate current inventory stage?'),
-                    confirm: function(){
-                        console.log('asdsadsadsadsadsadasd')
+                    'confirm': function(){
+                        if (!self.pos.get_order().inventory_adjustment_stage_id) {
+                            return self.gui.show_popup('error',{
+                                'title': 'Inventory Stage',
+                                'body': 'This order is not an Inventory Stage, Please create a new stage to continue',
+                            });
+                        }
+                        self.pos.send_inventory_stage().then(function (res) {
+                            if (res.error) {
+                                return self.gui.show_popup('error',{
+                                    'title': res.error.title,
+                                    'body': res.error.message,
+                                });
+                            }
+                            self.gui.close_popup();
+                            self.pos.get_order().destroy({'reason': 'abandon'});
+                        }, function (err) {
+                            console.log(err);
+                        });
                     },
                 });
             });
-//            this.$('.numpad button[data-mode="discount"]').text('').off().addClass('disable');
-//            this.$('.numpad button[data-mode="price"]').text('').off().addClass('disable');
-//            this.$('.numpad button.numpad-minus').text('').off().addClass('disable');
+            this.$('.numpad button[data-mode="discount"]').hide();
+            this.$('.numpad button[data-mode="price"]').hide();
+            this.$('.numpad button.numpad-minus').hide();
+            //this.$('.numpad button[data-mode="discount"]').text('').off().addClass('disable');
+            //this.$('.numpad button[data-mode="price"]').text('').off().addClass('disable');
+            //this.$('.numpad button.numpad-minus').text('').off().addClass('disable');
+        },
+    });
+
+    screens.OrderWidget.include({
+        init: function(parent, options) {
+            var self = this;
+            this._super(parent,options);
+            if (this.pos.config.inventory_adjustment) {
+                $(this.chrome.el).addClass('inventory');
+            }
+        },
+        renderElement: function() {
+            this._super();
+            if (this.pos.config.inventory_adjustment) {
+                $(this.el.querySelector('.summary')).hide();
+            }
+        },
+    });
+
+    screens.ProductListWidget.include({
+        get_product_image_url: function(product){
+            if (this.pos.config.inventory_adjustment) {
+                return '';
+            }
+            return window.location.origin + '/web/image?model=product.product&field=image_medium&id='+product.id;
         },
     });
 

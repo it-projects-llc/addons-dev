@@ -36,6 +36,12 @@ odoo.define('pos_inventory_adjustment.models', function (require) {
                 ? []
                 : product_domain;
             };
+            var product_fields = product_model.fields;
+            product_model.domain = function (self) {
+                return self.config.inventory_adjustment
+                ? []
+                : product_domain;
+            };
             return _super_posmodel.initialize.call(this, session, attributes);
         },
 
@@ -86,7 +92,24 @@ odoo.define('pos_inventory_adjustment.models', function (require) {
                 order.add_product(product, {
                     quantity: l.qty,
                 });
+                order.selected_orderline.line_id = l.id;
             });
+        },
+
+        send_inventory_stage: function() {
+            var self = this;
+            var order = this.get_order();
+            var order_to_send = {
+                inventory_adjustment_stage_id: order.inventory_adjustment_stage_id,
+                lines: _.map(order.get_orderlines(), function(l) {
+                    return {
+                        product_id: l.product.id,
+                        qty: l.quantity,
+                        line_id: l.line_id,
+                    }
+                }),
+            };
+            return new Model('stock.inventory.stage').call('update_stage_from_ui', [order.inventory_adjustment_stage_id, order_to_send]);
         },
     });
 
@@ -104,6 +127,13 @@ odoo.define('pos_inventory_adjustment.models', function (require) {
             _super_order.init_from_JSON.call(this, json);
             this.inventory_adjustment_stage_id = json.inventory_adjustment_stage_id;
             this.inventory_adjustment_stage_name = json.inventory_adjustment_stage_name;
+        },
+
+        add_product: function(product, options){
+            if (this.pos.config.inventory_adjustment) {
+                options = _.extend({}, options, {merge: true});
+            }
+            _super_order.add_product.call(this, product, options);
         },
     });
 

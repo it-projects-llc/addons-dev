@@ -1,13 +1,17 @@
-.pos .disable {
+.pos.inventory .disable {
     background: #00000036!important;
     pointer-events: none;
 }
 
-.pos .actionpad .button.pay {
+.pos.inventory .actionpad .button.pay {
+    display: none;
+}
+.pos.inventory .actionpad .button.pay.inventory {
     height: 216px;
+    display: block;
 }
 
-.pos .popup .popup_selection {
+.pos.inventory .popup .popup_selection {
     text-align: left;
     display: inline-block;
     overflow: hidden;
@@ -24,14 +28,86 @@
     width: 80%;
 }
 
-.pos .modal-dialog .popup {
+.pos.inventory .modal-dialog .popup {
     height: 450px;
 }
 
-.pos .popup.popup-selection .selection {
+.pos.inventory .popup.popup-selection .selection {
     max-height: 323px;
 }
 
-.pos .breadcrumbs.inventory_name .breadcrumb-button.breadcrumb-home {
+.pos.inventory .breadcrumbs.inventory_name .breadcrumb-button.breadcrumb-home {
     width: 100%;
+}
+
+.pos.inventory .actionpad {
+       width: 386px;
+}
+
+.pos.inventory .leftpane {
+    width: 666px;
+}
+
+.pos.inventory .rightpane {
+    left: 666px;
+}
+
+.pos.inventory .order {
+    max-width: 666px;
+}
+
+.pos.inventory .product {
+    height: 50px;
+}
+
+.pos.inventory .product .product-img {
+    display: none;
+}
+
+.pos.inventory .order .orderline .price {
+    display: none;
+}
+
+.pos.inventory .order .orderline .info-list {
+    display: none;
+}
+.pos.inventory .order .orderline .info-list.inventory {
+    display: block;
+}
+
+.pos .order .orderline .price.inventory {
+    display: none;
+}
+.pos .order .orderline .price.inventory {
+    display: block;
+}
+
+.pos.inventory .order .orderline .info-list.inventory {
+    display: none;
+}
+.pos.inventory .order .orderline .info-list.inventory {
+    display: block;
+}
+
+.pos.inventory .order .summary .line {
+    display: none;
+}
+
+.pos.inventory .numpad button[data-mode="price"] {
+    display: none;
+}
+.pos.inventory .numpad button.inventory[data-mode="price"] {
+    display: block;
+}
+.pos.inventory .numpad button[data-mode="discount"] {
+    display: none;
+}
+.pos.inventory .numpad button.inventory[data-mode="discount"] {
+    display: block;
+}
+.pos.inventory .numpad .input-button.numpad-minus {
+    display: none;
+}
+.pos.inventory .numpad .input-button.numpad-minus.inventory {
+    display: block;
 }
