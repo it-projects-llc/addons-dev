@@ -13,7 +13,7 @@ class PosConfig(models.Model):
     @api.model
     def send_receipt_via_mail(self, partner_id, body_from_ui, pos_reference):
         base64_pdf = self.env['ir.actions.report']._run_wkhtmltopdf(
-            [body_from_ui.encode()],
+            [body_from_ui.encode('utf-16')],
             landscape=False,
             specific_paperformat_args={'data-report-margin-top': 10, 'data-report-header-spacing': 10}
         )
