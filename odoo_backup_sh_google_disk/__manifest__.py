@@ -1,11 +1,11 @@
 # Copyright 2019 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 {
-    "name": """Backups into Google Drive""",
-    "summary": """Your backups into Google Drive""",
+    "name": """Backups to Google Drive""",
+    "summary": """Make database backups to your Google Drive""",
     "category": "Backup",
     # "live_test_url": "",
-    "images": ['images/backup_google.jpg'],
+    "images": ['images/odoo_backup_sh_google_disk.jpg'],
     "version": "12.0.1.0.0",
     "application": False,
 

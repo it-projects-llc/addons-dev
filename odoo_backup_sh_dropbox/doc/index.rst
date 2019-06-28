@@ -1,5 +1,5 @@
 ====================
- Backups into Dropbox
+ Backups to Dropbox
 ====================
 
 Installation

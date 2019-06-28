@@ -62,12 +62,33 @@ Each database specified in these settings will be presented in the dashboard.
 Usage
 =====
 
-* Open the menu ``[[ Backups ]] >> Dashboard``
-* Login into your Odoo account
-* Click on `Restore via Odoo-backup.sh` button
+* Login into your `Odoo account <https://www.odoo.com/web/login>`__
+* Click on ``Create Database`` button
+* In the open Pop-up window enter *Master Password*, fill required information such as Phone number, Language, Country, Password
+* Provide the name for Database
+* Click on ``Continue`` button
+
+RESULT: Backup is created.
+*The manual database creation may take some time before being ready*.
+
+* Login into your `Odoo account <https://www.odoo.com/web/login>`__
+* Click on ``Restore via Odoo-backup.sh`` button
 * Choose the backup that you want to restore
-* Click on `Restore` button
 * In the open Pop-up window enter *Master Password*, fill the *Database Name*
+* Click on `Restore` button
 
 RESULT: Backup is restored without any additional manipulations such as *downloading-uploading* process.
 *The database restore may take some time before being ready*.
+
+* Login into your `Odoo account <https://www.odoo.com/web/login>`__
+* Click on ``Restore`` button
+* Upload file that you want to restore
+* Think up the Database Name
+* In order to avoid conflicts between databases, choose the option if this database was moved or copied.
+* In the open Pop-up window enter *Master Password*, fill the *Database Name*
+* Click on `Continue` button
+
+
+RESULT: Backup is restored.
+*The database restore may take some time before being ready*.
+

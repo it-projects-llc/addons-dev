@@ -1,11 +1,11 @@
 # Copyright 2019 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 {
-    "name": """Backups into Dropbox""",
-    "summary": """Your backups into Dropbox""",
+    "name": """Backups to Dropbox""",
+    "summary": """Make database backups to your Dropbox""",
     "category": "Backup",
     # "live_test_url": "",
-    "images": ['images/backup_dropbox.jpg'],
+    "images": ['images/odoo_backup_sh_dropbox.jpg'],
     "version": "12.0.1.0.0",
     "application": False,
 

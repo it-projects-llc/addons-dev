@@ -6,7 +6,7 @@
  Odoo-backup.sh Dropbox
 ========================
 
-The application allows managing database backups via Dropbox, without downloading and uploading an archive via a browser.
+The application allows making database backups to your Dropbox.
 
 Credits
 =======
