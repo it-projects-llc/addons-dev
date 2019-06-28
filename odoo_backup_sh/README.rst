@@ -16,17 +16,12 @@ The service **Odoo-backup.sh** provides a way to store backups in a cloud. Payme
 Personal cloud
 ==============
 
-TODO: this part is not implemented yet.
-
 Additionally to the cloud provided by **Odoo-backup.sh** it's possible to store backups on a personal cloud. In that case user has to arrange credentials himself. Supported cloud providers and protocols are as following:
 
-* Dropbox
-* Google Drive
-* TODO S3
-* TODO Yandex.Disk
-* TODO ftp
+* `Dropbox <https://apps.odoo.com/apps/modules/12.0/odoo_backup_sh_dropbox/>`_
+* `Google Drive <https://apps.odoo.com/apps/modules/12.0/odoo_backup_sh_google_disk/>`_
 
-Posibility of using personal cloud *only* can be unlocked by purchasing module `odoo_backup_sh_private <https://apps.odoo.com/apps/modules/12.0/odoo_backup_sh_private/>`_
+(You need to get corresponding modules to use personal cloud)
 
 Implementation details
 ======================
