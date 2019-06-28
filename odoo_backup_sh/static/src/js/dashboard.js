@@ -52,10 +52,6 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
                 self.notifications = results.notifications;
                 self.up_balance_url = results.up_balance_url;
                 self.show_nocontent_msg = results.configs.length === 0;
-                self.show_inactive_warning = !self.show_nocontent_msg &&
-                    results.configs.every(function (config) {
-                        return !config.active;
-                    });
             }),
             self._rpc({
                 model: 'odoo_backup_sh.config',

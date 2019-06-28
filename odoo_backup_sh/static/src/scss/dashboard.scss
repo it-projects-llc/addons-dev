@@ -68,6 +68,25 @@
     margin: 8px 0 4px;
 }
 
+
+.o_kanban_card_warning {
+    color: #ffd52d;
+    float: right;
+    font-size: 12px;
+    position: relative;
+    margin-right: 20px;
+    p {
+        margin: 0px;
+        margin-left: 28px;
+    }
+    i {
+        position: absolute;
+        top: 50%;
+        transform: translate(0%, -50%);
+        font-size: 22px;
+    }
+}
+
 .o_backup_dashboard_configs .o_kanban_record:hover .backup_config_edit {
     opacity: 1;
     -webkit-transition: 0.2s ease-in-out;
@@ -76,9 +95,11 @@
 }
 
 .backup_config_edit {
-    float: right;
+    position: absolute;
     cursor: pointer;
     opacity: 0;
+    right: 14px;
+    top: 8px;
 }
 
 .o_backup_dashboard_nocontent {
@@ -107,17 +128,6 @@
     > p {
         padding-left: 78px;
     }
-}
-
-.o_backup_dashboard_inactive_warning {
-    background-color: #fef9f3;
-    border: 2px solid #fceedb;
-    color: #81500b;
-    display: block;
-    font-size: 15px;
-    margin: 16px 16px 0;
-    padding: 8px 16px;
-    position: static;
 }
 
 .o_backup_dashboard_notification {

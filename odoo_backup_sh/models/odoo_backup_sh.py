@@ -64,8 +64,8 @@ class BackupConfig(models.Model):
     common_rotation = fields.Selection(selection=ROTATION_OPTIONS, default='unlimited')
     max_backups = fields.Integer(readonly=True, compute=lambda self: 0)
     backup_simulation = fields.Boolean(string="Demo Backup Simulation", default=False,
-                                       help="if the setting is enabled then new backups will not be sent to the "
-                                            "storage server")
+                                       help="If the setting is enabled then new backups of current database will not "
+                                            "be sent to the storage server")
 
     _sql_constraints = [
         ('database_unique', 'unique (database, storage_service)', "Settings for this database already exist!"),
@@ -233,14 +233,8 @@ class BackupConfig(models.Model):
             backup_list = BackupCloudStorage.get_backup_list(cloud_params)
             # if the simulation configuration exists, we need to get
             # all the simulation info files and convert them to backup format
-            domain = [('storage_service', '=', 'odoo_backup_sh'), ('backup_simulation', '=', True), ('database', '=', self._cr.dbname)]
-            # first search with rotation
-            config = self.env['odoo_backup_sh.config'].search(domain)
-            # if the config does not exist, we need to find the config without rotation
-            if not config:
-                domain.append(('active', '=', False))
-                config = self.env['odoo_backup_sh.config'].search(domain)
-            if config:
+            configs = self.env['odoo_backup_sh.config'].with_context({'active_test': False}).search([('backup_simulation', '=', True)])
+            for config in configs:
                 simulation_backup_list = self.get_simulation_backup_list(config)
                 backup_list.update({
                     'backup_list': backup_list['backup_list'] + simulation_backup_list
@@ -267,14 +261,6 @@ class BackupConfig(models.Model):
     def delete_remote_objects(self, cloud_params, remote_objects):
         odoo_backup_sh_objects = []
         for file in remote_objects:
-            # ignore deletion of objects from the storage server if the file is a simulation object
-            file_name = file[0]
-            file_name_parts = file_name.split('.')
-            backup_dt_part_index = -3 if file_name_parts[-1] == 'enc' else -2
-            db_name = '.'.join(file_name_parts[:backup_dt_part_index])
-            config = self.search([('database', '=', db_name), ('storage_service', '=', 'odoo_backup_sh')])
-            if config.backup_simulation:
-                continue
             odoo_backup_sh_objects += [{'Key': '%s/%s' % (cloud_params['odoo_oauth_uid'], file[0])}]
         if odoo_backup_sh_objects:
             return BackupCloudStorage.delete_objects(cloud_params, odoo_backup_sh_objects)
@@ -329,7 +315,7 @@ class BackupConfig(models.Model):
                     needed_backup_dts = self.compute_auto_rotation_backup_dts(backup_dts, **limits)
                     for backup_dt in backup_dts:
                         if backup_dt not in needed_backup_dts:
-                            if file in remote_backups[backup_config.database][backup_dt]:
+                            if file in remote_backups[backup_config.database][backup_dt] and backup_config.backup_simulation is False:
                                 remote_objects_to_delete.append(file)
                             del remote_backups[backup_config.database][backup_dt]
 
@@ -547,8 +533,8 @@ class BackupInfo(models.Model):
     backup_size = fields.Float(string='Backup Size, MB', readonly=True)
     storage_service = fields.Selection(selection=[('odoo_backup_sh', 'Odoo Backup sh')], readonly=True)
     backup_simulation = fields.Boolean(default=False, readonly=True,
-                                       help="if the setting is enabled then backups will not be "
-                                            "remove after update backup list")
+                                       help="If this option is enabled, the backup information will not be deleted "
+                                            "after updating the backup list.")
     active = fields.Boolean('Active', default=True, help="If the active field is set to False, it will allow you to "
                                                          "hide the record without removing it.")
 
