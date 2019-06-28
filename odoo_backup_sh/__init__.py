@@ -1,3 +1,5 @@
+# Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
+# Copyright 2019 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 from . import controllers
@@ -6,10 +8,10 @@ from odoo import api, SUPERUSER_ID
 
 
 def uninstall_hook(cr, registry):
-    # During the unistall of the module, we have the error:
-    # 'update or delete on table "ir_act_server" violates foreign key constraint
-    # "ir_cron_ir_actions_server_id_fkey" on table "ir_cron"'. Due to this error the "odoo_backup_sh.config" table
-    # will not be deleted. Below the code allows you to delete all entries related to "ir_cron".
+    # The "odoo_backup_sh.config.cron" inherits from "ir.cron", which inherits from "ir.action.server", which as field
+    # model_id with option ondelete='cascade'. During uninstallation model is removed, so odoo tries to delete
+    # corresponding ir.action.server records which which raise violations error, because those records are used
+    # in "ir.cron" records. So, we need to delete "odoo_backup_sh.config.cron manually
     env = api.Environment(cr, SUPERUSER_ID, {})
     backup_crons = env['odoo_backup_sh.config.cron'].search([('model_name', '=', 'odoo_backup_sh.config')])
     if backup_crons:
