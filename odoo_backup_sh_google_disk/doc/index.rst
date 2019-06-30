@@ -69,14 +69,20 @@ Server Deployment
 Usage
 =====
 
-* Open the menu ``[[ Backups ]] >> Dashboard``
-* Proceed with ``[[ Backups ]] >> Backups`` where Google drive databases are presented
-* ``[[ Backups ]] >> Backups``
-* Go to ``[[Backup]] >> Configuration >> Schedules and Rotations``
-* See ``[[Backup]] >> Notifications`` if new one is displayed
+* Open the menu ``[[ Backups ]] >> Settings``
+* Choose the Google disk and click on ``Save`` button
+* Enter *Service Account File path*
+* Enter *Google Drive Folder ID*
+* Click on ``Save`` button and and come back to set up the feature
+* Set up a new configuration  [[ Backups ]] >> Dashboard >> Add Database
+* Choose the Database in the database field
+* Define the Storage service
+* Encrypt your backup if you need, but do not forget the password
+* Enter *Interval Number*, *Interval Unit*, *New execution Date*
+* Select/unselect *"Active" checkbox*
+* Click on ``Save``
+* Go to ``[[ Backups ]] >> Dashboard``
+* Click on ``New Backup`` in the appeared configuration
 
-
-RESULT: You can see the main Graph with the general statistics of all your backups are stored on a remote server. After this window a special form for managing and controlling backups of your databases specially *for Google drive* is located.
-In addition to auto backup, you can make new backups manually at any time. Backups *taken by hand* are not involved in auto rotation conditions.
-
-
+RESULT: Backup is stored in the Google drive.
+*Note: Restore without additional downloading is available only for* `Odoo backup service <https://apps.odoo.com/apps/modules/12.0/odoo_backup_sh/>`__
