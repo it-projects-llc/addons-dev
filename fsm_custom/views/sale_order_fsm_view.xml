@@ -30,14 +30,6 @@
                     <attribute name='string'>Service Address</attribute>
                 </xpath>
 
-                <xpath expr="//field[@name='template_id']" position="attributes">
-                    <attribute name='string'>Estimates</attribute>
-                </xpath>
-
-                <xpath expr="//label[@for='template_id']" position="replace">
-                    <label for="template_id" string="Estimates"/>
-                </xpath>
-
             </field>
         </record>
          <!--<record id="view_quotation_stock_01" model="ir.ui.view">-->
@@ -81,7 +73,7 @@
         </record>
 
          <menuitem id="sale.menu_sale_quotations" name="Estimates"
-                action="sale.action_quotations" parent="sales_team.menu_sales"
+                action="sale.action_quotations" parent="sale.sale_order_menu"
                 sequence="11"/>
 
         <menuitem name="Estimates" id="sales_team.menu_base_partner" web_icon="sale,static/description/icon.png"/>

@@ -8,7 +8,7 @@
     """,
     "author" : "Planet-odoo",
     'website': 'http://www.planet-odoo.com/',
-    'depends': ['base', 'web','sale', 'field_service_dashboard', 'field_service_management', 'project_subtask', 'backend_theme_v10'],
+    'depends': ['base', 'web', 'sale', 'field_service_dashboard', 'field_service_management', 'project_subtask', 'backend_theme_v12'],
     'data': [
              'security/ir.model.access.csv',
              'views/action_delete_view.xml',
