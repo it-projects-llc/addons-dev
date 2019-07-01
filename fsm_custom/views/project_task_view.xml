@@ -361,7 +361,7 @@
                                 <!--<field name="image_set" widget="many2many_binary" string="Image"/>-->
                                 <field name="image_set" widget="image"  filename="store_fname" />
                                 <templates>
-                                    <t t-name="kanban-box">
+                                    <t` t-name="kanban-box">
                                         <!--<t t-set="color" t-value="kanban_color(record.color.raw_value)"/>-->
                                         <div class="oe_kanban_global_click oe_kanban_card">
                                             <a t-if="!read_only_mode" type="delete" class="fa fa-times pull-right"/>
