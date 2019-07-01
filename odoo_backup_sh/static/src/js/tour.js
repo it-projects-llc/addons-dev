@@ -28,7 +28,7 @@ odoo.define("odoo_backup_sh.tour", function (require) {
             },
             {
                 // This step have been added to make sure that the "Go to Balance" button was shown.
-                trigger: '.o_dashboard_action_up_balance',
+                trigger: '.o_dashboard_action',
                 run: function () {},
             }
         ]

@@ -1,7 +1,11 @@
 // Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
+// Copyright 2019 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
 // License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 .o_backup_dashboard {
+    .kanban_group_buttons {
+        float: right;
+    }
     div.o_box {
         @include clearfix;
         color: $o-main-color-muted;
@@ -11,7 +15,9 @@
         position: static;
         box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
     }
-
+    .graph_container h2 {
+        float: left;
+    }
     .o_dashboard_common {
         .o_box {
             display: flex;
@@ -62,6 +68,40 @@
     margin: 8px 0 4px;
 }
 
+
+.o_kanban_card_warning {
+    color: #ffd52d;
+    float: right;
+    font-size: 12px;
+    position: relative;
+    margin-right: 20px;
+    p {
+        margin: 0px;
+        margin-left: 28px;
+    }
+    i {
+        position: absolute;
+        top: 50%;
+        transform: translate(0%, -50%);
+        font-size: 22px;
+    }
+}
+
+.o_backup_dashboard_configs .o_kanban_record:hover .backup_config_edit {
+    opacity: 1;
+    -webkit-transition: 0.2s ease-in-out;
+    -o-transition: 0.2s ease-in-out;
+    transition: 0.2s ease-in-out;
+}
+
+.backup_config_edit {
+    position: absolute;
+    cursor: pointer;
+    opacity: 0;
+    right: 14px;
+    top: 8px;
+}
+
 .o_backup_dashboard_nocontent {
     padding: 15px;
     margin-top: 12px;
@@ -90,17 +130,6 @@
     }
 }
 
-.o_backup_dashboard_inactive_warning {
-    background-color: #fef9f3;
-    border: 2px solid #fceedb;
-    color: #81500b;
-    display: block;
-    font-size: 15px;
-    margin: 16px 16px 0;
-    padding: 8px 16px;
-    position: static;
-}
-
 .o_backup_dashboard_notification {
     background-color: #eef6f8;
     border: 2px solid #d7eaef;
@@ -122,11 +151,13 @@
     color: #7c7bad;
     margin: 16px 16px 0;
     padding: 12px 16px;
+    .graph_title {
+        text-transform: uppercase;
+    }
 }
 
 .backup_card_title {
     color: #7c7bad;
-    cursor: pointer;
     font-size: 18px;
 }
 

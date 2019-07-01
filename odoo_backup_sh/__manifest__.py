@@ -5,9 +5,8 @@
     "summary": """Remote Backup Service""",
     "category": "Backup",
     # "live_test_url": "",
-    "images": [],
+    "images": ['images/odoo_backup_sh.jpg'],
     "version": "12.0.1.0.0",
-    "application": False,
 
     "author": "IT-Projects LLC, Stanislav Krotov",
     "support": "apps@it-projects.info",
@@ -29,6 +28,7 @@
     'qweb': ['static/src/xml/dashboard.xml'],
     "demo": [
         'demo/tour_views.xml',
+        'demo/demo.xml',
     ],
 
     "post_load": None,
@@ -39,4 +39,5 @@
     "auto_install": False,
     "installable": True,
     "application": True,
+    "uninstall_hook": "uninstall_hook",
 }
