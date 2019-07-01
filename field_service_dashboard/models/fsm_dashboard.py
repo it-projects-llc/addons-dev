@@ -26,7 +26,7 @@ class FsmDashboard(models.Model):
     _name = 'fsm.dashboard'
     _description = "Fsm Dashboard"
 
-    name = fields.Char("Name")
+    name = fields.Char(string='Name')
 
     @api.model
     def get_fsm_dashboard_details(self):

@@ -11,6 +11,7 @@
                         <group>
                             <field name="name" class="o_project_name oe_inline"
                                 string="Service Name" placeholder="e.g. Ac repair"/>
+                            <field name="user_id" invisible="1"/>
                             <field name="icon" widget="image"
                                 class="oe_avatar oe_left" style="max-width:100px;max-height:117px;"/>
                             <label for="alias_name" string="Choose a Project Email" attrs="{'invisible': [('alias_domain', '=', False)]}"/>

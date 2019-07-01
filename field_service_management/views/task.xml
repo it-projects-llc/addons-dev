@@ -209,15 +209,6 @@
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
         <field name="arch" type="xml">
-            <button name="toggle_active" position="after">
-                <button name="%(hr_timesheet.project_task_action_view_timesheet)d"
-                        type="action" class="oe_stat_button" icon="fa-tasks"
-                        attrs="{'invisible' : [('subtask_project_id', '=', False)]}"
-                        context="{'project_id': subtask_project_id, 'name': name, 'partner_id': partner_id}">
-                    <field string="Sub-tasks" name="subtask_count"
-                           widget="statinfo"/>
-                </button>
-            </button>
             <field name="tag_ids" position="after">
                 <field name="progress" widget="progressbar"/>
             </field>
@@ -263,11 +254,11 @@
                         <group class="oe_subtotal_footer oe_right"
                                name="project_hours">
                             <field name="effective_hours" widget="float_time"/>
-                            <field name="children_hours" widget="float_time"
-                                   attrs="{'invisible' : [('children_hours', '=', 0.0)]}"/>
+                            <field name="subtask_effective_hours" widget="float_time"
+                                   attrs="{'invisible' : [('subtask_effective_hours', '=', 0.0)]}" />
                             <field name="total_hours_spent"
                                    widget="float_time" class="oe_subtotal_footer_separator"
-                                   attrs="{'invisible' : [('children_hours', '=', 0.0)]}"/>
+                                   attrs="{'invisible' : [('subtask_effective_hours', '=', 0.0)]}"/>
                             <field name="remaining_hours" widget="float_time"
                                    class="oe_subtotal_footer_separator"
                                    readonly="1"/>
@@ -368,7 +359,8 @@
                 <group expand="0" string="Group By">
                     <filter string="Project" name="project"
                             context="{'group_by':'project_id'}"/>
-                    <filter string="Job" context="{'group_by':'name'}"/>
+                    <filter string="Job" name="job"
+                            context="{'group_by':'name'}"/>
                     <filter string="Assigned to" name="User"
                             context="{'group_by':'user_id'}"/>
                     <filter string="Customer" name="Partner"
@@ -381,11 +373,8 @@
                             context="{'group_by':'city_id'}"/>
                     <filter string="State" name="State"
                             context="{'group_by':'state_id'}"/>
-                    <filter string="Company" context="{'group_by':'company_id'}"
-                            groups="base.group_multi_company"/>
-                    <separator/>
-                    <filter string="Last Message" name="group_message_last_post"
-                            context="{'group_by':'message_last_post:week'}"/>
+                    <filter string="Company" name="company"
+                            context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                 </group>
             </search>
         </field>
@@ -511,17 +500,17 @@
                 <field name="name"/>
                 <field name="department_id"/>
                 <group expand="0" string="Group By">
-                    <filter string="Users" domain="[]"
+                    <filter string="Users" name="users" domain="[]"
                             context="{'group_by':'user_id'}"/>
-                    <filter string="Project" domain="[]"
+                    <filter string="Project" name="project" domain="[]"
                             context="{'group_by':'project_id'}"/>
-                    <filter string="Job" domain="[]"
+                    <filter string="Job" name="job" domain="[]"
                             context="{'group_by':'task_id'}"/>
-                    <filter string="Product" domain="[]"
+                    <filter string="Product" name="product" domain="[]"
                             context="{'group_by':'product_id'}"/>
-                    <filter string="Customer" name="Partner"
+                    <filter string="Customer" name="partner"
                             context="{'group_by':'partner_id'}"/>
-                    <filter string="Timesheet Month" domain="[]"
+                    <filter string="Timesheet Month" name="month" domain="[]"
                             context="{'group_by':'date'}" help="Timesheet by Month"/>
                 </group>
             </search>
@@ -556,16 +545,16 @@
                 <field name="user_id" string="Salesperson"/>
                 <field name="date" string="Period"/>
                 <separator/>
-                <filter domain="[('user_id','=',uid)]" help="My Invoices"/>
+                <filter domain="[('user_id','=',uid)]" name="group_by_user_id" help="My Invoices"/>
                 <group expand="0" string="Group By">
                     <filter name="group_by_partner_id" string="Partner"
                             context="{'group_by':'commercial_partner_id'}"/>
-                    <filter string="Salesperson" context="{'group_by':'user_id'}"/>
+                    <filter string="Salesperson" name="salesperson"  context="{'group_by':'user_id'}"/>
                     <filter name="status" string="Status"
                             context="{'group_by':'state'}"/>
                     <separator/>
-                    <filter string="Invoice Date" context="{'group_by':'date_invoice'}"/>
-                    <filter string="Due Date" context="{'group_by':'date_due'}"/>
+                    <filter string="Invoice Date" name="invoice_date" context="{'group_by':'date_invoice'}"/>
+                    <filter string="Due Date" name="due_date" context="{'group_by':'date_due'}"/>
                 </group>
             </search>
         </field>

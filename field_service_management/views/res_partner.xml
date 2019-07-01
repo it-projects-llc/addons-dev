@@ -23,8 +23,7 @@
                 </header>
             </xpath>
             <xpath expr="//field[@name='mobile']" position="replace">
-            </xpath>
-            <xpath expr="//field[@name='fax']" position="replace">
+                <field name="mobile" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='function']" position="replace">
             </xpath>

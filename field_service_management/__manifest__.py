@@ -54,7 +54,6 @@
         "wizard/suggested_serviceman.xml",
         "data/notify_customer_job_template.xml",
         "data/notify_serviceman_job_template.xml",
-        "data/job_delete_data.xml",
     ],
     "installable": True,
     "auto_install": False,

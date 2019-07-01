@@ -1,26 +1,28 @@
-# -*- coding: utf-8 -*-
 # Copyright 2016-2017 LasLabs Inc.
+# Copyright 2018 Alexandre Díaz
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
 {
     "name": "Web Responsive",
-    "summary": "It provides a mobile compliant interface for Odoo Community "
-               "web",
-    "version": "10.0.1.2.3",
+    "summary": "Responsive web client, community-supported",
+    "version": "12.0.1.1.1",
     "category": "Website",
-    "website": "https://laslabs.com/",
-    "author": "LasLabs, Tecnativa, Odoo Community Association (OCA)",
+    "website": "https://github.com/OCA/web",
+    "author": "LasLabs, Tecnativa, Alexandre Díaz, "
+              "Odoo Community Association (OCA)",
     "license": "LGPL-3",
     "installable": True,
     "depends": [
         'web',
+        'mail',
     ],
     "data": [
         'views/assets.xml',
+        'views/res_users.xml',
         'views/web.xml',
     ],
     'qweb': [
-        'static/src/xml/app_drawer_menu_search.xml',
+        'static/src/xml/apps.xml',
         'static/src/xml/form_view.xml',
         'static/src/xml/navbar.xml',
     ],

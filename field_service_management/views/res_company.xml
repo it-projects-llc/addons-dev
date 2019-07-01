@@ -11,7 +11,7 @@
                 <field name="automatic_fetch_address"/>
             </xpath>
 
-             <xpath expr="//field[@name='rml_header1']" position="after">
+             <xpath expr="//field[@name='name']" position="after">
                 <div>
                      <label for="default_password" class="oe_edit_only"/>
                      <field name= "default_password"/>
