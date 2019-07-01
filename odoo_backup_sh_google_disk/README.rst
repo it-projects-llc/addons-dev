@@ -6,7 +6,7 @@
  Odoo-backup.sh Google Drive
 =============================
 
-The application allows managing database backups via your Google drive, without downloading and uploading an archive via a browser.
+The application allows making database backups to your Google drive.
 
 Credits
 =======

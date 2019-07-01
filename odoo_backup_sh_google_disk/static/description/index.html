@@ -1,8 +1,8 @@
 <section class="oe_container">
     <div class="oe_row oe_spaced">
         <div class="oe_span12">
-            <h2 class="oe_slogan">Backups to Google disk</h2>
-            <h3 class="oe_slogan">Manage database backups via your Google drive</h3>
+            <h2 class="oe_slogan">Backups to Google Drive </h2>
+            <h3 class="oe_slogan">Make database backups to your Google Drive</h3>
         </div>
     </div>
 </section>
@@ -11,23 +11,23 @@
     <div class="oe_row oe_spaced">
         <div class="oe_span12">
             <p class="oe_mt32">
-                Main feature: no need to download and upload a database archive via a browser.
+                Main feature: no need to download a database archive via a browser and then upload to Cloud.
+                Also you can encrypting backup archives.
             </p>
         </div>
     </div>
 </section>
-
 <section class="oe_container oe_dark">
     <div class="oe_row oe_spaced">
         <div class="oe_span12">
             <h3 class="oe_slogan">Configuration</h3>
             <br class="oe_mt32">
                 Before starting backup jobs you need to make some configuration.</br>
-                <i>Note: You need to have a Google account</i>
+                <i>Note: You need to have a <a href="https://myaccount.google.com/"> Google account</a> </i>
             <br>
                 <li>Creating a Service Account Key</li>
                 - Open the GCP Console <a href="https://console.cloud.google.com/">https://console.cloud.google.com</a> <br/>
-                - Login to your Google account <br/>
+                - Login into your Google account <br/>
                 - Press <b>Projects</b> button on the Top menu<br/>
                 - In Popup window choose <i>New Project</i> <br/>
                 - Define the Name and Location (if needed) of Project <br/>
@@ -101,10 +101,25 @@
         <div class="oe_span12">
             <p class="oe_mt32">
             <ul>
-                <li>Define the <i>Name</i> </li>
-                <li>Create the <i>Password</i> if you want to encrypt the Backup</li>
-                <li>Schedule Auto Backups</li>
-                <li>Set up how many backups to preserve for certain time frames</li>
+                <li>Open the menu <b>[[ Backups ]] >> Settings</b></li>
+                <li>Choose the Dropbox and click on ``Save`` button</li>
+                <li>Enter <i>Service Account File path</i></li>
+                <li>Enter <i>Google Drive Folder ID</i></li>
+                <li>Click on ``Save`` and come back to set up the feature</li>
+            </ul>
+            <div class="oe_demo oe_picture oe_screenshot">
+                <img src="google_drive_config.png"/>
+            </div>
+            <ul>
+                <li>Set up a new configuration  <b>[[ Backups ]] >> Dashboard >> Add Database</b></li>
+                <li>Choose the Database in the database field</li>
+                <li>Define the Storage service</li>
+                <li>Encrypt your backup if you need, but do not forget the password</li>
+                <li>Enter <i>Interval Number</i>, <i>Interval Unit</i>, <i>New execution Date</i></li>
+                <li>Select/unselect <i>"Active" checkbox</i></li>
+                <li>Click on ``Save``</li>
+                <li>Go to ``[[ Backups ]] >> Dashboard``</li>
+                <li>Click on ``New Backup`` in the appeared configuration</li>
             </ul>
             </p>
             <div class="oe_demo oe_picture oe_screenshot">
@@ -113,6 +128,8 @@
         </div>
     </div>
 </section>
+
+
 
 <section class="oe_container oe_dark">
     <div class="oe_row oe_spaced">
