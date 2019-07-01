@@ -3,7 +3,7 @@
 	<t t-name="field_service_dashboard.fsm_dashboard">
 	<div class="col-md-12">
 		<t t-if="is_field_service_serviceman">
-		<div class="col-md-3 mt8 colstyle2">
+		<div class="col-md-3 mt8 colstyle2 float-cart">
 			<div class="btn_action_view_my_job" role="button" style="background-color:#00897B;color;#fff;height:150px">
 				<div style="padding:5px">
 					<div>
@@ -12,9 +12,9 @@
 								<h1 class="no-margin" style="font-size:25px;color:#fff;margin-top: 6px;"><t t-esc="job_count_id"></t></h1>
 							</div>
 								<div class="text-center">
-									<h2 style="color:#fff;font-size:20px;">
+									<col-md-3h2 style="color:#fff;font-size:20px;">
 									My Jobs
-									</h2>
+									</col-md-3h2>
 								</div>
 							</div>
 						</div>
@@ -22,7 +22,7 @@
 			</div>
 		</t>
 		<t t-if="is_field_service_customer">
-		<div class="col-md-3 mt8 colstyle2">
+		<div class="col-md-3 mt8 colstyle2 float-cart">
 			<div class="btn_action_view_job" role="button" style="background-color:#EF5350;color;#fff;height:150px">
 				<div style="padding:5px">
 					<div>
@@ -41,7 +41,7 @@
 		</div>
 		</t>
 		<t t-if="is_field_service_operator">
-		<div class="col-md-3 mt8 colstyle2">
+		<div class="col-md-3 mt8 colstyle2 float-cart">
 			<div class="btn_action_view_unassigned_job" role="button" style="background-color:#2196F3;color;#fff;height:150px">
 				<div style="padding:5px">
 					<div>
@@ -60,7 +60,7 @@
 		</div>
 		</t>
 		<t t-if="is_field_service_operator">
-		<div class="col-md-3 mt8 colstyle2">
+		<div class="col-md-3 mt8 colstyle2 float-cart">
 			<div class="btn_action_view_rejected_job" role="button" style="background-color:#00BCD4;color;#fff;height:150px">
 				<div style="padding:5px">
 					<div>
@@ -79,7 +79,7 @@
 		</div>
 		</t>
 		<t t-if="is_field_service_customer or is_field_service_serviceman">
-		<div class="col-md-3 mt8 colstyle2">
+		<div class="col-md-3 mt8 colstyle2 float-cart">
 			<div class="btn_action_my_invoices" role="button" style="background-color:#FF8F00;color;#fff;height:150px">
 				<div style="padding:5px">
 					<div>
@@ -98,7 +98,7 @@
 		</div>
 		</t>
 		<t t-if="is_field_service_operator">
-		<div class="col-md-3 mt8 colstyle2">
+		<div class="col-md-3 mt8 colstyle2 float-cart">
 			<div class="btn_action_open_invoices" role="button" style="background-color:#F44336;color;#fff;height:150px">
 				<div style="padding:5px">
 					<div>

@@ -36,3 +36,6 @@
 	text:center;
 	padding-left:inherit;
 }
+.float-cart{
+    float: left;
+}
