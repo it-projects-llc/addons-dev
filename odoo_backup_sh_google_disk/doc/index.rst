@@ -55,7 +55,7 @@ In the Example below you can see the Server, which is launched with Docker
 
 * Copy this path to the Docker container::
 
-  docker cp PATH_FROM/YOU_FILE_NAME.JSON CONTAINER_NAME:/PATH_TO
+      docker cp PATH_FROM/YOU_FILE_NAME.JSON CONTAINER_NAME:/PATH_TO
 
 
 Server Deployment
