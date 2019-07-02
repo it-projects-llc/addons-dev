@@ -5,7 +5,7 @@
     "summary": """Remote Backup Service""",
     "category": "Backup",
     # "live_test_url": "",
-    "images": ['images/odoo_backup_sh.jpg'],
+    "images": ['images/backupsh.jpg'],
     "version": "12.0.1.0.0",
 
     "author": "IT-Projects LLC, Stanislav Krotov",
