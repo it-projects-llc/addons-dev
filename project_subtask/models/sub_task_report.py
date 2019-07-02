@@ -32,7 +32,7 @@ class ProjectSubTaskHistory(models.Model):
     user_id = fields.Many2one('res.users', string='Assigned To', readonly=True)
     date_start = fields.Datetime(string='Assignation Date', readonly=True)
     no_of_days = fields.Integer(string='# of Days', size=128, readonly=True)
-    date_deadline = fields.Date(string='Deadline', readonly=True)
+    date_deadline = fields.Datetime(string='Deadline', readonly=True)
     date_last_stage_update = fields.Datetime(string='Last Stage Update', readonly=True)
     task_id = fields.Many2one('project.task', string='Task', readonly=True)
     closing_days = fields.Float(string='Days to Close', digits=(16, 2), readonly=True, group_operator="avg",

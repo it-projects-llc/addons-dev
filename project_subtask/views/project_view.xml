@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='options_active']" position="inside">
                         <div class="o_row">
+                            <field name="use_tasks" invisible="1"/>
                             <field name="use_sub_task" class="oe_inline" string="Sub Tasks" attrs="{'invisible':[('use_tasks', '=', False)]}"/>
                             <label for="use_sub_task" class="oe_inline" attrs="{'invisible':[('use_tasks', '=', False) ]}"/>
                             <span attrs="{'invisible':['|', ('use_sub_task', '=', False), ('use_tasks', '=', False) ]}">as </span>

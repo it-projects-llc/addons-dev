@@ -84,7 +84,7 @@
                     <field name="sequence"/>
                     <field name="date_deadline"/>
                     <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="kanban-lox">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                             <div class="oe_kanban_content">
                                 <div><b><field name="name"/></b></div>

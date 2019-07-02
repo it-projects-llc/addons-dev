@@ -14,7 +14,7 @@ class FsmSaleOrder(models.Model):
     project_ref = fields.Many2one('project.project', string='Project Reference',
                                   default=lambda self: self.env['project.project'].search([],limit = 1)
                                     )
-    date_deadline = fields.Date(string='Deadline', default=lambda *a: (datetime.today() + relativedelta(days=6)).strftime('%Y-%m-%d'))
+    date_deadline = fields.Datetime(string='Deadline', default=lambda *a: (datetime.today() + relativedelta(days=6)).strftime('%Y-%m-%d'))
 
     job_name = fields.Char(string='Name', related='name', strore= True, Help='Copy of sale order sequence')
 

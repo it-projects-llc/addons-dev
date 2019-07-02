@@ -39,7 +39,8 @@
         <field name="name">Jobs</field>
         <field name="res_model">project.task</field>
         <field name="view_mode">kanban,tree,form,calendar</field>
-        <field name="domain">[('copy_check', '=', False)]</field>
+        <!--<field name="domain">[('copy_check', '=', False)]</field>-->
+        <field name="domain">[('user_id','=',1)]</field>
 
     </record>
 
@@ -55,8 +56,8 @@
         <field name="name">All Jobs</field>
         <field name="res_model">project.task</field>
         <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
-        <!--<field name="domain">[('copy_check', '=', True)]</field>-->
-        <field name="domain">[('user_id','=',True)]</field>
+        <!--<field name="domain">[('copy_check', '=', False)]</field>-->
+        <field name="domain">[('user_id','=',1)]</field>
     </record>
 
     <record id="action_view_rejected_job" model="ir.actions.act_window">

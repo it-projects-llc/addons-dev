@@ -361,7 +361,7 @@
                                 <!--<field name="image_set" widget="many2many_binary" string="Image"/>-->
                                 <field name="image_set" widget="image"  filename="store_fname" />
                                 <templates>
-                                    <t` t-name="kanban-box">
+                                    <t t-name="kanban-box">
                                         <!--<t t-set="color" t-value="kanban_color(record.color.raw_value)"/>-->
                                         <div class="oe_kanban_global_click oe_kanban_card">
                                             <a t-if="!read_only_mode" type="delete" class="fa fa-times pull-right"/>
@@ -371,7 +371,7 @@
                                                 <!--<t t-if="!record.image.raw_value">-->
                                                 <!--<img t-if="record.type.raw_value === 'delivery'" t-att-src='_s + "/base/static/src/img/truck.png"'/>-->
                                                 <!--<img t-if="record.type.raw_value === 'invoice'" t-att-src='_s + "/base/static/src/img/money.png"'/>-->
-                                                <!--<t t-if="record.type.raw_value !== 'invoice' &amp;&amp; record.type.raw_value !== 'delivery'">-->
+                                                <!--<t t-if="record.type.raw_value !== 'invoice'  record.type.raw_value !== 'delivery'">-->
                                                 <!--<img t-if="record.is_company.raw_value === true" t-att-src='_s + "/base/static/src/img/company_image.png"'/>-->
                                                 <!--<img t-if="record.is_company.raw_value === false" t-att-src='_s + "/base/static/src/img/avatar.png"'/>-->
                                                 <!--</t>-->
@@ -454,7 +454,7 @@
                                                     <!--<t t-if="!record.image.raw_value">-->
                                                     <!--<img t-if="record.type.raw_value === 'delivery'" t-att-src='_s + "/base/static/src/img/truck.png"'/>-->
                                                     <!--<img t-if="record.type.raw_value === 'invoice'" t-att-src='_s + "/base/static/src/img/money.png"'/>-->
-                                                    <!--<t t-if="record.type.raw_value !== 'invoice' &amp;&amp; record.type.raw_value !== 'delivery'">-->
+                                                    <!--<t t-if="record.type.raw_value !== 'invoice' record.type.raw_value !== 'delivery'">-->
                                                     <!--<img t-if="record.is_company.raw_value === true" t-att-src='_s + "/base/static/src/img/company_image.png"'/>-->
                                                     <!--<img t-if="record.is_company.raw_value === false" t-att-src='_s + "/base/static/src/img/avatar.png"'/>-->
                                                     <!--</t>-->

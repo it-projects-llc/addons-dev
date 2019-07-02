@@ -23,6 +23,7 @@
 from odoo import models, api, fields, _
 from odoo.exceptions import Warning, ValidationError
 import logging
+import wdb
 logger = logging.getLogger(__name__)
 
 
@@ -60,7 +61,10 @@ class SubTaskMaster(models.Model):
 
     @api.constrains('date_deadline', 'task_ref')
     def date_deadline_validation(self):
-        if self.date_deadline > self.task_ref.date_deadline:
+        wdb.set_trace()
+        if self.task_ref.date_deadline == False:
+            return
+        elif self.date_deadline > self.task_ref.date_deadline:
             raise ValidationError(_("Your main task will dead at this date"))
 
     active = fields.Boolean(default=True)
@@ -90,7 +94,7 @@ class SubTaskMaster(models.Model):
     tag_ids = fields.Many2one('project.sub_task.tags', string='Tags')
     write_date = fields.Datetime(string='Last Modification Date', readonly=True, select=True)
     date_start = fields.Datetime(string='Starting Date', readonly=True, select=True, default=fields.Datetime.now())
-    date_deadline = fields.Date(string='Deadline')
+    date_deadline = fields.Datetime(string='Deadline')
     active = fields.Boolean(string='Active', default=True)
     description = fields.Html(String='Description')
     sequence = fields.Integer(string='Sequence', select=True, default=10,
@@ -112,10 +116,11 @@ class SubTaskMaster(models.Model):
 
     @api.model
     def default_get(self, fields):
+        wdb.set_trace()
         pes = super(SubTaskMaster, self).default_get(fields)
         context = self._context
         active_ids = context.get('active_ids')
-        pes.update({'task_ref': active_ids[0]})
+        pes.update({'task_ref': context['params']['id']})
         return pes
 
 
@@ -123,7 +128,7 @@ class TaskMaster(models.Model):
     _inherit = 'project.task'
 
     sub_task_lines = fields.One2many('project.sub_task', 'task_ref', string='Sub Tasks')
-    date_deadline = fields.Date('Deadline', select=True, copy=False)
+    date_deadline = fields.Datetime('Deadline', select=True, copy=False)
     use_sub_task = fields.Boolean(string="SubTasks", related='project_id.use_sub_task')
     subtask_count = fields.Integer(string='Count', compute='sub_task_found')
 

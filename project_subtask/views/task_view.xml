@@ -6,9 +6,8 @@
             <field name="model">project.task</field>
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
-                <xpath expr="//page[@name='description_page']" position="after">
-                    <page name="project_sub_tasks" string="Sub Tasks" invisible="1"
-                          attrs="{'invisible':[('use_sub_task','=',False)]}">
+                <xpath expr="//notebook/page[@name='description_page']" position="after">
+                    <page name="project_sub_tasks" string="Sub Tasks">
                         <field name="sub_task_lines" attrs="{'invisible': [('sub_task_lines', '=', [(6, False, [])])]}">
                             <tree string="Sub Task Lines" editable="bottom" colors="red:current_date > date_deadline;">
                                 <field name="name"/>
@@ -40,7 +39,10 @@
                 </field>
                 <xpath expr="//div[@class='oe_kanban_content']" position="inside">
                     <div>
-                        <span class="badge" t-if="record.subtask_count.value>0"><i class="fa fa-tasks"/><t t-esc=" "/> <t t-esc="record.subtask_count.value"/></span>
+                        <span class="badge" t-if="record.subtask_count.value &gt; 0">
+                            <i class="fa fa-tasks"/>
+                            <t t-esc="record.subtask_count.value"/>
+                        </span>
                     </div>
                 </xpath>
             </field>

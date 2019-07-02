@@ -20,5 +20,5 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import project
-import sub_task_report
+from . import project
+from . import sub_task_report
