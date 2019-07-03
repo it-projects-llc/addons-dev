@@ -1,0 +1,18 @@
+.floor-map .table .table-seats {
+	background: none;
+	color: black;
+}
+
+.pos .actionpad .button.pay {
+    height: 108px;
+}
+
+.floor-map .table .table-seats {
+    background: none;
+    color: black;
+    font-size: xx-large;
+    font-weight: bold;
+    width: 100%;
+    text-align: left;
+    margin-left: -40px;
+}

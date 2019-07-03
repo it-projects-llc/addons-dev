@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+<odoo>
+
+    <!--PRODUCT PRODUCT-->
+    <record id="product_normal_form_view_supplementary" model="ir.ui.view">
+        <field name="name">product.product.form.inherited</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='to_weight']" position="after">
+                <field name="duration" attrs="{'invisible': [('available_in_pos', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!--POS ORDER-->
+    <record id="pos_spa_management_order_form" model="ir.ui.view">
+        <field name="name">pos.order.form</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='fiscal_position_id']" position="after">
+                <field name="referrer_id"/>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="executor_ids" widget="many2many_tags"/>
+            </xpath>
+            <xpath expr="//field[@name='price_subtotal_incl']" position="after">
+                <field name="user_id"/>
+                <field name="executor_ids"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
