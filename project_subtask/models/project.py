@@ -23,7 +23,6 @@
 from odoo import models, api, fields, _
 from odoo.exceptions import Warning, ValidationError
 import logging
-import wdb
 logger = logging.getLogger(__name__)
 
 
@@ -61,7 +60,6 @@ class SubTaskMaster(models.Model):
 
     @api.constrains('date_deadline', 'task_ref')
     def date_deadline_validation(self):
-        wdb.set_trace()
         if self.task_ref.date_deadline == False:
             return
         elif self.date_deadline > self.task_ref.date_deadline:
@@ -116,7 +114,6 @@ class SubTaskMaster(models.Model):
 
     @api.model
     def default_get(self, fields):
-        wdb.set_trace()
         pes = super(SubTaskMaster, self).default_get(fields)
         context = self._context
         active_ids = context.get('active_ids')
