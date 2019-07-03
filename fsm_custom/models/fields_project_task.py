@@ -2,6 +2,7 @@ from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import UserError,Warning
 import base64
 import logging
+import wdb
 logger = logging.getLogger(__name__)
 
 class FieldsProjectTask(models.Model):
@@ -365,7 +366,8 @@ class FieldsProjectTask(models.Model):
         logger.info(
             '<-----------------------------------------------pdf1---------------------> %s',
             )
-        pdf=self.env['report'].sudo().get_pdf([self.id], 'fsm_custom.report_custom_template_install')
+        pdf = self.env.ref('fsm_custom.action_report_custom_install').render_qweb_pdf([self.id])
+        #pdf = self.env['report'].sudo().get_pdf([self.id], 'fsm_custom.report_custom_template_install')
         logger.info(
             '<-----------------------------------------------pdf---------------------> %s',
             pdf)
@@ -378,7 +380,7 @@ class FieldsProjectTask(models.Model):
         attachment_ids.append(self.env['ir.attachment'].create({
             'name': self.name+'.pdf',
             'type': 'binary',
-            'datas': base64.encodestring(pdf),
+            'datas': base64.encodestring(pdf[0]),
             'datas_fname':self.name+'.pdf',
             'res_model': 'project.task',
             'res_id': self.id,
@@ -419,6 +421,7 @@ class FieldsProjectTask(models.Model):
 
     @api.multi
     def send_damage_email(self):
+        wdb.set_trace()
         self.ensure_one()
         ir_model_data = self.env['ir.model.data']
         try:
@@ -427,14 +430,15 @@ class FieldsProjectTask(models.Model):
             demage_template_id=self.env.ref('fsm_custom.email_template_damages_details_email').id
         except ValueError:
             compose_form_id = False
-        pdf = self.env['report'].sudo().get_pdf([self.id], 'fsm_custom.report_custom_template_damage')
+        pdf = self.env.ref('fsm_custom.action_report_custom_damage').render_qweb_pdf([self.id])
+        #pdf = self.env['report'].sudo().get_pdf([self.id], 'fsm_custom.report_custom_template_damage')
 
         image_line_ids = self.env['image.damage'].search([('damage_id', '=', self.id)]).ids
         attachment_ids = []
         attachment_ids.append(self.env['ir.attachment'].create({
             'name': self.name + '.pdf',
             'type': 'binary',
-            'datas': base64.encodestring(pdf),
+            'datas': base64.encodestring(pdf[0]),
             'datas_fname': self.name + '.pdf',
             'res_model': 'project.task',
             'res_id': self.id,
@@ -483,14 +487,15 @@ class FieldsProjectTask(models.Model):
             feedback_template_id = self.env.ref('fsm_custom.email_template_feedback_email').id
         except ValueError:
             compose_form_id = False
-        pdf = self.env['report'].sudo().get_pdf([self.id], 'fsm_custom.report_custom_template_feedback')
+        pdf = self.env.ref('fsm_custom.report_custom_template_feedback').render_qweb_pdf([self.id])
+        #pdf = self.env['report'].sudo().get_pdf([self.id], 'fsm_custom.report_custom_template_feedback')
 
         # image_line_ids = self.env['image.damage'].search([('damage_id', '=', self.id)]).ids
         attachment_ids = []
         attachment_ids.append(self.env['ir.attachment'].create({
             'name': self.name + '.pdf',
             'type': 'binary',
-            'datas': base64.encodestring(pdf),
+            'datas': base64.encodestring(pdf[0]),
             'datas_fname': self.name + '.pdf',
             'res_model': 'project.task',
             'res_id': self.id,
@@ -527,13 +532,14 @@ class FieldsProjectTask(models.Model):
             modify_form_id = False
         # pdf1 = self.env['report']
         # pdf  = pdf1.sudo().get_pdf([self.id], 'fsm_custom.report_custom_modification')
-        pdf = self.env['report'].sudo().get_pdf([self.id], 'fsm_custom.report_custom_modification')
+        pdf = self.env.ref('fsm_custom.report_custom_modification').render_qweb_pdf([self.id])
+        #pdf = self.env['report'].sudo().get_pdf([self.id], 'fsm_custom.report_custom_modification')
 
         attachment_ids = []
         attachment_ids.append(self.env['ir.attachment'].create({
             'name': self.name + '.pdf',
             'type': 'binary',
-            'datas': base64.encodestring(pdf),
+            'datas': base64.encodestring(pdf[0]),
             'datas_fname': self.name + '.pdf',
             'res_model': 'project.task',
             'res_id': self.id,

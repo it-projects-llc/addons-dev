@@ -21,12 +21,12 @@
              'report/feedback_report_template.xml',
              'report/modification_report_template.xml'
          ],
-    'css':[
+    'css': [
         'static/src/css/styles.css'
     ],
 
     'demo': [],
-'qweb': [
+    'qweb': [
         "static/src/xml/*.xml",
     ],
     'installable': True,
