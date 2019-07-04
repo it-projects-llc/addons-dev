@@ -534,8 +534,6 @@
                 report_type="qweb-pdf"
                 name="fsm_custom.report_custom_template_damage"
                 file="fsm_custom.report_custom_template_damage"
-                attachment_use="True"
-                attachment="('INV'+(object.name or '').replace('/','')+'.pdf')"
         />
         <report
                 string="Feedback Template"

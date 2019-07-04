@@ -2,6 +2,7 @@ from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import UserError,Warning
 import base64
 import logging
+import wdb
 logger = logging.getLogger(__name__)
 
 class FieldsProjectTask(models.Model):
@@ -420,6 +421,7 @@ class FieldsProjectTask(models.Model):
 
     @api.multi
     def send_damage_email(self):
+        wdb.set_trace()
         self.ensure_one()
         ir_model_data = self.env['ir.model.data']
         try:
