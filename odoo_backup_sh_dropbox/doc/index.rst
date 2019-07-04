@@ -51,6 +51,7 @@ Config Settings
 Usage
 =====
 
+Manual creation of backups:
 * Open the menu ``[[ Backups ]] >> Settings``
 * Choose the Dropbox and click on ``Save`` button
 * Enter *Dropbox Access Token*
@@ -68,3 +69,14 @@ Usage
 
 RESULT: Backup is stored in the Dropbox cloud.
 *Note: Restore without additional downloading is available only for* `Odoo backup service <https://apps.odoo.com/apps/modules/12.0/odoo_backup_sh/>`__
+
+Visual presentation:
+* Open the menu ``[[ Backups ]] >> Dashboard``
+* Proceed with ``[[ Backups ]] >> Backups`` where Dropbox databases are presented
+* Continue with ``[[ Backups ]] >> Backups`` where your backups are stored
+* Go to ``[[Backup]] >> Configuration >> Schedules and Rotations`` and modify
+* See ``[[Backup]] >> Notifications`` if new one is displayed
+
+RESULT:
+You can see the main Graph with the general statistics of all your backups are stored on a remote server.
+After this window a special form for managing and controlling backups of your databases specially *for Dropbox* is located.
