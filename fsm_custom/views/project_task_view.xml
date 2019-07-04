@@ -206,7 +206,7 @@
                                 <field name="custom_install_color" invisible="1"/>
 
                                 <h3>Dishwasher</h3>
-                                <field name="dishwasher" nolabel="1" style="padding: 25px 0px 0px 9px;" />
+                                <field name="dishwasher" nolabel="1" style="padding: 0px 0px 0px 25px;" />
                                 <field name="appliance_secure_1"/>
                                 <field name="supply_line_connected_1"/>
                                 <field name="checked_function_1"/>
@@ -218,7 +218,7 @@
                             <group>
                                 <!--<separator string = "Washer"/>-->
                                 <h3>Washer</h3>
-                                <field name="washer" nolabel="1" style="padding: 25px 0px 0px 9px;"/>
+                                <field name="washer" nolabel="1" style="padding: 0px 0px 0px 25px;" />
                                 <field name="appliance_secure_2"/>
                                 <field name="supply_line_connected_2"/>
                                 <field name="checked_function_2"/>
@@ -230,7 +230,7 @@
                             <group>
                                 <!--<separator string = "Dryer"/>-->
                                 <h3>Dryer</h3>
-                                <field name="dryer" nolabel="1" style="padding: 25px 0px 0px 9px;"/>
+                                <field name="dryer" nolabel="1" style="padding: 0px 0px 0px 25px;" />
                                 <field name="appliance_secure_3"/>
                                 <field name="supply_line_connected_3"/>
                                 <field name="checked_function_3"/>
@@ -244,7 +244,7 @@
                             <group>
                                 <!--<separator string = "Cooktop"/>-->
                                 <h3>Cooktop</h3>
-                                <field name="cooktop" nolabel="1" style="padding: 25px 0px 0px 9px;"/>
+                                <field name="cooktop" nolabel="1" style="padding: 0px 0px 0px 25px;" />
                                 <field name="appliance_secure_4"/>
                                 <field name="electrical_connected_4"/>
                                 <field name="gas_connected_4"/>
@@ -256,7 +256,7 @@
                             <group>
                                 <!--<separator string = "Range"/>-->
                                 <h3>Range</h3>
-                                <field name="range" nolabel="1" style="padding: 25px 0px 0px 9px;"/>
+                                <field name="range" nolabel="1" style="padding: 0px 0px 0px 25px;" />
                                 <field name="appliance_secure_5"/>
                                 <field name="electrical_connected_5"/>
                                 <field name="gas_connected_5"/>
@@ -268,7 +268,7 @@
                             <group>
                                 <!--<separator string = "Downdraft"/>-->
                                 <h3>Downdraft</h3>
-                                <field name="downdraft" nolabel="1" style="padding: 25px 0px 0px 9px;"/>
+                                <field name="downdraft" nolabel="1" style="padding: 0px 0px 0px 25px;" />
                                 <field name="appliance_secure_6"/>
                                 <field name="raise_lowers_6"/>
                                 <field name="remote_mounted_6"/>
@@ -282,7 +282,7 @@
                             <group>
                                 <!--<separator string = "Ice Machine"/>-->
                                 <h3>Ice Machine</h3>
-                                <field name="ice_machine" nolabel="1" style="padding: 25px 0px 0px 9px;"/>
+                                <field name="ice_machine" nolabel="1" style="padding: 0px 0px 0px 25px;" />
                                 <field name="appliance_secure_7"/>
                                 <field name="electrical_connected_7"/>
                                 <field name="supply_line_connected_7"/>
@@ -294,7 +294,7 @@
                             <group>
                                 <!--<separator string = "Refrigerator"/>-->
                                 <h3>Refrigerator</h3>
-                                <field name="refrigerator" nolabel="1" style="padding: 25px 0px 0px 9px;"/>
+                                <field name="refrigerator" nolabel="1" style="padding: 0px 0px 0px 25px;" />
                                 <field name="appliance_secure_8"/>
                                 <field name="anti_tip_mounted_8"/>
                                 <field name="electrical_connected_8"/>
@@ -306,7 +306,7 @@
                             <group>
                                 <!--<separator string = "Freezer"/>-->
                                 <h3>Freezer</h3>
-                                <field name="freezer" nolabel="1" style="padding: 25px 0px 0px 9px;"/>
+                                <field name="freezer" nolabel="1" style="padding: 0px 0px 0px 25px;" />
                                 <field name="appliance_secure_9"/>
                                 <field name="anti_tip_mounted_9"/>
                                 <field name="electrical_connected_9"/>
@@ -320,7 +320,7 @@
                             <group>
                                 <!--<separator string = "Hood"/>-->
                                 <h3>Hood</h3>
-                                <field name="hood" nolabel="1" style="padding: 25px 0px 0px 9px;"/>
+                                <field name="hood" nolabel="1" style="padding: 0px 0px 0px 25px;" />
                                 <field name="appliance_secure_10"/>
                                 <field name="electrical_connected_10"/>
                                 <field name="duct_connected_sealed_10"/>
@@ -332,7 +332,7 @@
                             <group>
                                 <!--<separator string = "Microwave Oven"/>-->
                                 <h3>Microwave Oven</h3>
-                                <field name="microwave_oven" nolabel="1" style="padding: 25px 0px 0px 9px;"/>
+                                <field name="microwave_oven" nolabel="1" style="padding: 0px 0px 0px 25px;" />
                                 <field name="trim_kit_open_11"/>
                                 <field name="appliance_secure_11"/>
                                 <field name="electrical_connected_11"/>
@@ -345,7 +345,7 @@
                             <group>
                                 <!--<separator string = "Other"/>-->
                                 <h3>Other</h3>
-                                <field name="other" nolabel="1" style="padding: 25px 0px 0px 9px;"/>
+                                <field name="other" nolabel="1" style="padding: 0px 0px 0px 25px;" />
                                 <field name="appliance_secure_12"/>
                                 <field name="power_water_12"/>
                                 <field name="trim_kit_12"/>
