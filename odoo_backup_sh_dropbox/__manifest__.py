@@ -11,7 +11,7 @@
 
     "author": "IT-Projects LLC, Dinar Gabbasov",
     "support": "apps@it-projects.info",
-    "website": "https://it-projects.info/team/GabbasovDinar",
+    "website": "https://apps.odoo.com/apps/modules/12.0/odoo_backup_sh_dropbox/",
     "license": "LGPL-3",
     # "price": 9.00,
     # "currency": "EUR",

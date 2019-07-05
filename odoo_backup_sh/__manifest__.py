@@ -10,7 +10,7 @@
 
     "author": "IT-Projects LLC, Stanislav Krotov",
     "support": "apps@it-projects.info",
-    "website": "https://it-projects.info/team/ufaks",
+    "website": "https://apps.odoo.com/apps/modules/12.0/odoo_backup_sh/",
     "license": "LGPL-3",
     # "price": 9.00,
     # "currency": "EUR",
