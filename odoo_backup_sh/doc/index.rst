@@ -83,6 +83,7 @@ RESULT: Backup is created.
 
 
 Restoration:
+
 * Please proceed to the Database Manager: ``/web/database/manager``
 * Click on ``Restore via Odoo-backup.sh`` button
 * Choose the backup that you want to restore
@@ -93,9 +94,11 @@ Restoration:
 RESULT: Backup is restored in one click without any additional manipulations such as "downloading-uploading process".
 *The database restore may take some time before being ready*.
 
+
 Visual presentation:
+
 * Open the menu ``[[ Backups ]] >> Dashboard``
-* Proceed with ``[[ Backups ]] >> Backups`` where *Odoo.sh* databases are presented
+* Proceed with ``[[ Backups ]] >> Backups`` where *Odoo-backup.sh* databases are presented
 * Continue with ``[[ Backups ]] >> Backups`` where your Odoo backups are stored
 
 RESULT:
