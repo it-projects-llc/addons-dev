@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
+<odoo>
+    <record id='fleet_vehicle_wizard_view_form' model='ir.ui.view'>
+        <field name="name">driving.data.wizard.form</field>
+        <field name="model">driving.data.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Vehicle">
+                <sheet>
+                    <field name="xml_data"/>
+                    <field name="text_data"/>
+                </sheet>
+                <footer>
+                    <button name="apply" string="Create" type="object" class="btn-primary"/>
+                    <button special="cancel" string="Cancel" class="btn-default"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

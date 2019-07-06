@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
+<odoo>
+    <menuitem
+            name="Driving Data"
+            parent="fleet.menu_root"
+            id="menu_fleet_driving_data"
+            sequence="98"
+    />
+
+    <!-- Driving Data -->
+    <record id='driving_data_view_form' model='ir.ui.view'>
+        <field name="name">driving.data.form</field>
+        <field name="model">driving.data</field>
+        <field name="arch" type="xml">
+            <form string="Vehicle">
+                <sheet>
+                    <field name="date_created"/>
+                    <field name="xml_data"/>
+                    <field name="text_data" invisible="1"/>
+                    <notebook>
+                        <page string="Icc" name="CardIccIdentification">
+                            <group>
+                                <group name="group_general">
+                                    <field name="clock_stop"/>
+                                    <field name="card_approval_number"/>
+                                    <field name="card_personaliser_id"/>
+                                    <field name="embed_deric_assembler_id"/>
+                                    <field name="ic_identifier"/>
+                                </group>
+                                <group name="card_extended_serial_number">
+                                    <field name="card_extended_serial_number"/>
+                                    <field name="manufacturer_code"/>
+                                    <field name="month"/>
+                                    <field name="year"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="Chip" name="CardChip">
+                            <group>
+                                <group name="group_general">
+                                    <field name="ic_serial_number"/>
+                                    <field name="ic_manufacturing_reference"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="card_application_identification" name="card_application_identification">
+                            <group>
+                                <group name="type">
+                                    <field name="version"/>
+                                    <field name="no_of_events_per_type"/>
+                                    <field name="no_of_faults_per_type"/>
+                                    <field name="activity_structure_length"/>
+                                    <field name="no_of_card_vehicle_records"/>
+                                    <field name="no_of_card_place_records"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="identification" name="identification">
+                            <group>
+                                <group name="cardidentification">
+                                    <field name="card_issuing_member_state"/>
+                                    <field name="card_number"/>
+                                    <field name="renewal_index"/>
+                                    <field name="replacement_index"/>
+                                    <field name="card_issuing_authority_name"/>
+                                    <field name="card_issue_date"/>
+                                    <field name="card_validity_begin"/>
+                                    <field name="card_expiry_date"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="CardEventCollection" name="CardEventCollection">
+                            <group>
+                                <group name="card_event_collection_ids">
+                                    <field name="card_event_collection_ids">
+                                        <tree editable="bottom">
+                                          <field name="type"/>
+                                          <field name="vehicle_registration_nation"/>
+                                          <field name="vehicle_registration_number"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="CardFaultCollection" name="CardFaultCollection">
+                            <group>
+                                <group name="card_fault_collection_ids">
+                                    <field name="card_fault_collection_ids">
+                                        <tree editable="bottom">
+                                          <field name="type"/>
+                                          <field name="vehicle_registration_nation"/>
+                                          <field name="vehicle_registration_number"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="CardActivityDailyRecord" name="CardActivityDailyRecord">
+                            <group>
+                                <group name="activity_daily_ids">
+                                    <field name="activity_daily_ids">
+                                        <tree editable="bottom">
+                                          <field name="daily_presence_counter"/>
+                                          <field name="datetime"/>
+                                          <field name="distance"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="vehicle_record_ids" name="vehicle_record_ids">
+                            <group>
+                                <group name="vehicle_pointer_newest_record">
+                                    <field name="vehicle_pointer_newest_record"/>
+                                </group>
+                            </group>
+                            <field name="vehicle_record_ids">
+                                <tree editable="bottom">
+                                    <field name="vehicle_odometer_begin"/>
+                                    <field name="vehicle_odometer_end"/>
+                                    <field name="vehicle_first_use"/>
+                                    <field name="vehicle_last_use"/>
+                                    <field name="vehicle_registration_nation"/>
+                                    <field name="vehicle_registration_number"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <page string="vehicle_record_ids" name="vehicle_record_ids">
+                            <group>
+                                <group name="place_pointer_newest_record">
+                                    <field name="place_pointer_newest_record"/>
+                                </group>
+                            </group>
+                            <field name="place_daily_work_ids">
+                                <tree editable="bottom">
+                                    <field name="entry_time"/>
+                                    <field name="entry_type"/>
+                                    <field name="daily_work_period_country_name"/>
+                                    <field name="daily_work_period_country"/>
+                                    <field name="daily_work_period_region"/>
+                                    <field name="vehicle_odometer_value"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <page string="control_type" name="control_type">
+                            <group>
+                                <group name="control_type">
+                                    <field name="control_type"/>
+                                    <field name="control_time"/>
+                                    <field name="control_card_number_type"/>
+                                    <field name="control_card_number_issuingmemberstate"/>
+                                    <field name="control_card_number_replacementindex"/>
+                                    <field name="control_card_number_renewalindex"/>
+                                    <field name="vehicle_registration_nation"/>
+                                    <field name="vehicle_registration_number"/>
+                                    <field name="controldownloadperiodbegin"/>
+                                    <field name="controldownloadperiodend"/>
+                                </group>
+                            </group>
+                        </page>
+
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="driving_data_view_tree" model="ir.ui.view">
+        <field name="name">driving.data.tree</field>
+        <field name="model">driving.data</field>
+        <field name="arch" type="xml">
+            <tree string="Driving Data">
+                <field name="date_created"/>
+                <field name="clock_stop"/>
+                <field name="card_number"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id='driving_data_action' model='ir.actions.act_window'>
+        <field name="name">Driving Data</field>
+        <field name="res_model">driving.data</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form,graph</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a new driving data.
+          </p><p>
+            Odoo helps you keeping track of all the services done
+            on your vehicle. Services can be of many type: occasional
+            repair, fixed maintenance, etc.
+          </p>
+        </field>
+    </record>
+
+    <menuitem
+            action="driving_data_action"
+            parent="menu_fleet_driving_data"
+            id="driving_data_menu"
+    />
+
+    <!-- card.event.collection -->
+    <record id='card_event_view_form' model='ir.ui.view'>
+        <field name="name">card.event.collection.form</field>
+        <field name="model">card.event.collection</field>
+        <field name="arch" type="xml">
+            <form string="Vehicle">
+                <sheet>
+                    <group>
+                        <group name="group_general">
+                            <field name="type"/>
+                            <field name="vehicle_registration_nation"/>
+                            <field name="vehicle_registration_number"/>
+                        </group>
+<!--                        <group name="card_extended_serial_number">-->
+<!--                            <field name="driving_data_id"/>-->
+<!--                        </group>-->
+                    </group>
+                    <field name="card_event_record_ids">
+                        <tree editable="bottom">
+                          <field name="begin_time"/>
+                          <field name="end_time"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- card.fault.collection -->
+    <record id='card_fault_view_form' model='ir.ui.view'>
+        <field name="name">card.fault.collection.form</field>
+        <field name="model">card.fault.collection</field>
+        <field name="arch" type="xml">
+            <form string="Vehicle">
+                <sheet>
+                    <group>
+                        <group name="group_general">
+                            <field name="type"/>
+                            <field name="vehicle_registration_nation"/>
+                            <field name="vehicle_registration_number"/>
+                        </group>
+<!--                        <group name="card_extended_serial_number">-->
+<!--                            <field name="driving_data_id"/>-->
+<!--                        </group>-->
+                    </group>
+                    <field name="card_fault_record_ids">
+                        <tree editable="bottom">
+                          <field name="begin_time"/>
+                          <field name="end_time"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+        <!-- activity.daily -->
+    <record id='activity_daily_view_form' model='ir.ui.view'>
+        <field name="name">activity.daily.form</field>
+        <field name="model">activity.daily</field>
+        <field name="arch" type="xml">
+            <form string="Vehicle">
+                <sheet>
+                    <group>
+                        <group name="group_general">
+                            <field name="daily_presence_counter"/>
+                            <field name="datetime"/>
+                            <field name="distance"/>
+                        </group>
+                    </group>
+                    <field name="activity_change_info_ids">
+                        <tree editable="bottom">
+                          <field name="status"/>
+                          <field name="activity"/>
+                          <field name="time"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>
