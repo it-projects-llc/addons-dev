@@ -2,7 +2,7 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 {
     "name": """odoo-backup.sh""",
-    "summary": """The 10€ service that would save your business.""",
+    "summary": """The 10 Euros service that would save your business.""",
     "category": "Backup",
     # "live_test_url": "",
     "images": ['images/backupsh.jpg'],

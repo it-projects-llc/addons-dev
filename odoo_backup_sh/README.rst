@@ -6,7 +6,7 @@
  Odoo-backup.sh
 ================
 
-The 10€ service that would save your business.
+The 10 Euros service that would save your business.
 
 In-App Purchase
 ===============
@@ -74,5 +74,9 @@ HTML Description: https://apps.odoo.com/apps/modules/12.0/odoo_backup_sh/
 Usage instructions: `<doc/index.rst>`_
 
 Changelog: `<doc/changelog.rst>`_
+
+Privacy Policy: `<https://odoo-backup.sh/privacy>`__
+
+Term and Conditions: `<https://odoo-backup.sh/terms>`__
 
 Tested on Odoo 12.0 483b6024cd44fcc6e2b987505beb739014b51856
