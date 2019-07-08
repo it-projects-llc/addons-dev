@@ -3,10 +3,10 @@
    :alt: License: LGPL-3
 
 ========================
- Odoo-backup.sh Dropbox
+ odoo-backup.sh Dropbox
 ========================
 
-The application allows making database backups to your Dropbox.
+The small investment to protect your business.
 
 Credits
 =======

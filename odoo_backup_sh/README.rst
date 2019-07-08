@@ -6,12 +6,12 @@
  Odoo-backup.sh
 ================
 
-The application allows managing database backups via a cloud, without a need to download and upload archive via a browser.
+The 10€ service that would save your business.
 
 In-App Purchase
 ===============
 
-The service **Odoo-backup.sh** provides a way to store backups in a cloud. Payments for the service is managed by proprietary module, which implements `In-App Purchase <https://www.odoo.com/documentation/12.0/webservices/iap.html>`__ -- payments platform provided by *Odoo S.A.*.
+**Odoo-backup.sh** provides a way to store backups in a cloud. Payments for the service is managed by proprietary module, which implements `In-App Purchase <https://www.odoo.com/documentation/12.0/webservices/iap.html>`__ -- payments platform provided by *Odoo S.A.*.
 
 Personal cloud
 ==============

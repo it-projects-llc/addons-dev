@@ -1,8 +1,8 @@
 # Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 {
-    "name": """Odoo-backup.sh""",
-    "summary": """Remote Backup Service""",
+    "name": """odoo-backup.sh""",
+    "summary": """The 10€ service that would save your business.""",
     "category": "Backup",
     # "live_test_url": "",
     "images": ['images/backupsh.jpg'],
