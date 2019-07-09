@@ -24,6 +24,7 @@
         "views/views.xml",
         "views/assets.xml",
         "wizard/wizard.xml",
+        "security/ir.model.access.csv",
     ],
     "demo": [
     ],
