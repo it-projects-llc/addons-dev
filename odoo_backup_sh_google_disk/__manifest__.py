@@ -5,7 +5,7 @@
     "summary": """The small investment to protect your business""",
     "category": "Backup",
     # "live_test_url": "",
-    "images": ['images/odoo_backup_sh_google_disk.jpg'],
+    "images": ['images/google drive backing up.jpg'],
     "version": "12.0.1.0.0",
     "application": False,
 

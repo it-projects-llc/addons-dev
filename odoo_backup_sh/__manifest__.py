@@ -5,7 +5,7 @@
     "summary": """The 10 Euros service that would save your business.""",
     "category": "Backup",
     # "live_test_url": "",
-    "images": ['images/backupsh.jpg'],
+    "images": ['images/odoo-backup.sh.jpg'],
     "version": "12.0.1.0.0",
 
     "author": "IT-Projects LLC, Stanislav Krotov",
