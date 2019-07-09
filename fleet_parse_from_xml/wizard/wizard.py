@@ -4,6 +4,7 @@
 from odoo import models, fields, api
 from bs4 import BeautifulSoup
 import datetime
+import base64
 
 
 class PosCreditInvoices(models.TransientModel):
@@ -11,12 +12,14 @@ class PosCreditInvoices(models.TransientModel):
     _description = 'Parses XML to Driving Data Record'
 
     xml_data = fields.Binary(attachment=True, string="Origin", help="XML File")
-    text_data = fields.Text(string="Origin", help="TEXT")
+    # text_data = fields.Text(string="Origin", help="TEXT")
 
     @api.multi
     def apply(self):
-        xml = BeautifulSoup(self.text_data)
-        dd = xml.driverdata
+
+        xml_file = base64.b64decode(self.xml_data)
+        xml = BeautifulSoup(xml_file)
+        dd = xml.html.body.driverdata
 
         def p2str(data):
             return data and data.text or ''
@@ -52,57 +55,57 @@ class PosCreditInvoices(models.TransientModel):
                 res += compose_as_a_new_record(r)
             return res
 
-        def parse_card_icc_identification(text):
-            cardextendedserialnumber = text.cardextendedserialnumber
+        def parse_card_icc_identification(data):
+            cardextendedserialnumber = data.cardextendedserialnumber
             return {
-                'clock_stop': p2int(text.clockstop),
+                'clock_stop': p2int(data.clockstop),
 
                 'card_extended_serial_number': p2int(cardextendedserialnumber),
                 'manufacturer_code': get_int_attr(cardextendedserialnumber, 'manufacturercode'),
                 'month': get_int_attr(cardextendedserialnumber, 'month'),
                 'year': get_int_attr(cardextendedserialnumber, 'year'),
 
-                'card_approval_number': p2str(text.cardapprovalnumber),
-                'card_personaliser_id': p2int(text.cardpersonaliserid),
-                'embed_deric_assembler_id': p2str(text.embeddericassemblerid),
-                'ic_identifier': p2int(text.icidentifier),
+                'card_approval_number': p2str(data.cardapprovalnumber),
+                'card_personaliser_id': p2int(data.cardpersonaliserid),
+                'embed_deric_assembler_id': p2str(data.embeddericassemblerid),
+                'ic_identifier': p2int(data.icidentifier),
             }
 
-        def parse_card_chip_identification(text):
+        def parse_card_chip_identification(data):
             return {
-                'ic_serial_number': get_attr(text.icserialnumber, 'value'),
-                'ic_manufacturing_reference': get_attr(text.icmanufacturingreferences, 'value'),
+                'ic_serial_number': get_attr(data.icserialnumber, 'value'),
+                'ic_manufacturing_reference': get_attr(data.icmanufacturingreferences, 'value'),
             }
 
-        def parse_driver_card_application_identification(text):
+        def parse_driver_card_application_identification(data):
             return {
-                'type': p2int(text.type),
-                'version': p2int(text.version),
-                'no_of_events_per_type': p2int(text.noofeventspertype),
-                'no_of_faults_per_type': p2int(text.nooffaultspertype),
-                'activity_structure_length': p2int(text.activitystructurelength),
-                'no_of_card_vehicle_records': p2int(text.noofcardvehiclerecords),
-                'no_of_card_place_records': p2int(text.noofcardplacerecords),
+                'type': p2int(data.type),
+                'version': p2int(data.version),
+                'no_of_events_per_type': p2int(data.noofeventspertype),
+                'no_of_faults_per_type': p2int(data.nooffaultspertype),
+                'activity_structure_length': p2int(data.activitystructurelength),
+                'no_of_card_vehicle_records': p2int(data.noofcardvehiclerecords),
+                'no_of_card_place_records': p2int(data.noofcardplacerecords),
             }
 
-        def parse_card_identification(text):
-            cardnumber = text.cardnumber
+        def parse_card_identification(data):
+            cardnumber = data.cardnumber
             return {
-                'card_issuing_member_state': p2int(text.cardissuingmemberstate),
+                'card_issuing_member_state': p2int(data.cardissuingmemberstate),
 
                 'card_number': p2str(cardnumber),
                 'renewal_index': get_int_attr(cardnumber, 'renewalindex'),
                 'replacement_index': get_int_attr(cardnumber, 'replacementindex'),
 
-                'card_issuing_authority_name': p2str(text.cardissuingauthorityname),
-                'card_issue_date': get_datetime_attr(text.cardissuedate, 'datetime'),
-                'card_validity_begin': get_datetime_attr(text.cardvaliditybegin, 'datetime'),
-                'card_expiry_date': get_datetime_attr(text.cardexpirydate, 'datetime'),
+                'card_issuing_authority_name': p2str(data.cardissuingauthorityname),
+                'card_issue_date': get_datetime_attr(data.cardissuedate, 'datetime'),
+                'card_validity_begin': get_datetime_attr(data.cardvaliditybegin, 'datetime'),
+                'card_expiry_date': get_datetime_attr(data.cardexpirydate, 'datetime'),
             }
 
-        def parse_card_collection(text, key):
+        def parse_card_collection(data, key):
             result_set = []
-            for cerc in text.find_all('card' + key + 'recordcollection'):
+            for cerc in data.find_all('card' + key + 'recordcollection'):
                 cerc_data = {}
                 cer_records = cerc.find_all('card' + key + 'record')
                 if not len(cer_records):
@@ -182,8 +185,8 @@ class PosCreditInvoices(models.TransientModel):
             return {
                 'control_type': p2int(data.controltype),
                 'control_time': get_datetime_attr(data.controltime, 'datetime'),
-                'controldownloadperiodbegin': get_datetime_attr(data.controldownloadperiodbegin, 'datetime'),
-                'controldownloadperiodend': get_datetime_attr(data.controldownloadperiodend, 'datetime'),
+                'control_download_period_begin': get_datetime_attr(data.controldownloadperiodbegin, 'datetime'),
+                'control_download_period_end': get_datetime_attr(data.controldownloadperiodend, 'datetime'),
 
                 'control_card_number_type': get_int_attr(control_card_number, 'type'),
                 'control_card_number_issuingmemberstate': get_int_attr(control_card_number, 'issuingmemberstate'),
@@ -231,7 +234,7 @@ class PosCreditInvoices(models.TransientModel):
             }
 
         data = {
-            'text_data': self.text_data,
+            'xml_data': self.xml_data,
         }
         card_icc = parse_card_icc_identification(dd.cardiccidentification)
         data.update(card_icc)
@@ -280,9 +283,8 @@ class PosCreditInvoices(models.TransientModel):
         ca_certificate = parse_ca_certificate(dd.cacertificate)
         data.update(ca_certificate)
 
-        import wdb
-        wdb.set_trace()
 
-        self.env['driving.data'].create(data)
+        driver_data_record = self.env['driving.data'].create(data)
 
-        return {'type': 'ir.actions.client', 'tag': 'reload'}
+        final_url = "/web/?#id=" + str(driver_data_record.id) + "&view_type=form&model=driving.data"
+        return {'type': 'ir.actions.act_url', 'url': final_url, 'target': 'self', }

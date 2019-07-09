@@ -16,9 +16,15 @@
         <field name="arch" type="xml">
             <form string="Vehicle">
                 <sheet>
-                    <field name="date_created"/>
-                    <field name="xml_data"/>
-                    <field name="text_data" invisible="1"/>
+                    <group>
+                        <group name="group_general">
+                            <field name="date_created"/>
+                        </group>
+                        <group name="data">
+                            <field name="xml_data"/>
+                            <!--<field name="text_data" invisible="1"/>-->
+                        </group>
+                    </group>
                     <notebook>
                         <page string="Icc" name="CardIccIdentification">
                             <group>
@@ -26,7 +32,7 @@
                                     <field name="clock_stop"/>
                                     <field name="card_approval_number"/>
                                     <field name="card_personaliser_id"/>
-                                    <field name="embed_deric_assembler_id"/>
+                                    <field name="embedder_ic_assembler_id"/>
                                     <field name="ic_identifier"/>
                                 </group>
                                 <group name="card_extended_serial_number">
@@ -47,7 +53,7 @@
                             </group>
                         </page>
 
-                        <page string="card_application_identification" name="card_application_identification">
+                        <page string="Driver Card Application Identification" name="Driver Card Application Identification">
                             <group>
                                 <group name="type">
                                     <field name="version"/>
@@ -60,7 +66,7 @@
                             </group>
                         </page>
 
-                        <page string="identification" name="identification">
+                        <page string="Identification" name="Identification">
                             <group>
                                 <group name="cardidentification">
                                     <field name="card_issuing_member_state"/>
@@ -75,7 +81,7 @@
                             </group>
                         </page>
 
-                        <page string="CardEventCollection" name="CardEventCollection">
+                        <page string="Card Event Collection" name="Card Event Collection">
                             <group>
                                 <group name="card_event_collection_ids">
                                     <field name="card_event_collection_ids">
@@ -89,7 +95,7 @@
                             </group>
                         </page>
 
-                        <page string="CardFaultCollection" name="CardFaultCollection">
+                        <page string="Card Fault Collection" name="Card Fault Collection">
                             <group>
                                 <group name="card_fault_collection_ids">
                                     <field name="card_fault_collection_ids">
@@ -103,7 +109,7 @@
                             </group>
                         </page>
 
-                        <page string="CardActivityDailyRecord" name="CardActivityDailyRecord">
+                        <page string="Card Activity Daily Records" name="Card Activity Daily Records">
                             <group>
                                 <group name="activity_daily_ids">
                                     <field name="activity_daily_ids">
@@ -117,7 +123,7 @@
                             </group>
                         </page>
 
-                        <page string="vehicle_record_ids" name="vehicle_record_ids">
+                        <page string="Card Vehicles Used" name="Card Vehicles Used">
                             <group>
                                 <group name="vehicle_pointer_newest_record">
                                     <field name="vehicle_pointer_newest_record"/>
@@ -135,7 +141,7 @@
                             </field>
                         </page>
 
-                        <page string="vehicle_record_ids" name="vehicle_record_ids">
+                        <page string="Card Place Daily Work Period" name="Card Place Daily Work Period">
                             <group>
                                 <group name="place_pointer_newest_record">
                                     <field name="place_pointer_newest_record"/>
@@ -153,7 +159,7 @@
                             </field>
                         </page>
 
-                        <page string="control_type" name="control_type">
+                        <page string="CardControlActivityDataRecord" name="Card Control Activity Data Record">
                             <group>
                                 <group name="control_type">
                                     <field name="control_type"/>
@@ -164,13 +170,13 @@
                                     <field name="control_card_number_renewalindex"/>
                                     <field name="vehicle_registration_nation"/>
                                     <field name="vehicle_registration_number"/>
-                                    <field name="controldownloadperiodbegin"/>
-                                    <field name="controldownloadperiodend"/>
+                                    <field name="control_download_period_begin"/>
+                                    <field name="control_download_period_end"/>
                                 </group>
                             </group>
                         </page>
 
-                        <page string="specific_condition_ids" name="specific_condition_ids">
+                        <page string="Specific Conditions" name="Specific Conditions">
                             <field name="specific_condition_ids">
                                 <tree editable="bottom">
                                     <field name="entry_time"/>
@@ -179,13 +185,13 @@
                             </field>
                         </page>
 
-                        <page string="CardCertificate" name="CardCertificate">
+                        <page string="Card Certificate" name="Card Certificate">
                             <group>
-                                <group name="CardCertificate">
+                                <group name="Card Certificate">
                                     <field name="card_certificate_signature"/>
-                                    <field name="card_certificate_public_key_reminder"/>
+                                    <field name="card_certificate_public_key_remainder"/>
                                 </group>
-                                <group name="CertificationAuthorityReference">
+                                <group name="Certification Authority Reference">
                                     <field name="card_certificate_authority_nation_name"/>
                                     <field name="card_certificate_authority_nation"/>
                                     <field name="card_certificate_authority_nation_code"/>
@@ -196,13 +202,13 @@
                             </group>
                         </page>
 
-                        <page string="CaCertificate" name="CaCertificate">
+                        <page string="Ca Certificate" name="Ca Certificate">
                             <group>
-                                <group name="CaCertificate">
+                                <group name="Ca Certificate">
                                     <field name="ca_certificate_signature"/>
-                                    <field name="ca_certificate_public_key_reminder"/>
+                                    <field name="ca_certificate_public_key_remainder"/>
                                 </group>
-                                <group name="CertificationAuthorityReference">
+                                <group name="Certification Authority Reference">
                                     <field name="ca_certificate_authority_nation_name"/>
                                     <field name="ca_certificate_authority_nation"/>
                                     <field name="ca_certificate_authority_nation_code"/>

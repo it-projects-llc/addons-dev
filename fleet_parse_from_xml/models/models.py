@@ -14,101 +14,101 @@ class DrivingData(models.Model):
     # cardiccidentification
     clock_stop = fields.Integer('Clock Stop', default=0)
 
-    card_extended_serial_number = fields.Integer('CardExtendedSerialNumber')
-    manufacturer_code = fields.Integer('ManufacturerCode')
+    card_extended_serial_number = fields.Integer('Card ExtendedSerial Number')
+    manufacturer_code = fields.Integer('Manufacturer Code')
     month = fields.Integer('Month')
     year = fields.Integer('Year')
 
-    card_approval_number = fields.Char('CardApprovalNumber')
-    card_personaliser_id = fields.Integer('CardPersonaliserId')
-    embedder_ic_assembler_id = fields.Char('EmbedderIcAssemblerId')
+    card_approval_number = fields.Char('Card Approval Number')
+    card_personaliser_id = fields.Integer('Card Personaliser Id')
+    embedder_ic_assembler_id = fields.Char('Embedder Ic Assembler Id')
     ic_identifier = fields.Integer('Ic Identifier')
 
     # cardchipidentification
-    ic_serial_number = fields.Char('IcSerialNumber')
-    ic_manufacturing_reference = fields.Char('IcManufacturingReferences')
+    ic_serial_number = fields.Char('Ic Serial Number')
+    ic_manufacturing_reference = fields.Char('Ic Manufacturing References')
 
     # card_application_identification
     type = fields.Integer('Type')
     version = fields.Integer('Version')
-    no_of_events_per_type = fields.Integer('NoOfEventsPerType')
-    no_of_faults_per_type = fields.Integer('NoOfFaultsPerType')
-    activity_structure_length = fields.Integer('ActivityStructureLength')
-    no_of_card_vehicle_records = fields.Integer('NoOfCardVehicleRecords')
-    no_of_card_place_records = fields.Integer('NoOfCardPlaceRecords')
+    no_of_events_per_type = fields.Integer('No Of Events Per Type')
+    no_of_faults_per_type = fields.Integer('No Of Faults Per Type')
+    activity_structure_length = fields.Integer('Activity Structure Length')
+    no_of_card_vehicle_records = fields.Integer('No Of Card Vehicle Records')
+    no_of_card_place_records = fields.Integer('No Of Card Place Records')
 
     # cardidentification
-    card_issuing_member_state = fields.Integer('CardIssuingMemberState')
+    card_issuing_member_state = fields.Integer('Card Issuing Member State')
 
-    card_number = fields.Char('CardNumber')
-    renewal_index = fields.Integer('RenewalIndex')
-    replacement_index = fields.Integer('ReplacementIndex')
+    card_number = fields.Char('Card Number')
+    renewal_index = fields.Integer('Renewal Index')
+    replacement_index = fields.Integer('Replacement Index')
 
-    card_issuing_authority_name = fields.Char('CardIssuingAuthorityName')
-    card_issue_date = fields.Datetime('CardIssueDate')
-    card_validity_begin = fields.Datetime('CardValidityBegin')
-    card_expiry_date = fields.Datetime('CardExpiryDate')
+    card_issuing_authority_name = fields.Char('Card Issuing Authority Name')
+    card_issue_date = fields.Datetime('Card Issue Date')
+    card_validity_begin = fields.Datetime('Card Validity Begin')
+    card_expiry_date = fields.Datetime('Card Expiry Date')
 
     # CardEventCollection
     card_event_collection_ids = fields.One2many('card.event.collection', 'driving_data_id',
-                                                string="card_event_collection_ids")
+                                                string="Card Event Record Collection")
     # CardFaultCollection
     card_fault_collection_ids = fields.One2many('card.fault.collection', 'driving_data_id',
-                                                string="card_fault_collection_ids")
+                                                string="Card Fault Record Collection")
     # DriverActivityData
     activity_daily_ids = fields.One2many('activity.daily', 'driving_data_id',
-                                         string="activity.daily")
+                                         string="Driver Activity Data")
     # CardVehiclesUsed
-    vehicle_pointer_newest_record = fields.Integer('vehicle_pointer_newest_record')
+    vehicle_pointer_newest_record = fields.Integer('VehiclePointerNewestRecord')
     vehicle_record_ids = fields.One2many('vehicle.record', 'driving_data_id',
-                                         string="vehicle.record")
+                                         string="Card Vehicle Records")
     # CardPlaceDailyWorkPeriod
-    place_pointer_newest_record = fields.Integer('place_pointer_newest_record')
+    place_pointer_newest_record = fields.Integer('PlacePointerNewestRecord')
     place_daily_work_ids = fields.One2many('place.record', 'driving_data_id',
-                                           string="place_daily_work_ids")
+                                           string="Place Records")
     # CardControlActivityDataRecord
-    control_type = fields.Integer('control_type')
-    control_time = fields.Datetime('control_time')
-    control_card_number_type = fields.Integer('control_card_number_type')
-    control_card_number_issuingmemberstate = fields.Integer('control_card_number_issuingmemberstate')
-    control_card_number_replacementindex = fields.Integer('control_card_number_replacementindex')
-    control_card_number_renewalindex = fields.Integer('control_card_number_renewalindex')
-    vehicle_registration_nation = fields.Integer('vehicle_registration_nation')
-    vehicle_registration_number = fields.Integer('vehicle_registration_number')
-    controldownloadperiodbegin = fields.Datetime('controldownloadperiodbegin')
-    controldownloadperiodend = fields.Datetime('controldownloadperiodend')
+    control_type = fields.Integer('Control Type')
+    control_time = fields.Datetime('Control Time')
+    control_card_number_type = fields.Integer('Control Card Number Type')
+    control_card_number_issuingmemberstate = fields.Integer('Control Card Number Issuing Member State')
+    control_card_number_replacementindex = fields.Integer('Control Card Number Replacement Index')
+    control_card_number_renewalindex = fields.Integer('Control Card Number Renewal Index')
+    vehicle_registration_nation = fields.Integer('Vehicle Registration Nation')
+    vehicle_registration_number = fields.Integer('Vehicle Registration Number')
+    control_download_period_begin = fields.Datetime('Control Download Period Begin')
+    control_download_period_end = fields.Datetime('Control Download Period End')
     # SpecificConditions
     specific_condition_ids = fields.One2many('specific.condition', 'driving_data_id',
-                                             string="place_daily_work_ids")
+                                             string="Specific Conditions")
     # CardCertificate
     card_certificate_signature = fields.Char('Signature')
-    card_certificate_public_key_remainder = fields.Char('public_key_reminder')
+    card_certificate_public_key_remainder = fields.Char('Public Key Remainder')
     # CertificationAuthorityReference
-    card_certificate_authority_nation = fields.Integer('nation')
-    card_certificate_authority_nation_name = fields.Char('nation_name')
-    card_certificate_authority_nation_code = fields.Char('authority_nation_code')
-    card_certificate_authority_additional_info = fields.Char('authority_additional_info')
-    card_certificate_authority_serial_number = fields.Integer('authority_serial_number')
-    card_certificate_authority_ca_identifier = fields.Integer('authority_ca_identifier')
+    card_certificate_authority_nation = fields.Integer('Nation')
+    card_certificate_authority_nation_name = fields.Char('Nation Name')
+    card_certificate_authority_nation_code = fields.Char('Nation Code')
+    card_certificate_authority_additional_info = fields.Char('Additional Info')
+    card_certificate_authority_serial_number = fields.Integer('Serial Number')
+    card_certificate_authority_ca_identifier = fields.Integer('Ca Identifier')
 
     # CaCertificate
     ca_certificate_signature = fields.Char('Signature')
-    ca_certificate_public_key_remainder = fields.Char('public_key_reminder')
+    ca_certificate_public_key_remainder = fields.Char('Public Key Remainder')
     # CertificationAuthorityReference
-    ca_certificate_authority_nation = fields.Integer('nation')
-    ca_certificate_authority_nation_name = fields.Char('nation_name')
-    ca_certificate_authority_nation_code = fields.Char('authority_nation_code')
-    ca_certificate_authority_additional_info = fields.Char('authority_additional_info')
-    ca_certificate_authority_serial_number = fields.Integer('authority_serial_number')
-    ca_certificate_authority_ca_identifier = fields.Integer('authority_ca_identifier')
+    ca_certificate_authority_nation = fields.Integer('Nation')
+    ca_certificate_authority_nation_name = fields.Char('Nation Name')
+    ca_certificate_authority_nation_code = fields.Char('Nation Code')
+    ca_certificate_authority_additional_info = fields.Char('Additional Info')
+    ca_certificate_authority_serial_number = fields.Integer('Serial Number')
+    ca_certificate_authority_ca_identifier = fields.Integer('Ca Identifier')
 
 
 class CardEvent(models.Model):
     _name = "card.event"
 
-    begin_time = fields.Datetime('EventBeginTime')
-    end_time = fields.Datetime('EventEndTime')
-    collection_id = fields.Many2one('card.event.collection', string="card.event.collection")
+    begin_time = fields.Datetime('Event Begin Time')
+    end_time = fields.Datetime('Event End Time')
+    collection_id = fields.Many2one('card.event.collection', string="Card Event Record Collection")
 
 
 class CardEventCollection(models.Model):
@@ -116,20 +116,20 @@ class CardEventCollection(models.Model):
 
     # probably it should be selection field
     type = fields.Integer('Type')
-    vehicle_registration_nation = fields.Integer('VehicleRegistrationNation')
-    vehicle_registration_number = fields.Char('VehicleRegistrationNumber')
+    vehicle_registration_nation = fields.Integer('Vehicle Registration Nation')
+    vehicle_registration_number = fields.Char('Vehicle Registration Number')
 
-    card_event_record_ids = fields.One2many('card.event', 'collection_id', string="card_event_ids")
-    driving_data_id = fields.Many2one('driving.data', string="driving_data")
+    card_event_record_ids = fields.One2many('card.event', 'collection_id', string="Card Event Records")
+    driving_data_id = fields.Many2one('driving.data', string="Driver Data")
 
 
 class CardFault(models.Model):
     _name = "card.fault"
 
-    begin_time = fields.Datetime('EventBeginTime')
-    end_time = fields.Datetime('EventEndTime')
+    begin_time = fields.Datetime('Event Begin Time')
+    end_time = fields.Datetime('Event EndT ime')
 
-    collection_id = fields.Many2one('card.event.collection', string="card.event.collection")
+    collection_id = fields.Many2one('card.fault.collection', string="Card Fault Record Collection")
 
 
 class CardFaultCollection(models.Model):
@@ -137,70 +137,70 @@ class CardFaultCollection(models.Model):
 
     # probably it should be selection field
     type = fields.Integer('Type')
-    vehicle_registration_nation = fields.Integer('VehicleRegistrationNation')
-    vehicle_registration_number = fields.Char('VehicleRegistrationNumber')
+    vehicle_registration_nation = fields.Integer('Vehicle Registration Nation')
+    vehicle_registration_number = fields.Char('Vehicle Registration Number')
 
-    card_fault_record_ids = fields.One2many('card.fault', 'collection_id', string="card_event_ids")
-    driving_data_id = fields.Many2one('driving.data', string="driving_data")
+    card_fault_record_ids = fields.One2many('card.fault', 'collection_id', string="Card Fault Records")
+    driving_data_id = fields.Many2one('driving.data', string="Driver Data")
 
 
 class ActivityChangeInfo(models.Model):
     _name = "activity.change.info"
 
-    file_offset = fields.Char('file_offset')
-    slot = fields.Integer('slot')
-    status = fields.Integer('status')
-    inserted = fields.Boolean('inserted')
-    activity = fields.Char('activity')
-    time = fields.Char('time')
+    file_offset = fields.Char('File Offset')
+    slot = fields.Integer('Slot')
+    status = fields.Integer('Status')
+    inserted = fields.Boolean('Inserted')
+    activity = fields.Char('Activity')
+    time = fields.Char('Time')
 
-    collection_id = fields.Many2one('activity.daily', string="activity.daily")
+    collection_id = fields.Many2one('activity.daily', string="Card Activity Daily Record")
 
 
 class CardActivityDailyRecord(models.Model):
     _name = "activity.daily"
 
-    daily_presence_counter = fields.Integer('daily_presence_counter')
-    datetime = fields.Datetime('datetime')
-    distance = fields.Integer('distance')
+    daily_presence_counter = fields.Integer('Daily Presence Counter')
+    datetime = fields.Datetime('Datetime')
+    distance = fields.Integer('Distance')
 
-    activity_change_info_ids = fields.One2many('activity.change.info', 'collection_id', string="card_event_ids")
-    driving_data_id = fields.Many2one('driving.data', string="driving_data")
+    activity_change_info_ids = fields.One2many('activity.change.info', 'collection_id', string="Activity Change Info")
+    driving_data_id = fields.Many2one('driving.data', string="Driver Data")
 
 
 class VehicleRecord(models.Model):
     _name = "vehicle.record"
 
-    vehicle_odometer_begin = fields.Integer('vehicle_odometer_begin')
-    vehicle_odometer_end = fields.Integer('vehicle_odometer_end')
+    vehicle_odometer_begin = fields.Integer('Vehicle Odometer Begin')
+    vehicle_odometer_end = fields.Integer('Vehicle Odometer End')
 
-    vehicle_first_use = fields.Datetime('vehicle_first_use')
-    vehicle_last_use = fields.Datetime('vehicle_last_use')
+    vehicle_first_use = fields.Datetime('Vehicle First Use')
+    vehicle_last_use = fields.Datetime('Vehicle Last Use')
 
-    vehicle_registration_nation = fields.Integer('VehicleRegistrationNation')
-    vehicle_registration_number = fields.Char('VehicleRegistrationNumber')
+    vehicle_registration_nation = fields.Integer('Vehicle Registration Nation')
+    vehicle_registration_number = fields.Char('Vehicle Registration Number')
 
-    driving_data_id = fields.Many2one('driving.data', string="driving_data")
+    driving_data_id = fields.Many2one('driving.data', string="Driver Data")
 
 
 class PlaceRecord(models.Model):
     _name = "place.record"
 
-    entry_time = fields.Datetime('entry_time')
-    entry_type = fields.Integer('entry_type')
+    entry_time = fields.Datetime('Entry Time')
+    entry_type = fields.Integer('Entry Type')
 
-    daily_work_period_country_name = fields.Char('daily_work_period_country_name')
-    daily_work_period_country = fields.Integer('daily_work_period_country')
-    daily_work_period_region = fields.Integer('daily_work_period_region')
-    vehicle_odometer_value = fields.Integer('vehicle_odometer_value')
+    daily_work_period_country_name = fields.Char('Daily Work Period Country Name')
+    daily_work_period_country = fields.Integer('Daily Work Period Country')
+    daily_work_period_region = fields.Integer('Daily Work Period Region')
+    vehicle_odometer_value = fields.Integer('Vehicle Odometer Value')
 
-    driving_data_id = fields.Many2one('driving.data', string="driving_data")
+    driving_data_id = fields.Many2one('driving.data', string="Driver Data")
 
 
 class SpecificCondition(models.Model):
     _name = "specific.condition"
 
-    entry_time = fields.Datetime('entry_time')
+    entry_time = fields.Datetime('Entry Time')
     specific_condition_type = fields.Integer('Specific Condition Type')
 
-    driving_data_id = fields.Many2one('driving.data', string="driving_data")
+    driving_data_id = fields.Many2one('driving.data', string="Driver Data")

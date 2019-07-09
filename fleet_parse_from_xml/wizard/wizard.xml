@@ -8,8 +8,13 @@
         <field name="arch" type="xml">
             <form string="Vehicle">
                 <sheet>
-                    <field name="xml_data"/>
-                    <field name="text_data"/>
+                    <p><strong> Upload an '*.xml' file to be parsed into Drivers Data </strong></p>
+                    <group>
+                        <group name="group_general">
+                            <field name="xml_data" required="1"/>
+                            <!--<field name="text_data"/>-->
+                        </group>
+                    </group>
                 </sheet>
                 <footer>
                     <button name="apply" string="Create" type="object" class="btn-primary"/>
