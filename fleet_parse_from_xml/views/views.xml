@@ -170,6 +170,49 @@
                             </group>
                         </page>
 
+                        <page string="specific_condition_ids" name="specific_condition_ids">
+                            <field name="specific_condition_ids">
+                                <tree editable="bottom">
+                                    <field name="entry_time"/>
+                                    <field name="specific_condition_type"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <page string="CardCertificate" name="CardCertificate">
+                            <group>
+                                <group name="CardCertificate">
+                                    <field name="card_certificate_signature"/>
+                                    <field name="card_certificate_public_key_reminder"/>
+                                </group>
+                                <group name="CertificationAuthorityReference">
+                                    <field name="card_certificate_authority_nation_name"/>
+                                    <field name="card_certificate_authority_nation"/>
+                                    <field name="card_certificate_authority_nation_code"/>
+                                    <field name="card_certificate_authority_serial_number"/>
+                                    <field name="card_certificate_authority_additional_info"/>
+                                    <field name="card_certificate_authority_ca_identifier"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="CaCertificate" name="CaCertificate">
+                            <group>
+                                <group name="CaCertificate">
+                                    <field name="ca_certificate_signature"/>
+                                    <field name="ca_certificate_public_key_reminder"/>
+                                </group>
+                                <group name="CertificationAuthorityReference">
+                                    <field name="ca_certificate_authority_nation_name"/>
+                                    <field name="ca_certificate_authority_nation"/>
+                                    <field name="ca_certificate_authority_nation_code"/>
+                                    <field name="ca_certificate_authority_serial_number"/>
+                                    <field name="ca_certificate_authority_additional_info"/>
+                                    <field name="ca_certificate_authority_ca_identifier"/>
+                                </group>
+                            </group>
+                        </page>
+
                     </notebook>
                 </sheet>
             </form>

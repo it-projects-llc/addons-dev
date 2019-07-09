@@ -193,6 +193,43 @@ class PosCreditInvoices(models.TransientModel):
                 'vehicle_registration_number': p2str(data.vehicleregistrationnumber),
             }
 
+        def parse_specific_conditions(data):
+            result_set = []
+            for cvr in data.specificconditionrecords.find_all('specificconditionrecord'):
+                result_set += compose_as_a_new_record({
+                    'entry_time': get_datetime_attr(cvr.entrytime, 'datetime'),
+                    'specific_condition_type': p2int(cvr.specificconditiontype),
+                })
+            return {
+                'specific_condition_ids': result_set,
+            }
+
+        def parse_card_certificate(data):
+            certification_authority_reference = data.certificationauthorityreference
+            return {
+                'card_certificate_signature': get_attr(data.signature, 'value'),
+                'card_certificate_public_key_remainder': get_attr(data.publickeyremainder, 'value'),
+                'card_certificate_authority_nation_name': get_attr(certification_authority_reference.nation, 'name'),
+                'card_certificate_authority_nation': p2int(certification_authority_reference.nation),
+                'card_certificate_authority_nation_code': p2str(certification_authority_reference.nationcode),
+                'card_certificate_authority_serial_number': p2int(certification_authority_reference.serialnumber),
+                'card_certificate_authority_additional_info': p2str(certification_authority_reference.additionalinfo),
+                'card_certificate_authority_ca_identifier': p2int(certification_authority_reference.caidentifier),
+            }
+
+        def parse_ca_certificate(data):
+            certification_authority_reference = data.certificationauthorityreference
+            return {
+                'ca_certificate_signature': get_attr(data.signature, 'value'),
+                'ca_certificate_public_key_remainder': get_attr(data.publickeyremainder, 'value'),
+                'ca_certificate_authority_nation_name': get_attr(certification_authority_reference.nation, 'name'),
+                'ca_certificate_authority_nation': p2int(certification_authority_reference.nation),
+                'ca_certificate_authority_nation_code': p2str(certification_authority_reference.nationcode),
+                'ca_certificate_authority_serial_number': p2int(certification_authority_reference.serialnumber),
+                'ca_certificate_authority_additional_info': p2str(certification_authority_reference.additionalinfo),
+                'ca_certificate_authority_ca_identifier': p2int(certification_authority_reference.caidentifier),
+            }
+
         data = {
             'text_data': self.text_data,
         }
@@ -233,6 +270,15 @@ class PosCreditInvoices(models.TransientModel):
 
         card_control_activity_data_record = parse_card_control_activity_data_record(dd.cardcontrolactivitydatarecord)
         data.update(card_control_activity_data_record)
+
+        specific_conditions = parse_specific_conditions(dd.specificconditions)
+        data.update(specific_conditions)
+
+        card_certificate = parse_card_certificate(dd.cardcertificate)
+        data.update(card_certificate)
+
+        ca_certificate = parse_ca_certificate(dd.cacertificate)
+        data.update(ca_certificate)
 
         import wdb
         wdb.set_trace()
