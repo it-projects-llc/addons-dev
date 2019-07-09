@@ -4,7 +4,7 @@
 <odoo>
     <template id="assets_backend" name="fleet_assets" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
-            <script type="text/javascript" src="/fleet_parse_from_xml/static/src/js/list_controller.js"></script>
+            <script type="text/javascript" src="/fleet_parse_from_xml/static/src/js/view_controllers.js"></script>
         </xpath>
     </template>
 </odoo>
