@@ -1,7 +1,7 @@
 # Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
-from odoo import models, fields, api
+from odoo import models, fields
 
 
 class DrivingData(models.Model):

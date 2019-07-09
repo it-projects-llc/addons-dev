@@ -283,8 +283,6 @@ class PosCreditInvoices(models.TransientModel):
         ca_certificate = parse_ca_certificate(dd.cacertificate)
         data.update(ca_certificate)
 
-
         driver_data_record = self.env['driving.data'].create(data)
-
         final_url = "/web/?#id=" + str(driver_data_record.id) + "&view_type=form&model=driving.data"
         return {'type': 'ir.actions.act_url', 'url': final_url, 'target': 'self', }
