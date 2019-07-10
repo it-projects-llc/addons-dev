@@ -1,5 +1,5 @@
 =========================
- Backups to Google Drive
+ Google Drive backing up
 =========================
 
 Installation

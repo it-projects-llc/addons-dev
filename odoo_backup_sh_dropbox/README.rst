@@ -2,9 +2,9 @@
    :target: https://www.gnu.org/licenses/lgpl
    :alt: License: LGPL-3
 
-========================
- odoo-backup.sh Dropbox
-========================
+====================
+ Dropbox backing up
+====================
 
 The small investment to protect your business.
 

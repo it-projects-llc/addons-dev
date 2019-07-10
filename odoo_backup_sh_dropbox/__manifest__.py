@@ -1,7 +1,7 @@
 # Copyright 2019 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 {
-    "name": """odoo-backup.sh Dropbox""",
+    "name": """Dropbox backing up""",
     "summary": """The small investment to protect your business""",
     "category": "Backup",
     # "live_test_url": "",

@@ -2,9 +2,9 @@
    :target: https://www.gnu.org/licenses/lgpl
    :alt: License: LGPL-3
 
-=============================
- odoo-backup.sh Google Drive
-=============================
+=========================
+ Google Drive backing up
+=========================
 
 The small investment to protect your business.
 
