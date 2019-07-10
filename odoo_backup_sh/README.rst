@@ -75,8 +75,4 @@ Usage instructions: `<doc/index.rst>`_
 
 Changelog: `<doc/changelog.rst>`_
 
-Privacy Policy: `<https://odoo-backup.sh/privacy>`__
-
-Term and Conditions: `<https://odoo-backup.sh/terms>`__
-
 Tested on Odoo 12.0 483b6024cd44fcc6e2b987505beb739014b51856
