@@ -4,7 +4,7 @@
     <data>
         <record id="email_template_installation_details_email" model="mail.template">
             <field name="name">Installation Details</field>
-            <field name="email_from">${(object.user_id.email or '')|safe}</field>
+            <field name="email_from">${user.email}</field>
             <field name="subject">Installation Details</field>
             <field name="model_id" ref="project.model_project_task"/>
             <field name="auto_delete" eval="False"/>
@@ -32,7 +32,7 @@
 
         <record id="email_template_damages_details_email" model="mail.template">
             <field name="name">Damages Details</field>
-            <field name="email_from">${(object.user_id.email or '')|safe}</field>
+            <field name="email_from">${user.email}</field>
             <field name="subject">Damages Details</field>
             <field name="model_id" ref="project.model_project_task"/>
             <field name="auto_delete" eval="False"/>
@@ -63,7 +63,7 @@
 
         <record id="email_template_feedback_email" model="mail.template">
             <field name="name">Job Feedback</field>
-            <field name="email_from">${(object.user_id.email or '')|safe}</field>
+            <field name="email_from">${user.email}</field>
             <field name="subject">Regarding Feedback</field>
             <field name="model_id" ref="project.model_project_task"/>
             <field name="auto_delete" eval="False"/>
@@ -94,7 +94,7 @@
 
         <record id="email_template_modification_lines" model="mail.template">
             <field name="name">Modification Line</field>
-            <field name="email_from">${(object.user_id.email or '')|safe}</field>
+            <field name="email_from">${user.email}</field>
             <field name="subject">Regarding Modification</field>
             <field name="model_id" ref="project.model_project_task"/>
             <field name="auto_delete" eval="False"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="report_custom_template_damage">
+    <template id="report_custom_document_damage">
         <t t-call="web.external_layout">
             <div class="page">
                 <div class="oe_structure"/>
@@ -40,11 +40,11 @@
     </template>
 
 
-    <!--<template id="report_custom_template_damage">-->
-        <!--<t t-call="web.html_container">-->
-            <!--<t t-foreach="docs" t-as="doc">-->
-                <!--<t t-call="fsm_custom.report_custom_document_damage" t-lang="doc.partner_id.lang"/>-->
-            <!--</t>-->
-        <!--</t>-->
-    <!--</template>-->
+    <template id="report_custom_template_damage">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="fsm_custom.report_custom_document_damage" t-lang="doc.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
 </odoo>

@@ -207,37 +207,37 @@
 
                                 <h3>Dishwasher</h3>
                                 <field name="dishwasher" nolabel="1" style="padding: 0px 0px 0px 25px;" />
-                                <field name="appliance_secure_1"/>
-                                <field name="supply_line_connected_1"/>
-                                <field name="checked_function_1"/>
-                                <field name="operation_explained_1"/>
-                                <field name="drain_connected_1"/>
-                                <field name="tci"/>
-                                <field name="packing_material_removed_1"/>
+                                <field name="appliance_secure_1" attrs="{'readonly': False}"/>
+                                <field name="supply_line_connected_1" attrs="{'readonly': False}"/>
+                                <field name="checked_function_1" attrs="{'readonly': False}"/>
+                                <field name="operation_explained_1" attrs="{'readonly': False}"/>
+                                <field name="drain_connected_1" attrs="{'readonly': False}"/>
+                                <field name="tci" attrs="{'readonly': False}"/>
+                                <field name="packing_material_removed_1" attrs="{'readonly': False}"/>
                             </group>
                             <group>
                                 <!--<separator string = "Washer"/>-->
                                 <h3>Washer</h3>
                                 <field name="washer" nolabel="1" style="padding: 0px 0px 0px 25px;" />
-                                <field name="appliance_secure_2"/>
-                                <field name="supply_line_connected_2"/>
-                                <field name="checked_function_2"/>
-                                <field name="operation_explained_2"/>
-                                <field name="drain_connected_2"/>
-                                <field name="shipping_struts_removed_2"/>
-                                <field name="packing_material_removed_2"/>
+                                <field name="appliance_secure_2" attrs="{'readonly': False}"/>
+                                <field name="supply_line_connected_2" attrs="{'readonly': False}"/>
+                                <field name="checked_function_2" attrs="{'readonly': False}"/>
+                                <field name="operation_explained_2" attrs="{'readonly': False}"/>
+                                <field name="drain_connected_2" attrs="{'readonly': False}"/>
+                                <field name="shipping_struts_removed_2" attrs="{'readonly': False}"/>
+                                <field name="packing_material_removed_2" attrs="{'readonly': False}"/>
                             </group>
                             <group>
                                 <!--<separator string = "Dryer"/>-->
                                 <h3>Dryer</h3>
                                 <field name="dryer" nolabel="1" style="padding: 0px 0px 0px 25px;" />
-                                <field name="appliance_secure_3"/>
-                                <field name="supply_line_connected_3"/>
-                                <field name="checked_function_3"/>
-                                <field name="operation_explained_3"/>
-                                <field name="drain_connected_3"/>
-                                <field name="shipping_struts_removed_3"/>
-                                <field name="packing_material_removed_3"/>
+                                <field name="appliance_secure_3" attrs="{'readonly': False}"/>
+                                <field name="supply_line_connected_3" attrs="{'readonly': False}"/>
+                                <field name="checked_function_3" attrs="{'readonly': False}"/>
+                                <field name="operation_explained_3" attrs="{'readonly': False}"/>
+                                <field name="drain_connected_3" attrs="{'readonly': False}"/>
+                                <field name="shipping_struts_removed_3" attrs="{'readonly': False}"/>
+                                <field name="packing_material_removed_3" attrs="{'readonly': False}"/>
                             </group>
                         </group>
                         <group colspan="3" col="3" style="width:100%">
@@ -245,37 +245,37 @@
                                 <!--<separator string = "Cooktop"/>-->
                                 <h3>Cooktop</h3>
                                 <field name="cooktop" nolabel="1" style="padding: 0px 0px 0px 25px;" />
-                                <field name="appliance_secure_4"/>
-                                <field name="electrical_connected_4"/>
-                                <field name="gas_connected_4"/>
-                                <field name="operation_explained_4"/>
-                                <field name="all_bnr_ignite_4"/>
-                                <field name="packing_material_removed_4"/>
-                                <field name="grates_knob_4"/>
+                                <field name="appliance_secure_4" attrs="{'readonly': False}"/>
+                                <field name="electrical_connected_4" attrs="{'readonly': False}"/>
+                                <field name="gas_connected_4" attrs="{'readonly': False}"/>
+                                <field name="operation_explained_4" attrs="{'readonly': False}"/>
+                                <field name="all_bnr_ignite_4" attrs="{'readonly': False}"/>
+                                <field name="packing_material_removed_4" attrs="{'readonly': False}"/>
+                                <field name="grates_knob_4" attrs="{'readonly': False}"/>
                             </group>
                             <group>
                                 <!--<separator string = "Range"/>-->
                                 <h3>Range</h3>
                                 <field name="range" nolabel="1" style="padding: 0px 0px 0px 25px;" />
-                                <field name="appliance_secure_5"/>
-                                <field name="electrical_connected_5"/>
-                                <field name="gas_connected_5"/>
-                                <field name="operation_explained_5"/>
-                                <field name="all_bnr_ignite_5"/>
-                                <field name="packing_material_removed_5"/>
-                                <field name="grates_knob_5"/>
+                                <field name="appliance_secure_5" attrs="{'readonly': False}"/>
+                                <field name="electrical_connected_5" attrs="{'readonly': False}"/>
+                                <field name="gas_connected_5" attrs="{'readonly': False}"/>
+                                <field name="operation_explained_5" attrs="{'readonly': False}"/>
+                                <field name="all_bnr_ignite_5" attrs="{'readonly': False}"/>
+                                <field name="packing_material_removed_5" attrs="{'readonly': False}"/>
+                                <field name="grates_knob_5" attrs="{'readonly': False}"/>
                             </group>
                             <group>
                                 <!--<separator string = "Downdraft"/>-->
                                 <h3>Downdraft</h3>
                                 <field name="downdraft" nolabel="1" style="padding: 0px 0px 0px 25px;" />
-                                <field name="appliance_secure_6"/>
-                                <field name="raise_lowers_6"/>
-                                <field name="remote_mounted_6"/>
-                                <field name="filters_installed_6"/>
-                                <field name="electrical_connected_6"/>
-                                <field name="operation_explained_6"/>
-                                <field name="packing_material_removed_6"/>
+                                <field name="appliance_secure_6" attrs="{'readonly': False}"/>
+                                <field name="raise_lowers_6" attrs="{'readonly': False}"/>
+                                <field name="remote_mounted_6" attrs="{'readonly': False}"/>
+                                <field name="filters_installed_6" attrs="{'readonly': False}"/>
+                                <field name="electrical_connected_6" attrs="{'readonly': False}"/>
+                                <field name="operation_explained_6" attrs="{'readonly': False}"/>
+                                <field name="packing_material_removed_6" attrs="{'readonly': False}"/>
                             </group>
                         </group>
                         <group colspan="3" col="3" style="width:100%">
@@ -283,37 +283,37 @@
                                 <!--<separator string = "Ice Machine"/>-->
                                 <h3>Ice Machine</h3>
                                 <field name="ice_machine" nolabel="1" style="padding: 0px 0px 0px 25px;" />
-                                <field name="appliance_secure_7"/>
-                                <field name="electrical_connected_7"/>
-                                <field name="supply_line_connected_7"/>
-                                <field name="drain_line_connected_7"/>
-                                <field name="functions_properly_7"/>
-                                <field name="panel_installed_7"/>
-                                <field name="pump_working_7"/>
+                                <field name="appliance_secure_7" attrs="{'readonly': False}"/>
+                                <field name="electrical_connected_7" attrs="{'readonly': False}"/>
+                                <field name="supply_line_connected_7" attrs="{'readonly': False}"/>
+                                <field name="drain_line_connected_7" attrs="{'readonly': False}"/>
+                                <field name="functions_properly_7" attrs="{'readonly': False}"/>
+                                <field name="panel_installed_7" attrs="{'readonly': False}"/>
+                                <field name="pump_working_7" attrs="{'readonly': False}"/>
                             </group>
                             <group>
                                 <!--<separator string = "Refrigerator"/>-->
                                 <h3>Refrigerator</h3>
                                 <field name="refrigerator" nolabel="1" style="padding: 0px 0px 0px 25px;" />
-                                <field name="appliance_secure_8"/>
-                                <field name="anti_tip_mounted_8"/>
-                                <field name="electrical_connected_8"/>
-                                <field name="water_line_connected_8"/>
-                                <field name="operation_explained_8"/>
-                                <field name="water_purged_8"/>
-                                <field name="ice_maker_on_8"/>
+                                <field name="appliance_secure_8" attrs="{'readonly': False}"/>
+                                <field name="anti_tip_mounted_8" attrs="{'readonly': False}"/>
+                                <field name="electrical_connected_8" attrs="{'readonly': False}"/>
+                                <field name="water_line_connected_8" attrs="{'readonly': False}"/>
+                                <field name="operation_explained_8" attrs="{'readonly': False}"/>
+                                <field name="water_purged_8" attrs="{'readonly': False}"/>
+                                <field name="ice_maker_on_8" attrs="{'readonly': False}"/>
                             </group>
                             <group>
                                 <!--<separator string = "Freezer"/>-->
                                 <h3>Freezer</h3>
                                 <field name="freezer" nolabel="1" style="padding: 0px 0px 0px 25px;" />
-                                <field name="appliance_secure_9"/>
-                                <field name="anti_tip_mounted_9"/>
-                                <field name="electrical_connected_9"/>
-                                <field name="water_line_connected_9"/>
-                                <field name="operation_explained_9"/>
-                                <field name="water_purged_9"/>
-                                <field name="ice_maker_on_9"/>
+                                <field name="appliance_secure_9" attrs="{'readonly': False}"/>
+                                <field name="anti_tip_mounted_9" attrs="{'readonly': False}"/>
+                                <field name="electrical_connected_9" attrs="{'readonly': False}"/>
+                                <field name="water_line_connected_9" attrs="{'readonly': False}"/>
+                                <field name="operation_explained_9" attrs="{'readonly': False}"/>
+                                <field name="water_purged_9" attrs="{'readonly': False}"/>
+                                <field name="ice_maker_on_9" attrs="{'readonly': False}"/>
                             </group>
                         </group>
                         <group colspan="3" col="3" style="width:100%">
@@ -321,36 +321,36 @@
                                 <!--<separator string = "Hood"/>-->
                                 <h3>Hood</h3>
                                 <field name="hood" nolabel="1" style="padding: 0px 0px 0px 25px;" />
-                                <field name="appliance_secure_10"/>
-                                <field name="electrical_connected_10"/>
-                                <field name="duct_connected_sealed_10"/>
-                                <field name="functions_properly_10"/>
-                                <field name="packing_material_removed_10"/>
-                                <field name="grates_installed_10"/>
-                                <field name="flow_test_10"/>
+                                <field name="appliance_secure_10" attrs="{'readonly': False}"/>
+                                <field name="electrical_connected_10" attrs="{'readonly': False}"/>
+                                <field name="duct_connected_sealed_10" attrs="{'readonly': False}"/>
+                                <field name="functions_properly_10" attrs="{'readonly': False}"/>
+                                <field name="packing_material_removed_10" attrs="{'readonly': False}"/>
+                                <field name="grates_installed_10" attrs="{'readonly': False}"/>
+                                <field name="flow_test_10" attrs="{'readonly': False}"/>
                             </group>
                             <group>
                                 <!--<separator string = "Microwave Oven"/>-->
                                 <h3>Microwave Oven</h3>
                                 <field name="microwave_oven" nolabel="1" style="padding: 0px 0px 0px 25px;" />
-                                <field name="trim_kit_open_11"/>
-                                <field name="appliance_secure_11"/>
-                                <field name="electrical_connected_11"/>
-                                <field name="trim_kit_11"/>
-                                <field name="packing_material_removed_11"/>
-                                <field name="operation_explained_11"/>
-                                <field name="open_closes_11"/>
-                                <field name="functions_properly_11"/>
+                                <field name="trim_kit_open_11" attrs="{'readonly': False}"/>
+                                <field name="appliance_secure_11" attrs="{'readonly': False}"/>
+                                <field name="electrical_connected_11" attrs="{'readonly': False}"/>
+                                <field name="trim_kit_11" attrs="{'readonly': False}"/>
+                                <field name="packing_material_removed_11" attrs="{'readonly': False}"/>
+                                <field name="operation_explained_11" attrs="{'readonly': False}"/>
+                                <field name="open_closes_11" attrs="{'readonly': False}"/>
+                                <field name="functions_properly_11" attrs="{'readonly': False}"/>
                             </group>
                             <group>
                                 <!--<separator string = "Other"/>-->
                                 <h3>Other</h3>
                                 <field name="other" nolabel="1" style="padding: 0px 0px 0px 25px;" />
-                                <field name="appliance_secure_12"/>
-                                <field name="power_water_12"/>
-                                <field name="trim_kit_12"/>
-                                <field name="operation_explained_12"/>
-                                <field name="packing_material_removed_12"/>
+                                <field name="appliance_secure_12" attrs="{'readonly': False}"/>
+                                <field name="power_water_12" attrs="{'readonly': False}"/>
+                                <field name="trim_kit_12" attrs="{'readonly': False}"/>
+                                <field name="operation_explained_12" attrs="{'readonly': False}"/>
+                                <field name="packing_material_removed_12" attrs="{'readonly': False}"/>
                             </group>
                         </group>
                         <field name="image_o2m" mode="kanban" >
@@ -486,11 +486,11 @@
 
                     </page>
 
-                   <page name="modify_lines" string="Modification" >
+                   <page name="modify_line_ids" string="Modification" >
                        <header>
                         <button name="email_modify_lines" string="Send Email By" type="object" class="btn-danger"/>
                         </header>
-                    <field name="modify_line_ids" attrs="{'readonly':[('state','=','done')]}">
+                    <field name="modify_line_ids" attrs="{'readonly':[('state','=','cancel')]}">
                         <tree string="Modify Line" editable="bottom">
                             <field name="sequence" widget="handle"/>
                             <field name="product_id"/>
@@ -498,11 +498,11 @@
                             <field name="product_uom_qty" string="Ordered Qty"/>
                             <field name="product_uom" groups="product.group_uom"
                                    options='{"no_open": True}' />
-                            <field name="price_unit"/>
+                            <field name="price_unit" attrs ="{'readonly': 1}"/>
                             <field name="price_subtotal" widget="monetary"
-                                   groups="sale.group_show_price_subtotal"/>
+                                   groups="account.group_show_line_subtotals_tax_excluded"/>
                             <field name="price_total" widget="monetary"
-                                   groups="sale.group_show_price_total"/>
+                                   groups="account.group_show_line_subtotals_tax_included"/>
                         </tree>
                     </field>
 
@@ -524,8 +524,6 @@
                 report_type="qweb-pdf"
                 name="fsm_custom.report_custom_template_install"
                 file="fsm_custom.report_custom_template_install"
-                attachment_use="True"
-                attachment="('INV'+(object.name or '').replace('/','')+'.pdf')"
         />
         <report
                 string="Damage Template"
@@ -534,6 +532,7 @@
                 report_type="qweb-pdf"
                 name="fsm_custom.report_custom_template_damage"
                 file="fsm_custom.report_custom_template_damage"
+                attachment_use="True"
         />
         <report
                 string="Feedback Template"
@@ -543,7 +542,6 @@
                 name="fsm_custom.report_custom_template_feedback"
                 file="fsm_custom.report_custom_template_feedback"
                 attachment_use="True"
-                attachment="('INV'+(object.name or '').replace('/','')+'.pdf')"
         />
         <report
                 string="Modification Template"

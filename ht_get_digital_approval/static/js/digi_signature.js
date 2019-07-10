@@ -3,16 +3,18 @@ odoo.define('potential_candidate.ht_get_digital_approval',function(require){
 
     var core = require('web.core');
     var data = require('web.data');
+    var BasicFields= require('web.basic_fields');
     var FormView = require('web.FormView');
+    var Registry = require('web.field_registry');
     var utils = require('web.utils');
     var session = require('web.session');
     var _t = core._t;
     var QWeb = core.qweb;
     var images = {};
 
-    var DigitalSignature = core.form_widget_registry.map.image.extend({
+    var DigitalSignature = BasicFields.FieldBinaryImage.extend({
         template: 'DigitalSignature',
-        render_value: function() {
+        _render: function() {
             var self=this;
             this._super();
             this.$el.find('> img').remove();
@@ -29,20 +31,33 @@ odoo.define('potential_candidate.ht_get_digital_approval',function(require){
                 console.log("in clear",this);
                 self.signaturePad.clear();
             });
-            this.$el.find('.save_sign').on('click',function(){
+            this.$el.find("[data-action=save]").on('click',function(){
                 console.log("DigitalSignature",DigitalSignature);
                 console.log("in save 2",this);
                 var val = self.signaturePad.toDataURL();
                 var new_val = val.split(",")[1];
-                self.set("value", new_val);
+                self['value'] = new_val;
+                self._on_save_sign(this);
             });
+        },
+        _on_save_sign: function(prepend_on_create) {
+            var self = this;
+            this.$('> img').remove();
+            var signature = this.$(".signature").jSignature("getData", 'image');
+            var is_empty = signature ?
+                self.empty_sign[1] === signature[1] :
+                false;
+            if (!is_empty && typeof signature !== "undefined" && signature[1]) {
+                this._setValue(signature[1]);
+            }
         },
     });
 
-    core.form_widget_registry.add('digi-signature', DigitalSignature);
+    Registry.add('digi-signature', DigitalSignature);
 
     FormView.include({
         save: function(prepend_on_create) {
+            this.save_list = [];
             var self = this;
             if(this.model === "digital.sign.popup"){
                 console.log($(".save_sign"));

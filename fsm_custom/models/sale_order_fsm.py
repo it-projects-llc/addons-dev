@@ -7,7 +7,6 @@ from dateutil.relativedelta import relativedelta
 
 
 
-
 class FsmSaleOrder(models.Model):
     _inherit = 'sale.order'
 
@@ -50,12 +49,12 @@ class FsmSaleOrder(models.Model):
                                                              })
 
         for line in self.order_line:
-            job_dict = {    'job_id' : pro_env.id,
-                            'product_id':line.product_id.id,
-                            'name':line.name,
-                            'product_uom_qty': line.product_uom_qty,
-                            'price_unit': line.price_unit,
-                            'product_uom': line.product_uom.id,
+            job_dict = {'job_id' : pro_env.id,
+                        'product_id': line.product_id.id,
+                        'name': line.name,
+                        'product_uom_qty': line.product_uom_qty,
+                        'price_unit': line.price_unit,
+                        'product_uom': line.product_uom.id,
             }
 
             pro_env.write({ 'order_line_ids' : [(0,0,(job_dict))]

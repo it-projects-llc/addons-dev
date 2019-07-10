@@ -168,7 +168,7 @@ class Job(models.Model):
         list=[]
         account_type_id = self.env['account.account.type'].search([('name', '=', 'Receivable')])
         account_id = self.env['account.account'].search([('name', '=', 'Debtors'), ('user_type_id', '=', account_type_id.id)])
-        invoice_id=self.env['account.invoice'].create({'partner_id':self.partner_id.id,'account_id':account_id.id,'job_id':self.job_sequence})
+        invoice_id = self.env['account.invoice'].create({'partner_id':self.partner_id.id,'account_id':account_id.id,'job_id':self.job_sequence})
         account_type_line_id = self.env['account.account.type'].search([('name', '=', 'Income')])
         account_line_id = self.env['account.account'].search([('name', '=', 'Local Sales'), ('user_type_id', '=', account_type_line_id.id)])
 

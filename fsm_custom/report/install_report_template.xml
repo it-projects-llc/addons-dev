@@ -2,7 +2,9 @@
 <odoo>
     <template id="report_custom_document_install">
         <t t-call="web.external_layout">
+            <t t-foreach="docs" t-as="doc">
             <div class="page">
+                <div class="oe_structure"/>
                 <div class="row">
                     <h2 colspan="4" col="4" style="color:#2E86C1">
                         <span t-field="doc.job_sequence"/>
@@ -26,14 +28,14 @@
 
                             <tr style="font-size:30px;color:#2E86C1" >
 
-                                <td colspan="4" col="4">Dishwasher:&#160;<t t-if="doc.dishwasher"><i class="fa fa-check" aria-hidden="true"/></t></td>
-                                <td colspan="4" col="4">Washer: &#160;<t t-if="doc.washer"><i class="fa fa-check" aria-hidden="true"/></t></td>
-                                <td colspan="4" col="4">Dryer:&#160;<t t-if="doc.dryer"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Dishwasher:&#160;<span t-field="doc.dishwasher"/></td>
+                                <td colspan="4" col="4">Washer: &#160;<t t-if="doc.washer"><input type="checkbox" t-att-checked="'checked'"/></t></td>
+                                <td colspan="4" col="4">Dryer:&#160;<t t-if="doc.dryer"><input type="checkbox" t-att-checked="'checked'"/></t></td>
                             </tr>
                             <tr style="font-size:15px">
-                                <td colspan="4" col="4">Appliance Secured:&#160;<t t-if="doc.appliance_secure_1"><i class="fa fa-check" aria-hidden="true"/></t></td>
-                                <td colspan="4" col="4">Appliance Secured:&#160;<t t-if="doc.appliance_secure_2"><i class="fa fa-check" aria-hidden="true"/></t></td>
-                                <td colspan="4" col="4">Appliance Secured:&#160;<t t-if="doc.appliance_secure_3"><i class="fa fa-check" aria-hidden="true"/></t></td>
+                                <td colspan="4" col="4">Appliance Secured:&#160;<t t-if="doc.appliance_secure_1"><input type="checkbox" t-att-checked="'checked'"/></t></td>
+                                <td colspan="4" col="4">Appliance Secured:&#160;<t t-if="doc.appliance_secure_2"><input type="checkbox" t-att-checked="'checked'"/></t></td>
+                                <td colspan="4" col="4">Appliance Secured:&#160;<t t-if="doc.appliance_secure_3"><input type="checkbox" t-att-checked="'checked'"/></t></td>
                             </tr>
                             <tr style="font-size:15px">
                                 <td colspan="4" col="4">Supply Line Connected(HOT):&#160;<t t-if="doc.supply_line_connected_1"><i class="fa fa-check" aria-hidden="true"/></t></td>
@@ -283,7 +285,9 @@
 
 
                 </div>
+                <div class="oe_structure"/>
             </div>
+            </t>
         </t>
 
     </template>

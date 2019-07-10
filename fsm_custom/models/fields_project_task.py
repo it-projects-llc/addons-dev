@@ -1,4 +1,5 @@
 from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError,Warning
 import base64
 import logging
@@ -45,12 +46,17 @@ class FieldsProjectTask(models.Model):
     # image_set = fields.Binary(string='Image')
 
     child_count = fields.Integer(string="Site Visit", compute='compute_job_count')
-    modify_line_ids = fields.One2many(
-        comodel_name='modify.line',
-        inverse_name='modify_id',
-        string='Modify Line',
-        help='create the product name,price and quantity')
-    #
+
+    modify_line_ids = fields.One2many('modify.line', 'modify_id', string='Modify Line',
+                                 states={'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True,
+                                 auto_join=True)
+
+    # modify_line_ids = fields.One2many(
+    #     comodel_name='modify.line',
+    #     inverse_name='modify_id',
+    #     string='Modify Line',
+    #     help='create the product name,price and quantity')
+
     # child_ids = fields.One2many('project.task.display', 'child_project', string='Child ID' )
 
     # @api.multi
@@ -253,13 +259,12 @@ class FieldsProjectTask(models.Model):
 
     @api.multi
     def write(self, vals):
+        if 'kanban_state' not in vals:
+            vals['kanban_state'] = self.kanban_state
 
-            if 'kanban_state' not in vals:
-                vals['kanban_state'] = self.kanban_state
+        result = super(FieldsProjectTask, self).write(vals)
 
-            result = super(FieldsProjectTask, self).write(vals)
-
-            return result
+        return result
 
 
     @api.multi
@@ -285,7 +290,6 @@ class FieldsProjectTask(models.Model):
 
     @api.multi
     def sale_button(self):
-
         ord_obj = self.env['sale.order'].search([('name', '=', self.sale_ord)])
 
         view = self.env.ref('sale.view_order_form')
@@ -365,7 +369,7 @@ class FieldsProjectTask(models.Model):
         logger.info(
             '<-----------------------------------------------pdf1---------------------> %s',
             )
-        pdf = self.env.ref('fsm_custom.action_report_custom_install').render_qweb_pdf([self.id])
+        pdf, _ = self.env.ref('fsm_custom.action_report_custom_install').sudo().render_qweb_pdf([self.id])
         #pdf = self.env['report'].sudo().get_pdf([self.id], 'fsm_custom.report_custom_template_install')
         logger.info(
             '<-----------------------------------------------pdf---------------------> %s',
@@ -379,7 +383,7 @@ class FieldsProjectTask(models.Model):
         attachment_ids.append(self.env['ir.attachment'].create({
             'name': self.name+'.pdf',
             'type': 'binary',
-            'datas': base64.encodestring(pdf[0]),
+            'datas': base64.encodestring(pdf),
             'datas_fname':self.name+'.pdf',
             'res_model': 'project.task',
             'res_id': self.id,
@@ -485,7 +489,7 @@ class FieldsProjectTask(models.Model):
             feedback_template_id = self.env.ref('fsm_custom.email_template_feedback_email').id
         except ValueError:
             compose_form_id = False
-        pdf = self.env.ref('fsm_custom.report_custom_template_feedback').render_qweb_pdf([self.id])
+        pdf, _ = self.env.ref('fsm_custom.action_report_custom_feedback').sudo().render_qweb_pdf([self.id])
         #pdf = self.env['report'].sudo().get_pdf([self.id], 'fsm_custom.report_custom_template_feedback')
 
         # image_line_ids = self.env['image.damage'].search([('damage_id', '=', self.id)]).ids
@@ -493,7 +497,7 @@ class FieldsProjectTask(models.Model):
         attachment_ids.append(self.env['ir.attachment'].create({
             'name': self.name + '.pdf',
             'type': 'binary',
-            'datas': base64.encodestring(pdf[0]),
+            'datas': base64.encodestring(pdf),
             'datas_fname': self.name + '.pdf',
             'res_model': 'project.task',
             'res_id': self.id,
@@ -530,14 +534,14 @@ class FieldsProjectTask(models.Model):
             modify_form_id = False
         # pdf1 = self.env['report']
         # pdf  = pdf1.sudo().get_pdf([self.id], 'fsm_custom.report_custom_modification')
-        pdf = self.env.ref('fsm_custom.report_custom_modification').render_qweb_pdf([self.id])
+        pdf, _ = self.env.ref('fsm_custom.action_report_modification_lines').sudo().render_qweb_pdf([self.id])
         #pdf = self.env['report'].sudo().get_pdf([self.id], 'fsm_custom.report_custom_modification')
 
         attachment_ids = []
         attachment_ids.append(self.env['ir.attachment'].create({
             'name': self.name + '.pdf',
             'type': 'binary',
-            'datas': base64.encodestring(pdf[0]),
+            'datas': base64.encodestring(pdf),
             'datas_fname': self.name + '.pdf',
             'res_model': 'project.task',
             'res_id': self.id,
@@ -639,8 +643,25 @@ class ModifyLine(models.Model):
     order_id = fields.Many2one(
         comodel_name='sale.order',
         string='Order Reference',
-        required=False,
+        required=True,
         help='This field is a sale order reference field')
+
+    # @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_id')
+    # def _compute_amount(self):
+    #     """
+    #     Compute the amounts of the SO line.
+    #     """
+    #     for line in self:
+    #         self.price_unit = line.product_id.list_price
+    #         line.price_unit = line.product_id.list_price
+    #         price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+    #         taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_shipping_id)
+    #         line.update({
+    #             'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
+    #             'price_total': taxes['total_included'],
+    #             'price_subtotal': taxes['total_excluded'],
+    #         })
+
 
 class JobList(models.Model):
     _name = 'job.list'

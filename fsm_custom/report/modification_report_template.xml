@@ -3,6 +3,7 @@
     <template id="report_custom_modification_lines">
         <t t-call="web.external_layout">
             <div class="page">
+                <div class="oe_structure"/>
                  <div class="row">
                     <h2 colspan="4" col="4" style="color:#2E86C1">
                         <span t-field="doc.job_sequence"/>
@@ -46,7 +47,8 @@
                     </table>
 
 
-            </div>
+                </div>
+                <div class="oe_structure"/>
             </div>
         </t>
 
