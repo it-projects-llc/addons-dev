@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="fsm_job_report">
-        <t t-foreach="docs" t-as="o">
-            <t t-call="report.external_layout">
+    <template id="fsm_job_report_tem">
+            <t t-call="web.external_layout">
                 <div class="page">
-                    <br/>
+                    <div class="oe_structure"/>
                     <h2 class="text-center">Job Report</h2>
                     <table class="table table-bordered"
                         style="text-align:center">
@@ -119,6 +118,13 @@
                         </tr>
                     </table>
                 </div>
+            </t>
+    </template>
+
+    <template id="fsm_job_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="field_service_management.fsm_job_report_tem" t-lang="o.partner_id.lang"/>
             </t>
         </t>
     </template>
