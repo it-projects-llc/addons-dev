@@ -5,6 +5,7 @@ import base64
 import logging
 logger = logging.getLogger(__name__)
 
+
 class FieldsProjectTask(models.Model):
     _inherit = 'project.task'
 
@@ -47,15 +48,11 @@ class FieldsProjectTask(models.Model):
 
     child_count = fields.Integer(string="Site Visit", compute='compute_job_count')
 
-    modify_line_ids = fields.One2many('modify.line', 'modify_id', string='Modify Line',
-                                 states={'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True,
-                                 auto_join=True)
-
-    # modify_line_ids = fields.One2many(
-    #     comodel_name='modify.line',
-    #     inverse_name='modify_id',
-    #     string='Modify Line',
-    #     help='create the product name,price and quantity')
+    modify_line_ids = fields.One2many(
+        comodel_name='modify.line',
+        inverse_name='modify_id',
+        string='Modify Line',
+        help='create the product name,price and quantity')
 
     # child_ids = fields.One2many('project.task.display', 'child_project', string='Child ID' )
 

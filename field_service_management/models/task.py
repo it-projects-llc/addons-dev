@@ -5,7 +5,7 @@ import urllib
 from datetime import datetime
 from odoo import api, fields, models, _,SUPERUSER_ID
 from odoo.exceptions import ValidationError, Warning, except_orm
-import wdb
+
 
 class Job(models.Model):
     _inherit = 'project.task'

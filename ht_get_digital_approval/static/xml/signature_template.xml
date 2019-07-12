@@ -4,11 +4,11 @@
     <div id="signature-pad" class="m-signature-pad">
         <group>
             <group>
-                <span class="save_sign">
-                </span>
-                <canvas/>
+                    <canvas/>
+                    <span class="save_sign">
+                    </span>
             </group>
-            <group style="align:right">
+            <group style="align:left">
                 <button type="button" class="button clear" data-action="clear">
                     <span>Clear</span>
                 </button>

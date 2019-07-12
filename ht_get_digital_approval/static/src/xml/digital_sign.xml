@@ -6,7 +6,6 @@
                 <div class="panel-heading">
                     <div class="pull-right">
                         <a id="sign_clean" class="btn btn-xs oe_edit_only">Clear</a>
-                        <a class="oe_edit_only save_sign"></a>
                     </div>
                     <strong>Draw your signature</strong>
                 </div>
