@@ -83,6 +83,13 @@
                             />
                  </xpath>
 
+                <xpath expr="//header/button[@name='email_modify_lines']" position="after">
+                     <button type="action" name="%(action_digital_signature)d"
+                            string="Add Signature" class="oe_highlight" context="{'search_default_modify_1':True }"
+                            attrs="{'invisible':[('signature_modify_added','!=',False)]}"
+                            />
+                </xpath>
+
                  <xpath expr="//field[@name='modify_line_ids']" position="after">
                     <separator string="Signature" colspan="2" col="2"/>
                       <field name="signature_modify_install_image" widget="image" options='{"size": [200, 80]}'
