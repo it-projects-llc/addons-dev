@@ -3,3 +3,6 @@ access_image_damage,access.image.damage,model_image_damage,,1,1,1,1
 access_modify_line,access.modify.line,model_modify_line,,1,1,1,1
 access_image_line,access.image.line,model_image_line,,1,1,1,1
 access_additional_site_wizard,access.additional.site.wizard,model_additional_site_wizard,,1,1,1,1
+access_ job_list,access.job.list,model_job_list,field_service_management.group_operator,1,1,1,1
+access_ job_list,access.job.list,model_job_list,field_service_management.group_serviceman,1,1,1,1
+access_ job_list,access.job.list,model_job_list,field_service_management.group_fsm_manager,1,1,1,1
