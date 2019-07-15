@@ -490,7 +490,7 @@
                        <header>
                         <button name="email_modify_lines" string="Send Email By" type="object" class="btn-danger"/>
                         </header>
-                    <field name="modify_line_ids" attrs="{'readonly':[('state','=','cancel')]}">
+                    <field name="modify_line_ids" attrs="{'readonly':[('state','=','done')]}">
                         <tree string="Modify Line" editable="bottom">
                             <field name="sequence" widget="handle"/>
                             <field name="product_id"/>
