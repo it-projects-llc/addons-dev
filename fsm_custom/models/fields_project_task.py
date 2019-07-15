@@ -3,7 +3,6 @@ from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError,Warning
 import base64
 import logging
-import wdb
 logger = logging.getLogger(__name__)
 
 
@@ -649,7 +648,6 @@ class ModifyLine(models.Model):
         """
         Compute the amounts of the SO line.
         """
-        wdb.set_trace()
         for line in self:
             self.price_unit = line.product_id.list_price
             price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
