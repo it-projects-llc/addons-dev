@@ -111,3 +111,11 @@
 .pos.inventory .numpad .input-button.numpad-minus.inventory {
     display: block;
 }
+
+.pos.inventory .order-button.square {
+    display: none;
+}
+
+.pos.inventory .orders {
+    display: none;
+}

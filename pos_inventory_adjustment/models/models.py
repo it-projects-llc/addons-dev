@@ -38,7 +38,7 @@ class StockInventoryStage(models.Model):
                     'product_id': product_id,
                     'qty': qty,
                 })
-        self.action_stage_done()
+        # self.action_stage_done()
         return {
             'inventory_stage_id': self.id,
         }

@@ -130,10 +130,19 @@ odoo.define('pos_inventory_adjustment.models', function (require) {
         },
 
         add_product: function(product, options){
-            if (this.pos.config.inventory_adjustment) {
-                options = _.extend({}, options, {merge: true});
+            if (!this.pos.config.inventory_adjustment) {
+                return _super_order.add_product.call(this, product, options);
             }
-            _super_order.add_product.call(this, product, options);
+//            options = _.extend({}, options, {merge: true});
+            var same_product_orderline = _.find(this.get_orderlines(), function(ol){
+                return ol.product.id == product.id
+            });
+            if (same_product_orderline) {
+                var previous_qty = same_product_orderline.get_quantity();
+                same_product_orderline.set_quantity(previous_qty + 1);
+            } else {
+                return _super_order.add_product.call(this, product, options);
+            }
         },
     });
 
