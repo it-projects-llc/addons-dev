@@ -67,14 +67,10 @@ class SubTaskMaster(models.Model):
 
     active = fields.Boolean(default=True)
     name = fields.Char(string="Name", requires=True)
-    priority = fields.Selection([('0', 'Normal'), ('1', 'High')], 'Priority', select=True, default='0')
+    priority = fields.Selection([('0', 'Normal'), ('1', 'High')], 'Priority', index=True, default='0')
     assigned_user = fields.Many2one('res.users', string="Assigned Person", required=1)
-    task_ref = fields.Many2one('project.task', string='Name', required=1,
-                               default=lambda self: self.env.context.get('default_task_ref'),
-                               domain=['|', '|', ('project_id.use_sub_task', '=', True),
-                                                                                  ('stage_id.done_state', '=', False),
-                                                                                  ('stage_id.cancel_state', '=', False)])
-    stage_id = fields.Many2one('project.sub_task.type', string='Stage', select=True,
+    task_ref = fields.Many2one('project.task', 'Task', ondelete='cascade', required=True, index="1")
+    stage_id = fields.Many2one('project.sub_task.type', string='Stage', index=True,
                                domain="[('task_ids', '=', task_ref)]", copy=False)
     project_id = fields.Many2one('project.project', related='task_ref.project_id', string='Project')
     notes = fields.Html(string='Notes')
@@ -90,17 +86,17 @@ class SubTaskMaster(models.Model):
                                          string='Displayed Image')
 
     tag_ids = fields.Many2one('project.sub_task.tags', string='Tags')
-    write_date = fields.Datetime(string='Last Modification Date', readonly=True, select=True)
-    date_start = fields.Datetime(string='Starting Date', readonly=True, select=True, default=fields.Datetime.now())
+    write_date = fields.Datetime(string='Last Modification Date', readonly=True, index=True)
+    date_start = fields.Datetime(string='Starting Date', readonly=True, index=True, default=fields.Datetime.now())
     date_deadline = fields.Datetime(string='Deadline')
     active = fields.Boolean(string='Active', default=True)
     description = fields.Html(String='Description')
-    sequence = fields.Integer(string='Sequence', select=True, default=10,
+    sequence = fields.Integer(string='Sequence', index=True, default=10,
                               help="Gives the sequence order when displaying a list of sub tasks.")
     company_id = fields.Many2one('res.company', string='Company')
-    date_last_stage_update = fields.Datetime(string='Last Stage Update', select=True, copy=False, readonly=True,
+    date_last_stage_update = fields.Datetime(string='Last Stage Update', index=True, copy=False, readonly=True,
                                              default=fields.Datetime.now())
-    date_assign = fields.Datetime(string='Assigning Date', select=True, copy=False, readonly=True)
+    date_assign = fields.Datetime(string='Assigning Date', index=True, copy=False, readonly=True)
 
     @api.model
     def create(self, vals):
@@ -125,7 +121,7 @@ class TaskMaster(models.Model):
     _inherit = 'project.task'
 
     sub_task_lines = fields.One2many('project.sub_task', 'task_ref', string='Sub Tasks')
-    date_deadline = fields.Datetime('Deadline', select=True, copy=False)
+    date_deadline = fields.Datetime('Deadline', index=True, copy=False)
     use_sub_task = fields.Boolean(string="SubTasks", related='project_id.use_sub_task')
     subtask_count = fields.Integer(string='Count', compute='sub_task_found')
 

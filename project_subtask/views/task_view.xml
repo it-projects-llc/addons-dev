@@ -7,6 +7,8 @@
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook/page[2]" position="after">
+                    <field name="use_sub_task" invisible="1"/>
+                    <field name="subtask_count" invisible="1"/>
                     <page name="project_sub_tasks" string="Sub Tasks" attrs="{'invisible':[('use_sub_task','=',False)]}">
                         <field name="sub_task_lines" attrs="{'invisible': [('sub_task_lines', '=', [(6, False, [])])]}">
                             <tree string="Sub Task Lines" editable="bottom" colors="red:current_date > date_deadline;">
@@ -22,9 +24,9 @@
                      <field name="use_sub_task" invisible="1"/>
                      <field name="subtask_count" invisible="1"/>
                  </field>
-                <!--<field name="stage_id" position="attributes">-->
-                    <!--<attribute name="attrs">{'invisible':[('active','=',False)]}</attribute>-->
-                <!--</field>-->
+                <field name="stage_id" position="attributes">
+                    <attribute name="attrs">{'invisible':[('active','=',False)]}</attribute>
+                </field>
             </field>
         </record>
 

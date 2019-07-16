@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='options_active']" position="inside">
-                        <div class="o_row">
+                        <div>
                             <field name="use_tasks" invisible="1"/>
                             <field name="use_sub_task" class="oe_inline" string="Sub Tasks" attrs="{'invisible':[('use_tasks', '=', False)]}"/>
                             <label for="use_sub_task" class="oe_inline" attrs="{'invisible':[('use_tasks', '=', False) ]}"/>
