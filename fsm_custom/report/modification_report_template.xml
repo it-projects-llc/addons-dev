@@ -38,7 +38,7 @@
                         <tr>
                                 <td>Signature :<t t-if="doc.signature_modify_install_image">
                                     <div>
-                                        <img t-att-src="'data:image/png;base64,'+ doc.signature_modify_install_image" width="200" height="150"/>
+                                        <img t-att-src="image_data_uri(doc.signature_modify_install_image)" width="200" height="150"/>
                                     </div>
                                 </t>
                                 </td>

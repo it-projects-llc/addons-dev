@@ -273,13 +273,13 @@
                             <field name="product_id"/>
                             <field name="name"/>
                             <field name="product_uom_qty" string="Ordered Qty"/>
-                            <field name="product_uom" groups="product.group_uom"
+                            <field name="product_uom" groups="uom.group_uom"
                                    options='{"no_open": True}' />
                             <field name="price_unit"/>
                             <field name="price_subtotal" widget="monetary"
-                                   groups="sale.group_show_price_subtotal"/>
+                                   groups="account.group_show_line_subtotals_tax_excluded"/>
                             <field name="price_total" widget="monetary"
-                                   groups="sale.group_show_price_total"/>
+                                   groups="account.group_show_line_subtotals_tax_included"/>
                         </tree>
                     </field>
                     <button name="custom_create_invoice" type="object" class="oe_highlight" string="Create Invoice" attrs="{'invisible': ['|',('invoice_check','=', True),('invoice_id','!=', False)]}"/>

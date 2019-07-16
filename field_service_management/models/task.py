@@ -202,7 +202,7 @@ class Job(models.Model):
         if not default.get('parent_name'):
             default['parent_name'] = self.id
         duplicate_job = super(Job, self).copy(default)
-        uom = self.env['product.uom'].search([('name','=','Unit(s)')]).id
+        uom = self.env['uom.uom'].search([('name','=','Unit(s)')]).id
         for lines in self.order_line_ids:
             if not lines.check_box:
                 vals={'product_id':lines.product_id.id,
@@ -745,10 +745,25 @@ class JobLine(models.Model):
         comodel_name='project.task',
         string='Job',
         help='This field is a related to jobs view in create a jobs')
-    check_box=fields.Boolean("checked")
+    check_box = fields.Boolean("checked")
     order_id = fields.Many2one(
         comodel_name='sale.order',
         string='Order Reference',
         required=False,
         help='This field is a sale order reference field')
 
+    @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_id')
+    def _compute_amount(self):
+        """
+        Compute the amounts of the SO line.
+        """
+        for line in self:
+            self.price_unit = line.product_id.list_price
+            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+            taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty,
+                                            product=line.product_id, partner=line.order_id.partner_shipping_id)
+            line.update({
+                'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
+                'price_total': taxes['total_included'],
+                'price_subtotal': taxes['total_excluded'],
+            })
