@@ -9,11 +9,27 @@ class PosConfig(models.Model):
     _inherit = 'pos.config'
 
     inventory_adjustment = fields.Boolean('Inventory Mode')
+    inventory_adjustment_temporary_inv_id = fields.Many2one('stock.inventory.stage', 'Temporary POS')
 
-    @api.model
+    @api.multi
+    def create_temporary_inventory(self, stock_inventory_stage_id):
+        stock_inventory_stage_id = self.env['stock.inventory.stage'].browse(stock_inventory_stage_id)
+        return self.create({
+            'name': stock_inventory_stage_id.name + 'POS',
+            'stock_location_id': stock_inventory_stage_id.inventory_id.location_id.id,
+            'inventory_adjustment': True,
+            'inventory_adjustment_temporary_inv_id': stock_inventory_stage_id.id,
+        })
+
     def close_and_validate_entries_on_pos_closing(self, session):
         session = self.env['pos.session'].browse(session)
         session.action_pos_session_close()
+        if session.config_id.inventory_adjustment_temporary_inv_id:
+            config_id = session.config_id
+            session.action_pos_session_close()
+            session.statement_ids.button_cancel()
+            session.unlink()
+            config_id.unlink()
 
 
 class StockInventoryStage(models.Model):
@@ -47,3 +63,18 @@ class StockInventoryStage(models.Model):
         return {
             'inventory_stage_id': self.id,
         }
+
+
+class StockInventory(models.Model):
+    _inherit='stock.inventory'
+
+    @api.multi
+    def action_new_stage(self):
+        opened_poses = self.env['pos.session'].search([('user_id', '=', self.env.user.id), ('state', '=', 'opened')])
+        if opened_poses:
+            return opened_poses[0].open_frontend_cb()
+
+        res = super(StockInventory, self).action_new_stage()
+        config = self.env['pos.config'].create_temporary_inventory(res['res_id'])
+        config.open_session_cb()
+        return config.current_session_id.open_frontend_cb()

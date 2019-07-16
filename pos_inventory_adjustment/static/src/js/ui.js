@@ -18,7 +18,6 @@ odoo.define('pos_inventory_adjustment.ui', function (require) {
             this.gui.show_popup('invadjnew',{
                 'title': _t('New Stage'),
                 'confirm': function(data){
-                    console.log('asdsad')
                     return new Model('stock.inventory.stage').call('create', [data]).then(function (res) {
                         return pos.get_inventory_stages([res]).then(function(stage){
                             var order = pos.get_order();
@@ -121,7 +120,6 @@ odoo.define('pos_inventory_adjustment.ui', function (require) {
 
             this.list = options.list || [];
             this.renderElement();
-            console.log('asdasdasd')
 
             this.$el.find('select').on('change', function() {
                 var selections = self.$el.find('select');
@@ -244,7 +242,7 @@ odoo.define('pos_inventory_adjustment.ui', function (require) {
         _close: function() {
             this._super();
             if (this.pos.config.inventory_adjustment) {
-                new Model('pos.config').call('close_and_validate_entries_on_pos_closing', [this.pos.pos_session.id])
+                new Model('pos.config').call('close_and_validate_entries_on_pos_closing', [[], this.pos.pos_session.id])
             }
         },
    });
