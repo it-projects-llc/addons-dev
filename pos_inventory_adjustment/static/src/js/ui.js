@@ -5,7 +5,6 @@ odoo.define('pos_inventory_adjustment.ui', function (require) {
 
     var PopupWidget = require('point_of_sale.popups');
     var screens = require('point_of_sale.screens');
-    var models = require('point_of_sale.models');
     var gui = require('point_of_sale.gui');
     var Model = require('web.DataModel');
     var core = require('web.core');
@@ -240,6 +239,15 @@ odoo.define('pos_inventory_adjustment.ui', function (require) {
             return window.location.origin + '/web/image?model=product.product&field=image_medium&id='+product.id;
         },
     });
+
+    gui.Gui.include({
+        _close: function() {
+            this._super();
+            if (this.pos.config.inventory_adjustment) {
+                new Model('pos.config').call('close_and_validate_entries_on_pos_closing', [this.pos.pos_session.id])
+            }
+        },
+   });
 
     return {
         NewStageButton: NewStageButton,

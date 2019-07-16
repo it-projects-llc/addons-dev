@@ -10,6 +10,11 @@ class PosConfig(models.Model):
 
     inventory_adjustment = fields.Boolean('Inventory Mode')
 
+    @api.model
+    def close_and_validate_entries_on_pos_closing(self, session):
+        session = self.env['pos.session'].browse(session)
+        session.action_pos_session_close()
+
 
 class StockInventoryStage(models.Model):
     _inherit = "stock.inventory.stage"

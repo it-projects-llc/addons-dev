@@ -3,10 +3,7 @@
 odoo.define('pos_inventory_adjustment.models', function (require) {
     "use strict";
 
-    var PopupWidget = require('point_of_sale.popups');
-    var screens = require('point_of_sale.screens');
     var models = require('point_of_sale.models');
-    var gui = require('point_of_sale.gui');
     var Model = require('web.DataModel');
     var core = require('web.core');
     var _t = core._t;
@@ -133,7 +130,6 @@ odoo.define('pos_inventory_adjustment.models', function (require) {
             if (!this.pos.config.inventory_adjustment) {
                 return _super_order.add_product.call(this, product, options);
             }
-//            options = _.extend({}, options, {merge: true});
             var same_product_orderline = _.find(this.get_orderlines(), function(ol){
                 return ol.product.id == product.id
             });
