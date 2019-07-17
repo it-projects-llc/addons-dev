@@ -1,5 +1,6 @@
 # Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
 # Copyright 2019 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
+# Copyright 2019 Eugene Molotov <https://it-projects.info/team/molotov>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 import jinja2
@@ -39,11 +40,12 @@ except ImportError as err:
 
 _logger = logging.getLogger(__name__)
 config_parser = ConfigParser.ConfigParser()
+config_filename = os.path.join(config['data_dir'], "odoo_backup_sh.ini")
 path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'views'))
 loader = jinja2.FileSystemLoader(path)
 env = jinja2.Environment(loader=loader, autoescape=True)
 BACKUP_SERVICE_ENDPOINT = 'https://odoo-backup.sh'
-
+DuplicateSectionError = ConfigParser.DuplicateSectionError
 
 class BackupDatabase(web.controllers.main.Database):
 
@@ -271,25 +273,34 @@ class BackupController(http.Controller):
         """
         :return dict: option_name: value
         """
-        config_parser.read(config.rcfile)
+        config_parser.read(config_filename)
         result = {}
         for option in options_list:
-            result[option] = config_parser.get(section, option, fallback=None)
+            result[option] = config_parser.get(
+                section,
+                option,
+                fallback=config.options.get(option) if section == "options" else None
+            )
         return result
 
     @classmethod
     def set_config_values(cls, section, options_dict):
+        try:
+            config_parser.add_section(section)
+        except DuplicateSectionError:
+            pass
         for option, value in options_dict.items():
             config_parser.set(section, option, value or '')
-        with open(config.rcfile, 'w') as configfile:
+        with open(config_filename, 'w') as configfile:
             config_parser.write(configfile)
+        os.chmod(config_filename, 0o600)
 
     @classmethod
     def remove_config_options(cls, section, options_list):
-        config_parser.read(config.rcfile)
+        config_parser.read(config_filename)
         for option in options_list:
             config_parser.remove_option(section, option)
-        with open(config.rcfile, 'w') as configfile:
+        with open(config_filename, 'w') as configfile:
             config_parser.write(configfile)
 
 
