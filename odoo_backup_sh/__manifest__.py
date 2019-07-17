@@ -1,4 +1,5 @@
 # Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
+# Copyright 2019 Eugene Molotov <https://it-projects.info/team/molotov>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 {
     "name": """Odoo-backup.sh""",
@@ -8,7 +9,7 @@
     "images": ['images/backupsh.jpg'],
     "version": "12.0.1.0.0",
 
-    "author": "IT-Projects LLC, Stanislav Krotov",
+    "author": "IT-Projects LLC",
     "support": "apps@it-projects.info",
     "website": "https://it-projects.info/team/ufaks",
     "license": "LGPL-3",
@@ -34,7 +35,6 @@
     "post_load": None,
     "pre_init_hook": None,
     "post_init_hook": None,
-    "uninstall_hook": None,
 
     "auto_install": False,
     "installable": True,

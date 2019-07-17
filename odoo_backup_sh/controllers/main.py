@@ -47,6 +47,7 @@ env = jinja2.Environment(loader=loader, autoescape=True)
 BACKUP_SERVICE_ENDPOINT = 'https://odoo-backup.sh'
 DuplicateSectionError = ConfigParser.DuplicateSectionError
 
+
 class BackupDatabase(web.controllers.main.Database):
 
     def _render_template(self, **d):
