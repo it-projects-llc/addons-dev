@@ -52,7 +52,7 @@ class OAS(http.Controller):
                 type='http', auth='none', csrf=False, cors='*')
     def OAS_json_spec_download(self, namespace_name, **kwargs):
         ensure_db()
-        namespace = http.request.env['openapi.namespace'].search([('name', '=', namespace_name)])
+        namespace = http.request.env['openapi.namespace'].sudo().search([('name', '=', namespace_name)])
         if not namespace:
             raise werkzeug.exceptions.NotFound()
         if namespace.token != kwargs.get('token'):

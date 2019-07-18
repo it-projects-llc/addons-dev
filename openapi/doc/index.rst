@@ -7,7 +7,7 @@
 
 Installation
 ============
-
+* `Please install all the python dependencies described in the requirements.txt file`
 * `Install <https://odoo-development.readthedocs.io/en/latest/odoo/usage/install-module.html>`__ this module in a usual way
 * Add ``openapi`` to ``--load`` parameters, e.g.::
 
@@ -26,7 +26,7 @@ TODO
 * `Activate Developer Mode <https://odoo-development.readthedocs.io/en/latest/odoo/usage/debug-mode.html>`__
 * Open the developer tools drop down
 * Click menu ``Configure REST API`` located within the dropdown
-* On the form that opens, activate and configure this module for REST API accessability. 
+* On the form that opens, activate and configure this module for REST API accessability.
 * Click ``[Apply]``
 
 via Database Structure Menu (only for developers)
@@ -95,7 +95,7 @@ Swagger Editor
 Allows to review API
 
 * Open http://editor.swagger.io/
-* Click menu ``File >> Import File`` 
+* Click menu ``File >> Import File``
 * RESULT: You can see specification for API
 * You can auto-generate SDKs in over 40 languages, there.
 * Or even download server stups in over 20 frameworks, that iplement the API.

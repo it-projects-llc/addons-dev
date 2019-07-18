@@ -1,12 +1,20 @@
 # -*- coding: utf-8 -*-
 # Copyright 2018 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 # Copyright 2018 Rafis Bikbov <https://it-projects.info/team/bikbov>
+# Copyright 2019 Yan Chirino <https://xoe.solutions/>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 import collections
 import urllib
-import urlparse
 import uuid
+import time
+import datetime
 
+try:
+    import urlparse
+except ImportError:
+    import urllib.parse as urlparse
+
+from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo import models, fields, api
 from ..controllers import pinguin
 
@@ -65,7 +73,7 @@ class Namespace(models.Model):
     @api.model
     def _fix_name(self, vals):
         if 'name' in vals:
-            vals['name'] = urllib.quote_plus(vals['name'].lower())
+            vals['name'] = urlparse.quote_plus(vals['name'].lower())
         return vals
 
     @api.model
@@ -87,7 +95,7 @@ class Namespace(models.Model):
             ('swagger', '2.0'),
             ('info', {
                 "title": self.name,
-                "version": self.write_date
+                "version": self.write_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
             }),
             ('host', parsed_current_host.netloc),
             ('basePath', "/api/v1/%s" % self.name),

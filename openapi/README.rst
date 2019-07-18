@@ -73,6 +73,7 @@ Contributors
 ------------
 * `Ivan Yelizariev <https://it-projects.info/team/yelizariev>`__
 * `David Arnold <dar@xoe.solutions>`__
+* `Yan Chirino <ych@xoe.solutions>`__
 
 Sponsors
 --------
@@ -92,14 +93,6 @@ Maintainers
 Further information
 ===================
 
-Demo: http://runbot.it-projects.info/demo/misc-addons/10.0
-
-HTML Description: https://apps.odoo.com/apps/modules/10.0/openapi/
-
 Usage instructions: `<doc/index.rst>`_
 
 Changelog: `<doc/changelog.rst>`_
-
-Notifications on updates: `via Atom <https://github.com/it-projects-llc/misc-addons/commits/10.0/openapi.atom>`_, `by Email <https://blogtrottr.com/?subscribe=https://github.com/it-projects-llc/misc-addons/commits/10.0/openapi.atom>`_
-
-Tested on Odoo 10.0 87b42ad9a887faacbbefcab9dd0703a5c51ce28b

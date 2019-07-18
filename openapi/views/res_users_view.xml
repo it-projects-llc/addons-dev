@@ -14,14 +14,30 @@
                         attrs="{'invisible': [('id', '=', False)]}"
                 />
             </header>
-            <field name="partner_id" position="after">
-                <field name="token" attrs="{'invisible': [('id', '=', False)]}"/>
-            </field>
+            <xpath expr="//group/field[@name='partner_id']" position="after">
+                   <field name="token" attrs="{'invisible': [('id', '=', False)]}"/>
+            </xpath>
             <notebook position="inside">
                 <page string="Allowed Namespaces">
                     <field name="namespace_ids"/>
                 </page>
             </notebook>
+        </field>
+    </record>
+
+    <record id="res_users_preferences_form" model="ir.ui.view">
+        <field name="name">res.users.preferences.form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+        <field name="priority">120</field>
+        <field name="arch" type="xml">
+
+            <xpath expr="//button[@name='preference_change_password']" position="after">
+                <group>
+                   <field name="token" attrs="{'invisible': [('id', '=', False)],'readonly': True}"/>
+                </group>
+            </xpath>
+
         </field>
     </record>
 </odoo>

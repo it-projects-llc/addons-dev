@@ -1,3 +1,5 @@
 icalendar
 boto3
 websocket-client
+bravado-core==5.10.1
+swagger-spec-validator==2.4.3

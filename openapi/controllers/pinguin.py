@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright 2018, XOE Solutions
 # Copyright 2018 Rafis Bikbov <https://it-projects.info/team/bikbov>
+# Copyright 2019 Yan Chirino <https://xoe.solutions/>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
 """Pinguin module for Odoo REST Api.
@@ -28,15 +29,20 @@ import werkzeug.wrappers
 import collections
 
 import odoo
+import time
+import datetime
+
 from odoo.service import security
-from odoo.addons.report.controllers.main import ReportController
+from odoo.addons.web.controllers.main import ReportController
+from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
 try:
     import simplejson as json
 except ImportError:
     import json
 
-from odoo.http import request, route as http_route
+from .apijsonrequest import api_route
+from odoo.http import request
 from psycopg2.extensions import ISOLATION_LEVEL_READ_COMMITTED
 
 ####################################
@@ -181,7 +187,7 @@ def get_data_from_auth_header(header):
     """
     normalized_token = header.replace('Basic ', '').replace('\\n', '').encode('utf-8')
     try:
-        decoded_token_parts = base64.decodestring(normalized_token).split(':')
+        decoded_token_parts = base64.decodestring(normalized_token).split(b':')
     except TypeError:
         raise werkzeug.exceptions.HTTPException(response=error_response(500, 'Invalid header', 'Basic auth header must be valid base64 string'))
 
@@ -298,9 +304,10 @@ def route(*args, **kwargs):
     """
     def decorator(controller_method):
 
-        @http_route(*args, **kwargs)
+        @api_route(*args, **kwargs)
         @functools.wraps(controller_method)
         def controller_method_wrapper(*iargs, **ikwargs):
+
             auth_header = get_auth_header(request.httprequest.headers, raise_exception=True)
             db_name, user_token = get_data_from_auth_header(auth_header)
             setup_db(request.httprequest, db_name)
@@ -852,13 +859,13 @@ def get_dictlist_from_model(model, spec, **kwargs):
     # Do some optimization for subfields
     _prefetch = {}
     for field in spec:
-        if isinstance(field, basestring):
+        if isinstance(field, str):
             continue
         _fld = records._fields[field[0]]
         if _fld.relational:
             _prefetch[_fld.comodel] = records.mapped(field[0]).ids
 
-    for mod, ids in _prefetch.iteritems():
+    for mod, ids in _prefetch.items():
         get_model_for_read(mod).browse(ids).read()
 
     result = []
@@ -924,6 +931,14 @@ def get_dict_from_record(record, spec, include_fields, exclude_fields):
     validate_spec(record, _spec)
 
     for field in _spec:
+        if isinstance(record[field], datetime.date):
+            result[field] = record[field].strftime(DEFAULT_SERVER_DATE_FORMAT)
+            continue
+
+        if isinstance(record[field], datetime.datetime):
+            result[field] = record[field].strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            continue
+
         if isinstance(field, tuple):
             # It's a 2many (or a 2one specified as a list)
             if isinstance(field[1], list):

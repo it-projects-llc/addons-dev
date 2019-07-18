@@ -7,6 +7,11 @@ import json
 import urllib
 import inspect
 
+try:
+    import urlparse
+except ImportError:
+    import urllib.parse as urlparse
+
 from odoo import models, fields, api, _, exceptions
 
 from ..controllers import pinguin
@@ -65,7 +70,6 @@ class Access(models.Model):
         string='Creation Context Presets',
         help="Can be used to pass default values or custom context",
         domain="[('model_id', '=', model_id)]",
-        context="{'default_model_id': model_id}",
     )
 
     _sql_constraints = [
@@ -464,7 +468,7 @@ class AccessCreateContext(models.Model):
     @api.model
     def _fix_name(self, vals):
         if 'name' in vals:
-            vals['name'] = urllib.quote_plus(vals['name'].lower())
+            vals['name'] = urlparse.quote_plus(vals['name'].lower())
         return vals
 
     @api.model
