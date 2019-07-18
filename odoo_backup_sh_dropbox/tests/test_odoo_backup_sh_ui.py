@@ -1,12 +1,11 @@
 # Copyright 2019 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
+# Copyright 2019 Eugene Molotov <https://it-projects.info/team/molotov>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
-from odoo.tests.common import HttpCase, at_install, post_install
+from odoo.addons.odoo_backup_sh.tests.test_odoo_backup_sh_ui import TestUi as BaseTestUi
 
 
-@at_install(True)
-@post_install(True)
-class TestUi(HttpCase):
+class TestUi(BaseTestUi):
 
     def test_odoo_backup_sh_tour(self):
         # needed because tests are run before the module is marked as
