@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+
+<templates id="template" xml:space="preserve">
+
+    <t t-name="orderline_customzation_button">
+        <div class='control-button'>
+            <i class='fa fa-qrcode' /> orderline_customzation_button
+        </div>
+    </t>
+
+    <t t-name="orderline_customzation_popup">
+        <div class="modal-dialog">
+            <div class="popup pos_custom_orderline_popup">
+                <div class="header title">
+                    <div>
+                        <t t-esc="widget.options.title || '' " />
+                    </div>
+                </div>
+
+                <div class="body">
+                    <div>
+                        <select class='popup_selection partner_id' name='partner_selection'>
+                            <option value=''>None</option>
+                            <t t-foreach='widget.pos.db.partner_sorted' t-as='p_id'>
+                                <option t-att-value='p_id'>
+                                    <t t-esc='widget.pos.db.get_partner_by_id(p_id).name'/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                    <div>
+                        <input class="surname" type='text' t-att-value="widget.options.surname || ''"></input>
+                        <input class="name" type='text' t-att-value="widget.options.name || ''"></input>
+                        <input class="fathers_name" type='text' t-att-value="widget.options.fathers_name || ''"></input>
+                    </div>
+                    <div>
+                        <input name="gender" class="gender male" type='radio' value="male"></input> <label for="contactChoice3">Male</label>
+                        <input name="gender" class="gender female" type='radio' value="female"></input> <label for="contactChoice3">Female</label>
+                    </div>
+                    <div>
+                        <input class="birthday_date" type='date' min="1900-01-01" max="2018-12-31" t-att-value="1990-01-01"></input>
+                    </div>
+
+                    <div>
+                        <select class='popup_selection user executor_id' name='user_executor'>
+                            <option value=''>None</option>
+                            <t t-foreach='widget.pos.users' t-as='u'>
+                                <option t-att-value='u.id'>
+                                    <t t-esc='u.name'/>
+                                </option>
+                            </t>
+                        </select>
+
+                        <select class='popup_selection user seller_id' name='user_seller'>
+                            <option value=''>None</option>
+                            <t t-foreach='widget.pos.users' t-as='u'>
+                                <option t-att-value='u.id'>
+                                    <t t-esc='u.name'/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+
+                    <div>
+                        <select class='popup_selection other rooms' name='rooms'>
+                            <option value=''>None</option>
+                            <t t-foreach='widget.pos.db.service_rooms' t-as='r'>
+                                <option t-att-value='r.id'>
+                                    <t t-esc='r.name'/>
+                                </option>
+                            </t>
+                        </select>
+
+                        <select class='popup_selection other categories' name='categories'>
+                            <option value=''>None</option>
+                            <t t-foreach='widget.pos.db.guest_categories' t-as='c'>
+                                <option t-att-value='c.id'>
+                                    <t t-esc='c.name'/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="footer">
+                    <div class="button confirm">
+                        Ok
+                    </div>
+                    <div class="button copy">
+                        Copy from previous
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </t>
+
+</templates>
+

@@ -1,0 +1,40 @@
+.pos .popup .popup_selection {
+    text-align: left;
+    display: inline-block;
+    overflow: hidden;
+    background: white;
+    min-height: 44px;
+    font-family: "Lato";
+    font-size: 20px;
+    color: #444;
+    padding: 10px;
+    border-radius: 3px;
+    border: none;
+    box-shadow: 0px 0px 0px 1px rgb(220,220,220) inset;
+    box-sizing: border-box;
+    width: 80%;
+}
+
+.pos .modal-dialog .popup.pos_custom_orderline_popup {
+    width: 900px;
+    height: 500px;
+}
+
+.pos .popup.pos_custom_orderline_popup .body {
+    overflow: scroll;
+    height: 350px;
+}
+
+.pos .popup.pos_custom_orderline_popup input {
+    margin: 5px;
+    width: 30%;
+}
+
+.pos .popup.pos_custom_orderline_popup input.gender {
+    width: 10%;
+}
+
+.pos .popup.pos_custom_orderline_popup select.user,
+.pos .popup.pos_custom_orderline_popup select.other {
+    width: 45%;
+}

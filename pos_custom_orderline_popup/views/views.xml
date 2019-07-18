@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).-->
+<odoo>
+
+    <record id="res_partner_inherit_view" model="ir.ui.view">
+        <field name="name">res.partner.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='lang']" position="after">
+                <field name='birthday_date'/>
+                <field name='gender'/>
+                <field name='fathers_name'/>
+                <field name='surname'/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_pos_pos_form" model="ir.ui.view">
+        <field name="name">pos.order.inherit</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='price_subtotal_incl']" position="after">
+                <field name='partner_id'/>
+                <field name='executor_id'/>
+                <field name='seller_id'/>
+                <field name='service_room_id'/>
+                <field name='guest_category_id'/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_pos_order_line_form" model="ir.ui.view">
+        <field name="name">pos.order.line.inherit</field>
+        <field name="model">pos.order.line</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='create_date']" position="after">
+                <field name='partner_id'/>
+                <field name='executor_id'/>
+                <field name='seller_id'/>
+                <field name='service_room_id'/>
+                <field name='guest_category_id'/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="service_room_tree" model="ir.ui.view">
+        <field name="name">service.room.tree</field>
+        <field name="model">service.room</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_service_room_tree">
+        <field name="name">Rooms</field>
+        <field name="res_model">service.room</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form,tree</field>
+        <field name="view_id" ref="service_room_tree" />
+    </record>
+
+
+    <menuitem id="menu_point_of_sale_rooms"
+        name="Service Rooms"
+        parent="point_of_sale.menu_point_of_sale"
+        action="action_service_room_tree"
+        sequence="100"/>
+
+    <record id="guest_category_tree" model="ir.ui.view">
+        <field name="name">guest.category.tree</field>
+        <field name="model">guest.category</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_guest_category_tree">
+        <field name="name">Rooms</field>
+        <field name="res_model">guest.category</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form,tree</field>
+        <field name="view_id" ref="guest_category_tree" />
+    </record>
+
+    <menuitem id="menu_point_of_sale_categories"
+        name="Guest Categories"
+        parent="point_of_sale.menu_point_of_sale"
+        action="action_guest_category_tree"
+        sequence="101"/>
+
+</odoo>

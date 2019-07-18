@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_service_room,access_service_room,model_service_room,base.group_user,1,1,1,1
+access_guest_category,access_guest_category,model_guest_category,base.group_user,1,1,1,1
