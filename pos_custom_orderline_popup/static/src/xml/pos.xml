@@ -6,7 +6,7 @@
 
     <t t-name="orderline_customzation_button">
         <div class='control-button'>
-            <i class='fa fa-qrcode' /> orderline_customzation_button
+            <i class='fa fa-qrcode' /> Add Info
         </div>
     </t>
 
