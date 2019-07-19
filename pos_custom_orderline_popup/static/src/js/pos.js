@@ -34,7 +34,7 @@ odoo.define('pos_custom_orderline_popup.pos', function (require) {
             var orderlines = order.get_orderlines();
             if (orderlines.length && order.get_selected_orderline()) {
                 this.gui.show_popup('orderline_customzation',{
-                    'title': 'orderline_customzation',
+                    'title': 'Add Info to Orderline',
                 });
             }
         },
