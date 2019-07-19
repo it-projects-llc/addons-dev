@@ -58,7 +58,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_service_room_tree">
-        <field name="name">Rooms</field>
+        <field name="name">Service Rooms</field>
         <field name="res_model">service.room</field>
         <field name="view_type">form</field>
         <field name="view_mode">form,tree</field>
@@ -83,7 +83,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_guest_category_tree">
-        <field name="name">Rooms</field>
+        <field name="name">Guest Categories</field>
         <field name="res_model">guest.category</field>
         <field name="view_type">form</field>
         <field name="view_mode">form,tree</field>
