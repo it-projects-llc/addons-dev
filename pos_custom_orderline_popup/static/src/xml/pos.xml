@@ -22,7 +22,7 @@
                 <div class="body">
                     <div>
                         <select class='popup_selection partner_id' name='partner_selection'>
-                            <option value=''>None</option>
+                            <option value=''>Select a customer</option>
                             <t t-foreach='widget.pos.db.partner_sorted' t-as='p_id'>
                                 <option t-att-value='p_id'>
                                     <t t-esc='widget.pos.db.get_partner_by_id(p_id).name'/>
