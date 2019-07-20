@@ -22,7 +22,7 @@
                 <div class="body">
                     <div>
                         <select class='popup_selection partner_id' name='partner_selection'>
-                            <option value=''>Select a customer</option>
+                            <option value=''>Select a customer...</option>
                             <t t-foreach='widget.pos.db.partner_sorted' t-as='p_id'>
                                 <option t-att-value='p_id'>
                                     <t t-esc='widget.pos.db.get_partner_by_id(p_id).name'/>
@@ -31,9 +31,9 @@
                         </select>
                     </div>
                     <div>
-                        <input class="surname" type='text' t-att-value="widget.options.surname || ''"></input>
-                        <input class="name" type='text' t-att-value="widget.options.name || ''"></input>
-                        <input class="fathers_name" type='text' t-att-value="widget.options.fathers_name || ''"></input>
+                        <input class="surname" type='text' t-att-value="widget.options.surname || ''" placeholder="Surname"></input>
+                        <input class="name" type='text' t-att-value="widget.options.name || ''" placeholder="Firstname"></input>
+                        <input class="fathers_name" type='text' t-att-value="widget.options.fathers_name || ''" placeholder="Middle name"></input>
                     </div>
                     <div>
                         <input name="gender" class="gender male" type='radio' value="male"></input> <label for="contactChoice3">Male</label>
@@ -45,7 +45,7 @@
 
                     <div>
                         <select class='popup_selection user executor_id' name='user_executor'>
-                            <option value=''>None</option>
+                            <option value=''>Assign to user...</option>
                             <t t-foreach='widget.pos.users' t-as='u'>
                                 <option t-att-value='u.id'>
                                     <t t-esc='u.name'/>
@@ -54,7 +54,7 @@
                         </select>
 
                         <select class='popup_selection user seller_id' name='user_seller'>
-                            <option value=''>None</option>
+                            <option value=''>Select a seller...</option>
                             <t t-foreach='widget.pos.users' t-as='u'>
                                 <option t-att-value='u.id'>
                                     <t t-esc='u.name'/>
@@ -65,7 +65,7 @@
 
                     <div>
                         <select class='popup_selection other rooms' name='rooms'>
-                            <option value=''>None</option>
+                            <option value=''>Select a room...</option>
                             <t t-foreach='widget.pos.db.service_rooms' t-as='r'>
                                 <option t-att-value='r.id'>
                                     <t t-esc='r.name'/>
@@ -74,7 +74,7 @@
                         </select>
 
                         <select class='popup_selection other categories' name='categories'>
-                            <option value=''>None</option>
+                            <option value=''>Select a category...</option>
                             <t t-foreach='widget.pos.db.guest_categories' t-as='c'>
                                 <option t-att-value='c.id'>
                                     <t t-esc='c.name'/>
