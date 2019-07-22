@@ -31,10 +31,26 @@
 }
 
 .pos .popup.pos_custom_orderline_popup input.gender {
-    width: 10%;
+    width: 3%;
 }
 
 .pos .popup.pos_custom_orderline_popup select.user,
 .pos .popup.pos_custom_orderline_popup select.other {
     width: 45%;
+}
+
+.pos .popup.pos_custom_orderline_popup input:focus,
+.pos .popup.pos_custom_orderline_popup select:focus {
+    outline: none;
+    box-shadow: 0px 0px 0px 3px #6EC89B;
+}
+
+.pos .popup.pos_custom_orderline_popup input.alert,
+.pos .popup.pos_custom_orderline_popup select.alert {
+    outline: none;
+    box-shadow: 0px 0px 0px 3px #ff3d3d;
+}
+
+.pos .popup.pos_custom_orderline_popup .button.new_partner {
+    margin-top: 0px;
 }

@@ -36,8 +36,8 @@
                         <input class="fathers_name" type='text' t-att-value="widget.options.fathers_name || ''" placeholder="Middle name"></input>
                     </div>
                     <div>
-                        <input name="gender" class="gender male" type='radio' value="male"></input> <label for="contactChoice3">Male</label>
-                        <input name="gender" class="gender female" type='radio' value="female"></input> <label for="contactChoice3">Female</label>
+                        <input name="gender" class="gender male" type='radio' value="male"></input> <label for="gender">Male</label>
+                        <input name="gender" class="gender female" type='radio' value="female"></input> <label for="gender">Female</label>
                     </div>
                     <div>
                         <input class="birthday_date" type='date' min="1900-01-01" max="2018-12-31" t-att-value="1990-01-01"></input>
@@ -64,7 +64,7 @@
                     </div>
 
                     <div>
-                        <select class='popup_selection other rooms' name='rooms'>
+                        <select class='popup_selection other service_room_id' name='rooms'>
                             <option value=''>Select a room...</option>
                             <t t-foreach='widget.pos.db.service_rooms' t-as='r'>
                                 <option t-att-value='r.id'>
@@ -73,7 +73,7 @@
                             </t>
                         </select>
 
-                        <select class='popup_selection other categories' name='categories'>
+                        <select class='popup_selection other guest_category_id' name='categories'>
                             <option value=''>Select a category...</option>
                             <t t-foreach='widget.pos.db.guest_categories' t-as='c'>
                                 <option t-att-value='c.id'>
@@ -88,6 +88,9 @@
                 <div class="footer">
                     <div class="button confirm">
                         Ok
+                    </div>
+                    <div class="button cancel">
+                        Cancel
                     </div>
                     <div class="button copy">
                         Copy from previous

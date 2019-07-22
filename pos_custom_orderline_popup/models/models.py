@@ -34,7 +34,7 @@ class PosOrderLine(models.Model):
     seller_id = fields.Many2one('res.users', string="Seller")
     executor_id = fields.Many2one('res.users', string="Executor")
     partner_id = fields.Many2one('res.partner', string="Partner")
-    service_room_id = fields.Many2one('service.cabinet', string="Service Room")
+    service_room_id = fields.Many2one('service.room', string="Service Room")
     guest_category_id = fields.Many2one('guest.category', string="Guest Category")
 
 
@@ -52,8 +52,6 @@ class PosOrder(models.Model):
                 # l['seller_id'] = int(l.get('seller_id', 0))
                 # l['executor_id'] = int(l.get('executor_id', 0))
                 self.env['res.partner'].update_partner_fields(partner_id, l.get('partner_vals', {}))
-        # import wdb
-        # wdb.set_trace()
 
         order = super(PosOrder, self)._process_order(pos_order)
         return order
