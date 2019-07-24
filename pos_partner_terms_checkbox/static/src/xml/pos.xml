@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="ClientDetails">
+        <t t-jquery=".client-details-right" t-operation="append">
+            <div class='client-detail'>
+                <span class='label'>Terms</span>
+                <t t-if='partner.terms_and_conditions'>
+                    <span class='detail client-id'><t t-esc='partner.terms_and_conditions  &amp;&amp; "&#10004;" || ""'/></span>
+                </t>
+            </div>
+        </t>
+    </t>
+
+    <t t-extend="ClientDetailsEdit">
+        <t t-jquery=".client-details-right" t-operation="append">
+            <div class='client-detail'>
+                <span class='label'>Terms</span>
+                <input class='detail-support terms_and_conditions'
+                       type="checkbox"
+                       name="terms_and_conditions"
+                       t-att-checked='partner.terms_and_conditions || false'></input>
+                <input class='detail terms_and_conditions'
+                       type="checkbox"
+                       style="display:none;"
+                       name="terms_and_conditions"
+                       t-att-value='false'></input>
+            </div>
+        </t>
+    </t>
+
+</templates>
