@@ -16,9 +16,9 @@
 
     <t t-extend="ListView.row">
         <t t-jquery="t[t-foreach='columns']:first" t-operation='before'>
-            <t t-if="dataset.model == 'stock.inventory.line'">
+            <t t-if="(dataset &amp;&amp; dataset.model == 'stock.inventory.line') || (view &amp;&amp; view.model == 'stock.inventory.line')">
                 <td>
-                    <t t-esc="index + 1"/>
+                    <t t-esc="index + 1 || ''"/>
                 </td>
             </t>
         </t>
