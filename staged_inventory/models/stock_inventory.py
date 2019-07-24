@@ -9,6 +9,7 @@ _logger = logging.getLogger(__name__)
 # TODO: When inventory starts we set all stages to Done state.
 #       If anybody is scanning yet he needs to get notification to finish.
 
+
 class StockInventory(models.Model):
     _inherit = "stock.inventory"
     _order = 'date desc'
@@ -22,11 +23,29 @@ class StockInventory(models.Model):
         string='Stages',
         compute='_compute_stages_count',
     )
+    total_real_amount = fields.Float(
+        string='Total Real Amount',
+        compute="_compute_total_real_amount",
+    )
+    total_theoretical_amount = fields.Float(
+        string='Total Theoretical Amount',
+        compute="_compute_total_theoretical_amount",
+    )
 
     @api.depends('stage_ids')
     def _compute_stages_count(self):
         for inventory in self:
             inventory.stage_count = len(inventory.stage_ids)
+
+    @api.depends('stage_ids', 'line_ids')
+    def _compute_total_real_amount(self):
+        for inv in self:
+            inv.total_real_amount = sum([l.real_amount for l in inv.line_ids] + [0])
+
+    @api.depends('stage_ids', 'line_ids')
+    def _compute_total_theoretical_amount(self):
+        for inv in self:
+            inv.total_theoretical_amount = sum([l.theoretical_amount for l in inv.line_ids] + [0])
 
     @api.model
     def _selection_filter(self):
@@ -97,3 +116,25 @@ class StockInventory(models.Model):
                 'view_mode': 'form',
                 'flags': {'initial_mode': 'edit'},
             }
+
+
+class InventoryLine(models.Model):
+    _inherit = "stock.inventory.line"
+
+    product_barcode = fields.Char(related="product_id.barcode", string='Barcode')
+    real_amount = fields.Float(compute="_compute_real_amount", string='Real Amount')
+    theoretical_amount = fields.Float(compute="_compute_theoretical_amount", string='Theoretical Amount')
+
+    @api.onchange('product_qty', 'product_id', 'product_id.lst_price')
+    @api.depends('product_qty', 'product_id', 'product_id.lst_price')
+    def _compute_real_amount(self):
+        # import wdb
+        # wdb.set_trace()
+        for line in self:
+            line.real_amount = line.product_qty * line.product_id.lst_price
+
+    @api.onchange('theoretical_qty', 'product_id', 'product_id.lst_price')
+    @api.depends('theoretical_qty', 'product_id', 'product_id.lst_price')
+    def _compute_theoretical_amount(self):
+        for line in self:
+            line.theoretical_amount = line.theoretical_qty * line.product_id.lst_price

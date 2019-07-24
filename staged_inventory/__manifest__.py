@@ -23,6 +23,9 @@
         'views/stock_inventory_views.xml',
         'views/stock_inventory_stage_views.xml',
     ],
+    "qweb": [
+        "static/src/xml/list_view_templates.xml"
+    ],
     'price': 200.0,
     'currency': 'EUR',
     'application': False,
