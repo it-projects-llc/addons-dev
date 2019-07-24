@@ -213,6 +213,20 @@ odoo.define('pos_inventory_adjustment.ui', function (require) {
         },
     });
 
+    screens.NumpadWidget.include({
+        clickDeleteLastChar: function() {
+            var self = this;
+            var user_is_admin = _.contains(this.pos.get_cashier().groups_id, this.pos.config.group_system_id[0]);
+            if (!this.pos.config.inventory_adjustment || user_is_admin) {
+                return this._super();
+            }
+            return this.gui.show_popup('alert',{
+                'title': _t('Unable to Remove the Line'),
+                'body': _t('Ask an Administrator for it'),
+            });
+        },
+    });
+
     screens.OrderWidget.include({
         init: function(parent, options) {
             var self = this;

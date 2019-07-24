@@ -8,8 +8,13 @@ from odoo import models, fields, _, api
 class PosConfig(models.Model):
     _inherit = 'pos.config'
 
+    def _get_group_system(self):
+        return self.env.ref('base.group_system')
+
     inventory_adjustment = fields.Boolean('Inventory Mode')
     inventory_adjustment_temporary_inv_id = fields.Many2one('stock.inventory.stage', 'Temporary POS')
+    group_system_id = fields.Many2one('res.groups', string='System Group', default=_get_group_system,
+                                      help='This field is there to pass the id of the system group to the point of sale client')
 
     @api.multi
     def create_temporary_inventory(self, stock_inventory_stage_id):
@@ -44,7 +49,8 @@ class StockInventoryStage(models.Model):
                     'message': 'Inventory Stage Was Already Done',
                 }
             }
-        self.line_ids.unlink()
+        # we restrict line deletion for users without rights from the POS interface
+        self.line_ids.sudo().unlink()
         for line in data['lines']:
             product_id = line['product_id']
             qty = line['qty']
