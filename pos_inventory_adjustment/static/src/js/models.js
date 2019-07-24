@@ -161,6 +161,12 @@ odoo.define('pos_inventory_adjustment.models', function (require) {
                 return _super_order.add_product.call(this, product, options);
             }
         },
+
+        get_total_qty: function() {
+            return _.reduce(this.get_orderlines(), function(memo, num){
+                return memo + num.quantity;
+            }, 0);
+        },
     });
 
 });

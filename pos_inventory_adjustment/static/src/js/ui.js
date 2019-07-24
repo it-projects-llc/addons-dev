@@ -235,12 +235,6 @@ odoo.define('pos_inventory_adjustment.ui', function (require) {
                 $(this.chrome.el).addClass('inventory');
             }
         },
-        renderElement: function() {
-            this._super();
-            if (this.pos.config.inventory_adjustment) {
-                $(this.el.querySelector('.summary')).hide();
-            }
-        },
     });
 
     screens.ProductListWidget.include({

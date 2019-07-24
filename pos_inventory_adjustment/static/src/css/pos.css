@@ -93,6 +93,10 @@
     display: none;
 }
 
+.pos.inventory .order .summary.inventory .line {
+    display: block;
+}
+
 .pos.inventory .numpad button[data-mode="price"] {
     display: none;
 }
@@ -118,4 +122,13 @@
 
 .pos.inventory .orders {
     display: none;
+}
+
+.pos .order .orderline .line-index {
+    padding: 0;
+    display: inline-block;
+    font-weight: bold;
+    width: 3%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
