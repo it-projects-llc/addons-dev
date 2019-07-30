@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <act_window id="action_inventory_stage_tree"
+  		name="Inventory Stages"
+  		res_model="stock.inventory.stage"
+  		view_mode="tree,form"/>
+
+    <menuitem id="menu_inventory_stages"
+        name="Inventory Stages"
+        parent="stock.menu_stock_inventory_control"
+  		sequence="32"
+        action="action_inventory_stage_tree"/>
+
+    <record id="stock_inventory_stage_view_form" model="ir.ui.view">
+        <field name="name">stock.inventory.stage.view.form</field>
+        <field name="model">stock.inventory.stage</field>
+        <field name="arch" type="xml">
+            <form create="false">
+                <header>
+                    <button name="action_stage_done" string="Done"
+                        type="object" class="btn-primary"
+                        attrs="{'invisible':[('state','==','done')]}"/>
+                        <!-- confirm="Finish the stage?" -->
+                    <field name="state" widget="statusbar" statusbar_visible="open,done"/>
+                </header>
+                <sheet>
+                    <div name="buttons" class="oe_right oe_button_box">
+                    </div>
+                    <group>
+                        <field name="barcode"
+                               default_focus="1"
+                               attrs="{'invisible': [('state', '=', 'done')]}"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="inventory_id" readonly="True"/>
+                        </group>
+                        <group>
+                            <field name="user_id"
+                                   attrs="{'readonly': [('state', '=', 'done')]}"/>
+                        </group>
+                    </group>
+                    <field name="line_ids"
+                           mode="tree"
+                           options="{'always_reload': True}"
+                           attrs="{'readonly': [('state', '=', 'done')]}">
+                        <tree>
+                            <field name="stage_id" invisible="True"/>
+                            <field name="product_id"/>
+                            <field name="qty" sum="Total"/>
+                        </tree>
+                    </field>
+                    <field name="note" placeholder="Comment..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="stock_inventory_stage_view_tree" model="ir.ui.view">
+        <field name="name">stock.inventory.stage.view.tree</field>
+        <field name="model">stock.inventory.stage</field>
+        <field name="arch" type="xml">
+            <tree create="false"
+                  default_order="create_date desc"
+                  decoration-muted="state=='done'">
+                <field name="create_date"/>
+                <field name="name"/>
+                <field name="inventory_id"/>
+                <field name="user_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>
