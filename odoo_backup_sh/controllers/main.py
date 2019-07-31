@@ -133,12 +133,15 @@ class BackupController(http.Controller):
 
     @http.route('/web/database/backups', type='http', auth="none")
     def backup_list(self):
-        cloud_params = self.get_cloud_params(request.httprequest.url, call_from='frontend')
         page_values = {
             'backup_list': [],
             'pattern': DBNAME_PATTERN,
             'insecure': config.verify_admin_password('admin')
         }
+        if not config['list_db']:
+            page_values['error'] = 'The database manager has been disabled by the administrator'
+            return env.get_template("backup_list.html").render(page_values)
+        cloud_params = self.get_cloud_params(request.httprequest.url, call_from='frontend')
         if 'auth_link' in cloud_params:
             return "<html><head><script>window.location.href = '%s';</script></head></html>" % cloud_params['auth_link']
         elif 'insufficient_credit_error' in cloud_params:
