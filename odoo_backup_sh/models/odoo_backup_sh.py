@@ -41,11 +41,18 @@ class BackupConfig(models.Model):
     _description = 'Backup Configurations'
     _rec_name = 'database'
 
-    DATABASE_NAMES = [(db, db) for db in odoo.service.db.list_dbs() if db != 'session_store']
     ROTATION_OPTIONS = [('unlimited', 'Unlimited'), ('limited', 'Limited'), ('disabled', 'Disabled')]
 
     active = fields.Boolean('Active', compute='_compute_active', inverse='_inverse_active', store=True)
-    database = fields.Selection(selection=DATABASE_NAMES, string='Database', required=True, copy=False)
+
+    @api.model
+    def _compute_database_names(self):
+        if odoo.tools.config['list_db']:
+            return [(db, db) for db in odoo.service.db.list_dbs() if db != 'session_store']
+        else:
+            return [(self.env.cr.dbname, self.env.cr.dbname)]
+
+    database = fields.Selection(selection=_compute_database_names, string='Database', required=True, copy=False)
     encrypt_backups = fields.Boolean(string="Encrypt Backups")
     encryption_password = fields.Char(string='Encryption Password')
     config_cron_ids = fields.One2many('odoo_backup_sh.config.cron', 'backup_config_id', string='Scheduled Auto Backups')
