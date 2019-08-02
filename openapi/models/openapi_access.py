@@ -12,6 +12,16 @@ from odoo import models, fields, api, _, exceptions
 from ..controllers import pinguin
 
 
+PARAM_ID = {
+    "name": "id",
+    "in": "path",
+    "description": "Record ID",
+    "required": True,
+    "type": "integer",
+    "format": "int64"
+}
+
+
 class Access(models.Model):
     _name = 'openapi.access'
     _description = 'Access via API '
@@ -137,7 +147,6 @@ class Access(models.Model):
         model_name = self.model
         read_many_path = '/%s' % model_name
         read_one_path = '%s/{id}' % read_many_path
-        param_id_ref = "#/parameters/RecordIdInPath"
 
         read_many_definition_ref = "#/definitions/%s" % pinguin.get_definition_name(self.model, '', 'read_many')
         read_one_definition_ref = "#/definitions/%s" % pinguin.get_definition_name(self.model, '', 'read_one')
@@ -210,9 +219,7 @@ class Access(models.Model):
                     "application/json"
                 ],
                 "parameters": [
-                    {
-                        '$ref': param_id_ref
-                    }
+                    PARAM_ID
                 ],
                 "responses": {
                     "200": {
@@ -233,9 +240,7 @@ class Access(models.Model):
                 "description": "",
                 "operationId": "update%sById" % capitalized_model_name,
                 "parameters": [
-                    {
-                        '$ref': param_id_ref
-                    },
+                    PARAM_ID,
                     {
                         "in": "body",
                         "name": "body",
@@ -271,9 +276,7 @@ class Access(models.Model):
                     "application/json"
                 ],
                 "parameters": [
-                    {
-                        '$ref': param_id_ref
-                    }
+                    PARAM_ID,
                 ],
                 "responses": {
                     "204": {
@@ -308,9 +311,7 @@ class Access(models.Model):
                     "application/json",
                 ],
                 "parameters": [
-                    {
-                        '$ref': param_id_ref
-                    },
+                    PARAM_ID,
                     {
                         "in": "body",
                         "name": "body",

@@ -102,12 +102,13 @@ class Namespace(models.Model):
                 "application/json"
             ]),
             ('paths', {
-                '/report/pdf/{report_external_id}/{docids}': {
+                '/report/{report_external_id}/{docids}': {
                     'get': {
                         "summary": "Get PDF report file for %s namespace" % self.name,
                         'description': 'Returns PDF report file for %s namespace' % self.name,
                         "operationId": "getPdfReportFileFor%sNamespace" % self.name.capitalize(),
                         "produces": [
+                            # TODO: could be extended to support other types of reports (*.html, *.xlsx, *.docx, etc)
                             "application/pdf"
                         ],
                         "responses": {
@@ -120,37 +121,18 @@ class Namespace(models.Model):
                         },
                         "parameters": [
                             {
-                                "$ref": "#/parameters/ReportExternalId"
+                                "name": "report_external_id",
+                                "in": "path",
+                                "description": "Report xml id or report name",
+                                "required": True,
+                                "type": "string",
                             },
                             {
-                                "$ref": "#/parameters/ReportDocids"
-                            },
-                        ],
-                        "tags": ["report"]
-                    }
-                },
-                '/report/html/{report_external_id}/{docids}': {
-                    'get': {
-                        "summary": "Get HTML report file for %s namespace" % self.name,
-                        'description': 'Returns HTML report text for %s namespace' % self.name,
-                        "operationId": "getHtmlReportTextFor%sNamespace" % self.name.capitalize(),
-                        "produces": [
-                            "text/html"
-                        ],
-                        "responses": {
-                            "200": {
-                                "description": "A HTML report text for %s namespace." % self.name,
-                                "examples": {
-                                    "text/html": "<!DOCTYPE html><html><head></head><body></body></html>"
-                                }
-                            }
-                        },
-                        "parameters": [
-                            {
-                                "$ref": "#/parameters/ReportExternalId"
-                            },
-                            {
-                                "$ref": "#/parameters/ReportDocids"
+                                "name": "docids",
+                                "in": "path",
+                                "description": "One identifier or several identifiers separated by commas",
+                                "required": True,
+                                "type": "string",
                             },
                         ],
                         "tags": ["report"]
@@ -172,30 +154,6 @@ class Namespace(models.Model):
                             "type": "string"
                         }
                     }
-                },
-            }),
-            ('parameters', {
-                "RecordIdInPath": {
-                    "name": "id",
-                    "in": "path",
-                    "description": "ID of record to operation",
-                    "required": True,
-                    "type": "integer",
-                    "format": "int64"
-                },
-                "ReportExternalId": {
-                    "name": "report_external_id",
-                    "in": "path",
-                    "description": "Report xml id or report name",
-                    "required": True,
-                    "type": "string",
-                },
-                "ReportDocids": {
-                    "name": "docids",
-                    "in": "path",
-                    "description": "One identifier or several identifiers separated by commas",
-                    "required": True,
-                    "type": "string",
                 },
             }),
             ('responses', {
