@@ -220,6 +220,9 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                     <button name="action_create_simulation_data" string="Create Fake Backups" type="object" class="btn-secondary" attrs="{'invisible': [('backup_simulation', '=', False)]}"/>
                 </header>
                 <sheet>
+                    <p class="text-warning float-right" attrs="{'invisible': [('config_cron_ids', '!=', [])]}">
+                        Backups will not be made until you configure schedule
+                    </p>
                     <div class="oe_title">
                         <label for="database" class="oe_edit_only"/>
                         <h1><field name="database"/></h1>
@@ -252,11 +255,6 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                                 <field name="active"/>
                             </tree>
                         </field>
-                    </group>
-                    <group attrs="{'invisible': [('config_cron_ids', '!=', [])]}">
-                        <div class="text-warning">
-                            Backups will not be made until you configure schedule
-                        </div>
                     </group>
                     <group string="Auto Rotation" attrs="{'invisible': [('config_cron_ids', '=', [])]}">
                         <field name="unlimited_time_frame" invisible="1"/>
