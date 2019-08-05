@@ -2,6 +2,9 @@
 // Copyright 2019 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
 // License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
+$alert-warning-bg-color: #fff3cd;
+$alert-warning-color: #856404;
+
 .o_backup_dashboard {
     .kanban_group_buttons {
         float: right;
@@ -70,15 +73,15 @@
 
 
 .o_kanban_card_warning {
-    color: #856404;
-    background-color: #fff3cd;
-    padding: 0.75rem 1.25rem;
-    border-radius: 5px;
+    background-color: $alert-warning-bg-color;
     border: 1px solid transparent;
+    border-radius: 5px;
+    color: $alert-warning-color;
     float: right;
     font-size: 12px;
-    position: relative;
     margin-right: 20px;
+    padding: 0.75rem 1.25rem;
+    position: relative;
     p {
         margin: 0px;
         margin-left: 28px;
