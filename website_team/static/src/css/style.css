@@ -1,0 +1,172 @@
+.team_header {
+    text-transform: uppercase;
+    color: #838391;
+    /*font-family: Open Sans;*/
+    text-align: center;
+}
+.team_header .team_sub_header {
+    color: #a24588;
+}
+.team {
+    margin: 50px;
+    margin-bottom: 0px;
+}
+.team_list {
+    margin: auto;
+    max-width: 800px;
+}
+.team .team_image {
+    width: 166px;
+    height: 166px;
+}
+.team .team_image img{
+    width: 166px;
+    height: 166px;
+}
+.team_link div {
+    font-size: 24px;
+}
+.team_link a {
+    color: #a24588;
+}
+.team_link a:hover {
+    color: #b00081;
+}
+.team_profile .team_link .github {
+    float: left;
+    margin-top: -2px;
+}
+.team_profile .team_link .twitter {
+    float: right;
+    margin-top: -2px;
+}
+.team_link a:hover {
+    color: #b00081;
+}
+.team_profile {
+    width: 166px;
+    height: 300px;
+    margin: auto;
+    font-size: 14px;
+}
+.team_profile .user{
+    margin-top: 20px;
+    color: #a24588;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+.team_profile .user a{
+    color: #a24588;
+}
+.team_profile .user a:hover {
+    color: #b00081;
+    text-decoration: none;
+}
+.team_profile .job_position {
+    color: #838391;
+}
+.team .user_profile {
+    max-width: 1000px;
+    margin: auto;
+}
+.team .user_profile .team_image {
+    max-width: 70px;
+    max-height: 70px;
+}
+.team .user_profile .user_avatar {
+    text-align: right;
+    padding: 0;
+}
+.team .user_profile .user {
+    text-align: left;
+    color: #a24588;
+    font-size: 34px;
+    text-transform: uppercase;
+}
+.team .user_profile .team_link {
+    text-align: right;
+}
+.team .user_profile .job_position {
+    text-align: left;
+    font-size: 30px;
+    color: #838391;
+}
+.video {
+    height: 0;
+    position: relative;
+    padding-bottom: 56.25%;
+}
+.video iframe {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+.team .user_profile .info {
+    margin-top: 10px;
+    padding: 20px;
+}
+.team .user_profile .info .col-md-5 {
+    margin-top: -12px;
+}
+.team .user_profile .user_info {
+    float: right;
+}
+.team .user_info .location {
+    color: gray;
+    font-size: 12px;
+    max-width: 200px;
+}
+.team .user_profile .without_video {
+    text-align: center;
+    background-color: #a24588;
+    text-transform: uppercase;
+    color: white;
+    font-size: 30px;
+    padding: 50px;
+}
+.team .team_link .upwork {
+    background-color: #6fda44;
+    font-size: 10px;
+    margin-top: 10px;
+    padding-top: 4px;
+    padding-bottom: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 4px;
+}
+.team .team_link .upwork a{
+    color: white;
+    text-decoration: none;
+}
+.team .team_link .upwork a span{
+    text-transform: uppercase;
+}
+.team .team_link .upwork a:hover{
+    text-decoration: none;
+}
+.team .team_link .upwork:hover {
+    background-color: #37a000;
+}
+.team .team_link .github a {
+    color: black;
+}
+.user_profile .team_link div {
+    float: right;
+    padding: 5px;
+}
+.team .team_link .email a {
+    color: gray;
+}
+.user_profile .team_link .email {
+    margin-top: -2px;
+}
+.team_help_block {
+    text-align: center;
+    color: grey;
+    font-size: 24px;
+}
+.cke_editable.cke_editable_inline .team_help_block {
+    border-top: 2px solid gray;
+}

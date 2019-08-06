@@ -1,0 +1,181 @@
+<openerp>
+    <data>
+        <template id="website_team_twitter" name="Website Team Twitter">
+            <script src="https://buttons.github.io/buttons.js"></script>
+            <script>
+                window.twttr = (function(d, s, id) {
+                    var js, fjs = d.getElementsByTagName(s)[0],
+                    t = window.twttr || {};
+                    if (d.getElementById(id)) return t;
+                    js = d.createElement(s);
+                    js.id = id;
+                    js.src = "https://platform.twitter.com/widgets.js";
+                    fjs.parentNode.insertBefore(js, fjs);
+                    t._e = [];
+
+                    t.ready = function(f) {
+                        t._e.push(f);
+                    };
+                    return t;
+                }(document, "script", "twitter-wjs"));
+            </script>
+        </template>
+
+        <template id="website_team_assets" name="Website Team Assets" inherit_id="website.assets_frontend">
+            <xpath expr="link[last()]" position="after">
+                <link href="/website_team/static/src/css/style.css" rel="stylesheet" type="text/css"/>
+            </xpath>
+        </template>
+
+        <template name="user list" id="team_template" page="True">
+            <t t-call="website.layout">
+                <t t-set="title">Team </t>
+                <div class="oe_structure">
+                    <div class="container">
+                        <div t-if="company.team_website_description_top_block" itemprop="description" t-field="company.team_website_description_top_block" class="oe_structure mt16" id="team_company_full_description_in_the_top_block"/>
+                        <div class="team">
+                            <div class="team_list">
+                                <div class="row">
+                                    <t t-foreach="users" t-as="user">
+                                        <div class="col-md-3">
+                                            <div class="team_profile">
+                                                <t t-if="user.partner_id.image is not None">
+                                                    <a t-if="user.username_github" t-attf-href="/team/{{ user.username_github }}/"><span t-field="user.image" class="team_image image" t-field-options='{"widget": "image"}' /></a>
+                                                    <a t-if="user.username_github is False and user.alias_name" t-attf-href="/team/{{ user.alias_name }}/"><span t-field="user.image" class="team_image image" t-field-options='{"widget": "image"}' /></a>
+                                                    <t t-if="user.username_github is False and user.alias_name is False">
+                                                        <span t-field="user.image" class="team_image image" t-field-options='{"widget": "image"}' />
+                                                    </t>
+                                                </t>
+                                                <t t-if="user.partner_id.image is None">
+                                                    <a t-if="user.username_github" t-attf-href="/team/{{ user.username_github }}/"><img class="team_image image" src="/website_team/static/src/img/ava_lack.png"/></a>
+                                                    <a t-if="user.username_github is False and user.alias_name" t-attf-href="/team/{{ user.alias_name }}/"><img class="team_image image" src="/website_team/static/src/img/ava_lack.png"/></a>
+                                                    <t t-if="user.username_github is False and user.alias_name is False">
+                                                        <img class="team_image image" src="/website_team/static/src/img/ava_lack.png"/>
+                                                    </t>
+                                                </t>
+                                                <div class="user">
+                                                    <a t-if="user.username_github" t-attf-href="/team/{{ user.username_github }}/"><t t-esc="user.name"/></a>
+                                                    <t t-if="user.username_github is False">
+                                                        <a t-if="user.alias_name" t-attf-href="/team/{{ user.alias_name }}/"><t t-esc="user.name"/></a>
+                                                    </t>
+                                                    <t t-if="user.username_github is False and user.alias_name is False">
+                                                        <t t-esc="user.name"/>
+                                                    </t>
+                                                </div>
+                                                <div class="job_position">
+                                                    <t t-esc="user.partner_id.function"/>
+                                                </div>
+                                                <div class="team_link">
+                                                    <div class="github">
+                                                        <a t-if="user.username_github" class="github-button" t-attf-href="https://github.com/{{ user.username_github }}" data-show-count="true" aria-label="Follow @user on GitHub">Follow</a>
+                                                    </div>
+                                                    <div class="twitter">
+                                                        <a t-if="user.username_twitter" class="twitter-follow-button" t-attf-href="{{ user.username_twitter }}"
+                                                       data-show-screen-name="false"
+                                                       data-show-count="false" data-text-color = "#ff0000"> Follow</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                        <div t-if="company.team_website_description_bottom_block" itemprop="description" t-field="company.team_website_description_bottom_block" class="oe_structure mt16" id="team_company_full_description_in_the_down_block"/>
+                    </div>
+                </div>
+                <t t-call="website_team.website_team_twitter"/>
+            </t>
+        </template>
+
+        <template name="user card" id="user_template" page="True">
+            <t t-call="website.layout">
+                <t t-set="title"><t t-esc="user.name"/></t>
+                 <div class="container">
+                     <div class="team">
+                         <div class="user_profile">
+                             <div class="row" t-if="youtube_id">
+                                 <div class="col-md-12">
+                                     <div class="video">
+                                         <iframe t-attf-src="{{ youtube_id }}/"></iframe>
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="row info">
+                                 <div class="col-md-6"></div>
+                                 <div class="col-md-5">
+                                     <div class="user_info">
+                                         <div class="user">
+                                             <t t-esc="user.name"/>
+                                         </div>
+                                         <div class="job_position">
+                                             <t t-esc="user.partner_id.function"/>
+                                         </div>
+                                         <div class="location">
+                                             <t t-esc="user.location"/>
+                                         </div>
+                                     </div>
+                                 </div>
+                                 <div class="col-md-1 user_avatar">
+                                     <t t-if="user.partner_id.image is not None">
+                                         <span t-field="user.image" class="image" t-field-options='{"widget": "image"}' />
+                                     </t>
+                                     <t t-if="user.partner_id.image is None">
+                                         <img class="team_image image" src="/website_team/static/src/img/ava_lack.png"/>
+                                     </t>
+                                 </div>
+                             </div>
+                             <div class="row">
+                                 <div class="col-md-7"></div>
+                                 <div class="col-md-5">
+                                     <div class="team_link">
+                                         <div class="twitter" t-if="user.username_twitter">
+                                             <a class="twitter-follow-button" t-attf-href="{{ user.username_twitter }}" data-show-screen-name="false" data-show-count="false"> Follow</a>
+                                         </div>
+                                         <div class="upwork" t-if="user.url_upwork">
+                                             <a t-attf-href="{{ user.url_upwork }}/" target="_blank"><span class="sub_title">Hire me </span>on Upwork</a>
+                                         </div>
+                                         <div class="github" t-if="user.username_github">
+                                             <a class="github-button" t-attf-href="https://github.com/{{ user.username_github }}" data-show-count="true" aria-label="Follow @user on GitHub">Follow</a>
+                                         </div>
+                                         <div class="email" t-if="user.alias_name">
+                                             <a t-attf-href="mailto:{{user.alias_name}}@{{user.alias_domain}}" target="_blank"><i class="fa fa-envelope-o"/></a>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                     <div class="team_help_block cover js_fullheight" id="help" t-ignore="True">
+                         <div class="container">
+                             <div class="css_non_editable_mode_hidden">
+                                 <span class="team_help">
+                                     Personal custom content
+                                 </span>
+                             </div>
+                         </div>
+                     </div>
+                     <div t-if="user.user_description" itemprop="description" t-field="user.user_description" class="oe_structure mt16" id="team_user_full_description"/>
+                     <div class="team_help_block cover js_fullheight" id="help" t-ignore="True">
+                         <div class="container">
+                             <div class="css_non_editable_mode_hidden">
+                                 <span class="team_help">
+                                     Common custom content
+                                 </span>
+                             </div>
+                         </div>
+                     </div>
+                     <div t-if="user.company_id.team_website_description" itemprop="description" t-field="user.company_id.team_website_description" class="oe_structure mt16" id="team_company_full_description"/>
+                 </div>
+                <t t-call="website_team.website_team_twitter"/>
+            </t>
+        </template>
+
+        <template id="footer_custom" inherit_id="website.footer_default" name="Footer Team Link">
+            <xpath expr="//div[@id='info']/ul" position="inside">
+                <li><a href="/team">Team</a></li>
+            </xpath>
+        </template>
+
+    </data>
+</openerp>
