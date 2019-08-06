@@ -151,7 +151,7 @@ class BackupController(http.Controller):
         if 'reload_page' in backup_list:
             page_values['error'] = 'Something went wrong. Please refresh the page.'
             return env.get_template("backup_list.html").render(page_values)
-        page_values['backup_list'] = [name for name in backup_list['backup_list'] if name[-5:] != '.info']
+        page_values['backup_list'] = [name for name, _ in backup_list['backup_list'] if not name.endswith('.info')]
         return env.get_template("backup_list.html").render(page_values)
 
     @http.route('/web/database/restore_via_odoo_backup_sh', type='http', auth="none", methods=['POST'], csrf=False)
