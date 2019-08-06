@@ -26,12 +26,12 @@ Maintainers
 Further information
 ===================
 
-Demo: http://runbot.it-projects.info/demo/misc-addons/8.0
+Demo: http://runbot.it-projects.info/demo/misc-addons/12.0
 
-HTML Description: https://apps.odoo.com/8.0/website_team/
+HTML Description: https://apps.odoo.com/12.0/website_team/
 
 Usage instructions: `<doc/index.rst>`__
 
 Changelog: `<doc/changelog.rst>`__
 
-Tested on Odoo 8.0 27a47eb3c3d4b79d8fffb6df66f107a993ddf805
+Tested on Odoo 12.0 2f7bac438f4e4d2dc6821694e0243ccd05671f5d

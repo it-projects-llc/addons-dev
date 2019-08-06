@@ -1,4 +1,4 @@
-<openerp>
+<odoo>
     <data>
         <template id="website_team_twitter" name="Website Team Twitter">
             <script src="https://buttons.github.io/buttons.js"></script>
@@ -27,7 +27,7 @@
             </xpath>
         </template>
 
-        <template name="user list" id="team_template" page="True">
+        <template name="user list" id="team_template">
             <t t-call="website.layout">
                 <t t-set="title">Team </t>
                 <div class="oe_structure">
@@ -88,7 +88,7 @@
             </t>
         </template>
 
-        <template name="user card" id="user_template" page="True">
+        <template name="user card" id="user_template">
             <t t-call="website.layout">
                 <t t-set="title"><t t-esc="user.name"/></t>
                  <div class="container">
@@ -171,11 +171,11 @@
             </t>
         </template>
 
-        <template id="footer_custom" inherit_id="website.footer_default" name="Footer Team Link">
-            <xpath expr="//div[@id='info']/ul" position="inside">
+        <template id="footer_custom" inherit_id="website.layout" name="Footer Team Link">
+            <xpath expr="//div[@id='footer']" position="replace">
                 <li><a href="/team">Team</a></li>
             </xpath>
         </template>
 
     </data>
-</openerp>
+</odoo>

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from openerp import http
 import werkzeug
 from werkzeug.exceptions import NotFound
