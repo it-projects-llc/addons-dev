@@ -18,6 +18,7 @@ class Param(models.Model):
 
     @api.model
     def get_dropbox_service(self):
-        dropbox_access_token = self.get_param('odoo_backup_sh_dropbox.dropbox_access_token', '')
-        service = dropbox.Dropbox(dropbox_access_token)
-        return service
+        dropbox_access_token = self.get_param('odoo_backup_sh_dropbox.dropbox_access_token')
+        if not dropbox_access_token:
+            return
+        return dropbox.Dropbox(dropbox_access_token)

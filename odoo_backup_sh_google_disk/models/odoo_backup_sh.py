@@ -31,6 +31,8 @@ class BackupConfig(models.Model):
         backup_list = super(BackupConfig, self).get_backup_list(cloud_params) or dict()
         # get all backups from Google Drive
         GoogleDriveService = self.env['ir.config_parameter'].get_google_drive_service()
+        if not GoogleDriveService:
+            return {}
         folder_id = self.env['ir.config_parameter'].get_param("odoo_backup_sh_google_disk.google_disk_folder_id")
         response = GoogleDriveService.files().list(q="'" + folder_id + "' in parents",
                                                    fields="nextPageToken, files(id, name)",

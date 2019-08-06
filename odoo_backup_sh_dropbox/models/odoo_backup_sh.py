@@ -36,6 +36,8 @@ class BackupConfig(models.Model):
         backup_list = super(BackupConfig, self).get_backup_list(cloud_params) or dict()
         # get all backups from dropbox
         DropboxService = self.env['ir.config_parameter'].get_dropbox_service()
+        if not DropboxService:
+            return {}
         folder_path = self.env['ir.config_parameter'].get_param("odoo_backup_sh_dropbox.dropbox_folder_path")
         response = DropboxService.files_list_folder(folder_path)
         drobpox_backup_list = [(r.name, 'dropbox') for r in response.entries]
