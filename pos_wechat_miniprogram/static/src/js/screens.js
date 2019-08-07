@@ -139,9 +139,11 @@ odoo.define('pos_wechat_miniprogram.screens', function(require){
     screens.OrderWidget.include({
         rerender_orderline: function (order_line) {
             if (order_line.node && order_line.node.parentNode) {
+                var available_pos_product_qty = this.pos.db.get_product_by_id(order_line.product.id).available_pos_product_qty;
+                order_line.available_pos_product_qty = available_pos_product_qty;
                 return this._super(order_line);
             }
-        }
+        },
     });
 
     return screens;

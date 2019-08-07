@@ -90,3 +90,15 @@
 .pos .clientlist-screen.paid .edit-buttons {
     display: none;
 }
+.pos .product .available-pos-product {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    vertical-align: top;
+    color: white;
+    line-height: 13px;
+    background: #7f82ac;
+    padding: 2px 5px;
+    border-radius: 2px;
+    font-weight: bold;
+}

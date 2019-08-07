@@ -9,6 +9,7 @@
         <field name="arch" type="xml">
             <field name="to_weight" position="after">
                 <field name="available_in_pos"/>
+                <field name="available_pos_product_qty" attrs="{'invisible': [('available_in_pos', '=', False)]}"/>
                 <field name="hot_product" attrs="{'invisible': [('available_in_pos', '=', False)]}"/>
                 <field name="banner" widget="image" class="oe_miniprogram_banner" options="{'size': [320, 150]}" attrs="{'invisible': ['|', ('available_in_pos', '=', False), ('hot_product', '=', False)]}"/>
             </field>

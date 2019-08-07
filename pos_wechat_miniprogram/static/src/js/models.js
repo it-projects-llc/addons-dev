@@ -11,6 +11,8 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
 
     models.load_fields('account.journal', ['wechat']);
 
+    models.load_fields('product.product', ['available_pos_product_qty']);
+
     // load WeChat Mini-Program Orders
     models.load_models({
         model: 'pos.miniprogram.order',
@@ -196,6 +198,16 @@ odoo.define('pos_wechat_miniprogram.models', function(require){
             if (options.mp_data) {
                 this.apply_updates_miniprogram_order(options.mp_data);
             }
+        },
+        add_product: function(product, options) {
+            var available_pos_product_qty = this.pos.db.get_product_by_id(product.id).available_pos_product_qty;
+            if (available_pos_product_qty <= 0) {
+                return this.gui.show_popup('error',{
+                    'title': _t('No Product'),
+                    'body':  _t('You cannot add the product.'),
+                });
+            }
+            OrderSuper.prototype.add_product.apply(this, arguments);
         },
         apply_updates_miniprogram_order: function(data) {
             // all mini-program data

@@ -9,3 +9,4 @@ from . import res_company
 from . import res_users
 from . import wechat_order
 from . import pos_multi_session_models
+from . import ir_attachment
