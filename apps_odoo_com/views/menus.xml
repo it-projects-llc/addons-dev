@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright 2017 IT-Projects LLC (<https://it-projects.info>)
+ License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+-->
+<openerp>
+<data>
+
+<!-- Top menu item -->
+<menuitem name="Odoo App Store"
+    id="apps_odoo_com_menu"
+    groups="apps_odoo_com_group_user"
+    sequence="450"/>
+
+<!-- Statistics -->
+<menuitem name="Statistics"
+    id="statistics_folder_menu"
+    parent="apps_odoo_com_menu"
+    sequence="5"/>
+
+<menuitem name="Purchases"
+    id="purchase_menu"
+    parent="statistics_folder_menu"
+    sequence="10"/>
+
+<menuitem name="Modules"
+    id="module_menu"
+    parent="statistics_folder_menu"
+    sequence="20"/>
+
+<menuitem name="Buyers"
+    id="user_menu"
+    parent="statistics_folder_menu"
+    sequence="30"/>
+
+<menuitem name="Update Data"
+    id="update_data_menu"
+    parent="statistics_folder_menu"
+    sequence="100"/>
+
+<!-- Tools -->
+<menuitem name="Tools"
+    id="tools_folder_menu"
+    parent="apps_odoo_com_menu"
+    sequence="10"/>
+
+<menuitem name="Scan Repo"
+    id="scan_repo_menu"
+    parent="tools_folder_menu"
+    sequence="10"/>
+
+<menuitem name="Add Repos"
+    id="add_repos_menu"
+    parent="tools_folder_menu"
+    sequence="20"/>
+
+<!-- Settings -->
+<menuitem name="Settings"
+    id="settings_folder_menu"
+    parent="apps_odoo_com_menu"
+    groups="apps_odoo_com_group_manager"
+    sequence="100"/>
+
+<menuitem name="Settings"
+    id="settings_menu"
+    parent="settings_folder_menu"
+    groups="apps_odoo_com_group_manager"
+    sequence="100"/>
+
+</data>
+</openerp>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <!-- purchase -->
+    <record id="purchase_view_form" model="ir.ui.view">
+        <field name="name">apps_odoo_com.purchase.form</field>
+        <field name="model">apps_odoo_com.purchase</field>
+        <field name="arch" type="xml">
+            <form string="Purchase">
+                <sheet>
+                    <div class="oe_title">
+                        <h1 class="o_row">
+                            <field name="date_order"/>
+                            <field name="module_id"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="price"/>
+                            <field name="price_unit"/>
+                            <field name="quantity"/>
+                            <field name="referrer_module_id"/>
+                        </group>
+                        <group>
+                            <field name="order_name"/>
+                            <field name="purchase_order_ref"/>
+                            <field name="state"/>
+                            <field name="product_id"/>
+                            <field name="odoo_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="purchase_view_tree" model="ir.ui.view">
+        <field name="name">apps_odoo_com.purchase.form</field>
+        <field name="model">apps_odoo_com.purchase</field>
+        <field name="arch" type="xml">
+            <tree string="Purchase">
+                <field name="date_order"/>
+                <field name="module_id"/>
+                <field name="module_display_name"/>
+                <field name="user_id"/>
+                <field name="price_unit"/>
+                <field name="quantity"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="purchase_action" model="ir.actions.act_window">
+        <field name="name">Purchases</field>
+        <field name="res_model">apps_odoo_com.purchase</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="purchase_menu" model="ir.ui.menu">
+        <field name="action" ref="purchase_action"/>
+    </record>
+
+
+    <!-- Modules -->
+    <record id="module_view_form" model="ir.ui.view">
+        <field name="name">apps_odoo_com.module.form</field>
+        <field name="model">apps_odoo_com.module</field>
+        <field name="arch" type="xml">
+            <form string="Module">
+                <sheet>
+                    <div class="oe_title">
+                        <h1 class="o_row">
+                            <field name="name"/>
+                            <field name="display_name"/>
+                            <field name="version"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="odoo_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="module_view_tree" model="ir.ui.view">
+        <field name="name">apps_odoo_com.module.form</field>
+        <field name="model">apps_odoo_com.module</field>
+        <field name="arch" type="xml">
+            <tree string="Module">
+                <field name="name"/>
+                <field name="display_name"/>
+                <field name="version"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="module_action" model="ir.actions.act_window">
+        <field name="name">Modules</field>
+        <field name="res_model">apps_odoo_com.module</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="module_menu" model="ir.ui.menu">
+        <field name="action" ref="module_action"/>
+    </record>
+
+    <!-- Users -->
+    <record id="user_view_form" model="ir.ui.view">
+        <field name="name">apps_odoo_com.user.form</field>
+        <field name="model">apps_odoo_com.user</field>
+        <field name="arch" type="xml">
+            <form string="Buyer">
+                <sheet>
+                    <div class="oe_title">
+                        <h1 class="o_row">
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="odoo_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="user_view_tree" model="ir.ui.view">
+        <field name="name">apps_odoo_com.user.form</field>
+        <field name="model">apps_odoo_com.user</field>
+        <field name="arch" type="xml">
+            <tree string="User">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="user_action" model="ir.actions.act_window">
+        <field name="name">Buyers</field>
+        <field name="res_model">apps_odoo_com.user</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="user_menu" model="ir.ui.menu">
+        <field name="action" ref="user_action"/>
+    </record>
+
+</data>
+</openerp>
