@@ -75,7 +75,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                 </div>
                 <div class="backup_card_content">
                     <button type="object" class="btn btn-primary btn-sm pull-left o_dashboard_action_make_backup">
-                        <span>New Backup</span>
+                        <span>Make backup now</span>
                     </button>
                     <a href="#" class="pull-right o_dashboard_action_view_backups">
                         <t t-esc="config.backups_number"/> Remotely stored backups

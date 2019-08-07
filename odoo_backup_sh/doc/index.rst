@@ -58,7 +58,7 @@ Configuration
 
 * All databases with their settings are available in the ``[[ Backups ]] >> Configuration >> Dashboard`` section.
 
-* Click on ``New Backup`` in the appeared configuration
+* Click on ``Make backup now`` in the appeared configuration
 
 * Each database specified in these settings will be presented in the dashboard.
 
