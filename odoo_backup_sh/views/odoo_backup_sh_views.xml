@@ -366,6 +366,17 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                 src_model="odoo_backup_sh.backup_info" res_model="odoo_backup_sh.delete_remote_backup_wizard"
                 view_type="form" view_mode="form" key2="client_action_multi" target="new"/>
 
+    <record model="ir.actions.server" id="download_backup">
+        <field name="name">Download backup</field>
+        <field name="model_id" ref="model_odoo_backup_sh_backup_info"/>
+        <field name="binding_model_id" ref="model_odoo_backup_sh_backup_info"/>
+        <field name="state">code</field>
+        <field name="condition">True</field>
+        <field name="code">
+            action = model.download_backup_action()
+        </field>
+    </record>
+
     <menuitem name="Backups" id="menu_backup_root" sequence="100" web_icon="odoo_backup_sh,static/description/icon.png"/>
     <menuitem name="Dashboard" action="odoo_backup_sh.ir_actions_server_backup_dashboard" parent="menu_backup_root"
               id="menu_dashboard" sequence="1"/>

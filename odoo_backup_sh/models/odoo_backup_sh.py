@@ -557,6 +557,15 @@ class BackupInfo(models.Model):
         self.env['odoo_backup_sh.remote_storage'].compute_total_used_remote_storage()
         return res
 
+    @api.multi
+    def download_backup_action(self):
+        backup_id = self._context.get('active_ids')[0]
+        return {
+            "type": "ir.actions.act_url",
+            "url": "/web/database/backup?backup_id={0}".format(backup_id),
+            "target": "self",
+        }
+
 
 class BackupNotification(models.Model):
     _name = 'odoo_backup_sh.notification'

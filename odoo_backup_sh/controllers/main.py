@@ -131,6 +131,24 @@ class BackupController(http.Controller):
                 ).unlink()
         return cloud_params
 
+    @http.route('/web/database/backup', type='http', auth='user')
+    def download_backup(self, backup_id):
+        backup_info_record = request.env['odoo_backup_sh.backup_info'].search([
+            ('id', '=', backup_id),
+            ('storage_service', '=', 'odoo_backup_sh'),
+        ])
+        backup_info_record.ensure_one()
+        backup_filename = backup_info_record.backup_filename
+        cloud_params = self.get_cloud_params(request.httprequest.url, call_from='frontend')
+        backup_object = BackupCloudStorage.get_object(cloud_params, backup_filename)
+        return http.Response(
+            backup_object['Body'].iter_chunks(),
+            headers={
+                'Content-Disposition': 'attachment; filename="{0}"'.format(backup_filename),
+                'Content-Type': 'application/octet-stream',
+            }
+        )
+
     @http.route('/web/database/backups', type='http', auth="none")
     def backup_list(self):
         page_values = {
