@@ -1,14 +1,12 @@
-# -*- coding: utf-8 -*-
-
-from openerp import models, fields, api, _
-from openerp.exceptions import Warning as UserError
+from odoo import models, fields, api, _
+from odoo.exceptions import Warning as UserError
 import re
 
 
 class Users(models.Model):
     _inherit = ['res.users']
 
-    username_github = fields.Char(default=None, string="Github", help="User GitHub name")
+    username_github = fields.Char(default=None, string="Github user", help="User GitHub name")
     url_upwork = fields.Char(default=None, string="Upwork link", help="User upwork link")
     username_twitter = fields.Char(string="Twitter link", help="User twitter link")
     presentation_youtube_link = fields.Char(string='YouTube representation video link',
@@ -30,6 +28,42 @@ class Users(models.Model):
             return youtube_regex_match.group(6)
         return None
 
+    def twitter_url_validation(self, url):
+        twitter_regex = (
+            r'(https?://)?(www\.)?(twitter.com)/@?_?([a-z0-9]+_?)')
+        if url is False:
+            twitter_regex_match = False
+        else:
+            twitter_regex_match = re.match(twitter_regex, url)
+
+        if twitter_regex_match:
+            return twitter_regex_match.group(0)
+        return False
+
+    def upwork_url_validation(self, url):
+        upwork_regex = (
+            r'(https?://)?(www\.)?(upwork.com)/fl/([a-z]+)')
+        if url is False:
+            upwork_regex_match = False
+        else:
+            upwork_regex_match = re.match(upwork_regex, url)
+
+        if upwork_regex_match:
+            return upwork_regex_match.group(0)
+        return False
+
+    def github_name_validation(self, name):
+        github_regex = (
+            r'^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$')
+        if name is False:
+            github_regex_match = False
+        else:
+            github_regex_match = re.match(github_regex, name)
+
+        if github_regex_match:
+            return github_regex_match.group(0)
+        return False
+
     @api.constrains('presentation_youtube_link')
     def _check_youtube_id(self):
         if self.presentation_youtube_link is not False and self.get_youtube_id(self.presentation_youtube_link) is False:
@@ -42,11 +76,22 @@ class Users(models.Model):
         return "https://www.youtube.com/embed/" + link_id + "?rel=0&amp;showinfo=0"
 
     def get_alias_mail(self):
-        if self.alias_name:
-            alias_email_full = self.alias_name + "@" + self.alias_domain
-            return alias_email_full
-        else:
-            return False
+        return self.email if self.login else False
+
+    @api.constrains('username_twitter')
+    def _check_twitter_link(self):
+        if self.username_twitter is not False and self.twitter_url_validation(self.username_twitter) is False:
+            raise UserError(_('Twitter link is incorrect.'))
+
+    @api.constrains('url_upwork')
+    def _check_upwork_link(self):
+        if self.url_upwork is not False and self.upwork_url_validation(self.url_upwork) is False:
+            raise UserError(_('Upwork link is incorrect.'))
+
+    @api.constrains('username_github')
+    def _check_github(self):
+        if self.username_github is not False and self.github_name_validation(self.username_github) is False:
+            raise UserError(_('Github name is incorrect.'))
 
 
 class ResCompany(models.Model):

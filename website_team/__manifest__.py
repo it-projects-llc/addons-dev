@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 {
     "name": """Website Team""",
     "summary": """Team""",
     "category": "website",
     # "live_test_URL": "",
-    "images": [],
-    "version": "1.0.0",
+    "images": ["images/website_team.png"],
+    "version": "12.0.1.0.0",
     "application": False,
 
     "author": "IT-Projects LLC, Kolushov Alexandr",
@@ -33,5 +32,5 @@
     "post_init_hook": None,
 
     "auto_install": False,
-    "installable": False,
+    "installable": True,
 }

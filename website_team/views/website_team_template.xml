@@ -1,5 +1,5 @@
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
         <template id="website_team_twitter" name="Website Team Twitter">
             <script src="https://buttons.github.io/buttons.js"></script>
             <script>
@@ -27,7 +27,7 @@
             </xpath>
         </template>
 
-        <template name="user list" id="team_template" page="True">
+        <template name="user list" id="team_template">
             <t t-call="website.layout">
                 <t t-set="title">Team </t>
                 <div class="oe_structure">
@@ -40,25 +40,25 @@
                                         <div class="col-md-3">
                                             <div class="team_profile">
                                                 <t t-if="user.partner_id.image is not None">
-                                                    <a t-if="user.username_github" t-attf-href="/team/{{ user.username_github }}/"><span t-field="user.image" class="team_image image" t-field-options='{"widget": "image"}' /></a>
-                                                    <a t-if="user.username_github is False and user.alias_name" t-attf-href="/team/{{ user.alias_name }}/"><span t-field="user.image" class="team_image image" t-field-options='{"widget": "image"}' /></a>
-                                                    <t t-if="user.username_github is False and user.alias_name is False">
-                                                        <span t-field="user.image" class="team_image image" t-field-options='{"widget": "image"}' />
+                                                    <a t-if="user.username_github" t-attf-href="/team/{{ user.username_github }}/"><span t-field="user.image" class="team_image image" t-options='{"widget": "image"}' /></a>
+                                                    <a t-if="user.username_github is False and user.login" t-attf-href="/team/{{ user.login }}/"><span t-field="user.image" class="team_image image" t-options='{"widget": "image"}' /></a>
+                                                    <t t-if="user.username_github is False and user.login is False">
+                                                        <span t-field="user.image" class="team_image image" t-options='{"widget": "image"}' />
                                                     </t>
                                                 </t>
                                                 <t t-if="user.partner_id.image is None">
                                                     <a t-if="user.username_github" t-attf-href="/team/{{ user.username_github }}/"><img class="team_image image" src="/website_team/static/src/img/ava_lack.png"/></a>
-                                                    <a t-if="user.username_github is False and user.alias_name" t-attf-href="/team/{{ user.alias_name }}/"><img class="team_image image" src="/website_team/static/src/img/ava_lack.png"/></a>
-                                                    <t t-if="user.username_github is False and user.alias_name is False">
+                                                    <a t-if="user.username_github is False and user.login" t-attf-href="/team/{{ user.login }}/"><img class="team_image image" src="/website_team/static/src/img/ava_lack.png"/></a>
+                                                    <t t-if="user.username_github is False and user.login is False">
                                                         <img class="team_image image" src="/website_team/static/src/img/ava_lack.png"/>
                                                     </t>
                                                 </t>
                                                 <div class="user">
                                                     <a t-if="user.username_github" t-attf-href="/team/{{ user.username_github }}/"><t t-esc="user.name"/></a>
                                                     <t t-if="user.username_github is False">
-                                                        <a t-if="user.alias_name" t-attf-href="/team/{{ user.alias_name }}/"><t t-esc="user.name"/></a>
+                                                        <a t-if="user.login" t-attf-href="/team/{{ user.login }}/"><t t-esc="user.name"/></a>
                                                     </t>
-                                                    <t t-if="user.username_github is False and user.alias_name is False">
+                                                    <t t-if="user.username_github is False and user.login is False">
                                                         <t t-esc="user.name"/>
                                                     </t>
                                                 </div>
@@ -88,7 +88,7 @@
             </t>
         </template>
 
-        <template name="user card" id="user_template" page="True">
+        <template name="user card" id="user_template">
             <t t-call="website.layout">
                 <t t-set="title"><t t-esc="user.name"/></t>
                  <div class="container">
@@ -118,7 +118,7 @@
                                  </div>
                                  <div class="col-md-1 user_avatar">
                                      <t t-if="user.partner_id.image is not None">
-                                         <span t-field="user.image" class="image" t-field-options='{"widget": "image"}' />
+                                         <span t-field="user.image" class="image" t-options='{"widget": "image"}' />
                                      </t>
                                      <t t-if="user.partner_id.image is None">
                                          <img class="team_image image" src="/website_team/static/src/img/ava_lack.png"/>
@@ -138,8 +138,8 @@
                                          <div class="github" t-if="user.username_github">
                                              <a class="github-button" t-attf-href="https://github.com/{{ user.username_github }}" data-show-count="true" aria-label="Follow @user on GitHub">Follow</a>
                                          </div>
-                                         <div class="email" t-if="user.alias_name">
-                                             <a t-attf-href="mailto:{{user.alias_name}}@{{user.alias_domain}}" target="_blank"><i class="fa fa-envelope-o"/></a>
+                                         <div class="email" t-if="user.login">
+                                             <a t-attf-href="mailto:{{user.login}}@{{user.email}}" target="_blank"><i class="fa fa-envelope-o"/></a>
                                          </div>
                                      </div>
                                  </div>
@@ -171,11 +171,11 @@
             </t>
         </template>
 
-        <template id="footer_custom" inherit_id="website.footer_default" name="Footer Team Link">
-            <xpath expr="//div[@id='info']/ul" position="inside">
+        <template id="footer_custom" inherit_id="website.footer_custom" name="Footer Team Link">
+            <xpath expr="//footer//div[@id='connect']//ul//li[1]" position="after">
                 <li><a href="/team">Team</a></li>
             </xpath>
         </template>
 
-    </data>
-</openerp>
+
+</odoo>

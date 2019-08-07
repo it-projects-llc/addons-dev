@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-from openerp import http
+from odoo import http
 import werkzeug
 from werkzeug.exceptions import NotFound
 
@@ -20,8 +19,8 @@ class WebsiteTeam(http.Controller):
         current_user = User.search([('username_github', '=', login), ('website_published', '=', True)])
 
         if not current_user:
-            current_user = User.search([('alias_name', '=', login), ('website_published', '=', True)])
-            if current_user.username_github is not False and current_user.username_github != current_user.alias_name:
+            current_user = User.search([('login', '=', login), ('website_published', '=', True)])
+            if current_user.username_github is not False and current_user.username_github != current_user.login:
                 return werkzeug.utils.redirect("/team/" + current_user.username_github)
 
         if current_user.id is False:
