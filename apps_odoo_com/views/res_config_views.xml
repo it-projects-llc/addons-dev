@@ -3,31 +3,31 @@
  Copyright 2017 IT-Projects LLC (<https://it-projects.info>)
  License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 -->
-<openerp>
-<data>
+<odoo>
 
 <record id="res_config_settings_view_form" model="ir.ui.view">
-    <field name="name">apps_odoo_com.settings</field>
-    <field name="model">apps_odoo_com.settings</field>
+    <field name="name">apps_odoo_com_settings</field>
+    <field name="model">res.config.settings</field>
+    <field name="inherit_id" ref="base.res_config_settings_view_form" />
     <field name="arch" type="xml">
-        <form string="Odoo App Store Settings" class="oe_form_configuration">
-            <header>
-                <button string="Apply" type="object" name="execute" class="oe_highlight"/>
-                or
-                <button string="Cancel" type="object" name="cancel" class="oe_link"/>
-            </header>
-            <group string="Credentials">
-                <field name="apps_login"/>
-                <field name="apps_password" password="True"/>
-            </group>
-        </form>
+        <xpath expr="//div[hasclass('settings')]" position="inside">
+            <div class="app_settings_block" data-string="Apps Odoo Com" string="Odoo App Store" data-key="apps_odoo_com">
+                <h2>Credentials</h2>
+                <div class="row mt16 o_settings_container">
+                    <group>
+                        <field name="apps_login"/>
+                        <field name="apps_password" password="True"/>
+                    </group>
+                </div>
+            </div>
+        </xpath>
     </field>
 </record>
 
 <record id="res_config_settings_action" model="ir.actions.act_window">
     <field name="name">Odoo App Store Settings</field>
     <field name="type">ir.actions.act_window</field>
-    <field name="res_model">apps_odoo_com.settings</field>
+    <field name="res_model">res.config.settings</field>
     <field name="view_mode">form</field>
     <field name="target">inline</field>
 </record>
@@ -36,5 +36,4 @@
     <field name="action" ref="res_config_settings_action"/>
 </record>
 
-</data>
-</openerp>
+</odoo>

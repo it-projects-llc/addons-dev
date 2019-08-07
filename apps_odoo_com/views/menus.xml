@@ -3,8 +3,7 @@
  Copyright 2017 IT-Projects LLC (<https://it-projects.info>)
  License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 -->
-<openerp>
-<data>
+<odoo>
 
 <!-- Top menu item -->
 <menuitem name="Odoo App Store"
@@ -67,5 +66,4 @@
     groups="apps_odoo_com_group_manager"
     sequence="100"/>
 
-</data>
-</openerp>
+</odoo>

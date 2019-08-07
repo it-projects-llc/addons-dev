@@ -1,13 +1,13 @@
-# -*- coding: utf-8 -*-
 # Copyright 2017 IT-Projects LLC (<https://it-projects.info>)
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
-from openerp import models, fields
+from odoo import models, fields
 
 
 class User(models.Model):
 
     _name = 'apps_odoo_com.user'
     _order = 'odoo_id desc'
+    _description = 'Apps Store User'
 
     name = fields.Char(readonly=True)
     odoo_id = fields.Integer(readonly=True)
@@ -17,6 +17,7 @@ class Module(models.Model):
 
     _name = 'apps_odoo_com.module'
     _order = 'odoo_id desc'
+    _description = 'Apps Store Module'
 
     name = fields.Char(string='Technical Name', readonly=True)
     odoo_id = fields.Integer(readonly=True)
@@ -29,6 +30,7 @@ class Purchase(models.Model):
 
     _name = 'apps_odoo_com.purchase'
     _order = 'odoo_id desc'
+    _description = 'Apps Store Purchase'
 
     odoo_id = fields.Integer(readonly=True)
 
@@ -43,6 +45,6 @@ class Purchase(models.Model):
     order_name = fields.Char(readonly=True)
     state = fields.Char(readonly=True)
     module_id = fields.Many2one('apps_odoo_com.module', string="Module", readonly=True)
-    module_display_name = fields.Char('Display Name', related='module_id.display_name')
+    module_display_name = fields.Char('Module Display Name', related='module_id.display_name')
     date_order = fields.Char(readonly=True)
     quantity = fields.Float(readonly=True)

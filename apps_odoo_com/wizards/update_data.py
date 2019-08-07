@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 # Copyright 2017 IT-Projects LLC (<https://it-projects.info>)
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
-from openerp import models, api
-from openerp.exceptions import Warning as UserError
+from odoo import models, api
+from odoo.exceptions import Warning as UserError
 
 from ..xmlrpc import rpc_execute_kw, rpc_auth
 
@@ -13,6 +12,7 @@ MODULE_ID = '__apps_odoo_com__.module_%s'
 
 class UpdateData(models.TransientModel):
     _name = 'apps_odoo_com.update_data'
+    _description = 'description of updatedata'
 
     @api.model
     def _update_data(self, domain):
@@ -75,10 +75,10 @@ class UpdateData(models.TransientModel):
                 r[local_field] = r[remote_field]
 
         user_fields = ['id', 'odoo_id', 'name']
-        self._load('apps_odoo_com.user', user_fields, (r for id,r in  user_index.items()))
+        self._load('apps_odoo_com.user', user_fields, (r for id, r in user_index.items()))
 
         module_fields = ['id', 'odoo_id', 'display_name']
-        self._load('apps_odoo_com.module', module_fields, (r for id,r in  module_index.items()))
+        self._load('apps_odoo_com.module', module_fields, (r for id, r in module_index.items()))
 
         self._load('apps_odoo_com.purchase', purchase_fields, search_read)
 
@@ -121,12 +121,12 @@ class UpdateData(models.TransientModel):
     def _process_many2one(self, index, value, id_template, name_field='name'):
         if not value:
             return
-        id = value[0]
+        id_ = value[0]
         name = value[1]
-        if id not in index:
-            index[id] = {
-                'id': id_template % id,
-                'odoo_id': id,
+        if id_ not in index:
+            index[id_] = {
+                'id': id_template % id_,
+                'odoo_id': id_,
                 name_field: name,
             }
 

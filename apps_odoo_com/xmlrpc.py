@@ -1,23 +1,25 @@
-# -*- coding: utf-8 -*-
 # Copyright 2017 IT-Projects LLC (<https://it-projects.info>)
+# Copyright 2019 Anvar Kildebekov IT-Projects LLC (<https://it-projects.info/team/fedoranvar>)
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 import logging
-import xmlrpclib
+import xmlrpc.client
 
-from openerp.exceptions import Warning as UserError
-from openerp import _
+from odoo.exceptions import Warning as UserError
+from odoo import _
 
 
 _logger = logging.getLogger(__name__)
 
 
 def rpc_auth(env, username=None, password=None, url="http://apps.odoo.com", dbname="apps"):
+
     username = username or env['ir.config_parameter'].sudo().get_param("apps_odoo_com.login", '').strip()
     password = password or env['ir.config_parameter'].sudo().get_param("apps_odoo_com.password", '').strip()
+
     if not (username and password):
         return False
-    common = xmlrpclib.ServerProxy('{}/xmlrpc/2/common'.format(url))
-    models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
+    common = xmlrpc.client.ServerProxy('{}/xmlrpc/2/common'.format(url))
+    models = xmlrpc.client.ServerProxy('{}/xmlrpc/2/object'.format(url))
     uid = common.authenticate(dbname, username, password, {})
     if not uid:
         # for security reason log password only in debug level

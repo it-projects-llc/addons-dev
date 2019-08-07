@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
- Copyright 2017 IT-Projects LLC (<https://it-projects.info>)
- License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
--->
-<openerp>
-<data noupdate="1">
+<!-- Copyright 2017 IT-Projects LLC <https://it-projects.info>
+     Copyright 2019 Anvar Kildebekov <https://it-projects.info/team/fedoranvar>
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).-->
+<odoo noupdate="1">
 
 <record id="param_apps_odoo_com_login" model="ir.config_parameter">
     <field name="key">apps_odoo_com.login</field>
-    <field name="value"> </field>
-    <field name="group_ids" eval="[(4, ref('apps_odoo_com.apps_odoo_com_group_manager'))]"/>
+    <field name="value"></field>
 </record>
 
 <record id="param_apps_odoo_com_password" model="ir.config_parameter">
     <field name="key">apps_odoo_com.password</field>
-    <field name="value"> </field>
-    <field name="group_ids" eval="[(4, ref('apps_odoo_com.apps_odoo_com_group_manager'))]"/>
+    <field name="value"></field>
 </record>
 
-</data>
-</openerp>
+</odoo>

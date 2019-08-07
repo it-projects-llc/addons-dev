@@ -1,13 +1,13 @@
-# -*- coding: utf-8 -*-
 # Copyright 2017 IT-Projects LLC (<https://it-projects.info>)
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
-from openerp import models, fields, api
+from odoo import models, fields, api
 
 from ..xmlrpc import rpc_execute_kw, rpc_auth
 
 
 class ScanRepo(models.TransientModel):
     _name = 'apps_odoo_com.scan_repo'
+    _description = 'description of scanrepo'
 
     @api.model
     def _get_repos(self):

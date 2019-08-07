@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
- Copyright 2017 IT-Projects LLC (<https://it-projects.info>)
- License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
--->
-<openerp>
-<data>
-
+<!-- Copyright 2017 IT-Projects LLC <https://it-projects.info>
+     Copyright 2019 Anvar Kildebekov <https://it-projects.info/team/fedoranvar>
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl) -->
+<odoo>
 
 <record id="category" model="ir.module.category">
     <field name="name">Odoo App Store</field>
@@ -21,8 +18,7 @@
     <field name="name">Manager</field>
     <field name="category_id" ref="category"/>
     <field name="implied_ids" eval="[(4, ref('apps_odoo_com_group_user'))]"/>
-    <field name="users" eval="[(4, ref('base.user_root'))]"/>
+    <field name="users" eval="[(4, ref('base.user_admin'))]"/>
 </record>
 
-</data>
-</openerp>
+</odoo>

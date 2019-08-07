@@ -1,16 +1,17 @@
-# -*- coding: utf-8 -*-
 # Copyright 2017 IT-Projects LLC (<https://it-projects.info>)
+# Copyright 2019 Anvar Kildebekov (<https://it-projects.info/team/fedoranvar>)
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 {
-    "name": "Odoo App Store administration tool",
+    "name": "Odoo App Store Admin tool",
     "summary": "Tool to work with apps.odoo.com database via xmlrpc.",
-    "version": "8.0.1.0.0",
+    "version": "12.0.1.0.0",
     "category": "Extra Tools",
+    "images": ["images/main.jpg"],
     "website": "https://it-projects.info",
     "author": "IT-Projects LLC, Odoo Community Association (OCA)",
     "license": "LGPL-3",
     "application": False,
-    "installable": False,
+    "installable": True,
     # "pre_init_hook": "pre_init_hook",
     # "post_init_hook": "post_init_hook",
     # "post_load": "post_load",

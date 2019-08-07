@@ -1,17 +1,17 @@
-"id","name","odoo_id"
-"__apps_odoo_com__.user_145731","Ivan 145731","145731"
-"__apps_odoo_com__.user_122864","Ivan 122864","122864"
-"__apps_odoo_com__.user_179555","Ivan 179555","179555"
-"__apps_odoo_com__.user_130708","Ivan 130708","130708"
-"__apps_odoo_com__.user_147797","Ivan 147797","147797"
-"__apps_odoo_com__.user_180092","Ivan 180092","180092"
-"__apps_odoo_com__.user_51310","Ivan 51310","51310"
-"__apps_odoo_com__.user_25514","Ivan 25514","25514"
-"__apps_odoo_com__.user_122827","Ivan 122827","122827"
-"__apps_odoo_com__.user_152300","Ivan 152300","152300"
-"__apps_odoo_com__.user_50253","Ivan 50253","50253"
-"__apps_odoo_com__.user_155022","Ivan 155022","155022"
-"__apps_odoo_com__.user_131636","Ivan 131636","131636"
-"__apps_odoo_com__.user_164017","Ivan 164017","164017"
-"__apps_odoo_com__.user_121049","Ivan 121049","121049"
-"__apps_odoo_com__.user_177770","Ivan 177770","177770"
+id,name,odoo_id
+apps_odoo_com.user_145731,Ivan_145731,145731
+apps_odoo_com.user_122864,Ivan_122864,122864
+apps_odoo_com.user_179555,Ivan_179555,179555
+apps_odoo_com.user_130708,Ivan_130708,130708
+apps_odoo_com.user_147797,Ivan_147797,147797
+apps_odoo_com.user_180092,Ivan_180092,180092
+apps_odoo_com.user_51310,Ivan_51310,51310
+apps_odoo_com.user_25514,Ivan_25514,25514
+apps_odoo_com.user_122827,Ivan_122827,122827
+apps_odoo_com.user_152300,Ivan_152300,152300
+apps_odoo_com.user_50253,Ivan_50253,50253
+apps_odoo_com.user_155022,Ivan_155022,155022
+apps_odoo_com.user_131636,Ivan_131636,131636
+apps_odoo_com.user_121049,Ivan_121049,121049
+apps_odoo_com.user_164017,Ivan_164017,164017
+apps_odoo_com.user_177770,Ivan_177770,177770
