@@ -235,16 +235,16 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                         </group>
                     </group>
                     <group col="2" string="Backups Encryption">
-                        <p colspan="4">
-                            Warning: Don't forget the encryption password.
-                            Without it you cannot restore the database from the encrypted backup.
-                        </p>
                         <group>
                             <field name="encrypt_backups"/>
                         </group>
                         <group>
                             <field name="encryption_password" attrs="{'invisible': [('encrypt_backups', '=', False)]}"/>
                         </group>
+                        <p colspan="4" attrs="{'invisible': [('encrypt_backups', '=', False)]}">
+                            Warning: Don't forget the encryption password.
+                            Without it you cannot restore the database from the encrypted backup.
+                        </p>                        
                     </group>
                     <group string="Scheduled Auto Backups">
                         <field name="config_cron_ids" nolabel="1">
@@ -290,7 +290,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                             <field name="yearly_limit" attrs="{'invisible': [('yearly_rotation', '!=', 'limited')]}"/>
                         </group>
                         <p colspan="4" attrs="{'invisible': [('common_rotation', '!=', 'unlimited')]}">
-                            Unlilmited option is enabled. Number of backups will increase infinitly.
+                            Unlilmited option is enabled. Number of backups will increase <b>infinitly</b>.<br/>
                             <span attrs="{'invisible': [('unlimited_time_frame', '!=', 'hour')]}">
                                 From every hour at least one backup is preserved. If backups are made at least every hour,
                                 in three years you would have at least 26280 backups (=3*365*24).
@@ -311,8 +311,9 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                                 From every year at least one backup is preserved. If backups are made at least every year,
                                 in three years you would have at least 3 backups.
                             </span>
+                            <br/>
                             You can restrict how many backups to preserve for certain time frames.
-                            Example: The module makes auto backup database every 2 hours. You want to preserve 2 daily backups
+                            <b>Example</b>: the module makes auto backup database every 2 hours. You want to preserve 2 daily backups
                             (from today and from yesterday) and 1 weekly (additional backup from last week).
                             Set up Daily and Weekly rotation options as <em>Limited</em> and put the numbers in limit fields
                             (<em>2</em> in <b> Hourly</b>, <em>1</em> in <b>Weekly</b>). All other options mark as Disabled.
