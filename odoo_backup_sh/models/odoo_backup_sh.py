@@ -83,7 +83,8 @@ class BackupConfig(models.Model):
         ('yearly_limit_positive', 'check (yearly_limit > 0)', 'The yearly limit must be positive!'),
     ]
 
-    @api.onchange('config_cron_ids', 'hourly_rotation', 'daily_rotation', 'weekly_rotation', 'monthly_rotation', 'yearly_rotation')
+    @api.
+    nge('config_cron_ids', 'hourly_rotation', 'daily_rotation', 'weekly_rotation', 'monthly_rotation', 'yearly_rotation')
     def _onchange_common_rotation(self):
         if self.config_cron_ids:
             rotation_list = [self.hourly_rotation, self.daily_rotation, self.weekly_rotation, self.monthly_rotation, self.yearly_rotation]
@@ -113,7 +114,7 @@ class BackupConfig(models.Model):
         else:
             self.unlimited_time_frame = None
 
-    @api.onchange('common_rotation', 'hourly_limit', 'daily_limit', 'weekly_limit', 'monthly_limit', 'yearly_limit')
+    @api.onchange('hourly_rotation', 'hourly_limit', 'daily_rotation', 'daily_limit', 'weekly_rotation', 'weekly_limit', 'monthly_rotation', 'monthly_limit', 'yearly_rotation', 'yearly_limit')
     def _onchange_max_backups(self):
         if self.common_rotation == 'limited':
             max_backups = 0
