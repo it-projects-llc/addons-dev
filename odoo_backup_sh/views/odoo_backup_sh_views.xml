@@ -235,16 +235,16 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                         </group>
                     </group>
                     <group col="2" string="Backups Encryption">
-                        <p colspan="4">
-                            Warning: Don't forget the encryption password.
-                            Without it you cannot restore the database from the encrypted backup.
-                        </p>
                         <group>
                             <field name="encrypt_backups"/>
                         </group>
                         <group>
                             <field name="encryption_password" attrs="{'invisible': [('encrypt_backups', '=', False)]}"/>
                         </group>
+                        <p colspan="4" attrs="{'invisible': [('encrypt_backups', '=', False)]}">
+                            Warning: Don't forget the encryption password.
+                            Without it you cannot restore the database from the encrypted backup.
+                        </p>                        
                     </group>
                     <group string="Scheduled Auto Backups">
                         <field name="config_cron_ids" nolabel="1">
