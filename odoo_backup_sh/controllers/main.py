@@ -174,6 +174,8 @@ class BackupController(http.Controller):
 
     @http.route('/web/database/restore_via_odoo_backup_sh', type='http', auth="none", methods=['POST'], csrf=False)
     def restore_via_odoo_backup_sh(self, master_pwd, backup_file_name, name, encryption_password, copy=False):
+        if config['admin_passwd'] != master_pwd:
+            return env.get_template("backup_list.html").render(error="Incorrect master password")
         cloud_params = self.get_cloud_params(request.httprequest.url, call_from='frontend')
         backup_object = BackupCloudStorage.get_object(cloud_params, backup_file_name)
         backup_file = tempfile.NamedTemporaryFile()
