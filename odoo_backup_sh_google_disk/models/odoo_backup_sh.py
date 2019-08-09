@@ -13,8 +13,7 @@ except ImportError as err:
     logging.getLogger(__name__).debug(err)
 
 from odoo import api, models, fields
-from odoo.addons.odoo_backup_sh.models.odoo_backup_sh import REMOTE_STORAGE_DATETIME_FORMAT
-from odoo.addons.odoo_backup_sh.models.odoo_backup_sh import BACKUP_NAME_SUFFIX, BACKUP_NAME_ENCRYPT_SUFFIX
+from odoo.addons.odoo_backup_sh.models.odoo_backup_sh import compute_backup_filename, compute_backup_info_filename
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
@@ -105,11 +104,11 @@ class BackupConfig(models.Model):
         GoogleDriveService = self.env['ir.config_parameter'].get_google_drive_service()
         folder_id = self.env['ir.config_parameter'].get_param("odoo_backup_sh_google_disk.google_disk_folder_id")
         db_metadata = {
-            "name": "%s.%s%s" % (name, ts, BACKUP_NAME_ENCRYPT_SUFFIX if info_file_content.get('encrypted') else BACKUP_NAME_SUFFIX),
+            "name": compute_backup_filename(name, ts, info_file_content.get('encrypted')),
             "parents": [folder_id],
         }
         info_metadata = {
-            "name": "%s.%s%s" % (name, ts, '.info'),
+            "name": compute_backup_info_filename(name, ts),
             "parents": [folder_id],
         }
         db_mimetype = "application/zip"
@@ -161,12 +160,7 @@ class DeleteRemoteBackupWizard(models.TransientModel):
         GoogleDriveService = self.env['ir.config_parameter'].get_google_drive_service()
         backup_google_drive_info_records = backup_info_records.filtered(lambda r: r.storage_service == 'google_drive')
         for record in backup_google_drive_info_records:
-            backup_files_suffixes = ['.zip', '.info']
-            if record.encrypted:
-                backup_files_suffixes[0] += '.enc'
-            upload_datetime = datetime.strftime(record.upload_datetime, REMOTE_STORAGE_DATETIME_FORMAT)
-            for suffix in backup_files_suffixes:
-                obj_name = "%s.%s%s" % (record.database, upload_datetime, suffix)
+            for obj_name in [record.backup_filename, record.backup_info_filename]:
                 file_id = self.env["odoo_backup_sh.config"].get_google_drive_file_id(obj_name)
                 try:
                     GoogleDriveService.files().delete(fileId=file_id).execute()

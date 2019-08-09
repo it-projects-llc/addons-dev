@@ -16,8 +16,7 @@ except ImportError as err:
     logging.getLogger(__name__).debug(err)
 
 from odoo import api, models, fields
-from odoo.addons.odoo_backup_sh.models.odoo_backup_sh import REMOTE_STORAGE_DATETIME_FORMAT
-from odoo.addons.odoo_backup_sh.models.odoo_backup_sh import BACKUP_NAME_SUFFIX, BACKUP_NAME_ENCRYPT_SUFFIX
+from odoo.addons.odoo_backup_sh.models.odoo_backup_sh import compute_backup_filename, compute_backup_info_filename
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
@@ -97,10 +96,8 @@ class BackupConfig(models.Model):
         dump_stream.seek(0)
         info_file.seek(0)
         for obj, obj_name, file_size in \
-                [[dump_stream, "%s.%s%s" % (name, ts,
-                                            BACKUP_NAME_ENCRYPT_SUFFIX if info_file_content.get('encrypted')
-                                            else BACKUP_NAME_SUFFIX), info_file_content.get("backup_size") * 1024 * 1024],
-                 [info_file, "%s.%s%s" % (name, ts, '.info'), info_file_size]]:
+                [[dump_stream, compute_backup_filename(name, ts, info_file_content.get('encrypted')), info_file_content.get("backup_size") * 1024 * 1024],
+                 [info_file, compute_backup_info_filename(name, ts), info_file_size]]:
             # The full path to upload the file to, including the file name
             full_path = "{folder_path}/{file_name}".format(
                 folder_path=folder_path,
@@ -163,12 +160,7 @@ class DeleteRemoteBackupWizard(models.TransientModel):
         backup_dropbox_info_records = backup_info_records.filtered(lambda r: r.storage_service == 'dropbox')
 
         for record in backup_dropbox_info_records:
-            backup_files_suffixes = ['.zip', '.info']
-            if record.encrypted:
-                backup_files_suffixes[0] += '.enc'
-            upload_datetime = datetime.strftime(record.upload_datetime, REMOTE_STORAGE_DATETIME_FORMAT)
-            for suffix in backup_files_suffixes:
-                obj_name = "%s.%s%s" % (record.database, upload_datetime, suffix)
+            for obj_name in [record.backup_filename, record.backup_info_filename]:
                 full_path = "{folder_path}/{file_name}".format(
                     folder_path=folder_path,
                     file_name=obj_name,

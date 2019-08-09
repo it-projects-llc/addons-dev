@@ -36,6 +36,23 @@ BACKUP_NAME_SUFFIX = ".zip"
 BACKUP_NAME_ENCRYPT_SUFFIX = BACKUP_NAME_SUFFIX + ".enc"
 
 
+def compute_backup_filename(database, upload_datetime, is_encrypted):
+    return '%s.%s%s' % (
+        database,
+        datetime.strftime(upload_datetime, REMOTE_STORAGE_DATETIME_FORMAT)
+        if type(upload_datetime) is not str else upload_datetime,
+        BACKUP_NAME_ENCRYPT_SUFFIX if is_encrypted else BACKUP_NAME_SUFFIX,
+    )
+
+
+def compute_backup_info_filename(database, upload_datetime):
+    return '%s.%s.info' % (
+        database,
+        datetime.strftime(upload_datetime, REMOTE_STORAGE_DATETIME_FORMAT)
+        if type(upload_datetime) is not str else upload_datetime,
+    )
+
+
 class BackupConfig(models.Model):
     _name = 'odoo_backup_sh.config'
     _description = 'Backup Configurations'
@@ -226,12 +243,8 @@ class BackupConfig(models.Model):
                                                                       ('database', '=', config.database)])
         simulation_backup_list = []
         for r in info_records:
-            simulation_backup_list.append(('%s.%s.info' % (r.database,
-                                                           r.upload_datetime.strftime(REMOTE_STORAGE_DATETIME_FORMAT)),
-                                           config.storage_service))
-            simulation_backup_list.append(('%s.%s.zip' % (r.database,
-                                                          r.upload_datetime.strftime(REMOTE_STORAGE_DATETIME_FORMAT)),
-                                           config.storage_service))
+            simulation_backup_list.append((r.backup_info_filename, config.storage_service))
+            simulation_backup_list.append((r.backup_filename, config.storage_service))
         return simulation_backup_list
 
     @api.model
@@ -448,9 +461,8 @@ class BackupConfig(models.Model):
 
     @api.model
     def make_backup_odoo_backup_sh(self, ts, name, dump_stream, info_file, info_file_content, cloud_params):
-        s3_backup_path = '%s/%s.%s%s' % (cloud_params['odoo_oauth_uid'], name, ts,
-                                         BACKUP_NAME_ENCRYPT_SUFFIX if info_file_content.get('encrypted') else BACKUP_NAME_SUFFIX)
-        s3_info_file_path = '%s/%s.%s.info' % (cloud_params['odoo_oauth_uid'], name, ts)
+        s3_backup_path = '%s/%s' % (cloud_params['odoo_oauth_uid'], compute_backup_filename(name, ts, info_file_content.get('encrypted')))
+        s3_info_file_path = '%s/%s' % (cloud_params['odoo_oauth_uid'], compute_backup_info_filename(name, ts))
         # Upload two backup objects to AWS S3
         for obj, obj_path in [[dump_stream, s3_backup_path], [info_file, s3_info_file_path]]:
             try:
@@ -544,6 +556,24 @@ class BackupInfo(models.Model):
                                             "after updating the backup list.")
     active = fields.Boolean('Active', default=True, help="If the active field is set to False, it will allow you to "
                                                          "hide the record without removing it.")
+
+    def _compute_backup_filename(self):
+        for r in self:
+            r.backup_filename = compute_backup_filename(
+                r.database,
+                r.upload_datetime,
+                r.encrypted,
+            )
+
+    def _compute_backup_info_filename(self):
+        for r in self:
+            r.backup_info_filename = compute_backup_info_filename(
+                r.database,
+                r.upload_datetime,
+            )
+
+    backup_filename = fields.Char(compute=_compute_backup_filename, store=False)
+    backup_info_filename = fields.Char(compute=_compute_backup_info_filename, store=False)
 
     @api.model
     def create(self, vals):
@@ -668,14 +698,11 @@ class DeleteRemoteBackupWizard(models.TransientModel):
         backup_s3_info_records = backup_info_records.filtered(lambda r: r.storage_service == 'odoo_backup_sh')
 
         for record in backup_s3_info_records:
-            backup_files_suffixes = ['.zip', '.info']
-            if record.encrypted:
-                backup_files_suffixes[0] += '.enc'
-            upload_datetime = datetime.strftime(record.upload_datetime, REMOTE_STORAGE_DATETIME_FORMAT)
-            for suffix in backup_files_suffixes:
+            for filename in [record.backup_filename, record.backup_info_filename]:
                 remote_objects_to_delete += [{
-                    'Key': '%s/%s.%s%s' % (cloud_params['odoo_oauth_uid'], record.database, upload_datetime, suffix)
+                    'Key': '%s/%s' % (cloud_params['odoo_oauth_uid'], filename)
                 }]
+
         # Delete unnecessary remote backup objects
         if remote_objects_to_delete:
             res = BackupCloudStorage.delete_objects(cloud_params, remote_objects_to_delete)
