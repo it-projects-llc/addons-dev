@@ -14,6 +14,9 @@ from odoo.http import request, rpc_request, rpc_response
 # from odoo.tools import pycompat, date_utils
 # text_type=pycompat.text_type
 
+# PY2 and odoo 10:
+text_type = unicode  # pylint: disable=undefined-variable
+
 
 from odoo.service.server import memory_info
 
@@ -195,10 +198,7 @@ def api_route(route=None, **kw):
             if isinstance(response, Response) or f.routing_type in ("api", "json"):
                 return response
 
-            # python3
-            # if isinstance(response, (bytes, text_type)):
-            # python2
-            if isinstance(response, (bytes, unicode)):
+            if isinstance(response, (bytes, text_type)):
                 return Response(response)
 
             if isinstance(response, werkzeug.exceptions.HTTPException):
