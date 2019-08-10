@@ -100,7 +100,7 @@ class ApiJsonRequest(WebRequest):
         else:
             mime = 'application/json'
             # odoo 11+ version:
-            #body = json.dumps(response, default=date_utils.json_default)
+            # body = json.dumps(response, default=date_utils.json_default)
             # odoo 10 only:
             body = json.dumps(response)
 
@@ -108,7 +108,6 @@ class ApiJsonRequest(WebRequest):
             body, status=error and error.pop('http_status', 200) or 200,
             headers=[('Content-Type', mime), ('Content-Length', len(body))]
         )
-
 
     def _handle_exception(self, exception):
         """Called within an except block to allow converting exceptions
@@ -121,9 +120,9 @@ class ApiJsonRequest(WebRequest):
                                           odoo.exceptions.except_orm, werkzeug.exceptions.NotFound)):
                 _logger.exception("Exception during JSON request handling.")
             error = {
-                    'code': 200,
-                    'message': "Odoo Server Error",
-                    'data': serialize_exception(exception)
+                'code': 200,
+                'message': "Odoo Server Error",
+                'data': serialize_exception(exception)
             }
             if isinstance(exception, werkzeug.exceptions.NotFound):
                 error['http_status'] = 404
@@ -136,7 +135,6 @@ class ApiJsonRequest(WebRequest):
                 error['code'] = 100
                 error['message'] = "Odoo Session Expired"
             return self._json_response(error=error)
-
 
     def dispatch(self):
         if self.jsonp_handler:
@@ -155,7 +153,8 @@ class ApiJsonRequest(WebRequest):
                 if psutil:
                     start_memory = memory_info(psutil.Process(os.getpid()))
                 if rpc_request and rpc_response_flag:
-                    rpc_request.debug('%s: %s %s, %s',
+                    rpc_request.debug(
+                        '%s: %s %s, %s',
                         endpoint, model, method, pprint.pformat(args))
 
             result = self._call_function(**self.params)
@@ -177,11 +176,12 @@ class ApiJsonRequest(WebRequest):
             return self._handle_exception(e)
 
 
-#Copy of http.route adding routing 'type':'api'
+# Copy of http.route adding routing 'type':'api'
 def api_route(route=None, **kw):
 
     routing = kw.copy()
     assert 'type' not in routing or routing['type'] in ("http", "json", "api")
+
     def decorator(f):
         if route:
             if isinstance(route, list):
@@ -189,13 +189,14 @@ def api_route(route=None, **kw):
             else:
                 routes = [route]
             routing['routes'] = routes
+
         @functools.wraps(f)
         def response_wrap(*args, **kw):
             response = f(*args, **kw)
             if isinstance(response, Response) or f.routing_type in ("api", "json"):
                 return response
 
-            if isinstance(response, (bytes, pycompat.text_type)):
+            if isinstance(response, (bytes, text_type)):
                 return Response(response)
 
             if isinstance(response, werkzeug.exceptions.HTTPException):
@@ -215,20 +216,14 @@ def api_route(route=None, **kw):
 
 
 
+get_request_original = Root.get_request
 def api_get_request(self, httprequest):
     # deduce type of request
 
     if httprequest.headers.get('Type') and httprequest.headers.get('Type') in ('api'):
         return ApiJsonRequest(httprequest)
 
-    if httprequest.args.get('jsonp'):
-        return JsonRequest(httprequest)
-
-    if httprequest.mimetype in ("application/json", "application/json-rpc"):
-        return JsonRequest(httprequest)
-
-    else:
-        return HttpRequest(httprequest)
+    return get_request_original(self, httprequest)
 
 
 Root.get_request = api_get_request

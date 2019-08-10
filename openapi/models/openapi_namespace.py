@@ -5,8 +5,6 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 import collections
 import uuid
-import time
-import datetime
 
 # python3
 # import urllib.parse as urlparse
@@ -15,7 +13,6 @@ import datetime
 import urlparse
 import urllib
 
-from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo import models, fields, api
 from ..controllers import pinguin
 

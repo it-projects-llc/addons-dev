@@ -29,12 +29,9 @@ import werkzeug.wrappers
 import collections
 
 import odoo
-import time
-import datetime
 
 from odoo.service import security
 from odoo.addons.report.controllers.main import ReportController
-from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
 try:
     import simplejson as json
