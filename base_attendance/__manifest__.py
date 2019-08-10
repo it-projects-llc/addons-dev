@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2004-2015 Odoo S.A.
-# Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+# Copyright 2018-2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 {
     "name": """Partner Attendances""",
     "summary": """Manage partner attendances""",
     "category": "Extra Tools",
     # "live_test_url": "",
-    "images": [],
-    "version": "10.0.1.0.0",
+    "images": ['images/base_attendance.jpg'],
+    "version": "10.0.1.1.0",
     "application": False,
 
     "author": "IT-Projects LLC, Kolushov Alexandr",
