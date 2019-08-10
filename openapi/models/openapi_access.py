@@ -167,6 +167,7 @@ class Access(models.Model):
                 "summary": "Add a new %s object to the store" % model_name,
                 "description": "",
                 "operationId": "add%s" % capitalized_model_name,
+                "consumes": ["application/json"],
                 "parameters": [
                     {
                         "in": "body",

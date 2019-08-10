@@ -73,7 +73,7 @@ class ApiJsonRequest(WebRequest):
             _logger.info('%s: %s', self.httprequest.path, msg)
             raise werkzeug.exceptions.BadRequest(msg)
 
-        self.params = dict(self.ApiJsonRequest.get("params", {}))
+        self.params = dict(self.ApiJsonRequest or {})
         self.context = self.params.pop('context', dict(self.session.context))
 
     def _json_response(self, result=None, error=None):
@@ -222,7 +222,8 @@ get_request_original = Root.get_request
 def api_get_request(self, httprequest):
     # deduce type of request
 
-    if httprequest.headers.get('Type') and httprequest.headers.get('Type') in ('api'):
+    if 'authorization' in httprequest.headers:
+    # if httprequest.headers.get('Type') and httprequest.headers.get('Type') in ('api'):
         return ApiJsonRequest(httprequest)
 
     return get_request_original(self, httprequest)
