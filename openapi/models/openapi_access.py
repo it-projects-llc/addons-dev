@@ -4,13 +4,13 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 import collections
 import json
-import urllib
 import inspect
 
-try:
-    import urlparse
-except ImportError:
-    import urllib.parse as urlparse
+# python3
+# import urllib.parse as urlparse
+
+# python2
+import urllib
 
 from odoo import models, fields, api, _, exceptions
 
@@ -469,7 +469,10 @@ class AccessCreateContext(models.Model):
     @api.model
     def _fix_name(self, vals):
         if 'name' in vals:
-            vals['name'] = urlparse.quote_plus(vals['name'].lower())
+            # python3
+            # vals['name'] = urlparse.quote_plus(vals['name'].lower())
+            # python2
+            vals['name'] = urllib.quote_plus(vals['name'].lower())
         return vals
 
     @api.model

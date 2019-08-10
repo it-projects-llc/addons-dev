@@ -4,15 +4,16 @@
 # Copyright 2019 Yan Chirino <https://xoe.solutions/>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 import collections
-import urllib
 import uuid
 import time
 import datetime
 
-try:
-    import urlparse
-except ImportError:
-    import urllib.parse as urlparse
+# python3
+# import urllib.parse as urlparse
+
+# python2
+import urlparse
+import urllib
 
 from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo import models, fields, api
@@ -73,7 +74,10 @@ class Namespace(models.Model):
     @api.model
     def _fix_name(self, vals):
         if 'name' in vals:
-            vals['name'] = urlparse.quote_plus(vals['name'].lower())
+            # python3
+            # vals['name'] = urlparse.quote_plus(vals['name'].lower())
+            # python2
+            vals['name'] = urllib.quote_plus(vals['name'].lower())
         return vals
 
     @api.model
