@@ -3,6 +3,8 @@
 odoo.define('base_attendance.tour', function (require) {
     "use strict";
 
+    var TourManager = require("web_tour.TourManager");
+    TourManager = new TourManager();
     var tour = require("web_tour.tour");
     var core = require('web.core');
     var _t = core._t;
@@ -17,7 +19,7 @@ odoo.define('base_attendance.tour', function (require) {
             '.oe_hr_attendance_status.fa.fa-user.oe_hr_attendance_status_' + color,
             content: 'Select Partner',
         }, {
-            trigger: '.fa.btn-primary.o_hr_attendance_sign_in_out_icon.fa-sign-out.fa-sign-out',
+            trigger: '.fa.btn-primary.o_hr_attendance_sign_in_out_icon.fa-sign-out',
             content: 'Check in',
         }, {
             trigger: 'button:contains("ok")',
@@ -25,7 +27,7 @@ odoo.define('base_attendance.tour', function (require) {
         }];
     }
 
-    var steps = [{
+    var steps = [TourManager.STEPS.MENU_MORE, {
             trigger: 'a.oe_menu_toggler:contains("Attendance")',
             content: _t("Click to enter menu attendances"),
             position: 'bottom',

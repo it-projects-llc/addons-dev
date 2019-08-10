@@ -6,8 +6,8 @@
     "summary": """Technical module to switch Websites in Backend similarly to Company Switcher""",
     "category": "Hidden",
     # "live_test_url": "",
-    "images": [],
-    "version": "10.0.1.0.1",
+    "images": ['images/web_website.jpg'],
+    "version": "10.0.1.0.2",
     "application": False,
 
     "author": "IT-Projects LLC, Ivan Yelizariev",
