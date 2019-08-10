@@ -222,8 +222,8 @@ get_request_original = Root.get_request
 def api_get_request(self, httprequest):
     # deduce type of request
 
-    if 'authorization' in httprequest.headers:
     # if httprequest.headers.get('Type') and httprequest.headers.get('Type') in ('api'):
+    if 'authorization' in httprequest.headers:
         return ApiJsonRequest(httprequest)
 
     return get_request_original(self, httprequest)
