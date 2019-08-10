@@ -41,7 +41,7 @@
         # "static/src/xml/configure_api_button.xml"
     ],
 
-    "post_load": None,
+    "post_load": "post_load",
     "pre_init_hook": None,
     "post_init_hook": None,
     "uninstall_hook": None,
