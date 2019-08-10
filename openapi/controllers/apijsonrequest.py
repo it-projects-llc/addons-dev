@@ -6,20 +6,19 @@ import logging
 import functools
 import werkzeug.wrappers
 import time
-import datetime
 import os
 import pprint
-from odoo.http import WebRequest, Response, serialize_exception, HttpRequest, Root, SessionExpiredException, AuthenticationError
-from odoo.http import request, rpc_request, rpc_response, JsonRequest
+from odoo.http import AuthenticationError, Response, Root, SessionExpiredException, WebRequest, serialize_exception
+from odoo.http import request, rpc_request, rpc_response
 # PY3 and odoo 11+:
-#from odoo.tools import pycompat, date_utils
-#text_type=pycompat.text_type
+# from odoo.tools import pycompat, date_utils
+# text_type=pycompat.text_type
 
 # PY2 and odoo 10:
-text_type = unicode
+text_type = unicode  # pylint: disable=undefined-variable
+
 
 from odoo.service.server import memory_info
-from datetime import datetime, date
 
 try:
     import psutil
@@ -51,7 +50,7 @@ class ApiJsonRequest(WebRequest):
             def handler():
                 self.session['jsonp_request_%s' % (request_id,)] = self.httprequest.form['r']
                 self.session.modified = True
-                headers=[('Content-Type', 'text/plain; charset=utf-8')]
+                headers = [('Content-Type', 'text/plain; charset=utf-8')]
                 r = werkzeug.wrappers.Response(request_id, headers=headers)
                 return r
             self.jsonp_handler = handler
@@ -77,7 +76,6 @@ class ApiJsonRequest(WebRequest):
         self.params = dict(self.ApiJsonRequest.get("params", {}))
         self.context = self.params.pop('context', dict(self.session.context))
 
-
     def _json_response(self, result=None, error=None):
 
         response = {
@@ -96,7 +94,11 @@ class ApiJsonRequest(WebRequest):
             # We need then to manage http sessions manually.
             response['session_id'] = self.session.sid
             mime = 'application/javascript'
-            body = "%s(%s);" % (self.jsonp, json.dumps(response, default=date_utils.json_default))
+
+            # odoo 11+ version:
+            # body = "%s(%s);" % (self.jsonp, json.dumps(response, default=date_utils.json_default))
+            # odoo 10 only:
+            body = "%s(%s);" % (self.jsonp, json.dumps(response))
         else:
             mime = 'application/json'
             # odoo 11+ version:
@@ -214,9 +216,9 @@ def api_route(route=None, **kw):
     return decorator
 
 
-
-
 get_request_original = Root.get_request
+
+
 def api_get_request(self, httprequest):
     # deduce type of request
 
