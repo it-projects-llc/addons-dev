@@ -23,6 +23,7 @@
     "data": [
     ],
     "demo": [
+        "data/base_automation_demo.xml"
     ],
     "qweb": [
     ],
