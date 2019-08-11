@@ -2,7 +2,7 @@
 # Copyright 2018 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 {
-    "name": """REST API / Open API (Swagger)""",
+    "name": """REST API/Openapi/Swagger""",
     "summary": """Set up API and export OpenAPI specification file for integration with whatever system you need""",
     "category": "",
     # "live_test_url": "",
@@ -41,7 +41,7 @@
         # "static/src/xml/configure_api_button.xml"
     ],
 
-    "post_load": None,
+    "post_load": "post_load",
     "pre_init_hook": None,
     "post_init_hook": None,
     "uninstall_hook": None,

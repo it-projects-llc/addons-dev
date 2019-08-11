@@ -2,9 +2,9 @@
    :target: https://www.gnu.org/licenses/lgpl
    :alt: License: LGPL-3
 
-===============================
- REST API / Open API (Swagger)
-===============================
+==========================
+ REST API/Openapi/Swagger
+==========================
 
 Set up REST API and export Open API (Swagger) specification file for
 integration with whatever you need.

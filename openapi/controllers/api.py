@@ -2,7 +2,7 @@
 # Copyright 2018, XOE Solutions
 # Copyright 2018 Rafis Bikbov <https://it-projects.info/team/bikbov>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
-
+# pylint: disable=redefined-builtin
 import json
 import logging
 
@@ -58,6 +58,10 @@ class ApiV1Controller(http.Controller):
     _api_endpoint_model = _api_endpoint + '/<model>'
     # ReadOne # UpdateOne # UnlinkOne
     _api_endpoint_model_id = _api_endpoint + '/<model>/<int:id>'
+    # Call Method on Singleton Record
+    _api_endpoint_model_id_method = _api_endpoint + '/<model>/<int:id>/<method_name>'
+    # Call Method on RecordSet
+    _api_endpoint_model_method_ids = _api_endpoint + '/<model>/<method_name>/<ids>'
     # Get Reports
     _api_report_docids = _api_endpoint + '/report/<any(pdf, html):converter>/<report_external_id>/<docids>'
 
@@ -69,7 +73,7 @@ class ApiV1Controller(http.Controller):
     @pinguin.route(
         _api_endpoint_model,
         methods=['POST'],
-        type='http',
+        type='api',
         auth='none',
         csrf=False)
     def create_one__POST(self, namespace, model, **data):
@@ -115,7 +119,7 @@ class ApiV1Controller(http.Controller):
     @pinguin.route(
         _api_endpoint_model_id,
         methods=['PUT'],
-        type='http',
+        type='json',
         auth='none',
         csrf=False)
     def update_one__PUT(self, namespace, model, id, **data):
@@ -143,7 +147,7 @@ class ApiV1Controller(http.Controller):
 
     # Call Method on Singleton Record (optional: method parameters)
     @pinguin.route(
-        _api_endpoint_model_id,
+        _api_endpoint_model_id_method,
         methods=['PATCH'],
         type='http',
         auth='none',
@@ -161,7 +165,7 @@ class ApiV1Controller(http.Controller):
 
     # Call Method on RecordSet (optional: method parameters)
     @pinguin.route(
-        _api_endpoint_model,
+        _api_endpoint_model_method_ids,
         methods=['PATCH'],
         type='http',
         auth='none',

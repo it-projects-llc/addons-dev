@@ -58,9 +58,9 @@ class TestAPI(HttpCase):
         phantom_env = api.Environment(self.registry.test_cr, self.uid, {})
         namespace_name = 'demo'
         model_name = 'res.partner'
-        id = phantom_env[model_name].search([], limit=1).id
+        record_id = phantom_env[model_name].search([], limit=1).id
         demo_user = phantom_env.ref(USER_DEMO)
-        resp = self.request_from_user('GET', namespace_name, model_name, id, user=demo_user)
+        resp = self.request_from_user('GET', namespace_name, model_name, record_id, user=demo_user)
         self.assertEqual(resp.status_code, pinguin.CODE__success)
         # TODO check content
 

@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Copyright 2018, XOE Solutions
 # Copyright 2018 Rafis Bikbov <https://it-projects.info/team/bikbov>
+# Copyright 2019 Yan Chirino <https://xoe.solutions/>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+# pylint: disable=redefined-builtin
 
 """Pinguin module for Odoo REST Api.
 
@@ -28,6 +30,7 @@ import werkzeug.wrappers
 import collections
 
 import odoo
+
 from odoo.service import security
 from odoo.addons.report.controllers.main import ReportController
 
@@ -36,7 +39,8 @@ try:
 except ImportError:
     import json
 
-from odoo.http import request, route as http_route
+from .apijsonrequest import api_route
+from odoo.http import request
 from psycopg2.extensions import ISOLATION_LEVEL_READ_COMMITTED
 
 ####################################
@@ -298,9 +302,10 @@ def route(*args, **kwargs):
     """
     def decorator(controller_method):
 
-        @http_route(*args, **kwargs)
+        @api_route(*args, **kwargs)
         @functools.wraps(controller_method)
         def controller_method_wrapper(*iargs, **ikwargs):
+
             auth_header = get_auth_header(request.httprequest.headers, raise_exception=True)
             db_name, user_token = get_data_from_auth_header(auth_header)
             setup_db(request.httprequest, db_name)
@@ -924,6 +929,7 @@ def get_dict_from_record(record, spec, include_fields, exclude_fields):
     validate_spec(record, _spec)
 
     for field in _spec:
+
         if isinstance(field, tuple):
             # It's a 2many (or a 2one specified as a list)
             if isinstance(field[1], list):

@@ -4,12 +4,27 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 import collections
 import json
-import urllib
 import inspect
+
+# python3
+# import urllib.parse as urlparse
+
+# python2
+import urllib
 
 from odoo import models, fields, api, _, exceptions
 
 from ..controllers import pinguin
+
+
+PARAM_ID = {
+    "name": "id",
+    "in": "path",
+    "description": "Record ID",
+    "required": True,
+    "type": "integer",
+    "format": "int64"
+}
 
 
 class Access(models.Model):
@@ -65,7 +80,6 @@ class Access(models.Model):
         string='Creation Context Presets',
         help="Can be used to pass default values or custom context",
         domain="[('model_id', '=', model_id)]",
-        context="{'default_model_id': model_id}",
     )
 
     _sql_constraints = [
@@ -137,7 +151,6 @@ class Access(models.Model):
         model_name = self.model
         read_many_path = '/%s' % model_name
         read_one_path = '%s/{id}' % read_many_path
-        param_id_ref = "#/parameters/RecordIdInPath"
 
         read_many_definition_ref = "#/definitions/%s" % pinguin.get_definition_name(self.model, '', 'read_many')
         read_one_definition_ref = "#/definitions/%s" % pinguin.get_definition_name(self.model, '', 'read_one')
@@ -154,6 +167,7 @@ class Access(models.Model):
                 "summary": "Add a new %s object to the store" % model_name,
                 "description": "",
                 "operationId": "add%s" % capitalized_model_name,
+                "consumes": ["application/json"],
                 "parameters": [
                     {
                         "in": "body",
@@ -210,9 +224,7 @@ class Access(models.Model):
                     "application/json"
                 ],
                 "parameters": [
-                    {
-                        '$ref': param_id_ref
-                    }
+                    PARAM_ID
                 ],
                 "responses": {
                     "200": {
@@ -233,9 +245,7 @@ class Access(models.Model):
                 "description": "",
                 "operationId": "update%sById" % capitalized_model_name,
                 "parameters": [
-                    {
-                        '$ref': param_id_ref
-                    },
+                    PARAM_ID,
                     {
                         "in": "body",
                         "name": "body",
@@ -271,9 +281,7 @@ class Access(models.Model):
                     "application/json"
                 ],
                 "parameters": [
-                    {
-                        '$ref': param_id_ref
-                    }
+                    PARAM_ID,
                 ],
                 "responses": {
                     "204": {
@@ -308,9 +316,7 @@ class Access(models.Model):
                     "application/json",
                 ],
                 "parameters": [
-                    {
-                        '$ref': param_id_ref
-                    },
+                    PARAM_ID,
                     {
                         "in": "body",
                         "name": "body",
@@ -464,6 +470,9 @@ class AccessCreateContext(models.Model):
     @api.model
     def _fix_name(self, vals):
         if 'name' in vals:
+            # python3
+            # vals['name'] = urlparse.quote_plus(vals['name'].lower())
+            # python2
             vals['name'] = urllib.quote_plus(vals['name'].lower())
         return vals
 
