@@ -75,3 +75,18 @@ Usage
 RESULT: Backup is restored in one click without any additional manipulations such as "downloading-uploading process".
 
 *The database restore may take some time before being ready*.
+
+
+Downloading backups
+===================
+
+* Proceed to the Backups page
+* ``Backups`` -> ``Backups``
+* Click on backup from list
+* Click on ``Download backup`` button
+* If backup is encrypted (it has `.enc` extension), extract it using `gpg` utility. As example:
+
+```
+gpg --output OUTPUT_FILENAME.zip --decrypt INPUT_FILENAME.zip.enc
+```
+* Type the password when it will be prompted
