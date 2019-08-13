@@ -126,6 +126,17 @@ class BackupInfo(models.Model):
 
     storage_service = fields.Selection(selection_add=[('google_drive', 'Google Drive')])
 
+    @api.multi
+    def download_backup_action(self):
+        obj = self.env[self._inherit].search([('id', '=', self._context['active_id'])])
+        obj.ensure_one()
+        file_id = self.env["odoo_backup_sh.config"].get_google_drive_file_id(obj.backup_filename)
+        return {
+            "type": "ir.actions.act_url",
+            "url": "https://drive.google.com/uc?id={}&export=download".format(file_id),
+            "target": "self",
+        }
+
 
 class BackupRemoteStorage(models.Model):
     _inherit = 'odoo_backup_sh.remote_storage'
