@@ -13,8 +13,8 @@
     "support": "apps@it-projects.info",
     "website": "https://it-projects.info/team/GabbasovDinar",
     "license": "LGPL-3",
-    # "price": 9.00,
-    # "currency": "EUR",
+    "price": 119.00,
+    "currency": "EUR",
 
     "depends": [
         "odoo_backup_sh",
