@@ -13,8 +13,8 @@
     "support": "apps@it-projects.info",
     "website": "https://it-projects.info/team/ufaks",
     "license": "LGPL-3",
-    # "price": 9.00,
-    # "currency": "EUR",
+    "price": 1.00,
+    "currency": "EUR",
 
     "depends": [
         'iap', 'mail',
