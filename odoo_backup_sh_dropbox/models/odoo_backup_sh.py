@@ -124,6 +124,18 @@ class BackupInfo(models.Model):
 
     storage_service = fields.Selection(selection_add=[('dropbox', 'Dropbox')])
 
+    @api.multi
+    def download_backup_action(self):
+        obj = self.env[self._inherit].search([('id', '=', self._context['active_id'])])
+        obj.ensure_one()
+        folder_path = self.env['ir.config_parameter'].get_param("odoo_backup_sh_dropbox.dropbox_folder_path") or ""
+        DropboxService = self.env['ir.config_parameter'].get_dropbox_service()
+        return {
+            "type": "ir.actions.act_url",
+            "url": DropboxService.files_get_temporary_link("{0}/{1}".format(folder_path, obj.backup_filename)).link,
+            "target": "self",
+        }
+
 
 class BackupRemoteStorage(models.Model):
     _inherit = 'odoo_backup_sh.remote_storage'
