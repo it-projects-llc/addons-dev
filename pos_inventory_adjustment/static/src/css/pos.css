@@ -2,6 +2,9 @@
     background: #00000036!important;
     pointer-events: none;
 }
+.pos .disable.inventory {
+    display: none;
+}
 
 .pos.inventory .actionpad .button.pay {
     display: none;
@@ -9,6 +12,9 @@
 .pos.inventory .actionpad .button.pay.inventory {
     height: 216px;
     display: block;
+}
+.pos .actionpad .button.pay.inventory {
+    display: none;
 }
 
 .pos.inventory .popup .popup_selection {
