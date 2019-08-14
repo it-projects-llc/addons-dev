@@ -220,9 +220,6 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                     <button name="action_create_simulation_data" string="Create Fake Backups" type="object" class="btn-secondary" attrs="{'invisible': [('backup_simulation', '=', False)]}"/>
                 </header>
                 <sheet>
-                    <p class="text-warning float-right" attrs="{'invisible': [('config_cron_ids', '!=', [])]}">
-                        Backups will not be made until you configure schedule
-                    </p>
                     <div class="oe_title">
                         <label for="database" class="oe_edit_only"/>
                         <h1><field name="database"/></h1>
@@ -246,6 +243,9 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                             <field name="encryption_password" attrs="{'invisible': [('encrypt_backups', '=', False)]}"/>
                         </group>
                     </group>
+                    <p class="alert alert-warning" role="alert" attrs="{'invisible': [('config_cron_ids', '!=', [])]}">
+                        Backups will not be made until you configure schedule below
+                    </p>
                     <group string="Scheduled Auto Backups">
                         <field name="config_cron_ids" nolabel="1">
                             <tree editable="bottom">
