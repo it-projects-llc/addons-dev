@@ -82,7 +82,7 @@ class BackupController(http.Controller):
         cloud_params = cls.get_config_values('options', [
             'odoo_backup_user_key', 'amazon_bucket_name', 'amazon_access_key_id', 'amazon_secret_access_key',
             'odoo_oauth_uid'])
-        if not all(cloud_params.values()):
+        if len(cloud_params) == 0 or not all(cloud_params.values()):
             if redirect:
                 cloud_params = cls.update_cloud_params(cloud_params, redirect, call_from)
             else:
