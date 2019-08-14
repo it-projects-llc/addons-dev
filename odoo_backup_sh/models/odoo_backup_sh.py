@@ -91,6 +91,14 @@ class BackupConfig(models.Model):
                                        help="If the setting is enabled then new backups of current database will not "
                                             "be sent to the storage server")
 
+    @api.model
+    def _compute_backup_count(self):
+        self.backup_count = len(self.env['odoo_backup_sh.backup_info'].search([
+            ('database', '=', self.database),
+        ])._ids)
+
+    backup_count = fields.Integer('Backup count', compute=_compute_backup_count)
+
     _sql_constraints = [
         ('database_unique', 'unique (database, storage_service)', "Settings for this database already exist!"),
         ('hourly_limit_positive', 'check (hourly_limit > 0)', 'The hourly limit must be positive!'),
@@ -505,6 +513,19 @@ class BackupConfig(models.Model):
                 'backup_simulation': self.backup_simulation
             })
             upload_datetime -= relativedelta(hours=4)
+
+    @api.multi
+    def action_list_backups(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Backup list',
+            'view_mode': 'tree,form,pivot,graph,activity',
+            'res_model': 'odoo_backup_sh.backup_info',
+            'domain': [
+                ('database', '=', self.database),
+            ],
+            'search_view_id': self.env.ref('odoo_backup_sh.odoo_backup_sh_backup_search').id,
+        }
 
 
 class BackupConfigCron(models.Model):
