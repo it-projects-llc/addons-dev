@@ -80,6 +80,9 @@
 .pos.inventory .order .orderline .info-list.inventory {
     display: block;
 }
+.pos .order .orderline .info-list.inventory {
+    display: none;
+}
 
 .pos .order .orderline .price.inventory {
     display: none;
@@ -101,6 +104,9 @@
 
 .pos.inventory .order .summary.inventory .line {
     display: block;
+}
+.pos .order .summary.inventory .line{
+    display: none;
 }
 
 .pos.inventory .numpad button[data-mode="price"] {
@@ -131,6 +137,10 @@
 }
 
 .pos .order .orderline .line-index {
+    display: none;
+}
+
+.pos.inventory .order .orderline .line-index {
     padding: 0;
     display: inline-block;
     font-weight: bold;
