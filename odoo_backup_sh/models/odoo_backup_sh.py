@@ -23,7 +23,7 @@ except ImportError as err:
 
 import odoo
 from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, AccessError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.translate import _
 from ..controllers.main import BackupCloudStorage, BackupController, BACKUP_SERVICE_ENDPOINT
@@ -617,8 +617,14 @@ class BackupInfo(models.Model):
         self.env['odoo_backup_sh.remote_storage'].compute_total_used_remote_storage()
         return res
 
+    def assert_user_can_download_backup(self):
+        if not self.user_has_groups('odoo_backup_sh.group_manager'):
+            raise AccessError(_("Current user is not in Backup manager group"))
+
     @api.multi
     def download_backup_action(self, backup=None):
+        self.assert_user_can_download_backup()
+
         if backup is not None:
             if backup.storage_service != 'odoo_backup_sh':
                 raise UserError(_("Unknown storage service: %s") % backup.storage_service)

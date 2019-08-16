@@ -126,6 +126,7 @@ class BackupInfo(models.Model):
 
     @api.multi
     def download_backup_action(self, backup=None):
+        self.assert_user_can_download_backup()
         if backup is None:
             backup = get_backup_by_id(self.env, self._context['active_id'])
 

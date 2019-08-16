@@ -138,6 +138,7 @@ class BackupController(http.Controller):
             ('storage_service', '=', 'odoo_backup_sh'),
         ])
         backup_info_record.ensure_one()
+        backup_info_record.assert_user_can_download_backup()
         backup_filename = backup_info_record.backup_filename
         cloud_params = self.get_cloud_params(request.httprequest.url, call_from='frontend')
         backup_object = BackupCloudStorage.get_object(cloud_params, backup_filename)
