@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="res.groups" id="group_manager">
+        <field name="name">Backup manager</field>
+    </record>
+
+    <record model="res.groups" id="group_user">
+        <field name="name">Backup user</field>
+    </record>
+</odoo>

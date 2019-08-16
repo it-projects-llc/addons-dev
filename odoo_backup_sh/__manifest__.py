@@ -22,6 +22,8 @@
     "external_dependencies": {"python": ['boto3', 'botocore', 'pretty_bad_protocol'], "bin": []},
     "data": [
         'data/odoo_backup_sh_data.xml',
+        'security/security_groups.xml',
+        'security/security.xml',
         'security/ir.model.access.csv',
         'views/odoo_backup_sh_templates.xml',
         'views/odoo_backup_sh_views.xml',
