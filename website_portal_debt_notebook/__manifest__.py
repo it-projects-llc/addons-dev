@@ -1,4 +1,5 @@
 # Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+# Copyright 2019 Artem Rafailov <https://it-projects.info/team/Ommo73>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 {
     "name": """Portal Debt History""",
@@ -6,7 +7,7 @@
     "category": "Website",
     # "live_test_url": "http://apps.it-projects.info/shop/product/DEMO-URL?version=10.0",
     "images": [],
-    "version": "10.0.1.0.0",
+    "version": "12.0.1.0.0",
     "application": False,
 
     "author": "IT-Projects LLC, Kolushov Alexandr",
@@ -17,8 +18,9 @@
     # "currency": "EUR",
 
     "depends": [
-        "website_portal",
+        "portal",
         "pos_debt_notebook",
+        "website",
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
