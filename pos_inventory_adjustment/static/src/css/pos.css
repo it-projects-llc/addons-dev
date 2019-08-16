@@ -87,7 +87,7 @@
 .pos .order .orderline .price.inventory {
     display: none;
 }
-.pos .order .orderline .price.inventory {
+.pos.inventory .order .orderline .price.inventory {
     display: block;
 }
 
