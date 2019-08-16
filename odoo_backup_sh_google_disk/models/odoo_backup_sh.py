@@ -13,7 +13,7 @@ except ImportError as err:
     logging.getLogger(__name__).debug(err)
 
 from odoo import api, models, fields
-from odoo.addons.odoo_backup_sh.models.odoo_backup_sh import compute_backup_filename, compute_backup_info_filename
+from odoo.addons.odoo_backup_sh.models.odoo_backup_sh import compute_backup_filename, compute_backup_info_filename, get_backup_by_id
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
@@ -127,10 +127,14 @@ class BackupInfo(models.Model):
     storage_service = fields.Selection(selection_add=[('google_drive', 'Google Drive')])
 
     @api.multi
-    def download_backup_action(self):
-        obj = self.env[self._inherit].search([('id', '=', self._context['active_id'])])
-        obj.ensure_one()
-        file_id = self.env["odoo_backup_sh.config"].get_google_drive_file_id(obj.backup_filename)
+    def download_backup_action(self, backup=None):
+        if backup is None:
+            backup = get_backup_by_id(self.env, self._context['active_id'])
+
+        if backup.storage_service != 'google_drive':
+            return super(BackupInfo, self).download_backup_action(backup)
+
+        file_id = self.env["odoo_backup_sh.config"].get_google_drive_file_id(backup.backup_filename)
         return {
             "type": "ir.actions.act_url",
             "url": "https://drive.google.com/uc?id={}&export=download".format(file_id),

@@ -53,6 +53,15 @@ def compute_backup_info_filename(database, upload_datetime):
     )
 
 
+def get_backup_by_id(env, backup_id):
+    backup = env['odoo_backup_sh.backup_info'].search([
+        ('id', '=', backup_id),
+    ])
+    if len(backup) == 0:
+        raise UserError(_("Backup not found: %s") % backup_id)
+    return backup
+
+
 class BackupConfig(models.Model):
     _name = 'odoo_backup_sh.config'
     _description = 'Backup Configurations'
@@ -609,8 +618,14 @@ class BackupInfo(models.Model):
         return res
 
     @api.multi
-    def download_backup_action(self):
-        backup_id = self._context.get('active_ids')[0]
+    def download_backup_action(self, backup=None):
+        if backup is not None:
+            if backup.storage_service != 'odoo_backup_sh':
+                raise UserError(_("Unknown storage service: %s") % backup.storage_service)
+            backup_id = backup.id
+        else:
+            backup_id = self._context['active_id']
+
         return {
             "type": "ir.actions.act_url",
             "url": "/web/database/backup?backup_id={0}".format(backup_id),
