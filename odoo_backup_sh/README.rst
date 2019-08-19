@@ -21,7 +21,7 @@ Additionally to the cloud provided by **odoo-backup.sh** it's possible to store 
 * `Dropbox <https://apps.odoo.com/apps/modules/12.0/odoo_backup_sh_dropbox/>`_
 * `Google Drive <https://apps.odoo.com/apps/modules/12.0/odoo_backup_sh_google_disk/>`_
 
-(You need to get corresponding modules to use personal cloud)
+*You need to get corresponding modules to use personal cloud.*
 
 Implementation details
 ======================
@@ -47,7 +47,7 @@ Dashboard menu item in the Backups section
 
 It's a page where an user can watch detail information about his backups which are remote stored. Also he can make backup of any his database. This backup will be sent to AWS S3 for storing. Moreover the user can create autobackup settings. The settings say to the module at what point of time, from which databases to create backups and max number of backups of database must be store.
 
-When the user opens the backups dashboard, the module makes similar requests are described above about /web/database/backups page.
+When the user opens the backups dashboard, the module makes similar requests are described above about ``/web/database/backups page``.
 
 Credits
 =======
@@ -63,6 +63,14 @@ Sponsors
 Maintainers
 -----------
 * `IT-Projects LLC <https://it-projects.info>`__
+
+      To get a guaranteed support
+      you are kindly requested to purchase the module
+      at `odoo apps store <https://apps.odoo.com/apps/modules/{VERSION}/{TECHNICAL_NAME}/>`__.
+
+      Thank you for understanding!
+
+      `IT-Projects Team <https://www.it-projects.info/team>`__
 
 Further information
 ===================

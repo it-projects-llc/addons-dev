@@ -65,7 +65,7 @@ Configuration
 Usage
 =====
 
-Manual creation of backups:
+**Create:**
 
 * Open the menu ``[[ Backups ]] >> Dashboard``
 * After redireсtion please login into your `Odoo account <https://www.odoo.com/web/login>`__
@@ -82,9 +82,9 @@ RESULT: Backup is created.
 *The manual backup creation may take some time before being ready*.
 
 
-Restoration:
+**Restore:**
 
-* Please proceed to the Database Manager: ``/web/database/manager``
+* Proceed to the Database Manager: ``/web/database/manager``
 * Click on ``Restore via Odoo-backup.sh`` button
 * Choose the backup that you want to restore
 * In the open Pop-up window enter Master Password, fill the Database Name*
@@ -94,13 +94,29 @@ Restoration:
 RESULT: Backup is restored in one click without any additional manipulations such as "downloading-uploading process".
 *The database restore may take some time before being ready*.
 
+**Download:**
 
-Visual presentation:
+* Proceed to the Backups page
+* [[Backups]] >> ``Backups``
+* Click on backup from the list
+* Click on ``Download`` button and wait until download completes
+* If Backup is encrypted (it has `.enc` extension), extract it using `gpg` utility. For example:
+
+```
+gpg --output OUTPUT_FILENAME.zip --decrypt INPUT_FILENAME.zip.enc
+```
+
+.. note::
+   Type the password when it will be prompted
+
+RESULT: Backup is downloaded
+
+**Visualize:**
 
 * Open the menu ``[[ Backups ]] >> Dashboard``
 * Proceed with ``[[ Backups ]] >> Backups`` where *Odoo-backup.sh* databases are presented
 * Continue with ``[[ Backups ]] >> Backups`` where your Odoo backups are stored
 
-RESULT:
-You can see the main Graph with the general statistics of all your backups are stored on a remote server.
+RESULT: You can see the main Graph with the general statistics of all your backups are stored on a remote server.
+
 
