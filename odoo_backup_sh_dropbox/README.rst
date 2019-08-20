@@ -2,11 +2,11 @@
    :target: https://www.gnu.org/licenses/lgpl
    :alt: License: LGPL-3
 
-========================
- Odoo-backup.sh Dropbox
-========================
+====================
+ Dropbox backing up
+====================
 
-The application allows making database backups to your Dropbox.
+The small investment to protect your business.
 
 Credits
 =======

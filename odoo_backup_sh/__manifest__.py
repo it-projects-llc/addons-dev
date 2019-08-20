@@ -2,16 +2,16 @@
 # Copyright 2019 Eugene Molotov <https://it-projects.info/team/molotov>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 {
-    "name": """Odoo-backup.sh""",
-    "summary": """Remote Backup Service""",
+    "name": """odoo-backup.sh""",
+    "summary": """The 10 Euros service that would save your business.""",
     "category": "Backup",
     # "live_test_url": "",
-    "images": ['images/backupsh.jpg'],
+    "images": ['images/odoo-backup.sh.jpg'],
     "version": "12.0.1.0.0",
 
     "author": "IT-Projects LLC",
     "support": "apps@it-projects.info",
-    "website": "https://it-projects.info/team/ufaks",
+    "website": "https://apps.odoo.com/apps/modules/12.0/odoo_backup_sh/",
     "license": "LGPL-3",
     "price": 1.00,
     "currency": "EUR",
