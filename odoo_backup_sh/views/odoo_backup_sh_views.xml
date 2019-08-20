@@ -96,11 +96,12 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                     <group>
                         <field name="database"/>
                         <field name="storage_service" invisible="1"/>
+                        <field name="backup_simulation" invisible="1" />
                         <field name="upload_datetime"/>
                         <field name="encrypted"/>
                         <field name="backup_size" widget="float"/>
                     </group>
-                    <button class="btn btn-dark" type="action" name="%(download_backup)d" groups="odoo_backup_sh.group_manager">Download backup</button>
+                    <button class="btn btn-primary" type="action" name="%(download_backup)d" groups="odoo_backup_sh.group_manager" attrs="{'invisible': [('backup_simulation', '=', True)]}">Download backup</button>
                 </sheet>
             </form>
         </field>
