@@ -2,11 +2,11 @@
    :target: https://www.gnu.org/licenses/lgpl
    :alt: License: LGPL-3
 
-=============================
- Odoo-backup.sh Google Drive
-=============================
+=========================
+ Google Drive backing up
+=========================
 
-The application allows making database backups to your Google drive.
+The small investment to protect your business.
 
 Credits
 =======
