@@ -72,6 +72,15 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
         <field name="code">action = model.action_dashboard_redirect()</field>
     </record>
 
+    <record model="ir.actions.server" id="download_backup">
+        <field name="name">Download backup</field>
+        <field name="model_id" ref="model_odoo_backup_sh_backup_info"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.download_backup_action()
+        </field>
+    </record>
+
     <!--
         Show information about a Storage Service of Database after install additional modules only.
         Additional modules:
@@ -87,10 +96,12 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                     <group>
                         <field name="database"/>
                         <field name="storage_service" invisible="1"/>
+                        <field name="backup_simulation" invisible="1" />
                         <field name="upload_datetime"/>
                         <field name="encrypted"/>
                         <field name="backup_size" widget="float"/>
                     </group>
+                    <button class="btn btn-primary" type="action" name="%(download_backup)d" groups="odoo_backup_sh.group_manager" attrs="{'invisible': [('backup_simulation', '=', True)]}">Download backup</button>
                 </sheet>
             </form>
         </field>
@@ -220,9 +231,9 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                     <button name="action_create_simulation_data" string="Create Fake Backups" type="object" class="btn-secondary" attrs="{'invisible': [('backup_simulation', '=', False)]}"/>
                 </header>
                 <sheet>
-                    <p class="text-warning float-right" attrs="{'invisible': [('config_cron_ids', '!=', [])]}">
-                        Backups will not be made until you configure schedule
-                    </p>
+                    <button class="btn btn-outline-primary float-right" name="action_list_backups" type="object">
+                        <field name="backup_count" /> backup(s)
+                    </button>
                     <div class="oe_title">
                         <label for="database" class="oe_edit_only"/>
                         <h1><field name="database"/></h1>
@@ -246,6 +257,9 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                             Without it you cannot restore the database from the encrypted backup.
                         </p>                        
                     </group>
+                    <p class="alert alert-warning" role="alert" attrs="{'invisible': [('config_cron_ids', '!=', [])]}">
+                        Backups will not be made until you configure schedule below
+                    </p>
                     <group string="Scheduled Auto Backups">
                         <field name="config_cron_ids" nolabel="1">
                             <tree editable="bottom">

@@ -58,7 +58,7 @@ Configuration
 
 * All databases with their settings are available in the ``[[ Backups ]] >> Configuration >> Dashboard`` section.
 
-* Click on ``New Backup`` in the appeared configuration
+* Click on ``Make backup now`` in the appeared configuration
 
 * Each database specified in these settings will be presented in the dashboard.
 
@@ -94,6 +94,7 @@ RESULT: Backup is created.
 RESULT: Backup is restored in one click without any additional manipulations such as "downloading-uploading process".
 *The database restore may take some time before being ready*.
 
+
 **Download:**
 
 * Proceed to the Backups page
@@ -105,6 +106,7 @@ RESULT: Backup is restored in one click without any additional manipulations suc
 ```
 gpg --output OUTPUT_FILENAME.zip --decrypt INPUT_FILENAME.zip.enc
 ```
+
 
 .. note::
    Type the password when it will be prompted
@@ -118,5 +120,3 @@ RESULT: Backup is downloaded
 * Continue with ``[[ Backups ]] >> Backups`` where your Odoo backups are stored
 
 RESULT: You can see the main Graph with the general statistics of all your backups are stored on a remote server.
-
-

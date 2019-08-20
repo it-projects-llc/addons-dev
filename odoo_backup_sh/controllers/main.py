@@ -82,7 +82,7 @@ class BackupController(http.Controller):
         cloud_params = cls.get_config_values('options', [
             'odoo_backup_user_key', 'amazon_bucket_name', 'amazon_access_key_id', 'amazon_secret_access_key',
             'odoo_oauth_uid'])
-        if not all(cloud_params.values()):
+        if len(cloud_params) == 0 or not all(cloud_params.values()):
             if redirect:
                 cloud_params = cls.update_cloud_params(cloud_params, redirect, call_from)
             else:
@@ -131,6 +131,25 @@ class BackupController(http.Controller):
                 ).unlink()
         return cloud_params
 
+    @http.route('/web/database/backup', type='http', auth='user')
+    def download_backup(self, backup_id):
+        backup_info_record = request.env['odoo_backup_sh.backup_info'].search([
+            ('id', '=', backup_id),
+            ('storage_service', '=', 'odoo_backup_sh'),
+        ])
+        backup_info_record.ensure_one()
+        backup_info_record.assert_user_can_download_backup()
+        backup_filename = backup_info_record.backup_filename
+        cloud_params = self.get_cloud_params(request.httprequest.url, call_from='frontend')
+        backup_object = BackupCloudStorage.get_object(cloud_params, backup_filename)
+        return http.Response(
+            backup_object['Body'].iter_chunks(),
+            headers={
+                'Content-Disposition': 'attachment; filename="{0}"'.format(backup_filename),
+                'Content-Type': 'application/octet-stream',
+            }
+        )
+
     @http.route('/web/database/backups', type='http', auth="none")
     def backup_list(self):
         page_values = {
@@ -151,11 +170,13 @@ class BackupController(http.Controller):
         if 'reload_page' in backup_list:
             page_values['error'] = 'Something went wrong. Please refresh the page.'
             return env.get_template("backup_list.html").render(page_values)
-        page_values['backup_list'] = [name for name in backup_list['backup_list'] if name[-5:] != '.info']
+        page_values['backup_list'] = [name for name, _ in backup_list['backup_list'] if not name.endswith('.info')]
         return env.get_template("backup_list.html").render(page_values)
 
     @http.route('/web/database/restore_via_odoo_backup_sh', type='http', auth="none", methods=['POST'], csrf=False)
     def restore_via_odoo_backup_sh(self, master_pwd, backup_file_name, name, encryption_password, copy=False):
+        if config['admin_passwd'] != master_pwd:
+            return env.get_template("backup_list.html").render(error="Incorrect master password")
         cloud_params = self.get_cloud_params(request.httprequest.url, call_from='frontend')
         backup_object = BackupCloudStorage.get_object(cloud_params, backup_file_name)
         backup_file = tempfile.NamedTemporaryFile()
@@ -170,7 +191,12 @@ class BackupController(http.Controller):
             decrypted_backup_file_name = decrypted_backup_file.name
             os.unlink(decrypted_backup_file_name)
             backup_file.seek(0)
-            gnupg.GPG().decrypt_file(backup_file, passphrase=encryption_password, output=decrypted_backup_file_name)
+            r = gnupg.GPG().decrypt_file(backup_file, passphrase=encryption_password, output=decrypted_backup_file_name)
+            if not r.ok:
+                error = 'gpg: {0}'.format(r.status)
+                if not r.valid:
+                    error += ". Maybe wrong password?"
+                return env.get_template("backup_list.html").render(error=error)
             backup_file = open(decrypted_backup_file_name, 'rb')
         try:
             db.restore_db(name, backup_file.name, str2bool(copy))

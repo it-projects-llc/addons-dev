@@ -38,7 +38,9 @@ class Param(models.Model):
 
     @api.model
     def get_google_drive_service(self):
-        service_account_file = self.get_param('odoo_backup_sh_google_disk.service_account_file', '')
+        service_account_file = self.get_param('odoo_backup_sh_google_disk.service_account_file')
+        if not service_account_file:
+            return
         # create a credentials
         credentials = service_account.Credentials.from_service_account_file(service_account_file, scopes=SCOPES)
         # create a service using REST API Google Drive v3 and credentials
