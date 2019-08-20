@@ -54,7 +54,7 @@ def compute_backup_info_filename(database, upload_datetime):
 
 
 def get_backup_by_id(env, backup_id):
-    backup = env['odoo_backup_sh.backup_info'].browse(backup_id)
+    backup = env['odoo_backup_sh.backup_info'].browse(backup_id).exists()
     if len(backup) == 0:
         raise UserError(_("Backup not found: %s") % backup_id)
     return backup
