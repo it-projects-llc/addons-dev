@@ -109,7 +109,7 @@ gpg --output OUTPUT_FILENAME.zip --decrypt INPUT_FILENAME.zip.enc
 .. note::
    Type the password when it will be prompted
 
-RESULT: Backup is downloaded
+RESULT: Backup is downloaded.
 
 **Visualize:**
 
