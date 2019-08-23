@@ -92,23 +92,6 @@ RESULT: Backup is stored in the Google drive.
 .. note::
    Restore without additional downloading is available only for* `Odoo backup service <https://apps.odoo.com/apps/modules/12.0/odoo_backup_sh/>`__
 
-**Download:**
-
-* Proceed to the Backups page
-* [[Backups]] >> ``Backups``
-* Click on backup from the list
-* Click on ``Download`` button and wait until download completes
-* If Backup is encrypted (it has `.enc` extension), extract it using `gpg` utility. For example:
-
-```
-gpg --output OUTPUT_FILENAME.zip --decrypt INPUT_FILENAME.zip.enc
-```
-
-.. note::
-   Type the password when it will be prompted
-
-RESULT: Backup is downloaded.
-
 **Visualize:**
 
 * Open the menu ``[[ Backups ]] >> Dashboard``
