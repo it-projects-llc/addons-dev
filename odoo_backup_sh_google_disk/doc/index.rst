@@ -69,7 +69,8 @@ Server Deployment
 Usage
 =====
 
-Manual creation of backups:
+**Create:**
+
 * Open the menu ``[[ Backups ]] >> Settings``
 * Choose the Google disk and click on ``Save`` button
 * Enter *Service Account File path*
@@ -86,15 +87,16 @@ Manual creation of backups:
 * Click on ``New Backup`` in the appeared configuration
 
 RESULT: Backup is stored in the Google drive.
-*Note: Restore without additional downloading is available only for* `Odoo backup service <https://apps.odoo.com/apps/modules/12.0/odoo_backup_sh/>`__
+*The manual backup creation may take some time before being ready*.
 
-Visual presentation:
+.. note::
+   Restore without additional downloading is available only for* `Odoo backup service <https://apps.odoo.com/apps/modules/12.0/odoo_backup_sh/>`__
+
+**Visualize:**
+
 * Open the menu ``[[ Backups ]] >> Dashboard``
-* Proceed with ``[[ Backups ]] >> Backups`` where Google drive databases are presented
-* Continue with ``[[ Backups ]] >> Backups`` where your backups are stored
-* Go to ``[[Backup]] >> Configuration >> Schedules and Rotations`` and modify
-* See ``[[Backup]] >> Notifications`` if new one is displayed
+* Proceed with ``[[ Backups ]] >> Backups`` where *Odoo-backup.sh* databases are presented
+* Continue with ``[[ Backups ]] >> Backups`` where your Odoo backups are stored
 
-RESULT:
-You can see the main Graph with the general statistics of all your backups are stored on a remote server.
-After this window a special form for managing and controlling backups of your databases specially *for Google drive* is located.
+RESULT: You can see the main Graph with the general statistics of all your backups are stored on a remote server.
+After this window a special form for managing and controlling backups of your databases specially *for Google disk* is located.

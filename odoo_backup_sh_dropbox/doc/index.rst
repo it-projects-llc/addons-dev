@@ -51,8 +51,9 @@ Config Settings
 Usage
 =====
 
-Manual creation of backups:
-* Open the menu ``[[ Backups ]] >> Settings``
+**Create:**
+
+* Open the menu ``[[ Backups ]] >> Configuration >> Settings``
 * Choose the Dropbox and click on ``Save`` button
 * Enter *Dropbox Access Token*
 * Enter *Dropbox Folder Path*
@@ -68,15 +69,34 @@ Manual creation of backups:
 * Click on ``New Backup`` in the appeared configuration
 
 RESULT: Backup is stored in the Dropbox cloud.
-*Note: Restore without additional downloading is available only for* `Odoo backup service <https://apps.odoo.com/apps/modules/12.0/odoo_backup_sh/>`__
+*The manual backup creation may take some time before being ready*.
 
-Visual presentation:
+.. note::
+   Restore without additional downloading is available only for* `Odoo backup service <https://apps.odoo.com/apps/modules/12.0/odoo_backup_sh/>`__
+
+**Download:**
+
+* Proceed to the Backups page
+* [[Backups]] >> ``Backups``
+* Click on backup from the list
+* Click on ``Download`` button and wait until download completes
+* If Backup is encrypted (it has `.enc` extension), extract it using `gpg` utility. For example:
+
+```
+gpg --output OUTPUT_FILENAME.zip --decrypt INPUT_FILENAME.zip.enc
+```
+
+.. note::
+   Type the password when it will be prompted
+
+RESULT: Backup is downloaded.
+
+**Visualize:**
+
 * Open the menu ``[[ Backups ]] >> Dashboard``
-* Proceed with ``[[ Backups ]] >> Backups`` where Dropbox databases are presented
-* Continue with ``[[ Backups ]] >> Backups`` where your backups are stored
-* Go to ``[[Backup]] >> Configuration >> Schedules and Rotations`` and modify
-* See ``[[Backup]] >> Notifications`` if new one is displayed
+* Proceed with ``[[ Backups ]] >> Backups`` where *Odoo-backup.sh* databases are presented
+* Continue with ``[[ Backups ]] >> Backups`` where your Odoo backups are stored
 
-RESULT:
-You can see the main Graph with the general statistics of all your backups are stored on a remote server.
+RESULT: You can see the main Graph with the general statistics of all your backups are stored on a remote server.
 After this window a special form for managing and controlling backups of your databases specially *for Dropbox* is located.
+
