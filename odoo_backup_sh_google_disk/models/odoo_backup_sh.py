@@ -13,7 +13,7 @@ except ImportError as err:
     logging.getLogger(__name__).debug(err)
 
 from odoo import api, models, fields
-from odoo.addons.odoo_backup_sh.models.odoo_backup_sh import compute_backup_filename, compute_backup_info_filename, get_backup_by_id
+from odoo.addons.odoo_backup_sh.models.odoo_backup_sh import compute_backup_filename, compute_backup_info_filename, get_backup_by_id, ModuleNotConfigured
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
@@ -29,8 +29,9 @@ class BackupConfig(models.Model):
     def get_backup_list(self, cloud_params):
         backup_list = super(BackupConfig, self).get_backup_list(cloud_params) or dict()
         # get all backups from Google Drive
-        GoogleDriveService = self.env['ir.config_parameter'].get_google_drive_service()
-        if not GoogleDriveService:
+        try:
+            GoogleDriveService = self.env['ir.config_parameter'].get_google_drive_service()
+        except ModuleNotConfigured:
             return {}
         folder_id = self.env['ir.config_parameter'].get_param("odoo_backup_sh_google_disk.google_disk_folder_id")
         response = GoogleDriveService.files().list(q="'" + folder_id + "' in parents",

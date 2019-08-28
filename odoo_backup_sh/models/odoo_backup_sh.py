@@ -60,6 +60,10 @@ def get_backup_by_id(env, backup_id):
     return backup
 
 
+class ModuleNotConfigured(Exception):
+    pass
+
+
 class BackupConfig(models.Model):
     _name = 'odoo_backup_sh.config'
     _description = 'Backup Configurations'
