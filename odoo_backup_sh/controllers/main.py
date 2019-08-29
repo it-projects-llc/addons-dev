@@ -243,12 +243,15 @@ class BackupController(http.Controller):
             # Make all auto backup cron records inactive
             with closing(db_connect(name).cursor()) as cr:
                 cr.autocommit(True)
-                cr.execute("""
-                    UPDATE ir_cron SET active=false
-                    WHERE active=true AND id IN (SELECT ir_cron_id FROM odoo_backup_sh_config_cron);
+                try:
+                    cr.execute("""
+                        UPDATE ir_cron SET active=false
+                        WHERE active=true AND id IN (SELECT ir_cron_id FROM odoo_backup_sh_config_cron);
 
-                    UPDATE odoo_backup_sh_config SET active=false WHERE active=true;
-                """)
+                        UPDATE odoo_backup_sh_config SET active=false WHERE active=true;
+                    """)
+                except Exception:
+                    pass
             return http.local_redirect('/web/database/manager')
         except Exception as e:
             error = "Database restore error: %s" % (str(e) or repr(e))
