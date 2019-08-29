@@ -459,7 +459,7 @@ class BackupConfig(models.Model):
         if not config_record:
             return None
 
-        cloud_params = BackupController.get_cloud_params(env=self.env)
+        cloud_params = BackupController.get_cloud_params()
         dt = datetime.utcnow()
         ts = dt.strftime(REMOTE_STORAGE_DATETIME_FORMAT)
         dump_stream, info_file, info_file_content = self.get_dump_stream_and_info_file(name, service, ts)
