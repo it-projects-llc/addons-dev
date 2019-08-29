@@ -60,6 +60,10 @@ def get_backup_by_id(env, backup_id):
     return backup
 
 
+class ModuleNotConfigured(Exception):
+    pass
+
+
 class BackupConfig(models.Model):
     _name = 'odoo_backup_sh.config'
     _description = 'Backup Configurations'
@@ -455,7 +459,7 @@ class BackupConfig(models.Model):
         if not config_record:
             return None
 
-        cloud_params = BackupController.get_cloud_params()
+        cloud_params = BackupController.get_cloud_params(env=self.env)
         dt = datetime.utcnow()
         ts = dt.strftime(REMOTE_STORAGE_DATETIME_FORMAT)
         dump_stream, info_file, info_file_content = self.get_dump_stream_and_info_file(name, service, ts)
@@ -469,7 +473,7 @@ class BackupConfig(models.Model):
 
         # Create new record with backup info data
         info_file_content['upload_datetime'] = dt
-        self.env['odoo_backup_sh.backup_info'].create(info_file_content)
+        self.env['odoo_backup_sh.backup_info'].sudo().create(info_file_content)
         if init_by_cron_id:
             self.update_info(cloud_params)
         return None
@@ -673,8 +677,7 @@ class BackupNotification(models.Model):
     def fetch_notifications(self):
         config_params = self.env['ir.config_parameter']
         data = {'params': {
-            'user_key': BackupController.get_config_values(
-                'options', ['odoo_backup_user_key'])['odoo_backup_user_key'],
+            'user_key': config_params.get_param('odoo_backup_user_key'),
             'date_last_request': config_params.get_param('odoo_backup_sh.date_last_request', None)
         }}
         response = requests.post(BACKUP_SERVICE_ENDPOINT + '/fetch_notifications', json=data).json()['result']

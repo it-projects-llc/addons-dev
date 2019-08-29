@@ -381,7 +381,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                 src_model="odoo_backup_sh.backup_info" res_model="odoo_backup_sh.delete_remote_backup_wizard"
                 view_type="form" view_mode="form" key2="client_action_multi" target="new"/>
 
-    <menuitem name="Backups" id="menu_backup_root" sequence="100" web_icon="odoo_backup_sh,static/description/icon.png"/>
+    <menuitem name="Backups" id="menu_backup_root" sequence="100" web_icon="odoo_backup_sh,static/description/icon.png" groups="odoo_backup_sh.group_user" />
     <menuitem name="Dashboard" action="odoo_backup_sh.ir_actions_server_backup_dashboard" parent="menu_backup_root"
               id="menu_dashboard" sequence="1"/>
     <menuitem name="Backups" parent="menu_backup_root" id="menu_backups" sequence="10"/>

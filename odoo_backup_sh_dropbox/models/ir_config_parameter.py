@@ -2,6 +2,7 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 import logging
 from odoo import models, api
+from odoo.addons.odoo_backup_sh.models.odoo_backup_sh import ModuleNotConfigured
 
 
 _logger = logging.getLogger(__name__)
@@ -18,7 +19,7 @@ class Param(models.Model):
 
     @api.model
     def get_dropbox_service(self):
-        dropbox_access_token = self.get_param('odoo_backup_sh_dropbox.dropbox_access_token')
+        dropbox_access_token = self.sudo().get_param('odoo_backup_sh_dropbox.dropbox_access_token')
         if not dropbox_access_token:
-            return
+            raise ModuleNotConfigured("no access token given for dropbox")
         return dropbox.Dropbox(dropbox_access_token)

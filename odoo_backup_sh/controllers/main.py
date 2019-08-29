@@ -16,7 +16,7 @@ from contextlib import closing
 from datetime import datetime, timedelta
 
 import odoo
-from odoo import exceptions, fields, http, _
+from odoo import exceptions, fields, http, _, api, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.service import db
@@ -27,11 +27,6 @@ from odoo.addons import web
 from odoo.addons.web.controllers.main import DBNAME_PATTERN
 
 try:
-    import configparser as ConfigParser
-except ImportError:
-    import ConfigParser
-
-try:
     import boto3
     import botocore
     from pretty_bad_protocol import gnupg
@@ -39,13 +34,10 @@ except ImportError as err:
     logging.getLogger(__name__).debug(err)
 
 _logger = logging.getLogger(__name__)
-config_parser = ConfigParser.ConfigParser()
-config_filename = os.path.join(config['data_dir'], "odoo_backup_sh.ini")
 path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'views'))
 loader = jinja2.FileSystemLoader(path)
 env = jinja2.Environment(loader=loader, autoescape=True)
 BACKUP_SERVICE_ENDPOINT = 'https://odoo-backup.sh'
-DuplicateSectionError = ConfigParser.DuplicateSectionError
 
 
 class BackupDatabase(web.controllers.main.Database):
@@ -78,10 +70,12 @@ class BackupDatabase(web.controllers.main.Database):
 class BackupController(http.Controller):
 
     @classmethod
-    def get_cloud_params(cls, redirect=None, call_from='backend'):
-        cloud_params = cls.get_config_values('options', [
-            'odoo_backup_user_key', 'amazon_bucket_name', 'amazon_access_key_id', 'amazon_secret_access_key',
-            'odoo_oauth_uid'])
+    def get_cloud_params(cls, redirect=None, call_from='backend', env=None):
+        if env is None:
+            env = request.env
+        cloud_params = {}
+        for option in ['odoo_backup_user_key', 'amazon_bucket_name', 'amazon_access_key_id', 'amazon_secret_access_key', 'odoo_oauth_uid']:
+            cloud_params[option] = env['ir.config_parameter'].sudo().get_param(option)
         if len(cloud_params) == 0 or not all(cloud_params.values()):
             if redirect:
                 cloud_params = cls.update_cloud_params(cloud_params, redirect, call_from)
@@ -96,7 +90,7 @@ class BackupController(http.Controller):
         user_key = cloud_params['odoo_backup_user_key']
         if not user_key:
             user_key = ''.join(random.choice(string.hexdigits) for _ in range(30))
-            cls.set_config_values('options', {'odoo_backup_user_key': user_key})
+            request.env['ir.config_parameter'].sudo().set_param('odoo_backup_user_key', user_key)
 
         # You can set the verify parameter to False and requests will ignore SSL verification.
         try:
@@ -120,7 +114,8 @@ class BackupController(http.Controller):
             else:
                 request.env['odoo_backup_sh.notification'].sudo().create(notification_vals)
         elif all(param not in cloud_params for param in ['auth_link', 'insufficient_credit_error']):
-            cls.set_config_values('options', cloud_params)
+            for option, value in cloud_params.items():
+                request.env['ir.config_parameter'].set_param(option, value)
             if call_from == 'frontend':
                 # After creating a new IAM user we have to make a delay for the AWS.
                 # Otherwise AWS don't determine the user just created by it and returns an InvalidAccessKeyId error.
@@ -160,7 +155,7 @@ class BackupController(http.Controller):
         if not config['list_db']:
             page_values['error'] = 'The database manager has been disabled by the administrator'
             return env.get_template("backup_list.html").render(page_values)
-        cloud_params = self.get_cloud_params(request.httprequest.url, call_from='frontend')
+        cloud_params = self.get_cloud_params(request.httprequest.url, call_from='frontend', env=api.Environment(request.env.cr, SUPERUSER_ID, request.context))
         if 'auth_link' in cloud_params:
             return "<html><head><script>window.location.href = '%s';</script></head></html>" % cloud_params['auth_link']
         elif 'insufficient_credit_error' in cloud_params:
@@ -293,45 +288,10 @@ class BackupController(http.Controller):
                 [('is_read', '=', False)], ['id', 'date_create', 'message']),
             'up_balance_url': '%s/open_iap_recharge?user_key=%s' % (
                 BACKUP_SERVICE_ENDPOINT,
-                self.get_config_values('options', ['odoo_backup_user_key'])['odoo_backup_user_key']
+                request.env['ir.config_parameter'].sudo().get_param('odoo_backup_user_key')
             ),
         })
         return dashboard_data
-
-    @classmethod
-    def get_config_values(cls, section, options_list):
-        """
-        :return dict: option_name: value
-        """
-        config_parser.read(config_filename)
-        result = {}
-        for option in options_list:
-            result[option] = config_parser.get(
-                section,
-                option,
-                fallback=config.options.get(option) if section == "options" else None
-            )
-        return result
-
-    @classmethod
-    def set_config_values(cls, section, options_dict):
-        try:
-            config_parser.add_section(section)
-        except DuplicateSectionError:
-            pass
-        for option, value in options_dict.items():
-            config_parser.set(section, option, value or '')
-        with open(config_filename, 'w') as configfile:
-            config_parser.write(configfile)
-        os.chmod(config_filename, 0o600)
-
-    @classmethod
-    def remove_config_options(cls, section, options_list):
-        config_parser.read(config_filename)
-        for option in options_list:
-            config_parser.remove_option(section, option)
-        with open(config_filename, 'w') as configfile:
-            config_parser.write(configfile)
 
 
 def access_control(origin_method):
@@ -340,7 +300,7 @@ def access_control(origin_method):
             return origin_method(self, *args, **kwargs)
         except botocore.exceptions.ClientError as client_error:
             if client_error.response['Error']['Code'] == 'InvalidAccessKeyId':
-                BackupController.remove_config_options('options', ['amazon_access_key_id', 'amazon_secret_access_key'])
+                [request.env['ir.config_parameter'].set_param(option, None) for option in ('amazon_access_key_id', 'amazon_secret_access_key')]
                 return {'reload_page': True}
             else:
                 raise exceptions.ValidationError(_(
