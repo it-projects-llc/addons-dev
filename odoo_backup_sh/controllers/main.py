@@ -213,6 +213,10 @@ class BackupController(http.Controller):
     def restore_via_odoo_backup_sh(self, master_pwd, backup_file_name, name, encryption_password, copy=False):
         if config['admin_passwd'] != master_pwd:
             return env.get_template("backup_list.html").render(error="Incorrect master password")
+        if os.path.exists(config.filestore(name)):
+            return env.get_template("backup_list.html").render(
+                error='Filestore for database "{}" already exists. Please choose another database name'.format(name)
+            )
         cloud_params = self.get_cloud_params(request.httprequest.url, call_from='frontend')
         backup_object = BackupCloudStorage.get_object(cloud_params, backup_file_name)
         backup_file = tempfile.NamedTemporaryFile()
