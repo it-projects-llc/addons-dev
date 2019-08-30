@@ -16,7 +16,7 @@ from contextlib import closing
 from datetime import datetime, timedelta
 
 import odoo
-from odoo import exceptions, fields, http, _, api, SUPERUSER_ID
+from odoo import exceptions, fields, http, _
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.service import db
@@ -67,15 +67,56 @@ class BackupDatabase(web.controllers.main.Database):
         return res
 
 
+class CloudConfigStoreAbstract:
+    def _get_one(self, key):
+        raise NotImplementedError()
+
+    def get(self, keys):
+        if isinstance(keys, str):
+            return self._get_one(keys)
+        elif isinstance(keys, list) or isinstance(keys, tuple):
+            return dict(
+                zip(
+                    keys,
+                    map(self._get_one, keys)
+                )
+            )
+        else:
+            raise ValueError("Unexpected type: {}".format(type(keys)))
+
+    def set(self, key, value):
+        raise NotImplementedError()
+
+
+class CloudConfigStoreBackend(CloudConfigStoreAbstract):
+    def _get_one(self, key):
+        return request.env['ir.config_parameter'].sudo().get_param(key)
+
+    def set(self, key, value):
+        request.env['ir.config_parameter'].sudo().set_param(key, value)
+
+
+class CloudConfigStoreFrontend(CloudConfigStoreAbstract):
+    def _get_one(self, key):
+        return request.session.get(key)
+
+    def set(self, key, value):
+        request.session[key] = value
+
+
+cloud_config_stores = {
+    'frontend': CloudConfigStoreFrontend(),
+    'backend': CloudConfigStoreBackend(),
+}
+
+
 class BackupController(http.Controller):
 
     @classmethod
-    def get_cloud_params(cls, redirect=None, call_from='backend', env=None):
-        if env is None:
-            env = request.env
-        cloud_params = {}
-        for option in ['odoo_backup_user_key', 'amazon_bucket_name', 'amazon_access_key_id', 'amazon_secret_access_key', 'odoo_oauth_uid']:
-            cloud_params[option] = env['ir.config_parameter'].sudo().get_param(option)
+    def get_cloud_params(cls, redirect=None, call_from='backend'):
+        cloud_params = cloud_config_stores[call_from].get([
+            'odoo_backup_user_key', 'amazon_bucket_name', 'amazon_access_key_id', 'amazon_secret_access_key', 'odoo_oauth_uid'
+        ])
         if len(cloud_params) == 0 or not all(cloud_params.values()):
             if redirect:
                 cloud_params = cls.update_cloud_params(cloud_params, redirect, call_from)
@@ -90,7 +131,7 @@ class BackupController(http.Controller):
         user_key = cloud_params['odoo_backup_user_key']
         if not user_key:
             user_key = ''.join(random.choice(string.hexdigits) for _ in range(30))
-            request.env['ir.config_parameter'].sudo().set_param('odoo_backup_user_key', user_key)
+            cloud_config_stores[call_from].set('odoo_backup_user_key', user_key)
 
         # You can set the verify parameter to False and requests will ignore SSL verification.
         try:
@@ -115,7 +156,7 @@ class BackupController(http.Controller):
                 request.env['odoo_backup_sh.notification'].sudo().create(notification_vals)
         elif all(param not in cloud_params for param in ['auth_link', 'insufficient_credit_error']):
             for option, value in cloud_params.items():
-                request.env['ir.config_parameter'].set_param(option, value)
+                cloud_config_stores[call_from].set(option, value)
             if call_from == 'frontend':
                 # After creating a new IAM user we have to make a delay for the AWS.
                 # Otherwise AWS don't determine the user just created by it and returns an InvalidAccessKeyId error.
@@ -135,7 +176,7 @@ class BackupController(http.Controller):
         backup_info_record.ensure_one()
         backup_info_record.assert_user_can_download_backup()
         backup_filename = backup_info_record.backup_filename
-        cloud_params = self.get_cloud_params(request.httprequest.url, call_from='frontend')
+        cloud_params = self.get_cloud_params(request.httprequest.url, call_from='backend')
         backup_object = BackupCloudStorage.get_object(cloud_params, backup_filename)
         return http.Response(
             backup_object['Body'].iter_chunks(),
@@ -155,7 +196,7 @@ class BackupController(http.Controller):
         if not config['list_db']:
             page_values['error'] = 'The database manager has been disabled by the administrator'
             return env.get_template("backup_list.html").render(page_values)
-        cloud_params = self.get_cloud_params(request.httprequest.url, call_from='frontend', env=api.Environment(request.env.cr, SUPERUSER_ID, request.context))
+        cloud_params = self.get_cloud_params(request.httprequest.url, call_from='frontend')
         if 'auth_link' in cloud_params:
             return "<html><head><script>window.location.href = '%s';</script></head></html>" % cloud_params['auth_link']
         elif 'insufficient_credit_error' in cloud_params:
@@ -172,6 +213,10 @@ class BackupController(http.Controller):
     def restore_via_odoo_backup_sh(self, master_pwd, backup_file_name, name, encryption_password, copy=False):
         if config['admin_passwd'] != master_pwd:
             return env.get_template("backup_list.html").render(error="Incorrect master password")
+        if os.path.exists(config.filestore(name)):
+            return env.get_template("backup_list.html").render(
+                error='Filestore for database "{}" already exists. Please choose another database name'.format(name)
+            )
         cloud_params = self.get_cloud_params(request.httprequest.url, call_from='frontend')
         backup_object = BackupCloudStorage.get_object(cloud_params, backup_file_name)
         backup_file = tempfile.NamedTemporaryFile()
@@ -198,12 +243,15 @@ class BackupController(http.Controller):
             # Make all auto backup cron records inactive
             with closing(db_connect(name).cursor()) as cr:
                 cr.autocommit(True)
-                cr.execute("""
-                    UPDATE ir_cron SET active=false
-                    WHERE active=true AND id IN (SELECT ir_cron_id FROM odoo_backup_sh_config_cron);
+                try:
+                    cr.execute("""
+                        UPDATE ir_cron SET active=false
+                        WHERE active=true AND id IN (SELECT ir_cron_id FROM odoo_backup_sh_config_cron);
 
-                    UPDATE odoo_backup_sh_config SET active=false WHERE active=true;
-                """)
+                        UPDATE odoo_backup_sh_config SET active=false WHERE active=true;
+                    """)
+                except Exception:
+                    pass
             return http.local_redirect('/web/database/manager')
         except Exception as e:
             error = "Database restore error: %s" % (str(e) or repr(e))
