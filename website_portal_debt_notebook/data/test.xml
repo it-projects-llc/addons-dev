@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!--Copyright 2019 Anvar Kildebekov <https://it-projects.info/team/fedoranvar>
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+<odoo>
+    <template id="website_assets_frontend" inherit_id="website.assets_frontend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/website_portal_debt_notebook/static/src/js/test_website_portal_debt_notebook.js"></script>
+        </xpath>
+    </template>
+</odoo>
