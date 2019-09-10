@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2019 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+<odoo noupdate="1">
+
+    <record id="qcloudsms_app_id" model="ir.config_parameter">
+        <field name="key">qcloudsms.app_id</field>
+        <field name="value"></field>
+    </record>
+
+    <record id="qcloudsms_app_key" model="ir.config_parameter">
+        <field name="key">qcloudsms.app_key</field>
+        <field name="value"></field>
+    </record>
+
+</odoo>

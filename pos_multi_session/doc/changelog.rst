@@ -1,3 +1,8 @@
+`4.2.6`
+-------
+
+**Fix:** The error associated with the use of different companies within the same multi-session
+
 `4.2.5`
 -------
 
