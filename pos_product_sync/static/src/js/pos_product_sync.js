@@ -67,14 +67,32 @@ odoo.define('pos_product_sync.pos', function (require) {
 
         update_product_related_templates: function(product_ids) {
             var self = this;
-            var product_screen = this.gui.screen_instances.products;
 
             // Product Item
+            var product_screen = this.gui.screen_instances.products;
             var product_list_widget = product_screen.product_list_widget;
             product_list_widget.update_product_item(product_ids);
 
             // Orderlines
-            _.chain(this.get_all_orders_orderlines())
+            this.update_orderlines(product_ids);
+
+            // product Images
+            _.each(product_ids, function(pid) {
+                self.update_image(pid);
+            });
+        },
+
+        update_image: function(pid) {
+            var self = this;
+            var image_url = window.location.origin + '/web/image?model=product.product&field=image_medium&id=' + pid;
+            var product = this.db.get_product_by_id(pid);
+            return this._convert_product_img_to_base64(product, image_url);
+        },
+
+        update_orderlines: function (product_ids) {
+            var self = this;
+            var product_screen = this.gui.screen_instances.products;
+            return _.chain(this.get_all_orders_orderlines())
             .filter(function(ol) {
                 return _.contains(product_ids, ol.get_product().id);
             })
