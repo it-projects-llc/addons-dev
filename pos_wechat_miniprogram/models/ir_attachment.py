@@ -6,8 +6,13 @@ class IrAttachment(models.Model):
 
     @api.model
     def check(self, mode, values=None):
-        if self:
-            res = self.filtered(lambda record: record.res_model not in ["product.template", "product.product"])
-        if values and values.get("res_model") in ["product.template", "product.product"]:
-            values = None
-        super(IrAttachment, res).check(mode, values)
+        ids = []
+        if self.ids:
+            ids = self.ids[:]  # copy
+            self.env.cr.execute('SELECT id,res_model FROM ir_attachment WHERE id = ANY (%s)', (ids,))
+            for id, res_model in self.env.cr.fetchall():
+                if res_model in ["product.template", "product.product"]:
+                    ids.remove(id)
+            if not ids:
+                return
+        return super(IrAttachment, self.browse(ids)).check(mode, values)
