@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_specific_condition,access_specific_condition,model_specific_condition,base.group_user,1,0,0,0
+access_place_record,access_place_record,model_place_record,base.group_user,1,0,0,0
+access_vehicle_record,access_vehicle_record,model_vehicle_record,base.group_user,1,0,0,0
+access_activity_change_info,access_activity_change_info,model_activity_change_info,base.group_user,1,0,0,0
+access_activity_daily,access_activity_daily,model_activity_daily,base.group_user,1,0,0,0
+access_card_fault_collection,access_card_fault_collection,model_card_fault_collection,base.group_user,1,0,0,0
+access_card_fault,access_card_fault,model_card_fault,base.group_user,1,0,0,0
+access_card_event_collection,access_card_event_collection,model_card_event_collection,base.group_user,1,0,0,0
+access_card_event,access_card_event,model_card_event,base.group_user,1,0,0,0
+access_driving_data,access_driving_data,model_driving_data,base.group_user,1,0,0,0
