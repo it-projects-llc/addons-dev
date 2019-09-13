@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+<odoo>
+    <record id="product_template_only_form_view_supplementary" model="ir.ui.view">
+        <field name="name">product.template.form.inherited</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='purchase_ok']/.." position="after">
+                <div>
+                    <field name="is_supplementary_product"/>
+                    <label for="is_supplementary_product"/>
+                </div>
+                <div attrs="{'invisible':[('is_supplementary_product', '=', True)]}">
+                    <label for="supplementary_product_child_ids"/>
+                    <field name="supplementary_product_child_ids"
+                           domain="[('is_supplementary_product', '=', True)]"
+                           widget="many2many_tags"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_normal_form_view_supplementary" model="ir.ui.view">
+        <field name="name">product.product.form.inherited</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='purchase_ok']/.." position="after">
+                <div>
+                    <field name="is_supplementary_product"/>
+                    <label for="is_supplementary_product"/>
+                </div>
+                <div attrs="{'invisible':[('is_supplementary_product', '=', True)]}">
+                    <label for="supplementary_product_child_ids"/>
+                    <field name="supplementary_product_child_ids"
+                           domain="[('is_supplementary_product', '=', True)]"
+                           widget="many2many_tags"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

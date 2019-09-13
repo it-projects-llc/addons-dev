@@ -1,0 +1,27 @@
+.supplementary_product_line div {
+    display: inline-block;
+}
+
+.supplementary_product_line .name {
+    width: 659%;
+}
+.supplementary_product_line .price {
+    width: 19%;
+}
+
+.supp_qty_input {
+    float: right;
+    width: 90px;
+}
+
+.supplementary_product_info span{
+    font-weight: normal !important;
+}
+
+.supplementary_product_info .product-name{
+    width: 70% !important;
+}
+
+.supplementary_product_info .price.qty{
+    float: none !important;
+}

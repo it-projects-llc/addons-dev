@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+
+<templates id="template" xml:space="preserve">
+
+    <t t-name="SupplementaryProducts">
+        <t t-foreach="line.get_supplementary_orderlines()" t-as="ol">
+            <t t-if="ol &amp;&amp; ol.quantity != 0">
+                <li class="supplementary_product_info info">
+                    <span class="product-name">
+                        <t t-esc="ol.product.name"/>
+                    </span>
+
+                    <span class="price qty">
+                        <t t-esc="ol.qty_per_pack || 0"/>
+                    </span>
+                    <span class="price qty">
+                        <t t-esc="line.get_unit().name" />
+                    </span>
+
+<!--                    <span class="price">-->
+<!--                        <t t-esc="widget.format_currency(ol.product.lst_price)"/>-->
+<!--                    </span>-->
+                </li>
+            </t>
+        </t>
+    </t>
+
+    <t t-extend="Orderline">
+        <t t-jquery="ul" t-operation="prepend">
+            <t t-if="widget.pos.config.supplementary_products &amp;&amp; line.get_supplementary_products().length">
+                <t t-call="SupplementaryProducts"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="SupplementaryButton">
+        <div class='control-button'>
+            <i class='fa fa-qrcode' /> Supplementary
+        </div>
+    </t>
+
+    <t t-name="SupplementaryPopupWidget">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup popup-selection">
+                <header class="title"><t t-esc=" widget.options.title || 'Select' " /></header>
+                <div class='selection scrollable-y touch-scrollable'>
+                    <t t-foreach="widget.list || []" t-as="item">
+                        <div t-attf-class="selection-item {{widget.is_selected.call(widget, item.item) ? 'selected' : '' }}" t-att-data-item-index='item_index' t-att-olid='item.id'>
+                            <div class="supplementary_product_line">
+                                <div class="name">
+                                    <t t-esc='item.product.display_name'/>
+                                </div>
+                                <div class="price">
+                                    <t t-esc="widget.format_currency(item.product.lst_price)"/>
+                                </div>
+                                <div class="supp_qty_input">
+                                    <input class='detail client-name' name='quantity' t-att-value='item.qty_per_pack || 0' t-att-olid='item.id'></input>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+                <footer class="footer">
+                    <div class="button confirm">
+                        OK
+                    </div>
+                    <div class="button cancel">
+                        Cancel
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </t>
+
+</templates>
