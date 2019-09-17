@@ -25,6 +25,7 @@
     "external_dependencies": {"python": [], "bin": []},
     "data": [
         "views/website_portal_templates.xml",
+        "data/test.xml",
     ],
     "demo": [
     ],
