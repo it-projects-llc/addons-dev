@@ -14,3 +14,4 @@ Usage
 * Click on the User Name
 * Click ``My Account``
 * Click ``Debt / Credit History``
+* RESULT: User see his/her debt history

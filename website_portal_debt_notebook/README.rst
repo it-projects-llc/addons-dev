@@ -6,7 +6,7 @@
  Portal Debt History
 =====================
 
-Allows portal users to see their debt history
+Allows portal users to see their debt history.
 
 Credits
 =======
@@ -25,7 +25,7 @@ Maintainers
 
       To get a guaranteed support
       you are kindly requested to purchase the module
-      at `odoo apps store <https://apps.odoo.com/apps/modules/12.0//>`__.
+      at `odoo apps store <https://apps.odoo.com/apps/modules/12.0/website_portal_debt_notebook/>`__.
 
       Thank you for understanding!
 
@@ -36,7 +36,7 @@ Further information
 
 Demo: http://runbot.it-projects.info/demo/website-addons/12.0
 
-HTML Description: https://apps.odoo.com/apps/modules/12.0//
+HTML Description: https://apps.odoo.com/apps/modules/12.0/website_portal_debt_notebook/
 
 Usage instructions: `<doc/index.rst>`_
 

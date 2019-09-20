@@ -6,7 +6,7 @@
     "summary": """Allows portal users to see their debt history""",
     "category": "Website",
     # "live_test_url": "http://apps.it-projects.info/shop/product/DEMO-URL?version=10.0",
-    "images": [],
+    "images": ["images/debt_history1.png"],
     "version": "12.0.1.0.0",
     "application": False,
 
