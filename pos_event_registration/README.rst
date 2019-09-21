@@ -36,7 +36,7 @@ Further information
 
 Demo: http://runbot.it-projects.info/demo/pos-addons/10.0
 
-HTML Description: https://apps.odoo.com/apps/modules/10.0//
+HTML Description: https://apps.odoo.com/apps/modules/10.0/pos_event_registration/
 
 Usage instructions: `<doc/index.rst>`_
 
