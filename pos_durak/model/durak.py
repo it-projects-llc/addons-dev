@@ -2,7 +2,7 @@ import random
 import re
 from odoo import models, fields, api, _
 
-class Chat(models.Model):
+class Durak(models.Model):
     _inherit = 'pos.session'
 
     plays = fields.Boolean(default=False)
