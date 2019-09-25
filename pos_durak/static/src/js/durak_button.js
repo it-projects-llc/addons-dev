@@ -1,37 +1,38 @@
-odoo.define('pos_chat_button', function (require){
+odoo.define('pos_durak_button', function (require){
       'use_strict';
 
-    var gui = require('point_of_sale.gui');
-    var screens = require('point_of_sale.screens');
-    var session = require('web.session');
-    var models = require('point_of_sale.models');
+    let gui = require('point_of_sale.gui');
+    let screens = require('point_of_sale.screens');
+    let session = require('web.session');
+    let models = require('point_of_sale.models');
+    let rpc = require('web.rpc');
 
 //-------------------- Variables -----------------------
 
     // All users messages stored here
-    var all_messages = [];
+    let all_messages = [];
     // Messages timeouts needs to store,
     // cause only this way we can know when to delete the message
-    var all_timeOuts = [];
+    let all_timeOuts = [];
     // Information about every user
-    var chat_users = [];
+    let chat_users = [];
     // I don't remember why i added this,
     // but without it, app don't work:D
-    var messages_cnt = [];
+    let messages_cnt = [];
     // Are user in chat room right now
-    var in_chat = false;
+    let in_chat = false;
     // Full channel name
-    var channel = "pos_chat";
+    let channel = "pos_chat";
     // Shows game stage
-    var game_started = false;
+    let game_started = false;
     // Beated cards
-    var beated = [];
+    let beated = [];
     // Donald Trump
-    var trump = '';
+    let trump = '';
     // who moves
-    var who_moves = -1;
+    let who_moves = -1;
     // Game mode
-    var attacking = false;
+    let attacking = false;
 
 //------------------------------------------------------
 
@@ -48,12 +49,12 @@ odoo.define('pos_chat_button', function (require){
 //------------------------------------------------------
 
 //-------------- New screen defenition -----------------
-    let ChatButton = screens.ActionButtonWidget.extend({
-        template: 'ChatButton',
+    let Durak = screens.ActionButtonWidget.extend({
+        template: 'Durak',
         button_click: function () {
             let self = this;
             this.gui.show_screen('custom_screen');
-            // User in to the chat room
+            // User in to the game room
             in_chat = true;
             // Current users says that he connected to other users
             self._rpc({
@@ -68,7 +69,7 @@ odoo.define('pos_chat_button', function (require){
 //------------------------------------------------------
 
 //---------- Text insertion buttons control ------------
-    var CustomScreenWidget = screens.ScreenWidget.extend({
+    let CustomScreenWidget = screens.ScreenWidget.extend({
         template: 'CustomScreenWidget',
         show: function () {
           let self = this;
@@ -91,7 +92,7 @@ odoo.define('pos_chat_button', function (require){
             });
             // Send new messages using 'Enter' key on keyboard
             this.$("#text-line").off().keyup(function(event){
-                if(event.keyCode == 13){
+                if(event.keyCode === 13){
                     TakeNewMessage(true);
                 }
             });
@@ -120,7 +121,7 @@ odoo.define('pos_chat_button', function (require){
 
     screens.define_action_button({
         'name': 'durak_button',
-        'widget': ChatButton,
+        'widget': Durak,
     });
 
 //------------------------------------------------------
@@ -548,5 +549,5 @@ odoo.define('pos_chat_button', function (require){
         },
     });
 //------------------------------------------------------
-    return ChatButton;
+    return Durak;
 });

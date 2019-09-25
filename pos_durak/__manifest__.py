@@ -5,7 +5,7 @@
     'summary': """Cards game for employees""",
 
     'description': """
-        POS Durak - module allow's to play "Durak" card game with colleges
+        POS Durak - module allow's to play Durak card game with colleges
     """,
 
     'author': "IT-Projects LLC",
