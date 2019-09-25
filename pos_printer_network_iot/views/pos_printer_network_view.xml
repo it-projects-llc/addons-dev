@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_restaurant_printer_form" model="ir.ui.view">
+        <field name="name">Order Printer</field>
+        <field name="model">restaurant.printer</field>
+        <field name="inherit_id" ref="pos_printer_network.view_restaurant_printer_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='network_printer']" position="after">
+                <field name="printer_proxy_ip" attrs="{'invisible' : [('network_printer', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
