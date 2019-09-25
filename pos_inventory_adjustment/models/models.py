@@ -33,8 +33,8 @@ class PosConfig(models.Model):
             config_id = session.config_id
             session.action_pos_session_close()
             session.statement_ids.button_cancel()
-            session.unlink()
-            config_id.unlink()
+            session.sudo().unlink()
+            config_id.sudo().unlink()
 
 
 class StockInventoryStage(models.Model):
