@@ -3,7 +3,7 @@
 <odoo>
 
     <record id="group_pos_durak" model="res.groups">
-        <field name="name">Chat Updates Manager</field>
+        <field name="name">Game Updates Manager</field>
     </record>
 
 </odoo>

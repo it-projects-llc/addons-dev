@@ -180,7 +180,7 @@ odoo.define('pos_chat_button', function (require){
     }
 
     function Second_scene(data){
-        let who_attacks = [-1,-1],str = data.message, who_defends;
+        let who_attacks,str = data.message, who_defends;
         let attack_card = str[0] + (str[1] === ' ' ? '':str[1]);
         who_attacks[0] = Number((str[str.length - 2] === ' ' ? '':str[str.length - 2]) + str[str.length - 1]);
         who_defends = chat_users[next_to(who_attacks[0])].uid;
@@ -188,22 +188,22 @@ odoo.define('pos_chat_button', function (require){
         let window = document.getElementById('main-window');
         let w = window.offsetWidth, h = window.offsetHeight;
         let attacker_id_1 = document.getElementById('picture-'+NumInQueue(who_attacks[0]));
-        let attacker_id_2 = document.getElementById('picture-'+NumInQueue(who_attacks[1]));
+        let attacker_id_2 = chat_users.length === 2 ? null : document.getElementById('picture-'+NumInQueue(who_attacks[1]));
         let defender_id = document.getElementById('picture-'+NumInQueue(who_defends));
         if(attacker_id_1 !== null){
             let point = attacker_id_1.getBoundingClientRect(), x = point.left, y = point.top;
-            attacker_id_1.style.setProperty('transform','translate3d('+(w/2 - x)+'px,'+(h*0.9 - y)+'px,0px)');
-            attacker_id_1.style.setProperty('transition','transform .3s ease-in-out');
+            attacker_id_1.style.left = w / 2 - attacker_id_1.offsetWidth;
+            attacker_id_1.style.top = h * 0.8;
         }
         if(attacker_id_2 !== null){
             let point = attacker_id_2.getBoundingClientRect(), x = point.left, y = point.top;
-            attacker_id_2.style.setProperty('transform','translate3d('+(w/2 - x)+'px,'+(h*0.9 - y)+'px,0px)');
-            attacker_id_2.style.setProperty('transition','transform .3s ease-in-out');
+            attacker_id_2.style.left = w / 2 + attacker_id_2.offsetWidth;
+            attacker_id_2.style.top = h * 0.8
         }
         if(defender_id !== null){
             let point = defender_id.getBoundingClientRect(), x = point.left, y = point.top;
-            defender_id.style.setProperty('transform','translate3d('+(w/2 - x)+'px,'+(h*0.1 - y)+'px,0px)');
-            defender_id.style.setProperty('transition','transform .3s ease-in-out');
+            defender_id.style.left = w / 2;
+            defender_id.style.top = h * 0.8;
         }
     }
 //------------------------------------------------------
@@ -531,7 +531,7 @@ odoo.define('pos_chat_button', function (require){
             else if(data.command === 'Exist'){
                     AddExistUser(data);
             }
-            else if(data.command === 'game_started'){
+            else if(data.command === 'game_started' && chat_users.length >= 2){
                 game_started = true;
                 Distribute_cards(data, false);
             }
