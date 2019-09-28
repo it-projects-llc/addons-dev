@@ -6,7 +6,7 @@
     "summary": """Process Attendees and Sell Tickets via POS""",
     "category": "Point of Sale",
     # "live_test_url": "http://apps.it-projects.info/shop/product/DEMO-URL?version=10.0",
-    "images": [],
+    "images": ['images/registerattendees.jpg'],
     "version": "10.0.1.0.0",
     "application": False,
 

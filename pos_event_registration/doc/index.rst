@@ -52,4 +52,4 @@ Ticket sales
 * On the receipt screen as attendee is created a *Open Attendee* button is appeared, Click on it
 * In opened Attendee screen you proceed an attendee as it is written above
 
-RESULT: Attendees are processed and Tickets are sold out via POS
+RESULT: Attendees are processed and Tickets are sold out via POS.
