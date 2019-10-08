@@ -18,29 +18,30 @@ Configuration
 * For `properly-handled` text: in html-editor enter ``'Code View'``-mode by clicking ``"</>"``-icon
 
 Template example:
------------------
 
-<p>Dear, ${partner.name}</p>
+    ---
 
-<p>Thanks for purchasing in our shop</p>
+    <p>Dear, ${partner.name}</p>
 
-<p>Your order is: ${order.pos_reference}</p>
+    <p>Thanks for purchasing in our shop</p>
 
-<p>Best wishes.</p>
+    <p>Your order is: ${order.pos_reference}</p>
 
-Will be converted to:
+    <p>Best wishes.</p>
 
-<p>Dear, Bob</p>
 
-<p>Thanks for purchasing in our shop</p>
+Will be converted to
 
-<p>Your order is: Order-00000001</p>
+    ---
 
-<p>Best wishes.</p>
+    <p>Dear, Bob</p>
 
-* Open menu ``[[ Point of Sale ]] >> Configuration >> Point Of Sale``
-* Choose POS-config
-* In ``Bills & Receipts`` section check ``Mail a Receipt`` option
+    <p>Thanks for purchasing in our shop</p>
+
+    <p>Your order is: ${order.pos_reference}</p>
+
+    <p>Best wishes.</p>
+
 
 Usage
 =====
