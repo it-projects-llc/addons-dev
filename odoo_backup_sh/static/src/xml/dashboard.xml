@@ -9,10 +9,44 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
         <div class="container-fluid o_backup_dashboard">
             <div class="row o_dashboard_common">
                 <div class="col-12 o_box">
-                    <div class="o_inner_box o_dashboard_action o_dashboard_action_add_database" title="Add new database in the dashboard.">
-                        <i class="fa fa-plus fa-3x"/><br/>
+                    <div t-if="widget.dashboard_can_backup()" class="o_inner_box o_dashboard_action o_dashboard_action_add_database" title="Add new database in the dashboard.">
+                        <i class="fa fa-database fa-3x"/><br/>
                         Add Database
                     </div>
+
+                  <t t-if="widget.dashboard_basic()">
+                    <div class="o_inner_box o_dashboard_action o_dashboard_get_s3_credentials" title="Purchase S3 access via odoo.com">
+                        <i class="fab fa-aws fa-3x"/><br/>
+                        Get S3 storage
+                    </div>
+                    <div class="o_inner_box o_dashboard_action o_dashboard_use_dropbox" title="Install module to save backups to your Dropbox">
+                        <i class="fa fa-dropbox fa-3x"/><br/>
+                        Use Dropbox
+                    </div>
+                    <div class="o_inner_box o_dashboard_action o_dashboard_use_google_disk" title="Install module to save backups to your Google Drive">
+                        <i class="fab fa-google-drive fa-3x"/><br/>
+                        Use Google Drive
+                    </div>
+                  </t>
+                  <t t-if="widget.dashboard_configure_dropbox()">
+                    <div class="o_inner_box o_dashboard_action o_dashboard_configure_dropbox" title="">
+                        <i class="fa fa-plus fa-3x"/><br/>
+                        Configure Dropbox
+                    </div>
+                  </t>
+                  <t t-if="widget.dashboard_configure_google_disk()">
+                    <div class="o_inner_box o_dashboard_action o_dashboard_configure_google_disk" title="">
+                        <i class="fa fa-google-drive fa-3x"/><br/>
+                        Configure Google Drive
+                    </div>
+                  </t>
+                  <t t-if="widget.dashboard_offer_iap()">
+                    <div class="o_inner_box o_dashboard_action o_dashboard_get_s3_credentials" title="Purchase S3 access via odoo.com">
+                        <i class="fab fa-aws fa-3x"/><br/>
+                        Extra backups to S3
+                    </div>
+                  </t>
+                  <t t-if="widget.dashboard_iap()">
                     <div class="o_inner_box o_dashboard_action o_dashboard_action_update_info" title="Update backups information." t-if="widget.cloud_params['amazon_access_key_id']">
                         <i class="fa fa-refresh fa-3x"/><br/>
                         Update Info
@@ -21,10 +55,24 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                         <i class="fa fa-money fa-3x"/><br/>
                         Go to Balance
                     </a>
+                  </t>
+                  <t t-if="widget.dashboard_offer_extra_module()">
+                    <div class="o_inner_box o_dashboard_action o_dashboard_use_dropbox" title="Install module to save backups to your Dropbox">
+                        <i class="fa fa-plus fa-3x"/><br/>
+                        Extra backups to Dropbox
+                    </div>
+                    <div class="o_inner_box o_dashboard_action o_dashboard_use_google_disk" title="Install module to save backups to your Google Drive">
+                        <i class="fab fa-google-drive fa-3x"/><br/>
+                        Extra backups to Google Drive
+                    </div>
+                  </t>
+
                 </div>
             </div>
             <div class="o_backup_dashboard_note_section">
-                <div class="o_backup_dashboard_nocontent" t-if="widget.show_nocontent_msg">
+              <t t-if="widget.show_nocontent_msg">
+                <t  t-if="widget.dashboard_can_backup()">
+                <div class="o_backup_dashboard_nocontent">
                     <p class="o_backup_dashboard_nocontent_create">
                         Click to add a new Database
                     </p>
@@ -33,6 +81,29 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                         Auto/manual backup, auto rotation, remote storage for your backups, detailed statistics, etc.
                     </p>
                 </div>
+                </t>
+                <t  t-if="!widget.dashboard_can_backup()">
+
+                  <t t-if="widget.dashboard_basic()">
+                    <div class="o_backup_dashboard_nocontent">
+                      <p class="o_backup_dashboard_nocontent_create">
+                        Choose storage for backups
+                      </p>
+                      <p>
+                      </p>
+                    </div>
+                  </t>
+                  <t t-if="widget.dashboard_configure_google_disk() or widget.dashboard_configure_dropbox()">
+                    <div class="o_backup_dashboard_nocontent">
+                      <p class="o_backup_dashboard_nocontent_create">
+                        Finish configuration
+                      </p>
+                      <p>
+                      </p>
+                    </div>
+                  </t>
+                </t>
+              </t>
                 <t t-foreach="widget.notifications" t-as="notification">
                     <div class="o_backup_dashboard_notification" t-att-data-notification_id="notification.id">
                         <t t-raw="notification.message"/>

@@ -39,6 +39,11 @@ loader = jinja2.FileSystemLoader(path)
 env = jinja2.Environment(loader=loader, autoescape=True)
 BACKUP_SERVICE_ENDPOINT = 'https://odoo-backup.sh'
 
+EXTRA_MODULES = {
+    'odoo_backup_sh_dropbox': lambda: False, # TODO
+    'odoo_backup_sh_google_disk': lambda: False, # TODO
+}
+
 
 class BackupDatabase(web.controllers.main.Database):
 
@@ -135,6 +140,7 @@ class BackupController(http.Controller):
 
         # You can set the verify parameter to False and requests will ignore SSL verification.
         try:
+            raise Exception('TODO');
             cloud_params = requests.get(BACKUP_SERVICE_ENDPOINT + '/get_cloud_params', params={
                 'user_key': user_key,
                 'redirect': redirect,
@@ -160,7 +166,9 @@ class BackupController(http.Controller):
             if call_from == 'frontend':
                 # After creating a new IAM user we have to make a delay for the AWS.
                 # Otherwise AWS don't determine the user just created by it and returns an InvalidAccessKeyId error.
-                time.sleep(20)
+                # FIXME
+                # time.sleep(20)
+                pass
             else:
                 request.env['odoo_backup_sh.notification'].sudo().search(
                     [('type', 'in', ['insufficient_credits', 'forecast_insufficient_credits']), ('is_read', '=', False)]
@@ -330,7 +338,9 @@ class BackupController(http.Controller):
                     } for date in last_week_dates]
                 }]
             })
+        cloud_params = self.get_cloud_params(request.httprequest.url, call_from='frontend')
         dashboard_data.update({
+            'cloud_params': cloud_params,
             'configs': backup_configs,
             'notifications': request.env['odoo_backup_sh.notification'].search_read(
                 [('is_read', '=', False)], ['id', 'date_create', 'message']),
@@ -339,6 +349,24 @@ class BackupController(http.Controller):
                 request.env['ir.config_parameter'].sudo().get_param('odoo_backup_user_key')
             ),
         })
+        modules = {
+            'odoo_backup_sh': {
+                'installed': True,
+                'configured': bool(cloud_params['amazon_access_key_id']),
+                'configured_iap': 'itprojectsllc' in (cloud_params.get('amazon_bucket_name') or '')
+            }
+        }
+        modules_search = request.env['ir.module.module'].search([('name', 'in', list(EXTRA_MODULES.keys()))])
+        for m in modules_search:
+            installed = m.state == 'installed'
+            modules[m.name] = {
+                'installed': installed
+            }
+            if installed:
+                modules[m.name]['configured'] = bool(EXTRA_MODULES[m.name]())
+
+        dashboard_data['modules'] = modules
+
         return dashboard_data
 
 

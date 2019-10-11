@@ -675,6 +675,7 @@ class BackupNotification(models.Model):
 
     @api.model
     def fetch_notifications(self):
+        return # TODO
         config_params = self.env['ir.config_parameter']
         data = {'params': {
             'user_key': config_params.get_param('odoo_backup_user_key'),

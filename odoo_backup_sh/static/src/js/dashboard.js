@@ -42,8 +42,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
 
     fetch_dashboard_data: function() {
         var self = this;
-        return $.when(
-            self._rpc({
+        return self._rpc({
                 route: '/odoo_backup_sh/fetch_dashboard_data',
             }).done(function(results) {
                 self.remote_storage_usage_graph_values = results.remote_storage_usage_graph_values;
@@ -52,27 +51,71 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
                 self.notifications = results.notifications;
                 self.up_balance_url = results.up_balance_url;
                 self.show_nocontent_msg = results.configs.length === 0;
-            }),
-            self._rpc({
-                model: 'odoo_backup_sh.config',
-                method: 'get_cloud_params',
-                kwargs: {
-                    redirect: '/web/backup_redirect?redirect=' + window.location.href,
-                },
-            }).done(function(cloud_params) {
-                if ('auth_link' in cloud_params) {
-                    self.do_action({
-                        name: "Auth via odoo.com",
-                        target: 'self',
-                        type: 'ir.actions.act_url',
-                        url: cloud_params.auth_link
-                    });
-                }
-                self.cloud_params = cloud_params;
-            })
-        );
+                self._msg = results.configs.length === 0;
+                self.modules = results.modules;
+                self.cloud_params = results.cloud_params;
+            });
     },
+    dashboard_can_backup: function(){
+        return this.modules.odoo_backup_sh.configured ||
+            this.modules.odoo_backup_sh_dropbox.configured ||
+            this.modules.odoo_backup_sh_google_disk.configured;
+    },
+    dashboard_basic: function(){
+        return !this.modules.odoo_backup_sh.configured &&
+            !this.modules.odoo_backup_sh_dropbox.installed &&
+            !this.modules.odoo_backup_sh_google_disk.installed;
+    },
+    dashboard_configure_dropbox: function(){
+        return this.modules.odoo_backup_sh_dropbox.installed &&
+            !this.modules.odoo_backup_sh_dropbox.configured;
+    },
+    dashboard_configure_google_disk: function(){
+        return this.modules.odoo_backup_sh_google_disk.installed &&
+            !this.modules.odoo_backup_sh_google_disk.configured;
+    },
+    dashboard_offer_iap: function(){
+        return this.modules.odoo_backup_sh_dropbox.configured ||
+            this.modules.odoo_backup_sh_google_disk.configured;
+    },
+    dashboard_iap: function(){
+        return this.modules.odoo_backup_sh.configured_iap;
+    },
+    dashboard_offer_extra_module: function(){
+        return this.modules.odoo_backup_sh.configured &&
+            !this.modules.odoo_backup_sh.configured_iap &&
+            !this.modules.odoo_backup_sh_dropbox.installed &&
+            !this.modules.odoo_backup_sh_google_disk.installed;
+    },
+    auth_via_odoo: function(){
+        if ('auth_link' in this.cloud_params) {
+            self.do_action({
+                name: "Auth via odoo.com",
+                target: 'self',
+                type: 'ir.actions.act_url',
+                url: this.cloud_params.auth_link
+            });
+        }
+        /*
+        self._rpc({
+            model: 'odoo_backup_sh.config',
+            method: 'get_cloud_params',
+            kwargs: {
+                redirect: '/web/backup_redirect?redirect=' + window.location.href,
+            },
+        }).done(function(cloud_params) {
+            if ('auth_link' in cloud_params) {
+                self.do_action({
+                    name: "Auth via odoo.com",
+                    target: 'self',
+                    type: 'ir.actions.act_url',
+                    url: cloud_params.auth_link
+                });
+            }
+            self.cloud_params = cloud_params;
+        })*/
 
+    },
     start: function() {
         var self = this;
         return this._super().then(function() {
