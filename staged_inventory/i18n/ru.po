@@ -1,0 +1,262 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* staged_inventory
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-05 15:53+0000\n"
+"PO-Revision-Date: 2019-08-05 15:53+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: staged_inventory
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_line_product_barcode
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_barcode
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_line_barcode
+msgid "Barcode"
+msgstr "Штрихкод"
+
+#. module: staged_inventory
+#: code:addons/staged_inventory/models/stock_inventory_stage.py:74
+#, python-format
+msgid "Barcode is not found: {}"
+msgstr "Штрихкод не найден: {}"
+
+#. module: staged_inventory
+#: model:ir.ui.view,arch_db:staged_inventory.view_inventory_filter_inherit_staged_inventory
+msgid "Canceled"
+msgstr "Отменено"
+
+#. module: staged_inventory
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_note
+msgid "Comment"
+msgstr "Комментарий"
+
+#. module: staged_inventory
+#: model:ir.ui.view,arch_db:staged_inventory.stock_inventory_stage_view_form
+msgid "Comment..."
+msgstr "Комментарий..."
+
+#. module: staged_inventory
+#: model:ir.ui.view,arch_db:staged_inventory.view_inventory_filter_inherit_staged_inventory
+msgid "Confirmed"
+msgstr "Подтверждено"
+
+#. module: staged_inventory
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_create_uid
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_line_create_uid
+msgid "Created by"
+msgstr "Создал"
+
+#. module: staged_inventory
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_create_date
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_line_create_date
+msgid "Created on"
+msgstr "Создано"
+
+#. module: staged_inventory
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_display_name
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_line_display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#. module: staged_inventory
+#: model:ir.ui.view,arch_db:staged_inventory.stock_inventory_stage_view_form
+#: model:ir.ui.view,arch_db:staged_inventory.view_inventory_filter_inherit_staged_inventory
+#: selection:stock.inventory.stage,state:0
+msgid "Done"
+msgstr "Выполнено"
+
+#. module: staged_inventory
+#: model:ir.ui.view,arch_db:staged_inventory.view_inventory_filter_inherit_staged_inventory
+msgid "Draft"
+msgstr "Черновик"
+
+#. module: staged_inventory
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_exhausted_product_ids
+#: model:ir.ui.view,arch_db:staged_inventory.view_inventory_form_inherit_staged_inventory
+msgid "Exhausted Products"
+msgstr "Недостающие товары"
+
+#. module: staged_inventory
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_id
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_line_id
+msgid "ID"
+msgstr "ID"
+
+#. module: staged_inventory
+#: model:ir.model.fields,help:staged_inventory.field_stock_inventory_line_product_barcode
+#: model:ir.model.fields,help:staged_inventory.field_stock_inventory_stage_line_barcode
+msgid "International Article Number used for product identification."
+msgstr "Международный  номер товара используется для идентификации товара."
+
+#. module: staged_inventory
+#: model:ir.model,name:staged_inventory.model_stock_inventory
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_inventory_id
+msgid "Inventory"
+msgstr "Склад"
+
+#. module: staged_inventory
+#: model:ir.model,name:staged_inventory.model_stock_inventory_line
+msgid "Inventory Line"
+msgstr "Позиция инвентаризации"
+
+#. module: staged_inventory
+#: model:ir.actions.act_window,name:staged_inventory.action_inventory_stage_tree
+#: model:ir.ui.menu,name:staged_inventory.menu_inventory_stages
+msgid "Inventory Stages"
+msgstr "Этапы инвентаризации"
+
+#. module: staged_inventory
+#: code:addons/staged_inventory/models/stock_inventory_stage.py:43
+#, python-format
+msgid "Inventory must be in the Draft or Confirmed state."
+msgstr "Инвентаризация должна находиться в статусе черновика или выполнения."
+
+#. module: staged_inventory
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage___last_update
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_line___last_update
+msgid "Last Modified on"
+msgstr "Последний раз изменено"
+
+#. module: staged_inventory
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_line_write_uid
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_write_uid
+msgid "Last Updated by"
+msgstr "Последний раз обновил"
+
+#. module: staged_inventory
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_line_write_date
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_write_date
+msgid "Last Updated on"
+msgstr "Последний раз обновлено"
+
+#. module: staged_inventory
+#: model:ir.ui.view,arch_db:staged_inventory.view_inventory_filter_inherit_staged_inventory
+msgid "Location"
+msgstr "Место хранения"
+
+#. module: staged_inventory
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_name
+msgid "Name"
+msgstr "Имя"
+
+#. module: staged_inventory
+#: model:ir.ui.view,arch_db:staged_inventory.view_inventory_form_inherit_staged_inventory
+msgid "New Stage"
+msgstr "Новый этап"
+
+#. module: staged_inventory
+#: selection:stock.inventory.stage,state:0
+msgid "Open"
+msgstr "В процессе"
+
+#. module: staged_inventory
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_line_product_id
+msgid "Product"
+msgstr "Товар"
+
+#. module: staged_inventory
+#: code:addons/staged_inventory/models/stock_inventory_stage.py:70
+#, python-format
+msgid "Product added: {}"
+msgstr "Товар добавлен: {}"
+
+#. module: staged_inventory
+#: sql_constraint:stock.inventory.stage.line:0
+msgid "Product must be unique for the stage!"
+msgstr "Товар не должен иметь дубликатов в рамках этапа инвентаризации!"
+
+#. module: staged_inventory
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_line_qty
+msgid "Qty"
+msgstr "Кол-во"
+
+#. module: staged_inventory
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_line_real_amount
+msgid "Real Amount"
+msgstr "Реальная сумма"
+
+#. module: staged_inventory
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_user_id
+msgid "Responsible"
+msgstr "Ответственный"
+
+#. module: staged_inventory
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_line_stage_id
+msgid "Stage"
+msgstr "Этап"
+
+#. module: staged_inventory
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_line_ids
+msgid "Stage Lines"
+msgstr "Строки с товарами"
+
+#. module: staged_inventory
+#: code:addons/staged_inventory/models/stock_inventory.py:60
+#: model:ir.ui.view,arch_db:staged_inventory.view_inventory_filter_inherit_staged_inventory
+#, python-format
+msgid "Staged"
+msgstr "Поэтапная"
+
+#. module: staged_inventory
+#: model:ir.actions.act_window,name:staged_inventory.action_current_inventory_stage_tree
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_line_stage_ids
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_count
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_ids
+#: model:ir.ui.view,arch_db:staged_inventory.view_inventory_form_inherit_staged_inventory
+msgid "Stages"
+msgstr "Этапы"
+
+#. module: staged_inventory
+#: code:addons/staged_inventory/models/stock_inventory.py:123
+#, python-format
+msgid "Stages are empty."
+msgstr "Создайте этапы инвертаризации."
+
+#. module: staged_inventory
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_stage_state
+msgid "Status"
+msgstr "Статус"
+
+#. module: staged_inventory
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_line_theoretical_amount
+msgid "Theoretical Amount"
+msgstr "Расчетная сумма"
+
+#. module: staged_inventory
+#: model:ir.ui.view,arch_db:staged_inventory.view_inventory_form_inherit_staged_inventory
+msgid "This inventory can be processed in several stages."
+msgstr "Инвентаризация данного типа может быть проведена в несколько этапов."
+
+#. module: staged_inventory
+#: model:ir.ui.view,arch_db:staged_inventory.stock_inventory_stage_view_form
+msgid "Total"
+msgstr "Итого"
+
+#. module: staged_inventory
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_total_real_amount
+msgid "Total Real Amount"
+msgstr "Итого"
+
+#. module: staged_inventory
+#: model:ir.model.fields,field_description:staged_inventory.field_stock_inventory_total_theoretical_amount
+msgid "Total Theoretical Amount"
+msgstr "Итого"
+
+#. module: staged_inventory
+#: model:ir.model,name:staged_inventory.model_stock_inventory_stage
+msgid "stock.inventory.stage"
+msgstr "stock.inventory.stage"
+
+#. module: staged_inventory
+#: model:ir.model,name:staged_inventory.model_stock_inventory_stage_line
+msgid "stock.inventory.stage.line"
+msgstr "stock.inventory.stage.line"
+

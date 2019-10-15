@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="action_current_inventory_stage_tree" model="ir.actions.act_window">
+        <field name="name">Stages</field>
+        <field name="res_model">stock.inventory.stage</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'default_inventory_id': active_id}</field>
+        <field name="domain">[('inventory_id', '=', active_id)]</field>
+    </record>
+
+    <record id="view_inventory_form_inherit_staged_inventory" model="ir.ui.view">
+        <field name="name">view.inventory.form.inherit.staged.inventory</field>
+        <field name="model">stock.inventory</field>
+        <field name="inherit_id" ref="stock.view_inventory_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(staged_inventory.action_current_inventory_stage_tree)d"
+                        class="oe_stat_button"
+                        type="action" icon="fa-barcode"
+                        help="This inventory can be processed in several stages."
+                        string="">
+                    <field string="Stages" name="stage_count"
+                           widget="statinfo" attrs="{'string': 'stage_count'}"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='line_ids']/tree/field[@name='product_id']" position="after">
+                <field name="product_barcode"/>
+            </xpath>
+            <xpath expr="//field[@name='line_ids']/tree/field[@name='product_qty']" position="after">
+                <field name="theoretical_amount"/>
+                <field name="real_amount"/>
+            </xpath>
+            <xpath expr="//field[@name='line_ids']" position="after">
+                <group class="oe_subtotal_footer oe_right">
+                    <field name="total_real_amount"/>
+                    <field name="total_theoretical_amount"/>
+                </group>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="action_new_stage"
+                    string="New Stage"
+                    icon="fa-play"
+                    attrs="{'invisible': ['|',('filter', 'not in', ['staged']), ('state', 'not in', ['draft'])]}"
+                    type="object"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Exhausted Products"
+                      attrs="{'invisible':[('filter', '!=', 'staged')]}">
+                    <field name="exhausted_product_ids" mode="tree"
+                           attrs="{'readonly':[('state', 'not in', ['draft', 'confirm'])]}" >
+                        <tree>
+                            <field name="name"/>
+                            <field name="barcode"/>
+                            <field name="qty_available"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_inventory_tree_inherit_staged_inventory" model="ir.ui.view">
+        <field name="name">view.inventory.tree.inherit.staged.inventory</field>
+        <field name="model">stock.inventory</field>
+        <field name="inherit_id" ref="stock.view_inventory_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="default_order">date desc</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_inventory_filter_inherit_staged_inventory" model="ir.ui.view">
+        <field name="name">view.inventory.filter.inherit.staged.inventory</field>
+        <field name="model">stock.inventory</field>
+        <field name="inherit_id" ref="stock.view_inventory_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <filter name="filter_staged" string="Staged" domain="[('filter', '=', 'staged')]"/>
+                <filter name="filter_cancel" string="Canceled" domain="[('state', '=', 'cancel')]"/>
+            </xpath>
+            <!-- <xpath expr="//group" position="inside">
+                <filter string="Location" domain="[]" context="{'group_by':'location_id'}"/>
+            </xpath> -->
+        </field>
+    </record>
+
+    <!-- <record id="view_inventory_form_inherit_staged_inventory" model="ir.ui.view">
+        <field name="name">view.inventory.form.inherit.staged.inventory</field>
+        <field name="model">stock.inventory.line</field>
+        <field name="inherit_id" ref="stock.view_inventory_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='inventory_id']" position="after">
+                <field name="stage_ids"/>
+            </xpath>
+        </field>
+    </record> -->
+
+</odoo>

@@ -1,0 +1,5 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+access_stock_inventory_stage_user,access_stock_inventory_stage_user,model_stock_inventory_stage,base.group_user,1,1,1,0
+access_stock_inventory_stage_admin,access_stock_inventory_stage_admin,model_stock_inventory_stage,base.group_system,1,1,1,1
+access_stock_inventory_stage_line_user,access_stock_inventory_stage_line_user,model_stock_inventory_stage_line,base.group_user,1,1,1,0
+access_stock_inventory_stage_line_admin,access_stock_inventory_stage_line_admin,model_stock_inventory_stage_line,base.group_system,1,1,1,1
