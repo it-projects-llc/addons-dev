@@ -25,6 +25,7 @@ from odoo.tools import config, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DA
 from odoo.tools.misc import str2bool
 from odoo.addons import web
 from odoo.addons.web.controllers.main import DBNAME_PATTERN
+from odoo.release import version_info
 
 try:
     import boto3
@@ -39,6 +40,7 @@ loader = jinja2.FileSystemLoader(path)
 env = jinja2.Environment(loader=loader, autoescape=True)
 BACKUP_SERVICE_ENDPOINT = 'https://odoo-backup.sh'
 
+# module -> config parameter name
 EXTRA_MODULES = {
     'odoo_backup_sh_dropbox': lambda: False, # TODO
     'odoo_backup_sh_google_disk': lambda: False, # TODO
@@ -118,11 +120,11 @@ cloud_config_stores = {
 class BackupController(http.Controller):
 
     @classmethod
-    def get_cloud_params(cls, redirect=None, call_from='backend'):
+    def get_cloud_params(cls, redirect=None, call_from='backend', update=True):
         cloud_params = cloud_config_stores[call_from].get([
             'odoo_backup_user_key', 'amazon_bucket_name', 'amazon_access_key_id', 'amazon_secret_access_key', 'odoo_oauth_uid'
         ])
-        if len(cloud_params) == 0 or not all(cloud_params.values()):
+        if update and (len(cloud_params) == 0 or not all(cloud_params.values())):
             if redirect:
                 cloud_params = cls.update_cloud_params(cloud_params, redirect, call_from)
             else:
@@ -140,7 +142,6 @@ class BackupController(http.Controller):
 
         # You can set the verify parameter to False and requests will ignore SSL verification.
         try:
-            raise Exception('TODO');
             cloud_params = requests.get(BACKUP_SERVICE_ENDPOINT + '/get_cloud_params', params={
                 'user_key': user_key,
                 'redirect': redirect,
@@ -267,6 +268,10 @@ class BackupController(http.Controller):
         finally:
             os.unlink(backup_file.name)
 
+    @http.route('/odoo_backup_sh/get_s3_credentials', type="json", auth='user')
+    def get_s3_credentials(self):
+        TODO
+
     @http.route('/odoo_backup_sh/fetch_dashboard_data', type="json", auth='user')
     def fetch_dashboard_data(self):
         date_month_before = datetime.now().date() - timedelta(days=29)
@@ -338,7 +343,7 @@ class BackupController(http.Controller):
                     } for date in last_week_dates]
                 }]
             })
-        cloud_params = self.get_cloud_params(request.httprequest.url, call_from='frontend')
+        cloud_params = self.get_cloud_params(request.httprequest.url, call_from='backend', update=False)
         dashboard_data.update({
             'cloud_params': cloud_params,
             'configs': backup_configs,
@@ -357,9 +362,11 @@ class BackupController(http.Controller):
             }
         }
         modules_search = request.env['ir.module.module'].search([('name', 'in', list(EXTRA_MODULES.keys()))])
+        version = '%s.%s' % (version_info[0], version_info[1])
         for m in modules_search:
             installed = m.state == 'installed'
             modules[m.name] = {
+                'url': "https://apps.odoo.com/apps/modules/%s/%s/" % (version, m.name),
                 'installed': installed
             }
             if installed:

@@ -2,6 +2,7 @@
 <!--
 Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
 Copyright 2019 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
+Copyright 2019 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
@@ -13,8 +14,39 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('settings')]" position="inside">
+
                 <div class="app_settings_block" data-string="Backups" string="Backups" data-key="odoo_backup_sh" groups="base.group_system">
-                    <h2>Backup Services</h2>
+                    <h2>S3 Storage</h2>
+
+                    <div class="row mt16 o_settings_container" name="backup_services">
+                      <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                          &amp;nbsp;
+                        </div>
+                        <div class="o_setting_right_pane">
+                          <div class="text-muted">
+                            Paste your S3 credentials here
+                          </div>
+                          <div class="content-group">
+                            <div class="mt16 row">
+                              <label for="odoo_backup_sh_amazon_bucket_name" class="col-4 col-lg-4 o_light_label"/>
+                              <field name="odoo_backup_sh_amazon_bucket_name" nolabel="1"/>
+
+                              <label for="odoo_backup_sh_amazon_access_key_id" string="Access Key ID" class="col-4 col-lg-4 o_light_label"/>
+                              <field name="odoo_backup_sh_amazon_access_key_id" nolabel="1"/>
+
+                              <label for="odoo_backup_sh_amazon_secret_access_key" string="Secret Access Key" class="col-4 col-lg-4 o_light_label"/>
+                              <field name="odoo_backup_sh_amazon_secret_access_key" nolabel="1"/>
+
+
+                            </div>
+                            <button name="%(odoo_backup_sh.ir_actions_server_backup_dashboard)d" type="action" string="Get Credentials" class="btn btn-primary" icon="fa-lock" attrs="{'invisible': [('odoo_backup_sh_amazon_secret_access_key', '!=', '')]}"/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <h2>Other Storage</h2>
                     <div class="row mt16 o_settings_container" name="backup_services">
                         <div class="col-12 col-lg-12 o_setting_box">
                             <div class="o_setting_left_pane">
@@ -26,7 +58,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                                     Use Google Drive to store Database
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('module_odoo_backup_sh_google_disk','=',False)]}" id="msg_module_odoo_backup_sh_google_disk">
-                                    <div class="text-warning mt16"><strong>Save</strong> this page and come back here to set up the feature.</div>
+                                  <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
                                 </div>
                             </div>
                         </div>
@@ -40,7 +72,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                                     Use Dropbox to store Database
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible': [('module_odoo_backup_sh_dropbox','=',False)]}" id="msg_module_odoo_backup_sh_dropbox">
-                                    <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
+                                  <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
                                 </div>
                             </div>
                         </div>
@@ -384,11 +416,8 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
     <menuitem name="Backups" id="menu_backup_root" sequence="100" web_icon="odoo_backup_sh,static/description/icon.png" groups="odoo_backup_sh.group_user" />
     <menuitem name="Dashboard" action="odoo_backup_sh.ir_actions_server_backup_dashboard" parent="menu_backup_root"
               id="menu_dashboard" sequence="1"/>
-    <menuitem name="Backups" parent="menu_backup_root" id="menu_backups" sequence="10"/>
-    <menuitem name="Backups" action="odoo_backup_sh_backup_action" parent="menu_backups" id="backups_menu" sequence="1"/>
-    <menuitem name="Notifications" parent="menu_backup_root" id="menu_notification" sequence="20"/>
-    <menuitem name="Notifications" action="action_backup_notifications" parent="menu_notification" id="notification_menu"/>
-    <menuitem name="Configuration" parent="menu_backup_root" id="menu_config" sequence="100"/>
-    <menuitem name="Schedules and Rotations" action="action_backup_config" parent="menu_config" id="menu_backup_config"/>
-    <menuitem name="Settings" id="menu_settings" parent="menu_config" action="action_backup_settings" groups="base.group_system"/>
+    <menuitem name="Backups" action="odoo_backup_sh_backup_action" parent="menu_backup_root" id="backups_menu" sequence="10"/>
+    <menuitem name="Schedules and Rotations" action="action_backup_config" parent="menu_backup_root" id="menu_backup_config" sequence="20"/>
+    <menuitem name="Notifications" action="action_backup_notifications" parent="menu_backup_root" id="notification_menu" sequence="30" groups="base.group_no_one"/>
+    <menuitem name="Settings" id="menu_settings" parent="menu_backup_root" action="action_backup_settings" groups="base.group_system" sequence="100"/>
 </odoo>

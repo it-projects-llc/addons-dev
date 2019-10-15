@@ -24,6 +24,8 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         '/web/static/src/js/libs/nvd3.js'
     ],
     events: {
+        'click .o_dashboard_action': 'on_dashboard_action',
+        'click .o_dashboard_get_s3_credentials': 'o_dashboard_get_s3_credentials',
         'click .o_dashboard_action_add_database': 'o_dashboard_action_add_database',
         'click .o_dashboard_action_update_info': 'o_dashboard_action_update_info',
         'click .o_dashboard_action_make_backup': 'o_dashboard_action_make_backup',
@@ -56,6 +58,12 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
                 self.cloud_params = results.cloud_params;
             });
     },
+    on_dashboard_action: function (ev) {
+        ev.preventDefault();
+        var $action = $(ev.currentTarget);
+        this.do_action($action.attr('name'));
+    },
+
     dashboard_can_backup: function(){
         return this.modules.odoo_backup_sh.configured ||
             this.modules.odoo_backup_sh_dropbox.configured ||
@@ -235,7 +243,25 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
             return chart;
         });
     },
-
+    o_dashboard_get_s3_credentials: function(ev){
+        // STOPHERE
+        ev.preventDefault();
+        self._rpc({
+            route: '/odoo_backup_sh/fetch_dashboard_data',
+            params: {
+                redirect: '/web/backup_redirect?redirect=' + window.location.href,
+            }
+        }).done(function(results) {
+            if ('auth_link' in results.cloud_params) {
+                self.do_action({
+                    name: "Auth via odoo.com",
+                    target: 'self',
+                    type: 'ir.actions.act_url',
+                    url: results.cloud_params.auth_link
+                });
+            }
+        });
+    },
     o_dashboard_action_add_database: function (ev) {
         ev.preventDefault();
         this.do_action({
