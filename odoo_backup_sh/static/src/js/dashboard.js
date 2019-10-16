@@ -244,23 +244,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         });
     },
     o_dashboard_get_s3_credentials: function(ev){
-        // STOPHERE
-        ev.preventDefault();
-        self._rpc({
-            route: '/odoo_backup_sh/fetch_dashboard_data',
-            params: {
-                redirect: '/web/backup_redirect?redirect=' + window.location.href,
-            }
-        }).done(function(results) {
-            if ('auth_link' in results.cloud_params) {
-                self.do_action({
-                    name: "Auth via odoo.com",
-                    target: 'self',
-                    type: 'ir.actions.act_url',
-                    url: results.cloud_params.auth_link
-                });
-            }
-        });
+        window.location.href = '/odoo_backup_sh/get_s3_credentials?redirect=' + encodeURIComponent(window.location.href);
     },
     o_dashboard_action_add_database: function (ev) {
         ev.preventDefault();

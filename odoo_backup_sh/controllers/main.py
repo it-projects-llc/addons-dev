@@ -14,6 +14,7 @@ import tempfile
 import time
 from contextlib import closing
 from datetime import datetime, timedelta
+import werkzeug
 
 import odoo
 from odoo import exceptions, fields, http, _
@@ -149,6 +150,7 @@ class BackupController(http.Controller):
         except Exception:
             _logger.exception('Failed to load cloud params')
 
+        _logger.debug('cloud_params = %s', cloud_params)
         if 'insufficient_credit_error' in cloud_params and call_from == 'backend':
             existing_msg = request.env['odoo_backup_sh.notification'].sudo().search(
                 [('type', '=', 'insufficient_credits'), ('is_read', '=', False)])
@@ -268,9 +270,13 @@ class BackupController(http.Controller):
         finally:
             os.unlink(backup_file.name)
 
-    @http.route('/odoo_backup_sh/get_s3_credentials', type="json", auth='user')
-    def get_s3_credentials(self):
-        TODO
+    @http.route('/odoo_backup_sh/get_s3_credentials', type="http", auth='user')
+    def get_s3_credentials(self, redirect):
+        cloud_params = self.get_cloud_params(request.httprequest.url, call_from='backend')
+        if 'auth_link' in cloud_params:
+            return werkzeug.utils.redirect(cloud_params.get('auth_link'))
+        else:
+            return werkzeug.utils.redirect(redirect)
 
     @http.route('/odoo_backup_sh/fetch_dashboard_data', type="json", auth='user')
     def fetch_dashboard_data(self):
