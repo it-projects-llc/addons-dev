@@ -263,9 +263,11 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                     <button name="action_create_simulation_data" string="Create Fake Backups" type="object" class="btn-secondary" attrs="{'invisible': [('backup_simulation', '=', False)]}"/>
                 </header>
                 <sheet>
-                    <button class="btn btn-outline-primary float-right" name="action_list_backups" type="object">
-                        <field name="backup_count" /> backup(s)
+                  <div class="oe_button_box" name="button_box">
+                    <button class="oe_stat_button" name="action_list_backups" type="object" icon="fa-database">
+                        <field name="backup_count" string="backups" widget="statinfo"/>
                     </button>
+                  </div>
                     <div class="oe_title">
                         <label for="database" class="oe_edit_only"/>
                         <h1><field name="database"/></h1>
