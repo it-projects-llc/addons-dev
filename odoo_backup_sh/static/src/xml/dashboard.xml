@@ -36,13 +36,13 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                   </t>
                   <t t-if="widget.dashboard_configure_dropbox()">
                     <div class="o_inner_box o_dashboard_action o_dashboard_configure_dropbox" title="" name="odoo_backup_sh.action_backup_settings">
-                        <i class="fa fa-plus fa-3x"/><br/>
+                        <i class="fa fa-dropbox fa-3x"/><br/>
                         Configure Dropbox
                     </div>
                   </t>
                   <t t-if="widget.dashboard_configure_google_disk()">
                     <div class="o_inner_box o_dashboard_action o_dashboard_configure_google_disk" title="" name="odoo_backup_sh.action_backup_settings">
-                        <i class="fa fa-google-drive fa-3x"/><br/>
+                        <i class="fab fa-google-drive fa-3x"/><br/>
                         Configure Google Drive
                     </div>
                   </t>
@@ -67,7 +67,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                         <i class="fa fa-dropbox fa-3x"/><br/>
                         Extra backups to Dropbox
                     </a>
-                    <a target="_blank" t-att-href="widget.modules.odoo_backup_sh_dropbox.url" class="o_inner_box o_dashboard_use_google_disk" title="Install module to save backups to your Google Drive">
+                    <a target="_blank" t-att-href="widget.modules.odoo_backup_sh_google_disk.url" class="o_inner_box o_dashboard_use_google_disk" title="Install module to save backups to your Google Drive">
                         <i class="fab fa-google-drive fa-3x"/><br/>
                         Extra backups to Drive
                     </a>
@@ -122,7 +122,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                 <h2 class="graph_title">total remote storage usage</h2>
                 <div class="kanban_group_buttons o_hidden">
                     <button type="button" data-service="total" class="btn btn-primary btn-sm">Total</button>
-                    <button type="button" data-service="odoo_backup_sh" class="btn btn-secondary btn-sm">Odoo Backup sh</button>
+                    <button type="button" data-service="odoo_backup_sh" class="btn btn-secondary btn-sm">S3</button>
                 </div>
                 <div id="graph_remote_storage_usage"/>
             </div>

@@ -94,7 +94,7 @@ class BackupConfig(models.Model):
     weekly_limit = fields.Integer('Weekly limit', default=1, help='How many weekly backups to preserve.')
     monthly_limit = fields.Integer('Monthly limit', default=1, help='How many monthly backups to preserve.')
     yearly_limit = fields.Integer('Yearly limit', default=1, help='How many yearly backups to preserve.')
-    storage_service = fields.Selection(selection=[('odoo_backup_sh', 'Odoo Backup sh')], default='odoo_backup_sh', required=True)
+    storage_service = fields.Selection(selection=[('odoo_backup_sh', 'S3')], default='odoo_backup_sh', required=True)
     unlimited_time_frame = fields.Char(default="hour")
     common_rotation = fields.Selection(selection=ROTATION_OPTIONS, default='unlimited')
     max_backups = fields.Integer(readonly=True, compute=lambda self: 0)
