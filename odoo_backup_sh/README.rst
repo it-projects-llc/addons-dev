@@ -2,9 +2,9 @@
    :target: https://www.gnu.org/licenses/lgpl
    :alt: License: LGPL-3
 
-================
- Odoo-backup.sh
-================
+============
+ S3 Backups
+============
 
 The 10 Euros service that would save your business.
 
