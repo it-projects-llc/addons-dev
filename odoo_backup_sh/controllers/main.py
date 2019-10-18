@@ -11,7 +11,6 @@ import re
 import requests
 import string
 import tempfile
-import time
 from contextlib import closing
 from datetime import datetime, timedelta
 import werkzeug

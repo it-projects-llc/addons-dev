@@ -71,7 +71,7 @@ Maintainers
 
       To get a guaranteed support
       you are kindly requested to purchase the module
-      at `odoo apps store <https://apps.odoo.com/apps/modules/{VERSION}/{TECHNICAL_NAME}/>`__.
+      at `odoo apps store <https://apps.odoo.com/apps/modules/12.0/odoo_backup_sh/>`__.
 
       Thank you for understanding!
 
