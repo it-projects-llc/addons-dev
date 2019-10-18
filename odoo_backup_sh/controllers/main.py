@@ -360,7 +360,7 @@ class BackupController(http.Controller):
         modules = {
             'odoo_backup_sh': {
                 'installed': True,
-                'configured': bool(cloud_params['amazon_access_key_id']),
+                'configured': bool(cloud_params.get('amazon_access_key_id') or False),
                 'configured_iap': 'itprojectsllc' in (cloud_params.get('amazon_bucket_name') or '')
             }
         }

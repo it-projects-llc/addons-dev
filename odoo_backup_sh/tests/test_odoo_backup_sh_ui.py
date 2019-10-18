@@ -25,7 +25,7 @@ class TestUi(HttpCase):
 
         self.patcher_get_cloud_params = patch(
             'odoo.addons.odoo_backup_sh.controllers.main.BackupController.get_cloud_params',
-            wraps=lambda *args: {})
+            wraps=lambda *args, **kwargs: {})
         self.patcher_get_cloud_params.start()
 
     def test_odoo_backup_sh_tour(self):
