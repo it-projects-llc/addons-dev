@@ -43,8 +43,8 @@ BACKUP_SERVICE_ENDPOINT = 'https://odoo-backup.sh'
 
 # module -> config parameter name
 EXTRA_MODULES = {
-    'odoo_backup_sh_dropbox': lambda: False, # TODO
-    'odoo_backup_sh_google_disk': lambda: False, # TODO
+    'odoo_backup_sh_dropbox': lambda env: env['ir.config_parameter'].get_param('odoo_backup_sh_dropbox.dropbox_access_token'),
+    'odoo_backup_sh_google_disk': lambda env: env['ir.config_parameter'].get_param('odoo_backup_sh_google_disk.service_account_key'),
 }
 
 
@@ -374,7 +374,7 @@ class BackupController(http.Controller):
                 'installed': installed
             }
             if installed:
-                modules[m.name]['configured'] = bool(EXTRA_MODULES[m.name]())
+                modules[m.name]['configured'] = bool(EXTRA_MODULES[m.name](request.env))
 
         dashboard_data['modules'] = modules
 

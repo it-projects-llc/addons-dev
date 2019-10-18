@@ -21,5 +21,4 @@ class ResConfigSettings(models.TransientModel):
         IrModule = self.env['ir.module.module']
         for m in ['odoo_backup_sh_google_disk', 'odoo_backup_sh_dropbox']:
             res['available_module_' + m] = bool(IrModule.sudo().search([('name', '=', m)], limit=1))
-        print ('get_values', res)
         return res
