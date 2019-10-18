@@ -79,15 +79,12 @@ class CloudConfigStoreAbstract:
     def _get_one(self, key):
         raise NotImplementedError()
 
-    def get(self, keys):
+    def get(self, keys, env=None):
         if isinstance(keys, str):
-            return self._get_one(keys)
+            return self._get_one(keys, env=env)
         elif isinstance(keys, list) or isinstance(keys, tuple):
             return dict(
-                zip(
-                    keys,
-                    map(self._get_one, keys)
-                )
+                (k, self._get_one(k, env=env)) for k in keys
             )
         else:
             raise ValueError("Unexpected type: {}".format(type(keys)))
@@ -97,8 +94,8 @@ class CloudConfigStoreAbstract:
 
 
 class CloudConfigStoreBackend(CloudConfigStoreAbstract):
-    def _get_one(self, key):
-        return request.env['ir.config_parameter'].sudo().get_param(key)
+    def _get_one(self, key, env=None):
+        return (env or request.env)['ir.config_parameter'].sudo().get_param(key)
 
     def set(self, key, value):
         request.env['ir.config_parameter'].sudo().set_param(key, value)
@@ -121,10 +118,10 @@ cloud_config_stores = {
 class BackupController(http.Controller):
 
     @classmethod
-    def get_cloud_params(cls, redirect=None, call_from='backend', update=True):
+    def get_cloud_params(cls, redirect=None, call_from='backend', update=True, env=None):
         cloud_params = cloud_config_stores[call_from].get([
             'odoo_backup_user_key', 'amazon_bucket_name', 'amazon_access_key_id', 'amazon_secret_access_key', 'odoo_oauth_uid'
-        ])
+        ], env=env)
         if update and (len(cloud_params) == 0 or not all(cloud_params.values())):
             if redirect:
                 cloud_params = cls.update_cloud_params(cloud_params, redirect, call_from)
