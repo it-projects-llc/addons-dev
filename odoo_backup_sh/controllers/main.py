@@ -76,7 +76,7 @@ class BackupDatabase(web.controllers.main.Database):
 
 
 class CloudConfigStoreAbstract:
-    def _get_one(self, key):
+    def _get_one(self, key, env=None):
         raise NotImplementedError()
 
     def get(self, keys, env=None):
@@ -102,7 +102,7 @@ class CloudConfigStoreBackend(CloudConfigStoreAbstract):
 
 
 class CloudConfigStoreFrontend(CloudConfigStoreAbstract):
-    def _get_one(self, key):
+    def _get_one(self, key, env=None):
         return request.session.get(key)
 
     def set(self, key, value):
@@ -140,14 +140,15 @@ class BackupController(http.Controller):
 
         # You can set the verify parameter to False and requests will ignore SSL verification.
         try:
-            cloud_params = requests.get(BACKUP_SERVICE_ENDPOINT + '/get_cloud_params', params={
+            res = requests.get(BACKUP_SERVICE_ENDPOINT + '/get_cloud_params', params={
                 'user_key': user_key,
                 'redirect': redirect,
-            }, verify=True).json()
+            }, verify=True)
+            _logger.debug('/get_cloud_params returned: %s', res.text)
+            cloud_params = res.json()
         except Exception:
             _logger.exception('Failed to load cloud params')
 
-        _logger.debug('cloud_params = %s', cloud_params)
         if 'insufficient_credit_error' in cloud_params and call_from == 'backend':
             existing_msg = request.env['odoo_backup_sh.notification'].sudo().search(
                 [('type', '=', 'insufficient_credits'), ('is_read', '=', False)])
@@ -386,7 +387,8 @@ def access_control(origin_method):
             return origin_method(self, *args, **kwargs)
         except botocore.exceptions.ClientError as client_error:
             if client_error.response['Error']['Code'] == 'InvalidAccessKeyId':
-                [request.env['ir.config_parameter'].set_param(option, None) for option in ('amazon_access_key_id', 'amazon_secret_access_key')]
+                # TODO: commented cause it doesn't work (request.env is not available here
+                # [request.env['ir.config_parameter'].set_param(option, None) for option in ('amazon_access_key_id', 'amazon_secret_access_key')]
                 return {'reload_page': True}
             else:
                 raise exceptions.ValidationError(_(
