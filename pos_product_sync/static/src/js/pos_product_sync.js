@@ -17,12 +17,21 @@ odoo.define('pos_product_sync.pos', function (require) {
         },
         on_barcode_updates: function(data){
             var self = this;
-            if (data.message === 'update_product_fields' && data.product_ids && data.product_ids.length) {
-                if (data.action && data.action === 'unlink') {
-                    this.remove_unlinked_products(data.product_ids);
+            var product_ids = data && data.product_ids && _.uniq(data.product_ids);
+            if (data.message === 'update_product_fields' && product_ids && product_ids.length) {
+                if (data.action === 'unlink') {
+                    this.remove_unlinked_products(product_ids);
+                } else if (data.action === 'update_image') {
+                    // product Images
+                    _.each(product_ids, function(pid) {
+                        self.update_image(pid);
+                    });
+                    this.reload_products(product_ids).then(function(){
+                        self.update_product_related_templates_fields(product_ids);
+                    });
                 } else {
-                    this.reload_products(data.product_ids).then(function(){
-                        self.update_product_related_templates(data.product_ids);
+                    this.reload_products(product_ids).then(function(){
+                        self.update_product_related_templates_fields(product_ids);
                     });
                 }
             }
@@ -65,7 +74,7 @@ odoo.define('pos_product_sync.pos', function (require) {
                 .flatten().value();
         },
 
-        update_product_related_templates: function(product_ids) {
+        update_product_related_templates_fields: function(product_ids) {
             var self = this;
 
             // Product Item
@@ -75,11 +84,6 @@ odoo.define('pos_product_sync.pos', function (require) {
 
             // Orderlines
             this.update_orderlines(product_ids);
-
-            // product Images
-            _.each(product_ids, function(pid) {
-                self.update_image(pid);
-            });
         },
 
         update_image: function(pid) {
@@ -137,6 +141,7 @@ odoo.define('pos_product_sync.pos', function (require) {
             var self = this;
             var product_list = this.product_list;
             var product = false;
+            // var index = -1;
             _.each(product_ids, function(prod_id) {
                 index = _.indexOf(product_list, _.find(product_list, function(p){
                     return p.id == prod_id;
@@ -146,6 +151,10 @@ odoo.define('pos_product_sync.pos', function (require) {
                 : product_list.length
                 product = self.pos.db.get_product_by_id(prod_id);
                 if (product.available_in_pos && mode !== 'remove') {
+                    var old_barcode = product_list[index].barcode;
+                    if (old_barcode && old_barcode !== product.barcode) {
+                        delete self.pos.db.product_by_barcode[old_barcode];
+                    }
                     product_list[index] = product;
                 } else {
                     product_list.splice(index, 1);

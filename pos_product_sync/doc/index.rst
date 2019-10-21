@@ -11,5 +11,18 @@ Installation
 Configuration
 =============
 
-* Go to ``[Point of Sale] >> Configuration >> Settings``
-* Set **Product Synchronized Fields**
+* Go to ``[Inventory] >> Configuration >> Settings``
+* Check ``Attribute and Variants``
+* In ``Point of Sale Product Synchronization Fields`` add fields that needed to be synchronized (i.e. name, price)
+
+Usage
+=====
+* Open POS session
+* Open backend in another browser window
+  * Go to ``[Point of Sale] >> Catalog >> Product Variants``
+  * Choose product
+  * Change fields (i.e. name, price)
+
+RESULT: In opened POS UI the product data is updated instantly without any extra action
+
+
