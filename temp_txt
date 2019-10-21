@@ -1,3 +1,26 @@
+//---------Python------------------------------
+
+class Game(models.Model):
+    _name = 'game'
+
+    # Player name
+    name = fields.Text(default='')
+    # Player uid
+    uid = fields.Integer(default='')
+    # Player cards
+    cards = fields.Text(default='')
+    # Is player ready to play or alredy playing
+    plays = fields.Boolean(default=False)
+    # Players cards
+    cards = fields.Text(default='')
+    # Players cards number
+    cards_num = fields.Integer(default=0)
+
+    @api.model
+    def add_new_user(self, name, uid):
+
+//-----------JS--------------------------
+
 odoo.define('pos_chat_button', function (require){
       'use_strict';
 
@@ -689,17 +712,13 @@ odoo.define('pos_chat_button', function (require){
         showMessage(data.uid);
     }
 
-    function AddNewUser(user_data)
-    {
+    function AddNewUser(user_data) {
         // If user connected too late
         if(game_started) return;
 
         chat_users.push({
             name : '',
-            true_name : user_data.name,
             uid : user_data.uid,
-            participate : false,
-            allow_change_name: true,
             cards : []
         });
 
@@ -707,18 +726,6 @@ odoo.define('pos_chat_button', function (require){
         all_timeOuts.push([]);
         messages_cnt.push(0);
         if(user_data.uid === session.uid) {ShowUsers();return;}
-
-        // Tell to new user about current user
-        window.setTimeout(function(){
-            var i = NumInQueue(session.uid);
-            self._rpc({
-                model: "pos.session",
-                method: "send_all_user_data_to",
-                args: [chat_users[i].name, chat_users[i].true_name,
-                chat_users[i].participate, chat_users[i].allow_change_name,
-                session.uid, 'Exist', user_data.uid]
-            });
-        }, 200 * NumInQueue(session.uid) + 1);
 
         if(in_chat){
             ShowUsers();
@@ -728,10 +735,7 @@ odoo.define('pos_chat_button', function (require){
     function AddExistUser(data){
         chat_users.push({
             name : data.name,
-            true_name : data.true_name,
             uid : data.uid,
-            participate : data.participate,
-            allow_change_name: data.allow,
             cards : []
         });
         var n = chat_users.length;
@@ -816,10 +820,10 @@ odoo.define('pos_chat_button', function (require){
             PosModelSuper.prototype.initialize.apply(this, arguments);
             var self = this;
             // Listen to 'pos_chat' channel
-            self.bus.add_channel_callback("pos_chat", self.catch_server_response, self);
+            self.bus.add_channel_callback("pos_chat", self.catch_response, self);
         },
 
-        catch_server_response: function(data){
+        catch_response: function(data){
             if(!in_chat){
                 return;
             }
@@ -933,3 +937,4 @@ odoo.define('pos_chat_button', function (require){
 //------------------------------------------------------
     return ChatButton;
 });
+

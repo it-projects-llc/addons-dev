@@ -40,7 +40,7 @@ class Durak(models.Model):
         return 1
 
     @api.model
-    def game_started(self, uid, max_users):
+    def player_ready(self, uid, max_users):
         pos_id = self.search([('user_id', '=', uid)]).id
         self.search([("id", "=", pos_id)]).write({
             'plays': True
