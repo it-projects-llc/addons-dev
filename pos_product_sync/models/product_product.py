@@ -21,7 +21,11 @@ class ProductProduct(models.Model):
     def write(self, vals):
         result = super(ProductProduct, self).write(vals)
         if self.check_fields_to_send(vals):
-            self.send_field_updates(self.ids)
+            img_vals = ['image', 'image_medium', 'image_small', 'image_variant']
+            if any(val in img_vals for val in vals):
+                self.send_field_updates(self.ids, action='update_image')
+            else:
+                self.send_field_updates(self.ids)
         return result
 
     @api.model
@@ -51,6 +55,22 @@ class ProductChangeQuantity(models.TransientModel):
         res = super(ProductChangeQuantity, self).change_product_qty()
         product_ids = []
         for wizard in self:
-            product_ids.append(wizard.product_id.id )
+            product_ids.append(wizard.product_id.id)
         self.env['product.product'].send_field_updates(product_ids)
+        return res
+
+
+class PosOrder(models.Model):
+
+    _inherit = "pos.order"
+
+    # Compatibility with pos_product_available
+    def _process_order(self, pos_order):
+        res = super(PosOrder, self)._process_order(pos_order)
+        product_env = self.env['product.product']
+        if product_env.check_fields_to_send("qty_available"):
+            product_ids = [product[2]['product_id']
+                           for product in pos_order['lines']
+                           if product_env.browse(product[2]['product_id']).type == 'product']
+            product_env.send_field_updates(product_ids)
         return res
