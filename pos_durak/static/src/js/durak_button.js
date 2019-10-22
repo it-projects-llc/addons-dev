@@ -23,7 +23,7 @@ odoo.define('pos_chat_button', function (require){
     // Are user in chat room right now
     var in_chat = false;
     // Full channel name
-    var channel = "pos_chat";
+    var channel = "pos_durak";
     // Shows game stage
     var game_started = false;
     // Beated cards
@@ -51,6 +51,7 @@ odoo.define('pos_chat_button', function (require){
     var extra_cards = [];
     var temp_extra_cards = [];
     var card_suits = ['Heart', 'Diamond', 'Clubs', 'Spade'];
+    var my_game_id = -1;
 
 //------------------------------------------------------
 
@@ -179,9 +180,9 @@ odoo.define('pos_chat_button', function (require){
         }
         else if(elem.id === "ready-button"){
             self._rpc({
-                model: "pos.session",
-                method: "player_ready",
-                args: [session.uid, chat_users.length]
+                model: "game",
+                method: "player_is_ready",
+                args: [my_game_id, session.uid, chat_users.length]
             });
         }
         else if(elem.id === "step-button"){
@@ -193,6 +194,13 @@ odoo.define('pos_chat_button', function (require){
         }
         else if(elem.id === "take-button"){
             Take_Cards();
+        }
+        else if(elem.id === "check-button"){
+            self._rpc({
+               model: 'game',
+               method: 'start_the_game',
+                args: [my_game_id]
+            });
         }
         else if(elem.id[0]+elem.id[1]+elem.id[2] === "ava" && game_started){
             num = (elem.id[elem.id.length - 2] !== '-' ? elem.id[elem.id.length - 2] : '')
@@ -221,10 +229,9 @@ odoo.define('pos_chat_button', function (require){
             H = document.getElementById('main-window').offsetHeight;
             // Current users says that he connected to other users
             self._rpc({
-                model: "pos.session",
-                method: "send_field_updates",
-                args: [session.name, '', 'Connect',
-                 session.uid]
+                model: "game",
+                method: "create_the_game",
+                args: [channel, session.uid]
             });
         }
     });
@@ -242,9 +249,9 @@ odoo.define('pos_chat_button', function (require){
                 self.gui.show_screen('products');
 
                 self._rpc({
-                    model: "pos.session",
-                    method: "send_field_updates",
-                    args: ['', '', 'Disconnect', session.uid]
+                    model: "game",
+                    method: "delete_player",
+                    args: [my_game_id, session.uid]
                 });
 
                 DeleteMyData();
@@ -572,7 +579,7 @@ odoo.define('pos_chat_button', function (require){
         chat_users.forEach(function (item){
             var i = NumInQueue(item.uid);
             out += '<div class="chat-user-'+item.uid+'" id="picture-'+i+'">';
-            out += '<div class="user-name" id="user-name-'+item.uid+'">'+chat_users[i].true_name+'</div>';
+            out += '<div class="user-name" id="user-name-'+item.uid+'">'+chat_users[i].name+'</div>';
             out += '<img src="/web/image/res.users/' +
             item.uid + '/image_small" id="ava-' + i +'" class="avatar" style="border-radius:50%;"/>';
 
@@ -689,49 +696,34 @@ odoo.define('pos_chat_button', function (require){
         showMessage(data.uid);
     }
 
-    function AddNewUser(user_data)
-    {
+    function AddNewUser(user_data) {
         // If user connected too late
         if(game_started) return;
 
         chat_users.push({
-            name : '',
-            true_name : user_data.name,
+            name : user_data.name,
             uid : user_data.uid,
-            participate : false,
-            allow_change_name: true,
             cards : []
         });
 
         all_messages.push([]);
         all_timeOuts.push([]);
         messages_cnt.push(0);
-        if(user_data.uid === session.uid) {ShowUsers();return;}
 
-        // Tell to new user about current user
-        window.setTimeout(function(){
-            var i = NumInQueue(session.uid);
-            self._rpc({
-                model: "pos.session",
-                method: "send_all_user_data_to",
-                args: [chat_users[i].name, chat_users[i].true_name,
-                chat_users[i].participate, chat_users[i].allow_change_name,
-                session.uid, 'Exist', user_data.uid]
-            });
-        }, 200 * NumInQueue(session.uid) + 1);
+        ShowUsers();
 
-        if(in_chat){
-            ShowUsers();
+        if(chat_users[0].uid === user_data.uid){
+            alert("If players are ready, push 'Start the game' button." +
+                "Then game will begin.")
+            var check_button = document.getElementById('check-button');
+            check_button.style.setProperty('opacity', '1');
         }
     }
 
     function AddExistUser(data){
         chat_users.push({
             name : data.name,
-            true_name : data.true_name,
             uid : data.uid,
-            participate : data.participate,
-            allow_change_name: data.allow,
             cards : []
         });
         var n = chat_users.length;
@@ -806,6 +798,14 @@ odoo.define('pos_chat_button', function (require){
         }
     }
 
+    function CreatePlayer() {
+        self._rpc({
+            model: "game",
+            method: "add_new_user",
+            args: [my_game_id, session.name, session.uid]
+        });
+    }
+
 //------------------------------------------------------
 //-------------- Longpooling functions -----------------
 
@@ -815,8 +815,8 @@ odoo.define('pos_chat_button', function (require){
         initialize: function () {
             PosModelSuper.prototype.initialize.apply(this, arguments);
             var self = this;
-            // Listen to 'pos_chat' channel
-            self.bus.add_channel_callback("pos_chat", self.catch_server_response, self);
+            // Listen to 'pos_durak' channel
+            self.bus.add_channel_callback(channel, self.catch_server_response, self);
         },
 
         catch_server_response: function(data){
@@ -927,6 +927,11 @@ odoo.define('pos_chat_button', function (require){
                     }
                     extra_cards.shift();
                 }
+            }
+            else if(data.command === 'my_game_id'){
+                my_game_id = data.id;
+                // When game id is recieved, then adding new user
+                CreatePlayer();
             }
         },
     });

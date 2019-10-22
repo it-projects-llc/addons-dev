@@ -8,9 +8,6 @@ class Durak(models.Model):
     # def default_game_id(self):
     #     return self.env.ref('base_game')
 
-    plays = fields.Boolean(default=False)
-    cards = fields.Text(default='')
-    cards_num = fields.Integer(default=0)
     # game_id = fields.Many2one('game', default=default_game_id)
 
     @api.model
@@ -146,3 +143,193 @@ class Durak(models.Model):
         })
         self.send_field_updates('', user.cards, 'Loser', user.id)
         return 1
+
+class Game(models.Model):
+
+    _name = 'game'
+    _description = 'Simple game'
+
+    name = fields.Text(default='pos_durak')
+    id = fields.Integer(default=-1)
+    players = fields.One2many('game.player', 'game', ondelete="cascade", delegate=True)
+
+    @api.model
+    def create_the_game(self, game_name, uid):
+        temp_game = self.sudo().search([('name', '=', game_name)])
+        pos_id = self.env['pos.session'].search([('user_id', '=', uid)]).id
+        # If game didn't created, then create
+        if len(temp_game) == 0:
+            try:
+                self.sudo().create({'name': game_name, 'id': len(self.sudo().search([]))})
+            except Exception:
+                print('Game creation error!!! Game num is -' + str(len(self)))
+
+        temp_game = self.sudo().search([('name', '=', game_name)])
+        data = {'command': 'my_game_id', 'id': temp_game.id}
+        channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, pos_id, game_name)
+        self.env['bus.bus'].sendmany([[channel, data]])
+        return 1
+
+    @api.model
+    def add_new_user(self, game_id, name, uid):
+        cur_game = self.sudo().search([('id', '=', game_id)])
+        try:
+            cur_game.players.sudo().create({'name': name,
+                                            'uid': uid, 'num': len(cur_game.players.sudo().search([])),
+                         'pos_id': self.env['pos.session'].search([('user_id', '=', uid)])})
+        except Exception:
+            print('Player creation error!!!')
+
+        data = {'name': name, 'uid':uid, 'num': user.num, 'command': 'Connect'}
+        self.env['pos.config'].send_to_all_poses(channel_name, data)
+        try:
+            for user in cur_game.players.sudo().search([]):
+                data = {'name': user.name, 'uid': user.uid, 'num': user.num, 'command': 'Connect'}
+                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
+                                                                              user.pos_id, cur_game.name)
+                self.env['bus.bus'].sendmany([[channel, data]])
+        except Exception:
+            print('Player connected notification error!!!(add_new_user)')
+        return 1
+
+    @api.model
+    def player_is_ready(self, game_id, uid):
+        cur_game = self.sudo().search([('id', '=', game_id)])
+        try:
+            cur_game.players.sudo().search([('uid', '=', uid)]).ready = True
+        except Exception:
+            print('Error in player_is_ready method!!! (Model - game)')
+        return 1
+
+    @api.model
+    def send_cards(self, game_id, num):
+        cur_game = self.sudo().search([('id', '=', game_id)])
+        player = cur_game.players.sudo().search([('num', '=', num)])
+        for card in player.cards:
+            data = {'uid': player.uid, 'card_power': card.power, 'card_suit': card.suit}
+            channel = self.env['pos.config']._get_full_channel_name_by_id(self.enselfv.cr.dbname,
+                                                                          player.pos_id, cur_game.name)
+            self.env['bus.bus'].sendmany([[channel, data]])
+        return 1
+
+    @api.model
+    def start_the_game(self, game_id):
+        cur_game = self.sudo().search([('id', '=', game_id)])
+        seq = [*range(0, 52)]
+        cards_limit = 6
+        random.shuffle(seq)
+
+        i = 0
+        cards_cnt = 0
+        all_cards_cnt = 0
+        player = cur_game.players.sudo().search([('num', '=', i)])
+        try:
+            for num in seq:
+                player.add_new_card(num)
+                seq.remove(num)
+                cards_cnt += 1
+                all_cards_cnt += 1
+                if cards_cnt == cards_limit:
+                    cards_cnt = 0
+                    i += 1
+                    player = cur_game.players.sudo().search([('num', '=', i)])
+        except Exception:
+            print('Cards distribution error!!!\n')
+        temp_extra_cards = ''
+        for i in seq:
+            temp_extra_cards += (str(i) + ' ')
+        try:
+            cur_game.players.sudo().search([('num', '=', 0)]).extra_cards = temp_extra_cards
+        except Exception:
+            print('Extra cards assignment error!!!')
+
+        try:
+            while i >= 0:
+                i -= 1
+
+                cur_game.send_cards(i)
+        except Exception:
+            print('Cards sending error!!!')
+        return 1
+
+    @api.model
+    def delete_player(self, game_id, uid):
+        cur_game = self.sudo().search([('id', '=', game_id)])
+        try:
+            for user in cur_game.players.sudo().search([]):
+                data = {'uid': uid, 'command': 'Disconnect'}
+                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
+                                                                              user.pos_id, cur_game.name)
+                self.env['bus.bus'].sendmany([[channel, data]])
+        except Exception:
+            print('Player disconnected notification error!!!(delete_player)')
+
+        try:
+            cur_game.players.sudo().search([('uid', '=', uid)]).unlink()
+        except Exception:
+            print('Player removing error!!!')
+
+        try:
+            if len(cur_game.players.sudo().search([])) == 0:
+                cur_game.sudo().unlink()
+        except Exception:
+            print("Game session deleting error!!!")
+        return 1
+
+class Player(models.Model):
+
+    _name = 'game.player'
+    _description = 'Game player'
+
+    game = fields.Many2one('game', string='Game')
+    cards = fields.One2many('game.cards', 'cards_holder', ondelete="cascade")
+
+    # Player name
+    name = fields.Text(default='')
+    # Player uid
+    uid = fields.Integer(default=-1)
+    # Serial number
+    num = fields.Integer(default=-1)
+    # Is player ready to play or alredy playing
+    ready = fields.Boolean(default=False)
+    pos_id = fields.Integer(default=-1)
+    extra_cards = fields.Text(default='')
+
+    @api.model
+    def add_new_card(self, num):
+        try:
+            card = self.cards.sudo().card_power(num)
+            self.cards.sudo().create({'power': card[0], 'suit': card[1]})
+        except Exception:
+            print('New card addition error!!!')
+        return 1
+
+    @api.model
+    def delete_card(self, num):
+        try:
+            card = self.cards.sudo().card_power(num)
+            self.cards.sudo().search([('power', '=', card[0]), ('suit', '=', card[1])]).unlink()
+        except Exception:
+            print('Card deletion error!!!')
+        return 1
+
+class Card(models.Model):
+    _name = 'game.cards'
+    _description = 'Gaming cards'
+
+    cards_holder = fields.Many2one('game.player', string='Player')
+
+    suit = fields.Integer(default=-1)
+    power = fields.Integer(default=-1)
+    trump = fields.Boolean(default=False)
+
+    @api.model
+    def card_power(self, num):
+        temp_suit = 0
+        while num >= 13:
+            num -= 13
+            temp_suit += 1
+        # Cause tuzes is located on the first position
+        if num == 0:
+            num = 13
+        return [num, temp_suit]

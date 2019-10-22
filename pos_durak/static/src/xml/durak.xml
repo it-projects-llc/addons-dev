@@ -25,7 +25,7 @@
         <div id="cards"></div>
         <div id="enemy-cards"></div>
         <div class="game-tools">
-            <span type="button" class="ready-button" id="ready-button">
+            <span type="button" class="ready-button" id="create-button">
                 Ready
             </span>
             <span type="button" class="ready-button" id="step-button" style="opacity: 0">
@@ -33,6 +33,9 @@
             </span>
             <span type="button" class="ready-button" id="take-button" style="opacity: 0">
                 Take cards
+            </span>
+            <span type="button" class="ready-button" id="check-button" style="opacity: 0">
+                Start the game
             </span>
         </div>
         <div id="for-inscriptions" class="tips"/>
