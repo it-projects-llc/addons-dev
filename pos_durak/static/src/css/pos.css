@@ -64,16 +64,8 @@
     margin-top: 350px;
 }
 
-.pos .modal-dialog .messages{
-    overflow: scroll;
-    position: absolute;
-    top: 20px;
-    bottom: 60px;
-    left: 20px;
-    right: 20px;
-    margin: 0;
-    padding: 0;
-    border: 2px solid #ccc;
+.game-message{
+    position: relative;
     font-size: 16px;
     font-family: Arial, sans-serif;
     -webkit-overflow-scrolling: touch;

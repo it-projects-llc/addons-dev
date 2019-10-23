@@ -566,7 +566,7 @@ odoo.define('pos_chat_button', function (require){
             out += '<img src="/web/image/res.users/' +
             item.uid + '/image_small" id="ava-' + i +'" class="avatar" style="border-radius:50%;"/>';
 
-            out += '<ul class="message" id="messages-'+str_uid+'"></ul>';
+            out += '<ul class="game-message" id="messages-'+str_uid+'"></ul>';
             out += '</div>';
         });
         window.innerHTML = out;
@@ -621,21 +621,22 @@ odoo.define('pos_chat_button', function (require){
         newMessage.value = '';
     }
 
-    var msg_cnt = 0
     function showMessage(uid, message){
         var i = NumInQueue(uid);
-        var messages = document.getElementsByClassName('messages-'+String(uid));
-        var out = '<div id="msg-'+msg_cnt+'">';
-        out += '<p>'+message+'</p>';
+        var messages = document.getElementById('messages-'+String(uid));
+        var out = '<div id="msg-'+chat_users[i].msg_cnt+'-'+uid+'">';
+        out += '<p style="background: white;transition:' +
+            ' all .3s ease-in-out;border-radius: 20%;">'+message+'</p>';
         out += '<audio src="/pos_durak/static/src/sound/msg.wav" autoplay="true"></audio>';
         out += '</div>';
-        messages.innerHTML += out;cker 
-        msg_cnt++;
-        setTimeout(function () {
-            var old_message = document.getElementById('msg-'+msg_cnt);
-            old_message.style.setProperty('opacity','0');
-            msg_cnt--;
-        },5000);
+        messages.innerHTML += out;
+        setTimeout(delete_message,5000, chat_users[i].msg_cnt, uid);
+        chat_users[i].msg_cnt++;
+    }
+
+    function delete_message(msg, uid) {
+        var old_message = document.getElementById('msg-'+String(msg)+'-'+uid);
+        old_message.style.setProperty('display','none');
     }
 //--------------------------------------------------
 
@@ -652,6 +653,7 @@ odoo.define('pos_chat_button', function (require){
                 chat_users[i] = ({
                     name : '',
                     uid : -1,
+                    msg_cnt: 0,
                     cards : []
                 });
             }
@@ -661,9 +663,7 @@ odoo.define('pos_chat_button', function (require){
             chat_users[user_data.num] = ({
                 name : user_data.name,
                 uid : user_data.uid,
-                all_messages: [],
-                all_timeOuts: [],
-                messages_cnt: 0,
+                msg_cnt: 0,
                 cards : []
             });
         }
@@ -671,14 +671,15 @@ odoo.define('pos_chat_button', function (require){
             chat_users.push({
                 name : user_data.name,
                 uid : user_data.uid,
+                msg_cnt: 0,
                 cards : []
             });
         }
 
 
         if(user_data.num === 0 && session.uid === user_data.uid){
-            alert("If players are ready, push 'Start the game' button." +
-                "Then game will begin.")
+            // alert("If players are ready, push 'Start the game' button." +
+            //     "Then game will begin.")
             var check_button = document.getElementById('check-button');
             check_button.style.setProperty('opacity', '1');
         }
@@ -805,8 +806,8 @@ odoo.define('pos_chat_button', function (require){
                 DeleteUser(data.uid);
 
                 if(chat_users[0].uid === session.uid){
-                    alert("If players are ready, push 'Start the game' button." +
-                        "Then game will begin.")
+                    // alert("If players are ready, push 'Start the game' button." +
+                    //     "Then game will begin.")
                     var check_button = document.getElementById('check-button');
                     check_button.style.setProperty('opacity', '1');
                 }
