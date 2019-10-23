@@ -173,23 +173,27 @@ class Game(models.Model):
     @api.model
     def add_new_user(self, game_id, name, uid):
         cur_game = self.sudo().search([('id', '=', game_id)])
-        try:
-            cur_game.players.sudo().create({'name': name,
-                                            'uid': uid, 'num': len(cur_game.players.sudo().search([])),
-                         'pos_id': self.env['pos.session'].search([('user_id', '=', uid)])})
-        except Exception:
-            print('Player creation error!!!')
-
-        data = {'name': name, 'uid':uid, 'num': user.num, 'command': 'Connect'}
-        self.env['pos.config'].send_to_all_poses(channel_name, data)
+        new_num = len(cur_game.players.sudo().search([]))
+        new_pos_id = self.env['pos.session'].search([('user_id', '=', uid)]).id
+        # Sending new player's data to all players
+        data = {'name': name, 'uid':uid, 'num': new_num, 'command': 'Connect'}
+        self.env['pos.config'].send_to_all_poses(cur_game.name, data)
+        # Sending old players data to the new player
         try:
             for user in cur_game.players.sudo().search([]):
                 data = {'name': user.name, 'uid': user.uid, 'num': user.num, 'command': 'Connect'}
                 channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
-                                                                              user.pos_id, cur_game.name)
+                                                                              new_pos_id, cur_game.name)
                 self.env['bus.bus'].sendmany([[channel, data]])
         except Exception:
             print('Player connected notification error!!!(add_new_user)')
+
+        try:
+            cur_game.players.sudo().create({'name': name,
+                                            'uid': uid, 'num': new_num,
+                         'pos_id': new_pos_id})
+        except Exception:
+            print('Player creation error!!!')
         return 1
 
     @api.model
@@ -265,7 +269,15 @@ class Game(models.Model):
             print('Player disconnected notification error!!!(delete_player)')
 
         try:
-            cur_game.players.sudo().search([('uid', '=', uid)]).unlink()
+            deleting_user = cur_game.players.sudo().search([('uid', '=', uid)])
+            for user in cur_game.players.sudo().search([]):
+                if user.num > deleting_user.num:
+                    user.sudo().write({'num': user.num - 1})
+        except Exception:
+            print("Users num's shifting error!!!(delete_player)")
+
+        try:
+            deleting_user.unlink()
         except Exception:
             print('Player removing error!!!')
 
@@ -276,12 +288,22 @@ class Game(models.Model):
             print("Game session deleting error!!!")
         return 1
 
+    @api.model
+    def send_message(self, game_id, message, uid):
+        cur_game = self.sudo().search([('id', '=', game_id)])
+        for player in cur_game.players.sudo().search([]):
+            data = {'uid': uid, 'message': message, 'command': 'Message'}
+            channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
+                                                                          player.pos_id, cur_game.name)
+            self.env['bus.bus'].sendmany([[channel, data]])
+        return 1
+
 class Player(models.Model):
 
     _name = 'game.player'
     _description = 'Game player'
 
-    game = fields.Many2one('game', string='Game')
+    game = fields.Many2one('game', string='Game', ondelete="cascade")
     cards = fields.One2many('game.cards', 'cards_holder', ondelete="cascade")
 
     # Player name
@@ -317,7 +339,7 @@ class Card(models.Model):
     _name = 'game.cards'
     _description = 'Gaming cards'
 
-    cards_holder = fields.Many2one('game.player', string='Player')
+    cards_holder = fields.Many2one('game.player', string='Player', ondelete="cascade")
 
     suit = fields.Integer(default=-1)
     power = fields.Integer(default=-1)

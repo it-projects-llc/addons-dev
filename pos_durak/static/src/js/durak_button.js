@@ -9,25 +9,13 @@ odoo.define('pos_chat_button', function (require){
 
 //-------------------- Variables -----------------------
 
-    // New vers.
-    // All users messages stored here
-    var all_messages = [];
-    // Messages timeouts needs to store,
-    // cause only this way we can know when to delete the m
-    var all_timeOuts = [];
+    var game_started = false;
     // Information about every user
     var chat_users = [];
-    // I don't remember why i added this,
-    // but without it, app don't work:D
-    var messages_cnt = [];
     // Are user in chat room right now
     var in_chat = false;
     // Full channel name
     var channel = "pos_durak";
-    // Shows game stage
-    var game_started = false;
-    // Beated cards
-    var beated = [];
     // Donald Trump
     var trump = '';
     // who moves
@@ -304,14 +292,6 @@ odoo.define('pos_chat_button', function (require){
         return false;
     }
 
-    function Push_new_message(i, uid, message){
-        return all_messages[i].push({
-            text: message,
-            user_id : uid,
-            class : 'new-message-'+uid+'-'+all_messages[i].length,
-            cnt : -1
-        });
-    }
     // Users all data deletion
     function DeleteUserData(uid){
         var j = NumInQueue(uid);
@@ -336,6 +316,8 @@ odoo.define('pos_chat_button', function (require){
         game_started = false;
         document.getElementById('enemy-cards').innerHTML = '';
         document.getElementById('cards').innerHTML = '';
+        var check_button = document.getElementById('check-button');
+        check_button.style.setProperty('opacity', '0');
     }
     // Is this string the tag checking
     function is_it_tag(str, send)
@@ -578,12 +560,13 @@ odoo.define('pos_chat_button', function (require){
         var out = '';
         chat_users.forEach(function (item){
             var i = NumInQueue(item.uid);
-            out += '<div class="chat-user-'+item.uid+'" id="picture-'+i+'">';
-            out += '<div class="user-name" id="user-name-'+item.uid+'">'+chat_users[i].name+'</div>';
+            var str_uid = String(item.uid);
+            out += '<div class="chat-user-'+str_uid+'" id="picture-'+i+'">';
+            out += '<div class="user-name" id="user-name-'+str_uid+'">'+chat_users[i].name+'</div>';
             out += '<img src="/web/image/res.users/' +
             item.uid + '/image_small" id="ava-' + i +'" class="avatar" style="border-radius:50%;"/>';
 
-            out += '<ul class="new-message" id="message-id-'+item.uid+'"></ul>';
+            out += '<ul class="message" id="messages-'+str_uid+'"></ul>';
             out += '</div>';
         });
         window.innerHTML = out;
@@ -630,94 +613,82 @@ odoo.define('pos_chat_button', function (require){
         }
 
         self._rpc({
-            model: "pos.session",
-            method: "send_field_updates",
-            args: ['', text, 'Message', session.uid]
+            model: "game",
+            method: "send_message",
+            args: [my_game_id, text, session.uid]
         });
 
         newMessage.value = '';
     }
 
-    function showMessage(uid){
+    var msg_cnt = 0
+    function showMessage(uid, message){
         var i = NumInQueue(uid);
-        var num = all_messages[i].length - 1;
-        var cnt = messages_cnt[i]++;
-
-        var mes_class = 'new-message-'+uid+'-'+cnt;
-        all_messages[i][num].class = mes_class;
-        var mes_id = 'single-message-'+uid+'-'+cnt;
-
-        var message = document.getElementById('message-id-' + uid);
-        if(typeof message === null) {
-            return;
-        }
-        var out = '';
-
-        if(num > 0){
-            out += '<li id="single-message-'+uid+'-'+
-            (cnt - 1)+'" class="new-message-'+uid+'-'+(cnt - 1)+ '">'+
-            all_messages[i][num - 1].text+'</li>';
-        }
-
-        out += '<li id="'+mes_id+'" class="' + mes_class + '">'+
-        all_messages[i][num].text+'</li>';
-
+        var messages = document.getElementsByClassName('messages-'+String(uid));
+        var out = '<div id="msg-'+msg_cnt+'">';
+        out += '<p>'+message+'</p>';
         out += '<audio src="/pos_durak/static/src/sound/msg.wav" autoplay="true"></audio>';
-
-        message.innerHTML = out;
-        if(num > 0){
-            message_view('single-message-'+uid+'-'+(cnt - 1), false);
-        }
-
-        message_view(mes_id, true);
-        $("."+mes_class).fadeIn();
-        all_timeOuts[i].push(window.setTimeout(Disappear,15000, uid));
-    }
-
-    // Messages slow disapperaring
-    function Disappear(uid){
-        if(typeof all_messages[NumInQueue(uid)] === 'undefined') {return;}
-        if(all_messages[NumInQueue(uid)].length === 0) {return;}
-        $('.'+all_messages[NumInQueue(uid)][0].class).fadeOut();
-        all_messages[NumInQueue(uid)].shift();
-        all_timeOuts[NumInQueue(uid)].shift();
+        out += '</div>';
+        messages.innerHTML += out;cker 
+        msg_cnt++;
+        setTimeout(function () {
+            var old_message = document.getElementById('msg-'+msg_cnt);
+            old_message.style.setProperty('opacity','0');
+            msg_cnt--;
+        },5000);
     }
 //--------------------------------------------------
 
 //--------------- Users relations part -----------------
 
-    function AddNewMessage(data){
-        var i = NumInQueue(data.uid);
-        if(all_messages[i].length >= 2){
-            clearTimeout(all_timeOuts[i][0]);
-            Disappear(data.uid);
-        }
-        Push_new_message(i, data.uid, data.message);
-        showMessage(data.uid);
-    }
-
     function AddNewUser(user_data) {
+        var i = 0
         // If user connected too late
         if(game_started) return;
 
-        chat_users.push({
-            name : user_data.name,
-            uid : user_data.uid,
-            cards : []
-        });
+        if(chat_users.length === 0){
+            chat_users = new Array(user_data.num + 1)
+            for(i = 0; i < user_data.num; i++){
+                chat_users[i] = ({
+                    name : '',
+                    uid : -1,
+                    cards : []
+                });
+            }
+        }
 
-        all_messages.push([]);
-        all_timeOuts.push([]);
-        messages_cnt.push(0);
+        if(user_data.num < chat_users.length){
+            chat_users[user_data.num] = ({
+                name : user_data.name,
+                uid : user_data.uid,
+                all_messages: [],
+                all_timeOuts: [],
+                messages_cnt: 0,
+                cards : []
+            });
+        }
+        else{
+            chat_users.push({
+                name : user_data.name,
+                uid : user_data.uid,
+                cards : []
+            });
+        }
 
-        ShowUsers();
 
-        if(chat_users[0].uid === user_data.uid){
+        if(user_data.num === 0 && session.uid === user_data.uid){
             alert("If players are ready, push 'Start the game' button." +
                 "Then game will begin.")
             var check_button = document.getElementById('check-button');
             check_button.style.setProperty('opacity', '1');
         }
+        // Don't show players till they all become setted
+        // Return even if one of players didn't throw response
+        for(i = 0; i < chat_users.length; i++){
+            if(chat_users[i].uid === -1 ) return;
+        }
+
+        ShowUsers();
     }
 
     function AddExistUser(data){
@@ -748,7 +719,7 @@ odoo.define('pos_chat_button', function (require){
         if(!exist) {
             return;
         }
-        DeleteUserData(user_id);
+        chat_users.splice(NumInQueue(user_id),1);
         if(user_id !== session.uid){
             ShowUsers();
         }
@@ -832,9 +803,16 @@ odoo.define('pos_chat_button', function (require){
             }
             else if(data.command === 'Disconnect'){
                 DeleteUser(data.uid);
+
+                if(chat_users[0].uid === session.uid){
+                    alert("If players are ready, push 'Start the game' button." +
+                        "Then game will begin.")
+                    var check_button = document.getElementById('check-button');
+                    check_button.style.setProperty('opacity', '1');
+                }
             }
             else if(data.command === 'Message'){ // If someone throwed a message
-                AddNewMessage(data);
+                showMessage(data.uid, data.message);
             }
             else if(data.command === 'Exist'){
                     AddExistUser(data);
