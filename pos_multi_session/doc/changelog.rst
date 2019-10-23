@@ -1,3 +1,30 @@
+`4.2.10`
+--------
+
+- **Fix:** Synchronization error after an order was created offline
+
+`4.2.9`
+-------
+
+- **Fix:** Expected singleton error on adding POSes to a multisession
+
+`4.2.8`
+-------
+
+- **Fix:** Paid order could appear again in POS in case of problems with connection within payment process
+- **Fix:** After restoring the connection, numbers of created and paid offline POS orders were not counted, that could lead to order loss in some cases
+
+`4.2.7`
+-------
+
+- **Fix:** The Multi-sessions menu is not available for POS Managers
+- **Fix:** Error on using different companies within the same multi-session
+
+`4.2.6`
+-------
+
+- **Fix:** Unsynced order in some cases
+
 `4.2.5`
 -------
 

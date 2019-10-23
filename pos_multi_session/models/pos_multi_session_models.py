@@ -1,6 +1,6 @@
 # Copyright 2015-2016 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 # Copyright 2016 Ilyas Rakhimkulov
-# Copyright 2017 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+# Copyright 2017,2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
 # Copyright 2016-2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
@@ -28,6 +28,12 @@ class PosConfig(models.Model):
     autostart_longpolling = fields.Boolean(default=False)
     fiscal_position_ids = fields.Many2many(related='multi_session_id.fiscal_position_ids')
 
+    @api.depends('multi_session_id')
+    def _compute_current_company_id(self):
+        for record in self:
+            # company_id for pos.config has to be always set
+            record.company_id = record.multi_session_id and record.multi_session_id or self.env.user_id.company_id
+
     def _search_current_session_state(self, operator, value):
         ids = map(lambda x: x.id, self.env["pos.config"].search([]))
         value_ids = map(lambda x: x.config_id.id, self.env["pos.session"].search([('state', '=', value)]))
@@ -39,6 +45,14 @@ class PosConfig(models.Model):
             return [('id', 'in', ids)]
         else:
             return [('id', 'in', [])]
+
+    @api.multi
+    def _write(self, vals):
+        # made to prevent 'expected singleton' errors in *pos.config* constraints
+        result = False
+        for config in self:
+            result = super(PosConfig, config)._write(vals)
+        return result
 
 
 class PosMultiSession(models.Model):
@@ -55,6 +69,7 @@ class PosMultiSession(models.Model):
                                  "It's incremented each time the last session in Multi-session is closed. "
                                  "It's used to prevent synchronization of old orders")
     fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions', ondelete="restrict")
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
 
     @api.multi
     def action_set_default_multi_session(self):

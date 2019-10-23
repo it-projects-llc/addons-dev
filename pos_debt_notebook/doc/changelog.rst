@@ -1,3 +1,31 @@
+`5.3.1`
+-------
+- **Fix:** Credit Product Field was accessible only with **Show Full Accounting Features** option enabled so it has been moved to Sales tab
+
+
+`5.3.0`
+-------
+- **Improvement:** New Balance is amount for selected journal,  not for total Credits.
+
+`5.2.1`
+-------
+
+- **Improvement:** `Configuration -> Settings` were moved to `Point of Sale` menu
+- **Fix:** Error in order with combined payment methods
+
+`5.2.0`
+-------
+- **ADD:** Button on the ``Write-off Credits`` form. Adds all partners with debt according to the selected journal
+- **ADD:** Availability to write-off credits via ``Manual Credit Updates``
+
+`5.1.4`
+-------
+- **FIX:** Payment mistakes on in case SERIALIZATION_FAILURE in order processing
+
+`5.1.4`
+-------
+- **FIX:** Unavailability to withdraw credits
+
 `5.1.3`
 -------
 - **FIX:** Error related to pos loading with the lack of customers

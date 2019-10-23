@@ -1,3 +1,14 @@
+`2.1.1`
+-------
+
+**Fix:** Unavailability to install module if iot module is installed already
+
+`2.1.0`
+-------
+
+**Fix:** Show status of printers for current POS only
+**Improvement:** No need to specify a Receipt Printer in config for using Kitchen Printers.
+
 `2.0.1`
 -------
 

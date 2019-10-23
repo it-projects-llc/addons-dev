@@ -163,7 +163,10 @@ models.PosModel = models.PosModel.extend({
         var self = this;
         _.each(ids, function (id) {
             self.update_or_fetch_invoice(id).then(function () {
-                self.gui.current_screen.show();
+                var current_screen = self.gui.current_screen;
+                if (current_screen.invoice_screen){
+                    current_screen.show();
+                }
             });
         });
     },
@@ -306,6 +309,12 @@ models.PosModel = models.PosModel.extend({
 
     stop_invoice_processing: function () {
         this.add_itp_data = false;
+        // remove order paymentlines
+        var order = this.get_order();
+        var lines = order.get_paymentlines();
+        for ( var i = 0; i < lines.length; i++ ) {
+            order.remove_paymentline(lines[i]);
+        }
     }
 });
 
@@ -782,6 +791,7 @@ gui.define_screen({name:'sale_orders_list', widget: SaleOrdersWidget});
 
 var InvoicesWidget = InvoicesAndOrdersBaseWidget.extend({
     template: 'InvoicesWidget',
+    invoice_screen: true,
     init: function () {
         this._super.apply(this, arguments);
         this.$listEl = '.invoice';
