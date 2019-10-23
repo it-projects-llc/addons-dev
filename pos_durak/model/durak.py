@@ -152,6 +152,7 @@ class Game(models.Model):
     name = fields.Text(default='pos_durak')
     id = fields.Integer(default=-1)
     players = fields.One2many('game.player', 'game', ondelete="cascade", delegate=True)
+    extra_cards = fields.One2many('game.cards', 'game', ondelete="cascade")
 
     @api.model
     def create_the_game(self, game_name, uid):
@@ -206,13 +207,12 @@ class Game(models.Model):
         return 1
 
     @api.model
-    def send_cards(self, game_id, num):
-        cur_game = self.sudo().search([('id', '=', game_id)])
-        player = cur_game.players.sudo().search([('num', '=', num)])
+    def send_cards(self, game_name, player):
         for card in player.cards:
-            data = {'uid': player.uid, 'card_power': card.power, 'card_suit': card.suit}
+            data = {'uid': player.uid, 'num': card.num,
+                    'power': card.power, 'suit': card.suit, 'command': 'Cards'}
             channel = self.env['pos.config']._get_full_channel_name_by_id(self.enselfv.cr.dbname,
-                                                                          player.pos_id, cur_game.name)
+                                                                          player.pos_id, game_name)
             self.env['bus.bus'].sendmany([[channel, data]])
         return 1
 
@@ -226,32 +226,33 @@ class Game(models.Model):
         i = 0
         cards_cnt = 0
         all_cards_cnt = 0
-        player = cur_game.players.sudo().search([('num', '=', i)])
+        player = cur_game.players.sudo().search([])
         try:
             for num in seq:
-                player.add_new_card(num)
+                player[i].add_new_card(num)
                 seq.remove(num)
                 cards_cnt += 1
                 all_cards_cnt += 1
                 if cards_cnt == cards_limit:
                     cards_cnt = 0
                     i += 1
-                    player = cur_game.players.sudo().search([('num', '=', i)])
         except Exception:
             print('Cards distribution error!!!\n')
-        temp_extra_cards = ''
-        for i in seq:
-            temp_extra_cards += (str(i) + ' ')
+        # temp_extra_cards = ''
+        # for i in seq:
+        #     temp_extra_cards += (str(i) + ' ')
         try:
-            cur_game.players.sudo().search([('num', '=', 0)]).extra_cards = temp_extra_cards
+            for num in seq:
+                card = cur_game.extra_cards.sudo().card_power(num)
+                cur_game.extra_cards.sudo().create({'power': card[0],
+                                          'suit': card[1], 'num': num, 'in_game': True})
         except Exception:
             print('Extra cards assignment error!!!')
 
         try:
-            while i >= 0:
-                i -= 1
+            for player in cur_game.players.sudo().search([]):
+                cur_game.send_cards(cur_game.name, player)
 
-                cur_game.send_cards(i)
         except Exception:
             print('Cards sending error!!!')
         return 1
@@ -315,13 +316,13 @@ class Player(models.Model):
     # Is player ready to play or alredy playing
     ready = fields.Boolean(default=False)
     pos_id = fields.Integer(default=-1)
-    extra_cards = fields.Text(default='')
 
     @api.model
     def add_new_card(self, num):
         try:
             card = self.cards.sudo().card_power(num)
-            self.cards.sudo().create({'power': card[0], 'suit': card[1]})
+            self.cards.sudo().create({'power': card[0],
+                                      'suit': card[1], 'num': num, 'in_game': True})
         except Exception:
             print('New card addition error!!!')
         return 1
@@ -330,6 +331,7 @@ class Player(models.Model):
     def delete_card(self, num):
         try:
             card = self.cards.sudo().card_power(num)
+            card.write({'in_game': False})
             self.cards.sudo().search([('power', '=', card[0]), ('suit', '=', card[1])]).unlink()
         except Exception:
             print('Card deletion error!!!')
@@ -340,10 +342,13 @@ class Card(models.Model):
     _description = 'Gaming cards'
 
     cards_holder = fields.Many2one('game.player', string='Player', ondelete="cascade")
+    game = fields.Many2one('game', string='Game', ondelete="cascade")
 
     suit = fields.Integer(default=-1)
     power = fields.Integer(default=-1)
     trump = fields.Boolean(default=False)
+    num = fields.Integer(default=-1)
+    in_game = fields.Boolean(default=False)
 
     @api.model
     def card_power(self, num):

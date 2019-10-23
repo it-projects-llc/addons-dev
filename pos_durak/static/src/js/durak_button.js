@@ -819,18 +819,14 @@ odoo.define('pos_chat_button', function (require){
                     AddExistUser(data);
             }
             else if(data.command === 'game_started'){
-                game_started = true;
-                Distribute_cards(data, false);
             }
             else if(data.command === 'Cards'){
-                Distribute_cards(data, true);
-                if(chat_users[NumInQueue(session.uid)].cards.length < 6){
-                    self._rpc({
-                        model: "pos.session",
-                        method: "resent_cards",
-                        args: [session.uid]
-                    });
-                }
+                game_started = true;
+                chat_users[NumInQueue(data.uid)].cards = ({
+                   power: data.power,
+                   suit: data.suit,
+                   num: data.num
+                });
             }
             else if(data.command === 'Extra'){
                 SaveExtraCards(data);
