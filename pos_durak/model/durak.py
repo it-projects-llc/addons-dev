@@ -152,7 +152,8 @@ class Game(models.Model):
     name = fields.Text(default='pos_durak')
     id = fields.Integer(default=-1)
     players = fields.One2many('game.player', 'game', ondelete="cascade", delegate=True)
-    extra_cards = fields.One2many('game.cards', 'game', ondelete="cascade")
+    extra_cards = fields.One2many('game.cards', 'game_extra_cards', ondelete="cascade")
+    trump = fields.Integer(default=-1)
 
     @api.model
     def create_the_game(self, game_name, uid):
@@ -218,6 +219,8 @@ class Game(models.Model):
 
     @api.model
     def start_the_game(self, game_id):
+        import wdb
+        wdb.set_trace()
         cur_game = self.sudo().search([('id', '=', game_id)])
         seq = [*range(0, 52)]
         cards_limit = 6
@@ -226,7 +229,8 @@ class Game(models.Model):
         i = 0
         cards_cnt = 0
         all_cards_cnt = 0
-        player = cur_game.players.sudo().search([])
+        player = cur_game.players.sudo().search([('ready', '=', True)])
+        player[0].sudo().write({'stepping': True})
         try:
             for num in seq:
                 player[i].add_new_card(num)
@@ -238,23 +242,29 @@ class Game(models.Model):
                     i += 1
         except Exception:
             print('Cards distribution error!!!\n')
-        # temp_extra_cards = ''
-        # for i in seq:
-        #     temp_extra_cards += (str(i) + ' ')
+
         try:
             for num in seq:
                 card = cur_game.extra_cards.sudo().card_power(num)
                 cur_game.extra_cards.sudo().create({'power': card[0],
                                           'suit': card[1], 'num': num, 'in_game': True})
+            cur_game.sudo().write({'trump': cur_game.extra_cards[0].suit})
+            self.env['pos.config'].send_to_all_poses(cur_game.name, {'command':' Trump',
+                                                                     'trump': cur_game.trump})
         except Exception:
             print('Extra cards assignment error!!!')
 
         try:
             for player in cur_game.players.sudo().search([]):
                 cur_game.send_cards(cur_game.name, player)
-
         except Exception:
             print('Cards sending error!!!')
+
+        try:
+            for player in cur_game.players.sudo().search(['ready', '=', False]):
+                cur_game.delete_player(cur_game.id, player.uid)
+        except Exception:
+            print("Can't delete not ready players!!!(start_the_game)")
         return 1
 
     @api.model
@@ -299,6 +309,13 @@ class Game(models.Model):
             self.env['bus.bus'].sendmany([[channel, data]])
         return 1
 
+    @api.model
+    def delete_my_game(self, game_id):
+        import wdb
+        wdb.set_trace()
+        self.sudo().search([('id', '=', game_id)]).unlink()
+        return 1
+
 class Player(models.Model):
 
     _name = 'game.player'
@@ -316,6 +333,8 @@ class Player(models.Model):
     # Is player ready to play or alredy playing
     ready = fields.Boolean(default=False)
     pos_id = fields.Integer(default=-1)
+    # Step turn
+    stepping = fields.Boolean(default=False)
 
     @api.model
     def add_new_card(self, num):
@@ -342,11 +361,10 @@ class Card(models.Model):
     _description = 'Gaming cards'
 
     cards_holder = fields.Many2one('game.player', string='Player', ondelete="cascade")
-    game = fields.Many2one('game', string='Game', ondelete="cascade")
+    game_extra_cards = fields.Many2one('game', string='Game', ondelete="cascade")
 
     suit = fields.Integer(default=-1)
     power = fields.Integer(default=-1)
-    trump = fields.Boolean(default=False)
     num = fields.Integer(default=-1)
     in_game = fields.Boolean(default=False)
 
