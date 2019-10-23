@@ -38,7 +38,11 @@ class Durak(models.Model):
 
     @api.model
     def player_ready(self, uid, max_users):
-        pos_id = self.search([('user_id', '=', uid)]).id
+        try:
+            pos_id = self.search([('user_id', '=', uid)]).id
+        except Exception:
+            print('Excpected that pos_id only 1!')
+
         self.search([("id", "=", pos_id)]).write({
             'plays': True
         })
