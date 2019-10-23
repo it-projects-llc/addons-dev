@@ -162,7 +162,7 @@ class Game(models.Model):
     @api.model
     def create_the_game(self, game_name, uid):
         temp_game = self.sudo().search([('name', '=', game_name)])
-        pos_id = self.env['pos.session'].search([('user_id', '=', uid)]).id
+        pos_id = self.env['pos.session'].search([('user_id', '=', uid)])[0].id
         # If game didn't created, then create
         if len(temp_game) == 0:
             try:
@@ -180,7 +180,7 @@ class Game(models.Model):
     def add_new_user(self, game_id, name, uid):
         cur_game = self.sudo().search([('id', '=', game_id)])
         new_num = len(cur_game.players.sudo().search([]))
-        new_pos_id = self.env['pos.session'].search([('user_id', '=', uid)]).id
+        new_pos_id = self.env['pos.session'].search([('user_id', '=', uid)])[0].id
         # Sending new player's data to all players
         data = {'name': name, 'uid':uid, 'num': new_num, 'command': 'Connect'}
         self.env['pos.config'].send_to_all_poses(cur_game.name, data)
