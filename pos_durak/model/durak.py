@@ -210,16 +210,43 @@ class Game(models.Model):
     @api.model
     def make_step(self, game_id, uid, card_num):
         cur_game = self.sudo().search([('id', '=', game_id)])
-        player = cur_game.players.sudo().search([('uid', '=', uid)])
-        card = player.card.sudo().search([('num', '=', card_num)])
+        stepper = cur_game.players.sudo().search([('uid', '=', uid)])
+        card = stepper.cards.sudo().search([('num', '=', card_num)])[0]
         cur_game.on_table_cards += card
 
-        data = {'uid': player.uid, 'num': card.num, 'command': 'Move'}
-        channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
-                                                                      player.pos_id, cur_game.name)
-        self.env['bus.bus'].sendmany([[channel, data]])
-
+        for player in cur_game.players - stepper:
+            data = {'uid': uid, 'num': card.num, 'command': 'Move'}
+            channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
+                                                                          player.pos_id, cur_game.name)
+            self.env['bus.bus'].sendmany([[channel, data]])
         card.unlink()
+        return 1
+
+    @api.model
+    def defence(self, game_id, uid, card1, card2, x, y):
+        cur_game = self.sudo().search([('id', '=', game_id)])
+        cur_game.make_step(game_id, uid, card1)
+        first = cur_game.on_table_cards.sudo().search([('num', '=', card1)])[0]
+        second = cur_game.on_table_cards.sudo().search([('num', '=', card2)])[0]
+        fpow = first.power
+        spow = second.power
+        winner = -1
+        loser = -1
+        if first.suit == cur_game.trump:
+            fpow = first.power + 100
+        if second.suit == cur_game.trump:
+            spow = first.power + 100
+        if spow > fpow:
+            winner = card1
+            loser = card2
+        else:
+            loser = card1
+            winner = card2
+        for player in cur_game.players:
+            data = {'uid': uid, 'winner': winner, 'loser': loser, 'command': 'Move'}
+            channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
+                                                                          player.pos_id, cur_game.name)
+            self.env['bus.bus'].sendmany([[channel, data]])
         return 1
 
     @api.model
@@ -308,9 +335,9 @@ class Player(models.Model):
     def delete_card(self, uid, num):
         player = self.sudo().search([('uid', '=', uid)])
         try:
-            card = player.cards.sudo().card_power(num)
+            card = player.cards.card_power(num)
             card.write({'in_game': False})
-            player.cards.sudo().search([('power', '=', card[0]), ('suit', '=', card[1])]).unlink()
+            card.unlink()
         except Exception:
             print('Card deletion error!!!')
         return 1
