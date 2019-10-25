@@ -156,12 +156,10 @@ odoo.define('pos_chat_button', function (require){
            }
         }
         else if(elem.id === "ready-button"){
-            var sign = document.getElementById('user-name-'+String(NumInQueue(session.uid)));
-            sign.style.setProperty('background', 'green');
             self._rpc({
                 model: "game",
                 method: "player_is_ready",
-                args: [my_game_id, session.uid, chat_users.length]
+                args: [my_game_id, session.uid]
             });
         }
         else if(elem.id === "step-button"){
@@ -305,32 +303,21 @@ odoo.define('pos_chat_button', function (require){
         return false;
     }
 
-    // Users all data deletion
-    function DeleteUserData(uid){
-        var j = NumInQueue(uid);
-        for(var i = j; i < chat_users.length; i++){
-            chat_users[i] = chat_users[i + 1];
-            all_messages[i] = all_messages[i + 1];
-            all_timeOuts[i] = all_timeOuts[i + 1];
-        }
-        messages_cnt.pop();
-        chat_users.pop();
-        all_messages.pop();
-        all_timeOuts.pop();
-    }
-
     function DeleteMyData(){
         chat_users = [];
-        all_messages = [];
-        all_timeOuts = [];
-        messages_cnt = [];
-        // User out of the chat room
         in_chat = false;
         game_started = false;
-        document.getElementById('enemy-cards').innerHTML = '';
-        document.getElementById('cards').innerHTML = '';
-        var check_button = document.getElementById('check-button');
-        check_button.style.setProperty('opacity', '0');
+        try {
+            document.getElementById('cards').innerHTML = '';
+            document.getElementById('cards').innerHTML = '';
+            var check_button = document.getElementById('check-button');
+            check_button.style.setProperty('opacity', '0');
+            document.getElementById('enemy-cards').innerHTML = '';
+            document.getElementById('suit').style.display = 'none';
+        }
+        catch (error) {
+            alert("Catched exception when deleting xml objects process")
+        }
     }
     // Is this string the tag checking
     function is_it_tag(str, send)
@@ -574,7 +561,7 @@ odoo.define('pos_chat_button', function (require){
         chat_users.forEach(function (item){
             var i = NumInQueue(item.uid);
             var str_uid = String(item.uid);
-            out += '<div class="chat-user-'+str_uid+'" id="picture-'+i+'">';
+            out += '<div class="chat-user" id="picture-'+i+'">';
             out += '<div class="user-name" id="user-name-'+str_uid+'">'+chat_users[i].name+'</div>';
             out += '<img src="/web/image/res.users/' +
             item.uid + '/image_small" id="ava-' + i +'" class="avatar" style="border-radius:50%;"/>';
@@ -596,11 +583,9 @@ odoo.define('pos_chat_button', function (require){
         var x = Math.trunc(radius*Math.cos(angle));
         var y = Math.trunc(radius*Math.sin(angle));
 
-        avatar.style.setProperty('position', 'absolute');
         avatar.style.setProperty('left', W/2 - (avatar.offsetWidth / 2) + 'px');
         avatar.style.setProperty('top', H*0.4 - (avatar.offsetHeight / 2) + 'px');
         avatar.style.setProperty('transform','translate3d('+x+'px,'+y+'px,0px)');
-        avatar.style.setProperty('transition','transform .3s ease-in-out');
     }
 //------------------------------------------------------
 
@@ -811,9 +796,7 @@ odoo.define('pos_chat_button', function (require){
             }
             else if(data.command === 'Cards'){
                 game_started = true;
-                var sign = document.getElementById('user-name-'+String(NumInQueue(session.uid)));
-                sign.style.setProperty('background', '#a9a9ff');
-                chat_users[NumInQueue(data.uid)].cards = ({
+                chat_users[NumInQueue(session.uid)].cards = ({
                    power: data.power,
                    suit: data.suit,
                    num: data.num
@@ -821,11 +804,20 @@ odoo.define('pos_chat_button', function (require){
             }
             else if(data.command === 'Trump'){
                 trump = data.trump;
+                // Remove 'Start the game' button
+                if(NumInQueue(session.uid) === 0){
+                    var start = document.getElementById('check-button');
+                    start.style.setProperty('opacity', '0');
+                }
+                else{
+                    var ready = document.getElementById('ready-button');
+                    ready.style.setProperty('opacity', '0');
+                }
                 // Show suit
                 var temp_window = document.getElementById('card-suit');
                 temp_window.innerHTML = '<img type="button" src="/pos_durak/static/src/img/'+
-                    card_suits[trump]+'.png" id="suit" style=";' +
-                    'position:absolute;left:30%;top:30%;opacity: 0.2;"/>';
+                    card_suits[trump]+'.png" id="suit" ' +
+                    'style="position:absolute;left:30%;top:30%;opacity: 0.2;"/>';
             }
             else if(data.command === 'Move'){
                 moves_cnt++;
@@ -898,6 +890,13 @@ odoo.define('pos_chat_button', function (require){
                 my_game_id = data.id;
                 // When game id is recieved, then adding new user
                 CreatePlayer();
+            }
+            else if(data.command === 'ready'){
+                var sign = document.getElementById('user-name-'+String(data.uid));
+                sign.style.setProperty('background', 'green');
+            }
+            else if(data.command === 'Game_started'){
+                alert('Game "'+channel+'" already started');
             }
         },
     });

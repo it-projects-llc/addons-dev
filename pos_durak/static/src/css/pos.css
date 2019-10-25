@@ -27,8 +27,6 @@
     width: 100%;
 }
 
-/*  ********* The PopupWidgets  ********* */
-
 .pos .modal-dialog .popup{
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -288,4 +286,9 @@
     width: 20%;
     left: -20%;
     transform: rotate(-45deg);
+}
+
+.chat-user{
+    position: absolute;
+    transition: transform .3s ease-in-out;
 }

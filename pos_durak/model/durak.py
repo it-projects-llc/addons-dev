@@ -179,14 +179,19 @@ class Game(models.Model):
     @api.model
     def add_new_user(self, game_id, name, uid):
         cur_game = self.sudo().search([('id', '=', game_id)])
-        new_num = len(cur_game.players.sudo().search([]))
+        new_num = len(cur_game.players)
         new_pos_id = self.env['pos.session'].search([('user_id', '=', uid)])[0].id
+        if cur_game.trump != -1:
+            data = {'command': 'Game_started'}
+            channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
+                                                                          new_pos_id, cur_game.name)
+            return 1
         # Sending new player's data to all players
         data = {'name': name, 'uid':uid, 'num': new_num, 'command': 'Connect'}
         self.env['pos.config'].send_to_all_poses(cur_game.name, data)
         # Sending old players data to the new player
         try:
-            for user in cur_game.players.sudo().search([]):
+            for user in cur_game.players:
                 data = {'name': user.name, 'uid': user.uid, 'num': user.num, 'command': 'Connect'}
                 channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
                                                                               new_pos_id, cur_game.name)
@@ -195,7 +200,7 @@ class Game(models.Model):
             print('Player connected notification error!!!(add_new_user)')
 
         try:
-            cur_game.players.sudo().create({'name': name,
+            cur_game.players += cur_game.players.sudo().create({'name': name,
                                             'uid': uid, 'num': new_num,
                          'pos_id': new_pos_id})
         except Exception:
@@ -206,25 +211,26 @@ class Game(models.Model):
     def player_is_ready(self, game_id, uid):
         cur_game = self.sudo().search([('id', '=', game_id)])
         try:
-            cur_game.players.sudo().search([('uid', '=', uid)]).ready = True
+            cur_game.players.sudo().search([('uid', '=', uid)]).write({'ready': True})
         except Exception:
             print('Error in player_is_ready method!!! (Model - game)')
+
+        self.env['pos.config'].send_to_all_poses(cur_game.name,
+                                                 {'command': 'ready', 'uid': uid})
         return 1
 
     @api.model
     def send_cards(self, game_name, player):
         for card in player.cards:
-            data = {'uid': player.uid, 'num': card.num,
-                    'power': card.power, 'suit': card.suit, 'command': 'Cards'}
-            channel = self.env['pos.config']._get_full_channel_name_by_id(self.enselfv.cr.dbname,
+            data = {'num': card.num, 'power': card.power,
+                    'suit': card.suit, 'command': 'Cards'}
+            channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
                                                                           player.pos_id, game_name)
             self.env['bus.bus'].sendmany([[channel, data]])
         return 1
 
     @api.model
     def start_the_game(self, game_id):
-        import wdb
-        wdb.set_trace()
         cur_game = self.sudo().search([('id', '=', game_id)])
         seq = [*range(0, 52)]
         cards_limit = 6
@@ -233,39 +239,43 @@ class Game(models.Model):
         i = 0
         cards_cnt = 0
         all_cards_cnt = 0
+        cur_game.player_is_ready(cur_game.id,
+                                 cur_game.players.sudo().search([('num', '=', 0)]).uid)
         player = cur_game.players.sudo().search([('ready', '=', True)])
         player[0].sudo().write({'stepping': True})
         try:
             for num in seq:
-                player[i].add_new_card(num)
+                player[i].add_new_card(player[i].uid, num)
                 seq.remove(num)
                 cards_cnt += 1
                 all_cards_cnt += 1
                 if cards_cnt == cards_limit:
                     cards_cnt = 0
                     i += 1
+                if len(player) == i:
+                    break
         except Exception:
             print('Cards distribution error!!!\n')
 
         try:
             for num in seq:
                 card = cur_game.extra_cards.sudo().card_power(num)
-                cur_game.extra_cards.sudo().create({'power': card[0],
+                cur_game.extra_cards += cur_game.extra_cards.sudo().create({'power': card[0],
                                           'suit': card[1], 'num': num, 'in_game': True})
             cur_game.sudo().write({'trump': cur_game.extra_cards[0].suit})
-            self.env['pos.config'].send_to_all_poses(cur_game.name, {'command':' Trump',
+            self.env['pos.config'].send_to_all_poses(cur_game.name, {'command': 'Trump',
                                                                      'trump': cur_game.trump})
         except Exception:
             print('Extra cards assignment error!!!')
 
         try:
-            for player in cur_game.players.sudo().search([]):
+            for player in cur_game.players:
                 cur_game.send_cards(cur_game.name, player)
         except Exception:
             print('Cards sending error!!!')
 
         try:
-            for player in cur_game.players.sudo().search(['ready', '=', False]):
+            for player in cur_game.players.sudo().search([('ready', '=', False)]):
                 cur_game.delete_player(cur_game.id, player.uid)
         except Exception:
             print("Can't delete not ready players!!!(start_the_game)")
@@ -275,7 +285,7 @@ class Game(models.Model):
     def delete_player(self, game_id, uid):
         cur_game = self.sudo().search([('id', '=', game_id)])
         try:
-            for user in cur_game.players.sudo().search([]):
+            for user in cur_game.players:
                 data = {'uid': uid, 'command': 'Disconnect'}
                 channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
                                                                               user.pos_id, cur_game.name)
@@ -285,7 +295,7 @@ class Game(models.Model):
 
         try:
             deleting_user = cur_game.players.sudo().search([('uid', '=', uid)])
-            for user in cur_game.players.sudo().search([]):
+            for user in cur_game.players:
                 if user.num > deleting_user.num:
                     user.sudo().write({'num': user.num - 1})
         except Exception:
@@ -297,7 +307,7 @@ class Game(models.Model):
             print('Player removing error!!!')
 
         try:
-            if len(cur_game.players.sudo().search([])) == 0:
+            if len(cur_game.players) == 0:
                 cur_game.sudo().unlink()
         except Exception:
             print("Game session deleting error!!!")
@@ -306,7 +316,7 @@ class Game(models.Model):
     @api.model
     def send_message(self, game_id, message, uid):
         cur_game = self.sudo().search([('id', '=', game_id)])
-        for player in cur_game.players.sudo().search([]):
+        for player in cur_game.players:
             data = {'uid': uid, 'message': message, 'command': 'Message'}
             channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
                                                                           player.pos_id, cur_game.name)
@@ -315,8 +325,6 @@ class Game(models.Model):
 
     @api.model
     def delete_my_game(self, game_id):
-        import wdb
-        wdb.set_trace()
         self.sudo().search([('id', '=', game_id)]).unlink()
         return 1
 
@@ -341,21 +349,23 @@ class Player(models.Model):
     stepping = fields.Boolean(default=False)
 
     @api.model
-    def add_new_card(self, num):
+    def add_new_card(self, uid, num):
+        player = self.sudo().search([('uid', '=', uid)])
         try:
-            card = self.cards.sudo().card_power(num)
-            self.cards.sudo().create({'power': card[0],
+            card = player.cards.sudo().card_power(num)
+            player.cards += player.cards.sudo().create({'power': card[0],
                                       'suit': card[1], 'num': num, 'in_game': True})
         except Exception:
             print('New card addition error!!!')
         return 1
 
     @api.model
-    def delete_card(self, num):
+    def delete_card(self, uid, num):
+        player = self.sudo().search([('uid', '=', uid)])
         try:
-            card = self.cards.sudo().card_power(num)
+            card = player.cards.sudo().card_power(num)
             card.write({'in_game': False})
-            self.cards.sudo().search([('power', '=', card[0]), ('suit', '=', card[1])]).unlink()
+            player.cards.sudo().search([('power', '=', card[0]), ('suit', '=', card[1])]).unlink()
         except Exception:
             print('Card deletion error!!!')
         return 1
