@@ -2,9 +2,9 @@
    :target: https://www.gnu.org/licenses/lgpl
    :alt: License: LGPL-3
 
-==============================
- Inventory Adjustments in POS
-==============================
+================================
+ Inventory Adjustments over POS
+================================
 
 Inventory Adjustments in POS
 

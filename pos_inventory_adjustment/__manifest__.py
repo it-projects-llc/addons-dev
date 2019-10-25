@@ -1,9 +1,10 @@
 # Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+# Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/ilmir-k>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 {
-    "name": """Inventory Adjustments in POS""",
-    "summary": """Inventory Adjustments in POS""",
-    "category": "point_of_sale",
+    "name": """Inventory Adjustments over POS""",
+    "summary": """Inventory Adjustments over POS""",
+    "category": "Point of Sale",
     # "live_test_url": "http://apps.it-projects.info/shop/product/DEMO-URL?version=10.0",
     "images": [],
     "version": "10.0.1.0.0",
@@ -13,8 +14,8 @@
     "support": "apps@it-projects.info",
     "website": "https://it-projects.info/team/KolushovAlexandr",
     "license": "LGPL-3",
-    # "price": 9.00,
-    # "currency": "EUR",
+    "price": 29.00,
+    "currency": "EUR",
 
     "depends": [
         "point_of_sale",
