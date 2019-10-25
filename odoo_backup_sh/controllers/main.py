@@ -40,6 +40,9 @@ loader = jinja2.FileSystemLoader(path)
 env = jinja2.Environment(loader=loader, autoescape=True)
 BACKUP_SERVICE_ENDPOINT = 'https://odoo-backup.sh'
 
+# for local tests:
+BACKUP_SERVICE_ENDPOINT = 'http://backup_proxy.8080.yelizariev.dev.it-projects.info'
+
 # module -> config parameter name
 EXTRA_MODULES = {
     'odoo_backup_sh_dropbox': lambda env: env['ir.config_parameter'].get_param('odoo_backup_sh_dropbox.dropbox_access_token'),
@@ -123,6 +126,7 @@ class BackupController(http.Controller):
             'odoo_backup_sh.s3_bucket_name',
             'odoo_backup_sh.aws_access_key_id',
             'odoo_backup_sh.aws_secret_access_key',
+            'odoo_backup_sh.private_s3_dir',
             'odoo_backup_sh.odoo_oauth_uid'
         ], env=env)
         if update and (len(cloud_params) == 0 or not all(cloud_params.values())):
@@ -408,10 +412,17 @@ class BackupCloudStorage(http.Controller):
         return s3_client
 
     @classmethod
+    def _get_s3_dir(cls, cloud_params):
+        if cloud_params.get('odoo_backup_sh.odoo_oauth_uid'):
+            return cloud_params['odoo_backup_sh.odoo_oauth_uid']
+        else:
+            return cloud_params['odoo_backup_sh.private_s3_dir'] or '.'
+
+    @classmethod
     @access_control
     def get_backup_list(cls, cloud_params):
         amazon_s3_client = cls.get_amazon_s3_client(cloud_params)
-        user_dir_name = '%s/' % cloud_params['odoo_backup_sh.odoo_oauth_uid']
+        user_dir_name = '%s/' % cls._get_s3_dir(cloud_params)
         list_objects = amazon_s3_client.list_objects_v2(
             Bucket=cloud_params['odoo_backup_sh.s3_bucket_name'], Prefix=user_dir_name, Delimiter='/')
         return {'backup_list': [(obj['Key'][len(user_dir_name):], 'odoo_backup_sh') for obj in
@@ -421,7 +432,7 @@ class BackupCloudStorage(http.Controller):
     @access_control
     def get_object(cls, cloud_params, obj_name):
         amazon_s3_client = cls.get_amazon_s3_client(cloud_params)
-        object_path = '%s/%s' % (cloud_params['odoo_backup_sh.odoo_oauth_uid'], obj_name)
+        object_path = '%s/%s' % (cls._get_s3_dir(cloud_params), obj_name)
         return amazon_s3_client.get_object(Bucket=cloud_params['odoo_backup_sh.s3_bucket_name'], Key=object_path)
 
     @classmethod
