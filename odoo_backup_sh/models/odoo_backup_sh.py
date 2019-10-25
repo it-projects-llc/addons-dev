@@ -300,7 +300,7 @@ class BackupConfig(models.Model):
     def delete_remote_objects(self, cloud_params, remote_objects):
         odoo_backup_sh_objects = []
         for file in remote_objects:
-            odoo_backup_sh_objects += [{'Key': '%s/%s' % (cloud_params['odoo_oauth_uid'], file[0])}]
+            odoo_backup_sh_objects += [{'Key': '%s/%s' % (cloud_params['odoo_backup_sh.odoo_oauth_uid'], file[0])}]
         if odoo_backup_sh_objects:
             return BackupCloudStorage.delete_objects(cloud_params, odoo_backup_sh_objects)
         return {}
@@ -480,8 +480,8 @@ class BackupConfig(models.Model):
 
     @api.model
     def make_backup_odoo_backup_sh(self, ts, name, dump_stream, info_file, info_file_content, cloud_params):
-        s3_backup_path = '%s/%s' % (cloud_params['odoo_oauth_uid'], compute_backup_filename(name, ts, info_file_content.get('encrypted')))
-        s3_info_file_path = '%s/%s' % (cloud_params['odoo_oauth_uid'], compute_backup_info_filename(name, ts))
+        s3_backup_path = '%s/%s' % (cloud_params['odoo_backup_sh.odoo_oauth_uid'], compute_backup_filename(name, ts, info_file_content.get('encrypted')))
+        s3_info_file_path = '%s/%s' % (cloud_params['odoo_backup_sh.odoo_oauth_uid'], compute_backup_info_filename(name, ts))
         # Upload two backup objects to AWS S3
         for obj, obj_path in [[dump_stream, s3_backup_path], [info_file, s3_info_file_path]]:
             try:
@@ -677,7 +677,7 @@ class BackupNotification(models.Model):
     def fetch_notifications(self):
         config_params = self.env['ir.config_parameter']
         data = {'params': {
-            'user_key': config_params.get_param('odoo_backup_user_key'),
+            'user_key': config_params.get_param('odoo_backup_sh.user_key'),
             'date_last_request': config_params.get_param('odoo_backup_sh.date_last_request', None)
         }}
         response = requests.post(BACKUP_SERVICE_ENDPOINT + '/fetch_notifications', json=data).json()['result']
@@ -743,7 +743,7 @@ class DeleteRemoteBackupWizard(models.TransientModel):
         for record in backup_s3_info_records:
             for filename in [record.backup_filename, record.backup_info_filename]:
                 remote_objects_to_delete += [{
-                    'Key': '%s/%s' % (cloud_params['odoo_oauth_uid'], filename)
+                    'Key': '%s/%s' % (cloud_params['odoo_backup_sh.odoo_oauth_uid'], filename)
                 }]
 
         # Delete unnecessary remote backup objects

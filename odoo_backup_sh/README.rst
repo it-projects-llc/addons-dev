@@ -49,11 +49,6 @@ It's a page where an user can watch detail information about his backups which a
 
 When the user opens the backups dashboard, the module makes similar requests are described above about ``/web/database/backups page``.
 
-Roadmap
-=======
-
-* Config names should have prefix, e.g. ``odoo_backup_sh_``. Current names are ``amazon_bucket_name', 'amazon_access_key_id', 'amazon_secret_access_key', 'odoo_oauth_uid'``
-
 Credits
 =======
 

@@ -119,7 +119,7 @@ class BackupController(http.Controller):
     @classmethod
     def get_cloud_params(cls, redirect=None, call_from='backend', update=True, env=None):
         cloud_params = cloud_config_stores[call_from].get([
-            'odoo_backup_user_key', 'amazon_bucket_name', 'amazon_access_key_id', 'amazon_secret_access_key', 'odoo_oauth_uid'
+            'odoo_backup_sh.user_key', 'odoo_backup_sh.s3_bucket_name', 'odoo_backup_sh.aws_access_key_id', 'odoo_backup_sh.aws_secret_access_key', 'odoo_backup_sh.odoo_oauth_uid'
         ], env=env)
         if update and (len(cloud_params) == 0 or not all(cloud_params.values())):
             if redirect:
@@ -132,10 +132,10 @@ class BackupController(http.Controller):
 
     @classmethod
     def update_cloud_params(cls, cloud_params, redirect, call_from):
-        user_key = cloud_params['odoo_backup_user_key']
+        user_key = cloud_params['odoo_backup_sh.user_key']
         if not user_key:
             user_key = ''.join(random.choice(string.hexdigits) for _ in range(30))
-            cloud_config_stores[call_from].set('odoo_backup_user_key', user_key)
+            cloud_config_stores[call_from].set('odoo_backup_sh.user_key', user_key)
 
         # You can set the verify parameter to False and requests will ignore SSL verification.
         try:
@@ -354,14 +354,14 @@ class BackupController(http.Controller):
                 [('is_read', '=', False)], ['id', 'date_create', 'message']),
             'up_balance_url': '%s/open_iap_recharge?user_key=%s' % (
                 BACKUP_SERVICE_ENDPOINT,
-                request.env['ir.config_parameter'].sudo().get_param('odoo_backup_user_key')
+                request.env['ir.config_parameter'].sudo().get_param('odoo_backup_sh.user_key')
             ),
         })
         modules = {
             'odoo_backup_sh': {
                 'installed': True,
-                'configured': bool(cloud_params.get('amazon_access_key_id') or False),
-                'configured_iap': 'itprojectsllc' in (cloud_params.get('amazon_bucket_name') or '')
+                'configured': bool(cloud_params.get('odoo_backup_sh.aws_access_key_id') or False),
+                'configured_iap': 'itprojectsllc' in (cloud_params.get('odoo_backup_sh.s3_bucket_name') or '')
             }
         }
         modules_search = request.env['ir.module.module'].search([('name', 'in', list(EXTRA_MODULES.keys()))])
@@ -387,7 +387,7 @@ def access_control(origin_method):
         except botocore.exceptions.ClientError as client_error:
             if client_error.response['Error']['Code'] == 'InvalidAccessKeyId':
                 # TODO: commented cause it doesn't work (request.env is not available here
-                # [request.env['ir.config_parameter'].set_param(option, None) for option in ('amazon_access_key_id', 'amazon_secret_access_key')]
+                # [request.env['ir.config_parameter'].set_param(option, None) for option in ('odoo_backup_sh.aws_access_key_id', 'odoo_backup_sh.aws_secret_access_key')]
                 return {'reload_page': True}
             else:
                 raise exceptions.ValidationError(_(
@@ -399,17 +399,17 @@ class BackupCloudStorage(http.Controller):
 
     @classmethod
     def get_amazon_s3_client(cls, cloud_params):
-        s3_client = boto3.client('s3', aws_access_key_id=cloud_params['amazon_access_key_id'],
-                                 aws_secret_access_key=cloud_params['amazon_secret_access_key'])
+        s3_client = boto3.client('s3', aws_access_key_id=cloud_params['odoo_backup_sh.aws_access_key_id'],
+                                 aws_secret_access_key=cloud_params['odoo_backup_sh.aws_secret_access_key'])
         return s3_client
 
     @classmethod
     @access_control
     def get_backup_list(cls, cloud_params):
         amazon_s3_client = cls.get_amazon_s3_client(cloud_params)
-        user_dir_name = '%s/' % cloud_params['odoo_oauth_uid']
+        user_dir_name = '%s/' % cloud_params['odoo_backup_sh.odoo_oauth_uid']
         list_objects = amazon_s3_client.list_objects_v2(
-            Bucket=cloud_params['amazon_bucket_name'], Prefix=user_dir_name, Delimiter='/')
+            Bucket=cloud_params['odoo_backup_sh.s3_bucket_name'], Prefix=user_dir_name, Delimiter='/')
         return {'backup_list': [(obj['Key'][len(user_dir_name):], 'odoo_backup_sh') for obj in
                                 list_objects.get('Contents', {}) if obj.get('Size')]}
 
@@ -417,14 +417,14 @@ class BackupCloudStorage(http.Controller):
     @access_control
     def get_object(cls, cloud_params, obj_name):
         amazon_s3_client = cls.get_amazon_s3_client(cloud_params)
-        object_path = '%s/%s' % (cloud_params['odoo_oauth_uid'], obj_name)
-        return amazon_s3_client.get_object(Bucket=cloud_params['amazon_bucket_name'], Key=object_path)
+        object_path = '%s/%s' % (cloud_params['odoo_backup_sh.odoo_oauth_uid'], obj_name)
+        return amazon_s3_client.get_object(Bucket=cloud_params['odoo_backup_sh.s3_bucket_name'], Key=object_path)
 
     @classmethod
     @access_control
     def put_object(cls, cloud_params, obj, obj_path):
         amazon_s3_client = cls.get_amazon_s3_client(cloud_params)
-        amazon_s3_client.put_object(Body=obj, Bucket=cloud_params['amazon_bucket_name'], Key=obj_path)
+        amazon_s3_client.put_object(Body=obj, Bucket=cloud_params['odoo_backup_sh.s3_bucket_name'], Key=obj_path)
         _logger.info('Following backup object have been put in the remote storage: %s' % obj_path)
 
     @classmethod
@@ -432,7 +432,7 @@ class BackupCloudStorage(http.Controller):
     def delete_objects(cls, cloud_params, objs):
         amazon_s3_client = cls.get_amazon_s3_client(cloud_params)
         amazon_s3_client.delete_objects(
-            Bucket=cloud_params['amazon_bucket_name'], Delete={'Objects': objs})
+            Bucket=cloud_params['odoo_backup_sh.s3_bucket_name'], Delete={'Objects': objs})
         objects_names = [obj['Key'] for obj in objs]
         _logger.info(
             'Following backup objects have been deleted from the remote storage: %s' % ', '.join(objects_names))
