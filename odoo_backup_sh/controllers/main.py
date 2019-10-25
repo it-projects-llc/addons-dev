@@ -365,7 +365,7 @@ class BackupController(http.Controller):
             'odoo_backup_sh': {
                 'installed': True,
                 'configured': bool(cloud_params.get('odoo_backup_sh.aws_access_key_id') or False),
-                'configured_iap': 'itprojectsllc' in (cloud_params.get('odoo_backup_sh.s3_bucket_name') or '')
+                'configured_iap': bool(cloud_params.get('odoo_backup_sh.odoo_oauth_uid') or False)
             }
         }
         modules_search = request.env['ir.module.module'].search([('name', 'in', list(EXTRA_MODULES.keys()))])
