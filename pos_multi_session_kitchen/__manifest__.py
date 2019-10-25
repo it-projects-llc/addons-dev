@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 {
     "name": """POS Kitchen Screen""",
-    "summary": """Use POS for sync with kitchen screen""",
+    "summary": """Use the kitchen screen to track the order readiness""",
     "category": "Point Of Sale",
     # "live_test_url": "",
-    "images": [],
+    "images": ["images/pos_multi_session_main.jpg"],
     "version": "10.0.1.0.0",
     "application": False,
 
     "author": "IT-Projects LLC, Dinar Gabbasov",
-    "support": "apps@it-projects.info",
+    "support": "pos@it-projects.info",
     "website": "https://it-projects.info/team/GabbasovDinar",
     "license": "LGPL-3",
-    # "price": 0.00,
-    # "currency": "EUR",
+    "price": 320.00,
+    "currency": "EUR",
 
     "depends": [
         "pos_multi_session",

@@ -2,7 +2,9 @@
  POS Kitchen Screen
 ====================
 
-The module provides instant orders synchronization between POSes and Kitchen screen related to a common *multi session*.
+The module adds the ability to use Kitchen Screen to track the order readiness. It is achieved by the corresponding option in POS configuration form.
+
+All the orders may be synchronized between Waiters/Cashiers POSes and Kitchen Screen.
 
 Credits
 =======

@@ -2,8 +2,6 @@
  POS Kitchen Screen
 ====================
 
-Use POS for sync with kitchen screen
-
 Installation
 ============
 
@@ -54,21 +52,23 @@ POS Settings for Waiters
 * Specify **Point of Sale Name**
 * Specify **Specify Screen Type** like **Waiter**
 * Specify the **Custom Buttons** for Orders
-    - Click on ``[Create]``
-    - Specify **Button Label**
-    - Specify **Button Background Color**
-    - Specify **Button Name Color**
-    - Specify **Apply Tag**
-        + Click on ``[Create]``
-        + Specify **Display Name**
-        + Specify a unique **Technical Name**
-        + Specify **Tag Name Color**
-        + Specify **Tag Background Color**
-        + Specify **Priority**
-        + Click on ``[Save]``
 
-    - Specify **Remove Tag** if necessary
-    - Click on ``[Save & Close]``
+  * Click on ``[Create]``
+  * Specify **Button Label**
+  * Specify **Button Background Color**
+  * Specify **Button Name Color**
+  * Specify **Apply Tag**
+        
+     * Click on ``[Create]``
+     * Specify **Display Name**
+     * Specify a unique **Technical Name**
+     * Specify **Tag Name Color**
+     * Specify **Tag Background Color**
+     * Specify **Priority**
+     * Click on ``[Save]``
+
+  * Specify **Remove Tag** if necessary
+  * Click on ``[Save & Close]``
 
 * Click ``[Save]``
 
