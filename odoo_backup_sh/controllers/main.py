@@ -121,6 +121,11 @@ class BackupController(http.Controller):
 
     @classmethod
     def get_cloud_params(cls, redirect=None, call_from='backend', update=True, env=None):
+        mandadory_params = cloud_config_stores[call_from].get([
+            'odoo_backup_sh.s3_bucket_name',
+            'odoo_backup_sh.aws_access_key_id',
+            'odoo_backup_sh.aws_secret_access_key',
+        ], env=env)
         cloud_params = cloud_config_stores[call_from].get([
             'odoo_backup_sh.user_key',
             'odoo_backup_sh.s3_bucket_name',
@@ -129,7 +134,8 @@ class BackupController(http.Controller):
             'odoo_backup_sh.private_s3_dir',
             'odoo_backup_sh.odoo_oauth_uid'
         ], env=env)
-        if update and (len(cloud_params) == 0 or not all(cloud_params.values())):
+        cloud_params.update(mandadory_params)
+        if update and (len(mandadory_params) == 0 or not all(mandadory_params.values())):
             if redirect:
                 cloud_params = cls.update_cloud_params(cloud_params, redirect, call_from)
             else:
