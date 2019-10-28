@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).-->
+
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="ListView">
+        <t t-jquery="t[t-foreach='columns']:first" t-operation='before'>
+            <t t-if="dataset &amp;&amp; dataset.model == 'stock.inventory.line'">
+                <th>
+                    #
+                </th>
+            </t>
+        </t>
+    </t>
+
+    <t t-extend="ListView.row">
+        <t t-jquery="t[t-foreach='columns']:first" t-operation='before'>
+            <t t-if="(dataset &amp;&amp; dataset.model == 'stock.inventory.line') || (view &amp;&amp; view.model == 'stock.inventory.line')">
+                <td>
+                    <t t-esc="index + 1 || ''"/>
+                </td>
+            </t>
+        </t>
+    </t>
+
+</templates>
