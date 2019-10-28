@@ -5,7 +5,7 @@
     "summary": """Module allows to send POS receipts to a partner""",
     "category": "Point of Sale",
     # "live_test_url": "http://apps.it-projects.info/shop/product/DEMO-URL?version=12.0",
-    "images": [],
+    "images": ["images/pos_mail.jpg"],
     "version": "12.0.1.0.0",
     "application": False,
 

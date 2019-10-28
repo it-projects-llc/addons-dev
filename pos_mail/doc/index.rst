@@ -49,4 +49,4 @@ Usage
 * Choose customer with email
 * Create order and validate it
 * Click ``[Mail Receipt]``
-*RESULT: A letter is sending to the User with the receipt in the attachment, and with a template in the message body.
+RESULT: A letter is sending to the User with the receipt in the attachment, and with a template in the message body.
