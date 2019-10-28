@@ -366,7 +366,8 @@ odoo.define('pos_chat_button', function (require){
 
 //--------------- Game table actions -------------------
 
-    function PutOn(card) {
+    function PutOn(puton_card) {
+        var card = document.getElementById('card-'+puton_card);
         var sign = (moves_cnt + 1)%2 === 0 ? 1 : -1;
         var cw = card.offsetWidth, ch = card.offsetHeight;
 
@@ -375,7 +376,6 @@ odoo.define('pos_chat_button', function (require){
         card.style.setProperty('opacity','1');
         card.style.setProperty('transform','translate3d('
             +(put_w - x)+'px,'+(put_h - y)+'px,0px)');
-        card.style.left = x;card.style.top = y;
     }
 
     function Cover(card, x2, y2) {
@@ -389,9 +389,6 @@ odoo.define('pos_chat_button', function (require){
     function Move(card_num){
         // Need to check suit of card, and make a decide
         // Can player make a step or no
-        if(OnTable(card_num)){
-            return;
-        }
         if(moves_cnt >= max_cards){
             alert('You can step only '+max_cards+' times!');
             return;
@@ -445,27 +442,18 @@ odoo.define('pos_chat_button', function (require){
         document.getElementById('enemy-cards').innerHTML += out;
     }
 
-    function DeleteCard(n, who){
-        for(var i = 0; i < chat_users[who].cards.length; i++){
-            if(n === chat_users[who].cards[i].num){
-                chat_users[who].cards.splice(i,1);
+    function DeleteCard(card){
+        try{
+            for(var i = 0; i < chat_users[who].cards.length; i++){
+                if(n === chat_users[who].cards[i].num){
+                    chat_users[who].cards.splice(i,1);
+                }
             }
+            var del_card = document.getElementById('card-'+String(card));
+            del_card.style.setProperty('diplay','none')
         }
-        if(session.uid === chat_users[who].uid){
-            self._rpc({
-                model: "pos.session",
-                method: "send_field_updates",
-                args: ['', '', 'DeleteExtraCard', chat_users[who].uid]
-            });
-        }
-    }
-
-    function AddExtraCards(temp) {
-        for(var i = 0; i < temp_extra_cards.length; i++){
-            chat_users[temp].cards.push(temp_extra_cards[i]);
-        }
-        while(temp_extra_cards.length > 0){
-            temp_extra_cards.shift();
+        catch(e){
+            alert("Can't display:none card #" + String(card)+", cause it doesn't exist");
         }
     }
 
@@ -474,29 +462,28 @@ odoo.define('pos_chat_button', function (require){
         attacking = false;
         complete_move = 0;
         moves_cnt = 0;
-        // Take new cards
-        AddExtraCards(NumInQueue(session.uid));
-        for(i = 0; i < on_table_cards.length; i++){
-            var card = document.getElementById('card-'+on_table_cards[i]);
-            card.style.setProperty('opacity', '0');
+        try{
+            for(i = 0; i < on_table_cards.length; i++){
+                var card = document.getElementById('card-'+on_table_cards[i]);
+                card.style.setProperty('opacity', '0');
+            }
         }
-        while(on_table_cards.length > 0){
-            on_table_cards.shift();
-        }
-        while(moved_cards.length > 0){
-            moved_cards.shift();
-        }
-        for(i = 0; i < chat_users.length; i++){
-            document.getElementById('picture-'+i).
-            style.setProperty('opacity','1');
+        catch(e){
+            alert('Game cards deletion error!');
         }
 
         buttons_opacity(0);
         Ask_who_steps();
-        if(in_chat){
-            ShowUsers();
-            ShowCards();
+        try{
+            for(i = 0; i < chat_users.length; i++){
+                document.getElementById('picture-'+i).style.setProperty('opacity', '1');
+                SetPos(document.getElementById('picture-'+i), chat_users[i].uid);
+            }
         }
+        catch(e){
+            alert('Transition to the first scene error!');
+        }
+        ShowCards();
     }
 
     function Second_scene(data){
@@ -520,7 +507,8 @@ odoo.define('pos_chat_button', function (require){
         var defender_id = document.getElementById('picture-'+NumInQueue(who_defends));
         // Inscription showing
         if(session.uid === who_attacks[0] || session.uid === who_attacks[1]){
-            Tip('Attack'+String(chat_users[NumInQueue(who_defends)].name), 2000);
+            buttons_opacity(2);
+            Tip('Attack '+String(chat_users[NumInQueue(who_defends)].name), 2000);
         }
         if(session.uid === who_defends){
             buttons_opacity(3);
@@ -554,13 +542,13 @@ odoo.define('pos_chat_button', function (require){
 
 //---------- Set avatar and animation part -------------
     function ShowCards(){
-        var block = document.getElementById('cards');
-        var me = NumInQueue(session.uid);
-        var out = '', w = (60/chat_users[me].cards.length)/2;
-        for(var i = 0; i < chat_users[me].cards.length; i++){
-            var num = chat_users[me].cards[i].num;
+        let block = document.getElementById('cards');
+        let me = NumInQueue(session.uid);
+        let out = '', w = (60/chat_users[me].cards.length)/2;
+        for(let i = 0; i < chat_users[me].cards.length; i++){
+            let n = chat_users[me].cards[i].num;
             out+='<img type="button" src="/pos_durak/static/src/img/kards/'+
-            num+'.png" id="card-'+num+'" class="card" style="right: '+(30 - i*w)+'%"/>';
+            n+'.png" id="card-'+n+'" class="card" style="right: '+(30 - i*w)+'%"></img>'
         }
         block.innerHTML = out;
     }
@@ -712,46 +700,12 @@ odoo.define('pos_chat_button', function (require){
     }
 
     function DeleteUser(user_id){
-        var exist = false;
-        chat_users.forEach(function (item) {
-           if(item.uid === user_id) {
-               exist = true;
-           }
-        });
-        if(!exist) {
-            return;
-        }
+        var i = NumInQueue(user_id);
+        user = document.getElementById('picture-'+i);
+        user.style.setProperty('display', 'none');
         chat_users.splice(NumInQueue(user_id),1);
-        if(user_id !== session.uid){
+        if(session.uid !== user_id){
             ShowUsers();
-        }
-    }
-
-    function Distribute_cards(data, took_cards){
-        var ses = NumInQueue(session.uid);
-        while(chat_users[ses].cards.length > 0){
-            chat_users[ses].cards.shift();
-        }
-        if(took_cards){
-            var str = data.message;
-            for(var i = 0; i < str.length - 1; i++){
-                var num = '';
-                if(str[i] !== ' '){
-                    if(str[i + 1] !== ' '){
-                        chat_users[ses].cards.push(str[i] + str[i + 1]);
-                        i++;
-                    }
-                    else
-                        chat_users[ses].cards.push(str[i]);
-                }
-            }
-            ShowCards();
-        }
-        else if(session.uid === chat_users[0].uid){
-            self._rpc({
-                model: "pos.session",
-                method: "cards_distribution"
-            });
         }
     }
 
@@ -788,7 +742,14 @@ odoo.define('pos_chat_button', function (require){
                 }
             }
             else if(data.command === 'Disconnect'){
-                DeleteUser(data.uid);
+                if(data.uid === session.uid){
+                    for(var i = 0; i < chat_users.length; i++){
+                        DeleteUser(chat_users[i].uid);
+                    }
+                }
+                else{
+                    DeleteUser(data.uid);
+                }
 
                 if(chat_users[0].uid === session.uid){
                     // alert("If players are ready, push 'Start the game' button." +
@@ -796,17 +757,19 @@ odoo.define('pos_chat_button', function (require){
                     buttons_opacity(4);
                 }
             }
-            else if(data.command === 'Message'){ // If someone throwed a message
+            else if(data.command === 'Message'){
                 showMessage(data.uid, data.message);
             }
             else if(data.command === 'Cards'){
                 game_started = true;
+                var me = NumInQueue(session.uid);
                 var temp_i = NumInQueue(session.uid);
                 chat_users[temp_i].cards.push({
                    power: data.power,
                    suit: data.suit,
                    num: data.num
                 });
+                document.getElementById('cards').innerHTML = '';
                 ShowCards();
             }
             else if(data.command === 'Trump'){
@@ -826,12 +789,10 @@ odoo.define('pos_chat_button', function (require){
                     Tip('If defender beated cards, press "Complete move" button)', 4000);
                 }
                 attacking = true;
-                var attack_card = data.num;
                 if(data.uid !== session.uid){
                     DownloadEnemyCards(data);
                 }
-                var card = document.getElementById('card-'+attack_card);
-                PutOn(card);
+                PutOn(data.num);
                 on_table_cards.push(data.num);
             }
             else if(data.command === 'HowMuchCards'){
@@ -843,6 +804,9 @@ odoo.define('pos_chat_button', function (require){
                     (complete_move === 1 && chat_users.length === 2)){
                     First_scene();
                 }
+                for(var i = 0; i < on_table_cards.length; i++){
+                    DeleteCard(on_table_cards[i]);
+                }
             }
             else if(data.command === 'Defence'){
                 var card1 = data.first, card2 = data.second;
@@ -852,11 +816,9 @@ odoo.define('pos_chat_button', function (require){
                 }
                 if(!OnTable(card1)){
                     on_table_cards.push(card1);
-                    moved_cards.push(Card_power(card1)[0]);
                 }
                 if(!OnTable(card2)){
                     on_table_cards.push(card2);
-                    moved_cards.push(Card_power(card2)[0]);
                 }
                 Cover(card1, data.x, data.y);
                 beated.push(card1, card2);

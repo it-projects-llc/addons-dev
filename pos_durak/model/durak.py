@@ -209,44 +209,65 @@ class Game(models.Model):
 
     @api.model
     def make_step(self, game_id, uid, card_num):
-        cur_game = self.sudo().search([('id', '=', game_id)])
-        stepper = cur_game.players.sudo().search([('uid', '=', uid)])
-        card = stepper.cards.sudo().search([('num', '=', card_num)])[0]
-        cur_game.on_table_cards += card
+        try:
+            cur_game = self.sudo().search([('id', '=', game_id)])
+            stepper = cur_game.players.sudo().search([('uid', '=', uid)])
+            card = stepper.cards.sudo().search([('num', '=', card_num)])[0]
+            can_make_a_step = False
+        except Exception:
+            print('Make_step error!')
 
-        for player in cur_game.players - stepper:
-            data = {'uid': uid, 'num': card.num, 'command': 'Move'}
-            channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
-                                                                          player.pos_id, cur_game.name)
-            self.env['bus.bus'].sendmany([[channel, data]])
-        card.unlink()
+        try:
+            for on_table_card in cur_game.on_table_cards:
+                if card.power == on_table_card.power:
+                    can_make_a_step = True
+            if card.suit == cur_game.trump or len(cur_game.on_table_cards) == 0:
+                can_make_a_step = True
+        except Exception:
+            print('Card on table checking error!!!\n')
+
+        if can_make_a_step:
+            for player in cur_game.players:
+                data = {'uid': uid, 'num': card.num, 'command': 'Move'}
+                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
+                                                                            player.pos_id, cur_game.name)
+                self.env['bus.bus'].sendmany([[channel, data]])
+            cur_game.on_table_cards += cur_game.on_table_cards.sudo().create({'power': card.power,
+                                          'suit': card.suit, 'num': card.num, 'in_game': True})
+            stepper.cards -= card
         return 1
 
     @api.model
     def defence(self, game_id, uid, card1, card2, x, y):
-        cur_game = self.sudo().search([('id', '=', game_id)])
-        cur_game.make_step(game_id, uid, card1)
-        first = cur_game.on_table_cards.sudo().search([('num', '=', card1)])[0]
-        second = cur_game.on_table_cards.sudo().search([('num', '=', card2)])[0]
-        fpow = first.power
-        spow = second.power
-        winner = -1
-        loser = -1
-        if first.suit == cur_game.trump:
-            fpow = first.power + 100
-        if second.suit == cur_game.trump:
-            spow = first.power + 100
-        if spow > fpow:
-            winner = card1
-            loser = card2
-        else:
-            loser = card1
-            winner = card2
-        for player in cur_game.players:
-            data = {'uid': uid, 'winner': winner, 'loser': loser, 'command': 'Move'}
-            channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
-                                                                          player.pos_id, cur_game.name)
-            self.env['bus.bus'].sendmany([[channel, data]])
+        try:
+            cur_game = self.sudo().search([('id', '=', game_id)])
+            cur_game.make_step(game_id, uid, card1)
+            first = cur_game.on_table_cards.sudo().search([('num', '=', card1)])[0]
+            second = cur_game.on_table_cards.sudo().search([('num', '=', card2)])[0]
+            fpow = first.power
+            spow = second.power
+            winner = -1
+            loser = -1
+        except Exception:
+            print("Defence var's initialization error!")
+        try:
+            if first.suit == cur_game.trump:
+                fpow = first.power + 100
+            if second.suit == cur_game.trump:
+                spow = first.power + 100
+            if spow > fpow:
+                winner = card1
+                loser = card2
+            else:
+                loser = card1
+                winner = card2
+            for player in cur_game.players:
+                data = {'uid': uid, 'winner': winner, 'loser': loser, 'command': 'Move'}
+                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
+                                                                              player.pos_id, cur_game.name)
+                self.env['bus.bus'].sendmany([[channel, data]])
+        except Exception:
+            print('defence error!')
         return 1
 
     @api.model
@@ -271,6 +292,7 @@ class Game(models.Model):
             channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
                                                                           player.pos_id, cur_game.name)
             self.env['bus.bus'].sendmany([[channel, data]])
+            cur_game.send_cards(cur_game.name, player)
         return 1
 
     @api.model
