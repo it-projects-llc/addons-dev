@@ -13,7 +13,8 @@ Credits
 
 Contributors
 ------------
-* Kolushov Alexandr <kolushov@it-projects.info>
+* `Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>`__
+* `Anvar Kildebekov <https://it-projects.info/team/fedoranvar>`__
 
 Sponsors
 --------
@@ -26,12 +27,12 @@ Maintainers
 Further information
 ===================
 
-Demo: http://runbot.it-projects.info/demo/misc-addons/8.0
+Demo: http://runbot.it-projects.info/demo/misc-addons/12.0
 
-HTML Description: https://apps.odoo.com/8.0/website_team/
+HTML Description: https://apps.odoo.com/12.0/website_team/
 
 Usage instructions: `<doc/index.rst>`__
 
 Changelog: `<doc/changelog.rst>`__
 
-Tested on Odoo 8.0 27a47eb3c3d4b79d8fffb6df66f107a993ddf805
+Tested on Odoo 12.0 32c2666d189047db66eb7b1392ea34b086fd341e
