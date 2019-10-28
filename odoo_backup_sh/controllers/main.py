@@ -184,7 +184,7 @@ class BackupController(http.Controller):
         return cloud_params
 
     @http.route('/web/database/backup', type='http', auth='user')
-    def download_backup(self, backup_id):
+    def download_backup(self, backup_id, **kwargs):
         backup_info_record = request.env['odoo_backup_sh.backup_info'].search([
             ('id', '=', backup_id),
             ('storage_service', '=', 'odoo_backup_sh'),
