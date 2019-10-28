@@ -189,6 +189,7 @@ class BackupController(http.Controller):
                 ).unlink()
         return cloud_params
 
+    # TODO: don't use /web/database/ prefix
     @http.route('/web/database/backup', type='http', auth='user')
     def download_backup(self, backup_id, **kwargs):
         backup_info_record = request.env['odoo_backup_sh.backup_info'].search([
@@ -197,9 +198,11 @@ class BackupController(http.Controller):
         ])
         backup_info_record.ensure_one()
         backup_info_record.assert_user_can_download_backup()
+        path = backup_info_record.backup_path
         backup_filename = backup_info_record.backup_filename
+        backup_key = '%s/%s' % (path, backup_filename)
         cloud_params = self.get_cloud_params(request.httprequest.url, call_from='backend')
-        backup_object = BackupCloudStorage.get_object(cloud_params, backup_filename)
+        backup_object = BackupCloudStorage.get_object(cloud_params, backup_key)
         return http.Response(
             backup_object['Body'].iter_chunks(),
             headers={
@@ -418,7 +421,7 @@ class BackupCloudStorage(http.Controller):
         return s3_client
 
     @classmethod
-    def _get_s3_dir(cls, cloud_params):
+    def get_s3_dir(cls, cloud_params):
         if cloud_params.get('odoo_backup_sh.odoo_oauth_uid'):
             return cloud_params['odoo_backup_sh.odoo_oauth_uid']
         else:
@@ -428,7 +431,7 @@ class BackupCloudStorage(http.Controller):
     @access_control
     def get_backup_list(cls, cloud_params):
         amazon_s3_client = cls.get_amazon_s3_client(cloud_params)
-        user_dir_name = '%s/' % cls._get_s3_dir(cloud_params)
+        user_dir_name = '%s/' % cls.get_s3_dir(cloud_params)
         list_objects = amazon_s3_client.list_objects_v2(
             Bucket=cloud_params['odoo_backup_sh.s3_bucket_name'], Prefix=user_dir_name, Delimiter='/')
         return {'backup_list': [(obj['Key'][len(user_dir_name):], 'odoo_backup_sh') for obj in
@@ -436,21 +439,22 @@ class BackupCloudStorage(http.Controller):
 
     @classmethod
     @access_control
-    def get_object(cls, cloud_params, obj_name):
+    def get_object(cls, cloud_params, obj_key):
         amazon_s3_client = cls.get_amazon_s3_client(cloud_params)
-        object_path = '%s/%s' % (cls._get_s3_dir(cloud_params), obj_name)
-        return amazon_s3_client.get_object(Bucket=cloud_params['odoo_backup_sh.s3_bucket_name'], Key=object_path)
+        return amazon_s3_client.get_object(Bucket=cloud_params['odoo_backup_sh.s3_bucket_name'], Key=obj_key)
 
     @classmethod
     @access_control
-    def put_object(cls, cloud_params, obj, obj_path):
+    def put_object(cls, cloud_params, obj, obj_key):
         amazon_s3_client = cls.get_amazon_s3_client(cloud_params)
-        amazon_s3_client.put_object(Body=obj, Bucket=cloud_params['odoo_backup_sh.s3_bucket_name'], Key=obj_path)
-        _logger.info('Following backup object have been put in the remote storage: %s' % obj_path)
+        amazon_s3_client.put_object(Body=obj, Bucket=cloud_params['odoo_backup_sh.s3_bucket_name'], Key=obj_key)
+        _logger.info('Following backup object have been put in the remote storage: %s' % obj_key)
 
     @classmethod
     @access_control
-    def delete_objects(cls, cloud_params, objs):
+    def delete_objects(cls, cloud_params, s3_keys):
+        objs = [{'Key': key} for key in s3_keys]
+
         amazon_s3_client = cls.get_amazon_s3_client(cloud_params)
         amazon_s3_client.delete_objects(
             Bucket=cloud_params['odoo_backup_sh.s3_bucket_name'], Delete={'Objects': objs})

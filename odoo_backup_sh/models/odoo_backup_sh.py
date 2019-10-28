@@ -286,6 +286,7 @@ class BackupConfig(models.Model):
     @api.model
     def get_info_file_object(self, cloud_params, info_file_name, storage_service):
         if storage_service == 'odoo_backup_sh':
+            # TODO: get_object accepts key, not a filename
             return BackupCloudStorage.get_object(cloud_params, info_file_name)
 
     @api.model
@@ -330,6 +331,9 @@ class BackupConfig(models.Model):
                 if backup_dt not in remote_backups[db_name]:
                     remote_backups[db_name][backup_dt] = []
                 remote_backups[db_name][backup_dt].append((file_name, service_name))
+
+            # TODO: this is supposed to be part for previous for-block?
+            # TODO: delete_remote_objects has to be updated due to changes in delete_objects method
 
             # Compute remote backup objects to delete according to auto rotation parameters.
             remote_objects_to_delete = []
@@ -469,7 +473,7 @@ class BackupConfig(models.Model):
         # make a backup if it is not a simulation
         if hasattr(self, cust_method_name) and config_record.backup_simulation is False:
             method = getattr(self, cust_method_name)
-            method(ts, name, dump_stream, info_file, info_file_content, cloud_params)
+            res = method(ts, name, dump_stream, info_file, info_file_content, cloud_params)
 
         # Create new record with backup info data
         info_file_content['upload_datetime'] = dt
@@ -480,17 +484,20 @@ class BackupConfig(models.Model):
 
     @api.model
     def make_backup_odoo_backup_sh(self, ts, name, dump_stream, info_file, info_file_content, cloud_params):
-        s3_backup_path = '%s/%s' % (cloud_params['odoo_backup_sh.odoo_oauth_uid'], compute_backup_filename(name, ts, info_file_content.get('encrypted')))
-        s3_info_file_path = '%s/%s' % (cloud_params['odoo_backup_sh.odoo_oauth_uid'], compute_backup_info_filename(name, ts))
+        s3_backup_name = compute_backup_filename(name, ts, info_file_content.get('encrypted'))
+        s3_info_file_name = compute_backup_info_filename(name, ts)
         # Upload two backup objects to AWS S3
-        for obj, obj_path in [[dump_stream, s3_backup_path], [info_file, s3_info_file_path]]:
+        for obj, obj_name in [(dump_stream, s3_backup_name), (info_file, s3_info_file_name)]:
             try:
-                res = BackupCloudStorage.put_object(cloud_params, obj, obj_path)
+                path = BackupCloudStorage.get_s3_dir(cloud_params)
+                obj_key = '%s/%s' % (path, obj_name)
+                info_file_content['backup_path'] = path
+                res = BackupCloudStorage.put_object(cloud_params, obj, obj_key)
                 if res and 'reload_page' in res:
                     return res
             except Exception as e:
-                _logger.exception('Failed to load backups')
-                raise UserError(_("Failed to load backups: %s") % e)
+                _logger.exception('Failed to create backup')
+                raise UserError(_("Failed to create backup: %s") % e)
 
     @api.multi
     def action_create_simulation_data(self):
@@ -604,6 +611,8 @@ class BackupInfo(models.Model):
                 r.upload_datetime,
             )
 
+    backup_path = fields.Char()
+    # TODO: Shall we make those fields static?
     backup_filename = fields.Char(compute=_compute_backup_filename, store=False)
     backup_info_filename = fields.Char(compute=_compute_backup_info_filename, store=False)
 
@@ -741,10 +750,11 @@ class DeleteRemoteBackupWizard(models.TransientModel):
         backup_s3_info_records = backup_info_records.filtered(lambda r: r.storage_service == 'odoo_backup_sh')
 
         for record in backup_s3_info_records:
-            for filename in [record.backup_filename, record.backup_info_filename]:
-                remote_objects_to_delete += [{
-                    'Key': '%s/%s' % (cloud_params['odoo_backup_sh.odoo_oauth_uid'], filename)
-                }]
+            for path, filename in [
+                    (record.backup_path, record.backup_filename),
+                    (record.backup_path, record.backup_info_filename)
+            ]:
+                remote_objects_to_delete.append('%s/%s' % (path, filename))
 
         # Delete unnecessary remote backup objects
         if remote_objects_to_delete:
