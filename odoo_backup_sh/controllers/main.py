@@ -1,6 +1,7 @@
 # Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
 # Copyright 2019 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
 # Copyright 2019 Eugene Molotov <https://it-projects.info/team/molotov>
+# Copyright 2019 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 import jinja2
