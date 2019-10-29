@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright 2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+<odoo>
+
+    <record id="view_pos_config_form" model="ir.ui.view">
+        <field name="name">pos.config.form</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='iface_big_scrollbars']/../.." position="after">
+                <div class="col-12 col-lg-6 o_setting_box" >
+                    <div class="o_setting_left_pane">
+                        <field name="ask_for_sign"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="ask_for_sign"/>
+<!--                        <div class="text-muted">-->
+<!--                            Improve navigation for imprecise industrial touchscreens-->
+<!--                        </div>-->
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('ask_for_sign', '=', False)]}">
+                    <div class="o_setting_left_pane">
+                        <field name="mandatory_ask_for_sign"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="mandatory_ask_for_sign"/>
+<!--                        <div class="text-muted">-->
+<!--                            Improve navigation for imprecise industrial touchscreens-->
+<!--                        </div>-->
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6 o_setting_box"
+                     attrs="{'invisible': [('ask_for_sign', '=', False)], 'required': [('ask_for_sign', '=', True)]}">
+<!--                    <div class="o_setting_left_pane">-->
+<!--                        -->
+<!--                    </div>-->
+                    <div class="o_setting_right_pane">
+                        <label for="terms_to_sign"/>
+                        <field name="terms_to_sign"
+                               widget="ace" options="{'mode': 'xml'}"/>
+<!--                        <div class="text-muted">-->
+<!--                            Improve navigation for imprecise industrial touchscreens-->
+<!--                        </div>-->
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_pos_config_kanban_inherited" model="ir.ui.view">
+        <field name="name">pos.config.kanban.view</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_config_kanban"/>
+        <field name="arch" type="xml">
+            <field name="currency_id" position="after">
+                <field name="ask_for_sign"/>
+            </field>
+            <button name="open_session_cb" position="after">
+                <button t-if="record.ask_for_sign.value &amp;&amp; (record.current_session_state.raw_value === 'opened' || record.pos_session_username.value)"
+                        class="btn btn-default" name="open_esign_kiosk" type="object">E-Sign</button>
+            </button>
+        </field>
+    </record>
+
+</odoo>
