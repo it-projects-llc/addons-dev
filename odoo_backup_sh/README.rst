@@ -100,7 +100,7 @@ Checklist: Backups
 
   * Find just created backup
   * Click ``[Download]``
-  * If database is encrypted, decrypt it as described in  `<doc/index.rst>`_
+  * If database is encrypted, decrypt it as described in  `<doc/index.rst>`__
   * Restore database in a usual way
 
 * Go to Dashboard
