@@ -27,8 +27,8 @@ odoo.define("odoo_backup_sh.tour", function (require) {
                 edition: 'enterprise'
             },
             {
-                // This step have been added to make sure that the "Go to Balance" button was shown.
-                trigger: '.o_dashboard_get_s3_credentials',
+                // Check that at least one button in dashboard is visible
+                trigger: '.o_dashboard_common .o_inner_box',
                 run: function () {},
             }
         ]
