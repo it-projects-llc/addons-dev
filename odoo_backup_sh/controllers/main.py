@@ -436,8 +436,10 @@ class BackupCloudStorage(http.Controller):
         user_dir_name = '%s/' % cls.get_s3_dir(cloud_params)
         list_objects = amazon_s3_client.list_objects_v2(
             Bucket=cloud_params['odoo_backup_sh.s3_bucket_name'], Prefix=user_dir_name, Delimiter='/')
-        all_files = [(obj['Key'].split('/')[-1], 'odoo_backup_sh') for obj in
-                       list_objects.get('Contents', {}) if obj.get('Size')]
+        all_files = [
+            (obj['Key'].split('/')[-1], 'odoo_backup_sh')
+            for obj in list_objects.get('Contents', {}) if obj.get('Size')
+        ]
         _logger.debug('Files in %s: \n %s', user_dir_name, all_files)
         return {'all_files': all_files}
 

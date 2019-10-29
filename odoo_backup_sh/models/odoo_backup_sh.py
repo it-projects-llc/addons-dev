@@ -308,7 +308,7 @@ class BackupConfig(models.Model):
         for obj in remote_objects:
             if obj[1] != S3_STORAGE:
                 continue
-            odoo_backup_sh_objects.append('%s/%s' % (path, filename[0]))
+            odoo_backup_sh_objects.append('%s/%s' % (path, obj[0]))
         if odoo_backup_sh_objects:
             return BackupCloudStorage.delete_objects(cloud_params, odoo_backup_sh_objects)
         return {}
