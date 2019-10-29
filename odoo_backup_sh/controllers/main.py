@@ -227,11 +227,11 @@ class BackupController(http.Controller):
         elif 'insufficient_credit_error' in cloud_params:
             page_values['error'] = cloud_params['insufficient_credit_error']
             return env.get_template("backup_list.html").render(page_values)
-        backup_list = BackupCloudStorage.get_backup_list(cloud_params)
+        backup_list = BackupCloudStorage.get_all_files(cloud_params)
         if 'reload_page' in backup_list:
             page_values['error'] = 'Something went wrong. Please refresh the page.'
             return env.get_template("backup_list.html").render(page_values)
-        page_values['backup_list'] = [name for name, _ in backup_list['backup_list'] if not name.endswith('.info')]
+        page_values['backup_list'] = [name for name, _ in backup_list['all_files'] if not name.endswith('.info')]
         return env.get_template("backup_list.html").render(page_values)
 
     @http.route('/web/database/restore_via_odoo_backup_sh', type='http', auth="none", methods=['POST'], csrf=False)
@@ -412,6 +412,7 @@ def access_control(origin_method):
     return wrapped
 
 
+# TODO: would it better to move this to odoo_backup_sh.config ?
 class BackupCloudStorage(http.Controller):
 
     @classmethod
@@ -429,13 +430,15 @@ class BackupCloudStorage(http.Controller):
 
     @classmethod
     @access_control
-    def get_backup_list(cls, cloud_params):
+    def get_all_files(cls, cloud_params):
         amazon_s3_client = cls.get_amazon_s3_client(cloud_params)
         user_dir_name = '%s/' % cls.get_s3_dir(cloud_params)
         list_objects = amazon_s3_client.list_objects_v2(
             Bucket=cloud_params['odoo_backup_sh.s3_bucket_name'], Prefix=user_dir_name, Delimiter='/')
-        return {'backup_list': [(obj['Key'][len(user_dir_name):], 'odoo_backup_sh') for obj in
-                                list_objects.get('Contents', {}) if obj.get('Size')]}
+        all_files = [(obj['Key'].split('/')[-1], 'odoo_backup_sh') for obj in
+                       list_objects.get('Contents', {}) if obj.get('Size')]
+        _logger.debug('Files in %s: \n %s', user_dir_name, all_files)
+        return {'all_files': all_files}
 
     @classmethod
     @access_control

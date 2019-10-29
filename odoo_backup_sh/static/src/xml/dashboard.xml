@@ -53,7 +53,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                     </div>
                   </t>
                   <t t-if="widget.dashboard_iap()">
-                    <div class="o_inner_box o_dashboard_action_update_info" title="Update backups information." t-if="widget.cloud_params['amazon_access_key_id']">
+                    <div class="o_inner_box o_dashboard_action_update_info" title="Update backups information." t-if="widget.cloud_params['odoo_backup_sh.aws_access_key_id']">
                         <i class="fa fa-refresh fa-3x"/><br/>
                         Update Info
                     </div>

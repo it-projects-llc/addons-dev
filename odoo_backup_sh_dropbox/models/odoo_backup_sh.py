@@ -41,12 +41,12 @@ class BackupConfig(models.Model):
         folder_path = self.env['ir.config_parameter'].get_param("odoo_backup_sh_dropbox.dropbox_folder_path")
         response = DropboxService.files_list_folder(folder_path)
         drobpox_backup_list = [(r.name, 'dropbox') for r in response.entries]
-        if 'backup_list' in backup_list:
+        if 'all_files' in backup_list:
             backup_list.update({
-                'backup_list': backup_list['backup_list'] + drobpox_backup_list
+                'all_files': backup_list['all_files'] + drobpox_backup_list
             })
         else:
-            backup_list['backup_list'] = drobpox_backup_list
+            backup_list['all_files'] = drobpox_backup_list
         return backup_list
 
     @api.model
