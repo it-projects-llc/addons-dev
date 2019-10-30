@@ -47,3 +47,14 @@ class TestOdooBackupSh(odoo.tests.common.TransactionCase):
             self.env['odoo_backup_sh.config'].compute_auto_rotation_backup_dts(backup_dts, hourly=2, daily=2, weekly=3),
             [dt for dt in backup_dts if backup_dts.index(dt) in [0, 1, 2, 4]]
         )
+        dt_start = datetime(2018, 10, 1, 12, 0, 0, 0)
+        backup_dts = [
+            dt_start - timedelta(minutes=1),
+            dt_start - timedelta(minutes=3),
+            dt_start - timedelta(minutes=6),
+            dt_start - timedelta(minutes=9),
+        ]
+        self.assertEqual(
+            self.env['odoo_backup_sh.config'].compute_auto_rotation_backup_dts(backup_dts, hourly=1000),
+            [backup_dts[i] for i in [0]]
+        )

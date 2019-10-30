@@ -203,7 +203,7 @@ class BackupController(http.Controller):
         backup_filename = backup_info_record.backup_filename
         backup_key = '%s/%s' % (path, backup_filename)
         cloud_params = self.get_cloud_params(request.httprequest.url, call_from='backend')
-        backup_object = BackupCloudStorage.get_object(cloud_params, backup_key)
+        backup_object = BackupCloudStorage.get_object(cloud_params, key=backup_key)
         return http.Response(
             backup_object['Body'].iter_chunks(),
             headers={
@@ -244,7 +244,7 @@ class BackupController(http.Controller):
                 error='Filestore for database "{}" already exists. Please choose another database name'.format(name)
             )
         cloud_params = self.get_cloud_params(request.httprequest.url, call_from='frontend')
-        backup_object = BackupCloudStorage.get_object(cloud_params, backup_file_name)
+        backup_object = BackupCloudStorage.get_object(cloud_params, filename=backup_file_name)
         backup_file = tempfile.NamedTemporaryFile()
         backup_file.write(backup_object['Body'].read())
         if backup_file_name.split('|')[0][-4:] == '.enc':
@@ -408,6 +408,7 @@ def access_control(origin_method):
                 # [request.env['ir.config_parameter'].set_param(option, None) for option in ('odoo_backup_sh.aws_access_key_id', 'odoo_backup_sh.aws_secret_access_key')]
                 return {'reload_page': True}
             else:
+                import wdb; wdb.set_trace()
                 raise exceptions.ValidationError(_(
                     "Amazon Web Services error: " + client_error.response['Error']['Message']))
     return wrapped
@@ -445,9 +446,11 @@ class BackupCloudStorage(http.Controller):
 
     @classmethod
     @access_control
-    def get_object(cls, cloud_params, obj_key):
+    def get_object(cls, cloud_params, filename=None, key=None):
         amazon_s3_client = cls.get_amazon_s3_client(cloud_params)
-        return amazon_s3_client.get_object(Bucket=cloud_params['odoo_backup_sh.s3_bucket_name'], Key=obj_key)
+        if not key:
+            key = '%s/%s' % (cls.get_s3_dir(cloud_params), filename)
+        return amazon_s3_client.get_object(Bucket=cloud_params['odoo_backup_sh.s3_bucket_name'], Key=key)
 
     @classmethod
     @access_control

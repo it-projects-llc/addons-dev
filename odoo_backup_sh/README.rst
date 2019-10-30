@@ -142,8 +142,11 @@ Test: All storages
 * *Install base module*
 * Install ``odoo_backup_sh_dropbox`` module
 * Install ``odoo_backup_sh_google_disk`` module
-* Configure all storages
-* Create Schedule for the same database for all storages
+* Configure S3 only credentials, Create Schedule
+* Test according to *Checklist: Backups*
+* Configure Dropbox credentials, Create Schedule
+* Test according to *Checklist: Backups*
+* Configure Google Drive credentials, Create Schedule
 * Test according to *Checklist: Backups*
 
 Test: IAP Notification

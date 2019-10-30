@@ -37,7 +37,7 @@ class BackupConfig(models.Model):
         try:
             DropboxService = self.env['ir.config_parameter'].get_dropbox_service()
         except ModuleNotConfigured:
-            return {}
+            return backup_list
         folder_path = self.env['ir.config_parameter'].get_param("odoo_backup_sh_dropbox.dropbox_folder_path")
         response = DropboxService.files_list_folder(folder_path)
         drobpox_backup_list = [(r.name, 'dropbox') for r in response.entries]
@@ -75,10 +75,12 @@ class BackupConfig(models.Model):
     @api.model
     def delete_remote_objects(self, cloud_params, remote_objects):
         folder_path = self.env['ir.config_parameter'].get_param("odoo_backup_sh_dropbox.dropbox_folder_path")
-        DropboxService = self.env['ir.config_parameter'].get_dropbox_service()
+        DropboxService = None
         dropbox_remove_objects = []
         for file in remote_objects:
             if file[1] == 'dropbox':
+                if not DropboxService:
+                    DropboxService = self.env['ir.config_parameter'].get_dropbox_service()
                 dropbox_remove_objects.append(file)
                 full_path = "{folder_path}/{file_name}".format(
                     folder_path=folder_path,

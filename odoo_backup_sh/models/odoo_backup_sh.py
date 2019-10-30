@@ -202,6 +202,7 @@ class BackupConfig(models.Model):
         """
         returns lisf of datetimes that has to be kept
         """
+        # TODO: it works too slow for hundreds of records
         backup_dts = sorted(backup_dts, reverse=True)
         last_backup_dt = backup_dts.pop(0)
         # We always take the last backup and based on its upload time we compute time frames
@@ -290,8 +291,7 @@ class BackupConfig(models.Model):
     @api.model
     def get_info_file_object(self, cloud_params, info_file_name, storage_service):
         if storage_service == S3_STORAGE:
-            # TODO: get_object accepts key, not a filename
-            return BackupCloudStorage.get_object(cloud_params, info_file_name)
+            return BackupCloudStorage.get_object(cloud_params, filename=info_file_name)
 
     @api.model
     def create_info_file(self, info_file_object, storage_service):
@@ -352,9 +352,11 @@ class BackupConfig(models.Model):
             remote_backups.setdefault(db_name, {})
             remote_backups[db_name].setdefault(backup_dt, [])
             remote_backups[db_name][backup_dt].append((file_name, service_name))
+        _logger.debug('remote_backups: %s', remote_backups)
 
         # Compute remote backup objects to delete according to auto rotation parameters.
         remote_objects_to_delete = []
+        remote_objects_to_archive = []
         for backup_config in self.search([('active', '=', True)]):
             limits = {}
             for time_frame in ('hourly', 'daily', 'weekly', 'monthly', 'yearly'):
@@ -363,6 +365,8 @@ class BackupConfig(models.Model):
                     limits[time_frame] = getattr(backup_config, time_frame + '_limit')
                 elif limit_option == 'unlimited':
                     limits[time_frame] = 1000000
+                    # we don't need to have some extra backups for futher periods
+                    break
             if limits:
                 remote_db = remote_backups.get(backup_config.database, False)
                 if not remote_db:
@@ -382,8 +386,10 @@ class BackupConfig(models.Model):
                     if backup_dt not in needed_backup_dts:
                         if backup_config.backup_simulation is False:
                             remote_objects_to_delete += remote_backups[backup_config.database][backup_dt]
+                        remote_objects_to_archive += remote_backups[backup_config.database][backup_dt]
                         del remote_backups[backup_config.database][backup_dt]
 
+        _logger.debug('remote_objects_to_delete: %s', remote_objects_to_delete)
         # Delete unnecessary remote backup objects
         if remote_objects_to_delete:
             res = self.delete_remote_objects(cloud_params, remote_objects_to_delete)
@@ -394,8 +400,10 @@ class BackupConfig(models.Model):
         backup_info_ids_to_delete = []
         # TODO: it would work slow if we have hundreds of backups
         for r in self.env['odoo_backup_sh.backup_info'].search([('active', '=', True)]):
-            if r.backup_filename not in backup_list['all_files']:
+            obj = (r.backup_filename, r.storage_service)
+            if obj not in backup_list['all_files'] or obj in remote_objects_to_archive:
                 backup_info_ids_to_delete.append(r.id)
+        _logger.debug('backup_info_ids_to_delete: %s', backup_info_ids_to_delete)
 
         # Archive old records
         self.env['odoo_backup_sh.backup_info'].browse(backup_info_ids_to_delete).write({
@@ -582,7 +590,7 @@ class BackupConfigCron(models.Model):
     def create(self, vals):
         config = self.env['odoo_backup_sh.config'].browse(vals['backup_config_id'])
         vals.update({
-            'name': 'Odoo-backup.sh: Backup the "%s" database and send it to the remote storage' % config.database,
+            'name': 'Odoo-backup.sh: Backup the "%s" database, send it to %s storage, apply rotation' % (config.database, config.storage_service),
             'model_id': self.env.ref('odoo_backup_sh.model_odoo_backup_sh_config').id,
             'state': 'code',
             'numbercall': -1,
@@ -616,8 +624,11 @@ class BackupInfo(models.Model):
     backup_simulation = fields.Boolean(default=False, readonly=True,
                                        help="If this option is enabled, the backup information will not be deleted "
                                             "after updating the backup list.")
-    active = fields.Boolean('Active', default=True, help="If the active field is set to False, it will allow you to "
-                                                         "hide the record without removing it.")
+    active = fields.Boolean(
+        'Active',
+        default=True,
+        readonly=True,
+        help="Non-active record means that the backup file was deleted")
 
     def _compute_backup_filename(self):
         for r in self:
@@ -735,8 +746,10 @@ class BackupRemoteStorage(models.Model):
 
     @api.multi
     def compute_total_used_remote_storage(self):
+        _logger.debug('compute_total_used_remote_storage...')
         self.compute_s3_used_remote_storage()
         amount = sum(self.env['odoo_backup_sh.backup_info'].search([]).mapped('backup_size'))
+        _logger.debug('compute_total_used_remote_storage: %s', amount)
         today_record = self.search([('date', '=', datetime.strftime(datetime.now(), DEFAULT_SERVER_DATE_FORMAT))])
         if today_record:
             today_record.total_used_remote_storage = amount
