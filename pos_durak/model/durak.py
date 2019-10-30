@@ -78,7 +78,7 @@ class Game(models.Model):
     def send_cards(self, game_name, player):
         for card in player.cards:
             data = {'num': card.num, 'power': card.power,
-                    'suit': card.suit, 'command': 'Cards'}
+                    'suit': card.suit, 'n': len(player.cards), 'command': 'Cards'}
             channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
                                                                           player.pos_id, game_name)
             self.env['bus.bus'].sendmany([[channel, data]])
@@ -186,21 +186,10 @@ class Game(models.Model):
     @api.model
     def who_should_step(self, game_id):
         cur_game = self.sudo().search([('id', '=', game_id)])
-        players_num = len(cur_game.players)
-        if cur_game.who_steps + 1 < players_num:
-            cur_game.who_steps += 1
-        else:
-            cur_game.who_steps = 0
-
-        second_stepper = cur_game.who_steps
-        if players_num > 2:
-            if cur_game.who_steps + 2 < players_num:
-                second_stepper = cur_game.who_steps + 2
-            else:
-                second_stepper = players_num - cur_game.who_steps - 1
-
+        stepman = cur_game.next(game_id, cur_game.who_steps)
+        cur_game.who_steps = stepman
         for player in cur_game.players:
-            data = {'first': cur_game.who_steps, 'second': second_stepper,
+            data = {'first': stepman, 'second': cur_game.next(game_id, cur_game.next(game_id, stepman)),
                     'command': 'Who_steps'}
             channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
                                                                           player.pos_id, cur_game.name)
@@ -209,19 +198,25 @@ class Game(models.Model):
 
     @api.model
     def make_step(self, game_id, uid, card_num):
+        if int(card_num) > 52 or int(card_num) < 0:
+            return 1
         try:
             cur_game = self.sudo().search([('id', '=', game_id)])
             stepper = cur_game.players.sudo().search([('uid', '=', uid)])
             card = stepper.cards.sudo().search([('num', '=', card_num)])[0]
-            can_make_a_step = False
         except Exception:
+            import wdb
+            wdb.set_trace()
             print('Make_step error!')
+        
+        can_make_a_step = False
+        
 
         try:
             for on_table_card in cur_game.on_table_cards:
                 if card.power == on_table_card.power:
                     can_make_a_step = True
-            if card.suit == cur_game.trump or len(cur_game.on_table_cards) == 0:
+            if len(cur_game.on_table_cards) == 0:
                 can_make_a_step = True
         except Exception:
             print('Card on table checking error!!!\n')
@@ -269,30 +264,51 @@ class Game(models.Model):
         except Exception:
             print('defence error!')
         return 1
+    
+    @api.model
+    def next(self, game_id, num):
+        cur_game = self.sudo().search([('id', '=', game_id)])
+        player = cur_game.players.sudo().search([('num', '=', num)])
+        if player.num < len(cur_game.players) - 1:
+            return cur_game.players.sudo().search([('num', '=', player.num + 1)]).num
+        else:
+            return cur_game.players.sudo().search([('num', '=', 0)]).num
 
     @api.model
     def cards_are_beated(self, game_id):
         cur_game = self.sudo().search([('id', '=', game_id)])
+        if len(cur_game.on_table_cards) == 0:
+            return 1
         extra_cards_length = len(cur_game.extra_cards)
+        who_took_new_cards = []
         try:
             for player in cur_game.players:
+                tooked_cards = False
                 while len(player.cards) < 6:
+                    tooked_cards = True
                     if len(cur_game.extra_cards) == 0:
                         break
-                    player.add_new_card(player.uid, cur_game.extra_cards[extra_cards_length - 1])
+                    player.add_new_card(player.uid, cur_game.extra_cards[extra_cards_length - 1].num)
                     cur_game.extra_cards[extra_cards_length - 1].unlink()
                     extra_cards_length -= 1
+                if tooked_cards == True:
+                    who_took_new_cards.append(player.uid)
         except Exception:
             print('Extra cards sending error!!!')
-        cur_game.on_table_cards.unlink()
-        cur_game.who_should_step(game_id)
-
+        
+        attackman = cur_game.who_steps
+        defman = cur_game.next(game_id, attackman)
+        help_attackman = cur_game.next(game_id, defman)
         for player in cur_game.players:
             data = {'command': 'Move_done'}
             channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
                                                                           player.pos_id, cur_game.name)
             self.env['bus.bus'].sendmany([[channel, data]])
-            cur_game.send_cards(cur_game.name, player)
+            for user in who_took_new_cards:
+                if user == player.uid:
+                    cur_game.send_cards(cur_game.name, player)
+        cur_game.who_should_step(game_id)
+        cur_game.on_table_cards.unlink()
         return 1
 
     @api.model
