@@ -1,8 +1,9 @@
 # Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
 # Copyright 2019 Eugene Molotov <https://it-projects.info/team/molotov>
+# Copyright 2019 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 {
-    "name": """odoo-backup.sh""",
+    "name": """S3 Backups""",
     "summary": """The 10 Euros service that would save your business.""",
     "category": "Backup",
     # "live_test_url": "",
@@ -13,8 +14,8 @@
     "support": "apps@it-projects.info",
     "website": "https://apps.odoo.com/apps/modules/12.0/odoo_backup_sh/",
     "license": "LGPL-3",
-    "price": 1.00,
-    "currency": "EUR",
+    # "price": 1.00,
+    # "currency": "EUR",
 
     "depends": [
         'iap', 'mail',

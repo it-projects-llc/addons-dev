@@ -32,18 +32,18 @@ class BackupConfig(models.Model):
         try:
             GoogleDriveService = self.env['ir.config_parameter'].get_google_drive_service()
         except ModuleNotConfigured:
-            return {}
+            return backup_list
         folder_id = self.env['ir.config_parameter'].get_param("odoo_backup_sh_google_disk.google_disk_folder_id")
         response = GoogleDriveService.files().list(q="'" + folder_id + "' in parents",
                                                    fields="nextPageToken, files(id, name)",
                                                    spaces="drive").execute()
         google_drive_backup_list = [(r.get('name'), 'google_drive') for r in response.get('files', [])]
-        if 'backup_list' in backup_list:
+        if 'all_files' in backup_list:
             backup_list.update({
-                'backup_list': backup_list['backup_list'] + google_drive_backup_list
+                'all_files': backup_list['all_files'] + google_drive_backup_list
             })
         else:
-            backup_list['backup_list'] = google_drive_backup_list
+            backup_list['all_files'] = google_drive_backup_list
         return backup_list
 
     @api.model
@@ -87,10 +87,12 @@ class BackupConfig(models.Model):
 
     @api.model
     def delete_remote_objects(self, cloud_params, remote_objects):
-        GoogleDriveService = self.env['ir.config_parameter'].get_google_drive_service()
+        GoogleDriveService = None
         google_drive_remove_objects = []
         for file in remote_objects:
             if file[1] == 'google_drive':
+                if not GoogleDriveService:
+                    GoogleDriveService = self.env['ir.config_parameter'].get_google_drive_service()
                 google_drive_remove_objects.append(file)
                 file_id = self.get_google_drive_file_id(file[0])
                 try:

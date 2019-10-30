@@ -1,5 +1,6 @@
 # Copyright 2018 Stanislav Krotov <https://it-projects.info/team/ufaks>
 # Copyright 2019 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
+# Copyright 2019 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 import copy
@@ -34,7 +35,7 @@ _logger = logging.getLogger(__name__)
 REMOTE_STORAGE_DATETIME_FORMAT = "%Y-%m-%d_%H-%M-%S"
 BACKUP_NAME_SUFFIX = ".zip"
 BACKUP_NAME_ENCRYPT_SUFFIX = BACKUP_NAME_SUFFIX + ".enc"
-
+S3_STORAGE = 'odoo_backup_sh'
 
 def compute_backup_filename(database, upload_datetime, is_encrypted):
     return '%s.%s%s' % (
@@ -94,7 +95,7 @@ class BackupConfig(models.Model):
     weekly_limit = fields.Integer('Weekly limit', default=1, help='How many weekly backups to preserve.')
     monthly_limit = fields.Integer('Monthly limit', default=1, help='How many monthly backups to preserve.')
     yearly_limit = fields.Integer('Yearly limit', default=1, help='How many yearly backups to preserve.')
-    storage_service = fields.Selection(selection=[('odoo_backup_sh', 'Odoo Backup sh')], default='odoo_backup_sh', required=True)
+    storage_service = fields.Selection(selection=[(S3_STORAGE, 'S3')], default=S3_STORAGE, required=True)
     unlimited_time_frame = fields.Char(default="hour")
     common_rotation = fields.Selection(selection=ROTATION_OPTIONS, default='unlimited')
     max_backups = fields.Integer(readonly=True, compute=lambda self: 0)
@@ -198,7 +199,11 @@ class BackupConfig(models.Model):
         return BackupController.get_cloud_params(redirect)
 
     def compute_auto_rotation_backup_dts(self, backup_dts, hourly=0, daily=0, weekly=0, monthly=0, yearly=0):
-        backup_dts = sorted(copy.deepcopy(backup_dts), reverse=True)
+        """
+        returns lisf of datetimes that has to be kept
+        """
+        # TODO: it works too slow for hundreds of records
+        backup_dts = sorted(backup_dts, reverse=True)
         last_backup_dt = backup_dts.pop(0)
         # We always take the last backup and based on its upload time we compute time frames
         # for other backups.
@@ -269,14 +274,14 @@ class BackupConfig(models.Model):
     @api.model
     def get_backup_list(self, cloud_params):
         try:
-            backup_list = BackupCloudStorage.get_backup_list(cloud_params)
+            backup_list = BackupCloudStorage.get_all_files(cloud_params)
             # if the simulation configuration exists, we need to get
             # all the simulation info files and convert them to backup format
             configs = self.env['odoo_backup_sh.config'].with_context({'active_test': False}).search([('backup_simulation', '=', True)])
             for config in configs:
                 simulation_backup_list = self.get_simulation_backup_list(config)
                 backup_list.update({
-                    'backup_list': backup_list['backup_list'] + simulation_backup_list
+                    'all_files': backup_list['all_files'] + simulation_backup_list
                 })
             return backup_list
         except Exception as e:
@@ -285,12 +290,12 @@ class BackupConfig(models.Model):
 
     @api.model
     def get_info_file_object(self, cloud_params, info_file_name, storage_service):
-        if storage_service == 'odoo_backup_sh':
-            return BackupCloudStorage.get_object(cloud_params, info_file_name)
+        if storage_service == S3_STORAGE:
+            return BackupCloudStorage.get_object(cloud_params, filename=info_file_name)
 
     @api.model
     def create_info_file(self, info_file_object, storage_service):
-        if storage_service == 'odoo_backup_sh':
+        if storage_service == S3_STORAGE:
             info_file = tempfile.NamedTemporaryFile()
             info_file.write(info_file_object['Body'].read())
             info_file.seek(0)
@@ -299,117 +304,152 @@ class BackupConfig(models.Model):
     @api.model
     def delete_remote_objects(self, cloud_params, remote_objects):
         odoo_backup_sh_objects = []
-        for file in remote_objects:
-            odoo_backup_sh_objects += [{'Key': '%s/%s' % (cloud_params['odoo_oauth_uid'], file[0])}]
+        path = BackupCloudStorage.get_s3_dir(cloud_params)
+        for obj in remote_objects:
+            if obj[1] != S3_STORAGE:
+                continue
+            odoo_backup_sh_objects.append('%s/%s' % (path, obj[0]))
         if odoo_backup_sh_objects:
             return BackupCloudStorage.delete_objects(cloud_params, odoo_backup_sh_objects)
         return {}
 
     @api.model
     def update_info(self, cloud_params):
+        """
+        * apply rotations
+        * sync odoo_backup_sh.backup_info records:
+
+          * create missed records for found backups in the remote storage
+          * archive existed records that don't have corresponding backup in the remote storage
+        """
         backup_list = self.get_backup_list(cloud_params)
-        if 'backup_list' in backup_list:
-            # Create a dictionary with remote backup objects:
-            # remote_backups = {
-            #     db_name: {
-            #         backup_datetime(datetime.datetime): [backup_file_name(str), info_file_name(str)],
-            #         ...
-            #     },
-            #     ...
-            # }
-            remote_backups = {}
-            for file in backup_list['backup_list']:
-                file_name = file[0]
-                service_name = file[1]
-                file_name_parts = file_name.split('.')
-                backup_dt_part_index = -3 if file_name_parts[-1] == 'enc' else -2
-                db_name = '.'.join(file_name_parts[:backup_dt_part_index])
-                backup_dt = datetime.strptime(file_name_parts[backup_dt_part_index], REMOTE_STORAGE_DATETIME_FORMAT)
-                if db_name not in remote_backups:
-                    remote_backups[db_name] = {}
-                if backup_dt not in remote_backups[db_name]:
-                    remote_backups[db_name][backup_dt] = []
-                remote_backups[db_name][backup_dt].append((file_name, service_name))
+        if not backup_list.get('all_files'):
+            return backup_list
 
-            # Compute remote backup objects to delete according to auto rotation parameters.
-            remote_objects_to_delete = []
-            for backup_config in self.search([('active', '=', True)]):
-                limits = {}
-                for time_frame in ('hourly', 'daily', 'weekly', 'monthly', 'yearly'):
-                    limit_option = getattr(backup_config, time_frame + '_rotation')
-                    if limit_option == 'limited':
-                        limits[time_frame] = getattr(backup_config, time_frame + '_limit')
-                    elif limit_option == 'unlimited':
-                        limits[time_frame] = 1000000
-                if limits:
-                    remote_db = remote_backups.get(backup_config.database, False)
-                    if not remote_db:
-                        continue
-                    # filter current dict by service name
-                    remote_db = {rem_db: remote_db[rem_db] for rem_db in remote_db if
-                                 remote_db[rem_db][0][1] == backup_config.storage_service}
-                    if not remote_db:
-                        continue
-                    backup_dts = copy.deepcopy(remote_db)
-                    needed_backup_dts = self.compute_auto_rotation_backup_dts(backup_dts, **limits)
-                    for backup_dt in backup_dts:
-                        if backup_dt not in needed_backup_dts:
-                            if file in remote_backups[backup_config.database][backup_dt] and backup_config.backup_simulation is False:
-                                remote_objects_to_delete.append(file)
-                            del remote_backups[backup_config.database][backup_dt]
+        # Create a dictionary with remote backup objects:
+        # remote_backups = {
+        #     db_name: {
+        #         backup_datetime::datetime.datetime: [(file_name::str, service_name::str)],
+        #         ...
+        #     },
+        #     ...
+        # }
+        remote_backups = {}
+        for f in backup_list['all_files']:
+            # file_name has on of follogin format:
+            # DATABASE_NAME.TIMESTAMP_WITHOUT_DOTES.zip[.enc]
+            # DATABASE_NAME.TIMESTAMP_WITHOUT_DOTES.info
+            # see compute_backup_filename, compute_backup_info_filename
+            file_name = f[0]
+            # service_name is odoo_backup_sh, dropbox, etc.
+            service_name = f[1]
+            file_name_parts = file_name.split('.')
+            if file_name_parts[-1] == 'enc':
+                file_name_parts = file_name_parts[:-1]
+            timestamp = file_name_parts[-2]
+            db_name = '.'.join(file_name_parts[:-2])
+            backup_dt = datetime.strptime(timestamp, REMOTE_STORAGE_DATETIME_FORMAT)
+            remote_backups.setdefault(db_name, {})
+            remote_backups[db_name].setdefault(backup_dt, [])
+            remote_backups[db_name][backup_dt].append((file_name, service_name))
+        _logger.debug('remote_backups: %s', remote_backups)
 
-            # Delete unnecessary remote backup objects
-            if remote_objects_to_delete:
-                res = self.delete_remote_objects(cloud_params, remote_objects_to_delete)
-                if res and 'reload_page' in res:
-                    return res
+        # Compute remote backup objects to delete according to auto rotation parameters.
+        remote_objects_to_delete = []
+        remote_objects_to_archive = []
+        for backup_config in self.search([('active', '=', True)]):
+            limits = {}
+            for time_frame in ('hourly', 'daily', 'weekly', 'monthly', 'yearly'):
+                limit_option = getattr(backup_config, time_frame + '_rotation')
+                if limit_option == 'limited':
+                    limits[time_frame] = getattr(backup_config, time_frame + '_limit')
+                elif limit_option == 'unlimited':
+                    limits[time_frame] = 1000000
+                    # we don't need to have some extra backups for futher periods
+                    break
+            if not limits:
+                # no rotations rules
+                continue
+            remote_db = remote_backups.get(backup_config.database, False)
+            if not remote_db:
+                continue
+            # filter current dict by service name
 
-            # Delete unnecessary local backup info records
-            backup_info_ids_to_delete = []
-            for r in self.env['odoo_backup_sh.backup_info'].search([('active', '=', True)]):
-                if remote_backups.get(r.database, False) is False or \
-                        remote_backups[r.database].get(r.upload_datetime.replace(microsecond=0), False) is False:
-                    backup_info_ids_to_delete.append(r.id)
+            # TODO: this works only in assumption that there are no backups
+            # made in same second for different storages. Otherwise we need
+            # to check storage service in each tuple of remote_db[dt] array
+            remote_db = {dt: remote_db[dt] for dt in remote_db if
+                         remote_db[dt][0][1] == backup_config.storage_service}
+            if not remote_db:
+                continue
+            backup_dts = copy.deepcopy(remote_db)
+            needed_backup_dts = self.compute_auto_rotation_backup_dts(backup_dts.keys(), **limits)
+            for backup_dt in backup_dts:
+                if backup_dt in needed_backup_dts:
+                    continue
+                if backup_config.backup_simulation is False:
+                    remote_objects_to_delete += remote_backups[backup_config.database][backup_dt]
+                remote_objects_to_archive += remote_backups[backup_config.database][backup_dt]
+                del remote_backups[backup_config.database][backup_dt]
 
-            # Archive old records
-            self.env['odoo_backup_sh.backup_info'].browse(backup_info_ids_to_delete).write({
-                'active': False
-            })
-            # Compute total remote storage after archive
-            self.env['odoo_backup_sh.remote_storage'].compute_total_used_remote_storage()
+        _logger.debug('remote_objects_to_delete: %s', remote_objects_to_delete)
+        # Delete unnecessary remote backup objects
+        if remote_objects_to_delete:
+            res = self.delete_remote_objects(cloud_params, remote_objects_to_delete)
+            if res and 'reload_page' in res:
+                return res
 
-            # Create missing local backup info records
-            for db_name, backup_dts in remote_backups.items():
-                for backup_dt, files in backup_dts.items():
-                    if not self.env['odoo_backup_sh.backup_info'].search([
-                        ('database', '=', db_name),
-                        ('upload_datetime', '>=', datetime.strftime(backup_dt, DEFAULT_SERVER_DATETIME_FORMAT)),
-                        ('upload_datetime', '<', datetime.strftime(backup_dt + relativedelta(seconds=1),
-                                                                   DEFAULT_SERVER_DATETIME_FORMAT))
-                    ]):
-                        info_file = files[0] if files[0][0][-5:] == '.info' else files[1] if len(files) == 2 else False
-                        if not info_file:
-                            continue
-                        info_file_name = info_file[0]
-                        info_file_service = info_file[1]
-                        info_file_object = self.get_info_file_object(cloud_params, info_file_name, info_file_service)
+        # Delete unnecessary local backup info records
+        backup_info_ids_to_delete = []
+        # TODO: it would work slow if we have hundreds of backups
+        for r in self.env['odoo_backup_sh.backup_info'].search([('active', '=', True)]):
+            obj = (r.backup_filename, r.storage_service)
+            if obj not in backup_list['all_files'] or obj in remote_objects_to_archive:
+                backup_info_ids_to_delete.append(r.id)
+        _logger.debug('backup_info_ids_to_delete: %s', backup_info_ids_to_delete)
 
-                        if 'reload_page' in info_file_object:
-                            return info_file_object
-                        info_file = self.create_info_file(info_file_object, info_file_service)
-                        config_parser.read(info_file.name)
-                        backup_info_vals = {}
-                        for (name, value) in config_parser.items('common'):
-                            if value == 'True' or value == 'true':
-                                value = True
-                            if value == 'False' or value == 'false':
-                                value = False
-                            if name == 'upload_datetime':
-                                value = datetime.strptime(value, REMOTE_STORAGE_DATETIME_FORMAT)
-                            elif name == 'backup_size':
-                                value = int(float(value))
-                            backup_info_vals[name] = value
-                        self.env['odoo_backup_sh.backup_info'].create(backup_info_vals)
+        # Archive old records
+        self.env['odoo_backup_sh.backup_info'].browse(backup_info_ids_to_delete).write({
+            'active': False
+        })
+        # Compute total remote storage after archive
+        self.env['odoo_backup_sh.remote_storage'].compute_total_used_remote_storage()
+
+        # Create missing local backup info records
+        for db_name, backup_dts in remote_backups.items():
+            for backup_dt, files in backup_dts.items():
+                # TODO: use backup_filename to search for record
+                record_exists = self.env['odoo_backup_sh.backup_info'].search([
+                    ('database', '=', db_name),
+                    ('upload_datetime', '>=', datetime.strftime(backup_dt, DEFAULT_SERVER_DATETIME_FORMAT)),
+                    ('upload_datetime', '<', datetime.strftime(backup_dt + relativedelta(seconds=1),
+                                                               DEFAULT_SERVER_DATETIME_FORMAT))
+                ])
+                if record_exists:
+                    continue
+                info_file = files[0] if files[0][0][-5:] == '.info' else files[1] if len(files) == 2 else False
+                if not info_file:
+                    continue
+                info_file_name = info_file[0]
+                info_file_service = info_file[1]
+                info_file_object = self.get_info_file_object(cloud_params, info_file_name, info_file_service)
+
+                if 'reload_page' in info_file_object:
+                    return info_file_object
+                info_file = self.create_info_file(info_file_object, info_file_service)
+                config_parser.read(info_file.name)
+                backup_info_vals = {}
+                for (name, value) in config_parser.items('common'):
+                    if value == 'True' or value == 'true':
+                        value = True
+                    if value == 'False' or value == 'false':
+                        value = False
+                    if name == 'upload_datetime':
+                        value = datetime.strptime(value, REMOTE_STORAGE_DATETIME_FORMAT)
+                    elif name == 'backup_size':
+                        value = int(float(value))
+                    backup_info_vals[name] = value
+                self.env['odoo_backup_sh.backup_info'].create(backup_info_vals)
         return backup_list
 
     @api.model
@@ -459,7 +499,7 @@ class BackupConfig(models.Model):
         if not config_record:
             return None
 
-        cloud_params = BackupController.get_cloud_params()
+        cloud_params = BackupController.get_cloud_params(env=self.env)
         dt = datetime.utcnow()
         ts = dt.strftime(REMOTE_STORAGE_DATETIME_FORMAT)
         dump_stream, info_file, info_file_content = self.get_dump_stream_and_info_file(name, service, ts)
@@ -469,7 +509,7 @@ class BackupConfig(models.Model):
         # make a backup if it is not a simulation
         if hasattr(self, cust_method_name) and config_record.backup_simulation is False:
             method = getattr(self, cust_method_name)
-            method(ts, name, dump_stream, info_file, info_file_content, cloud_params)
+            res = method(ts, name, dump_stream, info_file, info_file_content, cloud_params)
 
         # Create new record with backup info data
         info_file_content['upload_datetime'] = dt
@@ -480,17 +520,20 @@ class BackupConfig(models.Model):
 
     @api.model
     def make_backup_odoo_backup_sh(self, ts, name, dump_stream, info_file, info_file_content, cloud_params):
-        s3_backup_path = '%s/%s' % (cloud_params['odoo_oauth_uid'], compute_backup_filename(name, ts, info_file_content.get('encrypted')))
-        s3_info_file_path = '%s/%s' % (cloud_params['odoo_oauth_uid'], compute_backup_info_filename(name, ts))
+        s3_backup_name = compute_backup_filename(name, ts, info_file_content.get('encrypted'))
+        s3_info_file_name = compute_backup_info_filename(name, ts)
         # Upload two backup objects to AWS S3
-        for obj, obj_path in [[dump_stream, s3_backup_path], [info_file, s3_info_file_path]]:
+        for obj, obj_name in [(dump_stream, s3_backup_name), (info_file, s3_info_file_name)]:
             try:
-                res = BackupCloudStorage.put_object(cloud_params, obj, obj_path)
+                path = BackupCloudStorage.get_s3_dir(cloud_params)
+                obj_key = '%s/%s' % (path, obj_name)
+                info_file_content['backup_path'] = path
+                res = BackupCloudStorage.put_object(cloud_params, obj, obj_key)
                 if res and 'reload_page' in res:
                     return res
             except Exception as e:
-                _logger.exception('Failed to load backups')
-                raise UserError(_("Failed to load backups: %s") % e)
+                _logger.exception('Failed to create backup')
+                raise UserError(_("Failed to create backup: %s") % e)
 
     @api.multi
     def action_create_simulation_data(self):
@@ -503,7 +546,7 @@ class BackupConfig(models.Model):
         config = self.create({
             'database': self._cr.dbname,
             'encrypt_backups': False,
-            'storage_service': 'odoo_backup_sh',
+            'storage_service': S3_STORAGE,
             'backup_simulation': True
         })
         config.install_demo_data()
@@ -552,7 +595,7 @@ class BackupConfigCron(models.Model):
     def create(self, vals):
         config = self.env['odoo_backup_sh.config'].browse(vals['backup_config_id'])
         vals.update({
-            'name': 'Odoo-backup.sh: Backup the "%s" database and send it to the remote storage' % config.database,
+            'name': 'Odoo-backup.sh: Backup the "%s" database, send it to %s storage, apply rotation' % (config.database, config.storage_service),
             'model_id': self.env.ref('odoo_backup_sh.model_odoo_backup_sh_config').id,
             'state': 'code',
             'numbercall': -1,
@@ -582,12 +625,15 @@ class BackupInfo(models.Model):
     upload_datetime = fields.Datetime(string='Upload Datetime', readonly=True)
     encrypted = fields.Boolean(string='Encrypted', readonly=True)
     backup_size = fields.Float(string='Backup Size, MB', readonly=True)
-    storage_service = fields.Selection(selection=[('odoo_backup_sh', 'Odoo Backup sh')], readonly=True)
+    storage_service = fields.Selection(selection=[(S3_STORAGE, 'S3')], readonly=True)
     backup_simulation = fields.Boolean(default=False, readonly=True,
                                        help="If this option is enabled, the backup information will not be deleted "
                                             "after updating the backup list.")
-    active = fields.Boolean('Active', default=True, help="If the active field is set to False, it will allow you to "
-                                                         "hide the record without removing it.")
+    active = fields.Boolean(
+        'Active',
+        default=True,
+        readonly=True,
+        help="Non-active record means that the backup file was deleted")
 
     def _compute_backup_filename(self):
         for r in self:
@@ -604,6 +650,8 @@ class BackupInfo(models.Model):
                 r.upload_datetime,
             )
 
+    backup_path = fields.Char()
+    # TODO: Shall we make those fields static?
     backup_filename = fields.Char(compute=_compute_backup_filename, store=False)
     backup_info_filename = fields.Char(compute=_compute_backup_info_filename, store=False)
 
@@ -628,7 +676,7 @@ class BackupInfo(models.Model):
         self.assert_user_can_download_backup()
 
         if backup is not None:
-            if backup.storage_service != 'odoo_backup_sh':
+            if backup.storage_service != S3_STORAGE:
                 raise UserError(_("Unknown storage service: %s") % backup.storage_service)
             backup_id = backup.id
         else:
@@ -677,7 +725,7 @@ class BackupNotification(models.Model):
     def fetch_notifications(self):
         config_params = self.env['ir.config_parameter']
         data = {'params': {
-            'user_key': config_params.get_param('odoo_backup_user_key'),
+            'user_key': config_params.get_param('odoo_backup_sh.user_key'),
             'date_last_request': config_params.get_param('odoo_backup_sh.date_last_request', None)
         }}
         response = requests.post(BACKUP_SERVICE_ENDPOINT + '/fetch_notifications', json=data).json()['result']
@@ -703,8 +751,10 @@ class BackupRemoteStorage(models.Model):
 
     @api.multi
     def compute_total_used_remote_storage(self):
+        _logger.debug('compute_total_used_remote_storage...')
         self.compute_s3_used_remote_storage()
         amount = sum(self.env['odoo_backup_sh.backup_info'].search([]).mapped('backup_size'))
+        _logger.debug('compute_total_used_remote_storage: %s', amount)
         today_record = self.search([('date', '=', datetime.strftime(datetime.now(), DEFAULT_SERVER_DATE_FORMAT))])
         if today_record:
             today_record.total_used_remote_storage = amount
@@ -716,7 +766,7 @@ class BackupRemoteStorage(models.Model):
 
     @api.multi
     def compute_s3_used_remote_storage(self):
-        amount = sum(self.env['odoo_backup_sh.backup_info'].search([('storage_service', '=', 'odoo_backup_sh')]).mapped('backup_size'))
+        amount = sum(self.env['odoo_backup_sh.backup_info'].search([('storage_service', '=', S3_STORAGE)]).mapped('backup_size'))
         today_record = self.search([('date', '=', datetime.strftime(datetime.now(), DEFAULT_SERVER_DATE_FORMAT))])
         if today_record:
             today_record.s3_used_remote_storage = amount
@@ -738,13 +788,14 @@ class DeleteRemoteBackupWizard(models.TransientModel):
         backup_info_records = self.env['odoo_backup_sh.backup_info'].search([('id', 'in', record_ids)])
         cloud_params = BackupController.get_cloud_params()
         remote_objects_to_delete = []
-        backup_s3_info_records = backup_info_records.filtered(lambda r: r.storage_service == 'odoo_backup_sh')
+        backup_s3_info_records = backup_info_records.filtered(lambda r: r.storage_service == S3_STORAGE)
 
         for record in backup_s3_info_records:
-            for filename in [record.backup_filename, record.backup_info_filename]:
-                remote_objects_to_delete += [{
-                    'Key': '%s/%s' % (cloud_params['odoo_oauth_uid'], filename)
-                }]
+            for path, filename in [
+                    (record.backup_path, record.backup_filename),
+                    (record.backup_path, record.backup_info_filename)
+            ]:
+                remote_objects_to_delete.append('%s/%s' % (path, filename))
 
         # Delete unnecessary remote backup objects
         if remote_objects_to_delete:

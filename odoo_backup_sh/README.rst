@@ -2,9 +2,9 @@
    :target: https://www.gnu.org/licenses/lgpl
    :alt: License: LGPL-3
 
-================
- Odoo-backup.sh
-================
+============
+ S3 Backups
+============
 
 The 10 Euros service that would save your business.
 
@@ -49,12 +49,123 @@ It's a page where an user can watch detail information about his backups which a
 
 When the user opens the backups dashboard, the module makes similar requests are described above about ``/web/database/backups page``.
 
+Manual Testing
+==============
+
+To test odoo_backup_sh* modules one can use following scenarios:
+
+Test: rotation
+--------------
+
+* use database with demo
+* install ``odoo_backup_sh``
+* click ``[Get S3 storage]``
+* configure any backup schedule
+* configure rotation to test
+* Go to ``[[ Settings ]] >> Automation >> Scheduled Actions``
+
+  * Find a cron job for backuping and click ``[Run Manually]``
+
+* check that backups are rotated according to plan
+
+Preparation: Install base module
+--------------------------------
+
+* use database without demo
+* if you previously installed backup modules, then uninstall them and delete ``odoo_backup_sh.*`` params in ``[[ Settings ]] >> System Parameters``. 
+* install ``odoo_backup_sh``
+
+
+Test: IAP S3
+------------
+
+
+* Install base module
+* Click ``[Get S3 storage]``
+* Create Schedule for current database. Test from this step should be proceeded in two different scenarios: with encryption disabled and enabled
+* Test according to *Checklist: Backups*
+
+Restoring without downloading:
+
+* In new incognito window open ``/web/database/manager``
+* In ``Odoo-backup.sh`` section restore database
+* Login to the restored database -- all scheduled backuping must be disabled
+
+Checklist: Backups
+------------------
+
+* Directly at the storage: create manually any file with random name
+* Go to ``[[ Settings ]] >> Automation >> Scheduled Actions``
+
+  * Find a cron job for backuping and click ``[Run Manually]``
+
+* Go to ``[[ Settings ]] >> Backups``
+
+  * Find just created backup
+  * Click ``[Download]``
+  * If database is encrypted, decrypt it as described in  `<doc/index.rst>`__
+  * Restore database in a usual way
+
+Manual backups:
+
+* Go to Dashboard
+* Click ``[Make backup now]``
+* Download the backup again as described above
+
+Syncing with remote backups:
+
+* Directly at the storage:
+
+  * copy archive for a backup and set new name (e.g. change day of the backup)
+  * copy info file of the backup and make corresponing name in its name and content
+
+* Go to ``[[ Settings ]] >> Automation >> Scheduled Actions``
+
+  * Find a cron job for backuping and click ``[Run Manually]``
+
+* Go to ``[[ Settings ]] >> Backups``
+
+  * Check that copied backup has a record in Backup list. If there is no one, be
+    sure that the Backup Settings doesn't have rotations.
+
+
+Test: Dropbox only
+------------------
+* *Install base module*
+* Install ``odoo_backup_sh_dropbox`` module
+* Configure dropbox according to the module's documentation
+* Create Schedule for any database
+* Test according to *Checklist: Backups*
+
+Test: All storages
+------------------
+* *Install base module*
+* Install ``odoo_backup_sh_dropbox`` module
+* Install ``odoo_backup_sh_google_disk`` module
+* Configure S3 only credentials, Create Schedule
+* Test according to *Checklist: Backups*
+* Configure Dropbox credentials, Create Schedule
+* Test according to *Checklist: Backups*
+* Configure Google Drive credentials, Create Schedule
+* Test according to *Checklist: Backups*
+
+Test: IAP Notification
+----------------------
+
+TODO
+
+Test: IAP Credits
+-----------------
+
+TODO: Check purchasing, top-up, using credits, running out of credits
+
 Credits
 =======
 
 Contributors
 ------------
 * `Stanislav Krotov <https://it-projects.info/team/ufaks>`__
+* `Ivan Yelizariev <https://it-projects.info/team/yelizariev>`__
 
 Sponsors
 --------
@@ -66,7 +177,7 @@ Maintainers
 
       To get a guaranteed support
       you are kindly requested to purchase the module
-      at `odoo apps store <https://apps.odoo.com/apps/modules/{VERSION}/{TECHNICAL_NAME}/>`__.
+      at `odoo apps store <https://apps.odoo.com/apps/modules/12.0/odoo_backup_sh/>`__.
 
       Thank you for understanding!
 
