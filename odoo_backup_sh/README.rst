@@ -91,6 +91,14 @@ Restoring without downloading:
 * In ``Odoo-backup.sh`` section restore database
 * Login to the restored database -- all scheduled backuping must be disabled
 
+Test: S3
+--------
+
+* Install base module
+* Configure private S3 credentials according to the instuction 
+* Create Schedule for current database.
+* Test according to *Checklist: Backups*
+
 Checklist: Backups
 ------------------
 
