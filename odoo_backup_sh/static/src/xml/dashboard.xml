@@ -13,6 +13,16 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                         <i class="fa fa-database fa-3x"/><br/>
                         Add Database
                     </div>
+                    <!--
+                        See update_info method to undestand meaning of the button.
+                        It's normally not needed for the user. 
+                        It's call automatically after every cron backup
+
+                    <div class="o_inner_box o_dashboard_action_update_info" title="Update backups information.">
+                        <i class="fa fa-refresh fa-3x"/><br/>
+                        Update Info
+                    </div>
+                    -->
 
                   <t t-if="widget.dashboard_basic()">
                     <!--
@@ -53,10 +63,6 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                     </div>
                   </t>
                   <t t-if="widget.dashboard_iap()">
-                    <div class="o_inner_box o_dashboard_action_update_info" title="Update backups information." t-if="widget.cloud_params['odoo_backup_sh.aws_access_key_id']">
-                        <i class="fa fa-refresh fa-3x"/><br/>
-                        Update Info
-                    </div>
                     <a target="_blank" t-att-href="widget.up_balance_url" class="o_inner_box o_dashboard_action" title="Up to the balance.">
                         <i class="fa fa-money fa-3x"/><br/>
                         Go to Balance

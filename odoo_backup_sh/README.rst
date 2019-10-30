@@ -62,7 +62,10 @@ Test: rotation
 * click ``[Get S3 storage]``
 * configure any backup schedule
 * configure rotation to test
-* go to Dashboard and click *Update Info*
+* Go to ``[[ Settings ]] >> Automation >> Scheduled Actions``
+
+  * Find a cron job for backuping and click ``[Run Manually]``
+
 * check that backups are rotated according to plan
 
 Preparation: Install base module
@@ -103,9 +106,28 @@ Checklist: Backups
   * If database is encrypted, decrypt it as described in  `<doc/index.rst>`__
   * Restore database in a usual way
 
+Manual backups:
+
 * Go to Dashboard
 * Click ``[Make backup now]``
 * Download the backup again as described above
+
+Syncing with remote backups:
+
+* Directly at the storage:
+
+  * copy archive for a backup and set new name (e.g. change day of the backup)
+  * copy info file of the backup and make corresponing name in its name and content
+
+* Go to ``[[ Settings ]] >> Automation >> Scheduled Actions``
+
+  * Find a cron job for backuping and click ``[Run Manually]``
+
+* Go to ``[[ Settings ]] >> Backups``
+
+  * Check that copied backup has a record in Backup list. If there is no one, be
+    sure that the Backup Settings doesn't have rotations.
+
 
 Test: Dropbox only
 ------------------
