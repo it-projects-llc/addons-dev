@@ -419,35 +419,37 @@ class BackupConfig(models.Model):
         for db_name, backup_dts in remote_backups.items():
             for backup_dt, files in backup_dts.items():
                 # TODO: use backup_filename to search for record
-                if not self.env['odoo_backup_sh.backup_info'].search([
+                record_exists = self.env['odoo_backup_sh.backup_info'].search([
                     ('database', '=', db_name),
                     ('upload_datetime', '>=', datetime.strftime(backup_dt, DEFAULT_SERVER_DATETIME_FORMAT)),
                     ('upload_datetime', '<', datetime.strftime(backup_dt + relativedelta(seconds=1),
                                                                DEFAULT_SERVER_DATETIME_FORMAT))
                 ]):
-                    info_file = files[0] if files[0][0][-5:] == '.info' else files[1] if len(files) == 2 else False
-                    if not info_file:
-                        continue
-                    info_file_name = info_file[0]
-                    info_file_service = info_file[1]
-                    info_file_object = self.get_info_file_object(cloud_params, info_file_name, info_file_service)
+                if record_exists:
+                    continue
+                info_file = files[0] if files[0][0][-5:] == '.info' else files[1] if len(files) == 2 else False
+                if not info_file:
+                    continue
+                info_file_name = info_file[0]
+                info_file_service = info_file[1]
+                info_file_object = self.get_info_file_object(cloud_params, info_file_name, info_file_service)
 
-                    if 'reload_page' in info_file_object:
-                        return info_file_object
-                    info_file = self.create_info_file(info_file_object, info_file_service)
-                    config_parser.read(info_file.name)
-                    backup_info_vals = {}
-                    for (name, value) in config_parser.items('common'):
-                        if value == 'True' or value == 'true':
-                            value = True
-                        if value == 'False' or value == 'false':
-                            value = False
-                        if name == 'upload_datetime':
-                            value = datetime.strptime(value, REMOTE_STORAGE_DATETIME_FORMAT)
-                        elif name == 'backup_size':
-                            value = int(float(value))
-                        backup_info_vals[name] = value
-                    self.env['odoo_backup_sh.backup_info'].create(backup_info_vals)
+                if 'reload_page' in info_file_object:
+                    return info_file_object
+                info_file = self.create_info_file(info_file_object, info_file_service)
+                config_parser.read(info_file.name)
+                backup_info_vals = {}
+                for (name, value) in config_parser.items('common'):
+                    if value == 'True' or value == 'true':
+                        value = True
+                    if value == 'False' or value == 'false':
+                        value = False
+                    if name == 'upload_datetime':
+                        value = datetime.strptime(value, REMOTE_STORAGE_DATETIME_FORMAT)
+                    elif name == 'backup_size':
+                        value = int(float(value))
+                    backup_info_vals[name] = value
+                self.env['odoo_backup_sh.backup_info'].create(backup_info_vals)
         return backup_list
 
     @api.model
