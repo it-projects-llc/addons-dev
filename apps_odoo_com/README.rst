@@ -2,9 +2,9 @@
    :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
    :alt: License: LGPL-3
 
-==========================
-Odoo App Store Admin tool
-==========================
+===========================
+ Odoo App Store Admin tool
+===========================
 
 Tool to work with apps.odoo.com database via xmlrpc. Usefull for sharing administration rights with your colleagues as well as for automation.
 
