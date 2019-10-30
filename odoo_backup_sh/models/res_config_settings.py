@@ -17,6 +17,7 @@ class ResConfigSettings(models.TransientModel):
     odoo_backup_sh_amazon_secret_access_key = fields.Char("Secret Access Key", config_parameter='odoo_backup_sh.aws_secret_access_key', default='')
     odoo_backup_sh_private_s3_dir = fields.Char("Path", config_parameter='odoo_backup_sh.private_s3_dir', default='')
     odoo_backup_sh_odoo_oauth_uid = fields.Char("Odoo OAuth", config_parameter='odoo_backup_sh.odoo_oauth_uid', default='')
+    private_s3_dir_changed = fields.Boolean(default=False)
 
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
@@ -32,3 +33,12 @@ class ResConfigSettings(models.TransientModel):
            != self.env['ir.config_parameter'].get_param('odoo_backup_sh.aws_access_key_id'):
             # when Access Key is changed to new non-empty value
             self.odoo_backup_sh_odoo_oauth_uid = ''
+
+    @api.onchange('odoo_backup_sh_private_s3_dir')
+    def track_dir_changes(self):
+        current_value = self.env['ir.config_parameter'].get_param('odoo_backup_sh.private_s3_dir')
+        has_key = self.env['ir.config_parameter'].get_param('odoo_backup_sh.aws_access_key_id')
+        if self.odoo_backup_sh_private_s3_dir and \
+           has_key and \
+           self.odoo_backup_sh_private_s3_dir != current_value:
+            self.private_s3_dir_changed = True

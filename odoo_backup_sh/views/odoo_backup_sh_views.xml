@@ -375,6 +375,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                           <div class="content-group">
                             <div class="mt16 row">
                               <field name="odoo_backup_sh_odoo_oauth_uid" invisible="1"/>
+                              <field name="private_s3_dir_changed" invisible="1"/>
 
                               <label for="odoo_backup_sh_amazon_bucket_name" class="col-4 col-lg-4 o_light_label"/>
                               <field name="odoo_backup_sh_amazon_bucket_name" nolabel="1"/>
@@ -394,6 +395,8 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 
                             </div>
+                            <div class="mt16 text-warning" attrs="{'invisible': [('private_s3_dir_changed', '=', False)]}">Note that on changing Folder, backups will be synced with new folder only<br/><span attrs="{'invisible': [('odoo_backup_sh_private_s3_dir', '=', '')]}">Be sure, that the folder exists in the bucket</span></div>
+
                             <button name="%(odoo_backup_sh.ir_actions_server_backup_dashboard)d" type="action" string="Get Credentials" class="btn btn-primary" icon="fa-lock" attrs="{'invisible': [('odoo_backup_sh_amazon_secret_access_key', '!=', '')]}"/>
                           </div>
                         </div>
