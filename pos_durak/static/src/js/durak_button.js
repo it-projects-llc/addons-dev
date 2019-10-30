@@ -32,7 +32,6 @@ odoo.define('pos_chat_button', function (require){
     // Defender counter
     var choose_and_beat = 0;
     var def_cards = [0,0];
-    var all_cards = [];
     var card_suits = ['Heart', 'Diamond', 'Clubs', 'Spade'];
     var my_game_id = -1;
 
@@ -175,7 +174,7 @@ odoo.define('pos_chat_button', function (require){
             self._rpc({
                model: 'game',
                method: 'cards_are_beated',
-               args: [my_game_id]
+               args: [my_game_id, session.uid]
             });
         }
         else if(elem.id === "take-button"){
@@ -307,7 +306,6 @@ odoo.define('pos_chat_button', function (require){
         on_table_cards = [];
         trump = -1;
         who_moves = [-1,-1];
-        all_cards = [];
         try {
             chat_users.forEach(function(item){
                 document.getElementById('picture-'+NumInQueue(item.uid)).
@@ -365,11 +363,16 @@ odoo.define('pos_chat_button', function (require){
     }
 
     function Cover(card, x2, y2) {
-        var card1 = document.getElementById('card-'+card);
-        var x1 = card1.offsetLeft, y1 = card1.offsetTop;
-        var w = card1.offsetWidth, h = card1.offsetHeight;
-        card1.style.setProperty('transform','translate3d('+
-            (((x2*W) - w/2) - x1)+'px,'+(((y2*H) - h/2) - y1)+'px,0px)');
+        try{
+            var card1 = document.getElementById('card-'+card);
+            var x1 = card1.offsetLeft, y1 = card1.offsetTop;
+            var w = card1.offsetWidth, h = card1.offsetHeight;
+            card1.style.setProperty('transform','translate3d('+
+                (((x2*W) - w/2) - x1)+'px,'+(((y2*H) - h/2) - y1)+'px,0px)');
+        }
+        catch(e){
+            Tip("Can't cover chosen card!")
+        }
     }
 
     function Move(card_num){
@@ -411,20 +414,14 @@ odoo.define('pos_chat_button', function (require){
         Tip(num, 1500);
     }
 
-    function DownloadEnemyCards(data){
-        for(var i = 0; i < all_cards.length; i++){
-            if(data.num === all_cards[i]){
-                return;
-            }
-        }
-        all_cards.push(data.num);
-        chat_users[NumInQueue(data.uid)].cards.push({
+    function DownloadEnemyCards(num, uid){
+        chat_users[NumInQueue(uid)].cards.push({
            power: -1,
            suit: -1,
-           num: data.num
+           num: num
         });
         var out ='<img type="button" src="/pos_durak/static/src/img/kards/'+
-                data.num+'.png" id="card-'+data.num+'" class="enemy-card"/>';
+                num+'.png" id="card-'+num+'" class="enemy-card"/>';
         document.getElementById('enemy-cards').innerHTML += out;
     }
 
@@ -805,7 +802,7 @@ odoo.define('pos_chat_button', function (require){
                     Tip('If defender beated cards, press "Complete move" button)', 4000);
                 }
                 if(data.uid !== session.uid){
-                    DownloadEnemyCards(data);
+                    DownloadEnemyCards(data.num, data.uid);
                 }
                 PutOn(data.num);
                 on_table_cards.push(data.num);
@@ -814,15 +811,7 @@ odoo.define('pos_chat_button', function (require){
                 ShowHowMuchCards(data.number)
             }
             else if(data.command === 'Move_done'){
-                complete_move++;
-                if((complete_move === 2 && chat_users.length > 2) ||
-                    (complete_move === 1 && chat_users.length === 2)){
-                    First_scene();
-                }
-                me = NumInQueue(session.uid);
-                if(me === who_moves[0] || me === next_to(who_moves[0], true) || me === who_moves[1]){
-                    chat_users[me].cards = [];
-                }
+                First_scene();
             }
             else if(data.command === 'Defence'){
                 if(!data.can_beat){
@@ -836,14 +825,8 @@ odoo.define('pos_chat_button', function (require){
                 var winner = data.winner, loser = data.loser;
                 if(data.uid !== session.uid){
                     DownloadEnemyCards(winner, data.uid);
-                    DownloadEnemyCards(loser, data.uid);
                 }
-                if(!OnTable(winner)){
-                    on_table_cards.push(winner);
-                }
-                if(!OnTable(loser)){
-                    on_table_cards.push(loser);
-                }
+                on_table_cards.push(winner);
                 Cover(winner, data.x, data.y);
             }
             else if(data.command === 'my_game_id'){

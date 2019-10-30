@@ -13,6 +13,7 @@ class Game(models.Model):
     trump = fields.Integer(default=-1)
     who_steps = fields.Integer(default=-1, help='Holds user id')
     on_table_cards = fields.One2many('game.cards', 'on_table_cards', ondelete="cascade")
+    attackers_agreement = fields.Integer(default=0)
 
     @api.model
     def create_the_game(self, game_name, uid):
@@ -210,10 +211,8 @@ class Game(models.Model):
             import wdb
             wdb.set_trace()
             print('Make_step error!')
-        
-        can_make_a_step = False
-        
 
+        can_make_a_step = False
         try:
             for on_table_card in cur_game.on_table_cards:
                 if card.power == on_table_card.power:
@@ -238,7 +237,11 @@ class Game(models.Model):
     def defence(self, game_id, uid, card1, card2, x, y):
         try:
             cur_game = self.sudo().search([('id', '=', game_id)])
-            cur_game.make_step(game_id, uid, card1)
+            defender = cur_game.players.sudo().search([('uid', '=', uid)])
+            card = defender.cards.sudo().search([('num', '=', card1)])[0]
+            cur_game.on_table_cards += cur_game.on_table_cards.sudo().create({'power': card.power,
+                                          'suit': card.suit, 'num': card.num, 'in_game': True})
+            defender.cards -= card
             first = cur_game.on_table_cards.sudo().search([('num', '=', card1)])[0]
             second = cur_game.on_table_cards.sudo().search([('num', '=', card2)])[0]
             fpow = first.power
@@ -248,13 +251,16 @@ class Game(models.Model):
         except Exception:
             print("Defence var's initialization error!")
         try:
-            if first.suit == cur_game.trump:
-                fpow = first.power + 100
-            if second.suit == cur_game.trump:
-                spow = first.power + 100
-            if spow > fpow:
-                winner = card1
-                loser = card2
+            # If one of them is trump, there's always way to compare cards
+            # If posible to compare
+            if first.suit == second.suit or first.suit == cur_game.trump or second.suit == cur_game.trump:
+                if first.suit == cur_game.trump:
+                    fpow = first.power + 100
+                if second.suit == cur_game.trump:
+                    spow = second.power + 100
+                if spow < fpow:
+                    winner = card1
+                    loser = card2
             else:
                 loser = card1
                 winner = card2
@@ -317,13 +323,23 @@ class Game(models.Model):
         return 1
 
     @api.model
-    def cards_are_beated(self, game_id):
+    def cards_are_beated(self, game_id, uid):
         cur_game = self.sudo().search([('id', '=', game_id)])
         if len(cur_game.on_table_cards) == 0:
             return 1
         
+        cur_game.players.sudo().search([('uid', '=', uid)])[0].completed_move = True
+        temp_cnt = 0
+        for player in cur_game.players:
+            if player.completed_move:
+                temp_cnt += 1
+        if temp_cnt != 2 and len(cur_game.players) > 2:
+            return 1
+        
         cur_game.new_cards(game_id)
         cur_game.who_should_step(game_id)
+        for player in cur_game.players:
+            if player.completed_move: player.completed_move = False
         return 1
 
     @api.model
@@ -390,6 +406,8 @@ class Player(models.Model):
     # Is player ready to play or alredy playing
     ready = fields.Boolean(default=False)
     pos_id = fields.Integer(default=-1)
+    # This var needs to check if attacker completed his move
+    completed_move = fields.Boolean(default=False)
 
     @api.model
     def add_new_card(self, uid, num):
