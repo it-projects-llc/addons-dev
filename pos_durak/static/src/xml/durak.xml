@@ -24,6 +24,7 @@
         </div>
         <div id="cards"></div>
         <div id="enemy-cards"></div>
+        <div id="sounds"></div>
         <div class="game-tools">
             <span type="button" class="game-button" id="ready-button" style="opacity: 0">
                 Ready
