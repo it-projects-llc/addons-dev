@@ -367,27 +367,30 @@ class BackupConfig(models.Model):
                     limits[time_frame] = 1000000
                     # we don't need to have some extra backups for futher periods
                     break
-            if limits:
-                remote_db = remote_backups.get(backup_config.database, False)
-                if not remote_db:
-                    continue
-                # filter current dict by service name
+            if not limits:
+                # no rotations rules
+                continue
+            remote_db = remote_backups.get(backup_config.database, False)
+            if not remote_db:
+                continue
+            # filter current dict by service name
 
-                # TODO: this works only in assumption that there are no backups
-                # made in same second for different storages. Otherwise we need
-                # to check storage service in each tuple of remote_db[dt] array
-                remote_db = {dt: remote_db[dt] for dt in remote_db if
-                             remote_db[dt][0][1] == backup_config.storage_service}
-                if not remote_db:
+            # TODO: this works only in assumption that there are no backups
+            # made in same second for different storages. Otherwise we need
+            # to check storage service in each tuple of remote_db[dt] array
+            remote_db = {dt: remote_db[dt] for dt in remote_db if
+                         remote_db[dt][0][1] == backup_config.storage_service}
+            if not remote_db:
+                continue
+            backup_dts = copy.deepcopy(remote_db)
+            needed_backup_dts = self.compute_auto_rotation_backup_dts(backup_dts.keys(), **limits)
+            for backup_dt in backup_dts:
+                if backup_dt in needed_backup_dts:
                     continue
-                backup_dts = copy.deepcopy(remote_db)
-                needed_backup_dts = self.compute_auto_rotation_backup_dts(backup_dts.keys(), **limits)
-                for backup_dt in backup_dts:
-                    if backup_dt not in needed_backup_dts:
-                        if backup_config.backup_simulation is False:
-                            remote_objects_to_delete += remote_backups[backup_config.database][backup_dt]
-                        remote_objects_to_archive += remote_backups[backup_config.database][backup_dt]
-                        del remote_backups[backup_config.database][backup_dt]
+                if backup_config.backup_simulation is False:
+                    remote_objects_to_delete += remote_backups[backup_config.database][backup_dt]
+                remote_objects_to_archive += remote_backups[backup_config.database][backup_dt]
+                del remote_backups[backup_config.database][backup_dt]
 
         _logger.debug('remote_objects_to_delete: %s', remote_objects_to_delete)
         # Delete unnecessary remote backup objects
