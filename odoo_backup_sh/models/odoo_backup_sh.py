@@ -424,7 +424,7 @@ class BackupConfig(models.Model):
                     ('upload_datetime', '>=', datetime.strftime(backup_dt, DEFAULT_SERVER_DATETIME_FORMAT)),
                     ('upload_datetime', '<', datetime.strftime(backup_dt + relativedelta(seconds=1),
                                                                DEFAULT_SERVER_DATETIME_FORMAT))
-                ]):
+                ])
                 if record_exists:
                     continue
                 info_file = files[0] if files[0][0][-5:] == '.info' else files[1] if len(files) == 2 else False
