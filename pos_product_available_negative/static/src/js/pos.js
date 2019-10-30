@@ -1,5 +1,6 @@
 /*  Copyright 2016 Stanislav Krotov <https://it-projects.info/team/ufaks>
     Copyright 2018-2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    Copyright 2019 Anvar Kildebekov <https://it-projects.info/team/fedoranvar>
     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). */
 odoo.define('pos_product_available_negative.pos', function (require) {
     "use strict";
@@ -19,9 +20,15 @@ odoo.define('pos_product_available_negative.pos', function (require) {
             var order = this.pos.get_order();
             var orderlines = order.get_orderlines();
             var has_negative_product = false;
+            var unique_products = {};
             for (var i = 0; i < orderlines.length; i++) {
                 var line = orderlines[i];
-                if (line.product.type === 'product' && line.product.qty_available < line.quantity) {
+                if (!(line.product.display_name in unique_products)) {
+                    unique_products[line.product.display_name] = line.quantity;
+                } else {
+                    unique_products[line.product.display_name] += line.quantity;
+                }
+                if (line.product.type === 'product' && line.product.qty_available < unique_products[line.product.display_name]) {
                     has_negative_product = true;
                     self.gui.sudo_custom({
                         'title': _t('Order has out-of-stock product and must be approved by supervisor'),
@@ -52,6 +59,23 @@ odoo.define('pos_product_available_negative.pos', function (require) {
         }
     });
 
+    function check_qty_of_orderlines(self, product, quantity_to_add) {
+        var orderlines = self.pos.get_order().get_orderlines();
+        var product_quantity_to_buy = 0;
+        for (var i = 0; i < orderlines.length; i++) {
+            var line = orderlines[i];
+            if (self.pos.db.get_product_by_id(line.product.id).id == product.id) {
+                product_quantity_to_buy += line.quantity;
+            }
+        }
+        if ((product_quantity_to_buy + quantity_to_add)>product.qty_available) {
+            self.gui.show_popup('alert',{
+                'title': _t("Quantity exceeded available"),
+                'body': _t("You've entered quantity of product that exceeded available in stock"),
+            });
+        }
+    }
+
     screens.ProductListWidget.include({
         init: function(parent, options) {
             var self = this;
@@ -70,9 +94,29 @@ odoo.define('pos_product_available_negative.pos', function (require) {
                             'body': _t("It's unavailable to add the product"),
                         });
                 }
+                check_qty_of_orderlines(self, product, 1);
                 _.bind(click_product_handler_super, this)();
             };
-        },
+        },        
     });
+
+    screens.OrderWidget.include({
+        set_value: function(val) {
+            this._super();
+            var self = this;
+            var order = this.pos.get_order();
+            if (!order.get_selected_orderline()) {
+                return;
+            } 
+            var mode = this.numpad_state.get('mode');
+            if( mode !== 'quantity'){
+                return;
+            }
+            var selected_orderline = order.get_selected_orderline();
+            var product = self.pos.db.get_product_by_id(selected_orderline.product.id);
+            check_qty_of_orderlines(self, product, parseInt(val));
+            selected_orderline.set_quantity(val);
+        }
+     });
 
 });
