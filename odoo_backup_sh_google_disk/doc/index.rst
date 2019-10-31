@@ -35,16 +35,26 @@ Creating a Service Account Key
 
   .. image:: service-accounts-menu.png
 
-* Click on `Create` and add the Private key
-* Choose `Service account` or create a new one
-  * If you create a new one please define ``[[Project]] >> Owner``
-  * Define the name of Service account
-  * Start Odoo with ``--load=web,odoo_backup_sh`` or set the ``server_wide_modules`` option in the Odoo configuration file
-* Define a key type as *JSON*
-* Click `Create` (key is created automatically)
+* Click on ``+ CREATE SERVICE ACCOUNT`` and add the Private key
+
+  * Set name, e.g. ``Odoo Backups`` and click ``[Create]`
+  * At next the step set permission ``[[Project]] >> Owner``
+
+    .. image:: service-account-permission.png
+
+  * At the last stage click ``+ CREATE KEY``
+
+    * Use key type ``JSON``
+
+    .. image:: create-key.png
+
+
+
+TODO: MOVE THIS
 * In opened page *IAM& admin* click on `Service account`
 * Remember the e-mail of your service account
 
+STOPHERE
 Access rights to Google Folder
 ------------------------------
 
