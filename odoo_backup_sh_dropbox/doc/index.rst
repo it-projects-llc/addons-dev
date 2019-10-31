@@ -22,6 +22,9 @@ Creating Access Token
 * Open the `App Console <https://www.dropbox.com/developers/apps>`__
 * Login/Register into Dropbox account.
 * Click on `Create app`
+
+.. image:: create-app.png
+
 * Choose an API e.g. `Dropbox API`
 * Choose the type of access e.g. `App folder`
 * Specify the name of your App e.g. `Odoo Backups`
