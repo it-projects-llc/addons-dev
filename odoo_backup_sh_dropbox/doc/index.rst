@@ -34,6 +34,9 @@ Creating Access Token
   .. image:: create-app-form.png
 
 * Click on `Generate` button in order to Generated access token
+
+  .. image:: generate-token.png
+
 * Save the access token
 
 Folder in Dropbox
