@@ -22,12 +22,19 @@ Creating a Service Account Key
 * `Create new Project <https://console.cloud.google.com/projectcreate>`__ in Google Cloud 
 * Switch to the created Project
 * Open navigation menu (*Burger menu in the Left corner*)
-* Choose APIs and ``[[Services]] >> Library``
+* Choose ``API & Services >> Library``
 
   .. image:: api-library-menu.png
 
 * Choose Google Drive API and turn it on
-* Go to `Service account` inside *IAM& admin*
+
+  .. image:: api-library-menu.png
+
+* Open navigation menu (*Burger menu in the Left corner*)
+* Choose ``IAM & admin >> Service accounts``
+
+  .. image:: service-accounts-menu.png
+
 * Click on `Create` and add the Private key
 * Choose `Service account` or create a new one
   * If you create a new one please define ``[[Project]] >> Owner``
