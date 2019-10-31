@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<odoo>
-    <record id="group_pos_game_player" model="pos.game.player">
-        <field name="name">Game player</field>
-    </record>
-</odoo>
-

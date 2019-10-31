@@ -77,16 +77,6 @@ odoo.define('pos_chat_button', function (require){
         });
     }
 
-    function Ask_who_steps() {
-        if(NumInQueue(session.uid) === 0) {
-            self._rpc({
-                model: "game",
-                method: "who_should_step",
-                args: [my_game_id]
-            });
-        }
-    }
-
 //------------------------------------------------------
 
 //-------------Help functions part----------------------
@@ -299,8 +289,7 @@ odoo.define('pos_chat_button', function (require){
         who_moves = [-1,-1];
         try {
             chat_users.forEach(function(item){
-                document.getElementById('picture-'+NumInQueue(item.uid)).
-                style.setProperty('display', 'none');
+                document.getElementById('picture-'+NumInQueue(item.uid)).style.setProperty('display', 'none');
             });
             document.getElementById('cards').innerHTML = '';
             buttons_opacity(0);
@@ -637,7 +626,7 @@ function SetPos(avatar, uid){
                     name : '',
                     uid : -1,
                     msg_cnt: 0,
-                    cards : []+'.png" id="card-'+n+'" class="card" styl
+                    cards : []
                 });
             }
         }
@@ -773,7 +762,6 @@ function SetPos(avatar, uid){
                 temp_window.innerHTML = '<img type="button" src="/pos_durak/static/src/img/'+
                     card_suits[trump]+'.png" id="suit" ' +
                     'style="position:absolute;left:30%;top:30%;opacity: 0.2;"/>';
-                Ask_who_steps();
             }
             else if(data.command === 'Move'){
                 moves_cnt++;
@@ -845,6 +833,14 @@ function SetPos(avatar, uid){
                     Tip('You won!', 3000);
                     showMessage(data.uid, 'won');
                 }
+            }
+            else if(data.command === 'GAME_PING'){
+                Tip('Catch Ping', 2000);    
+                self._rcp({
+                    model: 'game',
+                    method: 'Pong',
+                    args: [my_game_id, session.uid]
+                })
             }
         },
     });

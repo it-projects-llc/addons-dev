@@ -1,40 +1,73 @@
 import random
+import logging
 from odoo import models, fields, api, _
+from threading import Timer
+
+
+_logger = logging.getLogger(__name__)
 
 class Game(models.Model):
 
-    _name = 'pos.game'
-    _description = 'Universal game'
+    _name = 'game'
+    _description = 'Simple game'
 
     name = fields.Text(default='pos_durak')
     id = fields.Integer(default=-1)
-    players = fields.One2many('pos.game.player', 'game', ondelete="cascade", delegate=True)
-    extra_cards = fields.One2many('pos.game.cards', 'game_extra_cards', ondelete="cascade")
+    players = fields.One2many('game.player', 'game', ondelete="cascade", delegate=True)
+    extra_cards = fields.One2many('game.cards', 'game_extra_cards', ondelete="cascade")
     trump = fields.Integer(default=-1)
     who_steps = fields.Integer(default=-1, help='Holds user id')
-    on_table_cards = fields.One2many('pos.game.cards', 'on_table_cards', ondelete="cascade")
+    on_table_cards = fields.One2many('game.cards', 'on_table_cards', ondelete="cascade")
     attackers_agreement = fields.Integer(default=0)
 
     @api.model
     def create_the_game(self, game_name, uid):
-        temp_game = self.search([('name', '=', game_name)])
+        temp_game = self.sudo().search([('name', '=', game_name)])
         pos_id = self.env['pos.session'].search([('user_id', '=', uid)])[0].id
         # If game didn't created, then create
         if len(temp_game) == 0:
             try:
-                self.create({'name': game_name, 'id': len(self.search([]))})
+                self.sudo().create({'name': game_name, 'id': len(self.sudo().search([]))})
             except Exception:
-                print('Game creation error!!! Game num is -' + str(len(self)))
+                _logger.error('Game creation error!!! Game num is -' + str(len(self)))
 
-        temp_game = self.search([('name', '=', game_name)])
+        temp_game = self.sudo().search([('name', '=', game_name)])
         data = {'command': 'my_game_id', 'id': temp_game.id}
         channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, pos_id, game_name)
         self.env['bus.bus'].sendmany([[channel, data]])
+        # temp_game.Ping(temp_game.id)
         return 1
+    
+    # @api.model
+    # def Ping(self, game_id):
+    #     cur_game = self.sudo().search([('id', '=', game_id)])
+    #     for player in cur_game.players:
+    #         import wdb
+    #         wdb.set_trace()
+    #         if player.didnt_respond != 0:
+    #             player.write({'didnt_respond': player.didnt_respond + 1})
+    #         if player.didnt_respond > 2:
+    #             cur_game.delete_player(game_id, player.uid)
+    #         else:
+    #             data = {'command': 'GAME_PING'}
+    #             channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
+    #                                                                         player.pos_id, cur_game.name)
+    #     t = Timer(10.0, cur_game.Ping, args=[game_id])
+    #     t.start()
+    #     return 1
+    
+    # @api.model
+    # def Pong(self, game_id, uid):
+    #     import wdb
+    #     wdb.set_trace()
+    #     cur_game = self.sudo().search([('id', '=', game_id)])
+    #     player = cur_game.players.search([('uid', '=', uid)])
+    #     player.write({'didnt_respond': 0})
+    #     return 1
 
     @api.model
     def add_new_user(self, game_id, name, uid):
-        cur_game = self.search([('id', '=', game_id)])
+        cur_game = self.sudo().search([('id', '=', game_id)])
         new_num = len(cur_game.players)
         new_pos_id = self.env['pos.session'].search([('user_id', '=', uid)])[0].id
         if cur_game.trump != -1:
@@ -49,28 +82,30 @@ class Game(models.Model):
         try:
             for user in cur_game.players:
                 data = {'name': user.name, 'uid': user.uid, 'num': user.num, 'command': 'Connect'}
-                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, new_pos_id, cur_game.name)
+                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
+                                                                              new_pos_id, cur_game.name)
                 self.env['bus.bus'].sendmany([[channel, data]])
         except Exception:
-            print('Player connected notification error!!!(add_new_user)')
+            _logger.error('Player connected notification error!!!(add_new_user)')
 
         try:
-            cur_game.players += cur_game.players.create({'name': name,
+            cur_game.players += cur_game.players.sudo().create({'name': name,
                                             'uid': uid, 'num': new_num,
                          'pos_id': new_pos_id})
         except Exception:
-            print('Player creation error!!!')
+            _logger.error('Player creation error!!!')
         return 1
 
     @api.model
     def player_is_ready(self, game_id, uid):
-        cur_game = self.search([('id', '=', game_id)])
+        cur_game = self.sudo().search([('id', '=', game_id)])
         try:
-            cur_game.players.search([('uid', '=', uid)]).write({'ready': True})
+            cur_game.players.sudo().search([('uid', '=', uid)]).write({'ready': True})
         except Exception:
-            print('Error in player_is_ready method!!! (Model - game)')
+            _logger.error('Error in player_is_ready method!!! (Model - game)')
 
-        self.env['pos.config'].send_to_all_poses(cur_game.name, {'command': 'ready', 'uid': uid})
+        self.env['pos.config'].send_to_all_poses(cur_game.name,
+                                                 {'command': 'ready', 'uid': uid})
         return 1
 
     @api.model
@@ -79,14 +114,15 @@ class Game(models.Model):
         for card in player.cards:
             data = {'num': card.num, 'power': card.power, 'pack_num': cnt,
                     'suit': card.suit, 'n': len(player.cards), 'command': 'Cards'}
-            channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, game_name)
+            channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
+                                                                          player.pos_id, game_name)
             self.env['bus.bus'].sendmany([[channel, data]])
             cnt += 1
         return 1
 
     @api.model
     def start_the_game(self, game_id):
-        cur_game = self.search([('id', '=', game_id)])
+        cur_game = self.sudo().search([('id', '=', game_id)])
         seq = [*range(0, 52)]
         cards_limit = 6     
         random.shuffle(seq)
@@ -95,9 +131,9 @@ class Game(models.Model):
         cards_cnt = 0
         all_cards_cnt = 0
         cur_game.player_is_ready(cur_game.id,
-                                 cur_game.players.search([('num', '=', 0)]).uid)
-        player = cur_game.players.search([('ready', '=', True)])
-        player[0].write({'stepping': True})
+                                 cur_game.players.sudo().search([('num', '=', 0)]).uid)
+        player = cur_game.players.sudo().search([('ready', '=', True)])
+        player[0].sudo().write({'stepping': True})
         try:
             for num in seq:
                 player[i].add_new_card(player[i].uid, num)
@@ -110,85 +146,92 @@ class Game(models.Model):
                 if len(player) == i:
                     break
         except Exception:
-            print('Cards distribution error!!!\n')
+            _logger.error('Cards distribution error!!!\n')
 
         try:
             for num in seq:
-                card = cur_game.extra_cards.card_power(num)
-                cur_game.extra_cards += cur_game.extra_cards.create({'power': card[0], 'suit': card[1], 'num': num, 'in_game': True})
-            cur_game.write({'trump': cur_game.extra_cards[0].suit})
-            self.env['pos.config'].send_to_all_poses(cur_game.name, {'command': 'Trump', 'trump': cur_game.trump})
+                card = cur_game.extra_cards.sudo().card_power(num)
+                cur_game.extra_cards += cur_game.extra_cards.sudo().create({'power': card[0],
+                                          'suit': card[1], 'num': num, 'in_game': True})
+            cur_game.sudo().write({'trump': cur_game.extra_cards[0].suit})
+            self.env['pos.config'].send_to_all_poses(cur_game.name, {'command': 'Trump',
+                                                                     'trump': cur_game.trump})
         except Exception:
-            print('Extra cards assignment error!!!')
+            _logger.error('Extra cards assignment error!!!')
 
         try:
             for player in cur_game.players:
                 cur_game.send_cards(cur_game.name, player)
         except Exception:
-            print('Cards sending error!!!')
+            _logger.error('Cards sending error!!!')
 
         try:
-            for player in cur_game.players.search([('ready', '=', False)]):
+            for player in cur_game.players.sudo().search([('ready', '=', False)]):
                 cur_game.delete_player(cur_game.id, player.uid)
         except Exception:
-            print("Can't delete not ready players!!!(start_the_game)")
+            _logger.error("Can't delete not ready players!!!(start_the_game)")
         return 1
 
     @api.model
     def delete_player(self, game_id, uid):
-        cur_game = self.search([('id', '=', game_id)])
+        cur_game = self.sudo().search([('id', '=', game_id)])
         try:
             for user in cur_game.players:
                 data = {'uid': uid, 'command': 'Disconnect'}
-                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, user.pos_id, cur_game.name)
+                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
+                                                                              user.pos_id, cur_game.name)
                 self.env['bus.bus'].sendmany([[channel, data]])
         except Exception:
-            print('Player disconnected notification error!!!(delete_player)')
+            _logger.error('Player disconnected notification error!!!(delete_player)')
 
         try:
             if deleting_user.num == cur_game.who_steps:
                 cur_game.who_should_step(game_id)
-            deleting_user = cur_game.players.search([('uid', '=', uid)])
+            deleting_user = cur_game.players.sudo().search([('uid', '=', uid)])
             for user in cur_game.players:
                 if user.num > deleting_user.num:
-                    user.write({'num': user.num - 1})
+                    user.sudo().write({'num': user.num - 1})
         except Exception:
-            print("Users num's shifting error!!!(delete_player)")
+            _logger.error("Users num's shifting error!!!(delete_player)")
+            cur_game.players.unlink()
 
         try:
             deleting_user.unlink()
         except Exception:
-            print('Player removing error!!!')
+            _logger.error('Player removing error!!!')
 
         try:
             if len(cur_game.players) == 0:
-                cur_game.unlink()
+                cur_game.sudo().unlink()
         except Exception:
-            print("Game session deleting error!!!")
+            _logger.error("Game session deleting error!!!")
         return 1
 
     @api.model
     def send_message(self, game_id, message, uid):
-        cur_game = self.search([('id', '=', game_id)])
+        cur_game = self.sudo().search([('id', '=', game_id)])
         for player in cur_game.players:
             data = {'uid': uid, 'message': message, 'command': 'Message'}
-            channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, cur_game.name)
+            channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
+                                                                          player.pos_id, cur_game.name)
             self.env['bus.bus'].sendmany([[channel, data]])
         return 1
 
     @api.model
     def delete_my_game(self, game_id):
-        self.search([('id', '=', game_id)]).unlink()
+        self.sudo().search([('id', '=', game_id)]).unlink()
         return 1
 
     @api.model
     def who_should_step(self, game_id):
-        cur_game = self.search([('id', '=', game_id)])
+        cur_game = self.sudo().search([('id', '=', game_id)])
         stepman = cur_game.next(game_id, cur_game.who_steps)
         cur_game.who_steps = stepman
         for player in cur_game.players:
-            data = {'first': stepman, 'second': cur_game.next(game_id, cur_game.next(game_id, stepman)), 'command': 'Who_steps'}
-            channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, cur_game.name)
+            data = {'first': stepman, 'second': cur_game.next(game_id, cur_game.next(game_id, stepman)),
+                    'command': 'Who_steps'}
+            channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
+                                                                          player.pos_id, cur_game.name)
             self.env['bus.bus'].sendmany([[channel, data]])
         return 1
 
@@ -197,13 +240,13 @@ class Game(models.Model):
         if card_num == 'ds':
             return 1
         try:
-            cur_game = self.search([('id', '=', game_id)])
-            stepper = cur_game.players.search([('uid', '=', uid)])
-            card = stepper.cards.search([('num', '=', card_num)])[0]
+            cur_game = self.sudo().search([('id', '=', game_id)])
+            stepper = cur_game.players.sudo().search([('uid', '=', uid)])
+            card = stepper.cards.sudo().search([('num', '=', card_num)])[0]
         except Exception:
             import wdb
             wdb.set_trace()
-            print('Make_step error!')
+            _logger.error('Make_step error!')
 
         can_make_a_step = False
         try:
@@ -213,33 +256,36 @@ class Game(models.Model):
             if len(cur_game.on_table_cards) == 0:
                 can_make_a_step = True
         except Exception:
-            print('Card on table checking error!!!\n')
+            _logger.error('Card on table checking error!!!\n')
 
         if can_make_a_step:
             for player in cur_game.players:
                 data = {'uid': uid, 'num': card.num, 'command': 'Move'}
-                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, cur_game.name)
+                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
+                                                                            player.pos_id, cur_game.name)
                 self.env['bus.bus'].sendmany([[channel, data]])
-            cur_game.on_table_cards += cur_game.on_table_cards.create({'power': card.power, 'suit': card.suit, 'num': card.num, 'in_game': True})
+            cur_game.on_table_cards += cur_game.on_table_cards.sudo().create({'power': card.power,
+                                          'suit': card.suit, 'num': card.num, 'in_game': True})
             stepper.cards -= card
         return 1
 
     @api.model
     def defence(self, game_id, uid, card1, card2, x, y):
         try:
-            cur_game = self.search([('id', '=', game_id)])
-            defender = cur_game.players.search([('uid', '=', uid)])
-            card = defender.cards.search([('num', '=', card1)])[0]
-            cur_game.on_table_cards += cur_game.on_table_cards.create({'power': card.power, 'suit': card.suit, 'num': card.num, 'in_game': True})
+            cur_game = self.sudo().search([('id', '=', game_id)])
+            defender = cur_game.players.sudo().search([('uid', '=', uid)])
+            card = defender.cards.sudo().search([('num', '=', card1)])[0]
+            cur_game.on_table_cards += cur_game.on_table_cards.sudo().create({'power': card.power,
+                                          'suit': card.suit, 'num': card.num, 'in_game': True})
             defender.cards -= card
-            first = cur_game.on_table_cards.search([('num', '=', card1)])[0]
-            second = cur_game.on_table_cards.search([('num', '=', card2)])[0]
+            first = cur_game.on_table_cards.sudo().search([('num', '=', card1)])[0]
+            second = cur_game.on_table_cards.sudo().search([('num', '=', card2)])[0]
             fpow = first.power
             spow = second.power
             winner = -1
             loser = -1
         except Exception:
-            print("Defence var's initialization error!")
+            _logger.error("Defence var's initialization error!")
         try:
             # If one of them is trump, there's always way to compare cards
             # If posible to compare
@@ -255,28 +301,30 @@ class Game(models.Model):
                 loser = card1
                 winner = card2
             if card1 == winner:
-                data = {'uid': uid, 'winner': winner, 'x': x, 'y': y, 'loser': loser, 'can_beat': True, 'command': 'Defence'}
+                data = {'uid': uid, 'winner': winner, 'x': x, 'y': y,
+                 'loser': loser, 'can_beat': True, 'command': 'Defence'}
             else:
-                data = {'uid': uid, 'can_beat': False, 'command': 'Defence'}
+                data = {'uid':uid, 'can_beat': False, 'command': 'Defence'}
             for player in cur_game.players:
-                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, cur_game.name)
+                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
+                                                                            player.pos_id, cur_game.name)
                 self.env['bus.bus'].sendmany([[channel, data]])
         except Exception:
-            print('defence error!')
+            _logger.error('defence error!')
         return 1
-
+    
     @api.model
     def next(self, game_id, num):
-        cur_game = self.search([('id', '=', game_id)])
-        player = cur_game.players.search([('num', '=', num)])
+        cur_game = self.sudo().search([('id', '=', game_id)])
+        player = cur_game.players.sudo().search([('num', '=', num)])
         if player.num < len(cur_game.players) - 1:
-            return cur_game.players.search([('num', '=', player.num + 1)]).num
+            return cur_game.players.sudo().search([('num', '=', player.num + 1)]).num
         else:
-            return cur_game.players.search([('num', '=', 0)]).num
+            return cur_game.players.sudo().search([('num', '=', 0)]).num
 
     @api.model
     def new_cards(self, game_id):
-        cur_game = self.search([('id', '=', game_id)])
+        cur_game = self.sudo().search([('id', '=', game_id)])
         extra_cards_length = len(cur_game.extra_cards)
         who_took_new_cards = []
         try:
@@ -289,16 +337,18 @@ class Game(models.Model):
                     player.add_new_card(player.uid, cur_game.extra_cards[extra_cards_length - 1].num)
                     cur_game.extra_cards[extra_cards_length - 1].unlink()
                     extra_cards_length -= 1
-                if tooked_cards:
+                if tooked_cards == True:
                     who_took_new_cards.append(player.uid)
         except Exception:
-            print('Extra cards distribution error!!!')
-
+            _logger.error('Extra cards distribution error!!!')
+        
         attackman = cur_game.who_steps
         defman = cur_game.next(game_id, attackman)
+        help_attackman = cur_game.next(game_id, defman)
         for player in cur_game.players:
             data = {'command': 'Move_done'}
-            channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, cur_game.name)
+            channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
+                                                                          player.pos_id, cur_game.name)
             self.env['bus.bus'].sendmany([[channel, data]])
             for user in who_took_new_cards:
                 if user == player.uid:
@@ -310,36 +360,36 @@ class Game(models.Model):
 
     @api.model
     def cards_are_beated(self, game_id, uid):
-        cur_game = self.search([('id', '=', game_id)])
+        cur_game = self.sudo().search([('id', '=', game_id)])
         if len(cur_game.on_table_cards) == 0:
             return 1
-
-        cur_game.players.search([('uid', '=', uid)])[0].completed_move = True
+        
+        cur_game.players.sudo().search([('uid', '=', uid)])[0].completed_move = True
         temp_cnt = 0
         for player in cur_game.players:
             if player.completed_move:
                 temp_cnt += 1
         if temp_cnt != 2 and len(cur_game.players) > 2:
             return 1
-
+        
         cur_game.new_cards(game_id)
         cur_game.who_should_step(game_id)
         for player in cur_game.players:
-            if player.completed_move:
-                player.completed_move = False
+            if player.completed_move: player.completed_move = False
         return 1
 
     @api.model
     def defender_took_cards(self, game_id, uid):
-        cur_game = self.search([('id', '=', game_id)])
-        player = cur_game.players.search([('uid', '=', uid)])
+        cur_game = self.sudo().search([('id', '=', game_id)])
+        player = cur_game.players.sudo().search([('uid', '=', uid)])
         for card in cur_game.on_table_cards:
-            player.cards += player.cards.create({'power': card.power, 'suit': card.suit, 'num': card.num, 'in_game': True})
+            player.cards += player.cards.sudo().create({'power': card.power,
+                                        'suit': card.suit, 'num': card.num, 'in_game': True})
 
         cur_game.new_cards(game_id)
         # Sending cards to defender
         defman = cur_game.next(game_id, cur_game.who_steps)
-        defer = cur_game.players.search([('num', '=', defman)])
+        defer = cur_game.players.sudo().search([('num', '=', defman)])
         cur_game.send_cards(cur_game.name, defer)
         # Loser should skip his queue
         cur_game.who_steps = cur_game.next(game_id, cur_game.who_steps)
@@ -353,9 +403,10 @@ class Game(models.Model):
             if len(player.cards) == 0 and len(cur_game.extra_cards) == 0:
                 won.append(player)
         for winner in won:
-            data = {'uid': winner.uid, 'command': 'Won'}
+            data = {'uid': winner.uid, 'command':'Won'}
             for player in cur_game.players:
-                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, cur_game.name)
+                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
+                                                                            player.pos_id, cur_game.name)
                 self.env['bus.bus'].sendmany([[channel, data]])
                 if winner.uid == player.uid:
                     player.unlink()
@@ -363,23 +414,24 @@ class Game(models.Model):
 
     @api.model
     def cards_number(self, game_id, uid, my_uid):
-        cur_game = self.search([('id', '=', game_id)])
-        ask_player = cur_game.players.search([('uid', '=', uid)])
-        player = cur_game.players.search([('uid', '=', my_uid)])
+        cur_game = self.sudo().search([('id', '=', game_id)])
+        ask_player = cur_game.players.sudo().search([('uid', '=', uid)])
+        player = cur_game.players.sudo().search([('uid', '=', my_uid)])
 
         data = {'number': len(ask_player.cards), 'command': 'HowMuchCards'}
-        channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, cur_game.name)
+        channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
+                                                                      player.pos_id, cur_game.name)
         self.env['bus.bus'].sendmany([[channel, data]])
         return 1
 
 
 class Player(models.Model):
 
-    _name = 'pos.game.player'
+    _name = 'game.player'
     _description = 'Game player'
 
-    game = fields.Many2one('pos.game', string='Game', ondelete="cascade")
-    cards = fields.One2many('pos.game.cards', 'cards_holder', ondelete="cascade")
+    game = fields.Many2one('game', string='Game', ondelete="cascade")
+    cards = fields.One2many('game.cards', 'cards_holder', ondelete="cascade")
 
     # Player name
     name = fields.Text(default='')
@@ -392,34 +444,37 @@ class Player(models.Model):
     pos_id = fields.Integer(default=-1)
     # This var needs to check if attacker completed his move
     completed_move = fields.Boolean(default=False)
+    didnt_respond = fields.Integer(default=-1)
 
     @api.model
     def add_new_card(self, uid, num):
-        player = self.search([('uid', '=', uid)])
+        player = self.sudo().search([('uid', '=', uid)])
         try:
-            card = player.cards.card_power(num)
-            player.cards += player.cards.create({'power': card[0], 'suit': card[1], 'num': num, 'in_game': True})
+            card = player.cards.sudo().card_power(num)
+            player.cards += player.cards.sudo().create({'power': card[0],
+                                      'suit': card[1], 'num': num, 'in_game': True})
         except Exception:
-            print('New card addition error!!!')
+            _logger.error('New card addition error!!!')
         return 1
 
     @api.model
     def delete_card(self, uid, num):
-        player = self.search([('uid', '=', uid)])
+        player = self.sudo().search([('uid', '=', uid)])
         try:
             card = player.cards.card_power(num)
             card.write({'in_game': False})
             card.unlink()
         except Exception:
-            print('Card deletion error!!!')
+            _logger.error('Card deletion error!!!')
         return 1
+
 class Card(models.Model):
-    _name = 'pos.game.cards'
+    _name = 'game.cards'
     _description = 'Gaming cards'
 
-    cards_holder = fields.Many2one('pos.game.player', string='Player', ondelete="cascade")
-    game_extra_cards = fields.Many2one('pos.game', string='Game extra cards', ondelete="cascade")
-    on_table_cards = fields.Many2one('pos.game', string='Game on table cards', ondelete="cascade")
+    cards_holder = fields.Many2one('game.player', string='Player', ondelete="cascade")
+    game_extra_cards = fields.Many2one('game', string='Game', ondelete="cascade")
+    on_table_cards = fields.Many2one('game', string='Game', ondelete="cascade")
 
     suit = fields.Integer(default=-1)
     power = fields.Integer(default=-1)
