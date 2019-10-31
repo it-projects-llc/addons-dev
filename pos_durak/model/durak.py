@@ -473,8 +473,8 @@ class Card(models.Model):
     _description = 'Gaming cards'
 
     cards_holder = fields.Many2one('game.player', string='Player', ondelete="cascade")
-    game_extra_cards = fields.Many2one('game', string='Game', ondelete="cascade")
-    on_table_cards = fields.Many2one('game', string='Game', ondelete="cascade")
+    game_extra_cards = fields.Many2one('game', string='Game extra cards', ondelete="cascade")
+    on_table_cards = fields.Many2one('game', string='Game on table cards', ondelete="cascade")
 
     suit = fields.Integer(default=-1)
     power = fields.Integer(default=-1)
