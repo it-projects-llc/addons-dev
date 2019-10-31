@@ -3,7 +3,7 @@
 # Copyright 2019 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 {
-    "name": """S3 Backups""",
+    "name": """S3 Backing up""",
     "summary": """The 10 Euros service that would save your business.""",
     "category": "Backup",
     # "live_test_url": "",

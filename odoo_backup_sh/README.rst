@@ -2,11 +2,11 @@
    :target: https://www.gnu.org/licenses/lgpl
    :alt: License: LGPL-3
 
-============
- S3 Backups
-============
+===============
+ S3 Backing up
+===============
 
-The 10 Euros service that would save your business.
+Backing up Odoo databases to S3 bucket. 
 
 In-App Purchase
 ===============
@@ -29,12 +29,14 @@ Implementation details
 /web/database/backups
 ---------------------
 
-It's a new page in *database manager*, that allows to see list of available backups that can be restored. A process of receiving backup list is described below. Click on the ``Restore via Odoo-backup.sh`` consists the following operations:
+It's a new page in *database manager*, that allows to see list of available backups that can be restored. It works **only** with S3 bucket provided by **odoo-backup.sh service**.
 
-* If there are not amazon S3 credentials in the config file, the module makes requests to get them:
+The page is available via new button ``[Restore via Odoo-backup.sh]`` at *database manager*. It works in the following way:
+
+* If there are no amazon S3 credentials in the session, the module makes requests to get them:
 
   * *Browser* sends request to ``/web/database/backups``
-  * *Odoo instance* sends request to ``odoo-backup.sh/get_cloud_params`` with ``user_key`` from odoo config file (the ``user_key`` is generated automatically if it's not set).
+  * *Odoo instance* sends request to ``odoo-backup.sh/get_cloud_params`` with ``user_key`` from the session (the ``user_key`` is generated automatically if it's not set).
   * ``odoo-backup.sh`` **either** returns amazon S3 credentials with which the module can use to send request to S3 independently, **or** ``odoo-backup.sh`` doesn't recognise ``user_key`` and starts process of authentication via ``odoo.com`` as auth provider:
 
     * ``odoo-backup.sh/get_cloud_params`` returns a link to redirect to odoo.com authentication page
@@ -42,12 +44,17 @@ It's a new page in *database manager*, that allows to see list of available back
 
 * If amazon S3 credentials are in the config file, the module makes request to AWS S3 to get list of users backups and then renders it.
 
-Dashboard menu item in the Backups section
-------------------------------------------
+Backup dashboard
+----------------
 
-It's a page where an user can watch detail information about his backups which are remote stored. Also he can make backup of any his database. This backup will be sent to AWS S3 for storing. Moreover the user can create autobackup settings. The settings say to the module at what point of time, from which databases to create backups and max number of backups of database must be store.
+It's a backend page where an user can watch detail information about his backups
+which are remote stored. Also he can make backup of any of his databases. This
+backup will be sent to AWS S3 for storing. Moreover the user can create
+autobackup settings. The settings say to the module at what point of time, from
+which databases to create backups and max number of backups of database must be
+store. Backups rotations are supported too.
 
-When the user opens the backups dashboard, the module makes similar requests are described above about ``/web/database/backups page``.
+After module installation user can click ``Get S3 credentials``, which start similar process are described above in ``/web/database/backups`` section.
 
 Manual Testing
 ==============
