@@ -83,8 +83,8 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
             !this.modules.odoo_backup_sh_google_disk.configured;
     },
     dashboard_offer_iap: function(){
-        return this.modules.odoo_backup_sh_dropbox.configured ||
-            this.modules.odoo_backup_sh_google_disk.configured;
+        return (this.modules.odoo_backup_sh_dropbox.configured ||
+                this.modules.odoo_backup_sh_google_disk.configured) && !this.modules.odoo_backup_sh.configured;
     },
     dashboard_iap: function(){
         return this.modules.odoo_backup_sh.configured_iap;
