@@ -23,7 +23,7 @@ Creating Access Token
 * Login/Register into Dropbox account.
 * Click on `Create app`
 
-.. image:: create-app.png
+  .. image:: create-app.png
 
 * Choose an API e.g. `Dropbox API`
 * Choose the type of access e.g. `App folder`
