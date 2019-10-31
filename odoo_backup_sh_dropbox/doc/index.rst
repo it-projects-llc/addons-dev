@@ -44,15 +44,15 @@ Folder in Dropbox
 
 * Open `Dropbox > Apps <https://www.dropbox.com/home/Apps/>`__
 * Choose the application you just created
-* Create new folder, e.g. "ProductionBackups"
+* Create new folder, e.g. *ProductionBackups*
 
 Odoo Settings
 ---------------
 
 * Open menu ``[[ Backups ]] >> Settings``
 * Specify *Dropbox Access Token*
-* Specify your folder path, e.g. `/ProductionBackups`
-* Click on `Save` button
+* Specify your folder path, e.g. ``/ProductionBackups``
+* Click on ``[Save]`` button
 
 Backup Schedule and rotation
 ----------------------------
