@@ -47,8 +47,8 @@ If you already have S3 bucket with IAM credentials, you can setup your personal 
   * **Access Key ID**
   * **Secret Access Key**
 
-Backup Schedule
----------------
+Backup Schedule and rotation
+----------------------------
 
 To setup backups do as following:
 

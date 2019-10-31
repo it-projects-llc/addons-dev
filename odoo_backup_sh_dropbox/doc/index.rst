@@ -14,8 +14,8 @@ Installation
 Configuration
 =============
 
-Creating Access Token
----------------------
+Access Token
+------------
 
 *Note: You need to have a Dropbox account*
 
@@ -42,53 +42,65 @@ Creating Access Token
 Folder in Dropbox
 -----------------
 
-* Open your `Dropbox <https://www.dropbox.com/home/>`__
-* Open Applications >> Odoo Backups
-* Create new folder "Backups"
+* Open `Dropbox > Apps <https://www.dropbox.com/home/Apps/>`__
+* Choose the application you just created
+* Create new folder, e.g. "ProductionBackups"
 
-Config Settings
+Odoo Settings
 ---------------
 
-* `Activate Developer Mode <https://odoo-development.readthedocs.io/en/latest/odoo/usage/debug-mode.html>`__
-* Open menu ``[[Backups]] >> Configuration >> Settings``
-* Choose Dropbox option
-* Click on `Save` button
+* Open menu ``[[ Backups ]] >> Settings``
 * Specify *Dropbox Access Token*
-* Specify your folder path `/Backups`
+* Specify your folder path, e.g. `/ProductionBackups`
 * Click on `Save` button
+
+Backup Schedule and rotation
+----------------------------
+
+.. this sections is a copy-paste from odoo_backup_sh/doc/index.rst with adding a line about Storage Service
+
+To setup backups do as following:
+
+* Open the menu ``[[ Backups ]] >> Dashboard``.
+* Click on the ``[Add Database]`` button in the dashboard header.
+
+  * **Database:** select one of your databases
+  * **Storage Service:** select *Dropbox*
+  * Encrypt your backup if you need, but do not forget the password
+  * Scheduled Auto Backups
+
+    * **Interval**  type an inteval value and select a unit of measure. Example: *make backups every 1 day*.
+    * **Next Execution Date:** It shows next planned auto backup date. You can correct this. Example: *make every day at night time*.
+
+  * **Auto Rotation:** If you have set up the auto backup, you can specify how many backups to preserve for certain time frames.
+
+    Example: The module makes auto backup your database every night. You want to preserve 2 daily backups and 1 weekly only. Then
+
+    * *Set up Daily and Weekly rotation options as Limited and put the numbers in limit fields.*
+
+    * *All other options mark as Disabled*.
+
+  * After all required fields will be filled, click on the ``[Save]`` button.
 
 Usage
 =====
 
-**Create:**
+Manual backups
+--------------
 
-* Open the menu ``[[ Backups ]] >> Configuration >> Settings``
-* Choose the Dropbox and click on ``Save`` button
-* Enter *Dropbox Access Token*
-* Enter *Dropbox Folder Path*
-* Click on ``Save`` button
-* Set up a new configuration  [[ Backups ]] >> Dashboard >> Add Database
-* Choose the Database in the database field
-* Define the Storage service
-* Encrypt your backup if you need, but do not forget the password
-* Enter *Interval Number*, *Interval Unit*, *New execution Date*
-* Select/unselect *"Active" checkbox*
-* Click on ``Save`` and come back to set up the feature
-* Go to ``[[ Backups ]] >> Dashboard``
-* Click on ``New Backup`` in the appeared configuration
+.. this sections is a copy-paste from odoo_backup_sh/doc/index.rst
 
-RESULT: Backup is stored in the Dropbox cloud.
-*The manual backup creation may take some time before being ready*.
+* Configure Backup Schedule as described above
+* Open the menu ``[[ Backups ]] >> Dashboard``
+* Click on ``[Make Backup now]``
 
-.. note::
-   Restore without additional downloading is available only for* `Odoo backup service <https://apps.odoo.com/apps/modules/12.0/odoo_backup_sh/>`__
+RESULT: Backup is created. *Note, that the manual backup creation may take some time before being ready*
 
-**Visualize:**
+Backup Dashboard
+----------------
+
+.. this sections is a copy-paste from odoo_backup_sh/doc/index.rst
 
 * Open the menu ``[[ Backups ]] >> Dashboard``
-* Proceed with ``[[ Backups ]] >> Backups`` where *Odoo-backup.sh* databases are presented
-* Continue with ``[[ Backups ]] >> Backups`` where your Odoo backups are stored
 
 RESULT: You can see the main Graph with the general statistics of all your backups are stored on a remote server.
-After this window a special form for managing and controlling backups of your databases specially *for Dropbox* is located.
-
