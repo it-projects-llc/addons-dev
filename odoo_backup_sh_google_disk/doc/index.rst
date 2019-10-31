@@ -38,7 +38,7 @@ Creating a Service Account Key
 * Click on ``+ CREATE SERVICE ACCOUNT`` and add the Private key
 
   * Set name, e.g. ``Odoo Backups`` and click ``[Create]`
-  * At next the step set permission ``[[Project]] >> Owner``
+  * At next the step set permission ``Project >> Owner``
 
     .. image:: service-account-permission.png
 
