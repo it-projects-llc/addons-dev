@@ -338,6 +338,53 @@ odoo.define('pos_chat_button', function (require){
     }
 //--------------------------------------------------
 
+//---------- Set avatar and animation part -------------
+function ShowCards(){
+    var block = document.getElementById('cards');
+    var me = NumInQueue(session.uid);
+    var out = '', w = (60/chat_users[me].cards.length)/2;
+    for(var i = 0; i < chat_users[me].cards.length; i++){
+        var n = chat_users[me].cards[i].num;
+        out+='<img type="button" src="/pos_durak/static/src/img/kards/'+
+        n+'.png" id="card-'+n+'" class="card" style="right: '+String(30 - (i*w))+'%"></img>';
+    }
+    block.innerHTML = out;
+}
+
+function ShowUsers(){
+    var window = document.getElementById('main-window');
+    var out = '';
+    chat_users.forEach(function (item){
+        var i = NumInQueue(item.uid);
+        var str_uid = String(item.uid);
+        out += '<div class="chat-user" id="picture-'+i+'">';
+        out += '<div class="user-name" id="user-name-'+str_uid+'">'+chat_users[i].name+'</div>';
+        out += '<img src="/web/image/res.users/' +
+        item.uid + '/image_small" id="ava-' + i +'" class="avatar" style="border-radius:50%;margin-left:20%;"/>';
+
+        out += '<ul class="game-message" id="messages-'+str_uid+'"></ul>';
+        out += '</div>';
+    });
+    window.innerHTML = out;
+
+    chat_users.forEach(function(item){
+        SetPos(document.getElementById('picture-'+NumInQueue(item.uid)), item.uid);
+    });
+}
+
+function SetPos(avatar, uid){
+    var cnt = NumInQueue(uid) + 1;
+    var angle = (2 * 3.1415 / chat_users.length) * cnt;
+    var radius = Math.min(W*0.7,H*0.7)/2;
+    var x = Math.trunc(radius*Math.cos(angle));
+    var y = Math.trunc(radius*Math.sin(angle));
+
+    avatar.style.setProperty('left', W/2 - (avatar.offsetWidth / 2) + 'px');
+    avatar.style.setProperty('top', H*0.4 - (avatar.offsetHeight / 2) + 'px');
+    avatar.style.setProperty('transform','translate3d('+x+'px,'+y+'px,0px)');
+}
+//------------------------------------------------------
+
 //--------------- Game table actions -------------------
 
     function PutOn(puton_card) {
@@ -520,53 +567,6 @@ odoo.define('pos_chat_button', function (require){
     }
 //------------------------------------------------------
 
-//---------- Set avatar and animation part -------------
-    function ShowCards(){
-        var block = document.getElementById('cards');
-        var me = NumInQueue(session.uid);
-        var out = '', w = (60/chat_users[me].cards.length)/2;
-        for(var i = 0; i < chat_users[me].cards.length; i++){
-            var n = chat_users[me].cards[i].num;
-            out+='<img type="button" src="/pos_durak/static/src/img/kards/'+
-            n+'.png" id="card-'+n+'" class="card" style="right: '+(30 - i*w)+'%"></img>';
-        }
-        block.innerHTML = out;
-    }
-
-    function ShowUsers(){
-        var window = document.getElementById('main-window');
-        var out = '';
-        chat_users.forEach(function (item){
-            var i = NumInQueue(item.uid);
-            var str_uid = String(item.uid);
-            out += '<div class="chat-user" id="picture-'+i+'">';
-            out += '<div class="user-name" id="user-name-'+str_uid+'">'+chat_users[i].name+'</div>';
-            out += '<img src="/web/image/res.users/' +
-            item.uid + '/image_small" id="ava-' + i +'" class="avatar" style="border-radius:50%;margin-left:20%;"/>';
-
-            out += '<ul class="game-message" id="messages-'+str_uid+'"></ul>';
-            out += '</div>';
-        });
-        window.innerHTML = out;
-
-        chat_users.forEach(function(item){
-            SetPos(document.getElementById('picture-'+NumInQueue(item.uid)), item.uid);
-        });
-    }
-
-    function SetPos(avatar, uid){
-        var cnt = NumInQueue(uid) + 1;
-        var angle = (2 * 3.1415 / chat_users.length) * cnt;
-        var radius = Math.min(W*0.7,H*0.7)/2;
-        var x = Math.trunc(radius*Math.cos(angle));
-        var y = Math.trunc(radius*Math.sin(angle));
-
-        avatar.style.setProperty('left', W/2 - (avatar.offsetWidth / 2) + 'px');
-        avatar.style.setProperty('top', H*0.4 - (avatar.offsetHeight / 2) + 'px');
-        avatar.style.setProperty('transform','translate3d('+x+'px,'+y+'px,0px)');
-    }
-//------------------------------------------------------
-
 //------ Message taking and showing functions ----------
 
     function TakeNewMessage(delete_last_char){
@@ -605,6 +605,16 @@ odoo.define('pos_chat_button', function (require){
         newMessage.value = '';
     }
 
+    function delete_message(msg, uid) {
+        try{
+            var old_message = document.getElementById('msg-'+String(msg)+'-'+uid);
+            old_message.style.setProperty('display','none');
+        }
+        catch(e){
+            // Error
+        }
+    }
+
     function showMessage(uid, message){
         var i = NumInQueue(uid);
         var messages = document.getElementById('messages-'+String(uid));
@@ -624,16 +634,6 @@ odoo.define('pos_chat_button', function (require){
         messages.innerHTML += out;
         setTimeout(delete_message,15000, chat_users[i].msg_cnt, uid);
         chat_users[i].msg_cnt++;
-    }
-
-    function delete_message(msg, uid) {
-        try{
-            var old_message = document.getElementById('msg-'+String(msg)+'-'+uid);
-            old_message.style.setProperty('display','none');
-        }
-        catch(e){
-            // Error
-        }
     }
 //--------------------------------------------------
 
@@ -685,7 +685,9 @@ odoo.define('pos_chat_button', function (require){
         // Don't show players till they all become setted
         // Return even if one of players didn't throw response
         for(i = 0; i < chat_users.length; i++){
-            if(chat_users[i].uid === -1 ) return;
+            if(chat_users[i].uid === -1 ){
+                return;
+            }
         }
 
         ShowUsers();
@@ -694,7 +696,7 @@ odoo.define('pos_chat_button', function (require){
     function DeleteUser(user_id){
         var i = NumInQueue(user_id);
         try{
-            user = document.getElementById('picture-'+i);
+            var user = document.getElementById('picture-'+i);
             user.style.setProperty('display', 'none');
         }
         catch(e){
@@ -834,7 +836,7 @@ odoo.define('pos_chat_button', function (require){
                 if(chat_users[data.first].uid === session.uid){
                     Tip("Your turn to step", 5000);
                 }
-                for(i = 0; i < chat_users.length; i++){
+                for(var i = 0; i < chat_users.length; i++){
                     if(data.first !== i){
                         try{
                             var pic = document.getElementById('picture-'+String(i));
@@ -843,7 +845,6 @@ odoo.define('pos_chat_button', function (require){
                         catch(e){}
                     }
                 }
-                
                 who_moves = [data.first, data.second];
             }
             else if(data.command === 'Won'){

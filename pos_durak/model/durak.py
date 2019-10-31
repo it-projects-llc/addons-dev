@@ -4,7 +4,7 @@ from odoo import models, fields, api, _
 class Game(models.Model):
 
     _name = 'game'
-    _description = 'Simple game'
+    _description = 'Universal game'
 
     name = fields.Text(default='pos_durak')
     id = fields.Integer(default=-1)
@@ -17,6 +17,8 @@ class Game(models.Model):
 
     @api.model
     def create_the_game(self, game_name, uid):
+        import wdb
+        wdb.set_trace()
         temp_game = self.sudo().search([('name', '=', game_name)])
         pos_id = self.env['pos.session'].search([('user_id', '=', uid)])[0].id
         # If game didn't created, then create
@@ -146,6 +148,8 @@ class Game(models.Model):
             print('Player disconnected notification error!!!(delete_player)')
 
         try:
+            if deleting_user.num == cur_game.who_steps:
+                cur_game.who_should_step(game_id)
             deleting_user = cur_game.players.sudo().search([('uid', '=', uid)])
             for user in cur_game.players:
                 if user.num > deleting_user.num:
@@ -163,8 +167,6 @@ class Game(models.Model):
                 cur_game.sudo().unlink()
         except Exception:
             print("Game session deleting error!!!")
-        if deleting_user.num == cur_game.who_steps:
-            cur_game.who_should_step(game_id)
         return 1
 
     @api.model
