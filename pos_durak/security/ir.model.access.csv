@@ -1,4 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_game,access_game,model_game,point_of_sale.group_pos_user,1,1,1,1
-access_game_player,access_game_player,access_game_player,point_of_sale.group_pos_user,1,1,1,1
-access_game_cards,access_game_cards,access_game_cards,point_of_sale.group_pos_user,1,1,1,1
+access_pos_game,access_pos_game,model_pos_game,point_of_sale.group_pos_user,1,1,1,1
+access_pos_game_player,access_pos_game_player,access_pos_game_player,point_of_sale.group_pos_user,1,1,1,1
+access_pos_game_cards,access_pos_game_cards,access_pos_game_cards,point_of_sale.group_pos_user,1,1,1,1

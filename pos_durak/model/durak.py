@@ -3,7 +3,7 @@ from odoo import models, fields, api, _
 
 class Game(models.Model):
 
-    _name = 'game'
+    _name = 'pos.game'
     _description = 'Universal game'
 
     name = fields.Text(default='pos_durak')
@@ -17,18 +17,16 @@ class Game(models.Model):
 
     @api.model
     def create_the_game(self, game_name, uid):
-        import wdb
-        wdb.set_trace()
-        temp_game = self.sudo().search([('name', '=', game_name)])
+        temp_game = self.search([('name', '=', game_name)])
         pos_id = self.env['pos.session'].search([('user_id', '=', uid)])[0].id
         # If game didn't created, then create
         if len(temp_game) == 0:
             try:
-                self.sudo().create({'name': game_name, 'id': len(self.sudo().search([]))})
+                self.create({'name': game_name, 'id': len(self.search([]))})
             except Exception:
                 print('Game creation error!!! Game num is -' + str(len(self)))
 
-        temp_game = self.sudo().search([('name', '=', game_name)])
+        temp_game = self.search([('name', '=', game_name)])
         data = {'command': 'my_game_id', 'id': temp_game.id}
         channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, pos_id, game_name)
         self.env['bus.bus'].sendmany([[channel, data]])
@@ -36,7 +34,7 @@ class Game(models.Model):
 
     @api.model
     def add_new_user(self, game_id, name, uid):
-        cur_game = self.sudo().search([('id', '=', game_id)])
+        cur_game = self.search([('id', '=', game_id)])
         new_num = len(cur_game.players)
         new_pos_id = self.env['pos.session'].search([('user_id', '=', uid)])[0].id
         if cur_game.trump != -1:
@@ -57,7 +55,7 @@ class Game(models.Model):
             print('Player connected notification error!!!(add_new_user)')
 
         try:
-            cur_game.players += cur_game.players.sudo().create({'name': name,
+            cur_game.players += cur_game.players.create({'name': name,
                                             'uid': uid, 'num': new_num,
                          'pos_id': new_pos_id})
         except Exception:
@@ -66,9 +64,9 @@ class Game(models.Model):
 
     @api.model
     def player_is_ready(self, game_id, uid):
-        cur_game = self.sudo().search([('id', '=', game_id)])
+        cur_game = self.search([('id', '=', game_id)])
         try:
-            cur_game.players.sudo().search([('uid', '=', uid)]).write({'ready': True})
+            cur_game.players.search([('uid', '=', uid)]).write({'ready': True})
         except Exception:
             print('Error in player_is_ready method!!! (Model - game)')
 
@@ -88,7 +86,7 @@ class Game(models.Model):
 
     @api.model
     def start_the_game(self, game_id):
-        cur_game = self.sudo().search([('id', '=', game_id)])
+        cur_game = self.search([('id', '=', game_id)])
         seq = [*range(0, 52)]
         cards_limit = 6     
         random.shuffle(seq)
@@ -97,9 +95,9 @@ class Game(models.Model):
         cards_cnt = 0
         all_cards_cnt = 0
         cur_game.player_is_ready(cur_game.id,
-                                 cur_game.players.sudo().search([('num', '=', 0)]).uid)
-        player = cur_game.players.sudo().search([('ready', '=', True)])
-        player[0].sudo().write({'stepping': True})
+                                 cur_game.players.search([('num', '=', 0)]).uid)
+        player = cur_game.players.search([('ready', '=', True)])
+        player[0].write({'stepping': True})
         try:
             for num in seq:
                 player[i].add_new_card(player[i].uid, num)
@@ -116,9 +114,9 @@ class Game(models.Model):
 
         try:
             for num in seq:
-                card = cur_game.extra_cards.sudo().card_power(num)
-                cur_game.extra_cards += cur_game.extra_cards.sudo().create({'power': card[0], 'suit': card[1], 'num': num, 'in_game': True})
-            cur_game.sudo().write({'trump': cur_game.extra_cards[0].suit})
+                card = cur_game.extra_cards.card_power(num)
+                cur_game.extra_cards += cur_game.extra_cards.create({'power': card[0], 'suit': card[1], 'num': num, 'in_game': True})
+            cur_game.write({'trump': cur_game.extra_cards[0].suit})
             self.env['pos.config'].send_to_all_poses(cur_game.name, {'command': 'Trump', 'trump': cur_game.trump})
         except Exception:
             print('Extra cards assignment error!!!')
@@ -130,7 +128,7 @@ class Game(models.Model):
             print('Cards sending error!!!')
 
         try:
-            for player in cur_game.players.sudo().search([('ready', '=', False)]):
+            for player in cur_game.players.search([('ready', '=', False)]):
                 cur_game.delete_player(cur_game.id, player.uid)
         except Exception:
             print("Can't delete not ready players!!!(start_the_game)")
@@ -138,7 +136,7 @@ class Game(models.Model):
 
     @api.model
     def delete_player(self, game_id, uid):
-        cur_game = self.sudo().search([('id', '=', game_id)])
+        cur_game = self.search([('id', '=', game_id)])
         try:
             for user in cur_game.players:
                 data = {'uid': uid, 'command': 'Disconnect'}
@@ -150,10 +148,10 @@ class Game(models.Model):
         try:
             if deleting_user.num == cur_game.who_steps:
                 cur_game.who_should_step(game_id)
-            deleting_user = cur_game.players.sudo().search([('uid', '=', uid)])
+            deleting_user = cur_game.players.search([('uid', '=', uid)])
             for user in cur_game.players:
                 if user.num > deleting_user.num:
-                    user.sudo().write({'num': user.num - 1})
+                    user.write({'num': user.num - 1})
         except Exception:
             print("Users num's shifting error!!!(delete_player)")
 
@@ -164,14 +162,14 @@ class Game(models.Model):
 
         try:
             if len(cur_game.players) == 0:
-                cur_game.sudo().unlink()
+                cur_game.unlink()
         except Exception:
             print("Game session deleting error!!!")
         return 1
 
     @api.model
     def send_message(self, game_id, message, uid):
-        cur_game = self.sudo().search([('id', '=', game_id)])
+        cur_game = self.search([('id', '=', game_id)])
         for player in cur_game.players:
             data = {'uid': uid, 'message': message, 'command': 'Message'}
             channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, cur_game.name)
@@ -180,12 +178,12 @@ class Game(models.Model):
 
     @api.model
     def delete_my_game(self, game_id):
-        self.sudo().search([('id', '=', game_id)]).unlink()
+        self.search([('id', '=', game_id)]).unlink()
         return 1
 
     @api.model
     def who_should_step(self, game_id):
-        cur_game = self.sudo().search([('id', '=', game_id)])
+        cur_game = self.search([('id', '=', game_id)])
         stepman = cur_game.next(game_id, cur_game.who_steps)
         cur_game.who_steps = stepman
         for player in cur_game.players:
@@ -199,9 +197,9 @@ class Game(models.Model):
         if card_num == 'ds':
             return 1
         try:
-            cur_game = self.sudo().search([('id', '=', game_id)])
-            stepper = cur_game.players.sudo().search([('uid', '=', uid)])
-            card = stepper.cards.sudo().search([('num', '=', card_num)])[0]
+            cur_game = self.search([('id', '=', game_id)])
+            stepper = cur_game.players.search([('uid', '=', uid)])
+            card = stepper.cards.search([('num', '=', card_num)])[0]
         except Exception:
             import wdb
             wdb.set_trace()
@@ -222,20 +220,20 @@ class Game(models.Model):
                 data = {'uid': uid, 'num': card.num, 'command': 'Move'}
                 channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, cur_game.name)
                 self.env['bus.bus'].sendmany([[channel, data]])
-            cur_game.on_table_cards += cur_game.on_table_cards.sudo().create({'power': card.power, 'suit': card.suit, 'num': card.num, 'in_game': True})
+            cur_game.on_table_cards += cur_game.on_table_cards.create({'power': card.power, 'suit': card.suit, 'num': card.num, 'in_game': True})
             stepper.cards -= card
         return 1
 
     @api.model
     def defence(self, game_id, uid, card1, card2, x, y):
         try:
-            cur_game = self.sudo().search([('id', '=', game_id)])
-            defender = cur_game.players.sudo().search([('uid', '=', uid)])
-            card = defender.cards.sudo().search([('num', '=', card1)])[0]
-            cur_game.on_table_cards += cur_game.on_table_cards.sudo().create({'power': card.power, 'suit': card.suit, 'num': card.num, 'in_game': True})
+            cur_game = self.search([('id', '=', game_id)])
+            defender = cur_game.players.search([('uid', '=', uid)])
+            card = defender.cards.search([('num', '=', card1)])[0]
+            cur_game.on_table_cards += cur_game.on_table_cards.create({'power': card.power, 'suit': card.suit, 'num': card.num, 'in_game': True})
             defender.cards -= card
-            first = cur_game.on_table_cards.sudo().search([('num', '=', card1)])[0]
-            second = cur_game.on_table_cards.sudo().search([('num', '=', card2)])[0]
+            first = cur_game.on_table_cards.search([('num', '=', card1)])[0]
+            second = cur_game.on_table_cards.search([('num', '=', card2)])[0]
             fpow = first.power
             spow = second.power
             winner = -1
@@ -270,16 +268,16 @@ class Game(models.Model):
 
     @api.model
     def next(self, game_id, num):
-        cur_game = self.sudo().search([('id', '=', game_id)])
-        player = cur_game.players.sudo().search([('num', '=', num)])
+        cur_game = self.search([('id', '=', game_id)])
+        player = cur_game.players.search([('num', '=', num)])
         if player.num < len(cur_game.players) - 1:
-            return cur_game.players.sudo().search([('num', '=', player.num + 1)]).num
+            return cur_game.players.search([('num', '=', player.num + 1)]).num
         else:
-            return cur_game.players.sudo().search([('num', '=', 0)]).num
+            return cur_game.players.search([('num', '=', 0)]).num
 
     @api.model
     def new_cards(self, game_id):
-        cur_game = self.sudo().search([('id', '=', game_id)])
+        cur_game = self.search([('id', '=', game_id)])
         extra_cards_length = len(cur_game.extra_cards)
         who_took_new_cards = []
         try:
@@ -313,11 +311,11 @@ class Game(models.Model):
 
     @api.model
     def cards_are_beated(self, game_id, uid):
-        cur_game = self.sudo().search([('id', '=', game_id)])
+        cur_game = self.search([('id', '=', game_id)])
         if len(cur_game.on_table_cards) == 0:
             return 1
 
-        cur_game.players.sudo().search([('uid', '=', uid)])[0].completed_move = True
+        cur_game.players.search([('uid', '=', uid)])[0].completed_move = True
         temp_cnt = 0
         for player in cur_game.players:
             if player.completed_move:
@@ -334,15 +332,15 @@ class Game(models.Model):
 
     @api.model
     def defender_took_cards(self, game_id, uid):
-        cur_game = self.sudo().search([('id', '=', game_id)])
-        player = cur_game.players.sudo().search([('uid', '=', uid)])
+        cur_game = self.search([('id', '=', game_id)])
+        player = cur_game.players.search([('uid', '=', uid)])
         for card in cur_game.on_table_cards:
-            player.cards += player.cards.sudo().create({'power': card.power, 'suit': card.suit, 'num': card.num, 'in_game': True})
+            player.cards += player.cards.create({'power': card.power, 'suit': card.suit, 'num': card.num, 'in_game': True})
 
         cur_game.new_cards(game_id)
         # Sending cards to defender
         defman = cur_game.next(game_id, cur_game.who_steps)
-        defer = cur_game.players.sudo().search([('num', '=', defman)])
+        defer = cur_game.players.search([('num', '=', defman)])
         cur_game.send_cards(cur_game.name, defer)
         # Loser should skip his queue
         cur_game.who_steps = cur_game.next(game_id, cur_game.who_steps)
@@ -366,9 +364,9 @@ class Game(models.Model):
 
     @api.model
     def cards_number(self, game_id, uid, my_uid):
-        cur_game = self.sudo().search([('id', '=', game_id)])
-        ask_player = cur_game.players.sudo().search([('uid', '=', uid)])
-        player = cur_game.players.sudo().search([('uid', '=', my_uid)])
+        cur_game = self.search([('id', '=', game_id)])
+        ask_player = cur_game.players.search([('uid', '=', uid)])
+        player = cur_game.players.search([('uid', '=', my_uid)])
 
         data = {'number': len(ask_player.cards), 'command': 'HowMuchCards'}
         channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, cur_game.name)
@@ -378,7 +376,7 @@ class Game(models.Model):
 
 class Player(models.Model):
 
-    _name = 'game.player'
+    _name = 'pos.game.player'
     _description = 'Game player'
 
     game = fields.Many2one('game', string='Game', ondelete="cascade")
@@ -398,17 +396,17 @@ class Player(models.Model):
 
     @api.model
     def add_new_card(self, uid, num):
-        player = self.sudo().search([('uid', '=', uid)])
+        player = self.search([('uid', '=', uid)])
         try:
-            card = player.cards.sudo().card_power(num)
-            player.cards += player.cards.sudo().create({'power': card[0], 'suit': card[1], 'num': num, 'in_game': True})
+            card = player.cards.card_power(num)
+            player.cards += player.cards.create({'power': card[0], 'suit': card[1], 'num': num, 'in_game': True})
         except Exception:
             print('New card addition error!!!')
         return 1
 
     @api.model
     def delete_card(self, uid, num):
-        player = self.sudo().search([('uid', '=', uid)])
+        player = self.search([('uid', '=', uid)])
         try:
             card = player.cards.card_power(num)
             card.write({'in_game': False})
@@ -418,12 +416,12 @@ class Player(models.Model):
         return 1
 
 class Card(models.Model):
-    _name = 'game.cards'
+    _name = 'pos.game.cards'
     _description = 'Gaming cards'
 
     cards_holder = fields.Many2one('game.player', string='Player', ondelete="cascade")
-    game_extra_cards = fields.Many2one('game', string='Game', ondelete="cascade")
-    on_table_cards = fields.Many2one('game', string='Game', ondelete="cascade")
+    game_extra_cards = fields.Many2one('game', string='Game extra cards', ondelete="cascade")
+    on_table_cards = fields.Many2one('game', string='Game on table cards', ondelete="cascade")
 
     suit = fields.Integer(default=-1)
     power = fields.Integer(default=-1)
