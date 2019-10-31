@@ -361,7 +361,7 @@ odoo.define('pos_chat_button', function (require){
                 (((x2*W) - w/2) - x1)+'px,'+(((y2*H) - h/2) - y1)+'px,0px)');
         }
         catch(e){
-            Tip("Can't cover chosen card!")
+            Tip("Can't cover chosen card!");
         }
     }
 
@@ -423,7 +423,7 @@ odoo.define('pos_chat_button', function (require){
                 }
             }
             var del_card = document.getElementById('card-'+String(card));
-            del_card.style.setProperty('diplay','none')
+            del_card.style.setProperty('diplay','none');
         }
         catch(e){
             alert("Can't display:none card #" + String(card)+", cause it doesn't exist");
@@ -631,7 +631,9 @@ odoo.define('pos_chat_button', function (require){
             var old_message = document.getElementById('msg-'+String(msg)+'-'+uid);
             old_message.style.setProperty('display','none');
         }
-        catch(e){}
+        catch(e){
+            // Error
+        }
     }
 //--------------------------------------------------
 
@@ -725,10 +727,10 @@ odoo.define('pos_chat_button', function (require){
             PosModelSuper.prototype.initialize.apply(this, arguments);
             var self = this;
             // Listen to 'pos_durak' channel
-            self.bus.add_channel_callback(channel, self.catch_server_response, self);
+            self.bus.add_channel_callback(channel, self.catch_response, self);
         },
 
-        catch_server_response: function(data){
+        catch_response: function(data){
             if(!in_chat){
                 return;
             }
@@ -762,7 +764,7 @@ odoo.define('pos_chat_button', function (require){
             else if(data.command === 'Cards'){
                 var me = NumInQueue(session.uid);
                 if(data.pack_num === 0){
-                    chat_users[me].cards = [];    
+                    chat_users[me].cards = [];
                 }
                 chat_users[me].cards.push({
                     power: data.power,
@@ -787,7 +789,7 @@ odoo.define('pos_chat_button', function (require){
             }
             else if(data.command === 'Move'){
                 moves_cnt++;
-                if(on_table_cards.length == 0){
+                if(on_table_cards.length === 0){
                     Second_scene();
                     Tip('If defender beated cards, press "Complete move" button)', 4000);
                 }
@@ -832,20 +834,21 @@ odoo.define('pos_chat_button', function (require){
                 if(chat_users[data.first].uid === session.uid){
                     Tip("Your turn to step", 5000);
                 }
-                for(var i = 0; i < chat_users.length; i++){
+                for(i = 0; i < chat_users.length; i++){
                     if(data.first !== i){
                         try{
-                            pic = document.getElementById('picture-'+String(i));
+                            var pic = document.getElementById('picture-'+String(i));
                             pic.style.setProperty('opacity','0.6');    
                         }
                         catch(e){}
                     }
                 }
+                
                 who_moves = [data.first, data.second];
             }
             else if(data.command === 'Won'){
                 DeleteUser(data.uid);
-                for(var i = 0; i < chat_users.length; i++){
+                for(i = 0; i < chat_users.length; i++){
                     SetPos(document.getElementById('picture-'+i), chat_users[i].uid);
                 }
                 if(session.uid === data.uid){
