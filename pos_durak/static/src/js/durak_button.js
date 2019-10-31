@@ -435,7 +435,7 @@ odoo.define('pos_chat_button', function (require){
         moves_cnt = 0;
         try{
             me = NumInQueue(session.uid);
-            for(var i = 0; i < on_table_cards.length; i++){
+            for(i = 0; i < on_table_cards.length; i++){
                 for(var j = 0; j < chat_users[me].cards.length; j++){
                     if(chat_users[me].cards[j].num === on_table_cards[i]){
                         chat_users[me].cards.splice(j,1);
@@ -467,7 +467,7 @@ odoo.define('pos_chat_button', function (require){
     }
 
     function Second_scene(data){
-        buttons_opacity(0)
+        buttons_opacity(0);
         var who_attacks = [chat_users[who_moves[0]].uid,chat_users[who_moves[1]].uid];
         var who_defends = next_to(who_attacks[0], false);
         if(who_attacks[0] === session.uid || who_attacks[1] === session.uid){
@@ -522,13 +522,13 @@ odoo.define('pos_chat_button', function (require){
 
 //---------- Set avatar and animation part -------------
     function ShowCards(){
-        let block = document.getElementById('cards');
-        let me = NumInQueue(session.uid);
-        let out = '', w = (60/chat_users[me].cards.length)/2;
-        for(let i = 0; i < chat_users[me].cards.length; i++){
-            let n = chat_users[me].cards[i].num;
+        var block = document.getElementById('cards');
+        var me = NumInQueue(session.uid);
+        var out = '', w = (60/chat_users[me].cards.length)/2;
+        for(var i = 0; i < chat_users[me].cards.length; i++){
+            var n = chat_users[me].cards[i].num;
             out+='<img type="button" src="/pos_durak/static/src/img/kards/'+
-            n+'.png" id="card-'+n+'" class="card" style="right: '+(30 - i*w)+'%"></img>'
+            n+'.png" id="card-'+n+'" class="card" style="right: '+(30 - i*w)+'%"></img>';
         }
         block.innerHTML = out;
     }
@@ -613,7 +613,7 @@ odoo.define('pos_chat_button', function (require){
             audio_mes = '<audio src="/pos_durak/static/src/sound/shit.wav" autoplay="true"></audio>';
         }
         else if(message === 'win'){
-            var audio_mes = '<audio src="/pos_durak/static/src/sound/won.wav" autoplay="true"></audio>';
+            audio_mes = '<audio src="/pos_durak/static/src/sound/won.wav" autoplay="true"></audio>';
         }
         var out = '<div id="msg-'+chat_users[i].msg_cnt+'-'+uid+'">';
         out += '<p style="background: white;transition:' +
@@ -638,12 +638,12 @@ odoo.define('pos_chat_button', function (require){
 //--------------- Users relations part -----------------
 
     function AddNewUser(user_data) {
-        var i = 0
+        var i = 0;
         // If user connected too late
         if(game_started) return;
 
         if(chat_users.length === 0){
-            chat_users = new Array(user_data.num + 1)
+            chat_users = new Array(user_data.num + 1);
             for(i = 0; i < user_data.num; i++){
                 chat_users[i] = ({
                     name : '',
@@ -696,7 +696,7 @@ odoo.define('pos_chat_button', function (require){
             user.style.setProperty('display', 'none');
         }
         catch(e){
-            alert('Trying to delete undefined user!')
+            alert('Trying to delete undefined user!');
         }
         chat_users.splice(NumInQueue(user_id),1);
         if(session.uid !== user_id){
@@ -798,7 +798,7 @@ odoo.define('pos_chat_button', function (require){
                 on_table_cards.push(data.num);
             }
             else if(data.command === 'HowMuchCards'){
-                ShowHowMuchCards(data.number)
+                ShowHowMuchCards(data.number);
             }
             else if(data.command === 'Move_done'){
                 First_scene();
@@ -845,7 +845,7 @@ odoo.define('pos_chat_button', function (require){
             }
             else if(data.command === 'Won'){
                 DeleteUser(data.uid);
-                for(i = 0; i < chat_users.length; i++){
+                for(var i = 0; i < chat_users.length; i++){
                     SetPos(document.getElementById('picture-'+i), chat_users[i].uid);
                 }
                 if(session.uid === data.uid){
