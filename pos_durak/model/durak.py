@@ -169,6 +169,8 @@ class Game(models.Model):
                 cur_game.sudo().unlink()
         except Exception:
             print("Game session deleting error!!!")
+        if deleting_user.num == cur_game.who_steps:
+            cur_game.who_should_step(game_id)
         return 1
 
     @api.model
@@ -382,7 +384,7 @@ class Game(models.Model):
         ask_player = cur_game.players.sudo().search([('uid', '=', uid)])
         player = cur_game.players.sudo().search([('uid', '=', my_uid)])
 
-        data = {'number': len(ask_player.cards)}
+        data = {'number': len(ask_player.cards), 'command': 'HowMuchCards'}
         channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
                                                                       player.pos_id, cur_game.name)
         self.env['bus.bus'].sendmany([[channel, data]])

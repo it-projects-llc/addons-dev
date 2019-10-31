@@ -24,7 +24,6 @@ odoo.define('pos_chat_button', function (require){
     var H = 0;
     // On table cards
     var on_table_cards = [];
-    var complete_move = 0;
     // How much cards on the table
     var moves_cnt = 0;
     // Cards max count
@@ -125,15 +124,6 @@ odoo.define('pos_chat_button', function (require){
         else if(num === 4){
             document.getElementById('check-button').style.setProperty('opacity', '1');
         }
-    }
-
-    function Is_card_moved(card_power) {
-        for(var i = 0; i < moved_cards.length; i++){
-            if(moved_cards[i] === card_power[0]){
-                return true;
-            }
-        }
-        return false;
     }
 
     var triangle_button_pushed = false;
@@ -442,7 +432,6 @@ odoo.define('pos_chat_button', function (require){
 
     function First_scene(){
         var i = 0;
-        complete_move = 0;
         moves_cnt = 0;
         try{
             me = NumInQueue(session.uid);
@@ -553,7 +542,7 @@ odoo.define('pos_chat_button', function (require){
             out += '<div class="chat-user" id="picture-'+i+'">';
             out += '<div class="user-name" id="user-name-'+str_uid+'">'+chat_users[i].name+'</div>';
             out += '<img src="/web/image/res.users/' +
-            item.uid + '/image_small" id="ava-' + i +'" class="avatar" style="border-radius:50%;"/>';
+            item.uid + '/image_small" id="ava-' + i +'" class="avatar" style="border-radius:50%;margin-left:20%;"/>';
 
             out += '<ul class="game-message" id="messages-'+str_uid+'"></ul>';
             out += '</div>';
@@ -758,6 +747,7 @@ odoo.define('pos_chat_button', function (require){
                 }
                 else{
                     DeleteUser(data.uid);
+                    First_scene();
                 }
 
                 if(chat_users[0].uid === session.uid){
@@ -841,6 +831,15 @@ odoo.define('pos_chat_button', function (require){
             else if(data.command === 'Who_steps'){
                 if(chat_users[data.first].uid === session.uid){
                     Tip("Your turn to step", 5000);
+                }
+                for(var i = 0; i < chat_users.length; i++){
+                    if(data.first !== i){
+                        try{
+                            pic = document.getElementById('picture-'+String(i));
+                            pic.style.setProperty('opacity','0.6');    
+                        }
+                        catch(e){}
+                    }
                 }
                 who_moves = [data.first, data.second];
             }
