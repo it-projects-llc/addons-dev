@@ -33,6 +33,7 @@ odoo.define('pos_chat_button', function (require){
     var def_cards = [0,0];
     var card_suits = ['Heart', 'Diamond', 'Clubs', 'Spade'];
     var my_game_id = -1;
+    var i = 0;
 
 //------------------------------------------------------
 
@@ -66,7 +67,7 @@ odoo.define('pos_chat_button', function (require){
     function Take_Cards() {
         // Need to finish
         var temp_cards = '';
-        for(var i = 0; i < on_table_cards.length; i++){
+        for(i = 0; i < on_table_cards.length; i++){
             temp_cards += on_table_cards[i] + ' ';
         }
         self._rpc({
@@ -91,7 +92,7 @@ odoo.define('pos_chat_button', function (require){
 //-------------Help functions part----------------------
     // Checks out which num user has
     function NumInQueue(uid){
-        for(var i = 0; i < chat_users.length; i++){
+        for(i = 0; i < chat_users.length; i++){
             if(chat_users[i].uid === uid) {
                 return i;
             }
@@ -99,7 +100,7 @@ odoo.define('pos_chat_button', function (require){
     }
 
     function OnTable(n) {
-        for(var i = 0; i < on_table_cards.length; i++){
+        for(i = 0; i < on_table_cards.length; i++){
             if(on_table_cards[i] === Number(n)) {
                 return true;
             }
@@ -283,7 +284,7 @@ odoo.define('pos_chat_button', function (require){
 //---------Help functions part----------------------
 
     function CheckUserExists(uid){
-        for(var i = 0; i < chat_users.length; i++){
+        for(i = 0; i < chat_users.length; i++){
             if(uid === chat_users[i].uid) return true;
         }
         return false;
@@ -315,7 +316,7 @@ odoo.define('pos_chat_button', function (require){
     {
         var left = 0, right = 0, slash = 0;
         var text = '';
-        for(var i = 0; i < str.length; i++){
+        for(i = 0; i < str.length; i++){
             if(left + right === 2 && str[i] !== '<'){
                 text += str[i];
             }
@@ -332,10 +333,10 @@ odoo.define('pos_chat_button', function (require){
     }
 
     function next_to(uid, already_converted){
-        var i = already_converted ? uid : NumInQueue(uid);
-        return i === chat_users.length - 1 ?
-            chat_users[0].uid : chat_users[i + 1].uid;
+        i = already_converted ? uid : NumInQueue(uid);
+        return i === chat_users.length - 1 ? chat_users[0].uid : chat_users[i + 1].uid;
     }
+
 //--------------------------------------------------
 
 //---------- Set avatar and animation part -------------
@@ -343,7 +344,7 @@ function ShowCards(){
     var block = document.getElementById('cards');
     var me = NumInQueue(session.uid);
     var out = '', w = (60/chat_users[me].cards.length)/2;
-    for(var i = 0; i < chat_users[me].cards.length; i++){
+    for(i = 0; i < chat_users[me].cards.length; i++){
         var n = chat_users[me].cards[i].num;
         out+='<img type="button" src="/pos_durak/static/src/img/kards/'+
         n+'.png" id="card-'+n+'" class="card" style="right: '+String(30 - (i*w))+'%"></img>';
@@ -355,7 +356,7 @@ function ShowUsers(){
     var window = document.getElementById('main-window');
     var out = '';
     chat_users.forEach(function (item){
-        var i = NumInQueue(item.uid);
+        i = NumInQueue(item.uid);
         var str_uid = String(item.uid);
         out += '<div class="chat-user" id="picture-'+i+'">';
         out += '<div class="user-name" id="user-name-'+str_uid+'">'+chat_users[i].name+'</div>';
@@ -379,8 +380,8 @@ function SetPos(avatar, uid){
     var x = Math.trunc(radius*Math.cos(angle));
     var y = Math.trunc(radius*Math.sin(angle));
 
-    avatar.style.setProperty('left', W/2 - (avatar.offsetWidth / 2) + 'px');
-    avatar.style.setProperty('top', H*0.4 - (avatar.offsetHeight / 2) + 'px');
+    avatar.style.setProperty('left', (W/2) - (avatar.offsetWidth / 2) + 'px');
+    avatar.style.setProperty('top', (H*0.4) - (avatar.offsetHeight / 2) + 'px');
     avatar.style.setProperty('transform','translate3d('+x+'px,'+y+'px,0px)');
 }
 //------------------------------------------------------
@@ -408,7 +409,7 @@ function SetPos(avatar, uid){
                 (((x2*W) - w/2) - x1)+'px,'+(((y2*H) - h/2) - y1)+'px,0px)');
         }
         catch(e){
-            Tip("Can't cover chosen card!");
+            Tip("Can't cover chosen card!", 3000);
         }
     }
 
@@ -462,26 +463,11 @@ function SetPos(avatar, uid){
         document.getElementById('enemy-cards').innerHTML += out;
     }
 
-    function DeleteCard(card){
-        try{
-            for(var i = 0; i < chat_users[who].cards.length; i++){
-                if(n === chat_users[who].cards[i].num){
-                    chat_users[who].cards.splice(i,1);
-                }
-            }
-            var del_card = document.getElementById('card-'+String(card));
-            del_card.style.setProperty('diplay','none');
-        }
-        catch(e){
-            alert("Can't display:none card #" + String(card)+", cause it doesn't exist");
-        }
-    }
-
     function First_scene(){
-        var i = 0;
+        i = 0;
         moves_cnt = 0;
         try{
-            me = NumInQueue(session.uid);
+            var me = NumInQueue(session.uid);
             for(i = 0; i < on_table_cards.length; i++){
                 for(var j = 0; j < chat_users[me].cards.length; j++){
                     if(chat_users[me].cards[j].num === on_table_cards[i]){
@@ -497,7 +483,7 @@ function SetPos(avatar, uid){
             on_table_cards = [];
         }
         catch(e){
-            alert('Game cards deletion error!');
+            Tip('Game cards deletion error!', 3000);
         }
 
         buttons_opacity(0);
@@ -508,7 +494,7 @@ function SetPos(avatar, uid){
             }
         }
         catch(e){
-            alert('Transition to the first scene error!');
+            Tip('Transition to the first scene error!', 3000);
         }
         ShowCards();
     }
@@ -521,7 +507,7 @@ function SetPos(avatar, uid){
             buttons_opacity(2);
         }
         // Hode other players
-        for(var i = 0; i < chat_users.length; i++){
+        for(i = 0; i < chat_users.length; i++){
             var temp = chat_users[i].uid;
             if(temp !== who_attacks[0] && temp !== who_attacks[1]
             && temp !== who_defends){
@@ -570,7 +556,7 @@ function SetPos(avatar, uid){
 //------ Message taking and showing functions ----------
 
     function TakeNewMessage(delete_last_char){
-        var i = NumInQueue(session.uid);
+        i = NumInQueue(session.uid);
 
         var newMessage = document.getElementById('text-line');
 
@@ -616,7 +602,7 @@ function SetPos(avatar, uid){
     }
 
     function showMessage(uid, message){
-        var i = NumInQueue(uid);
+        i = NumInQueue(uid);
         var messages = document.getElementById('messages-'+String(uid));
         var audio_mes = '<audio src="/pos_durak/static/src/sound/msg.wav" autoplay="true"></audio>';
         if(message === 'shit'){
@@ -640,7 +626,7 @@ function SetPos(avatar, uid){
 //--------------- Users relations part -----------------
 
     function AddNewUser(user_data) {
-        var i = 0;
+        i = 0;
         // If user connected too late
         if(game_started) return;
 
@@ -651,7 +637,7 @@ function SetPos(avatar, uid){
                     name : '',
                     uid : -1,
                     msg_cnt: 0,
-                    cards : []
+                    cards : []+'.png" id="card-'+n+'" class="card" styl
                 });
             }
         }
@@ -694,13 +680,13 @@ function SetPos(avatar, uid){
     }
 
     function DeleteUser(user_id){
-        var i = NumInQueue(user_id);
+        i = NumInQueue(user_id);
         try{
             var user = document.getElementById('picture-'+i);
             user.style.setProperty('display', 'none');
         }
         catch(e){
-            alert('Trying to delete undefined user!');
+            Tip('Trying to delete undefined user!', 3000);
         }
         chat_users.splice(NumInQueue(user_id),1);
         if(session.uid !== user_id){
@@ -745,7 +731,7 @@ function SetPos(avatar, uid){
             }
             else if(data.command === 'Disconnect'){
                 if(data.uid === session.uid){
-                    for(var i = 0; i < chat_users.length; i++){
+                    for(i = 0; i < chat_users.length; i++){
                         DeleteUser(chat_users[i].uid);
                     }
                 }
@@ -836,15 +822,18 @@ function SetPos(avatar, uid){
                 if(chat_users[data.first].uid === session.uid){
                     Tip("Your turn to step", 5000);
                 }
-                for(var i = 0; i < chat_users.length; i++){
+                for(i = 0; i < chat_users.length; i++){
                     if(data.first !== i){
                         try{
                             var pic = document.getElementById('picture-'+String(i));
                             pic.style.setProperty('opacity','0.6');    
                         }
-                        catch(e){}
+                        catch(e){
+                            Tip('Something bad happened', 2000);
+                        }
                     }
                 }
+
                 who_moves = [data.first, data.second];
             }
             else if(data.command === 'Won'){
@@ -853,7 +842,7 @@ function SetPos(avatar, uid){
                     SetPos(document.getElementById('picture-'+i), chat_users[i].uid);
                 }
                 if(session.uid === data.uid){
-                    alert('You won!');
+                    Tip('You won!', 3000);
                     showMessage(data.uid, 'won');
                 }
             }

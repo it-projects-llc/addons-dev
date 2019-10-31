@@ -23,6 +23,7 @@
     # always loaded
     'data': [
         'view/durak_view.xml',
+        'security/pos_durak_security.xml',
         "security/ir.model.access.csv"
     ],
     'qweb': [

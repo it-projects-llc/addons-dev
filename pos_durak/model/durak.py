@@ -8,11 +8,11 @@ class Game(models.Model):
 
     name = fields.Text(default='pos_durak')
     id = fields.Integer(default=-1)
-    players = fields.One2many('game.player', 'game', ondelete="cascade", delegate=True)
-    extra_cards = fields.One2many('game.cards', 'game_extra_cards', ondelete="cascade")
+    players = fields.One2many('pos.game.player', 'game', ondelete="cascade", delegate=True)
+    extra_cards = fields.One2many('pos.game.cards', 'game_extra_cards', ondelete="cascade")
     trump = fields.Integer(default=-1)
     who_steps = fields.Integer(default=-1, help='Holds user id')
-    on_table_cards = fields.One2many('game.cards', 'on_table_cards', ondelete="cascade")
+    on_table_cards = fields.One2many('pos.game.cards', 'on_table_cards', ondelete="cascade")
     attackers_agreement = fields.Integer(default=0)
 
     @api.model
@@ -255,10 +255,9 @@ class Game(models.Model):
                 loser = card1
                 winner = card2
             if card1 == winner:
-                data = {'uid': uid, 'winner': winner, 'x': x, 'y': y,
-                 'loser': loser, 'can_beat': True, 'command': 'Defence'}
+                data = {'uid': uid, 'winner': winner, 'x': x, 'y': y, 'loser': loser, 'can_beat': True, 'command': 'Defence'}
             else:
-                data = {'uid':uid, 'can_beat': False, 'command': 'Defence'}
+                data = {'uid': uid, 'can_beat': False, 'command': 'Defence'}
             for player in cur_game.players:
                 channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, cur_game.name)
                 self.env['bus.bus'].sendmany([[channel, data]])
@@ -354,7 +353,7 @@ class Game(models.Model):
             if len(player.cards) == 0 and len(cur_game.extra_cards) == 0:
                 won.append(player)
         for winner in won:
-            data = {'uid': winner.uid, 'command':'Won'}
+            data = {'uid': winner.uid, 'command': 'Won'}
             for player in cur_game.players:
                 channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, cur_game.name)
                 self.env['bus.bus'].sendmany([[channel, data]])
@@ -379,8 +378,8 @@ class Player(models.Model):
     _name = 'pos.game.player'
     _description = 'Game player'
 
-    game = fields.Many2one('game', string='Game', ondelete="cascade")
-    cards = fields.One2many('game.cards', 'cards_holder', ondelete="cascade")
+    game = fields.Many2one('pos.game', string='Game', ondelete="cascade")
+    cards = fields.One2many('pos.game.cards', 'cards_holder', ondelete="cascade")
 
     # Player name
     name = fields.Text(default='')
@@ -414,14 +413,13 @@ class Player(models.Model):
         except Exception:
             print('Card deletion error!!!')
         return 1
-
 class Card(models.Model):
     _name = 'pos.game.cards'
     _description = 'Gaming cards'
 
-    cards_holder = fields.Many2one('game.player', string='Player', ondelete="cascade")
-    game_extra_cards = fields.Many2one('game', string='Game extra cards', ondelete="cascade")
-    on_table_cards = fields.Many2one('game', string='Game on table cards', ondelete="cascade")
+    cards_holder = fields.Many2one('pos.game.player', string='Player', ondelete="cascade")
+    game_extra_cards = fields.Many2one('pos.game', string='Game extra cards', ondelete="cascade")
+    on_table_cards = fields.Many2one('pos.game', string='Game on table cards', ondelete="cascade")
 
     suit = fields.Integer(default=-1)
     power = fields.Integer(default=-1)
