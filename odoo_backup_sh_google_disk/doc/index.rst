@@ -28,7 +28,7 @@ Creating a Service Account Key
 
 * Choose Google Drive API and turn it on
 
-  .. image:: api-library-menu.png
+  .. image:: enable-api.png
 
 * Open navigation menu (*Burger menu in the Left corner*)
 * Choose ``IAM & admin >> Service accounts``
