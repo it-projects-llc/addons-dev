@@ -30,6 +30,9 @@ Creating Access Token
 * Specify the name of your App e.g. `Odoo Backups`
 * Read and accept the agreement
 * Click on `Create app` button
+
+  .. image:: create-app-form.png
+
 * Click on `Generate` button in order to Generated access token
 * Save the access token
 
