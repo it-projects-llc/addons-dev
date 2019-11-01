@@ -3,7 +3,7 @@
     'name': "POS Durak",
 
     'summary': """Cards game for employees""",
-
+    'images': ['images/icon.png'],
     'description': """
         POS Durak - module allow's to play "Durak" card game with colleges
     """,

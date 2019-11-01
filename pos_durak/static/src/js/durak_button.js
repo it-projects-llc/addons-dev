@@ -424,9 +424,6 @@ function SetPos(avatar, uid){
                 args: [my_game_id, session.uid, card_num]
             });
         }
-        else{
-            alert('Not so fast, its not your turn!');
-        }
     }
 
     function HowMuchCards(uid){
@@ -594,7 +591,7 @@ function SetPos(avatar, uid){
         i = NumInQueue(uid);
         var messages = document.getElementById('messages-'+String(uid));
         var audio_mes = '<audio src="/pos_durak/static/src/sound/msg.wav" autoplay="true"></audio>';
-        if(message === 'shit'){
+        if(message === 'sorry'){
             audio_mes = '<audio src="/pos_durak/static/src/sound/shit.wav" autoplay="true"></audio>';
         }
         else if(message === 'win'){
@@ -787,7 +784,7 @@ function SetPos(avatar, uid){
                         Tip("You can't beat this card with chosen card", 2000);
                     }
                     Tip(chat_users[NumInQueue(data.uid)].name + 'tried to cover card, but not successfuly', 2000);
-                    showMessage(data.uid, 'shit');
+                    showMessage(data.uid, 'sorry');
                     return;
                 }
                 var winner = data.winner, loser = data.loser;
