@@ -4,10 +4,6 @@
     'summary': """Chat for employees""",
     'images': ['images/icon.png'],
 
-    'description': """
-        POS Chat - module for chatting in pos
-    """,
-
     'author': "IT-Projects LLC",
     'website': "https://eda.yandex/restaurant/mcdonalds_ufa",
     "license": "LGPL-3",
@@ -16,7 +12,7 @@
     # Check https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml
     # for the full list
     'category': 'communication',
-    'version': '0.1',
+    'version': '12.0.1.0.0',
 
     # any module necessary for this one to work correctly
     'depends': ['point_of_sale', 'pos_longpolling'],
