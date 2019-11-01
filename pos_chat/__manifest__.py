@@ -23,6 +23,7 @@
     # always loaded
     'data': [
         'view/chat_rooms.xml',
+        "security/ir.model.access.csv"
     ],
     'qweb': [
         'static/src/xml/chat.xml',

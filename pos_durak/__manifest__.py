@@ -9,7 +9,7 @@
     """,
 
     'author': "IT-Projects LLC",
-    'website': "https://www.gambler.ru/Durak_rules",
+    'website': "https://en.wikipedia.org/wiki/Durak",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml
