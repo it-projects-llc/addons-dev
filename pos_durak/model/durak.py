@@ -1,10 +1,11 @@
 import random
 import logging
 from odoo import models, fields, api, _
-import threading
-from openerp.modules.registry import Registry 
+# import threading
+from openerp.modules.registry import Registry 1
 
 _logger = logging.getLogger(__name__)
+
 
 class Game(models.Model):
 
@@ -78,7 +79,7 @@ class Game(models.Model):
                                                                           new_pos_id, cur_game.name)
             return 1
         # Sending new player's data to all players
-        data = {'name': name, 'uid':uid, 'num': new_num, 'command': 'Connect'}
+        data = {'name': name, 'uid': uid, 'num': new_num, 'command': 'Connect'}
         self.env['pos.config'].send_to_all_poses(cur_game.name, data)
         # Sending old players data to the new player
         try:
@@ -91,9 +92,7 @@ class Game(models.Model):
             _logger.error('Player connected notification error!!!(add_new_user)')
 
         try:
-            cur_game.players += cur_game.players.create({'name': name,
-                                            'uid': uid, 'num': new_num,
-                         'pos_id': new_pos_id})
+            cur_game.players += cur_game.players.create({'name': name, 'uid': uid, 'num': new_num, 'pos_id': new_pos_id})
         except Exception:
             _logger.error('Player creation error!!!')
         return 1
@@ -126,7 +125,7 @@ class Game(models.Model):
     def start_the_game(self, game_id):
         cur_game = self.search([('id', '=', game_id)])
         seq = [*range(0, 52)]
-        cards_limit = 6     
+        cards_limit = 6
         random.shuffle(seq)
 
         i = 0
@@ -154,7 +153,7 @@ class Game(models.Model):
             for num in seq:
                 card = cur_game.extra_cards.card_power(num)
                 cur_game.extra_cards += cur_game.extra_cards.create({'power': card[0],
-                                          'suit': card[1], 'num': num, 'in_game': True})
+                                        'suit': card[1], 'num': num, 'in_game': True})
             cur_game.write({'trump': cur_game.extra_cards[0].suit})
             self.env['pos.config'].send_to_all_poses(cur_game.name, {'command': 'Trump',
                                                                      'trump': cur_game.trump})
@@ -265,10 +264,9 @@ class Game(models.Model):
             for player in cur_game.players:
                 data = {'uid': uid, 'num': card.num, 'command': 'Move'}
                 channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
-                                                                            player.pos_id, cur_game.name)
+                                                                        player.pos_id, cur_game.name)
                 self.env['bus.bus'].sendmany([[channel, data]])
-            cur_game.on_table_cards += cur_game.on_table_cards.create({'power': card.power,
-                                          'suit': card.suit, 'num': card.num, 'in_game': True})
+            cur_game.on_table_cards += cur_game.on_table_cards.create({'power': card.power, 'suit': card.suit, 'num': card.num, 'in_game': True})
             stepper.cards -= card
         return 1
 
@@ -278,8 +276,7 @@ class Game(models.Model):
             cur_game = self.search([('id', '=', game_id)])
             defender = cur_game.players.search([('uid', '=', uid)])
             card = defender.cards.search([('num', '=', card1)])[0]
-            cur_game.on_table_cards += cur_game.on_table_cards.create({'power': card.power,
-                                          'suit': card.suit, 'num': card.num, 'in_game': True})
+            cur_game.on_table_cards += cur_game.on_table_cards.create({'power': card.power, 'suit': card.suit, 'num': card.num, 'in_game': True})
             defender.cards -= card
             first = cur_game.on_table_cards.search([('num', '=', card1)])[0]
             second = cur_game.on_table_cards.search([('num', '=', card2)])[0]
@@ -309,8 +306,7 @@ class Game(models.Model):
             else:
                 data = {'uid':uid, 'can_beat': False, 'command': 'Defence'}
             for player in cur_game.players:
-                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
-                                                                            player.pos_id, cur_game.name)
+                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, cur_game.name)
                 self.env['bus.bus'].sendmany([[channel, data]])
         except Exception:
             _logger.error('defence error!')
@@ -454,8 +450,7 @@ class Player(models.Model):
         player = self.search([('uid', '=', uid)])
         try:
             card = player.cards.card_power(num)
-            player.cards += player.cards.create({'power': card[0],
-                                      'suit': card[1], 'num': num, 'in_game': True})
+            player.cards += player.cards.create({'power': card[0], 'suit': card[1], 'num': num, 'in_game': True})
         except Exception:
             _logger.error('New card addition error!!!')
         return 1
@@ -470,6 +465,7 @@ class Player(models.Model):
         except Exception:
             _logger.error('Card deletion error!!!')
         return 1
+
 
 class Card(models.Model):
     _name = 'game.cards'

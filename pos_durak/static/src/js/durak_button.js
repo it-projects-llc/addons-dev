@@ -647,15 +647,11 @@ function SetPos(avatar, uid){
 
 
         if(chat_users[0].uid === session.uid){
-            // alert("If players are ready, push 'Start the game' button." +
-            //     "Then game will begin.")
             buttons_opacity(4);
         }
         else{
             buttons_opacity(1);
         }
-        // Don't show players till they all become setted
-        // Return even if one of players didn't throw response
         for(i = 0; i < chat_users.length; i++){
             if(chat_users[i].uid === -1 ){
                 return;
@@ -837,7 +833,7 @@ function SetPos(avatar, uid){
                     model: 'game',
                     method: 'Pong',
                     args: [my_game_id, session.uid]
-                })
+                });
             }
         },
     });
