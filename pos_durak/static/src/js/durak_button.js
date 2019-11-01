@@ -117,6 +117,16 @@ odoo.define('pos_chat_button', function (require){
         }
     }
 
+    function is_my_card(card_num){
+        var me = NumInQueue(session.uid);
+        for(i = 0; i < chat_users[me].cards.length; i++){
+            if(chat_users[me].cards[i].num == card_num){
+                return true;
+            }
+        }
+        return false;
+    }
+
     var triangle_button_pushed = false;
     function ControlOnClick(e) {
         var elem = e ? e.target : window.event.srcElement;
@@ -140,7 +150,7 @@ odoo.define('pos_chat_button', function (require){
                    Defendence(e.pageX/W, e.pageY/H);
                }
            }
-           else{
+           else if(is_my_card(num) && !OnTable(num)){
                Move(num);
            }
         }
@@ -284,6 +294,7 @@ odoo.define('pos_chat_button', function (require){
         chat_users = [];
         in_chat = false;
         game_started = false;
+        moves_cnt = 0;
         on_table_cards = [];
         trump = -1;
         who_moves = [-1,-1];
@@ -779,7 +790,7 @@ function SetPos(avatar, uid){
                     if(session.uid === data.uid){
                         Tip("You can't beat this card with chosen card", 2000);
                     }
-                    Tip(chat_users[NumInQueue(data.uid)].name + 'tried to cover card, but not successfuly', 2000);
+                    Tip(chat_users[NumInQueue(data.uid)].name + ' tried to cover card, but not successfuly', 2000);
                     showMessage(data.uid, 'sorry');
                     return;
                 }

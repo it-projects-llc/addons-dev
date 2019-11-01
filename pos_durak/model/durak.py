@@ -1,6 +1,6 @@
 import random
 import logging
-from odoo import models, fields, api, _
+from odoo import models, fields, api
 # import threading
 # from openerp.modules.registry import Registry
 
@@ -8,7 +8,6 @@ _logger = logging.getLogger(__name__)
 
 
 class Game(models.Model):
-
     _name = 'game'
     _description = 'Simple game'
 
@@ -41,8 +40,6 @@ class Game(models.Model):
     
     # @api.model
     # def Ping(self, game_id):
-    #     import wdb
-    #     wdb.set_trace()
     #     cur_game = self.search([('id', '=', game_id)])
     #     for player in cur_game.players:
     #         import wdb
@@ -186,8 +183,6 @@ class Game(models.Model):
         except Exception:
             _logger.error('Player disconnected notification error!!!(delete_player)')
 
-        import wdb
-        wdb.set_trace()
         try:
             deleting_user = cur_game.players.search([('uid', '=', uid)])
             if deleting_user.num == cur_game.who_steps and len(cur_game.players) > 1:
@@ -207,7 +202,7 @@ class Game(models.Model):
         try:
             # next time change self.unlink() -> cur_game.unlink() 
             if len(cur_game.players) == 0:
-                self.unlink()
+                self.search([]).unlink()
         except Exception:
             _logger.error("Game session deleting error!!!")
         return 1
@@ -249,8 +244,6 @@ class Game(models.Model):
             stepper = cur_game.players.search([('uid', '=', uid)])
             card = stepper.cards.search([('num', '=', card_num)])[0]
         except Exception:
-            import wdb
-            wdb.set_trace()
             _logger.error('Make_step error!')
 
         can_make_a_step = False
@@ -428,7 +421,6 @@ class Game(models.Model):
 
 
 class Player(models.Model):
-
     _name = 'game.player'
     _description = 'Game player'
 
