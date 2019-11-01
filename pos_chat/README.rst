@@ -1,8 +1,8 @@
 ==============================
- POS Durak
+ POS Chat
 ==============================
 
-The module allows to play card game 'Durak' in pos.
+The module allows to chatting in pos.
 
 Sponsors
 --------

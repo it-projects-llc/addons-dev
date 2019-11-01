@@ -3,9 +3,10 @@
     'name': "POS Chat",
 
     'summary': """Chat for employees""",
+    'images': ['images/icon.png'],
 
     'description': """
-        POS Chat - module for chatting with colleges
+        POS Chat - module for chatting in pos
     """,
 
     'author': "IT-Projects LLC",
