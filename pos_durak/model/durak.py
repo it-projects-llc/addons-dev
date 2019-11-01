@@ -2,7 +2,7 @@ import random
 import logging
 from odoo import models, fields, api, _
 # import threading
-from openerp.modules.registry import Registry 1
+# from openerp.modules.registry import Registry
 
 _logger = logging.getLogger(__name__)
 
@@ -186,6 +186,8 @@ class Game(models.Model):
         except Exception:
             _logger.error('Player disconnected notification error!!!(delete_player)')
 
+        import wdb
+        wdb.set_trace()
         try:
             deleting_user = cur_game.players.search([('uid', '=', uid)])
             if deleting_user.num == cur_game.who_steps and len(cur_game.players) > 1:
@@ -203,8 +205,9 @@ class Game(models.Model):
             _logger.error('Player removing error!!!')
 
         try:
+            # next time change self.unlink() -> cur_game.unlink() 
             if len(cur_game.players) == 0:
-                cur_game.unlink()
+                self.unlink()
         except Exception:
             _logger.error("Game session deleting error!!!")
         return 1
