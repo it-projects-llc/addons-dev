@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': "POS Chat",
 
@@ -11,6 +10,7 @@
 
     'author': "IT-Projects LLC",
     'website': "https://eda.yandex/restaurant/mcdonalds_ufa",
+    "license": "LGPL-3",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml

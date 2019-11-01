@@ -1,12 +1,8 @@
-# -*- coding: utf-8 -*-
 {
     'name': "POS Durak",
 
     'summary': """Cards game for employees""",
     'images': ['images/icon.png'],
-    'description': """
-        POS Durak - module allow's to play "Durak" card game in pos
-    """,
 
     'author': "IT-Projects LLC",
     'website': "https://en.wikipedia.org/wiki/Durak",
@@ -16,6 +12,7 @@
     # for the full list
     'category': 'communication',
     'version': '12.0.1.0.0',
+    "license": "LGPL-3",
 
     # any module necessary for this one to work correctly
     'depends': ['point_of_sale', 'pos_longpolling'],
