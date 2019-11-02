@@ -37,6 +37,7 @@ BACKUP_NAME_SUFFIX = ".zip"
 BACKUP_NAME_ENCRYPT_SUFFIX = BACKUP_NAME_SUFFIX + ".enc"
 S3_STORAGE = 'odoo_backup_sh'
 
+
 def compute_backup_filename(database, upload_datetime, is_encrypted):
     return '%s.%s%s' % (
         database,
@@ -509,7 +510,7 @@ class BackupConfig(models.Model):
         # make a backup if it is not a simulation
         if hasattr(self, cust_method_name) and config_record.backup_simulation is False:
             method = getattr(self, cust_method_name)
-            res = method(ts, name, dump_stream, info_file, info_file_content, cloud_params)
+            method(ts, name, dump_stream, info_file, info_file_content, cloud_params)
 
         # Create new record with backup info data
         info_file_content['upload_datetime'] = dt

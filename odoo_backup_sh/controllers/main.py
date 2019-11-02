@@ -408,7 +408,6 @@ def access_control(origin_method):
                 # [request.env['ir.config_parameter'].set_param(option, None) for option in ('odoo_backup_sh.aws_access_key_id', 'odoo_backup_sh.aws_secret_access_key')]
                 return {'reload_page': True}
             else:
-                import wdb; wdb.set_trace()
                 raise exceptions.ValidationError(_(
                     "Amazon Web Services error: " + client_error.response['Error']['Message']))
     return wrapped
