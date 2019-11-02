@@ -297,10 +297,13 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
                 service: service,
             },
         }).then(function (result) {
-            if (typeof result !== "undefined" && 'reload_page' in result) {
-                window.location.reload();
-            }
-            self.o_dashboard_action_update_info(self.cloud_params);
+            // always reload to update graphs
+            window.location.reload();
+
+            // Commented, because it's not clear why do we need it here. That
+            // method applies rotations and checks for missed records, while all should be clean here
+
+            // self.o_dashboard_action_update_info(self.cloud_params);
         });
     },
 
