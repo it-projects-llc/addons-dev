@@ -14,8 +14,8 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
             <div id="msg_module_odoo_backup_sh_google_disk" position="replace">
                 <div class="content-group" attrs="{'invisible': [('module_odoo_backup_sh_google_disk','=',False)]}">
                     <div class="mt16 row">
-                        <label for="google_service_account_file" class="col-lg-3 o_light_label"/>
-                        <field name="google_service_account_file" requred="1"/>
+                        <label for="google_service_account_key" class="col-lg-3 o_light_label"/>
+                        <field name="google_service_account_key" requred="1"/>
                         <label for="google_disk_folder_id" class="col-lg-3 o_light_label"/>
                         <field name="google_disk_folder_id" requred="1"/>
                     </div>

@@ -35,7 +35,7 @@ Note: You need to have a Google account with activated access to `Google Cloud P
 
   .. image:: service-accounts-menu.png
 
-* Click on ``+ CREATE SERVICE ACCOUNT`` and add the Private key
+* Click on ``+ CREATE SERVICE ACCOUNT``
 
   * Set name, e.g. ``Odoo Backups`` and click ``[Create]`
   * At next the step set permission ``Project >> Owner``
@@ -47,6 +47,9 @@ Note: You need to have a Google account with activated access to `Google Cloud P
     * Use key type ``JSON``
 
     .. image:: create-key.png
+
+  * A json file is downloaded. You will need it later
+
 
 Access rights to Google Folder
 ------------------------------
@@ -71,21 +74,41 @@ Access rights to Google Folder
 
   .. image:: folder-id.png
 
-Installation of Private key on server
--------------------------------------
+Odoo Settings
+---------------
 
-TODO
+* Open menu ``[[ Backups ]] >> Settings``
+* Paste content of the Key file into *Service Account Key* field
+* Paste *Folder ID* value into *Google Drive Folder ID*
+* Click on ``[Save]`` button
 
+Backup Schedule and rotation
+----------------------------
 
-Server Deployment
------------------
+.. this sections is a copy-paste from odoo_backup_sh/doc/index.rst with adding a line about Storage Service
 
-TODO
+To setup backups do as following:
 
-* Activate `Developer Mode <https://odoo-development.readthedocs.io/en/latest/odoo/usage/debug-mode.html>`__
-* Go to ``[[Backups]] >> Configuration >> Settings``
-* Choose Google Drive
-* Click on `Save`
+* Open the menu ``[[ Backups ]] >> Dashboard``.
+* Click on the ``[Add Database]`` button in the dashboard header.
+
+  * **Database:** select one of your databases
+  * **Storage Service:** select *Google Drive*
+  * Encrypt your backup if you need, but do not forget the password
+  * Scheduled Auto Backups
+
+    * **Interval**  type an inteval value and select a unit of measure. Example: *make backups every 1 day*.
+    * **Next Execution Date:** It shows next planned auto backup date. You can correct this. Example: *make every day at night time*.
+
+  * **Auto Rotation:** If you have set up the auto backup, you can specify how many backups to preserve for certain time frames.
+
+    Example: The module makes auto backup your database every night. You want to preserve 2 daily backups and 1 weekly only. Then
+
+    * *Set up Daily and Weekly rotation options as Limited and put the numbers in limit fields.*
+
+    * *All other options mark as Disabled*.
+
+  * After all required fields will be filled, click on the ``[Save]`` button.
 
 Usage
 =====
