@@ -17,7 +17,7 @@ Configuration
 Creating a Service Account Key
 ------------------------------
 
-*Note: You need to have a Google account*
+Note: You need to have a Google account with activated access to `Google Cloud Platform <https://cloud.google.com/>`__.
 
 * `Create new Project <https://console.cloud.google.com/projectcreate>`__ in Google Cloud 
 * Switch to the created Project
@@ -48,33 +48,34 @@ Creating a Service Account Key
 
     .. image:: create-key.png
 
-
-
-TODO: MOVE THIS
-* In opened page *IAM& admin* click on `Service account`
-* Remember the e-mail of your service account
-
-STOPHERE
 Access rights to Google Folder
 ------------------------------
 
 * Go to `Google Drive <https://www.google.com/drive/>`__
-* Create a new folder `Backups`
-* Click the right mouse button on this folder and choose `Share+`
-* In Pop up window fill in e-mail of created service account
+* Create a new folder, say `Odoo Backups`
+* Open folder and click `Share` button in folder menu
+
+  .. image:: share-button.png
+
+* In Pop up window fill in e-mail of created service account. It should have Edit access
+
+  * You can find service account e-mail in Google Cloud in menu ``IAM & admin >> Service accounts``
+
 * Confirm your action
+
+  .. image:: share-folder.png
+
 
 Installation of Private key on server
 -------------------------------------
-In the Example below you can see the Server, which is launched with Docker
 
-* Copy this path to the Docker container::
-
-      docker cp PATH_FROM/YOU_FILE_NAME.JSON CONTAINER_NAME:/PATH_TO
+TODO
 
 
 Server Deployment
 -----------------
+
+TODO
 
 * Activate `Developer Mode <https://odoo-development.readthedocs.io/en/latest/odoo/usage/debug-mode.html>`__
 * Go to ``[[Backups]] >> Configuration >> Settings``
@@ -84,34 +85,22 @@ Server Deployment
 Usage
 =====
 
-**Create:**
+Manual backups
+--------------
 
-* Open the menu ``[[ Backups ]] >> Settings``
-* Choose the Google disk and click on ``Save`` button
-* Enter *Service Account File path*
-* Enter *Google Drive Folder ID*
-* Click on ``Save`` button and and come back to set up the feature
-* Set up a new configuration  [[ Backups ]] >> Dashboard >> Add Database
-* Choose the Database in the database field
-* Define the Storage service
-* Encrypt your backup if you need, but do not forget the password
-* Enter *Interval Number*, *Interval Unit*, *New execution Date*
-* Select/unselect *"Active" checkbox*
-* Click on ``Save``
-* Go to ``[[ Backups ]] >> Dashboard``
-* Click on ``New Backup`` in the appeared configuration
+.. this sections is a copy-paste from odoo_backup_sh/doc/index.rst
 
-RESULT: Backup is stored in the Google drive.
-*The manual backup creation may take some time before being ready*.
+* Configure Backup Schedule as described above
+* Open the menu ``[[ Backups ]] >> Dashboard``
+* Click on ``[Make Backup now]``
 
-.. note::
-   Restore without additional downloading is available only for* `Odoo backup service <https://apps.odoo.com/apps/modules/12.0/odoo_backup_sh/>`__
+RESULT: Backup is created. *Note, that the manual backup creation may take some time before being ready*
 
-**Visualize:**
+Backup Dashboard
+----------------
+
+.. this sections is a copy-paste from odoo_backup_sh/doc/index.rst
 
 * Open the menu ``[[ Backups ]] >> Dashboard``
-* Proceed with ``[[ Backups ]] >> Backups`` where *Odoo-backup.sh* databases are presented
-* Continue with ``[[ Backups ]] >> Backups`` where your Odoo backups are stored
 
 RESULT: You can see the main Graph with the general statistics of all your backups are stored on a remote server.
-After this window a special form for managing and controlling backups of your databases specially *for Google disk* is located.

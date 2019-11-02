@@ -17,7 +17,7 @@ Configuration
 Access Token
 ------------
 
-*Note: You need to have a Dropbox account*
+Note: You need to have a Dropbox account.
 
 * Open the `App Console <https://www.dropbox.com/developers/apps>`__
 * Login/Register into Dropbox account.
