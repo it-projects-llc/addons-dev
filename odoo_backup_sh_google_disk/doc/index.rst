@@ -65,6 +65,11 @@ Access rights to Google Folder
 
   .. image:: share-folder.png
 
+* Check URL in your browser. It has following format:
+  ``https://drive.google.com/drive/folders/1oRL3sEKsk9i9Iripu7hsroaYpefl4DO4``,
+  where last part is the *Folder ID*: ``1oRL3sEKsk9i9Iripu7hsroaYpefl4DO4``. You will need it later.
+
+  .. image:: folder-id.png
 
 Installation of Private key on server
 -------------------------------------
