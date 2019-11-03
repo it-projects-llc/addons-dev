@@ -201,7 +201,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                             <field name="encrypt_backups"/>
                         </group>
                         <group>
-                            <field name="encryption_password" password="1" attrs="{'invisible': [('encrypt_backups', '=', False)]}"/>
+                            <field name="encryption_password" password="1" attrs="{'invisible': [('encrypt_backups', '=', False)], 'required': [('encrypt_backups', '!=', False)]}"/>
                         </group>
                         <p colspan="4" attrs="{'invisible': [('encrypt_backups', '=', False)]}">
                             Warning: Don't forget the encryption password.
