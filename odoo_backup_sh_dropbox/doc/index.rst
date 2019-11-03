@@ -104,3 +104,10 @@ Backup Dashboard
 * Open the menu ``[[ Backups ]] >> Dashboard``
 
 RESULT: You can see the main Graph with the general statistics of all your backups are stored on a remote server.
+
+Downloading backups to computer
+-------------------------------
+
+To download backup (e.g. for restoring in odoo), you can nagivate to dropbox or
+download directly in odoo. Note that in later case your browser could show you a
+security warning. Just ignore it.

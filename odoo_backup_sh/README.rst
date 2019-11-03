@@ -138,7 +138,7 @@ Syncing with remote backups:
 
 * Directly at the storage:
 
-  * copy archive for a backup and set new name (e.g. change day of the backup)
+  * copy archive for a backup and set new name (e.g. change year of the backup)
   * copy info file of the backup and make corresponing name in its name and content
 
 * Go to ``[[ Settings ]] >> Automation >> Scheduled Actions``
