@@ -114,7 +114,7 @@ Checklist: Backups
 * Directly at the storage: create manually some file to check that modules can handle them:
 
   * a file with random name
-  * a backup without corresponding "*.info" file
+  * a backup without corresponding ``*.info`` file
   * a backup info file without backup itself
 
 * Go to ``[[ Settings ]] >> Automation >> Scheduled Actions``
