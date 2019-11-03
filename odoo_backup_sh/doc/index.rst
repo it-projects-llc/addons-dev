@@ -109,8 +109,8 @@ Downloading backups to computer
 RESULT: Backup is downloaded.
 
 * If Backup is encrypted (it has `.enc` extension), extract it using `gpg` utility. For example:
-
-    gpg --output OUTPUT_FILENAME.zip --decrypt INPUT_FILENAME.zip.enc
+  ::
+      gpg --output OUTPUT_FILENAME.zip --decrypt INPUT_FILENAME.zip.enc
 
 
 
