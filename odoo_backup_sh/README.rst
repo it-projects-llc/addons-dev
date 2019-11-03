@@ -11,7 +11,7 @@ Backing up Odoo databases to S3 bucket.
 In-App Purchase
 ===============
 
-**odoo-backup.sh** provides a way to store backups in a cloud. Payments for the service is managed by proprietary module, which implements `In-App Purchase <https://www.odoo.com/documentation/12.0/webservices/iap.html>`__ -- payments platform provided by *Odoo S.A.*.
+**odoo-backup.sh** provides s3 credentials. Payments for the service is managed by proprietary module, which implements `In-App Purchase <https://www.odoo.com/documentation/12.0/webservices/iap.html>`__ -- payments platform provided by *Odoo S.A.*.
 
 Personal cloud
 ==============
