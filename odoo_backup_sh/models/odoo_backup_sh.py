@@ -273,7 +273,9 @@ class BackupConfig(models.Model):
         return simulation_backup_list
 
     @api.model
-    def get_backup_list(self, cloud_params):
+    def get_backup_list(self, cloud_params, service):
+        if service != S3_STORAGE:
+            return {}
         try:
             backup_list = BackupCloudStorage.get_all_files(cloud_params)
             # if the simulation configuration exists, we need to get
@@ -305,17 +307,19 @@ class BackupConfig(models.Model):
     @api.model
     def delete_remote_objects(self, cloud_params, remote_objects):
         odoo_backup_sh_objects = []
-        path = BackupCloudStorage.get_s3_dir(cloud_params)
+        path = None
         for obj in remote_objects:
             if obj[1] != S3_STORAGE:
                 continue
+            if not path:
+                path = BackupCloudStorage.get_s3_dir(cloud_params)
             odoo_backup_sh_objects.append('%s/%s' % (path, obj[0]))
         if odoo_backup_sh_objects:
             return BackupCloudStorage.delete_objects(cloud_params, odoo_backup_sh_objects)
         return {}
 
     @api.model
-    def update_info(self, cloud_params):
+    def update_info(self, cloud_params, service=None):
         """
         * apply rotations
         * sync odoo_backup_sh.backup_info records:
@@ -323,7 +327,7 @@ class BackupConfig(models.Model):
           * create missed records for found backups in the remote storage
           * archive existed records that don't have corresponding backup in the remote storage
         """
-        backup_list = self.get_backup_list(cloud_params)
+        backup_list = self.get_backup_list(cloud_params, service)
         if not backup_list.get('all_files'):
             return backup_list
 
@@ -521,7 +525,12 @@ class BackupConfig(models.Model):
         if not config_record:
             return None
 
-        cloud_params = BackupController.get_cloud_params(env=self.env)
+        cloud_params = None
+        # TODO: cloud_params is in fact s3 params only. So, method should be
+        # refactored to don't use cloud_params, because dropbox and google
+        # drive modules don't use them
+        if service == S3_STORAGE:
+            cloud_params = BackupController.get_cloud_params(env=self.env)
         dt = datetime.utcnow()
         ts = dt.strftime(REMOTE_STORAGE_DATETIME_FORMAT)
         dump_stream, info_file, info_file_content = self.get_dump_stream_and_info_file(name, service, ts)
@@ -537,7 +546,7 @@ class BackupConfig(models.Model):
         info_file_content['upload_datetime'] = dt
         self.env['odoo_backup_sh.backup_info'].sudo().create(info_file_content)
         if init_by_cron_id:
-            self.update_info(cloud_params)
+            self.update_info(cloud_params, service=service)
         return None
 
     @api.model

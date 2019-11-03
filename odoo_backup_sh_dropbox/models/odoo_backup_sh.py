@@ -1,4 +1,5 @@
 # Copyright 2019 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
+# Copyright 2019 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 import logging
@@ -23,16 +24,19 @@ from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 CHUNK_SIZE = 4 * 1024 * 1024
 
 _logger = logging.getLogger(__name__)
+DROPBOX_STORAGE = 'dropbox'
 
 
 class BackupConfig(models.Model):
     _inherit = "odoo_backup_sh.config"
 
-    storage_service = fields.Selection(selection_add=[('dropbox', 'Dropbox')])
+    storage_service = fields.Selection(selection_add=[(DROPBOX_STORAGE, 'Dropbox')])
 
     @api.model
-    def get_backup_list(self, cloud_params):
-        backup_list = super(BackupConfig, self).get_backup_list(cloud_params) or dict()
+    def get_backup_list(self, cloud_params, service):
+        backup_list = super(BackupConfig, self).get_backup_list(cloud_params, service) or dict()
+        if service != DROPBOX_STORAGE:
+            return backup_list
         # get all backups from dropbox
         try:
             DropboxService = self.env['ir.config_parameter'].get_dropbox_service()
@@ -40,7 +44,7 @@ class BackupConfig(models.Model):
             return backup_list
         folder_path = self.env['ir.config_parameter'].get_param("odoo_backup_sh_dropbox.dropbox_folder_path")
         response = DropboxService.files_list_folder(folder_path)
-        drobpox_backup_list = [(r.name, 'dropbox') for r in response.entries]
+        drobpox_backup_list = [(r.name, DROPBOX_STORAGE) for r in response.entries]
         if 'all_files' in backup_list:
             backup_list.update({
                 'all_files': backup_list['all_files'] + drobpox_backup_list
@@ -51,7 +55,7 @@ class BackupConfig(models.Model):
 
     @api.model
     def get_info_file_object(self, cloud_params, info_file_name, storage_service):
-        if storage_service == 'dropbox':
+        if storage_service == DROPBOX_STORAGE:
             DropboxService = self.env['ir.config_parameter'].get_dropbox_service()
             folder_path = self.env['ir.config_parameter'].get_param("odoo_backup_sh_dropbox.dropbox_folder_path")
             full_path = "{folder_path}/{file_name}".format(
@@ -64,7 +68,7 @@ class BackupConfig(models.Model):
 
     @api.model
     def create_info_file(self, info_file_object, storage_service):
-        if storage_service == 'dropbox':
+        if storage_service == DROPBOX_STORAGE:
             info_file = tempfile.NamedTemporaryFile()
             info_file.write(info_file_object[1].content)
             info_file.seek(0)
@@ -78,7 +82,7 @@ class BackupConfig(models.Model):
         DropboxService = None
         dropbox_remove_objects = []
         for file in remote_objects:
-            if file[1] == 'dropbox':
+            if file[1] == DROPBOX_STORAGE:
                 if not DropboxService:
                     DropboxService = self.env['ir.config_parameter'].get_dropbox_service()
                 dropbox_remove_objects.append(file)
@@ -125,7 +129,7 @@ class BackupConfig(models.Model):
 class BackupInfo(models.Model):
     _inherit = 'odoo_backup_sh.backup_info'
 
-    storage_service = fields.Selection(selection_add=[('dropbox', 'Dropbox')])
+    storage_service = fields.Selection(selection_add=[(DROPBOX_STORAGE, 'Dropbox')])
 
     @api.multi
     def download_backup_action(self, backup=None):
@@ -133,7 +137,7 @@ class BackupInfo(models.Model):
         if backup is None:
             backup = get_backup_by_id(self.env, self._context['active_id'])
 
-        if backup.storage_service != 'dropbox':
+        if backup.storage_service != DROPBOX_STORAGE:
             return super(BackupInfo, self).download_backup_action(backup)
 
         # TODO: use backup_path field
@@ -158,7 +162,7 @@ class BackupRemoteStorage(models.Model):
 
     @api.multi
     def compute_dropbox_used_remote_storage(self):
-        amount = sum(self.env['odoo_backup_sh.backup_info'].search([('storage_service', '=', 'dropbox')]).mapped('backup_size'))
+        amount = sum(self.env['odoo_backup_sh.backup_info'].search([('storage_service', '=', DROPBOX_STORAGE)]).mapped('backup_size'))
         today_record = self.search([('date', '=', datetime.strftime(datetime.now(), DEFAULT_SERVER_DATE_FORMAT))])
         if today_record:
             today_record.dropbox_used_remote_storage = amount
@@ -178,7 +182,7 @@ class DeleteRemoteBackupWizard(models.TransientModel):
         backup_info_records = self.env['odoo_backup_sh.backup_info'].search([('id', 'in', record_ids)])
         folder_path = self.env['ir.config_parameter'].get_param("odoo_backup_sh_dropbox.dropbox_folder_path")
         DropboxService = self.env['ir.config_parameter'].get_dropbox_service()
-        backup_dropbox_info_records = backup_info_records.filtered(lambda r: r.storage_service == 'dropbox')
+        backup_dropbox_info_records = backup_info_records.filtered(lambda r: r.storage_service == DROPBOX_STORAGE)
 
         for record in backup_dropbox_info_records:
             for obj_name in [record.backup_filename, record.backup_info_filename]:
