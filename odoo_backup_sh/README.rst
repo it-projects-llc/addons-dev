@@ -64,16 +64,18 @@ To test odoo_backup_sh* modules one can use following scenarios:
 Test: rotation
 --------------
 
-* use database with demo
-* install ``odoo_backup_sh``
-* click ``[Get S3 storage]``
-* configure any backup schedule
-* configure rotation to test
+* Use database with demo
+* Install ``odoo_backup_sh``
+* Open menu ``[[ Backups ]]``
+* Click ``[Get S3 storage]``
+* At demo Backup Config set any backup schedule
+* Configure rotation to test
 * Go to ``[[ Settings ]] >> Automation >> Scheduled Actions``
 
   * Find a cron job for backuping and click ``[Run Manually]``
 
-* check that backups are rotated according to plan
+* Check that backups are rotated according to plan
+* To repeat the test open Backup Config and click ``[Create Fake Backups]``
 
 Preparation: Install base module
 --------------------------------
