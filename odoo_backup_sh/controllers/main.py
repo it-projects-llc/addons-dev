@@ -129,9 +129,6 @@ class BackupController(http.Controller):
         ], env=env)
         cloud_params = cloud_config_stores[call_from].get([
             'odoo_backup_sh.user_key',
-            'odoo_backup_sh.s3_bucket_name',
-            'odoo_backup_sh.aws_access_key_id',
-            'odoo_backup_sh.aws_secret_access_key',
             'odoo_backup_sh.private_s3_dir',
             'odoo_backup_sh.odoo_oauth_uid'
         ], env=env)
@@ -230,7 +227,7 @@ class BackupController(http.Controller):
             return env.get_template("backup_list.html").render(page_values)
         backup_list = BackupCloudStorage.get_all_files(cloud_params)
         if 'reload_page' in backup_list:
-            page_values['error'] = 'Something went wrong. Please refresh the page.'
+            page_values['error'] = 'AWS needs some time to activate s3 credentials. Please refresh the page in 30 seconds.'
             return env.get_template("backup_list.html").render(page_values)
         page_values['backup_list'] = [name for name, _ in backup_list['all_files'] if not name.endswith('.info')]
         return env.get_template("backup_list.html").render(page_values)
