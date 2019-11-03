@@ -21,8 +21,7 @@ Note: You need to have a Google account with activated access to `Google Cloud P
 
 * `Create new Project <https://console.cloud.google.com/projectcreate>`__ in Google Cloud 
 * Switch to the created Project
-* Open navigation menu (*Burger menu in the Left corner*)
-* Choose ``API & Services >> Library``
+* Open navigation menu (*Burger menu in the Left corner*), choose ``API & Services >> Library``
 
   .. image:: api-library-menu.png
 
@@ -30,8 +29,7 @@ Note: You need to have a Google account with activated access to `Google Cloud P
 
   .. image:: enable-api.png
 
-* Open navigation menu (*Burger menu in the Left corner*)
-* Choose ``IAM & admin >> Service accounts``
+* Open navigation menu (*Burger menu in the Left corner*), choose ``IAM & admin >> Service accounts``
 
   .. image:: service-accounts-menu.png
 
@@ -46,7 +44,7 @@ Note: You need to have a Google account with activated access to `Google Cloud P
 
     * Use key type ``JSON``
 
-    .. image:: create-key.png
+      .. image:: create-key.png
 
   * A json file is downloaded. You will need it later
 
