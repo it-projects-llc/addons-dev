@@ -449,6 +449,7 @@ class BackupCloudStorage(http.Controller):
         amazon_s3_client = cls.get_amazon_s3_client(cloud_params)
         if not key:
             key = '%s/%s' % (cls.get_s3_dir(cloud_params), filename)
+        _logger.debug('get_object: %s', key)
         return amazon_s3_client.get_object(Bucket=cloud_params['odoo_backup_sh.s3_bucket_name'], Key=key)
 
     @classmethod

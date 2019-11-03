@@ -457,6 +457,10 @@ class BackupConfig(models.Model):
                 info_file = self.create_info_file(info_file_object, info_file_service)
                 config_parser.read(info_file.name)
                 backup_info_vals = {}
+
+                # TODO: call a method, that will compute path depending on storage
+                if info_file_service == S3_STORAGE:
+                    backup_info_vals['backup_path'] = BackupCloudStorage.get_s3_dir(cloud_params)
                 for (name, value) in config_parser.items('common'):
                     if value == 'True' or value == 'true':
                         value = True

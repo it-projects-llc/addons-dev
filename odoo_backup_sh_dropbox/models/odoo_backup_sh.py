@@ -136,6 +136,7 @@ class BackupInfo(models.Model):
         if backup.storage_service != 'dropbox':
             return super(BackupInfo, self).download_backup_action(backup)
 
+        # TODO: use backup_path field
         folder_path = self.env['ir.config_parameter'].get_param("odoo_backup_sh_dropbox.dropbox_folder_path") or ""
         DropboxService = self.env['ir.config_parameter'].get_dropbox_service()
         return {

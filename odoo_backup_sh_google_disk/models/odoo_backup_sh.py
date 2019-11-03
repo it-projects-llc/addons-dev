@@ -139,6 +139,7 @@ class BackupInfo(models.Model):
         if backup.storage_service != 'google_drive':
             return super(BackupInfo, self).download_backup_action(backup)
 
+        # TODO: add file_id in backup_info for this
         file_id = self.env["odoo_backup_sh.config"].get_google_drive_file_id(backup.backup_filename)
         return {
             "type": "ir.actions.act_url",

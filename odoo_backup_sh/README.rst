@@ -149,6 +149,7 @@ Syncing with remote backups:
 
   * Check that copied backup has a record in Backup list. If there is no one, be
     sure that the Backup Settings doesn't have rotations.
+  * Download the backup
 
 
 Test: Dropbox only
