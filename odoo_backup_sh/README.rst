@@ -104,7 +104,7 @@ Test: S3
 --------
 
 * Install base module
-* Configure private S3 credentials according to the instuction 
+* Configure private S3 credentials according to the instruction
 * Create Schedule for current database.
 * Test according to *Checklist: Backups*
 

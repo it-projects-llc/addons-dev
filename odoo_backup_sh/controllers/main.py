@@ -456,6 +456,7 @@ class BackupCloudStorage(http.Controller):
     @access_control
     def put_object(cls, cloud_params, obj, obj_key):
         amazon_s3_client = cls.get_amazon_s3_client(cloud_params)
+        _logger.debug('put_object: %s', obj_key)
         amazon_s3_client.put_object(Body=obj, Bucket=cloud_params['odoo_backup_sh.s3_bucket_name'], Key=obj_key)
         _logger.info('Following backup object have been put in the remote storage: %s' % obj_key)
 
