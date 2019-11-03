@@ -3,7 +3,7 @@
 import logging
 from odoo import models, api
 from odoo.addons.odoo_backup_sh.models.odoo_backup_sh import ModuleNotConfigured
-
+import json
 
 _logger = logging.getLogger(__name__)
 
@@ -39,11 +39,15 @@ class Param(models.Model):
 
     @api.model
     def get_google_drive_service(self):
-        service_account_file = self.sudo().get_param('odoo_backup_sh_google_disk.service_account_file')
-        if not service_account_file:
-            raise ModuleNotConfigured("service account file is not given")
+        service_account_key = self.sudo().get_param('odoo_backup_sh_google_disk.service_account_key')
+        if not service_account_key:
+            raise ModuleNotConfigured("service account key is not set")
+        try:
+            service_account_key = json.loads(service_account_key.strip())
+        except json.JSONDecodeError:
+            raise ModuleNotConfigured("Service Key value is not a json")
         # create a credentials
-        credentials = service_account.Credentials.from_service_account_file(service_account_file, scopes=SCOPES)
+        credentials = service_account.Credentials.from_service_account_info(service_account_key, scopes=SCOPES)
         # create a service using REST API Google Drive v3 and credentials
         service = build('drive', 'v3', credentials=credentials, cache=MemoryCache())
         return service

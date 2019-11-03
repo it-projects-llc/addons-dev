@@ -6,7 +6,7 @@
  Dropbox backing up
 ====================
 
-The small investment to protect your business.
+Backing up Odoo databases to Dropbox.
 
 Credits
 =======

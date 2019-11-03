@@ -139,8 +139,8 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
     <t t-name="odoo_backup_sh.config_cards">
         <t t-foreach="configs" t-as="config">
             <div class="o_kanban_record" t-att-data-db_name="config.database" t-att-data-service="config.storage_service">
-                <div class="backup_card_title" title="Set up schedules and rotations.">
-                    <t t-esc="config.database"/>
+                <div class="backup_card_title">
+                    <span title="Database Name"><t t-esc="config.database"/></span>
                     <t t-if="!config.active">
                         <span class="o_kanban_card_warning">
                             <i class="fa fa-warning" title="Warning"/>
@@ -152,11 +152,11 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                         <i class="fa fa-pencil" title="Edit Backup Config"/>
                     </span>
                 </div>
-                <div class="backup_storage_service_title o_hidden" title="Backup Storage Service">
+                <div class="backup_storage_service_title o_hidden"><span id="backup_storage_type" title="Backup Storage Type">
                     <t t-if="config.storage_service == 'odoo_backup_sh'">
-                        Odoo Backup sh
+                        S3
                     </t>
-                </div>
+                </span></div>
                 <div class="backup_card_content">
                     <button type="object" class="btn btn-primary btn-sm pull-left o_dashboard_action_make_backup">
                         <span>Make backup now</span>

@@ -129,9 +129,6 @@ class BackupController(http.Controller):
         ], env=env)
         cloud_params = cloud_config_stores[call_from].get([
             'odoo_backup_sh.user_key',
-            'odoo_backup_sh.s3_bucket_name',
-            'odoo_backup_sh.aws_access_key_id',
-            'odoo_backup_sh.aws_secret_access_key',
             'odoo_backup_sh.private_s3_dir',
             'odoo_backup_sh.odoo_oauth_uid'
         ], env=env)
@@ -230,7 +227,7 @@ class BackupController(http.Controller):
             return env.get_template("backup_list.html").render(page_values)
         backup_list = BackupCloudStorage.get_all_files(cloud_params)
         if 'reload_page' in backup_list:
-            page_values['error'] = 'Something went wrong. Please refresh the page.'
+            page_values['error'] = 'AWS needs some time to activate s3 credentials. Please refresh the page in 30 seconds.'
             return env.get_template("backup_list.html").render(page_values)
         page_values['backup_list'] = [name for name, _ in backup_list['all_files'] if not name.endswith('.info')]
         return env.get_template("backup_list.html").render(page_values)
@@ -408,7 +405,6 @@ def access_control(origin_method):
                 # [request.env['ir.config_parameter'].set_param(option, None) for option in ('odoo_backup_sh.aws_access_key_id', 'odoo_backup_sh.aws_secret_access_key')]
                 return {'reload_page': True}
             else:
-                import wdb; wdb.set_trace()
                 raise exceptions.ValidationError(_(
                     "Amazon Web Services error: " + client_error.response['Error']['Message']))
     return wrapped
@@ -450,12 +446,14 @@ class BackupCloudStorage(http.Controller):
         amazon_s3_client = cls.get_amazon_s3_client(cloud_params)
         if not key:
             key = '%s/%s' % (cls.get_s3_dir(cloud_params), filename)
+        _logger.debug('get_object: %s', key)
         return amazon_s3_client.get_object(Bucket=cloud_params['odoo_backup_sh.s3_bucket_name'], Key=key)
 
     @classmethod
     @access_control
     def put_object(cls, cloud_params, obj, obj_key):
         amazon_s3_client = cls.get_amazon_s3_client(cloud_params)
+        _logger.debug('put_object: %s', obj_key)
         amazon_s3_client.put_object(Body=obj, Bucket=cloud_params['odoo_backup_sh.s3_bucket_name'], Key=obj_key)
         _logger.info('Following backup object have been put in the remote storage: %s' % obj_key)
 

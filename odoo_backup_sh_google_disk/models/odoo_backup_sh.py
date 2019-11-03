@@ -1,4 +1,5 @@
 # Copyright 2019 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
+# Copyright 2019 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 import logging
@@ -18,16 +19,20 @@ from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
 _logger = logging.getLogger(__name__)
+GOOGLE_DRIVE_STORAGE = 'google_drive'
 
 
 class BackupConfig(models.Model):
     _inherit = "odoo_backup_sh.config"
 
-    storage_service = fields.Selection(selection_add=[('google_drive', 'Google Drive')])
+    storage_service = fields.Selection(selection_add=[(GOOGLE_DRIVE_STORAGE, 'Google Drive')])
 
     @api.model
-    def get_backup_list(self, cloud_params):
-        backup_list = super(BackupConfig, self).get_backup_list(cloud_params) or dict()
+    def get_backup_list(self, cloud_params, service):
+        backup_list = super(BackupConfig, self).get_backup_list(cloud_params, service) or dict()
+        if service != GOOGLE_DRIVE_STORAGE:
+            return backup_list
+
         # get all backups from Google Drive
         try:
             GoogleDriveService = self.env['ir.config_parameter'].get_google_drive_service()
@@ -37,7 +42,7 @@ class BackupConfig(models.Model):
         response = GoogleDriveService.files().list(q="'" + folder_id + "' in parents",
                                                    fields="nextPageToken, files(id, name)",
                                                    spaces="drive").execute()
-        google_drive_backup_list = [(r.get('name'), 'google_drive') for r in response.get('files', [])]
+        google_drive_backup_list = [(r.get('name'), GOOGLE_DRIVE_STORAGE) for r in response.get('files', [])]
         if 'all_files' in backup_list:
             backup_list.update({
                 'all_files': backup_list['all_files'] + google_drive_backup_list
@@ -48,7 +53,7 @@ class BackupConfig(models.Model):
 
     @api.model
     def get_info_file_object(self, cloud_params, info_file_name, storage_service):
-        if storage_service == 'google_drive':
+        if storage_service == GOOGLE_DRIVE_STORAGE:
             GoogleDriveService = self.env['ir.config_parameter'].get_google_drive_service()
             file_id = self.get_google_drive_file_id(info_file_name)
             if file_id:
@@ -76,7 +81,7 @@ class BackupConfig(models.Model):
 
     @api.model
     def create_info_file(self, info_file_object, storage_service):
-        if storage_service == 'google_drive':
+        if storage_service == GOOGLE_DRIVE_STORAGE:
             info_file_object.seek(0)
             info_file = tempfile.NamedTemporaryFile()
             info_file.write(info_file_object.read())
@@ -90,7 +95,7 @@ class BackupConfig(models.Model):
         GoogleDriveService = None
         google_drive_remove_objects = []
         for file in remote_objects:
-            if file[1] == 'google_drive':
+            if file[1] == GOOGLE_DRIVE_STORAGE:
                 if not GoogleDriveService:
                     GoogleDriveService = self.env['ir.config_parameter'].get_google_drive_service()
                 google_drive_remove_objects.append(file)
@@ -127,7 +132,7 @@ class BackupConfig(models.Model):
 class BackupInfo(models.Model):
     _inherit = 'odoo_backup_sh.backup_info'
 
-    storage_service = fields.Selection(selection_add=[('google_drive', 'Google Drive')])
+    storage_service = fields.Selection(selection_add=[(GOOGLE_DRIVE_STORAGE, 'Google Drive')])
 
     @api.multi
     def download_backup_action(self, backup=None):
@@ -136,9 +141,10 @@ class BackupInfo(models.Model):
         if backup is None:
             backup = get_backup_by_id(self.env, self._context['active_id'])
 
-        if backup.storage_service != 'google_drive':
+        if backup.storage_service != GOOGLE_DRIVE_STORAGE:
             return super(BackupInfo, self).download_backup_action(backup)
 
+        # TODO: add file_id in backup_info for this
         file_id = self.env["odoo_backup_sh.config"].get_google_drive_file_id(backup.backup_filename)
         return {
             "type": "ir.actions.act_url",
@@ -159,7 +165,7 @@ class BackupRemoteStorage(models.Model):
 
     @api.multi
     def compute_google_drive_used_remote_storage(self):
-        amount = sum(self.env['odoo_backup_sh.backup_info'].search([('storage_service', '=', 'google_drive')]).mapped('backup_size'))
+        amount = sum(self.env['odoo_backup_sh.backup_info'].search([('storage_service', '=', GOOGLE_DRIVE_STORAGE)]).mapped('backup_size'))
         today_record = self.search([('date', '=', datetime.strftime(datetime.now(), DEFAULT_SERVER_DATE_FORMAT))])
         if today_record:
             today_record.google_drive_used_remote_storage = amount
@@ -178,7 +184,7 @@ class DeleteRemoteBackupWizard(models.TransientModel):
         record_ids = (self._context.get('active_model') == 'odoo_backup_sh.backup_info' and self._context.get('active_ids') or [])
         backup_info_records = self.env['odoo_backup_sh.backup_info'].search([('id', 'in', record_ids)])
         GoogleDriveService = self.env['ir.config_parameter'].get_google_drive_service()
-        backup_google_drive_info_records = backup_info_records.filtered(lambda r: r.storage_service == 'google_drive')
+        backup_google_drive_info_records = backup_info_records.filtered(lambda r: r.storage_service == GOOGLE_DRIVE_STORAGE)
         for record in backup_google_drive_info_records:
             for obj_name in [record.backup_filename, record.backup_info_filename]:
                 file_id = self.env["odoo_backup_sh.config"].get_google_drive_file_id(obj_name)

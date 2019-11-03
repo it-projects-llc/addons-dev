@@ -1,6 +1,6 @@
-============
- S3 Backups
-============
+===============
+ S3 Backing up
+===============
 
 Installation
 ============
@@ -44,11 +44,12 @@ If you already have S3 bucket with IAM credentials, you can setup your personal 
 * Set following fields:
 
   * **S3 Bucket**
+  * **Path**, e.g. ``odoo-backups``. Note that the folder must exist
   * **Access Key ID**
   * **Secret Access Key**
 
-Backup Schedule
----------------
+Backup Schedule and rotation
+----------------------------
 
 To setup backups do as following:
 
@@ -109,8 +110,8 @@ Downloading backups to computer
 RESULT: Backup is downloaded.
 
 * If Backup is encrypted (it has `.enc` extension), extract it using `gpg` utility. For example:
-
-    gpg --output OUTPUT_FILENAME.zip --decrypt INPUT_FILENAME.zip.enc
+  ::
+      gpg --output OUTPUT_FILENAME.zip --decrypt INPUT_FILENAME.zip.enc
 
 
 

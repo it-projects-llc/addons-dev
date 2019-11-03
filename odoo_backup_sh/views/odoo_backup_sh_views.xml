@@ -201,7 +201,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                             <field name="encrypt_backups"/>
                         </group>
                         <group>
-                            <field name="encryption_password" password="1" attrs="{'invisible': [('encrypt_backups', '=', False)]}"/>
+                            <field name="encryption_password" password="1" attrs="{'invisible': [('encrypt_backups', '=', False)], 'required': [('encrypt_backups', '!=', False)]}"/>
                         </group>
                         <p colspan="4" attrs="{'invisible': [('encrypt_backups', '=', False)]}">
                             Warning: Don't forget the encryption password.
@@ -349,7 +349,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
     <menuitem name="Dashboard" action="odoo_backup_sh.ir_actions_server_backup_dashboard" parent="menu_backup_root"
               id="menu_dashboard" sequence="1"/>
     <menuitem name="Backups" action="odoo_backup_sh_backup_action" parent="menu_backup_root" id="backups_menu" sequence="10"/>
-    <menuitem name="Schedules and Rotations" action="action_backup_config" parent="menu_backup_root" id="menu_backup_config" sequence="20"/>
+    <menuitem name="Schedules and Rotations" action="action_backup_config" parent="menu_backup_root" id="menu_backup_config" sequence="20" groups="base.group_no_one"/>
     <menuitem name="Notifications" action="action_backup_notifications" parent="menu_backup_root" id="notification_menu" sequence="30" groups="base.group_no_one"/>
 
     <record id="res_config_settings_view_form" model="ir.ui.view">
@@ -375,6 +375,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
                           <div class="content-group">
                             <div class="mt16 row">
                               <field name="odoo_backup_sh_odoo_oauth_uid" invisible="1"/>
+                              <field name="private_s3_dir_changed" invisible="1"/>
 
                               <label for="odoo_backup_sh_amazon_bucket_name" class="col-4 col-lg-4 o_light_label"/>
                               <field name="odoo_backup_sh_amazon_bucket_name" nolabel="1"/>
@@ -394,6 +395,8 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 
                             </div>
+                            <div class="mt16 text-warning" attrs="{'invisible': [('private_s3_dir_changed', '=', False)]}">Note that on changing Folder, backups will be synced with new folder only<br/><span attrs="{'invisible': [('odoo_backup_sh_private_s3_dir', '=', '')]}">Be sure, that the folder exists in the bucket</span></div>
+
                             <button name="%(odoo_backup_sh.ir_actions_server_backup_dashboard)d" type="action" string="Get Credentials" class="btn btn-primary" icon="fa-lock" attrs="{'invisible': [('odoo_backup_sh_amazon_secret_access_key', '!=', '')]}"/>
                           </div>
                         </div>

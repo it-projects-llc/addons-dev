@@ -6,7 +6,7 @@
  Google Drive backing up
 =========================
 
-The small investment to protect your business.
+Backing up Odoo databases to Google Drive.
 
 Credits
 =======

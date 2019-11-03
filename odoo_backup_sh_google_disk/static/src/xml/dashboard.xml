@@ -12,7 +12,7 @@ License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
     </t>
 
     <t t-extend="odoo_backup_sh.config_cards">
-        <t t-jquery=".backup_storage_service_title" t-operation="append">
+        <t t-jquery="#backup_storage_type" t-operation="append">
             <t t-if="config.storage_service == 'google_drive'">
                 Google Drive
             </t>
