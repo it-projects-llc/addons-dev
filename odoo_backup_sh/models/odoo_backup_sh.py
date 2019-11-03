@@ -351,7 +351,7 @@ class BackupConfig(models.Model):
                 timestamp = file_name_parts[-2]
                 db_name = '.'.join(file_name_parts[:-2])
                 backup_dt = datetime.strptime(timestamp, REMOTE_STORAGE_DATETIME_FORMAT)
-            except IndexError, ValueError:
+            except (IndexError, ValueError):
                 _logger.warning('Cannot parse file name: %s', file_name)
                 continue
             remote_backups.setdefault(db_name, {})
