@@ -185,7 +185,8 @@ TODO: Check purchasing, top-up, using credits, running out of credits
 Roadmap
 =======
 
-All backups modules should be refactored and cleaned up. See TODOs in code
+* All backups modules should be refactored and cleaned up. See TODOs in code
+* non-active records in config_cron_ids should be visible. But visibility of warning and rotation fields should depend on active crons only
 
 Credits
 =======
