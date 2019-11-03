@@ -41,9 +41,6 @@ loader = jinja2.FileSystemLoader(path)
 env = jinja2.Environment(loader=loader, autoescape=True)
 BACKUP_SERVICE_ENDPOINT = 'https://odoo-backup.sh'
 
-# for local tests:
-BACKUP_SERVICE_ENDPOINT = 'http://backup_proxy.8080.yelizariev.dev.it-projects.info'
-
 # module -> config parameter name
 EXTRA_MODULES = {
     'odoo_backup_sh_dropbox': lambda env: env['ir.config_parameter'].get_param('odoo_backup_sh_dropbox.dropbox_access_token'),
