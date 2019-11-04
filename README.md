@@ -9,7 +9,7 @@ Addons Forge
 * [Create new branch](#create-new-branch) - once per addon (or set of addons). For managers only, because push access is needed.
 * [Get branch from upstream](#get-branch-from-upstream) - once per addon
 * [PR to addons-dev](#pr-to-addons-dev) - as much as needed.
-* [Merge PR to addons-dev](#merge-pr-to-addons-dev) - as much as needed. For managers only.
+* Merge PR to addons-dev - as much as needed. For managers only.
 * [Final PR to target repo](#final-pr-to-target-repo) - once per addon
 * After accepting Final PR, addon is published at [apps store](https://www.odoo.com/apps/modules/browse?order=Newest) automatically with a delay of up to 24 hours
 * Further updates - PRs are sent directly to target repo.
@@ -69,25 +69,6 @@ Click Fork button at top right hand corner
     git push origin misc-addons-11.0-some_feature
    
     # create pull request via github interface to it-projects-llc/addons-dev repo
-
-# Merge PR to addons-dev
-
-Usually, ``Squash and merge`` button is used to merge PR. In that case, update PR reference to avoid wrong reference after merging to target repo. For example, suggested comment was
-
-    [ADD] pos product category discount (#178)
-
-One need to update it as following:
-
-    [ADD] pos product category discount (it-projects-llc/addons-dev#178)
-    
-
-Otherwise after merging to target repo the link will be 
-
-https://github.com/it-projects-llc/pos-addons/pull/178
-
-instead of 
-
-https://github.com/it-projects-llc/addons-dev/pull/178
 
 # Final PR to target repo
 
