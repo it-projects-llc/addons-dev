@@ -10,7 +10,7 @@ class Chat(models.Model):
 
     name = fields.Char(string='Name')
     maxUsers = fields.Integer()
-    current_user = fields.Many2one('res.users','Current User', default=lambda self: self.env.user.id)
+    current_user = fields.Many2one('res.users', 'Current User', default=lambda self: self.env.user.id)
     dbname = fields.Char(index=True)
 
     @api.model
