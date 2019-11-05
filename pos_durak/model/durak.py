@@ -367,7 +367,8 @@ class Game(models.Model):
         cur_game.new_cards(game_id)
         cur_game.who_should_step(game_id)
         for player in cur_game.players:
-            if player.completed_move: player.completed_move = False
+            if player.completed_move: 
+                player.completed_move = False
         return 1
 
     @api.model
