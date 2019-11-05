@@ -335,8 +335,6 @@ class Game(models.Model):
         except Exception:
             _logger.error('Extra cards distribution error!!!')
 
-        attackman = cur_game.who_steps
-        defman = cur_game.next(game_id, attackman)
         for player in cur_game.players:
             data = {'command': 'Move_done'}
             channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
@@ -367,7 +365,7 @@ class Game(models.Model):
         cur_game.new_cards(game_id)
         cur_game.who_should_step(game_id)
         for player in cur_game.players:
-            if player.completed_move: 
+            if player.completed_move:
                 player.completed_move = False
         return 1
 
