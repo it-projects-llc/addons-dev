@@ -27,8 +27,6 @@
     width: 100%;
 }
 
-/*  ********* The PopupWidgets  ********* */
-
 .pos .modal-dialog .popup{
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -64,19 +62,14 @@
     margin-top: 350px;
 }
 
-.pos .modal-dialog .messages{
-    overflow: scroll;
-    position: absolute;
-    top: 20px;
-    bottom: 60px;
-    left: 20px;
-    right: 20px;
-    margin: 0;
-    padding: 0;
-    border: 2px solid #ccc;
+.game-message{
+    position: relative;
     font-size: 16px;
     font-family: Arial, sans-serif;
     -webkit-overflow-scrolling: touch;
+    -webkit-transition: 0.5s ease-in-out;
+      -moz-transition: 0.5s ease-in-out;
+      -o-transition: 0.5s ease-in-out;
 }
 
 .pos .modal-dialog .text-right.small{
@@ -103,7 +96,16 @@
     bottom: 20px;
     left: 20px;
     width: 40%;
-    justify-content: center
+    justify-content: center;
+    -webkit-transition: 0.5s ease-in-out;
+    -moz-transition: 0.5s ease-in-out;
+    -o-transition: 0.5s ease-in-out;
+    -webkit-transform-origin: 0 0;
+    -ms-transform-origin: 0 0;
+    transform-origin: 0 0;
+    -webkit-transform: scaleX(0);
+    -ms-transform: scaleX(0);
+    transform: scaleX(0);
 }
 
 .pos .chat-tools .button.back{
@@ -194,7 +196,7 @@
     color: white;
 }
 
-.pos .ready-button:hover{
+.pos .game-button:hover{
     background: #2db34a;
     transition-timing-function: linear;
     border-radius: 30px;
@@ -203,13 +205,14 @@
     transition-duration: 0.2s;
 }
 
-.pos .ready-button:active{
+.pos .game-button:active{
     color: white;
     transition-duration: 0.2s;
 }
 
-.pos .ready-button{
+.pos .game-button{
     -webkit-flex-grow: 1;
+    position: relative;
     flex-grow: 1;
     background: #e2e2e2;
     border: solid 1px #bfbfbf;
@@ -261,4 +264,31 @@
     position: absolute;
     right: 30px;
     top: 30px;
+}
+
+.game-tools{
+    -webkit-transform: scaleX(0);
+    -ms-transform: scaleX(0);
+    transform: scaleX(0);
+  -webkit-transform-origin: 0 0;
+    -ms-transform-origin: 0 0;
+    transform-origin: 0 0;
+    -webkit-transition: 0.5s ease-in-out;
+    -moz-transition: 0.5s ease-in-out;
+    -o-transition: 0.5s ease-in-out;
+}
+
+#triangle{
+    position: relative;
+    border-right: 10px solid;
+    border-bottom: 10px solid;
+    height: 50%;
+    width: 20%;
+    left: -25%;
+    transform: rotate(-45deg);
+}
+
+.chat-user{
+    position: absolute;
+    transition: transform .3s ease-in-out;
 }

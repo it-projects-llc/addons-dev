@@ -1,21 +1,18 @@
-# -*- coding: utf-8 -*-
 {
     'name': "POS Durak",
 
     'summary': """Cards game for employees""",
-
-    'description': """
-        POS Durak - module allow's to play "Durak" card game with colleges
-    """,
+    'images': ['images/icon.png'],
 
     'author': "IT-Projects LLC",
-    'website': "https://www.gambler.ru/Durak_rules",
+    'website': "https://en.wikipedia.org/wiki/Durak",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml
     # for the full list
     'category': 'communication',
     'version': '12.0.1.0.0',
+    "license": "LGPL-3",
 
     # any module necessary for this one to work correctly
     'depends': ['point_of_sale', 'pos_longpolling'],
@@ -23,6 +20,7 @@
     # always loaded
     'data': [
         'view/durak_view.xml',
+        "security/ir.model.access.csv"
     ],
     'qweb': [
         'static/src/xml/durak.xml',

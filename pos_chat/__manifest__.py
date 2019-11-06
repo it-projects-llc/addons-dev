@@ -1,21 +1,18 @@
-# -*- coding: utf-8 -*-
 {
     'name': "POS Chat",
 
     'summary': """Chat for employees""",
-
-    'description': """
-        POS Chat - module for chatting with colleges
-    """,
+    'images': ['images/icon.png'],
 
     'author': "IT-Projects LLC",
     'website': "https://eda.yandex/restaurant/mcdonalds_ufa",
+    "license": "LGPL-3",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml
     # for the full list
     'category': 'communication',
-    'version': '0.1',
+    'version': '12.0.1.0.0',
 
     # any module necessary for this one to work correctly
     'depends': ['point_of_sale', 'pos_longpolling'],
@@ -23,6 +20,7 @@
     # always loaded
     'data': [
         'view/chat_rooms.xml',
+        "security/ir.model.access.csv"
     ],
     'qweb': [
         'static/src/xml/chat.xml',
