@@ -333,12 +333,18 @@ odoo.define('pos_chat_button', function (require){
     }
 
     function next_to(uid, already_converted){
-        i = already_converted ?
-        uid :
-        NumInQueue(uid);
-        return i === chat_users.length - 1 ?
-        chat_users[0].uid :
-        chat_users[i + 1].uid;
+        if(already_converted){
+            i = uid;
+        }
+        else{
+            i = NumInQueue(uid);
+        }
+        if(i === chat_users.length - 1){
+            return chat_users[0].uid; 
+        }
+        else{
+            return chat_users[i + 1].uid;
+        }
     }
 
 //--------------------------------------------------
