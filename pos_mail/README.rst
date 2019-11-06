@@ -43,6 +43,6 @@ Usage instructions: `<doc/index.rst>`_
 
 Changelog: `<doc/changelog.rst>`_
 
-Notifications on updates: `via Atom <https://github.com/it-projects-llc/pos-addons/commits/12.0/_mail.atom>`_, `by Email <https://blogtrottr.com/?subscribe=https://github.com/it-projects-llc/pos-addons/commits/12.0/pos_mail.atom>`_
+Notifications on updates: `via Atom <https://github.com/it-projects-llc/pos-addons/commits/12.0/pos_mail.atom>`_, `by Email <https://blogtrottr.com/?subscribe=https://github.com/it-projects-llc/pos-addons/commits/12.0/pos_mail.atom>`_
 
 Tested on Odoo 12.0 0669eddc7e88303f3a97e9f4f834f64fd9a8158c
