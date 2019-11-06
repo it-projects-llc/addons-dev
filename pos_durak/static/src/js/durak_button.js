@@ -120,7 +120,7 @@ odoo.define('pos_chat_button', function (require){
     function is_my_card(card_num){
         var me = NumInQueue(session.uid);
         for(i = 0; i < chat_users[me].cards.length; i++){
-            if(chat_users[me].cards[i].num == card_num){
+            if(chat_users[me].cards[i].num === card_num){
                 return true;
             }
         }
@@ -333,8 +333,12 @@ odoo.define('pos_chat_button', function (require){
     }
 
     function next_to(uid, already_converted){
-        i = already_converted ? uid : NumInQueue(uid);
-        return i === chat_users.length - 1 ? chat_users[0].uid : chat_users[i + 1].uid;
+        i = already_converted ?
+        uid :
+        NumInQueue(uid);
+        return i === chat_users.length - 1 ?
+        chat_users[0].uid :
+        chat_users[i + 1].uid;
     }
 
 //--------------------------------------------------
@@ -581,7 +585,7 @@ function SetPos(avatar, uid){
             self._rpc({
                 model: "game",
                 method: "delete_my_game",
-                args: [my_game_id]
+                args: [my_game_id, session.uid]
             });
         }
 
@@ -831,7 +835,7 @@ function SetPos(avatar, uid){
             else if(data.command === 'Won'){
                 DeleteUser(data.uid);
                 for(i = 0; i < chat_users.length; i++){
-                    SetPos(document.getElementById('picture-'+i), chat_users[i].uid);
+                    SetPos(document.getElementById('picture-'+String(i)), chat_users[i].uid);
                 }
                 if(session.uid === data.uid){
                     Tip('You won!', 3000);
@@ -839,7 +843,7 @@ function SetPos(avatar, uid){
                 }
             }
             else if(data.command === 'GAME_PING'){
-                Tip('Catch Ping', 2000);    
+                Tip('Catch Ping', 2000);
                 self._rcp({
                     model: 'game',
                     method: 'Pong',

@@ -217,8 +217,11 @@ class Game(models.Model):
         return 1
 
     @api.model
-    def delete_my_game(self, game_id):
-        self.search([('id', '=', game_id)]).unlink()
+    def delete_my_game(self, game_id, uid):
+        cur_game = self.search([('id', '=', game_id)])
+        for player in cur_game.players:
+            if player.uid != uid:
+                player.unlink()
         return 1
 
     @api.model
