@@ -343,7 +343,7 @@ odoo.define('pos_chat_button', function (require){
         if(i === chat_users.length - 1){
             return chat_users[0].uid;
         }
-        
+
         return chat_users[i + 1].uid;
     }
 
