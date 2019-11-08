@@ -1049,10 +1049,14 @@ class OhadaReport(models.AbstractModel):
         # This scenario happens when you want to print a PDF report for the first time, as the
         # assets are not in cache and must be generated. To workaround this issue, we manually
         # commit the writes in the `ir.attachment` table. It is done thanks to a key in the context.
+        # wdb.set_trace()
+
         if not config['test_enable']:
             self = self.with_context(commit_assetsbundle=True)
 
         base_url = self.env['ir.config_parameter'].sudo().get_param('report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        # base_url = 'http://127.0.0.1:8069'
+
         rcontext = {
             'mode': 'print',
             'base_url': base_url,
@@ -1063,12 +1067,13 @@ class OhadaReport(models.AbstractModel):
             "ohada_reports.print_template",
             values=dict(rcontext),
         )
-        body_html = self.with_context(print_mode=True).get_html(options)
+        # body_html = self.with_context(print_mode=True).get_html(options)
+        body_html = self.get_html(options)
 
         body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
         if minimal_layout:
             header = ''
-            footer = self.env['ir.actions.report'].render_template("web.internal_layout", values=rcontext)
+            footer = self.env['ir.actions.report'].render_template("ohada_reports.internal_layout_ohada", values=rcontext)
             spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 10}
             footer = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=footer))
         else:
