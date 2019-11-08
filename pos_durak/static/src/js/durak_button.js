@@ -120,7 +120,7 @@ odoo.define('pos_chat_button', function (require){
     function is_my_card(card_num){
         var me = NumInQueue(session.uid);
         for(i = 0; i < chat_users[me].cards.length; i++){
-            if(chat_users[me].cards[i].num === card_num){
+            if(chat_users[me].cards[i].num === Number(card_num)){
                 return true;
             }
         }
@@ -343,7 +343,7 @@ odoo.define('pos_chat_button', function (require){
         if(i === chat_users.length - 1){
             return chat_users[0].uid;
         }
-        
+
         return chat_users[i + 1].uid;
     }
 
@@ -615,6 +615,9 @@ function SetPos(avatar, uid){
         if(message === 'sorry'){
             audio_mes = '<audio src="/pos_durak/static/src/sound/shit.wav" autoplay="true"></audio>';
         }
+        else if(message === 'welcome'){
+            audio_mes = '<audio src="/pos_durak/static/src/sound/welcome.wav" autoplay="true"></audio>';
+        }
         else if(message === 'win'){
             audio_mes = '<audio src="/pos_durak/static/src/sound/won.wav" autoplay="true"></audio>';
         }
@@ -665,7 +668,6 @@ function SetPos(avatar, uid){
                 cards : []
             });
         }
-
 
         if(chat_users[0].uid === session.uid){
             buttons_opacity(4);
@@ -855,6 +857,9 @@ function SetPos(avatar, uid){
                     method: 'Pong',
                     args: [my_game_id, session.uid]
                 });
+            }
+            else if(data.command === 'Welcome'){
+                showMessage(data.uid, 'welcome');
             }
         },
     });
