@@ -15,12 +15,13 @@
     "license": "LGPL-3",
 
     # any module necessary for this one to work correctly
-    'depends': ['point_of_sale', 'pos_longpolling'],
+    'depends': ['point_of_sale', 'pos_longpolling', 'web_tour'],
 
     # always loaded
     'data': [
         'view/durak_view.xml',
-        "security/ir.model.access.csv"
+        'security/ir.model.access.csv',
+        'view/test_data.xml',
     ],
     'qweb': [
         'static/src/xml/durak.xml',

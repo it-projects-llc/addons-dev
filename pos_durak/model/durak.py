@@ -85,6 +85,9 @@ class Game(models.Model):
                 channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
                                                                               new_pos_id, cur_game.name)
                 self.env['bus.bus'].sendmany([[channel, data]])
+            data = {'command': 'Welcome', 'uid': uid}
+            channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, new_pos_id, cur_game.name)
+            self.env['bus.bus'].sendmany([[channel, data]])
         except Exception:
             _logger.error('Player connected notification error!!!(add_new_user)')
 
@@ -217,8 +220,11 @@ class Game(models.Model):
         return 1
 
     @api.model
-    def delete_my_game(self, game_id):
-        self.search([('id', '=', game_id)]).unlink()
+    def delete_my_game(self, game_id, uid):
+        cur_game = self.search([('id', '=', game_id)])
+        for player in cur_game.players:
+            if player.uid != uid:
+                player.unlink()
         return 1
 
     @api.model
