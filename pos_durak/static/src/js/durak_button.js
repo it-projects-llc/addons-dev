@@ -140,7 +140,10 @@ odoo.define('pos_chat_button', function (require){
            }
            // Checking who is player - defender or attacker
            if(session.uid === next_to(who_moves[0], true)){
-               if(!OnTable(num) && choose_and_beat > 0){
+               if(OnTable(num) && choose_and_beat === 0){
+                   return;
+               }
+               if(!OnTable(num) && choose_and_beat === 1){
                    return;
                }
                choose_and_beat++;
@@ -415,6 +418,7 @@ function SetPos(avatar, uid){
             var card1 = document.getElementById('card-'+card);
             var x1 = card1.offsetLeft, y1 = card1.offsetTop;
             var w = card1.offsetWidth, h = card1.offsetHeight;
+            card1.style.setProperty('z-index', '1');
             card1.style.setProperty('transform','translate3d('+
                 (((x2*W) - w/2) - x1)+'px,'+(((y2*H) - h/2) - y1)+'px,0px)');
         }
