@@ -828,9 +828,6 @@ function SetPos(avatar, uid){
                 sign.style.setProperty('background', 'green');
             }
             else if(data.command === 'Who_steps'){
-                if(chat_users[data.first].uid === session.uid){
-                    Tip("Your turn to step", 5000);
-                }
                 for(i = 0; i < chat_users.length; i++){
                     if(data.first !== i){
                         try{
