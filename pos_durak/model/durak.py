@@ -233,8 +233,7 @@ class Game(models.Model):
         stepman = cur_game.next(game_id, cur_game.who_steps)
         cur_game.who_steps = stepman
         for player in cur_game.players:
-            data = {'first': stepman, 'second': cur_game.next(game_id, cur_game.next(game_id, stepman)),
-                    'command': 'Who_steps'}
+            data = {'first': stepman, 'second': cur_game.next(game_id, cur_game.next(game_id, stepman)), 'command': 'Who_steps'}
             channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
                                                                           player.pos_id, cur_game.name)
             self.env['bus.bus'].sendmany([[channel, data]])
@@ -250,6 +249,8 @@ class Game(models.Model):
             card = stepper.cards.search([('num', '=', card_num)])[0]
         except Exception:
             _logger.error('Make_step error!')
+        # Making card able to cover
+        card.write({'able_to_cover': True})
 
         can_make_a_step = False
         try:
@@ -266,7 +267,7 @@ class Game(models.Model):
                 data = {'uid': uid, 'num': card.num, 'command': 'Move'}
                 channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, cur_game.name)
                 self.env['bus.bus'].sendmany([[channel, data]])
-            cur_game.on_table_cards += cur_game.on_table_cards.create({'power': card.power, 'suit': card.suit, 'num': card.num, 'in_game': True})
+            cur_game.on_table_cards += cur_game.on_table_cards.create({'power': card.power, 'suit': card.suit, 'num': card.num, 'in_game': True, 'able_to_cover': card.able_to_cover})
             stepper.cards -= card
         return 1
 
@@ -276,7 +277,8 @@ class Game(models.Model):
             cur_game = self.search([('id', '=', game_id)])
             defender = cur_game.players.search([('uid', '=', uid)])
             card = defender.cards.search([('num', '=', card1)])[0]
-            cur_game.on_table_cards += cur_game.on_table_cards.create({'power': card.power, 'suit': card.suit, 'num': card.num, 'in_game': True})
+            
+            cur_game.on_table_cards += cur_game.on_table_cards.create({'power': card.power, 'suit': card.suit, 'num': card.num, 'in_game': True, 'able_to_cover': card.able_to_cover})
             defender.cards -= card
             first = cur_game.on_table_cards.search([('num', '=', card1)])[0]
             second = cur_game.on_table_cards.search([('num', '=', card2)])[0]
@@ -300,8 +302,11 @@ class Game(models.Model):
             else:
                 loser = card1
                 winner = card2
+            if not second.able_to_cover:
+                winner = card2
             if card1 == winner:
                 data = {'uid': uid, 'winner': winner, 'x': x, 'y': y, 'loser': loser, 'can_beat': True, 'command': 'Defence'}
+                cur_game.on_table_cards.search([('num', '=', second.num)]).write({'able_to_cover': False})
             else:
                 data = {'uid': uid, 'can_beat': False, 'command': 'Defence'}
 
@@ -474,6 +479,7 @@ class Card(models.Model):
     power = fields.Integer(default=-1)
     num = fields.Integer(default=-1)
     in_game = fields.Boolean(default=False)
+    able_to_cover = fields.Boolean(default=False)
 
     @api.model
     def card_power(self, num):
