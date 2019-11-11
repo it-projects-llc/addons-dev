@@ -19,6 +19,7 @@ class Game(models.Model):
     who_steps = fields.Integer(default=-1, help='Holds user id')
     on_table_cards = fields.One2many('game.cards', 'on_table_cards', ondelete="cascade")
     attackers_agreement = fields.Integer(default=0)
+    uncovered_cards = fields.Integer(default=0)
 
     @api.model
     def create_the_game(self, game_name, uid):
@@ -263,6 +264,7 @@ class Game(models.Model):
             _logger.error('Card on table checking error!!!\n')
 
         if can_make_a_step:
+            cur_game.write({'uncovered_cards': cur_game.uncovered_cards + 1})
             for player in cur_game.players:
                 data = {'uid': uid, 'num': card.num, 'command': 'Move'}
                 channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, cur_game.name)
@@ -304,9 +306,11 @@ class Game(models.Model):
                 winner = card2
             if not second.able_to_cover:
                 winner = card2
+            # If chosen can cover second card 
             if card1 == winner:
                 data = {'uid': uid, 'winner': winner, 'x': x, 'y': y, 'loser': loser, 'can_beat': True, 'command': 'Defence'}
                 cur_game.on_table_cards.search([('num', '=', second.num)]).write({'able_to_cover': False})
+                cur_game.write({'uncovered_cards': cur_game.uncovered_cards - 1})
             else:
                 data = {'uid': uid, 'can_beat': False, 'command': 'Defence'}
 
@@ -362,7 +366,9 @@ class Game(models.Model):
     @api.model
     def cards_are_beated(self, game_id, uid):
         cur_game = self.search([('id', '=', game_id)])
-        if len(cur_game.on_table_cards) == 0:
+        import wdb
+        wdb.set_trace()
+        if len(cur_game.on_table_cards) == 0 or cur_game.uncovered_cards > 0:
             return 1
 
         cur_game.players.search([('uid', '=', uid)])[0].completed_move = True
