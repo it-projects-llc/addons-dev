@@ -356,7 +356,7 @@ function ShowCards(){
     var out = '', w = (60/chat_users[me].cards.length)/2;
     for(i = 0; i < chat_users[me].cards.length; i++){
         var n = chat_users[me].cards[i].num;
-        out+='<img type="button" src="/pos_durak/static/src/img/kards/'+
+        out+='<img type="button" draggable="false" src="/pos_durak/static/src/img/kards/'+
         n+'.png" id="card-'+n+'" class="card" style="right: '+String(30 - (i*w))+'%"></img>';
     }
     block.innerHTML = out;
@@ -465,7 +465,7 @@ function SetPos(avatar, uid){
            suit: -1,
            num: num
         });
-        var out ='<img type="button" src="/pos_durak/static/src/img/kards/'+
+        var out ='<img type="button" draggable="false" src="/pos_durak/static/src/img/kards/'+
                 num+'.png" id="card-'+num+'" class="enemy-card"/>';
         document.getElementById('enemy-cards').innerHTML += out;
     }
