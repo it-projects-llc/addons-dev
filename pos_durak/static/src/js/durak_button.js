@@ -786,7 +786,7 @@ function SetPos(avatar, uid){
                 var temp_window = document.getElementById('card-suit');
                 temp_window.innerHTML = '<img type="button" src="/pos_durak/static/src/img/'+
                     card_suits[trump]+'.png" id="suit" ' +
-                    'style="position:absolute;left:30%;top:30%;opacity: 0.2;"/>';
+                    'style="position:absolute;left:30%;bottom:-10%;opacity: 0.2;"/>';
             }
             else if(data.command === 'Move'){
                 moves_cnt++;
