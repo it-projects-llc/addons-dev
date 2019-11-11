@@ -6,7 +6,7 @@
  Register Event Attendees
 ==========================
 
-Process Attendees and Sell Tickets via POS
+Process Attendees and Sell Tickets via POS.
 
 Credits
 =======
