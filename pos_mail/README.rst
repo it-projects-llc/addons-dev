@@ -6,7 +6,7 @@
  POS Receipts by mail
 ======================
 
-Module allows to send POS receipts to partners by theirs mail
+Module allows to send POS receipts to partners by mail
 
 Credits
 =======
