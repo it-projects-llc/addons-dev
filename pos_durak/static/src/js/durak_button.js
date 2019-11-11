@@ -601,24 +601,29 @@ function SetPos(avatar, uid){
     function delete_message(msg, uid) {
         try{
             var old_message = document.getElementById('msg-'+String(msg)+'-'+uid);
-            old_message.style.setProperty('display','none');
+            old_message.innerHTML = '';
+            old_message.style.display = none;
         }
         catch(e){
             // Error
         }
     }
-
+    
     function showMessage(uid, message){
         i = NumInQueue(uid);
+        var time = 10000;
         var messages = document.getElementById('messages-'+String(uid));
         var audio_mes = '<audio src="/pos_durak/static/src/sound/msg.wav" autoplay="true"></audio>';
         if(message === 'sorry'){
+            time = 2000;
             audio_mes = '<audio src="/pos_durak/static/src/sound/shit.wav" autoplay="true"></audio>';
         }
         else if(message === 'welcome'){
+            time = 2000;
             audio_mes = '<audio src="/pos_durak/static/src/sound/welcome.wav" autoplay="true"></audio>';
         }
         else if(message === 'win'){
+            time = 4400;
             audio_mes = '<audio src="/pos_durak/static/src/sound/won.wav" autoplay="true"></audio>';
         }
         var out = '<div id="msg-'+chat_users[i].msg_cnt+'-'+uid+'">';
@@ -628,7 +633,7 @@ function SetPos(avatar, uid){
         out += audio_mes;
         out += '</div>';
         messages.innerHTML += out;
-        setTimeout(delete_message,15000, chat_users[i].msg_cnt, uid);
+        setTimeout(delete_message, time, chat_users[i].msg_cnt, uid);
         chat_users[i].msg_cnt++;
     }
 //--------------------------------------------------
