@@ -34,6 +34,7 @@ odoo.define('pos_chat_button', function (require){
     var card_suits = ['Heart', 'Diamond', 'Clubs', 'Spade'];
     var my_game_id = -1;
     var i = 0;
+    var potentialy_can_beat_cards = [];
 
 //------------------------------------------------------
 
@@ -56,6 +57,7 @@ odoo.define('pos_chat_button', function (require){
     }
 
     function Defendence(x, y) {
+        choose_and_beat = 0;
         self._rpc({
             model: "game",
             method: "defence",
@@ -68,13 +70,28 @@ odoo.define('pos_chat_button', function (require){
         // Need to finish
         var temp_cards = '';
         for(i = 0; i < on_table_cards.length; i++){
-            temp_cards += on_table_cards[i] + ' ';
+            temp_cards += on_table_cards[i].num + ' ';
         }
         self._rpc({
             model: "game",
             method: "defender_took_cards",
             args: [my_game_id, session.uid]
         });
+    }
+
+    function change_cards_opacity(){
+        var card;
+        try{
+            for(i = 0; i < on_table_cards.length; i++){
+                document.getElementById('card-'+ String(on_table_cards[i].num)).style.setProperty('opacity', '0.6');
+            }
+            for(i = 0; i < potentialy_can_beat_cards.length; i++){
+                document.getElementById('card-'+ String(potentialy_can_beat_cards[i])).style.setProperty('opacity', '1');
+            }
+        }
+        catch(e){
+            Tip('change_card_opacity error');
+        }
     }
 
 //------------------------------------------------------
@@ -91,7 +108,7 @@ odoo.define('pos_chat_button', function (require){
 
     function OnTable(n) {
         for(i = 0; i < on_table_cards.length; i++){
-            if(on_table_cards[i] === Number(n)) {
+            if(on_table_cards[i].num === Number(n)) {
                 return true;
             }
         }
@@ -132,30 +149,39 @@ odoo.define('pos_chat_button', function (require){
         var elem = e ? e.target : window.event.srcElement;
         var num = '';
         if(elem.id[0]+elem.id[1]+elem.id[2]+elem.id[3] === 'card'){
-           if(elem.id[elem.id.length - 2] !== '-') num = elem.id[elem.id.length - 2];
-           num += elem.id[elem.id.length - 1];
-           if(Number(num) < 0 || Number(num) > 52){
-               alert(elem.id);
-               return;
-           }
-           // Checking who is player - defender or attacker
-           if(session.uid === next_to(who_moves[0], true)){
-               if(OnTable(num) && choose_and_beat === 0){
-                   return;
-               }
-               if(!OnTable(num) && choose_and_beat === 1){
-                   return;
-               }
-               choose_and_beat++;
-               def_cards[choose_and_beat - 1] = num;
-               if(choose_and_beat === 2){
-                   choose_and_beat = 0;
-                   Defendence(e.pageX/W, e.pageY/H);
-               }
-           }
-           else if(is_my_card(num) && !OnTable(num)){
-               Move(num);
-           }
+            if(elem.id[elem.id.length - 2] !== '-') num = elem.id[elem.id.length - 2];
+            num += elem.id[elem.id.length - 1];
+            if(Number(num) < 0 || Number(num) > 52){
+                alert(elem.id);
+                return;
+            }
+            // Checking who is player - defender or attacker
+            if(session.uid === next_to(who_moves[0], true)){
+                if(OnTable(num) && choose_and_beat === 0){
+                    return;
+                }
+                if(!OnTable(num) && choose_and_beat === 1){
+                    return;
+                }
+                choose_and_beat++;
+                def_cards[choose_and_beat - 1] = num;
+                self._rpc({
+                    model: "game",
+                    method: "which_cards_are_avaible_to_cover",
+                    args: [my_game_id, session.uid, def_cards[0]]
+                });
+                if(choose_and_beat === 2){
+                    for(i = 0; i < on_table_cards.length; i++){
+                        if(on_table_cards[i].x <= e.pageX && on_table_cards[i].x + 75 >= e.pageX && on_table_cards[i].y <= e.pageY && on_table_cards[i].y + 150 >= e.pageY){
+                            Defendence(on_table_cards[i].x + 10, on_table_cards[i].y + 20);
+                            break;
+                        }    
+                    }
+                }
+            }
+            else if(is_my_card(num) && !OnTable(num)){
+                Move(num);
+            }
         }
         else if(elem.id === "ready-button"){
             self._rpc({
@@ -411,16 +437,16 @@ function SetPos(avatar, uid){
         card.style.setProperty('opacity','1');
         card.style.setProperty('transform','translate3d('
             +(put_w - x)+'px,'+(put_h - y)+'px,0px)');
+        return [put_w, put_h];
     }
 
     function Cover(card, x2, y2) {
         try{
             var card1 = document.getElementById('card-'+card);
             var x1 = card1.offsetLeft, y1 = card1.offsetTop;
-            var w = card1.offsetWidth, h = card1.offsetHeight;
             card1.style.setProperty('z-index', '1');
             card1.style.setProperty('transform','translate3d('+
-                (((x2*W) - w/2) - x1)+'px,'+(((y2*H) - h/2) - y1)+'px,0px)');
+                String(x2 - x1)+'px,'+String(y2 - y1)+'px,0px)');
         }
         catch(e){
             Tip("Can't cover chosen card!", 3000);
@@ -481,14 +507,14 @@ function SetPos(avatar, uid){
             var me = NumInQueue(session.uid);
             for(i = 0; i < on_table_cards.length; i++){
                 for(var j = 0; j < chat_users[me].cards.length; j++){
-                    if(chat_users[me].cards[j].num === on_table_cards[i]){
+                    if(chat_users[me].cards[j].num === on_table_cards[i].num){
                         chat_users[me].cards.splice(j,1);
                     }
                 }
             }
 
             for(i = 0; i < on_table_cards.length; i++){
-                var card = document.getElementById('card-'+on_table_cards[i]);
+                var card = document.getElementById('card-'+on_table_cards[i].num);
                 card.style.setProperty('display', 'none');
             }
             on_table_cards = [];
@@ -797,8 +823,12 @@ function SetPos(avatar, uid){
                 if(data.uid !== session.uid){
                     DownloadEnemyCards(data.num, data.uid);
                 }
-                PutOn(data.num);
-                on_table_cards.push(data.num);
+                var point = PutOn(data.num);
+                on_table_cards.push({
+                    num: data.num,
+                    x: point[0],
+                    y: point[1]
+                });
             }
             else if(data.command === 'HowMuchCards'){
                 ShowHowMuchCards(data.number);
@@ -815,11 +845,16 @@ function SetPos(avatar, uid){
                     showMessage(data.uid, 'sorry');
                     return;
                 }
-                var winner = data.winner, loser = data.loser;
+                var winner = data.winner;
                 if(data.uid !== session.uid){
                     DownloadEnemyCards(winner, data.uid);
                 }
-                on_table_cards.push(winner);
+                
+                on_table_cards.push({
+                    num: Number(winner),
+                    x: data.x,
+                    y: data.y
+                });
                 Cover(winner, data.x, data.y);
             }
             else if(data.command === 'my_game_id'){
@@ -866,6 +901,25 @@ function SetPos(avatar, uid){
             }
             else if(data.command === 'Welcome'){
                 showMessage(data.uid, 'welcome');
+            }
+            else if(data.command === 'Can_beat_this_card'){
+                if(data.n == 1){
+                    choose_and_beat = 0;
+                    def_cards[1] = String(data.loser);
+                    var point = [-1,-1];
+                    for(i = 0; i < on_table_cards.length; i++){
+                        if(data.loser === on_table_cards[i].num){
+                            point = [on_table_cards[i].x + 10, on_table_cards[i].y + 20];
+                        }
+                    }
+                    Defendence(point[0], point[1]);
+                }
+                else{
+                    potentialy_can_beat_cards.push(data.loser);
+                    if(potentialy_can_beat_cards.length === data.n){
+                        change_cards_opacity();
+                    }
+                }
             }
         },
     });

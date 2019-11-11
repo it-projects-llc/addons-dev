@@ -274,6 +274,31 @@ class Game(models.Model):
         return 1
 
     @api.model
+    def can_first_card_beat_second(self, cur_game, first, second):
+        fpow = first.power
+        spow = second.power
+        winner = -1
+        loser = -1
+        # If one of them is trump, there's always way to compare cards
+        # If posible to compare
+        if first.suit == second.suit or first.suit == cur_game.trump or second.suit == cur_game.trump:
+            if first.suit == cur_game.trump:
+                fpow = first.power + 100
+            if second.suit == cur_game.trump:
+                spow = second.power + 100
+            if spow < fpow:
+                winner = first.num
+                loser = second.num
+        else:
+            loser = first.num
+            winner = second.num
+        if not second.able_to_cover:
+            winner = second.num
+        if first.num == winner:
+            return True
+        return False
+
+    @api.model
     def defence(self, game_id, uid, card1, card2, x, y):
         try:
             cur_game = self.search([('id', '=', game_id)])
@@ -284,31 +309,12 @@ class Game(models.Model):
             defender.cards -= card
             first = cur_game.on_table_cards.search([('num', '=', card1)])[0]
             second = cur_game.on_table_cards.search([('num', '=', card2)])[0]
-            fpow = first.power
-            spow = second.power
-            winner = -1
-            loser = -1
         except Exception:
             _logger.error("Defence var's initialization error!")
         try:
-            # If one of them is trump, there's always way to compare cards
-            # If posible to compare
-            if first.suit == second.suit or first.suit == cur_game.trump or second.suit == cur_game.trump:
-                if first.suit == cur_game.trump:
-                    fpow = first.power + 100
-                if second.suit == cur_game.trump:
-                    spow = second.power + 100
-                if spow < fpow:
-                    winner = card1
-                    loser = card2
-            else:
-                loser = card1
-                winner = card2
-            if not second.able_to_cover:
-                winner = card2
             # If chosen can cover second card 
-            if card1 == winner:
-                data = {'uid': uid, 'winner': winner, 'x': x, 'y': y, 'loser': loser, 'can_beat': True, 'command': 'Defence'}
+            if cur_game.can_first_card_beat_second(cur_game, first, second):
+                data = {'uid': uid, 'winner': card1, 'x': x, 'y': y, 'loser': card2, 'can_beat': True, 'command': 'Defence'}
                 cur_game.on_table_cards.search([('num', '=', second.num)]).write({'able_to_cover': False})
                 cur_game.write({'uncovered_cards': cur_game.uncovered_cards - 1})
             else:
@@ -427,6 +433,22 @@ class Game(models.Model):
                                                                       player.pos_id, cur_game.name)
         self.env['bus.bus'].sendmany([[channel, data]])
         return 1
+
+    @api.model
+    def which_cards_are_avaible_to_cover(self, game_id, uid, card):
+        cur_game = self.search([('id', '=', game_id)])
+        player = cur_game.players.search([('uid', '=', uid)])
+        first = player.cards.search([('num', '=', card)])
+        temp_cards = []
+        for tcard in cur_game.on_table_cards:
+            if cur_game.can_first_card_beat_second(cur_game, first, tcard) and tcard.num != card:
+                temp_cards.append(tcard)
+        for tcard in temp_cards:
+            data = {'winner': card, 'loser': tcard.num, 'command': 'Can_beat_this_card', 'n': len(temp_cards)}
+            channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, cur_game.name)
+            self.env['bus.bus'].sendmany([[channel, data]])
+        return 1
+
 
 
 class Player(models.Model):
