@@ -489,7 +489,7 @@ function SetPos(avatar, uid){
 
             for(i = 0; i < on_table_cards.length; i++){
                 var card = document.getElementById('card-'+on_table_cards[i]);
-                card.style.setProperty('opacity', '0');
+                card.style.setProperty('display', 'none');
             }
             on_table_cards = [];
         }

@@ -366,8 +366,6 @@ class Game(models.Model):
     @api.model
     def cards_are_beated(self, game_id, uid):
         cur_game = self.search([('id', '=', game_id)])
-        import wdb
-        wdb.set_trace()
         if len(cur_game.on_table_cards) == 0 or cur_game.uncovered_cards > 0:
             return 1
 
