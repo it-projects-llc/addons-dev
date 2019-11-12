@@ -46,17 +46,17 @@ odoo.define('pos_chat_button', function (require){
         $(".tips").fadeIn(500);
 
         text.style.setProperty('transform','translate3d(0px,'+(H/2 - text.offsetTop)+'px,0px)');
-        setTimeout(function () {
+        setTimeout(function (){
         text.style.setProperty('transform','translate3d(0px,'+(H*3 - text.offsetTop)+'px,0px)');
         },how_long_to_hold);
 
-        setTimeout(function () {
+        setTimeout(function (){
             $(".tips").fadeOut(500);
             text.style.setProperty('top', '0');
         },how_long_to_hold + 1000);
     }
 
-    function Defendence() {
+    function Defendence(){
         choose_and_beat = 0;
         self._rpc({
             model: "game",
@@ -66,7 +66,7 @@ odoo.define('pos_chat_button', function (require){
         def_cards = [0,0];
     }
 
-    function Take_Cards() {
+    function Take_Cards(){
         // Need to finish
         var temp_cards = '';
         for(i = 0; i < on_table_cards.length; i++){
@@ -80,17 +80,41 @@ odoo.define('pos_chat_button', function (require){
     }
 
     function change_cards_opacity(){
-        var card;
-        try{
+        try {
             for(i = 0; i < on_table_cards.length; i++){
                 document.getElementById('card-'+ String(on_table_cards[i].num)).style.setProperty('opacity', '0.6');
             }
             for(i = 0; i < potentialy_can_beat_cards.length; i++){
                 document.getElementById('card-'+ String(potentialy_can_beat_cards[i])).style.setProperty('opacity', '1');
             }
-        }
-        catch(e){
+        }catch(e){
             Tip('change_card_opacity error');
+        }
+    }
+
+//------------------------------------------------------
+
+//--------------- Game table actions -------------------
+    function Move(card_num){
+        // Need to check suit of card, and make a decide
+        // Can player make a step or no
+        if(moves_cnt >= max_cards){
+            Tip('You can step only '+max_cards+' times!', 2000);
+            return;
+        }
+        var stepper = [chat_users[who_moves[0]].uid, chat_users[who_moves[1]].uid];
+        if(stepper[0] === session.uid){
+            self._rpc({
+                model: "game",
+                method: "make_step",
+                args: [my_game_id, session.uid, card_num]
+            });
+        }else if(stepper[1] === session.uid && on_table_cards.length > 0){
+            self._rpc({
+                model: "game",
+                method: "make_step",
+                args: [my_game_id, session.uid, card_num]
+            });
         }
     }
 
@@ -100,36 +124,33 @@ odoo.define('pos_chat_button', function (require){
     // Checks out which num user has
     function NumInQueue(uid){
         for(i = 0; i < chat_users.length; i++){
-            if(chat_users[i].uid === uid) {
+            if(chat_users[i].uid === uid){
                 return i;
             }
         }
     }
 
-    function OnTable(n) {
+    function OnTable(n){
         for(i = 0; i < on_table_cards.length; i++){
-            if(on_table_cards[i].num === Number(n)) {
+            if(on_table_cards[i].num === Number(n)){
                 return true;
             }
         }
         return false;
     }
 
-    function buttons_opacity(num) {
+    function buttons_opacity(num){
         document.getElementById('ready-button').style.setProperty('opacity', '0');
         document.getElementById('step-button').style.setProperty('opacity', '0');
         document.getElementById('take-button').style.setProperty('opacity', '0');
         document.getElementById('check-button').style.setProperty('opacity', '0');
         if(num === 1){
             document.getElementById('ready-button').style.setProperty('opacity', '1');
-        }
-        else if(num === 2){
+        }else if(num === 2){
             document.getElementById('step-button').style.setProperty('opacity', '1');
-        }
-        else if(num === 3){
+        }else if(num === 3){
             document.getElementById('take-button').style.setProperty('opacity', '1');
-        }
-        else if(num === 4){
+        }else if(num === 4){
             document.getElementById('check-button').style.setProperty('opacity', '1');
         }
     }
@@ -144,17 +165,29 @@ odoo.define('pos_chat_button', function (require){
         return false;
     }
 
+    function next_to(uid, already_converted){
+        if(already_converted){
+            i = uid;
+        }else{
+            i = NumInQueue(uid);
+        }
+
+        if(i === chat_users.length - 1){
+            return chat_users[0].uid;
+        }
+
+        return chat_users[i + 1].uid;
+    }
+
     var triangle_button_pushed = false;
-    function ControlOnClick(e) {
+    function ControlOnClick(e){
         var elem = e ? e.target : window.event.srcElement;
         var num = '';
         if(elem.id[0]+elem.id[1]+elem.id[2]+elem.id[3] === 'card'){
-            if(elem.id[elem.id.length - 2] !== '-') num = elem.id[elem.id.length - 2];
-            num += elem.id[elem.id.length - 1];
-            if(Number(num) < 0 || Number(num) > 52){
-                alert(elem.id);
-                return;
+            if(elem.id[elem.id.length - 2] !== '-'){
+                num = elem.id[elem.id.length - 2];
             }
+            num += elem.id[elem.id.length - 1];
             // Checking who is player - defender or attacker
             if(session.uid === next_to(who_moves[0], true)){
                 if(OnTable(num) && choose_and_beat === 0){
@@ -167,44 +200,37 @@ odoo.define('pos_chat_button', function (require){
                 def_cards[choose_and_beat - 1] = num;
                 if(choose_and_beat === 2){
                     Defendence();
-                }
-                else{
+                }else{
                     self._rpc({
                         model: "game",
                         method: "which_cards_are_avaible_to_cover",
                         args: [my_game_id, session.uid, def_cards[0]]
                     });
                 }
-            }
-            else if(is_my_card(num) && !OnTable(num)){
+           }else if(is_my_card(num) && !OnTable(num)){
                 Move(num);
             }
-        }
-        else if(elem.id === "ready-button"){
+        }else if(elem.id === "ready-button"){
             self._rpc({
                 model: "game",
                 method: "player_is_ready",
                 args: [my_game_id, session.uid]
             });
-        }
-        else if(elem.id === "step-button"){
+        }else if(elem.id === "step-button"){
             self._rpc({
                model: 'game',
                method: 'cards_are_beated',
                args: [my_game_id, session.uid]
             });
-        }
-        else if(elem.id === "take-button"){
+        }else if(elem.id === "take-button"){
             Take_Cards();
-        }
-        else if(elem.id === "check-button"){
+        }else if(elem.id === "check-button"){
             self._rpc({
                model: 'game',
                method: 'start_the_game',
                 args: [my_game_id]
             });
-        }
-        else if(elem.id === "triangle"){
+        }else if(elem.id === "triangle"){
             var menu = document.getElementsByClassName('game-tools')[0];
             var chat = document.getElementsByClassName('chat-tools')[0];
             if(!triangle_button_pushed){
@@ -215,8 +241,7 @@ odoo.define('pos_chat_button', function (require){
                 chat.style.setProperty('-webkit-transform','scaleX(1)');
                 chat.style.setProperty('-ms-transform','scaleX(1)');
                 triangle_button_pushed = true;
-            }
-            else{
+           }else{
                 triangle_button_pushed = false;
                 menu.style.setProperty('transform','scaleX(0)');
                 menu.style.setProperty('-webkit-transform','scaleX(0)');
@@ -225,8 +250,7 @@ odoo.define('pos_chat_button', function (require){
                 chat.style.setProperty('-webkit-transform','scaleX(0)');
                 chat.style.setProperty('-ms-transform','scaleX(0)');
             }
-        }
-        else{
+        }else{
             // If you missed
             if (choose_and_beat === 1){
                 choose_and_beat--;
@@ -239,8 +263,11 @@ odoo.define('pos_chat_button', function (require){
 //-------------- New screen defenition -----------------
     var ChatButton = screens.ActionButtonWidget.extend({
         template: 'ChatButton',
-        button_click: function () {
+        button_click: function (){
             self = this;
+            if(game_started){
+                return;
+            }
             this.gui.show_screen('custom_screen');
             // User in to the chat room
             in_chat = true;
@@ -260,11 +287,11 @@ odoo.define('pos_chat_button', function (require){
 //---------- Text insertion buttons control ------------
     var CustomScreenWidget = screens.ScreenWidget.extend({
         template: 'CustomScreenWidget',
-        show: function () {
+        show: function (){
           var self = this;
           this._super();
             // Returning to POS main screen
-            this.$('.back').off().click(function () {
+            this.$('.back').off().click(function (){
                 self.gui.show_screen('products');
 
                 self._rpc({
@@ -276,7 +303,7 @@ odoo.define('pos_chat_button', function (require){
                 DeleteMyData();
             });
             // Send new messages using button
-            this.$('.next').off().click(function () {
+            this.$('.next').off().click(function (){
                 TakeNewMessage(false);
             });
             // Send new messages using 'Enter' key on keyboard
@@ -328,7 +355,7 @@ odoo.define('pos_chat_button', function (require){
             document.getElementById('enemy-cards').innerHTML = '';
             document.getElementById('suit').style.display = 'none';
         }
-        catch (error) {
+        catch (error){
             // Nothing to do
         }
     }
@@ -346,26 +373,11 @@ odoo.define('pos_chat_button', function (require){
             if(str[i] === '/') slash++;
         }
         // If send mode is active
-        if(send) {
+        if(send){
             return text;
         }
 
         return left === 2 && right === 2 && slash === 1 ? true : false;
-    }
-
-    function next_to(uid, already_converted){
-        if(already_converted){
-            i = uid;
-        }
-        else{
-            i = NumInQueue(uid);
-        }
-
-        if(i === chat_users.length - 1){
-            return chat_users[0].uid;
-        }
-
-        return chat_users[i + 1].uid;
     }
 
 //--------------------------------------------------
@@ -393,7 +405,7 @@ function ShowUsers(){
         out += '<div class="user-name" id="user-name-'+str_uid+'">'+chat_users[i].name+'</div>';
         out += '<img src="/web/image/res.users/' +
         item.uid + '/image_small" id="ava-' + i +'" class="avatar" style="border-radius:50%;margin-left:20%;"/>';
-        out += '<div id="count-cards-'+String(item.uid)+'" style="margin-left: 10%;"></div>'
+        out += '<div id="count-cards-'+String(item.uid)+'" style="margin-left: 10%;"></div>';
         out += '<ul class="game-message" id="messages-'+str_uid+'"></ul>';
         out += '</div>';
     });
@@ -419,7 +431,7 @@ function SetPos(avatar, uid){
 
 //--------------- Game table actions -------------------
 
-    function PutOn(puton_card) {
+    function PutOn(puton_card){
         var card = document.getElementById('card-'+puton_card);
         var sign = (moves_cnt + 1)%2 === 0 ? 1 : -1;
         var cw = card.offsetWidth, ch = card.offsetHeight;
@@ -432,7 +444,7 @@ function SetPos(avatar, uid){
         return [put_w, put_h];
     }
 
-    function Cover(card, x2, y2) {
+    function Cover(card, x2, y2){
         try{
             var card1 = document.getElementById('card-'+card);
             var x1 = card1.offsetLeft, y1 = card1.offsetTop;
@@ -445,30 +457,6 @@ function SetPos(avatar, uid){
         }
     }
 
-    function Move(card_num){
-        // Need to check suit of card, and make a decide
-        // Can player make a step or no
-        if(moves_cnt >= max_cards){
-            alert('You can step only '+max_cards+' times!');
-            return;
-        }
-        var stepper = [chat_users[who_moves[0]].uid, chat_users[who_moves[1]].uid];
-        if(stepper[0] === session.uid){
-            self._rpc({
-                model: "game",
-                method: "make_step",
-                args: [my_game_id, session.uid, card_num]
-            });
-        }
-        else if(stepper[1] === session.uid && on_table_cards.length > 0){
-            self._rpc({
-                model: "game",
-                method: "make_step",
-                args: [my_game_id, session.uid, card_num]
-            });
-        }
-    }
-
     function HowMuchCards(uid){
         self._rpc({
             model: "game",
@@ -478,14 +466,13 @@ function SetPos(avatar, uid){
     }
 
     function ShowHowMuchCards(num, uid){
-        try{
+        try {
             var temp_user = document.getElementById('count-cards-'+String(uid));
             temp_user.innerHTML = '';
             for(i = 0; i < num; i++){
                 temp_user.innerHTML += '<img style="margin-left: auto" class="cards-counter" src="/pos_durak/static/src/img/reverse-card.png"/>';
             }
-        }
-        catch(e){
+        }catch(e){
             Tip("Something with cards", 1000);
         }
     }
@@ -610,7 +597,7 @@ function SetPos(avatar, uid){
         }
 
         var text = newMessage.value;
-        if(delete_last_char) {
+        if(delete_last_char){
             text.substring(0, text.length - 2);
         }
 
@@ -635,17 +622,17 @@ function SetPos(avatar, uid){
         newMessage.value = '';
     }
 
-    function delete_message(msg, uid) {
+    function delete_message(msg, uid){
         try{
             var old_message = document.getElementById('msg-'+String(msg)+'-'+uid);
             old_message.innerHTML = '';
-            old_message.style.display = none;
+            old_message.style.setProperty('display', 'none');
         }
         catch(e){
             // Error
         }
     }
-    
+
     function showMessage(uid, message){
         i = NumInQueue(uid);
         var time = 10000;
@@ -677,7 +664,7 @@ function SetPos(avatar, uid){
 
 //--------------- Users relations part -----------------
 
-    function AddNewUser(user_data) {
+    function AddNewUser(user_data){
         i = 0;
         // If user connected too late
         if(game_started) return;
@@ -744,7 +731,7 @@ function SetPos(avatar, uid){
         }
     }
 
-    function CreatePlayer() {
+    function CreatePlayer(){
         self._rpc({
             model: "game",
             method: "add_new_user",
@@ -758,7 +745,7 @@ function SetPos(avatar, uid){
     var PosModelSuper = models.PosModel;
     models.PosModel = models.PosModel.extend({
 
-        initialize: function () {
+        initialize: function (){
             PosModelSuper.prototype.initialize.apply(this, arguments);
             var self = this;
             // Listen to 'pos_durak' channel
@@ -775,8 +762,7 @@ function SetPos(avatar, uid){
                 if(!CheckUserExists(data.uid)){
                     AddNewUser(data);
                 }
-            }
-            else if(data.command === 'Disconnect'){
+            }else if(data.command === 'Disconnect'){
                 if(data.uid === session.uid){
                     for(i = 0; i < chat_users.length; i++){
                         DeleteUser(chat_users[i].uid);
@@ -792,11 +778,9 @@ function SetPos(avatar, uid){
                     //     "Then game will begin.")
                     buttons_opacity(4);
                 }
-            }
-            else if(data.command === 'Message'){
+            }else if(data.command === 'Message'){
                 showMessage(data.uid, data.message);
-            }
-            else if(data.command === 'Cards'){
+            }else if(data.command === 'Cards'){
                 var me = NumInQueue(session.uid);
                 if(data.pack_num === 0){
                     chat_users[me].cards = [];
@@ -809,10 +793,9 @@ function SetPos(avatar, uid){
                 if(data.n === chat_users[me].cards.length){
                     document.getElementById('cards').innerHTML = '';
                     ShowCards();
-                    Show_all_cards()
+                    Show_all_cards();
                 }
-            }
-            else if(data.command === 'Trump'){
+            }else if(data.command === 'Trump'){
                 game_started = true;
                 trump = data.trump;
                 buttons_opacity(0);
@@ -822,8 +805,7 @@ function SetPos(avatar, uid){
                 temp_window.innerHTML = '<img type="button" src="/pos_durak/static/src/img/'+
                     card_suits[trump]+'.png" id="suit" ' +
                     'style="position:absolute;left:30%;bottom:-10%;opacity: 0.2;"/>';
-            }
-            else if(data.command === 'Move'){
+            }else if(data.command === 'Move'){
                 moves_cnt++;
                 if(on_table_cards.length === 0){
                     Second_scene();
@@ -839,14 +821,11 @@ function SetPos(avatar, uid){
                     y: point[1]
                 });
                 Show_all_cards();
-            }
-            else if(data.command === 'HowMuchCards'){
+            }else if(data.command === 'HowMuchCards'){
                 ShowHowMuchCards(data.number, data.uid);
-            }
-            else if(data.command === 'Move_done'){
+            }else if(data.command === 'Move_done'){
                 First_scene();
-            }
-            else if(data.command === 'Defence'){
+            }else if(data.command === 'Defence'){
                 if(!data.can_beat){
                     if(session.uid === data.uid){
                         Tip("You can't beat this card with chosen card", 2000);
@@ -865,7 +844,7 @@ function SetPos(avatar, uid){
                         temp_x = on_table_cards[i].x + 10;
                         temp_y = on_table_cards[i].y + 20;
                         break;
-                    }    
+                    }
                 }
                 on_table_cards.push({
                     num: Number(winner),
@@ -874,17 +853,14 @@ function SetPos(avatar, uid){
                 });
                 Cover(winner, temp_x, temp_y);
                 Show_all_cards();
-            }
-            else if(data.command === 'my_game_id'){
+            }else if(data.command === 'my_game_id'){
                 my_game_id = data.id;
                 // When game id is recieved, then adding new user
                 CreatePlayer();
-            }
-            else if(data.command === 'ready'){
+            }else if(data.command === 'ready'){
                 var sign = document.getElementById('user-name-'+String(data.uid));
                 sign.style.setProperty('background', 'green');
-            }
-            else if(data.command === 'Who_steps'){
+            }else if(data.command === 'Who_steps'){
                 for(i = 0; i < chat_users.length; i++){
                     if(data.first !== i){
                         try{
@@ -898,8 +874,7 @@ function SetPos(avatar, uid){
                 }
 
                 who_moves = [data.first, data.second];
-            }
-            else if(data.command === 'Won'){
+            }else if(data.command === 'Won'){
                 DeleteUser(data.uid);
                 for(i = 0; i < chat_users.length; i++){
                     SetPos(document.getElementById('picture-'+String(i)), chat_users[i].uid);
@@ -908,25 +883,21 @@ function SetPos(avatar, uid){
                     Tip('You won!', 3000);
                     showMessage(data.uid, 'won');
                 }
-            }
-            else if(data.command === 'GAME_PING'){
+            }else if(data.command === 'GAME_PING'){
                 Tip('Catch Ping', 2000);
                 self._rcp({
                     model: 'game',
                     method: 'Pong',
                     args: [my_game_id, session.uid]
                 });
-            }
-            else if(data.command === 'Welcome'){
+            }else if(data.command === 'Welcome'){
                 showMessage(data.uid, 'welcome');
-            }
-            else if(data.command === 'Can_beat_this_card'){
-                if(data.n == 1){
+            }else if(data.command === 'Can_beat_this_card'){
+                if(data.n === 1){
                     choose_and_beat = 0;
                     def_cards[1] = String(data.loser);
                     Defendence();
-                }
-                else{
+                }else{
                     potentialy_can_beat_cards.push(data.loser);
                     if(potentialy_can_beat_cards.length === data.n){
                         change_cards_opacity();

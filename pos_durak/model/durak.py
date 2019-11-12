@@ -278,7 +278,6 @@ class Game(models.Model):
         fpow = first.power
         spow = second.power
         winner = -1
-        loser = -1
         # If one of them is trump, there's always way to compare cards
         # If posible to compare
         if first.suit == second.suit or first.suit == cur_game.trump or second.suit == cur_game.trump:
@@ -288,9 +287,7 @@ class Game(models.Model):
                 spow = second.power + 100
             if spow < fpow:
                 winner = first.num
-                loser = second.num
         else:
-            loser = first.num
             winner = second.num
         if not second.able_to_cover:
             winner = second.num
@@ -304,7 +301,7 @@ class Game(models.Model):
             cur_game = self.search([('id', '=', game_id)])
             defender = cur_game.players.search([('uid', '=', uid)])
             card = defender.cards.search([('num', '=', card1)])[0]
-            
+
             cur_game.on_table_cards += cur_game.on_table_cards.create({'power': card.power, 'suit': card.suit, 'num': card.num, 'in_game': True, 'able_to_cover': card.able_to_cover})
             defender.cards -= card
             first = cur_game.on_table_cards.search([('num', '=', card1)])[0]
@@ -312,7 +309,7 @@ class Game(models.Model):
         except Exception:
             _logger.error("Defence var's initialization error!")
         try:
-            # If chosen can cover second card 
+            # If chosen can cover second card
             if cur_game.can_first_card_beat_second(cur_game, first, second):
                 data = {'uid': uid, 'winner': card1, 'loser': card2, 'can_beat': True, 'command': 'Defence'}
                 cur_game.on_table_cards.search([('num', '=', second.num)]).write({'able_to_cover': False})
@@ -448,7 +445,6 @@ class Game(models.Model):
             channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, cur_game.name)
             self.env['bus.bus'].sendmany([[channel, data]])
         return 1
-
 
 
 class Player(models.Model):
