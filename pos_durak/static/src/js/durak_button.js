@@ -226,11 +226,6 @@ odoo.define('pos_chat_button', function (require){
                 chat.style.setProperty('-ms-transform','scaleX(0)');
             }
         }
-        else if(elem.id[0]+elem.id[1]+elem.id[2] === "ava" && game_started){
-            num = (elem.id[elem.id.length - 2] !== '-' ? elem.id[elem.id.length - 2] : '')
-                + elem.id[elem.id.length - 1];
-            HowMuchCards(chat_users[Number(num)].uid);
-        }
         else{
             // If you missed
             if (choose_and_beat === 1){
@@ -398,7 +393,7 @@ function ShowUsers(){
         out += '<div class="user-name" id="user-name-'+str_uid+'">'+chat_users[i].name+'</div>';
         out += '<img src="/web/image/res.users/' +
         item.uid + '/image_small" id="ava-' + i +'" class="avatar" style="border-radius:50%;margin-left:20%;"/>';
-
+        out += '<div id="count-cards-'+String(item.uid)+'" style="margin-left: 10%;"></div>'
         out += '<ul class="game-message" id="messages-'+str_uid+'"></ul>';
         out += '</div>';
     });
@@ -482,8 +477,17 @@ function SetPos(avatar, uid){
         });
     }
 
-    function ShowHowMuchCards(num){
-        Tip(num, 1500);
+    function ShowHowMuchCards(num, uid){
+        try{
+            var temp_user = document.getElementById('count-cards-'+String(uid));
+            temp_user.innerHTML = '';
+            for(i = 0; i < num; i++){
+                temp_user.innerHTML += '<img style="margin-left: auto" class="cards-counter" src="/pos_durak/static/src/img/reverse-card.png"/>';
+            }
+        }
+        catch(e){
+            Tip("Something with cards", 1000);
+        }
     }
 
     function DownloadEnemyCards(num, uid){
@@ -583,6 +587,12 @@ function SetPos(avatar, uid){
             defender_id.style.setProperty('transform','translate3d('
                 +(W/2 - x)+'px,'+bias_top+'px,0px)');
             defender_id.style.setProperty('transition','transform .3s ease-in-out');
+        }
+    }
+
+    function Show_all_cards(){
+        for(i = 0; i < chat_users.length; i++){
+            HowMuchCards(chat_users[i].uid);
         }
     }
 //------------------------------------------------------
@@ -799,12 +809,14 @@ function SetPos(avatar, uid){
                 if(data.n === chat_users[me].cards.length){
                     document.getElementById('cards').innerHTML = '';
                     ShowCards();
+                    Show_all_cards()
                 }
             }
             else if(data.command === 'Trump'){
                 game_started = true;
                 trump = data.trump;
                 buttons_opacity(0);
+                Show_all_cards();
                 // Show suit
                 var temp_window = document.getElementById('card-suit');
                 temp_window.innerHTML = '<img type="button" src="/pos_durak/static/src/img/'+
@@ -826,9 +838,10 @@ function SetPos(avatar, uid){
                     x: point[0],
                     y: point[1]
                 });
+                Show_all_cards();
             }
             else if(data.command === 'HowMuchCards'){
-                ShowHowMuchCards(data.number);
+                ShowHowMuchCards(data.number, data.uid);
             }
             else if(data.command === 'Move_done'){
                 First_scene();
@@ -860,6 +873,7 @@ function SetPos(avatar, uid){
                     y: temp_y
                 });
                 Cover(winner, temp_x, temp_y);
+                Show_all_cards();
             }
             else if(data.command === 'my_game_id'){
                 my_game_id = data.id;

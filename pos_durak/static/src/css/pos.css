@@ -292,3 +292,10 @@
     position: absolute;
     transition: transform .3s ease-in-out;
 }
+
+.cards-counter{
+    position: relative;
+    width: 15px;
+    height: 25px;
+    margin-left: 5px;
+}

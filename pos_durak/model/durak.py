@@ -428,7 +428,7 @@ class Game(models.Model):
         ask_player = cur_game.players.search([('uid', '=', uid)])
         player = cur_game.players.search([('uid', '=', my_uid)])
 
-        data = {'number': len(ask_player.cards), 'command': 'HowMuchCards'}
+        data = {'uid': uid, 'number': len(ask_player.cards), 'command': 'HowMuchCards'}
         channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
                                                                       player.pos_id, cur_game.name)
         self.env['bus.bus'].sendmany([[channel, data]])
