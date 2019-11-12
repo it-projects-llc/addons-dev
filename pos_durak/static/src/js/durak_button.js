@@ -56,12 +56,12 @@ odoo.define('pos_chat_button', function (require){
         },how_long_to_hold + 1000);
     }
 
-    function Defendence(x, y) {
+    function Defendence() {
         choose_and_beat = 0;
         self._rpc({
             model: "game",
             method: "defence",
-            args: [my_game_id, session.uid, def_cards[0], def_cards[1], x, y]
+            args: [my_game_id, session.uid, def_cards[0], def_cards[1]]
         });
         def_cards = [0,0];
     }
@@ -165,18 +165,15 @@ odoo.define('pos_chat_button', function (require){
                 }
                 choose_and_beat++;
                 def_cards[choose_and_beat - 1] = num;
-                self._rpc({
-                    model: "game",
-                    method: "which_cards_are_avaible_to_cover",
-                    args: [my_game_id, session.uid, def_cards[0]]
-                });
                 if(choose_and_beat === 2){
-                    for(i = 0; i < on_table_cards.length; i++){
-                        if(on_table_cards[i].x <= e.pageX && on_table_cards[i].x + 75 >= e.pageX && on_table_cards[i].y <= e.pageY && on_table_cards[i].y + 150 >= e.pageY){
-                            Defendence(on_table_cards[i].x + 10, on_table_cards[i].y + 20);
-                            break;
-                        }    
-                    }
+                    Defendence();
+                }
+                else{
+                    self._rpc({
+                        model: "game",
+                        method: "which_cards_are_avaible_to_cover",
+                        args: [my_game_id, session.uid, def_cards[0]]
+                    });
                 }
             }
             else if(is_my_card(num) && !OnTable(num)){
@@ -849,13 +846,20 @@ function SetPos(avatar, uid){
                 if(data.uid !== session.uid){
                     DownloadEnemyCards(winner, data.uid);
                 }
-                
+                var temp_x = -1, temp_y = -1;
+                for(i = 0; i < on_table_cards.length; i++){
+                    if(on_table_cards[i].num === Number(data.loser)){
+                        temp_x = on_table_cards[i].x + 10;
+                        temp_y = on_table_cards[i].y + 20;
+                        break;
+                    }    
+                }
                 on_table_cards.push({
                     num: Number(winner),
-                    x: data.x,
-                    y: data.y
+                    x: temp_x,
+                    y: temp_y
                 });
-                Cover(winner, data.x, data.y);
+                Cover(winner, temp_x, temp_y);
             }
             else if(data.command === 'my_game_id'){
                 my_game_id = data.id;
@@ -906,18 +910,13 @@ function SetPos(avatar, uid){
                 if(data.n == 1){
                     choose_and_beat = 0;
                     def_cards[1] = String(data.loser);
-                    var point = [-1,-1];
-                    for(i = 0; i < on_table_cards.length; i++){
-                        if(data.loser === on_table_cards[i].num){
-                            point = [on_table_cards[i].x + 10, on_table_cards[i].y + 20];
-                        }
-                    }
-                    Defendence(point[0], point[1]);
+                    Defendence();
                 }
                 else{
                     potentialy_can_beat_cards.push(data.loser);
                     if(potentialy_can_beat_cards.length === data.n){
                         change_cards_opacity();
+                        potentialy_can_beat_cards = [];
                     }
                 }
             }

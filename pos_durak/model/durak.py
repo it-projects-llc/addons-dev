@@ -299,7 +299,7 @@ class Game(models.Model):
         return False
 
     @api.model
-    def defence(self, game_id, uid, card1, card2, x, y):
+    def defence(self, game_id, uid, card1, card2):
         try:
             cur_game = self.search([('id', '=', game_id)])
             defender = cur_game.players.search([('uid', '=', uid)])
@@ -314,7 +314,7 @@ class Game(models.Model):
         try:
             # If chosen can cover second card 
             if cur_game.can_first_card_beat_second(cur_game, first, second):
-                data = {'uid': uid, 'winner': card1, 'x': x, 'y': y, 'loser': card2, 'can_beat': True, 'command': 'Defence'}
+                data = {'uid': uid, 'winner': card1, 'loser': card2, 'can_beat': True, 'command': 'Defence'}
                 cur_game.on_table_cards.search([('num', '=', second.num)]).write({'able_to_cover': False})
                 cur_game.write({'uncovered_cards': cur_game.uncovered_cards - 1})
             else:
