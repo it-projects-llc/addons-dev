@@ -23,3 +23,5 @@ UI buttons:
 * If you was attacked, defend yourself via your cards. You can click on choosen card, and then click to attacking card
 * If you can't cover all attacking cards, you should to press "Take cards" button
 * If all attacking cards was beated, attacking players should press "Complete move" button.
+* You can see how much cards opponent has.
+* If you want to cover card, you shouldn't choose card that you want to cover by yourself, just choose covering card.
