@@ -672,8 +672,8 @@ class OhadaReport(models.AbstractModel):
                   'company_name': self.env.user.company_id.name,
                   'type': self.type,
                   'vat': self.env.user.company_id.vat,
-                  'year': datetime.datetime.now().year,
-                  'header': self.header and self.header + ' ' + str(datetime.datetime.now().year),}
+                  'year': options['date']['date_from'][0:4],
+                  'header': self.header and self.header + ' ' + options['date']['date_from'][0:4],}
         lines = self._get_lines(options, line_id=line_id)
 
         if options.get('hierarchy'):
@@ -987,6 +987,22 @@ class OhadaReport(models.AbstractModel):
                     options['comparison']['date_from'] = ""
                     options['comparison']['date_to'] = ""
                 return
+            elif self.type == 'note':
+                periods = []
+                number_period = 1
+                for index in range(0, number_period):
+                    if cmp_filter == 'previous_period':
+                        period_vals = self._get_dates_previous_period(options, period_vals)
+                    else:
+                        period_vals = self._get_dates_previous_year(options, period_vals)
+                    periods.append(create_vals(period_vals))
+
+                if len(periods) > 0:
+                    options['comparison'].update(periods[-1])
+                options['comparison']['periods'] = periods
+                options['comparison']['filter'] = 'previous_period'
+                options['comparison']['string'] = _('No comparison')
+                return
 
             periods = []
             number_period = 1
@@ -1154,23 +1170,27 @@ class OhadaReport(models.AbstractModel):
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         sheet = workbook.add_worksheet(self._get_report_name()[:31])
 
-        date_default_col1_style = workbook.add_format({'font_name': 'Arial', 'font_size': 12, 'font_color': '#666666', 'indent': 2, 'num_format': 'yyyy-mm-dd'})
-        date_default_style = workbook.add_format({'font_name': 'Arial', 'font_size': 12, 'font_color': '#666666', 'num_format': 'yyyy-mm-dd'})
-        default_col1_style = workbook.add_format({'font_name': 'Arial', 'font_size': 12, 'font_color': '#666666', 'indent': 2})
-        default_style = workbook.add_format({'font_name': 'Arial', 'font_size': 12, 'font_color': '#666666'})
-        title_style = workbook.add_format({'font_name': 'Arial', 'bold': True, 'bottom': 2})
-        super_col_style = workbook.add_format({'font_name': 'Arial', 'bold': True, 'align': 'center'})
-        level_0_style = workbook.add_format({'font_name': 'Arial', 'bold': True, 'font_size': 13, 'bottom': 6, 'font_color': '#666666'})
-        level_1_style = workbook.add_format({'font_name': 'Arial', 'bold': True, 'font_size': 13, 'bottom': 1, 'font_color': '#666666'})
-        level_2_col1_style = workbook.add_format({'font_name': 'Arial', 'bold': True, 'font_size': 12, 'font_color': '#666666', 'indent': 1})
-        level_2_col1_total_style = workbook.add_format({'font_name': 'Arial', 'bold': True, 'font_size': 12, 'font_color': '#666666'})
-        level_2_style = workbook.add_format({'font_name': 'Arial', 'bold': True, 'font_size': 12, 'font_color': '#666666'})
-        level_3_col1_style = workbook.add_format({'font_name': 'Arial', 'font_size': 12, 'font_color': '#666666', 'indent': 2})
-        level_3_col1_total_style = workbook.add_format({'font_name': 'Arial', 'bold': True, 'font_size': 12, 'font_color': '#666666', 'indent': 1})
-        level_3_style = workbook.add_format({'font_name': 'Arial', 'font_size': 12, 'font_color': '#666666'})
+
+        top_border = workbook.add_format({'bottom': 6, 'border_color': '#001E5A'})
+        bottom_border = workbook.add_format({'top': 6, 'border_color': '#001E5A'})
+        right_border = workbook.add_format({'left': 6, 'border_color': '#001E5A'})
+        left_border = workbook.add_format({'right': 6, 'border_color': '#001E5A'})
+        date_default_col1_style = workbook.add_format({'font_name': 'Arial', 'font_size': 12, 'font_color': '#001E5A', 'indent': 2, 'num_format': 'yyyy-mm-dd'})
+        date_default_style = workbook.add_format({'font_name': 'NimbusSanL', 'font_size': 12, 'font_color': '#001E5A', 'num_format': 'yyyy-mm-dd'})
+        default_col1_style = workbook.add_format({'font_name': 'NimbusSanL', 'font_size': 12, 'font_color': '#001E5A', 'indent': 2})
+        default_style = workbook.add_format({'font_name': 'NimbusSanL', 'font_size': 12, 'font_color': '#001E5A'})
+        title_style = workbook.add_format({'font_name': 'NimbusSanL', 'bold': True, 'bottom': 2})
+        super_col_style = workbook.add_format({'font_name': 'NimbusSanL', 'bold': True, 'align': 'center'})
+        level_0_style = workbook.add_format({'valign': 'vcenter', 'border_color': '#001E5A', 'shrink': True, 'align': 'center', 'bg_color': '#CDEBFF', 'font_name': 'NimbusSanL', 'bold': True, 'font_size': 8, 'border': 1, 'font_color': '#001E5A'})
+        level_1_style = workbook.add_format({'valign': 'vcenter', 'border_color': '#001E5A', 'border': 1, 'align': 'center', 'bold': True, 'bg_color':'#FFDCDC','font_name': 'NimbusSanL', 'font_size': 8, 'bottom': 1, 'font_color': '#001E5A'})
+        level_2_col1_style = workbook.add_format({'border_color': '#001E5A', 'border': 1, 'font_name': 'NimbusSanL', 'font_size': 8, 'font_color': '#001E5A', 'indent': 1})
+        level_2_col1_total_style = workbook.add_format({'border_color': '#001E5A', 'border': 1, 'font_name': 'NimbusSanL', 'font_size': 8, 'font_color': '#001E5A'})
+        level_2_style = workbook.add_format({'border_color': '#001E5A', 'border': 1, 'font_name': 'NimbusSanL', 'font_size': 8, 'font_color': '#001E5A'})
+        level_3_col1_style = workbook.add_format({'border_color': '#001E5A', 'border': 1, 'font_name': 'NimbusSanL', 'font_size': 8, 'font_color': '#001E5A', 'indent': 2})
+        level_3_col1_total_style = workbook.add_format({'border_color': '#001E5A', 'border': 1, 'font_name': 'NimbusSanL', 'font_size': 8, 'font_color': '#001E5A', 'indent': 1})
+        level_3_style = workbook.add_format({'border_color': '#001E5A', 'border': 1, 'font_name': 'NimbusSanL', 'font_size': 8, 'font_color': '#001E5A'})
 
         #Set the first column width to 50
-        sheet.set_column(0, 0, 50)
 
         super_columns = self._get_super_columns(options)
         y_offset = bool(super_columns.get('columns')) and 1 or 0
@@ -1188,33 +1208,45 @@ class OhadaReport(models.AbstractModel):
             else:
                 sheet.write(0, x, cell_content, super_col_style)
                 x += 1
-        for row in self.get_header(options):
-            x = 0
-            for column in row:
-                colspan = column.get('colspan', 1)
-                header_label = column.get('name', '').replace('<br/>', ' ').replace('&nbsp;', ' ')
-                if colspan == 1:
-                    sheet.write(y_offset, x, header_label, title_style)
-                else:
-                    sheet.merge_range(y_offset, x, y_offset, x + colspan - 1, header_label, title_style)
-                x += colspan
-            y_offset += 1
+        # for row in self.get_header(options):
+        #     x = 0
+        #     for column in row:
+        #         colspan = column.get('colspan', 1)
+        #         header_label = column.get('name', '').replace('<br/>', ' ').replace('&nbsp;', ' ')
+        #         if colspan == 1:
+        #             sheet.write(y_offset, x, header_label, title_style)
+        #         else:
+        #             sheet.merge_range(y_offset, x, y_offset, x + colspan - 1, header_label, title_style)
+        #         x += colspan
+        #     y_offset += 1
         ctx = self._set_context(options)
-        ctx.update({'no_format':True, 'print_mode':True, 'prefetch_fields': False})
+        ctx.update({'no_format': True, 'print_mode': True, 'prefetch_fields': False})
         # deactivating the prefetching saves ~35% on get_lines running time
         lines = self.with_context(ctx)._get_lines(options)
 
         if options.get('hierarchy'):
             lines = self._create_hierarchy(lines)
 
+        if lines[0].get('reference'):
+            sheet.set_column(1, 1, 3)
+            sheet.set_column(2, 2, 50)
+            sheet.set_row(7, 50)
+            sheet.set_row(8, 30)
+        else:
+            sheet.set_column(1, 1, 50)
+            sheet.set_row(7, 50)
+
         #write all data rows
         for y in range(0, len(lines)):
             level = lines[y].get('level')
+            sheet.write(y, 0, '', workbook.add_format({}))
+            x_index = 1
+            y_offset = 7
             if lines[y].get('caret_options'):
                 style = level_3_style
                 col1_style = level_3_col1_style
             elif level == 0:
-                y_offset += 1
+                # y_offset += 1
                 style = level_0_style
                 col1_style = style
             elif level == 1:
@@ -1230,31 +1262,119 @@ class OhadaReport(models.AbstractModel):
                 style = default_style
                 col1_style = default_col1_style
 
-            #write the first column, with a specific style to manage the indentation
-            cell_name = lines[y]['name']
-            if 'date' in lines[y].get('class', '') and cell_name is not None:
-                #write the dates with a specific format to avoid them being casted as floats in the XLSX
-                if not isinstance(cell_name, (float, datetime.date, datetime.datetime)):
-                    # Convert non-xlsx compatible dates
-                    cell_name = dateparser.parse(cell_name).date()                             #B+
-                    #B- cell_name = fields.Date.to_date(cell_name)
-                sheet.write_datetime(y + y_offset, 0, cell_name, date_default_col1_style)
+            if lines[y].get('note') == 'NET':
+                for x in range(1, len(lines[y]['columns']) + 1):
+                    cell = lines[y]['columns'][x - 1]
+                    loc_style = copy.copy(style)
+                    loc_style.set_align('center')
+                    workbook.formats.append(loc_style)
+                    sheet.write(y + y_offset, net_x, cell.get('name', ''), loc_style)
+                    net_x += 1
             else:
-                sheet.write(y + y_offset, 0, cell_name, col1_style)
+                if lines[y].get('reference') or lines[0].get('reference'):
+                    loc_style = copy.copy(style)
+                    loc_style.set_align('left')
+                    workbook.formats.append(loc_style)
+                    cell_name = lines[y].get('reference')
+                    if lines[y].get('reference') == 'REF':
+                        sheet.merge_range(y + y_offset, x_index, y + y_offset + 1, x_index, cell_name, loc_style)
+                        x_index += 1
+                    else:
+                        sheet.write(y + y_offset, x_index, cell_name, loc_style)
+                        x_index += 1
 
-            #write all the remaining cells
-            for x in range(1, len(lines[y]['columns']) + 1):
-                cell = lines[y]['columns'][x - 1]
-                if 'date' in cell.get('class', '') and cell.get('name'):
-                    #write the dates with a specific format to avoid them being casted as floats in the XLSX
-                    cell_name = cell['name']
-                    if not isinstance(cell_name, (float, datetime.date, datetime.datetime)):
-                        # Convert non-xlsx compatible dates
-                        cell_name = dateparser.parse(cell_name).date()                             #B+
-                        #B- cell_name = fields.Date.to_date(cell_name)
-                    sheet.write_datetime(y + y_offset, x + lines[y].get('colspan', 1) - 1, cell_name, date_default_style)
+                # write the first column, with a specific style to manage the indentation
+                cell_name = lines[y]['name']
+                if lines[y].get('reference') == 'REF':
+                    sheet.merge_range(y + y_offset, x_index, y + y_offset + 1, x_index, cell_name, style)
+                    x_index += 1
                 else:
-                    sheet.write(y + y_offset, x + lines[y].get('colspan', 1) - 1, cell.get('name', ''), style)
+                    sheet.write(y + y_offset, x_index, cell_name, style)
+                    x_index += 1
+
+                if lines[y].get('symbol') != 'none':
+                    loc_style = copy.copy(style)
+                    loc_style.set_align('center')
+                    workbook.formats.append(loc_style)
+                    cell_name = lines[y].get('symbol')
+                    if lines[y].get('reference') == 'REF':
+                        sheet.merge_range(y + y_offset, x_index, y + y_offset + 1, x_index, cell_name, loc_style)
+                        x_index += 1
+                    else:
+                        sheet.write(y + y_offset, x_index, cell_name, loc_style)
+                        x_index += 1
+
+                if lines[y].get('note') != 'none' and lines[y].get('note') != None:
+                    loc_style = copy.copy(style)
+                    loc_style.set_align('center')
+                    workbook.formats.append(loc_style)
+                    cell_name = lines[y].get('note')
+                    if lines[y].get('reference') == 'REF':
+                        sheet.merge_range(y + y_offset, x_index, y + y_offset + 1, x_index, cell_name, loc_style)
+                        x_index += 1
+                    else:
+                        sheet.write(y + y_offset, x_index, cell_name, loc_style)
+                        x_index += 1
+
+                # write all the remaining cells
+                for x in range(1, len(lines[y]['columns']) + 1):
+                    cell = lines[y]['columns'][x - 1]
+                    if lines[y].get('reference') == 'REF' or lines[y].get('header') is True:
+                        if x == 1:
+                            net_x = x_index
+                        loc_style = copy.copy(style)
+                        loc_style.set_align('center')
+                        workbook.formats.append(loc_style)
+                        sheet.set_column(y + y_offset, x_index, 10)
+                    else:
+                        loc_style = copy.copy(style)
+                        loc_style.set_align('right')
+                        workbook.formats.append(loc_style)
+                    if lines[y].get('reference') == 'REF' and self.name == 'Balance Sheet - Assets' and x == 1\
+                            and options['comparison']['periods'] == []:
+                        cell_name = str()
+                        for i in cell.get('name', ''):
+                            cell_name += i
+                            cell_name += '\n'
+                        sheet.merge_range(y + y_offset, x_index, y + y_offset, x_index + 2, cell_name, loc_style)
+                        x_index += 1
+                    elif isinstance(cell.get('name', ''), list):
+                        cell_name = str()
+                        for i in cell.get('name', ''):
+                            cell_name += i
+                            cell_name += '\n'
+                        sheet.write(y + y_offset, x_index, cell_name, loc_style)
+                        x_index += 1
+                    else:
+                        sheet.write(y + y_offset, x_index, cell.get('name', ''), loc_style)
+                        x_index += 1
+        # make header above the table
+        header = {
+            'year': options['date']['date_from'][0:4],
+            'company': self.env.user.company_id.name,
+            'vat': self.env.user.company_id.vat,
+            'title': self.header and self.header + ' ' + options['date']['date_from'][0:4],
+        }
+        left_style = workbook.add_format(
+            {'align': 'left', 'font_name': 'NimbusSanL', 'font_size': 13, 'font_color': '#001E5A'})
+        right_style = workbook.add_format(
+            {'align': 'right', 'font_name': 'NimbusSanL', 'font_size': 13, 'font_color': '#001E5A'})
+        title_style = workbook.add_format(
+            {'align': 'center', 'font_name': 'NimbusSanL', 'font_size': 13, 'font_color': '#001E5A',
+             'bold': True, })
+        sheet.write(2, 1, 'Désignation Entité : ' + header['year'], left_style)
+        sheet.write(2, x_index - 1, 'Exercice clos le : ' + '31/12/' + header['year'], right_style)
+        sheet.write(3, 1, "Numéro d'identification : " + header['vat'], left_style)
+        sheet.write(3, x_index - 1, 'Durée (en mois) : 12', right_style)
+        sheet.merge_range(5, 1, 5, x_index - 1, header['title'], title_style)
+
+        #make double border
+        sheet.merge_range(6, 1, 6, x_index - 1, '', top_border)
+        sheet.merge_range(len(lines) + 7, 1, len(lines) + 7, x_index - 1, '', bottom_border)
+        sheet.merge_range(7, 0, len(lines) + 6, 0, '', left_border)
+        sheet.merge_range(7, x_index, len(lines) + 6, x_index, '', right_border)
+
+        sheet.hide_gridlines(2)
 
         workbook.close()
         output.seek(0)

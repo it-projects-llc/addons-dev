@@ -361,7 +361,7 @@
                 <t t-set="hierarchies_enabled" t-value="len(lines.get('columns_header', [])) > 1"/>
                 <t t-if="line.get('reference') == 'REF'">
                     <t t-if="report['name'] == 'Balance Sheet - Assets'">
-                        <td t-att-colspan="line.get('colspan0')" style="width:90px !important;text-align:center;" t-att-class="'o_account_report_line ' + (column.get('class', lines.get('columns_header')[-1][column_index+line.get('colspan', 1)].get('class', '')) + (line.get('unfoldable') and ' o_foldable_total' or '')) + ('' if hierarchies_enabled else ' o_account_report_line_indent')">
+                        <td t-att-colspan="line.get('colspan0')" style="width:90px !important;text-align:center;padding:10px;" t-att-class="'o_account_report_line ' + (column.get('class', lines.get('columns_header')[-1][column_index+line.get('colspan', 1)].get('class', '')) + (line.get('unfoldable') and ' o_foldable_total' or '')) + ('' if hierarchies_enabled else ' o_account_report_line_indent')">
                             <t t-foreach="column.get('name')" t-as="name">
                                 <span style="margin:auto;padding:15px;" class="o_account_report_column_value" t-att-title="column.get('title')">
                                     <t t-esc="name"/>
@@ -371,7 +371,7 @@
                         </td>
                     </t>
                     <t t-else="">
-                        <td style="width:90px !important;text-align:center;" t-att-class="'o_account_report_line ' + (column.get('class', lines.get('columns_header')[-1][column_index+line.get('colspan', 1)].get('class', '')) + (line.get('unfoldable') and ' o_foldable_total' or '')) + ('' if hierarchies_enabled else ' o_account_report_line_indent')">
+                        <td style="width:90px !important;text-align:center;padding:10px;" t-att-class="'o_account_report_line ' + (column.get('class', lines.get('columns_header')[-1][column_index+line.get('colspan', 1)].get('class', '')) + (line.get('unfoldable') and ' o_foldable_total' or '')) + ('' if hierarchies_enabled else ' o_account_report_line_indent')">
                             <t t-foreach="column.get('name')" t-as="name">
                                 <span style="margin:auto;padding:15px;" class="o_account_report_column_value" t-att-title="column.get('title')">
                                     <t t-esc="name"/>
@@ -381,12 +381,21 @@
                         </td>
                     </t>
                 </t>
-                <t t-else="column.get('name')">
-                    <td t-att-class="'o_account_report_line ' + (column.get('class', lines.get('columns_header')[-1][column_index+line.get('colspan', 1)].get('class', '')) + (line.get('unfoldable') and ' ' or '')) + ('' if hierarchies_enabled else ' o_account_report_line_indent')" t-att-style="column.get('style', lines.get('columns_header')[-1][column_index+line.get('colspan', 1)].get('style', ''))">
-                        <span class="o_account_report_column_value" t-att-title="column.get('title')">
-                            <t t-esc="column.get('name')"/>
-                        </span>
-                    </td>
+                <t t-else="">
+                    <t t-if="line.get('header') == true">
+                        <td t-att-class="'o_account_report_line ' + (column.get('class', lines.get('columns_header')[-1][column_index+line.get('colspan', 1)].get('class', '')) + (line.get('unfoldable') and ' ' or '')) + ('' if hierarchies_enabled else ' o_account_report_line_indent')" style="text-align:center;">
+                            <span class="o_account_report_column_value" style="margin:auto;padding:10px;" t-att-title="column.get('title')">
+                                <t t-esc="column.get('name')"/>
+                            </span>
+                        </td>
+                    </t>
+                    <t t-else="">
+                        <td t-att-class="'o_account_report_line ' + (column.get('class', lines.get('columns_header')[-1][column_index+line.get('colspan', 1)].get('class', '')) + (line.get('unfoldable') and ' ' or '')) + ('' if hierarchies_enabled else ' o_account_report_line_indent')" t-att-style="column.get('style', lines.get('columns_header')[-1][column_index+line.get('colspan', 1)].get('style', ''))">
+                            <span class="o_account_report_column_value" t-att-title="column.get('title')">
+                                <t t-esc="column.get('name')"/>
+                            </span>
+                        </td>
+                    </t>
                 </t>
                 <t t-set="column_index" t-value="column_index + 1"/>
             </t>
@@ -429,7 +438,7 @@
 
 <template id="main_template">
     <div class='o_account_reports_body'>
-        <div class="container o_account_reports_page o_account_reports_no_print">
+        <div class="container o_account_reports_page o_account_reports_no_print" style="padding-top:0px;padding-bottom:0px;">
             <div class="alert alert-info text-center no_print" t-if="not options.get('all_entries') and options.get('unposted_in_period')">
                 <span>There are <a action="open_unposted_moves">unposted Journal Entries</a> prior or included in this period.</span>
                 <br/>
@@ -612,26 +621,13 @@
 <template id="internal_layout_ohada">
     <t t-if="not o" t-set="o" t-value="doc"/>
 
-    <t t-if="not company">
-        <!-- Multicompany -->
-        <t t-if="company_id">
-            <t t-set="company" t-value="company_id" style="color:#001E5A;font-family:NimbusSanL-Regu;"/>
-        </t>
-        <t t-elif="o and 'company_id' in o">
-            <t t-set="company" t-value="o.company_id.sudo()" style="color:#001E5A;font-family:NimbusSanL-Regu;"/>
-        </t>
-        <t t-else="else">
-            <t t-set="company" t-value="res_company" style="color:#001E5A;font-family:NimbusSanL-Regu;"/>
-        </t>
-    </t>
-
-    <div class="header" style="color:#001E5A;font-family:NimbusSanL-Regu;">
+    <div style="color:#001E5A;font-family:NimbusSanL-Regu;margin-bottom:0px;">
         <div class="row">
             <div class="col-3">
-                <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/>
+
             </div>
             <div class="col-2 offset-2 text-center">
-                <span t-esc="company.name"/>
+
             </div>
             <div class="col-2 offset-3 text-right">
                 <ul class="list-inline">
@@ -641,9 +637,6 @@
                 </ul>
             </div>
         </div>
-    </div>
-    <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
-      <t t-raw="0"/>
     </div>
 </template>
 </data>

@@ -572,7 +572,7 @@ class OhadaFinancialReportLine(models.Model):
     displayed_sign = fields.Char(string="Displayed Sign", size=3)
     hidden_line = fields.Boolean(default=False)
     symbol = fields.Char(string="Symbol", default='none')
-    header = fields.Char(string="Header", default=None)
+    header = fields.Boolean(default=False)
     letter = fields.Char(string="letter", default=None)
 
     _sql_constraints = [
@@ -1332,6 +1332,7 @@ class OhadaFinancialReportLine(models.Model):
                 'unfolded': line.id in options.get('unfolded_lines', []) or line.show_domain == 'always',
                 'page_break': line.print_on_new_page,
                 'letter': line.letter,
+                'header': line.header,
             }
             # wdb.set_trace()
             if financial_report.tax_report and line.domain and not line.action_id:
@@ -1375,10 +1376,8 @@ class OhadaFinancialReportLine(models.Model):
                     vals['columns'] = [line._format(v) for v in vals['columns']]
                 if not line.formulas:
                     vals['columns'] = [{'name': ''} for k in vals['columns']]
-
+            # wdb.set_trace()
             if line.reference == 'REF':
-                # wdb.set_trace()
-                # line.header = line.header.split(',')
                 vals['columns'][0]['name'] = ['EXERPRICE', 'au 31/12/' + line._context['date_from'][0:4]]
                 if len(vals['columns']) > 1 and line._context.get('periods') != None \
                         and options['comparison']['filter'] == 'no_comparison' or len(options['comparison']['periods']) > 1:
@@ -1389,8 +1388,20 @@ class OhadaFinancialReportLine(models.Model):
                         vals['columns'][i+1]['name'] = ['EXERPRICE', 'au 31/12/' + line._context['periods'][i]['string']]
                 if financial_report.name == 'Balance Sheet - Assets' and options['comparison']['periods'] == []:
                     vals['columns'] = []
-                    vals['columns'].append({'name': ['EXERPRICE', 'au 31/12/2019']})
+                    vals['columns'].append({'name': ['EXERPRICE', 'au 31/12/' + line._context['date_from'][0:4]]})
                     vals['colspan0'] = 3
+            elif line.header == True and financial_report.type == 'note':
+                vals['columns'][0]['name'] = 'ANNEE ' + line._context['date_from'][0:4]
+                if len(vals['columns']) > 1 and line._context.get('periods') != None \
+                        and options['comparison']['filter'] == 'no_comparison' or len(
+                    options['comparison']['periods']) > 1:
+                    for i in range(len(vals['columns'][1:])):
+                        vals['columns'][i + 1]['name'] = 'ANNEE ' + line._context['periods'][i]['string']
+                    vals['columns'][- 1]['name'] = 'Variation en %'
+                elif len(vals['columns']) > 1 and line._context.get('periods') != None:
+                    for i in range(len(vals['columns'][1:]) - 1):
+                        vals['columns'][i + 1]['name'] = 'ANNEE ' + line._context['periods'][i]['string']
+                    vals['columns'][- 1]['name'] = 'Variation en %'
 
             if len(lines) == 1:
                 new_lines = line.children_ids._get_lines(financial_report, currency_table, options, linesDicts)
@@ -1400,7 +1411,7 @@ class OhadaFinancialReportLine(models.Model):
                     result = lines + new_lines
             else:
                 result = lines
-            # wdb.set_trace()
+
             if result[0]['note'] == 'NET':
                 if financial_report.name == 'Balance Sheet - Assets' and options['comparison']['periods'] == []:
                     result[0]['columns'][0]['name'] = 'BRUT'
