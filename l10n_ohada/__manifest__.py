@@ -6,7 +6,7 @@
 {
     'name': 'OHADA - Accounting',
     'summary': 'Chart of accounts & chart of taxes',
-    'category': 'Accounting',
+    'category': 'Localization',
     'author' : 'ERGOBIT',
     'description': """
 Accounting Chart for OHADA
