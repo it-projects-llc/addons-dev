@@ -22,19 +22,45 @@ class Game(models.Model):
     uncovered_cards = fields.Integer(default=0)
 
     @api.model
-    def create_the_game(self, game_name, uid):
-        temp_game = self.search([('name', '=', game_name)])
+    def create_the_game(self, uid):
         pos_id = self.env['pos.session'].search([('user_id', '=', uid)])[0].id
         # If game didn't created, then create
-        if len(temp_game) == 0:
+        cnt = len(self.search([]))
+        # Save new or found game name in 'empty_game_name', means we direct new player right there
+        empty_game_name = ''
+        # We need to check, if it's not new game, because users on fron side doesnt know new game name to catch response
+        created_new_game = False
+        # If there's no any game
+        if cnt == 0:
             try:
-                self.create({'name': game_name, 'id': len(self.search([]))})
+                self.create({'name': 'pos_durak_' + str(cnt), 'id': str(cnt)})
             except Exception:
-                _logger.error('Game creation error!!! Game num is -' + str(len(self)))
+                _logger.error('Game creation error!!! Game num is -' + str(cnt))
+            empty_game_name = 'pos_durak_' + str(cnt)
+            created_new_game = True
+        else:
+            temp_cnt = 0
+            # Searching for empty slot in any game
+            for game in self.search([]):
+                if game.trump != -1:
+                    temp_cnt += 1
+                else:
+                    empty_game_name = game.name
+                    break
 
-        temp_game = self.search([('name', '=', game_name)])
-        data = {'command': 'my_game_id', 'id': temp_game.id}
-        channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, pos_id, game_name)
+            # If all slots are busy, new user creates new game and goes right there
+            if temp_cnt == cnt:
+                try:
+                    self.create({'name': 'pos_durak_' + str(cnt), 'id': str(cnt)})
+                except Exception:
+                    _logger.error('Game creation error!!! Game num is -' + str(cnt))
+                empty_game_name = 'pos_durak_' + str(cnt)
+                created_new_game = True
+
+        temp_game = self.search([('name', '=', empty_game_name)])
+        data = {'command': 'my_game_id', 'id': temp_game.id, 'name': temp_game.name}
+        # If game just created, user on front doesn't know games name, therefore send 'pos_durak' to him(default name)
+        channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, pos_id, "pos_durak")
         self.env['bus.bus'].sendmany([[channel, data]])
         # temp_game.Ping(temp_game.id)
         return 1
@@ -71,18 +97,14 @@ class Game(models.Model):
         cur_game = self.search([('id', '=', game_id)])
         new_num = len(cur_game.players)
         new_pos_id = self.env['pos.session'].search([('user_id', '=', uid)])[0].id
-        if cur_game.trump != -1:
-            data = {'command': 'Game_started'}
-            channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
-                                                                          new_pos_id, cur_game.name)
-            return 1
+
         # Sending new player's data to all players
         data = {'name': name, 'uid': uid, 'num': new_num, 'command': 'Connect'}
         self.env['pos.config'].send_to_all_poses(cur_game.name, data)
         # Sending old players data to the new player
         try:
             for user in cur_game.players:
-                data = {'name': user.name, 'uid': user.uid, 'num': user.num, 'command': 'Connect'}
+                data = {'name': user.name, 'uid': user.uid, 'num': user.num, 'ready': user.ready, 'command': 'Connect'}
                 channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
                                                                               new_pos_id, cur_game.name)
                 self.env['bus.bus'].sendmany([[channel, data]])
@@ -102,7 +124,7 @@ class Game(models.Model):
     def player_is_ready(self, game_id, uid):
         cur_game = self.search([('id', '=', game_id)])
         try:
-            cur_game.players.search([('uid', '=', uid)]).write({'ready': True})
+            cur_game.players.search([('uid', '=', uid), ('game.id', '=', cur_game.id)]).write({'ready': True})
         except Exception:
             _logger.error('Error in player_is_ready method!!! (Model - game)')
 
@@ -133,13 +155,14 @@ class Game(models.Model):
         cards_cnt = 0
         all_cards_cnt = 0
         cur_game.player_is_ready(cur_game.id,
-                                 cur_game.players.search([('num', '=', 0)]).uid)
-        player = cur_game.players.search([('ready', '=', True)])
+                                 cur_game.players.search([('num', '=', 0), ('game.id', '=', cur_game.id)]).uid)
+        player = cur_game.players.search([('ready', '=', True), ('game.id', '=', cur_game.id)])
         player[0].write({'stepping': True})
         try:
+            temp_seq = []
             for num in seq:
-                player[i].add_new_card(player[i].uid, num)
-                seq.remove(num)
+                player[i].add_new_card(player[i], num)
+                temp_seq.append(num)
                 cards_cnt += 1
                 all_cards_cnt += 1
                 if cards_cnt == cards_limit:
@@ -147,6 +170,10 @@ class Game(models.Model):
                     i += 1
                 if len(player) == i:
                     break
+            
+            cur_game.write({'trump': player[0].cards[0].suit})
+            for num in temp_seq:
+                seq.remove(num)
         except Exception:
             _logger.error('Cards distribution error!!!\n')
 
@@ -154,7 +181,6 @@ class Game(models.Model):
             for num in seq:
                 card = cur_game.extra_cards.card_power(num)
                 cur_game.extra_cards += cur_game.extra_cards.create({'power': card[0], 'suit': card[1], 'num': num, 'in_game': True})
-            cur_game.write({'trump': cur_game.extra_cards[0].suit})
             self.env['pos.config'].send_to_all_poses(cur_game.name, {'command': 'Trump',
                                                                      'trump': cur_game.trump})
         except Exception:
@@ -167,7 +193,7 @@ class Game(models.Model):
             _logger.error('Cards sending error!!!')
 
         try:
-            for player in cur_game.players.search([('ready', '=', False)]):
+            for player in cur_game.players.search([('ready', '=', False), ('game.id', '=', cur_game.id)]):
                 cur_game.delete_player(cur_game.id, player.uid)
         except Exception:
             _logger.error("Can't delete not ready players!!!(start_the_game)")
@@ -178,6 +204,9 @@ class Game(models.Model):
     def delete_player(self, game_id, uid):
         cur_game = self.search([('id', '=', game_id)])
         try:
+            deleting_user = cur_game.players.search([('uid', '=', uid), ('game.id', '=', cur_game.id)])
+            if len(deleting_user) == 0:
+                return 1
             for user in cur_game.players:
                 data = {'uid': uid, 'command': 'Disconnect'}
                 channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
@@ -187,16 +216,17 @@ class Game(models.Model):
             _logger.error('Player disconnected notification error!!!(delete_player)')
 
         try:
-            deleting_user = cur_game.players.search([('uid', '=', uid)])
             if deleting_user.num == cur_game.who_steps and len(cur_game.players) > 1:
                 cur_game.who_should_step(game_id)
         except Exception:
             _logger.error("Users num's finding error!!!(delete_player)")
-
-        for user in cur_game.players:
-            if user.num > deleting_user[0].num:
-                user.write({'num': user.num - 1})
-
+        try:
+            for user in cur_game.players:
+                if user.num > deleting_user[0].num:
+                    user.write({'num': user.num - 1})
+        except Exception:
+            _logger.error("You trying to delete not existing user, its because of last users didn't press BACK button")
+            return 1
         try:
             deleting_user.unlink()
         except Exception:
@@ -205,7 +235,7 @@ class Game(models.Model):
         try:
             # next time change self.unlink() -> cur_game.unlink()
             if len(cur_game.players) == 0:
-                self.search([]).unlink()
+                cur_game.unlink()
         except Exception:
             _logger.error("Game session deleting error!!!")
         return 1
@@ -246,8 +276,9 @@ class Game(models.Model):
             return 1
         try:
             cur_game = self.search([('id', '=', game_id)])
-            stepper = cur_game.players.search([('uid', '=', uid)])
-            card = stepper.cards.search([('num', '=', card_num)])[0]
+            _logger.info("Uncovered cards before = " + str(cur_game.uncovered_cards))
+            stepper = cur_game.players.search([('uid', '=', uid), ('game.id', '=', cur_game.id)])
+            card = stepper.cards.search([('num', '=', card_num), ('cards_holder.uid', '=', stepper.uid)])
         except Exception:
             _logger.error('Make_step error!')
         # Making card able to cover
@@ -271,6 +302,7 @@ class Game(models.Model):
                 self.env['bus.bus'].sendmany([[channel, data]])
             cur_game.on_table_cards += cur_game.on_table_cards.create({'power': card.power, 'suit': card.suit, 'num': card.num, 'in_game': True, 'able_to_cover': card.able_to_cover})
             stepper.cards -= card
+        _logger.info("Uncovered cards before = " + str(cur_game.uncovered_cards))
         return 1
 
     @api.model
@@ -299,21 +331,22 @@ class Game(models.Model):
     def defence(self, game_id, uid, card1, card2):
         try:
             cur_game = self.search([('id', '=', game_id)])
-            defender = cur_game.players.search([('uid', '=', uid)])
-            card = defender.cards.search([('num', '=', card1)])[0]
+            _logger.info("Uncovered cards before = " + str(cur_game.uncovered_cards))
+            defender = cur_game.players.search([('uid', '=', uid), ('game.id', '=', cur_game.id)])
+            card = defender.cards.search([('num', '=', card1), ('cards_holder.uid', '=', defender.uid)])[0]
 
             cur_game.on_table_cards += cur_game.on_table_cards.create({'power': card.power, 'suit': card.suit, 'num': card.num, 'in_game': True, 'able_to_cover': card.able_to_cover})
             defender.cards -= card
-            first = cur_game.on_table_cards.search([('num', '=', card1)])[0]
-            second = cur_game.on_table_cards.search([('num', '=', card2)])[0]
+            first = cur_game.on_table_cards.search([('num', '=', card1), ('on_table_cards.id', '=', cur_game.id)])[0]
+            second = cur_game.on_table_cards.search([('num', '=', card2), ('on_table_cards.id', '=', cur_game.id)])[0]
         except Exception:
             _logger.error("Defence var's initialization error!")
         try:
             # If chosen can cover second card
             if cur_game.can_first_card_beat_second(cur_game, first, second):
                 data = {'uid': uid, 'winner': card1, 'loser': card2, 'can_beat': True, 'command': 'Defence'}
-                cur_game.on_table_cards.search([('num', '=', second.num)]).write({'able_to_cover': False})
-                cur_game.write({'uncovered_cards': cur_game.uncovered_cards - 1})
+                cur_game.on_table_cards.search([('num', '=', second.num), ('on_table_cards.id', '=', cur_game.id)]).write({'able_to_cover': False})
+                cur_game.write({'uncovered_cards': (cur_game.uncovered_cards - 1)})
             else:
                 data = {'uid': uid, 'can_beat': False, 'command': 'Defence'}
 
@@ -322,16 +355,17 @@ class Game(models.Model):
                 self.env['bus.bus'].sendmany([[channel, data]])
         except Exception:
             _logger.error('defence error!')
+        _logger.info("Uncovered cards before = " + str(cur_game.uncovered_cards))
         return 1
 
     @api.model
     def next(self, game_id, num):
         cur_game = self.search([('id', '=', game_id)])
-        player = cur_game.players.search([('num', '=', num)])
+        player = cur_game.players.search([('num', '=', num), ('game.id', '=', cur_game.id)])
         if player.num < len(cur_game.players) - 1:
-            return cur_game.players.search([('num', '=', player.num + 1)]).num
+            return cur_game.players.search([('num', '=', player.num + 1), ('game.id', '=', cur_game.id)]).num
         else:
-            return cur_game.players.search([('num', '=', 0)]).num
+            return cur_game.players.search([('num', '=', 0), ('game.id', '=', cur_game.id)]).num
 
     @api.model
     def new_cards(self, game_id):
@@ -345,7 +379,7 @@ class Game(models.Model):
                     tooked_cards = True
                     if len(cur_game.extra_cards) == 0:
                         break
-                    player.add_new_card(player.uid, cur_game.extra_cards[extra_cards_length - 1].num)
+                    player.add_new_card(player, cur_game.extra_cards[extra_cards_length - 1].num)
                     cur_game.extra_cards[extra_cards_length - 1].unlink()
                     extra_cards_length -= 1
                 if tooked_cards:
@@ -372,7 +406,7 @@ class Game(models.Model):
         if len(cur_game.on_table_cards) == 0 or cur_game.uncovered_cards > 0:
             return 1
 
-        cur_game.players.search([('uid', '=', uid)])[0].completed_move = True
+        cur_game.players.search([('uid', '=', uid), ('game.id', '=', cur_game.id)])[0].completed_move = True
         temp_cnt = 0
         for player in cur_game.players:
             if player.completed_move:
@@ -390,14 +424,14 @@ class Game(models.Model):
     @api.model
     def defender_took_cards(self, game_id, uid):
         cur_game = self.search([('id', '=', game_id)])
-        player = cur_game.players.search([('uid', '=', uid)])
+        player = cur_game.players.search([('uid', '=', uid), ('game.id', '=', cur_game.id)])
         for card in cur_game.on_table_cards:
             player.cards += player.cards.create({'power': card.power, 'suit': card.suit, 'num': card.num, 'in_game': True})
 
         cur_game.new_cards(game_id)
         # Sending cards to defender
         defman = cur_game.next(game_id, cur_game.who_steps)
-        defer = cur_game.players.search([('num', '=', defman)])
+        defer = cur_game.players.search([('num', '=', defman), ('game.id', '=', cur_game.id)])
         cur_game.send_cards(cur_game.name, defer)
         # Loser should skip his queue
         cur_game.who_steps = cur_game.next(game_id, cur_game.who_steps)
@@ -422,8 +456,8 @@ class Game(models.Model):
     @api.model
     def cards_number(self, game_id, uid, my_uid):
         cur_game = self.search([('id', '=', game_id)])
-        ask_player = cur_game.players.search([('uid', '=', uid)])
-        player = cur_game.players.search([('uid', '=', my_uid)])
+        ask_player = cur_game.players.search([('uid', '=', uid), ('game.id', '=', cur_game.id)])
+        player = cur_game.players.search([('uid', '=', my_uid), ('game.id', '=', cur_game.id)])
 
         data = {'uid': uid, 'number': len(ask_player.cards), 'command': 'HowMuchCards'}
         channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
@@ -434,8 +468,8 @@ class Game(models.Model):
     @api.model
     def which_cards_are_avaible_to_cover(self, game_id, uid, card):
         cur_game = self.search([('id', '=', game_id)])
-        player = cur_game.players.search([('uid', '=', uid)])
-        first = player.cards.search([('num', '=', card)])
+        player = cur_game.players.search([('uid', '=', uid), ('game.id', '=', cur_game.id)])
+        first = player.cards.search([('num', '=', card), ('cards_holder.uid', '=', player.uid)])
         temp_cards = []
         for tcard in cur_game.on_table_cards:
             if cur_game.can_first_card_beat_second(cur_game, first, tcard) and tcard.num != card:
@@ -468,8 +502,7 @@ class Player(models.Model):
     didnt_respond = fields.Integer(default=-1)
 
     @api.model
-    def add_new_card(self, uid, num):
-        player = self.search([('uid', '=', uid)])
+    def add_new_card(self, player, num):
         try:
             card = player.cards.card_power(num)
             player.cards += player.cards.create({'power': card[0], 'suit': card[1], 'num': num, 'in_game': True})
@@ -478,8 +511,7 @@ class Player(models.Model):
         return 1
 
     @api.model
-    def delete_card(self, uid, num):
-        player = self.search([('uid', '=', uid)])
+    def delete_card(self, player, num):
         try:
             card = player.cards.card_power(num)
             card.write({'in_game': False})

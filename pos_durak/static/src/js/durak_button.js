@@ -35,6 +35,7 @@ odoo.define('pos_chat_button', function (require){
     var my_game_id = -1;
     var i = 0;
     var potentialy_can_beat_cards = [];
+    var ready = false;
 
 //------------------------------------------------------
 
@@ -265,9 +266,6 @@ odoo.define('pos_chat_button', function (require){
         template: 'ChatButton',
         button_click: function (){
             self = this;
-            if(game_started){
-                return;
-            }
             this.gui.show_screen('custom_screen');
             // User in to the chat room
             in_chat = true;
@@ -277,7 +275,7 @@ odoo.define('pos_chat_button', function (require){
             self._rpc({
                 model: "game",
                 method: "create_the_game",
-                args: [channel, session.uid]
+                args: [session.uid]
             });
         }
     });
@@ -346,6 +344,7 @@ odoo.define('pos_chat_button', function (require){
         on_table_cards = [];
         trump = -1;
         who_moves = [-1,-1];
+        channel = "pos_durak";
         try {
             chat_users.forEach(function(item){
                 document.getElementById('picture-'+NumInQueue(item.uid)).style.setProperty('display', 'none');
@@ -402,7 +401,11 @@ function ShowUsers(){
         i = NumInQueue(item.uid);
         var str_uid = String(item.uid);
         out += '<div class="chat-user" id="picture-'+i+'">';
-        out += '<div class="user-name" id="user-name-'+str_uid+'">'+chat_users[i].name+'</div>';
+        if(item.ready){
+            out += '<div class="user-name" id="user-name-'+str_uid+'" style="background:green" >'+chat_users[i].name+'</div>';
+        }else{
+            out += '<div class="user-name" id="user-name-'+str_uid+'">'+chat_users[i].name+'</div>';
+        }
         out += '<img src="/web/image/res.users/' +
         item.uid + '/image_small" id="ava-' + i +'" class="avatar" style="border-radius:50%;margin-left:20%;"/>';
         out += '<div id="count-cards-'+String(item.uid)+'" style="margin-left: 10%;"></div>';
@@ -510,8 +513,10 @@ function SetPos(avatar, uid){
         catch(e){
             Tip('Game cards deletion error!', 3000);
         }
-
-        buttons_opacity(0);
+        if(game_started){
+            buttons_opacity(0);
+        }
+        
         try{
             for(i = 0; i < chat_users.length; i++){
                 document.getElementById('picture-'+i).style.setProperty('opacity', '1');
@@ -667,7 +672,10 @@ function SetPos(avatar, uid){
     function AddNewUser(user_data){
         i = 0;
         // If user connected too late
-        if(game_started) return;
+        if(game_started){
+            ShowUsers();
+            return;
+        }
 
         if(chat_users.length === 0){
             chat_users = new Array(user_data.num + 1);
@@ -676,7 +684,8 @@ function SetPos(avatar, uid){
                     name : '',
                     uid : -1,
                     msg_cnt: 0,
-                    cards : []
+                    cards : [],
+                    ready: false
                 });
             }
         }
@@ -686,7 +695,8 @@ function SetPos(avatar, uid){
                 name : user_data.name,
                 uid : user_data.uid,
                 msg_cnt: 0,
-                cards : []
+                cards : [],
+                ready: user_data.ready
             });
         }
         else{
@@ -694,7 +704,8 @@ function SetPos(avatar, uid){
                 name : user_data.name,
                 uid : user_data.uid,
                 msg_cnt: 0,
-                cards : []
+                cards : [],
+                ready: user_data.ready
             });
         }
 
@@ -854,12 +865,18 @@ function SetPos(avatar, uid){
                 Cover(winner, temp_x, temp_y);
                 Show_all_cards();
             }else if(data.command === 'my_game_id'){
+                if(channel !== "pos_durak" || game_started === true){
+                    return;
+                }
                 my_game_id = data.id;
+                channel = data.name;
+                self.bus.add_channel_callback(channel, self.catch_response, self);
                 // When game id is recieved, then adding new user
                 CreatePlayer();
             }else if(data.command === 'ready'){
                 var sign = document.getElementById('user-name-'+String(data.uid));
                 sign.style.setProperty('background', 'green');
+                chat_users[NumInQueue(data.uid)].ready = true;
             }else if(data.command === 'Who_steps'){
                 for(i = 0; i < chat_users.length; i++){
                     if(data.first !== i){
@@ -875,13 +892,12 @@ function SetPos(avatar, uid){
 
                 who_moves = [data.first, data.second];
             }else if(data.command === 'Won'){
-                DeleteUser(data.uid);
+                showMessage(next_to(data.uid, false), 'win');
                 for(i = 0; i < chat_users.length; i++){
                     SetPos(document.getElementById('picture-'+String(i)), chat_users[i].uid);
                 }
                 if(session.uid === data.uid){
                     Tip('You won!', 3000);
-                    showMessage(data.uid, 'won');
                 }
             }else if(data.command === 'GAME_PING'){
                 Tip('Catch Ping', 2000);
