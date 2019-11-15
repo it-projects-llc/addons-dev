@@ -28,8 +28,6 @@ class Game(models.Model):
         cnt = len(self.search([]))
         # Save new or found game name in 'empty_game_name', means we direct new player right there
         empty_game_name = ''
-        # We need to check, if it's not new game, because users on fron side doesnt know new game name to catch response
-        created_new_game = False
         # If there's no any game
         if cnt == 0:
             try:
@@ -37,7 +35,6 @@ class Game(models.Model):
             except Exception:
                 _logger.error('Game creation error!!! Game num is -' + str(cnt))
             empty_game_name = 'pos_durak_' + str(cnt)
-            created_new_game = True
         else:
             temp_cnt = 0
             # Searching for empty slot in any game
@@ -55,7 +52,6 @@ class Game(models.Model):
                 except Exception:
                     _logger.error('Game creation error!!! Game num is -' + str(cnt))
                 empty_game_name = 'pos_durak_' + str(cnt)
-                created_new_game = True
 
         temp_game = self.search([('name', '=', empty_game_name)])
         data = {'command': 'my_game_id', 'id': temp_game.id, 'name': temp_game.name}
@@ -170,7 +166,7 @@ class Game(models.Model):
                     i += 1
                 if len(player) == i:
                     break
-            
+
             cur_game.write({'trump': player[0].cards[0].suit})
             for num in temp_seq:
                 seq.remove(num)

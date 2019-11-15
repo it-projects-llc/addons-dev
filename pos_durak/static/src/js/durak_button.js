@@ -516,7 +516,7 @@ function SetPos(avatar, uid){
         if(game_started){
             buttons_opacity(0);
         }
-        
+
         try{
             for(i = 0; i < chat_users.length; i++){
                 document.getElementById('picture-'+i).style.setProperty('opacity', '1');
