@@ -655,8 +655,7 @@ function SetPos(avatar, uid){
         if(message === 'sorry'){
             time = 2000;
             audio_mes = '<audio src="/pos_durak/static/src/sound/shit.wav" autoplay="true"></audio>';
-        }
-        else if(message === 'welcome'){
+        }else if(message === 'welcome'){
             time = 2000;
             audio_mes = '<audio src="/pos_durak/static/src/sound/welcome.wav" autoplay="true"></audio>';
         }
