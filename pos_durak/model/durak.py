@@ -191,9 +191,7 @@ class Game(models.Model):
             deleting_user = cur_game.players.search([('uid', '=', uid), ('game.id', '=', cur_game.id)])
             if len(deleting_user) == 0:
                 return 1
-            
-            import wdb
-            wdb.set_trace()
+
             for user in cur_game.players:
                 data = {'uid': uid, 'command': 'Disconnect'}
                 channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
