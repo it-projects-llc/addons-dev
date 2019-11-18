@@ -268,6 +268,7 @@ class ReportOhadaFinancialReport(models.Model):
         return column_hierarchy
 
     def _get_columns_name(self, options):
+        # wdb.set_trace()
         columns = [{'name': ''}]
         if self.debit_credit and not options.get('comparison', {}).get('periods', False):
             columns += [{'name': _('Debit'), 'class': 'number'}, {'name': _('Credit'), 'class': 'number'}]
@@ -1281,6 +1282,7 @@ class OhadaFinancialReportLine(models.Model):
                 1) add fields reference and note in the lines
                 2) hide balance sheet lines for gross and depreciation values using field hidden_line
         '''
+        # wdb.set_trace()
         final_result_table = []
         comparison_table = [options.get('date')]
         comparison_table += options.get('comparison') and options['comparison'].get('periods', []) or []
@@ -1290,6 +1292,9 @@ class OhadaFinancialReportLine(models.Model):
         for line in self:
             res = []
             debit_credit = len(comparison_table) == 1
+            # wdb.set_trace()
+            if financial_report.name == 'Balance Sheet - Assets' and options['comparison']['filter'] == 'no_comparison':
+                debit_credit = len(comparison_table) == 2
             domain_ids = {'line'}
             k = 0
             for period in comparison_table:
@@ -1363,10 +1368,10 @@ class OhadaFinancialReportLine(models.Model):
                     if line.financial_report_id.name == 'Aged Receivable':
                         vals['trust'] = self.env['res.partner'].browse([domain_id]).trust
                     lines.append(vals)
-
+            # wdb.set_trace()
             for vals in lines:
                 if len(comparison_table) == 2 and options['comparison']['filter'] == 'no_comparison':
-                    for i in [0, 1]:
+                    for i in range(len(vals['columns'])):
                         vals['columns'][i] = line._format(vals['columns'][i])
                 elif len(comparison_table) == 2 and not options.get('groups'):
                     vals['columns'].append(line._build_cmp(vals['columns'][0]['name'], vals['columns'][1]['name']))
@@ -1376,20 +1381,22 @@ class OhadaFinancialReportLine(models.Model):
                     vals['columns'] = [line._format(v) for v in vals['columns']]
                 if not line.formulas:
                     vals['columns'] = [{'name': ''} for k in vals['columns']]
-            # wdb.set_trace()
+
             if line.reference == 'REF':
                 vals['columns'][0]['name'] = ['EXERPRICE', 'au 31/12/' + line._context['date_from'][0:4]]
-                if len(vals['columns']) > 1 and line._context.get('periods') != None \
+                if financial_report.name == 'Balance Sheet - Assets' and options['comparison']['filter'] == 'no_comparison':
+                    vals['columns'][1]['name'] = ['EXERPRICE', 'au 31/12/' + line._context['periods'][0]['string']]
+                    del vals['columns'][3]
+                    del vals['columns'][2]
+                    vals['colspan0'] = 3
+                elif len(vals['columns']) > 1 and line._context.get('periods') != None \
                         and options['comparison']['filter'] == 'no_comparison' or len(options['comparison']['periods']) > 1:
                     for i in range(len(vals['columns'][1:])):
                         vals['columns'][i+1]['name'] = ['EXERPRICE', 'au 31/12/' + line._context['periods'][i]['string']]
                 elif len(vals['columns']) > 1 and line._context.get('periods') != None:
                     for i in range(len(vals['columns'][1:])-1):
                         vals['columns'][i+1]['name'] = ['EXERPRICE', 'au 31/12/' + line._context['periods'][i]['string']]
-                if financial_report.name == 'Balance Sheet - Assets' and options['comparison']['periods'] == []:
-                    vals['columns'] = []
-                    vals['columns'].append({'name': ['EXERPRICE', 'au 31/12/' + line._context['date_from'][0:4]]})
-                    vals['colspan0'] = 3
+
             elif line.header == True and financial_report.type == 'note':
                 vals['columns'][0]['name'] = 'ANNEE ' + line._context['date_from'][0:4]
                 if len(vals['columns']) > 1 and line._context.get('periods') != None \
@@ -1411,12 +1418,12 @@ class OhadaFinancialReportLine(models.Model):
                     result = lines + new_lines
             else:
                 result = lines
-
             if result[0]['note'] == 'NET':
-                if financial_report.name == 'Balance Sheet - Assets' and options['comparison']['periods'] == []:
+                if financial_report.name == 'Balance Sheet - Assets' and options['comparison']['filter'] == 'no_comparison':
                     result[0]['columns'][0]['name'] = 'BRUT'
                     result[0]['columns'][1]['name'] = 'AMORT. ET DEPREC.'
                     result[0]['columns'][2]['name'] = 'NET'
+                    result[0]['columns'][3]['name'] = 'NET'
                 elif len(result[0]['columns']) > 1 and options['comparison']['filter'] == 'no_comparison' or \
                         len(options['comparison']['periods']) > 1:
                     for i in range(len(result[0]['columns'])):

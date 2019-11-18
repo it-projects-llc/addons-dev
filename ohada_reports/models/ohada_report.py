@@ -658,6 +658,7 @@ class OhadaReport(models.AbstractModel):
         otherwise it uses the main_template. Reason is for efficiency, when unfolding a line in the report
         we don't want to reload all lines, just get the one we unfolded.
         '''
+        # wdb.set_trace()
         # Check the security before updating the context to make sure the options are safe.
         self._check_report_security(options)
 
@@ -680,17 +681,17 @@ class OhadaReport(models.AbstractModel):
             lines = self._create_hierarchy(lines)
 
         footnotes_to_render = []
-        if self.env.context.get('print_mode', False):
-            # we are in print mode, so compute footnote number and include them in lines values, otherwise, let the js compute the number correctly as
-            # we don't know all the visible lines.
-            footnotes = dict([(str(f.line), f) for f in report_manager.footnotes_ids])
-            number = 0
-            for line in lines:
-                f = footnotes.get(str(line.get('id')))
-                if f:
-                    number += 1
-                    line['footnote'] = str(number)
-                    footnotes_to_render.append({'id': f.id, 'number': number, 'text': f.text})
+        # if self.env.context.get('print_mode', False):
+        #     # we are in print mode, so compute footnote number and include them in lines values, otherwise, let the js compute the number correctly as
+        #     # we don't know all the visible lines.
+        #     footnotes = dict([(str(f.line), f) for f in report_manager.footnotes_ids])
+        #     number = 0
+        #     for line in lines:
+        #         f = footnotes.get(str(line.get('id')))
+        #         if f:
+        #             number += 1
+        #             line['footnote'] = str(number)
+        #             footnotes_to_render.append({'id': f.id, 'number': number, 'text': f.text})
 
         rcontext = {'report': report,
                     'lines': {'columns_header': self.get_header(options), 'lines': lines},
@@ -698,6 +699,7 @@ class OhadaReport(models.AbstractModel):
                     'context': self.env.context,
                     'model': self,
                 }
+        # wdb.set_trace()
         if additional_context and type(additional_context) == dict:
             rcontext.update(additional_context)
         if self.env.context.get('analytic_account_ids'):
@@ -712,11 +714,11 @@ class OhadaReport(models.AbstractModel):
             render_template,
             values=dict(rcontext),
         )
-        if self.env.context.get('print_mode', False):
-            for k,v in self._replace_class().items():
-                html = html.replace(k, v)
-            # append footnote as well
-            html = html.replace(b'<div class="js_account_report_footnotes"></div>', self.get_html_footnotes(footnotes_to_render))
+        # if self.env.context.get('print_mode', False):
+        #     for k,v in self._replace_class().items():
+        #         html = html.replace(k, v)
+        #     # append footnote as well
+        #     html = html.replace(b'<div class="js_account_report_footnotes"></div>', self.get_html_footnotes(footnotes_to_render))
         return html
 
     @api.multi
@@ -979,15 +981,22 @@ class OhadaReport(models.AbstractModel):
         # wdb.set_trace()
         if cmp_filter == 'no_comparison':
             if self.name == 'Balance Sheet - Assets':
+                periods = []
+                number_period = 1
+                for index in range(0, number_period):
+                    if cmp_filter == 'previous_period':
+                        period_vals = self._get_dates_previous_period(options, period_vals)
+                    else:
+                        period_vals = self._get_dates_previous_year(options, period_vals)
+                    periods.append(create_vals(period_vals))
+
+                if len(periods) > 0:
+                    options['comparison'].update(periods[-1])
+                options['comparison']['periods'] = periods
+                options['comparison']['filter'] = 'no_comparison'
                 options['comparison']['string'] = _('No comparison')
-                options['comparison']['periods'] = []
-                if self.has_single_date_filter(options):
-                    options['comparison']['date'] = ""
-                else:
-                    options['comparison']['date_from'] = ""
-                    options['comparison']['date_to'] = ""
                 return
-            elif self.type == 'note':
+            if self.type == 'note':
                 periods = []
                 number_period = 1
                 for index in range(0, number_period):
@@ -1083,6 +1092,7 @@ class OhadaReport(models.AbstractModel):
             "ohada_reports.print_template",
             values=dict(rcontext),
         )
+
         # body_html = self.with_context(print_mode=True).get_html(options)
         body_html = self.get_html(options)
 
@@ -1330,14 +1340,15 @@ class OhadaReport(models.AbstractModel):
                         loc_style = copy.copy(style)
                         loc_style.set_align('right')
                         workbook.formats.append(loc_style)
+
                     if lines[y].get('reference') == 'REF' and self.name == 'Balance Sheet - Assets' and x == 1\
-                            and options['comparison']['periods'] == []:
+                            and options['comparison']['filter'] == 'no_comparison':
                         cell_name = str()
                         for i in cell.get('name', ''):
                             cell_name += i
                             cell_name += '\n'
                         sheet.merge_range(y + y_offset, x_index, y + y_offset, x_index + 2, cell_name, loc_style)
-                        x_index += 1
+                        x_index += 3
                     elif isinstance(cell.get('name', ''), list):
                         cell_name = str()
                         for i in cell.get('name', ''):
@@ -1364,7 +1375,7 @@ class OhadaReport(models.AbstractModel):
              'bold': True, })
         sheet.write(2, 1, 'Désignation Entité : ' + header['year'], left_style)
         sheet.write(2, x_index - 1, 'Exercice clos le : ' + '31/12/' + header['year'], right_style)
-        sheet.write(3, 1, "Numéro d'identification : " + header['vat'], left_style)
+        sheet.write(3, 1, "Numéro d'identification : " + (header.get('vat') or ''), left_style)
         sheet.write(3, x_index - 1, 'Durée (en mois) : 12', right_style)
         sheet.merge_range(5, 1, 5, x_index - 1, header['title'], title_style)
 

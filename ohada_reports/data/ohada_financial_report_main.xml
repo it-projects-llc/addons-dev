@@ -16,7 +16,6 @@
         <field name="hierarchy_option" eval="False"/>
         <field name='parent_id' ref='ohada_reports.menu_ohada_legal_statements_main'/>
     </record>
-
     
     <!-- CONTROL LINE -->
     <!--<record id="account_financial_report_ohada_balancesheet_spacer_01" model="ohada.financial.html.report.line">-->
@@ -1388,8 +1387,8 @@
         <field name="name">Profit and Lost</field>
         <field name="type">main</field>
         <field name="header">COMPTE DE RESULTAT AU 31 DECEMBRE</field>
-        <field name="unfold_all_filter" eval="True"/>
-        <field name="hierarchy_option" eval="False"/>
+        <!--<field name="unfold_all_filter" eval="True"/>-->
+        <!--<field name="hierarchy_option" eval="False"/>-->
         <field name='parent_id' ref='ohada_reports.menu_ohada_legal_statements_main'/>
     </record>
 
