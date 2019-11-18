@@ -22,6 +22,7 @@
         'view/durak_view.xml',
         'security/ir.model.access.csv',
         'view/test_data.xml',
+        'data/ping_pong.xml',
     ],
     'qweb': [
         'static/src/xml/durak.xml',

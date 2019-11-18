@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record model="player" id="base_player">
-        <field name="name">Player1</field>
+    <record model="game" id="base_player">
+        <field name="name">Game1</field>
     </record>
 </odoo>

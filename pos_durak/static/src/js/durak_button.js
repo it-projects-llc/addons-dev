@@ -259,6 +259,15 @@ odoo.define('pos_chat_button', function (require){
             }
         }
     }
+
+    function SendPong(){
+        Tip('Catch Ping', 2000);
+        self._rpc({
+            model: 'game',
+            method: 'pong',
+            args: [my_game_id, session.uid]
+        });
+    }
 //------------------------------------------------------
 
 //-------------- New screen defenition -----------------
@@ -900,12 +909,7 @@ function SetPos(avatar, uid){
                     Tip('You won!', 3000);
                 }
             }else if(data.command === 'GAME_PING'){
-                Tip('Catch Ping', 2000);
-                self._rcp({
-                    model: 'game',
-                    method: 'Pong',
-                    args: [my_game_id, session.uid]
-                });
+                SendPong();
             }else if(data.command === 'Welcome'){
                 showMessage(data.uid, 'welcome');
             }else if(data.command === 'Can_beat_this_card'){

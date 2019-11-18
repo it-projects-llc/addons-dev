@@ -1,9 +1,6 @@
 import random
 import logging
 from odoo import models, fields, api
-# import threading
-# from openerp.modules.registry import Registry
-
 _logger = logging.getLogger(__name__)
 
 
@@ -58,35 +55,26 @@ class Game(models.Model):
         # If game just created, user on front doesn't know games name, therefore send 'pos_durak' to him(default name)
         channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, pos_id, "pos_durak")
         self.env['bus.bus'].sendmany([[channel, data]])
-        # temp_game.Ping(temp_game.id)
         return 1
 
-    # @api.model
-    # def Ping(self, game_id):
-    #     cur_game = self.search([('id', '=', game_id)])
-    #     for player in cur_game.players:
-    #         import wdb
-    #         wdb.set_trace()
-    #         if player.didnt_respond != 0:
-    #             player.write({'didnt_respond': player.didnt_respond + 1})
-    #         if player.didnt_respond > 2:
-    #             cur_game.delete_player(game_id, player.uid)
-    #         else:
-    #             data = {'command': 'GAME_PING'}
-    #             channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
-    #                                                                         player.pos_id, cur_game.name)
-    #     t = threading.Timer(10.0, cur_game.Ping, args=[game_id])
-    #     t.start()
-    #     return 1
+    @api.model
+    def ping(self):
+        for game in self.search([]):
+            for player in game.players:
+                player.write({'didnt_respond': player.didnt_respond + 1})
+                if player.didnt_respond > 2:
+                    game.delete_player(game.id, player.uid)
+                data = {'command': 'GAME_PING'}
+                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, game.name)
+                self.env['bus.bus'].sendmany([[channel, data]])
+        return 1
 
-    # @api.model
-    # def Pong(self, game_id, uid):
-    #     import wdb
-    #     wdb.set_trace()
-    #     cur_game = self.search([('id', '=', game_id)])
-    #     player = cur_game.players.search([('uid', '=', uid)])
-    #     player.write({'didnt_respond': 0})
-    #     return 1
+    @api.model
+    def pong(self, game_id, uid):
+        cur_game = self.search([('id', '=', game_id)])
+        player = cur_game.players.search([('uid', '=', uid), ('game.id', '=', cur_game.id)])
+        player.write({'didnt_respond': 0})
+        return 1
 
     @api.model
     def add_new_user(self, game_id, name, uid):
@@ -203,6 +191,9 @@ class Game(models.Model):
             deleting_user = cur_game.players.search([('uid', '=', uid), ('game.id', '=', cur_game.id)])
             if len(deleting_user) == 0:
                 return 1
+            
+            import wdb
+            wdb.set_trace()
             for user in cur_game.players:
                 data = {'uid': uid, 'command': 'Disconnect'}
                 channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
@@ -216,6 +207,7 @@ class Game(models.Model):
                 cur_game.who_should_step(game_id)
         except Exception:
             _logger.error("Users num's finding error!!!(delete_player)")
+            return 1
         try:
             for user in cur_game.players:
                 if user.num > deleting_user[0].num:
