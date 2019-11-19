@@ -77,31 +77,40 @@ class Game(models.Model):
         return 1
 
     @api.model
+    def check_user_existing(self, cur_game, uid):
+        for player in cur_game.players:
+            if uid == player.uid:
+                player.unlink()
+
+    @api.model
     def add_new_user(self, game_id, name, uid):
         cur_game = self.search([('id', '=', game_id)])
         new_num = len(cur_game.players)
         new_pos_id = self.env['pos.session'].search([('user_id', '=', uid)])[0].id
+        cur_game.check_user_existing(cur_game, uid)
 
-        # Sending new player's data to all players
-        data = {'name': name, 'uid': uid, 'num': new_num, 'command': 'Connect'}
-        self.env['pos.config'].send_to_all_poses(cur_game.name, data)
         # Sending old players data to the new player
         try:
             for user in cur_game.players:
                 data = {'name': user.name, 'uid': user.uid, 'num': user.num, 'ready': user.ready, 'command': 'Connect'}
-                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
-                                                                              new_pos_id, cur_game.name)
+                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, new_pos_id, cur_game.name)
                 self.env['bus.bus'].sendmany([[channel, data]])
+        except Exception:
+            _logger.error('Player connected notification error!!!(add_new_user)')
+        try:
+            cur_game.players += cur_game.players.create({'name': name, 'uid': uid, 'num': new_num, 'pos_id': new_pos_id}) 
+            new_player = cur_game.players[new_num - 1]
+        except Exception:
+            _logger.error('Player creation error!!!')
+        # Sending new player's data to all players
+        try:
+            data = {'name': name, 'uid': uid, 'num': new_num, 'command': 'Connect'}
+            self.env['pos.config'].send_to_all_poses(cur_game.name, data)
             data = {'command': 'Welcome', 'uid': uid}
             channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, new_pos_id, cur_game.name)
             self.env['bus.bus'].sendmany([[channel, data]])
         except Exception:
-            _logger.error('Player connected notification error!!!(add_new_user)')
-
-        try:
-            cur_game.players += cur_game.players.create({'name': name, 'uid': uid, 'num': new_num, 'pos_id': new_pos_id})
-        except Exception:
-            _logger.error('Player creation error!!!')
+            _logger.error('Send to all poses connect or welcome error!')
         return 1
 
     @api.model
