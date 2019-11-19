@@ -388,6 +388,21 @@ odoo.define('pos_chat_button', function (require){
         return left === 2 && right === 2 && slash === 1 ? true : false;
     }
 
+    function next_to(uid, already_converted){
+        if(already_converted){
+            i = uid;
+        }
+        else{
+            i = NumInQueue(uid);
+        }
+
+        if(i === chat_users.length - 1){
+            return chat_users[0].uid;
+        }
+
+        return chat_users[i + 1].uid;
+    }
+
 //--------------------------------------------------
 
 //---------- Set avatar and animation part -------------
@@ -659,6 +674,9 @@ function SetPos(avatar, uid){
             time = 2000;
             audio_mes = '<audio src="/pos_durak/static/src/sound/welcome.wav" autoplay="true"></audio>';
         }
+        else if(message === 'welcome'){
+            audio_mes = '<audio src="/pos_durak/static/src/sound/welcome.wav" autoplay="true"></audio>';
+        }
         else if(message === 'win'){
             time = 4400;
             audio_mes = '<audio src="/pos_durak/static/src/sound/won.wav" autoplay="true"></audio>';
@@ -914,6 +932,9 @@ function SetPos(avatar, uid){
                         potentialy_can_beat_cards = [];
                     }
                 }
+            }
+            else if(data.command === 'Welcome'){
+                showMessage(data.uid, 'welcome');
             }
         },
     });
