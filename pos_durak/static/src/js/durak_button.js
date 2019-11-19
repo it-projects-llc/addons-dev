@@ -786,22 +786,8 @@ function SetPos(avatar, uid){
                 if(!CheckUserExists(data.uid)){
                     AddNewUser(data);
                 }
-            }else if(data.command === 'Disconnect'){
-                if(data.uid === session.uid){
-                    for(i = 0; i < chat_users.length; i++){
-                        DeleteUser(chat_users[i].uid);
-                    }
-                }else{
-                    DeleteUser(data.uid);
-                    First_scene();
-                }
-                try{
-                    if(chat_users[0].uid === session.uid){
-                        buttons_opacity(4);
-                    }
-                }catch(e){
-                    Tip(e, 3000);
-                }
+            }else if(data.command === 'Refresh'){
+                chat_users = [];
             }else if(data.command === 'Message'){
                 showMessage(data.uid, data.message);
             }else if(data.command === 'Cards'){

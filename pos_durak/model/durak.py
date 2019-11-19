@@ -109,14 +109,14 @@ class Game(models.Model):
         return 1
 
     @api.model
-    def send_players(self, cur_game, new_pos_id):
+    def send_players(self, cur_game, pos_id):
         cnt = 0
         try:
             for user in cur_game.players:
                 user.write({'num': cnt})
                 cnt += 1
                 data = {'name': user.name, 'uid': user.uid, 'num': user.num, 'ready': user.ready, 'command': 'Connect'}
-                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, new_pos_id, cur_game.name)
+                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, pos_id, cur_game.name)
                 self.env['bus.bus'].sendmany([[channel, data]])
         except Exception:
             _logger.error('Player connected notification error!!!(add_new_user)')
@@ -208,12 +208,6 @@ class Game(models.Model):
             deleting_user = cur_game.players.search([('uid', '=', uid), ('game.id', '=', cur_game.id)])[0]
             if len(deleting_user) == 0:
                 return 1
-
-            for user in cur_game.players:
-                data = {'uid': uid, 'command': 'Disconnect'}
-                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
-                                                                              user.pos_id, cur_game.name)
-                self.env['bus.bus'].sendmany([[channel, data]])
         except Exception:
             _logger.error('Player disconnected notification error!!!(delete_player)')
 
@@ -232,6 +226,9 @@ class Game(models.Model):
             return 1
         try:
             deleting_user.unlink()
+            self.env['pos.config'].send_to_all_poses(cur_game.name, {'command': 'Refresh'})
+            for player in cur_game.players:
+                cur_game.send_players(cur_game, player.pos_id)
         except Exception:
             _logger.error('Player removing error!!!')
 
@@ -427,6 +424,7 @@ class Game(models.Model):
     @api.model
     def defender_took_cards(self, game_id, uid):
         cur_game = self.search([('id', '=', game_id)])
+        cur_game.write({'uncovered_cards': 0})
         player = cur_game.players.search([('uid', '=', uid), ('game.id', '=', cur_game.id)])
         for card in cur_game.on_table_cards:
             player.cards += player.cards.create({'power': card.power, 'suit': card.suit, 'num': card.num, 'in_game': True})
