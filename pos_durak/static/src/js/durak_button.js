@@ -669,7 +669,12 @@ function SetPos(avatar, uid){
             'margin-bottom: 0px;">'+message+'</p>';
         out += audio_mes;
         out += '</div>';
-        messages.innerHTML += out;
+        try{
+            messages.innerHTML += out;
+        }
+        catch(e){
+            Tip('', 3000);
+        }
         setTimeout(delete_message, time, chat_users[i].msg_cnt, uid);
         chat_users[i].msg_cnt++;
     }
@@ -786,16 +791,16 @@ function SetPos(avatar, uid){
                     for(i = 0; i < chat_users.length; i++){
                         DeleteUser(chat_users[i].uid);
                     }
-                }
-                else{
+                }else{
                     DeleteUser(data.uid);
                     First_scene();
                 }
-
-                if(chat_users[0].uid === session.uid){
-                    // alert("If players are ready, push 'Start the game' button." +
-                    //     "Then game will begin.")
-                    buttons_opacity(4);
+                try{
+                    if(chat_users[0].uid === session.uid){
+                        buttons_opacity(4);
+                    }
+                }catch(e){
+                    Tip(e, 3000);
                 }
             }else if(data.command === 'Message'){
                 showMessage(data.uid, data.message);

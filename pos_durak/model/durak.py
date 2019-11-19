@@ -78,39 +78,48 @@ class Game(models.Model):
 
     @api.model
     def check_user_existing(self, cur_game, uid):
-        for player in cur_game.players:
-            if uid == player.uid:
-                player.unlink()
+        old_player = cur_game.players.search([('uid', '=', uid), ('game.id', '=', cur_game.id)])
+        if len(old_player) == 0:
+            return True
+        for player in old_player - old_player[0]:
+            cur_game.delete_player(cur_game.id, player.uid)
+        return False
 
     @api.model
     def add_new_user(self, game_id, name, uid):
         cur_game = self.search([('id', '=', game_id)])
         new_num = len(cur_game.players)
         new_pos_id = self.env['pos.session'].search([('user_id', '=', uid)])[0].id
-        cur_game.check_user_existing(cur_game, uid)
-
         # Sending old players data to the new player
+        cur_game.send_players(cur_game, new_pos_id)
         try:
-            for user in cur_game.players:
-                data = {'name': user.name, 'uid': user.uid, 'num': user.num, 'ready': user.ready, 'command': 'Connect'}
-                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, new_pos_id, cur_game.name)
-                self.env['bus.bus'].sendmany([[channel, data]])
-        except Exception:
-            _logger.error('Player connected notification error!!!(add_new_user)')
-        try:
-            cur_game.players += cur_game.players.create({'name': name, 'uid': uid, 'num': new_num, 'pos_id': new_pos_id}) 
-            new_player = cur_game.players[new_num - 1]
+            if cur_game.check_user_existing(cur_game, uid):
+                cur_game.players += cur_game.players.create({'name': name, 'uid': uid, 'num': new_num, 'pos_id': new_pos_id})
+                data = {'name': name, 'uid': uid, 'num': new_num, 'command': 'Connect'}
+                self.env['pos.config'].send_to_all_poses(cur_game.name, data)
         except Exception:
             _logger.error('Player creation error!!!')
         # Sending new player's data to all players
         try:
-            data = {'name': name, 'uid': uid, 'num': new_num, 'command': 'Connect'}
-            self.env['pos.config'].send_to_all_poses(cur_game.name, data)
             data = {'command': 'Welcome', 'uid': uid}
             channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, new_pos_id, cur_game.name)
             self.env['bus.bus'].sendmany([[channel, data]])
         except Exception:
             _logger.error('Send to all poses connect or welcome error!')
+        return 1
+
+    @api.model
+    def send_players(self, cur_game, new_pos_id):
+        cnt = 0
+        try:
+            for user in cur_game.players:
+                user.write({'num': cnt})
+                cnt += 1
+                data = {'name': user.name, 'uid': user.uid, 'num': user.num, 'ready': user.ready, 'command': 'Connect'}
+                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, new_pos_id, cur_game.name)
+                self.env['bus.bus'].sendmany([[channel, data]])
+        except Exception:
+            _logger.error('Player connected notification error!!!(add_new_user)')
         return 1
 
     @api.model
@@ -121,8 +130,7 @@ class Game(models.Model):
         except Exception:
             _logger.error('Error in player_is_ready method!!! (Model - game)')
 
-        self.env['pos.config'].send_to_all_poses(cur_game.name,
-                                                 {'command': 'ready', 'uid': uid})
+        self.env['pos.config'].send_to_all_poses(cur_game.name, {'command': 'ready', 'uid': uid})
         return 1
 
     @api.model
@@ -197,7 +205,7 @@ class Game(models.Model):
     def delete_player(self, game_id, uid):
         cur_game = self.search([('id', '=', game_id)])
         try:
-            deleting_user = cur_game.players.search([('uid', '=', uid), ('game.id', '=', cur_game.id)])
+            deleting_user = cur_game.players.search([('uid', '=', uid), ('game.id', '=', cur_game.id)])[0]
             if len(deleting_user) == 0:
                 return 1
 
