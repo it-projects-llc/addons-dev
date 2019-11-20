@@ -261,7 +261,6 @@ odoo.define('pos_chat_button', function (require){
     }
 
     function SendPong(){
-        Tip('Catch Ping', 2000);
         self._rpc({
             model: 'game',
             method: 'pong',
@@ -428,7 +427,7 @@ function ShowUsers(){
         if(item.ready){
             out += '<div class="user-name" id="user-name-'+str_uid+'" style="background:green" >'+chat_users[i].name+'</div>';
         }else{
-            out += '<div class="user-name" id="user-name-'+str_uid+'">'+chat_users[i].name+'</div>';
+            out += '<div class="user-name" id="user-name-'+str_uid+'">'+chat_users[i].name+'</div>'; 
         }
         out += '<img src="/web/image/res.users/' +
         item.uid + '/image_small" id="ava-' + i +'" class="avatar" style="border-radius:50%;margin-left:20%;"/>';
@@ -689,8 +688,7 @@ function SetPos(avatar, uid){
         out += '</div>';
         try{
             messages.innerHTML += out;
-        }
-        catch(e){
+        }catch(e){
             Tip('', 3000);
         }
         setTimeout(delete_message, time, chat_users[i].msg_cnt, uid);

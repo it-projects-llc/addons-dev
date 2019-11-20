@@ -62,11 +62,12 @@ class Game(models.Model):
         for game in self.search([]):
             for player in game.players:
                 player.write({'didnt_respond': player.didnt_respond + 1})
-                if player.didnt_respond > 2:
+                if player.didnt_respond > 1:
                     game.delete_player(game.id, player.uid)
-                data = {'command': 'GAME_PING'}
-                channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, game.name)
-                self.env['bus.bus'].sendmany([[channel, data]])
+                else:
+                    data = {'command': 'GAME_PING'}
+                    channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, game.name)
+                    self.env['bus.bus'].sendmany([[channel, data]])
         return 1
 
     @api.model
