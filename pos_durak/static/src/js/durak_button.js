@@ -1,4 +1,4 @@
-odoo.define('pos_chat_button', function (require){
+odoo.define('pos_durak.model', function (require){
       'use_strict';
 
     var gui = require('point_of_sale.gui');
@@ -427,7 +427,7 @@ function ShowUsers(){
         if(item.ready){
             out += '<div class="user-name" id="user-name-'+str_uid+'" style="background:green" >'+chat_users[i].name+'</div>';
         }else{
-            out += '<div class="user-name" id="user-name-'+str_uid+'">'+chat_users[i].name+'</div>'; 
+            out += '<div class="user-name" id="user-name-'+str_uid+'">'+chat_users[i].name+'</div>';
         }
         out += '<img src="/web/image/res.users/' +
         item.uid + '/image_small" id="ava-' + i +'" class="avatar" style="border-radius:50%;margin-left:20%;"/>';
