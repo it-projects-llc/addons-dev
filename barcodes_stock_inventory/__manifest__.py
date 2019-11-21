@@ -7,7 +7,7 @@
     "summary": """The module allows to proceed inventory adjustments via barcode scanning""",
     "category": "Warehouse",
     # "live_test_url": "",
-    "images": [],
+    "images": ['images/barcodes_stock_inventory.jpg'],
     "version": "10.0.1.0.0",
     "application": False,
 
