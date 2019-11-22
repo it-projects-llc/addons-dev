@@ -517,6 +517,7 @@ function SetPos(avatar, uid){
     function First_scene(took_cards){
         i = 0;
         moves_cnt = 0;
+        var card;
         try{
             var me = NumInQueue(session.uid);
             for(i = 0; i < on_table_cards.length; i++){
@@ -528,12 +529,12 @@ function SetPos(avatar, uid){
             }
             if(took_cards === 0){
                 for(i = 0; i < on_table_cards.length; i++){
-                    var card = document.getElementById('card-'+on_table_cards[i].num);
+                    card = document.getElementById('card-'+on_table_cards[i].num);
                     card.style.setProperty('display', 'none');
                 }
             }else{
                 for(i = 0; i < on_table_cards.length; i++){
-                    var card = document.getElementById('card-'+on_table_cards[i].num);
+                    card = document.getElementById('card-'+on_table_cards[i].num);
                     card.style.setProperty('transform','translate3d('+ (3*W) +'px,0px,0px)');
                 }
             }
