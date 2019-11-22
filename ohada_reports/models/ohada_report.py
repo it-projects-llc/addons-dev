@@ -163,6 +163,8 @@ class OhadaReport(models.AbstractModel):
                 'line_template': 'ohada_reports.line_template',
                 'footnotes_template': 'ohada_reports.footnotes_template',
                 'search_template': 'ohada_reports.search_template',
+                'bs_line_template': 'ohada_reports.bs_line_template',
+                'bs2_line_template': 'ohada_reports.bs2_line_template',
         }
 
     #TO BE OVERWRITTEN
@@ -446,7 +448,6 @@ class OhadaReport(models.AbstractModel):
         '''
         return a dictionary of informations that will be needed by the js widget, manager_id, footnotes, html of report and searchview, ...
         '''
-        # wdb.set_trace()
         options = self._get_options(options)
         # apply date and date_comparison filter
         self._apply_date_filter(options)
@@ -658,8 +659,9 @@ class OhadaReport(models.AbstractModel):
         otherwise it uses the main_template. Reason is for efficiency, when unfolding a line in the report
         we don't want to reload all lines, just get the one we unfolded.
         '''
-        # wdb.set_trace()
         # Check the security before updating the context to make sure the options are safe.
+        if self.name == 'Balance Sheet':
+            return self.get_html_bs(options, line_id, additional_context)
         self._check_report_security(options)
 
         # Prevent inconsistency between options and context.
@@ -667,7 +669,6 @@ class OhadaReport(models.AbstractModel):
 
         templates = self._get_templates()
         report_manager = self._get_report_manager(options)
-        # wdb.set_trace()
         report = {'name': self._get_report_name(),
                   'summary': report_manager.summary,
                   'company_name': self.env.user.company_id.name,
@@ -699,7 +700,6 @@ class OhadaReport(models.AbstractModel):
                     'context': self.env.context,
                     'model': self,
                 }
-        # wdb.set_trace()
         if additional_context and type(additional_context) == dict:
             rcontext.update(additional_context)
         if self.env.context.get('analytic_account_ids'):
@@ -936,7 +936,6 @@ class OhadaReport(models.AbstractModel):
                 vals['date_from'] = period_vals['date_from'].strftime(DEFAULT_SERVER_DATE_FORMAT)
                 vals['date_to'] = period_vals['date_to'].strftime(DEFAULT_SERVER_DATE_FORMAT)
             return vals
-
         # ===== Date Filter =====
         if not options.get('date') or not options['date'].get('filter'):
             return
@@ -978,7 +977,6 @@ class OhadaReport(models.AbstractModel):
         if not options.get('comparison') or not options['comparison'].get('filter'):
             return
         cmp_filter = options['comparison']['filter']
-        # wdb.set_trace()
         if cmp_filter == 'no_comparison':
             if self.name == 'Balance Sheet - Assets':
                 periods = []
@@ -1035,7 +1033,6 @@ class OhadaReport(models.AbstractModel):
             vals = create_vals(self._get_dates_period(options, date_from, date_to))
             options['comparison']['periods'] = [vals]
             return
-        # wdb.set_trace()
         periods = []
         number_period = options['comparison'].get('number_period', 1) or 0
         for index in range(0, number_period):
@@ -1074,7 +1071,6 @@ class OhadaReport(models.AbstractModel):
         # This scenario happens when you want to print a PDF report for the first time, as the
         # assets are not in cache and must be generated. To workaround this issue, we manually
         # commit the writes in the `ir.attachment` table. It is done thanks to a key in the context.
-        # wdb.set_trace()
 
         if not config['test_enable']:
             self = self.with_context(commit_assetsbundle=True)
@@ -1175,9 +1171,10 @@ class OhadaReport(models.AbstractModel):
         """
         return {}
 
-    def get_xlsx(self, options, response):
+    def get_xlsx(self, options, response, print_bundle=False, workbook=None):
         output = io.BytesIO()
-        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        if print_bundle == False:
+            workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         sheet = workbook.add_worksheet(self._get_report_name()[:31])
 
 
@@ -1386,7 +1383,8 @@ class OhadaReport(models.AbstractModel):
         sheet.merge_range(7, x_index, len(lines) + 6, x_index, '', right_border)
 
         sheet.hide_gridlines(2)
-
+        if print_bundle == True:
+            return
         workbook.close()
         output.seek(0)
         response.stream.write(output.read())
@@ -1417,3 +1415,74 @@ class OhadaReport(models.AbstractModel):
 
     def get_txt(self, options):
         return False
+
+    def get_html_bs(self, options, line_id=None, additional_context=None):
+        '''
+        return the html value of report, or html value of unfolded line
+        * if line_id is set, the template used will be the line_template
+        otherwise it uses the main_template. Reason is for efficiency, when unfolding a line in the report
+        we don't want to reload all lines, just get the one we unfolded.
+        '''
+
+        options = {'all_entries':	False, 'analytic':	None, 'cash_basis':	None,
+                    'comparison':	{
+                        'date_from':	'2018-01-01', 'date_to':	'2018-12-31', 'filter':	'no_comparison', 'number_period': 1,
+                        'periods': [{'date_from': '2018-01-01', 'date_to':	'2018-12-31', 'string':	'2018'}],
+                        'string': 'No comparison',
+                          },
+                    'date':	{'date_from':	'2019-01-01', 'date_to':	'2019-12-31', 'filter':	'this_year',
+                             'string':	'2019'}, 'hierarchy': None, 'ir_filters':	None,'journals': None,
+                    'partner': None, 'unfold_all':	False, 'unfolded_lines': [], 'unposted_in_period': False}
+        g_rcontext=dict()
+        g_rcontext['lines'] = []
+        reports = [self.env.ref('ohada_reports.account_financial_report_ohada_balancesheet'),
+        self.env.ref('ohada_reports.account_financial_report_ohada_balancesheet_liabilitites0')]
+        for report_bs in reports:
+        # Check the security before updating the context to make sure the options are safe.
+            self._check_report_security(options)
+
+        # Prevent inconsistency between options and context.
+            report_bs = report_bs.with_context(report_bs._set_context(options))
+
+            templates = report_bs._get_templates()
+            report_manager = report_bs._get_report_manager(options)
+            report = {'name': report_bs._get_report_name(),
+                      'summary': report_manager.summary,
+                      'company_name': report_bs.env.user.company_id.name,
+                      'type': report_bs.type,
+                      'vat': report_bs.env.user.company_id.vat,
+                      'year': options['date']['date_from'][0:4],
+                      'header': report_bs.header and report_bs.header + ' ' + options['date']['date_from'][0:4],}
+            lines = report_bs._get_lines(options, line_id=line_id)
+
+            if options.get('hierarchy'):
+                lines = report_bs._create_hierarchy(lines)
+
+            rcontext = {'report': report,
+                        'lines': {'columns_header': report_bs.get_header(options), 'lines': lines},
+                        'options': options,
+                        'context': report_bs.env.context,
+                        'model': report_bs,
+                    }
+
+            if additional_context and type(additional_context) == dict:
+                rcontext.update(additional_context)
+            if report_bs.env.context.get('analytic_account_ids'):
+                rcontext['options']['analytic_account_ids'] = [
+                    {'id': acc.id, 'name': acc.name} for acc in report_bs.env.context['analytic_account_ids']
+                ]
+
+            render_template = templates.get('main_template', 'ohada_reports.main_template')
+            if line_id is not None:
+                render_template = templates.get('line_template', 'ohada_reports.line_template')
+            g_rcontext['lines'].append({report_bs.name: rcontext['lines']})
+        rcontext['report']['name'] = 'Balance Sheet'
+        g_rcontext['report'] = rcontext['report']
+        g_rcontext['options'] = rcontext['options']
+        g_rcontext['model'] = rcontext['model']
+        # wdb.set_trace()
+        html = self.env['ir.ui.view'].render_template(
+            render_template,
+            values=dict(g_rcontext),
+        )
+        return html

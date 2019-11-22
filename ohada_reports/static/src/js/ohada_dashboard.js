@@ -8,6 +8,8 @@ var core = require('web.core');
 var rpc = require('web.rpc');
 var session = require('web.session');
 var web_client = require('web.web_client');
+var framework = require('web.framework');
+var crash_manager = require('web.crash_manager');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -24,19 +26,69 @@ var OhadaDashboard = AbstractAction.extend(ControlPanelMixin, {
     ],
     events: {
         'change .o_mrp_bom_report_variants': 'change_year',
+        'click .print_bundle': 'print_bundle',
+        'click .close': 'close_popup',
+        'click .export_pdf': 'print_bundle_pdf',
+        'click .export_xlsx': 'print_bundle_xlsx',
     },
-
+    close_popup: function(){
+        document.getElementById("myForm").style.display = "none";
+        document.getElementById("modal-backdrop").style.display = "none";
+    },
     change_year: function(ev) {
         var self = this;
         this.fetch_data(parseInt(ev['currentTarget']['value'])).then(function() {
             self._updateTemplateBody();
         });
     },
+    print_bundle: function() {
+        document.getElementById("myForm").style.display = "block";
+        document.getElementById("modal-backdrop").style.display = "block";
+    },
+
+    print_bundle_xlsx: function() {
+        framework.blockUI();
+        var def = $.Deferred();
+        session.get_file({
+            url: '/ohada_reports',
+            data: {"model": "ohada.financial.html.report",
+                   "options": '{"all_entries": false, "unfolded_lines": []}',
+                   "financial_id": 3,
+                   "output_format": "xlsx_bundle"},
+            success: def.resolve.bind(def),
+            error: function () {
+                crash_manager.rpc_error.apply(crash_manager, arguments);
+                def.reject();
+            },
+            complete: framework.unblockUI,
+        });
+        return def;
+    },
+
+    print_bundle_pdf: function() {
+        framework.blockUI();
+        var def = $.Deferred();
+        session.get_file({
+            url: '/ohada_reports',
+            data: {"model": "ohada.financial.html.report",
+                   "options": '{"all_entries": false, "unfolded_lines": []}',
+                   "financial_id": 3,
+                   "output_format": "pdf_bundle"},
+            success: def.resolve.bind(def),
+            error: function () {
+                crash_manager.rpc_error.apply(crash_manager, arguments);
+                def.reject();
+            },
+            complete: framework.unblockUI,
+        });
+        return def;
+    },
 
     _updateTemplateBody: function () {
         this.$el.empty();
         this.$el.append(core.qweb.render('ManagerDashboard', {widget: this}));
         this.render_graphs();
+        document.getElementById("myForm").style.display = "none";
     },
 
     init: function(parent, context) {

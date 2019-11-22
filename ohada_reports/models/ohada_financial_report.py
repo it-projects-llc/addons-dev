@@ -3,6 +3,14 @@
 import copy
 import ast
 import datetime
+import base64
+import io
+
+try:
+    from odoo.tools.misc import xlsxwriter
+except ImportError:
+    # TODO saas-17: remove the try/except to directly import from misc
+    import xlsxwriter
 
 from odoo import models, fields, api, _
 from odoo.tools.safe_eval import safe_eval
@@ -13,7 +21,8 @@ from dateutil.relativedelta import relativedelta
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.pycompat import izip
-from odoo.http import request
+from odoo import http
+from odoo.http import content_disposition, request
 # import wdb
 
 
@@ -60,6 +69,139 @@ class ReportOhadaFinancialReport(models.Model):
     #    def _code_constrains(self):
     #        if self.code and self.code.strip().lower() in __builtins__.keys():
     #            raise ValidationError('The code "%s" is invalid on report with name "%s"' % (self.code, self.name))
+    @api.model
+    def print_bundle_xlsx(self, response):
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        options = {'ir_filters': None,
+                   'date': {'date_to': '2019-12-31', 'string': '2019', 'filter': 'this_year',
+                            'date_from': '2019-01-01'},
+                   'comparison': {
+                       'date_from': '2018-01-01',
+                       'date_to': '2018-12-31',
+                       'filter': 'no_comparison',
+                       'number_period': 1,
+                       'periods': [{
+                           'date_from': '2018-01-01',
+                           'date_to': '2018-12-31',
+                           'string': '2018',
+                       }],
+                       'string': 'No comparison', },
+                   }
+        for report in self.env['ohada.financial.html.report'].search([('type', '=', 'main')]):
+            report.get_xlsx(options, response, print_bundle=True, workbook=workbook)
+        options['comparison']['filter'] = 'previous_period'
+        for report in self.env['ohada.financial.html.report'].search([('type', '=', 'cover')]):
+            report.get_xlsx(options, response, print_bundle=True, workbook=workbook)
+        for report in self.env['ohada.financial.html.report'].search([('type', '=', 'sheet')]):
+            report.get_xlsx(options, response, print_bundle=True, workbook=workbook)
+        for report in self.env['ohada.financial.html.report'].search([('type', '=', 'note')]):
+            report.get_xlsx(options, response, print_bundle=True, workbook=workbook)
+
+        workbook.close()
+        output.seek(0)
+        response.stream.write(output.read())
+        output.close()
+        return response
+
+    @api.model
+    def print_bundle_pdf(self, minimal_layout=True):
+        options = {'ir_filters': None,
+                   'date': {'date_to': '2019-12-31', 'string': '2019', 'filter': 'this_year',
+                            'date_from': '2019-01-01'},
+                   'comparison': {
+                       'date_from': '2018-01-01',
+                       'date_to': '2018-12-31',
+                       'filter': 'no_comparison',
+                       'number_period': 1,
+                       'periods': [{
+                           'date_from': '2018-01-01',
+                           'date_to': '2018-12-31',
+                           'string': '2018',
+                       }],
+                       'string': 'No comparison',},
+                   }
+
+        base_url = self.env['ir.config_parameter'].sudo().get_param('report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        # base_url = 'http://127.0.0.1:8069'
+
+        rcontext = {
+            'mode': 'print',
+            'base_url': base_url,
+            'company': self.env.user.company_id,
+        }
+
+        body = self.env['ir.ui.view'].render_template(
+            "ohada_reports.print_template",
+            values=dict(rcontext),
+        )
+
+        body_html = b''
+
+        for report in self.env['ohada.financial.html.report'].search([('type', '=', 'main')]):
+            body_html += report.get_html(options)
+        options['comparison']['filter'] = 'previous_period'
+        for report in self.env['ohada.financial.html.report'].search([('type', '=', 'cover')]):
+            body_html += report.get_html(options)
+        for report in self.env['ohada.financial.html.report'].search([('type', '=', 'sheet')]):
+            body_html += report.get_html(options)
+        for report in self.env['ohada.financial.html.report'].search([('type', '=', 'note')]):
+            body_html += report.get_html(options)
+
+        body = body.replace(b'<body class="o_account_reports_body_print">',
+                            b'<body class="o_account_reports_body_print">' + body_html)
+        if minimal_layout:
+            header = ''
+            footer = self.env['ir.actions.report'].render_template("ohada_reports.internal_layout_ohada",
+                                                                   values=rcontext)
+            spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 10}
+            footer = self.env['ir.actions.report'].render_template("web.minimal_layout",
+                                                                   values=dict(rcontext, subst=True, body=footer))
+        else:
+            rcontext.update({
+                'css': '',
+                'o': self.env.user,
+                'res_company': self.env.user.company_id,
+            })
+            header = self.env['ir.actions.report'].render_template("web.external_layout", values=rcontext)
+            header = header.decode('utf-8')  # Ensure that headers and footer are correctly encoded
+            spec_paperformat_args = {}
+            # Default header and footer in case the user customized web.external_layout and removed the header/footer
+            headers = header.encode()
+            footer = b''
+            # parse header as new header contains header, body and footer
+            try:
+                root = lxml.html.fromstring(header)
+                match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
+
+                for node in root.xpath(match_klass.format('header')):
+                    headers = lxml.html.tostring(node)
+                    headers = self.env['ir.actions.report'].render_template("web.minimal_layout",
+                                                                            values=dict(rcontext, subst=True,
+                                                                                        body=headers))
+
+                for node in root.xpath(match_klass.format('footer')):
+                    footer = lxml.html.tostring(node)
+                    footer = self.env['ir.actions.report'].render_template("web.minimal_layout",
+                                                                           values=dict(rcontext, subst=True,
+                                                                                       body=footer))
+
+            except lxml.etree.XMLSyntaxError:
+                headers = header.encode()
+                footer = b''
+            header = headers
+
+        landscape = False
+        if len(self.with_context(print_mode=True).get_header(options)[-1]) > 5:
+            landscape = True
+        # wdb.set_trace()
+        return self.env['ir.actions.report']._run_wkhtmltopdf(
+            [body],
+            header=header, footer=footer,
+            landscape=landscape,
+            specific_paperformat_args=spec_paperformat_args
+        )
+        # return base64.encodebytes(pdf)
 
     @api.model
     def get_link(self, year=None):
@@ -76,8 +218,8 @@ class ReportOhadaFinancialReport(models.Model):
             data['this_year'] = datetime.now().year
             data['prev_year'] = datetime.now().year - 1
             options = {'ir_filters': None,
-                       'date': {'date_to': '2019-12-31', 'string': '2019', 'filter': 'this_year',
-                                'date_from': '2019-01-01'}}
+                       'date': {'date_to': str(year)+'-12-31', 'string': str(year), 'filter': 'this_year',
+                                'date_from': str(year)+'-01-01'}}
 
         data['years'] = [year, year-1, year-2, year-3]
         data['company_name'] = self.env['res.users'].browse(request.session.uid).company_id.name
