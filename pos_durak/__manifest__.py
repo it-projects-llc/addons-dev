@@ -28,9 +28,9 @@
         'static/src/xml/durak.xml',
     ],
     # only loaded in demonstration mode
-    # 'demo': [
-    #     'demo.xml',
-    # ],
+    'demo': [
+        'demo/demo.xml',
+    ],
 
     "application": False,
     "auto_install": False,
