@@ -11,8 +11,6 @@ class TestUi(odoo.tests.HttpCase):
     def test_open_pos(self):
         # without a delay there might be problems on the steps whilst opening a POS
         # caused by a not yet loaded button's action
-        env = self.env
-        env['ir.module.module'].search([('name', '=', 'pos_durak')], limit=1).state = 'installed'
 
         self.browser_js("/web?debug=assets ",
                         "odoo.__DEBUG__.services['web_tour.tour'].run('tour_pos_durak')",
