@@ -29,5 +29,4 @@ odoo.define('pos_durak.tour', function (require) {
     }];
 
     tour.register('tour_pos_durak', { test: true, url: '/web' }, steps);
-
 });

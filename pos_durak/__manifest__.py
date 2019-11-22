@@ -15,7 +15,7 @@
     "license": "LGPL-3",
 
     # any module necessary for this one to work correctly
-    'depends': ['point_of_sale', 'pos_longpolling'],
+    'depends': ['point_of_sale', 'pos_longpolling', 'web_tour'],
 
     # always loaded
     'data': [

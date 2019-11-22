@@ -369,7 +369,7 @@ class Game(models.Model):
             return cur_game.players.search([('num', '=', 0), ('game.id', '=', cur_game.id)]).num
 
     @api.model
-    def new_cards(self, game_id):
+    def new_cards(self, game_id, took):
         cur_game = self.search([('id', '=', game_id)])
         extra_cards_length = len(cur_game.extra_cards)
         who_took_new_cards = []
@@ -389,7 +389,7 @@ class Game(models.Model):
             _logger.error('Extra cards distribution error!!!')
 
         for player in cur_game.players:
-            data = {'command': 'Move_done'}
+            data = {'command': 'Move_done', 'took_cards': took}
             channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname,
                                                                           player.pos_id, cur_game.name)
             self.env['bus.bus'].sendmany([[channel, data]])
@@ -415,7 +415,7 @@ class Game(models.Model):
         if temp_cnt != 2 and len(cur_game.players) > 2:
             return 1
 
-        cur_game.new_cards(game_id)
+        cur_game.new_cards(game_id, 0)
         cur_game.who_should_step(game_id)
         for player in cur_game.players:
             if player.completed_move:
@@ -430,7 +430,7 @@ class Game(models.Model):
         for card in cur_game.on_table_cards:
             player.cards += player.cards.create({'power': card.power, 'suit': card.suit, 'num': card.num, 'in_game': True})
 
-        cur_game.new_cards(game_id)
+        cur_game.new_cards(game_id, 1)
         # Sending cards to defender
         defman = cur_game.next(game_id, cur_game.who_steps)
         defer = cur_game.players.search([('num', '=', defman), ('game.id', '=', cur_game.id)])

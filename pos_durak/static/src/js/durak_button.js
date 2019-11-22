@@ -514,7 +514,7 @@ function SetPos(avatar, uid){
         document.getElementById('enemy-cards').innerHTML += out;
     }
 
-    function First_scene(){
+    function First_scene(took_cards){
         i = 0;
         moves_cnt = 0;
         try{
@@ -526,10 +526,16 @@ function SetPos(avatar, uid){
                     }
                 }
             }
-
-            for(i = 0; i < on_table_cards.length; i++){
-                var card = document.getElementById('card-'+on_table_cards[i].num);
-                card.style.setProperty('display', 'none');
+            if(took_cards === 0){
+                for(i = 0; i < on_table_cards.length; i++){
+                    var card = document.getElementById('card-'+on_table_cards[i].num);
+                    card.style.setProperty('display', 'none');
+                }
+            }else{
+                for(i = 0; i < on_table_cards.length; i++){
+                    var card = document.getElementById('card-'+on_table_cards[i].num);
+                    card.style.setProperty('transform','translate3d('+ (3*W) +'px,0px,0px)');
+                }
             }
             on_table_cards = [];
         }
@@ -850,7 +856,7 @@ function SetPos(avatar, uid){
             }else if(data.command === 'HowMuchCards'){
                 ShowHowMuchCards(data.number, data.uid);
             }else if(data.command === 'Move_done'){
-                First_scene();
+                First_scene(data.took_cards);
             }else if(data.command === 'Defence'){
                 if(!data.can_beat){
                     if(session.uid === data.uid){
