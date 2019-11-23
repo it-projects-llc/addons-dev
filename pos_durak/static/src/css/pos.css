@@ -231,7 +231,7 @@
 
 .card{
     position: absolute;
-    bottom: -100px;
+    bottom: -30px;
     width: 75px;
     height: 150px;
     transition: all .3s ease-in-out;
@@ -291,4 +291,11 @@
 .chat-user{
     position: absolute;
     transition: transform .3s ease-in-out;
+}
+
+.cards-counter{
+    position: relative;
+    width: 15px;
+    height: 25px;
+    margin-left: 5px;
 }

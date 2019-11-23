@@ -22,14 +22,15 @@
         'view/durak_view.xml',
         'security/ir.model.access.csv',
         'view/test_data.xml',
+        'data/ping_pong.xml',
     ],
     'qweb': [
         'static/src/xml/durak.xml',
     ],
     # only loaded in demonstration mode
-    # 'demo': [
-    #     'demo.xml',
-    # ],
+    'demo': [
+        'demo/demo.xml',
+    ],
 
     "application": False,
     "auto_install": False,
