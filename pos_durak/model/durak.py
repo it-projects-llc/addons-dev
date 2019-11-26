@@ -17,6 +17,7 @@ class Game(models.Model):
     on_table_cards = fields.One2many('game.cards', 'on_table_cards', ondelete="cascade")
     attackers_agreement = fields.Integer(default=0)
     uncovered_cards = fields.Integer(default=0)
+    started = fields.Boolean(default=False)
 
     @api.model
     def create_the_game(self, uid):
@@ -149,6 +150,7 @@ class Game(models.Model):
     @api.model
     def start_the_game(self, game_id):
         cur_game = self.search([('id', '=', game_id)])
+        cur_game.write({'started': True})
         seq = [*range(0, 52)]
         cards_limit = 6
         random.shuffle(seq)
@@ -211,13 +213,6 @@ class Game(models.Model):
                 return 1
         except Exception:
             _logger.error('Player disconnected notification error!!!(delete_player)')
-
-        try:
-            if deleting_user.num == cur_game.who_steps and len(cur_game.players) > 1:
-                cur_game.who_should_step(game_id)
-        except Exception:
-            _logger.error("Users num's finding error!!!(delete_player)")
-            return 1
         try:
             for user in cur_game.players:
                 if user.num > deleting_user[0].num:
@@ -227,9 +222,21 @@ class Game(models.Model):
             return 1
         try:
             deleting_user.unlink()
-            self.env['pos.config'].send_to_all_poses(cur_game.name, {'command': 'Refresh'})
-            for player in cur_game.players:
-                cur_game.send_players(cur_game, player.pos_id)
+            if cur_game.started:
+                data = {'command': 'Delete', 'uid': uid}
+                for player in cur_game.players:
+                    channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, cur_game.name)
+                    self.env['bus.bus'].sendmany([[channel, data]])
+                cur_game.on_table_cards.unlink()
+                cur_game.who_should_step(game_id)
+            else:
+                data = {'command': 'Refresh'}
+                for player in cur_game.players:
+                    channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, cur_game.name)
+                    self.env['bus.bus'].sendmany([[channel, data]])
+
+                for player in cur_game.players:
+                    cur_game.send_players(cur_game, player.pos_id)
         except Exception:
             _logger.error('Player removing error!!!')
 
@@ -451,8 +458,8 @@ class Game(models.Model):
             for player in cur_game.players:
                 channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, cur_game.name)
                 self.env['bus.bus'].sendmany([[channel, data]])
-                if winner.uid == player.uid:
-                    player.unlink()
+        for player in won:
+            cur_game.delete_player(cur_game.id, player.uid)
         return 1
 
     @api.model

@@ -811,6 +811,10 @@ function SetPos(avatar, uid){
                 }
             }else if(data.command === 'Refresh'){
                 chat_users = [];
+            }else if(data.command === 'Delete'){
+                DeleteUser(data.uid);
+                First_scene(0);
+                Show_all_cards();
             }else if(data.command === 'Message'){
                 showMessage(data.uid, data.message);
             }else if(data.command === 'Cards'){
