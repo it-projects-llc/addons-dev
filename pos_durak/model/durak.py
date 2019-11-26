@@ -458,8 +458,8 @@ class Game(models.Model):
             for player in cur_game.players:
                 channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, cur_game.name)
                 self.env['bus.bus'].sendmany([[channel, data]])
-                if winner.uid == player.uid:
-                    player.unlink()
+        for player in won:
+            cur_game.delete_player(cur_game.id, player.uid)
         return 1
 
     @api.model
