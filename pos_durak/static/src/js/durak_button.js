@@ -900,9 +900,13 @@ function SetPos(avatar, uid){
                 // When game id is recieved, then adding new user
                 CreatePlayer();
             }else if(data.command === 'ready'){
-                var sign = document.getElementById('user-name-'+String(data.uid));
-                sign.style.setProperty('background', 'green');
-                chat_users[NumInQueue(data.uid)].ready = true;
+                try{
+                    var sign = document.getElementById('user-name-'+String(data.uid));
+                    sign.style.setProperty('background', 'green');
+                    chat_users[NumInQueue(data.uid)].ready = true;
+                }catch(e){
+                    Tip("Can't make nickname green", 1000);
+                }
             }else if(data.command === 'Who_steps'){
                 for(i = 0; i < chat_users.length; i++){
                     if(data.first !== i){
