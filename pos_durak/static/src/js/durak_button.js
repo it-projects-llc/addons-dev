@@ -250,6 +250,7 @@ odoo.define('pos_durak.model', function (require){
                 chat.style.setProperty('transform','scaleX(0)');
                 chat.style.setProperty('-webkit-transform','scaleX(0)');
                 chat.style.setProperty('-ms-transform','scaleX(0)');
+                arrow_blinking(1);
             }
         }else{
             // If you missed
@@ -285,6 +286,7 @@ odoo.define('pos_durak.model', function (require){
                 method: "create_the_game",
                 args: [session.uid]
             });
+            arrow_blinking(1);
         }
     });
 
@@ -336,6 +338,25 @@ odoo.define('pos_durak.model', function (require){
 //------------------------------------------------------
 
 //---------Help functions part----------------------
+
+    function arrow_blinking(arrow_color){
+        if(triangle_button_pushed){
+            return;
+        }
+
+        try{
+            var triangle = document.getElementById('triangle');
+            if(arrow_color === 1){
+                triangle.style.setProperty('color', 'red');
+                setTimeout(arrow_blinking, 500, 2);
+            }else if(arrow_color === 2){
+                triangle.style.setProperty('color', 'blue');
+                setTimeout(arrow_blinking   , 500, 1);
+            }
+        }catch(e){
+            Tip("Arrow cant blink");
+        }
+    }
 
     function CheckUserExists(uid){
         for(i = 0; i < chat_users.length; i++){

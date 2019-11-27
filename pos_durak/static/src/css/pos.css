@@ -286,6 +286,7 @@
     width: 20%;
     left: -20%;
     transform: rotate(-45deg);
+    transition: all .3s ease-in-out;
 }
 
 .chat-user{
