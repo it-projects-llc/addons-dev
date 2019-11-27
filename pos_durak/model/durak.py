@@ -497,6 +497,7 @@ class Game(models.Model):
             self.env['bus.bus'].sendmany([[channel, data]])
         return 1
 
+
 class Player(models.Model):
     _name = 'game.player'
     _description = 'Game player'
