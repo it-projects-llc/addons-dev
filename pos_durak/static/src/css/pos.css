@@ -284,7 +284,8 @@
     border-bottom: 10px solid;
     height: 50%;
     width: 20%;
-    left: -20%;
+    top: 11%;
+    left: -15%;
     transform: rotate(-45deg);
     transition: all .3s ease-in-out;
 }
@@ -305,4 +306,12 @@
     position: absolute;
     right: 30px;
     top: 60px;
+}
+
+#cards-left{
+    position: absolute;
+    left: 50%;
+    top: 90%;
+    width: 10%;
+    height: 8%;
 }

@@ -379,6 +379,7 @@ odoo.define('pos_durak.model', function (require){
                 document.getElementById('picture-'+NumInQueue(item.uid)).style.setProperty('display', 'none');
             });
             document.getElementById('cards').innerHTML = '';
+            document.getElementById('cards-left').innerHTML = '';
             buttons_opacity(0);
             document.getElementById('enemy-cards').innerHTML = '';
             document.getElementById('suit').style.display = 'none';
@@ -524,6 +525,20 @@ function SetPos(avatar, uid){
         }
     }
 
+    function ShowExtraCards(num, last){
+        try{
+            var temp = document.getElementById('cards-left');
+            temp.innerHTML = '';
+            temp.innerHTML += '<img style="position:absolute;left:0%; top:-30%; width: 54%; height: 170%; transform: rotate(90deg)" draggable="false" src="/pos_durak/static/src/img/kards/'+
+            last+'.png"/>'
+            for(i = 1; i <= num; i++){
+                temp.innerHTML += '<img style="position:absolute;left:'+i+'%; width: 24%; height: 100%;" src="/pos_durak/static/src/img/reverse-card.png"/>';
+            }
+        }catch(e){
+            Tip("Can't display extra cards", 1000);
+        }
+    }
+
     function DownloadEnemyCards(num, uid){
         chat_users[NumInQueue(uid)].cards.push({
            power: -1,
@@ -578,6 +593,12 @@ function SetPos(avatar, uid){
             Tip('Transition to the first scene error!', 3000);
         }
         ShowCards();
+
+        self._rpc({
+            model: "game",
+            method: 'cards_left',
+            args: [my_game_id]
+        });
     }
 
     function Second_scene(data){
@@ -854,9 +875,9 @@ function SetPos(avatar, uid){
                     Show_all_cards();
                 }
             }else if(data.command === 'Trump'){
+                First_scene(0);
                 game_started = true;
                 trump = data.trump;
-                buttons_opacity(0);
                 Show_all_cards();
                 // Show suit
                 var temp_window = document.getElementById('card-suit');
@@ -881,6 +902,8 @@ function SetPos(avatar, uid){
                 Show_all_cards();
             }else if(data.command === 'HowMuchCards'){
                 ShowHowMuchCards(data.number, data.uid);
+            }else if(data.command === 'cards_left'){
+                ShowExtraCards(data.n, data.last);
             }else if(data.command === 'Move_done'){
                 First_scene(data.took_cards);
             }else if(data.command === 'Defence'){
