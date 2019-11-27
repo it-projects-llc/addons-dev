@@ -180,6 +180,25 @@ odoo.define('pos_durak.model', function (require){
         return chat_users[i + 1].uid;
     }
 
+    function arrow_blinking(arrow_color){
+        if(triangle_button_pushed){
+            return;
+        }
+
+        try{
+            var triangle = document.getElementById('triangle');
+            if(arrow_color === 1){
+                triangle.style.setProperty('color', 'red');
+                setTimeout(arrow_blinking, 500, 2);
+            }else if(arrow_color === 2){
+                triangle.style.setProperty('color', 'blue');
+                setTimeout(arrow_blinking, 500, 1);
+            }
+        }catch(e){
+            Tip("Arrow cant blink");
+        }
+    }
+
     var triangle_button_pushed = false;
     function ControlOnClick(e){
         var elem = e ? e.target : window.event.srcElement;
@@ -338,25 +357,6 @@ odoo.define('pos_durak.model', function (require){
 //------------------------------------------------------
 
 //---------Help functions part----------------------
-
-    function arrow_blinking(arrow_color){
-        if(triangle_button_pushed){
-            return;
-        }
-
-        try{
-            var triangle = document.getElementById('triangle');
-            if(arrow_color === 1){
-                triangle.style.setProperty('color', 'red');
-                setTimeout(arrow_blinking, 500, 2);
-            }else if(arrow_color === 2){
-                triangle.style.setProperty('color', 'blue');
-                setTimeout(arrow_blinking   , 500, 1);
-            }
-        }catch(e){
-            Tip("Arrow cant blink");
-        }
-    }
 
     function CheckUserExists(uid){
         for(i = 0; i < chat_users.length; i++){
@@ -530,7 +530,7 @@ function SetPos(avatar, uid){
             var temp = document.getElementById('cards-left');
             temp.innerHTML = '';
             temp.innerHTML += '<img style="position:absolute;left:0%; top:-30%; width: 54%; height: 170%; transform: rotate(90deg)" draggable="false" src="/pos_durak/static/src/img/kards/'+
-            last+'.png"/>'
+            last+'.png"/>';
             for(i = 1; i <= num; i++){
                 temp.innerHTML += '<img style="position:absolute;left:'+i+'%; width: 24%; height: 100%;" src="/pos_durak/static/src/img/reverse-card.png"/>';
             }
