@@ -180,6 +180,7 @@ odoo.define('pos_durak.model', function (require){
         return chat_users[i + 1].uid;
     }
 
+    var triangle_button_pushed = false;
     function arrow_blinking(arrow_color){
         if(triangle_button_pushed){
             return;
@@ -199,7 +200,6 @@ odoo.define('pos_durak.model', function (require){
         }
     }
 
-    var triangle_button_pushed = false;
     function ControlOnClick(e){
         var elem = e ? e.target : window.event.srcElement;
         var num = '';
