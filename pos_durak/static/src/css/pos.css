@@ -299,3 +299,9 @@
     height: 25px;
     margin-left: 5px;
 }
+
+#step-button{
+    position: absolute;
+    right: 30px;
+    top: 60px;
+}
