@@ -17,7 +17,11 @@
   margin-left: -100px;
   left: 50%;
   display: none;
-  z-index: 2010;
+  z-index: 1050;
+}
+
+.oh-card-body > .dropdown > .dropdown-toggle:after {
+    display: none !important;
 }
 /*-------------------------------------------------------------------*/
 .btn-color-ee{
@@ -28,9 +32,7 @@
     margin-top:10px;
     width:120px;
 }
-.btn-color-ee:focus,
-.btn-color-ee.focus,
-.btn-color-ee:hover{
+.btn-color-ee:active{
     background-color: #007a77;
     border-color: #007a77;
 }
@@ -588,22 +590,16 @@ h4 .stat-count {
 .li-head{
     list-style-type: none;
     display: inline;
-    cursor: pointer;
-}
-.li-head:hover{
-    color: #003a3f;
 }
 .stat-head {
     text-align: left !important;
     font-size: 16px;
     margin-bottom: 10px;
     margin-left: 22px;
-    width: 100%;
     color: #008784;
     font-weight: 560;
-    cursor: pointer;
 }
-.stat-head:hover{
+a.stat-head:hover{
     color: #003a3f;
 }
 .emp_graph {
@@ -823,9 +819,9 @@ h4 .stat-count {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     will-change: transform, box-shadow;
     height: 250px;
-    overflow-y: auto;
     margin-bottom: 15px;
     border: 1px solid #ced4da;
+    overflow-y: hidden;
 }
 .ohada_notification .media {
     border-bottom: 1px solid #001E5A;
@@ -971,7 +967,8 @@ h4 .stat-count {
 
 
 .row.main-section {
-    margin-right: 200px !important;
+    margin-right: 5px !important;
+    margin-left: 5px !important;
 }
 /* width */
 .ohada_notification::-webkit-scrollbar {

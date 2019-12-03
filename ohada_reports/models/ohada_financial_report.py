@@ -70,24 +70,13 @@ class ReportOhadaFinancialReport(models.Model):
     #        if self.code and self.code.strip().lower() in __builtins__.keys():
     #            raise ValidationError('The code "%s" is invalid on report with name "%s"' % (self.code, self.name))
     @api.model
-    def print_bundle_xlsx(self, response):
+    def print_bundle_xlsx(self, options, response):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
-        options = {'ir_filters': None,
-                   'date': {'date_to': '2019-12-31', 'string': '2019', 'filter': 'this_year',
-                            'date_from': '2019-01-01'},
-                   'comparison': {
-                       'date_from': '2018-01-01',
-                       'date_to': '2018-12-31',
-                       'filter': 'no_comparison',
-                       'number_period': 1,
-                       'periods': [{
-                           'date_from': '2018-01-01',
-                           'date_to': '2018-12-31',
-                           'string': '2018',
-                       }],
-                       'string': 'No comparison', },
-                   }
+
+        self.env.ref('ohada_reports.ohada_financial_report_balancesheet0').get_xlsx(options, response,
+                                                                                    print_bundle=True,
+                                                                                    workbook=workbook)
         for report in self.env['ohada.financial.html.report'].search([('type', '=', 'main')]):
             report.get_xlsx(options, response, print_bundle=True, workbook=workbook)
         options['comparison']['filter'] = 'previous_period'
@@ -105,23 +94,7 @@ class ReportOhadaFinancialReport(models.Model):
         return response
 
     @api.model
-    def print_bundle_pdf(self, minimal_layout=True):
-        options = {'ir_filters': None,
-                   'date': {'date_to': '2019-12-31', 'string': '2019', 'filter': 'this_year',
-                            'date_from': '2019-01-01'},
-                   'comparison': {
-                       'date_from': '2018-01-01',
-                       'date_to': '2018-12-31',
-                       'filter': 'no_comparison',
-                       'number_period': 1,
-                       'periods': [{
-                           'date_from': '2018-01-01',
-                           'date_to': '2018-12-31',
-                           'string': '2018',
-                       }],
-                       'string': 'No comparison',},
-                   }
-
+    def print_bundle_pdf(self, options, minimal_layout=True):
         base_url = self.env['ir.config_parameter'].sudo().get_param('report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         # base_url = 'http://127.0.0.1:8069'
 
@@ -150,6 +123,9 @@ class ReportOhadaFinancialReport(models.Model):
 
         body = body.replace(b'<body class="o_account_reports_body_print">',
                             b'<body class="o_account_reports_body_print">' + body_html)
+        body = body.replace(b'<table style="margin-top:10px;margin-bottom:10px;color:#001E5A;font-weight:normal;"',
+                            b'<table style="font-size:8px !important;margin-top:10px;margin-bottom:10px;color:#001E5A;font-weight:normal;"')
+
         if minimal_layout:
             header = ''
             footer = self.env['ir.actions.report'].render_template("ohada_reports.internal_layout_ohada",
@@ -201,115 +177,6 @@ class ReportOhadaFinancialReport(models.Model):
             landscape=landscape,
             specific_paperformat_args=spec_paperformat_args
         )
-        # return base64.encodebytes(pdf)
-
-    @api.model
-    def get_link(self, year=None):
-        # wdb.set_trace()
-        data = dict()
-        if year:
-            data['this_year'] = year
-            data['prev_year'] = year - 1
-            options = {'ir_filters': None,
-                       'date': {'date_to': str(year)+'-12-31', 'string': str(year), 'filter': 'this_year',
-                                'date_from': str(year)+'-01-01'}}
-        else:
-            year = datetime.now().year
-            data['this_year'] = datetime.now().year
-            data['prev_year'] = datetime.now().year - 1
-            options = {'ir_filters': None,
-                       'date': {'date_to': str(year)+'-12-31', 'string': str(year), 'filter': 'this_year',
-                                'date_from': str(year)+'-01-01'}}
-
-        data['years'] = [year, year-1, year-2, year-3]
-        data['company_name'] = self.env['res.users'].browse(request.session.uid).company_id.name
-
-        bz_id = self.env.ref('ohada_reports.account_financial_report_balancesheet_BZ').id
-        dz_id = self.env.ref('ohada_reports.account_financial_report_balancesheet_DZ').id
-        xl_id = self.env.ref('ohada_reports.account_financial_report_ohada_profitlost_XI').id
-        zh_id = self.env.ref('ohada_reports.account_financial_report_ohada_cashflow_ZH').id
-
-        # wdb.set_trace()
-        # 1st
-        data['bz'] = data['bz_d'] = self._get_lines(options, bz_id)[0]['columns'][0]['no_format_name']
-        data['dz'] = self._get_lines(options, dz_id)[0]['columns'][0]['no_format_name']
-        data['dif_1'] = '$ {:,.2f}'.format(data['bz'] + data['dz'])
-        data['bz'] = '$ {:,.2f}'.format(data['bz'])
-        data['dz'] = '$ {:,.2f}'.format(data['dz'])
-
-        # 2nd
-        data['xl'] = data['xl_d'] = self._get_lines(options, xl_id)[0]['columns'][0]['no_format_name']
-        data['xl-1'] = data['xl-1_d'] = self._get_lines({'ir_filters': None,
-                                        'date': {'date_to': str(year-1)+'-12-31', 'string': str(year-1), 'filter': 'this_year',
-                                                 'date_from': str(year-1)+'-01-01'}}, xl_id)[0]['columns'][0]['no_format_name']
-        data['xl_dif'] = '$ {:,.2f}'.format(data['xl'] - data['xl-1'])
-        data['xl'] = '$ {:,.2f}'.format(data['xl'])
-        data['xl-1'] = '$ {:,.2f}'.format(data['xl-1'])
-
-        # 3st
-        data['zh'] = data['zh_d'] = self._get_lines(options, zh_id)[0]['columns'][0]['no_format_name']
-        data['zh-1'] = data['zh-1_d'] = self._get_lines({'ir_filters': None,
-                                        'date': {'date_to': str(year-1)+'-12-31', 'string': str(year-1), 'filter': 'this_year',
-                                                 'date_from': str(year-1)+'-01-01'}}, zh_id)[0]['columns'][0]['no_format_name']
-        data['zh_dif'] = '$ {:,.2f}'.format(data['zh'] - data['zh-1'])
-        data['zh'] = '$ {:,.2f}'.format(data['zh'])
-        data['zh-1'] = '$ {:,.2f}'.format(data['zh-1'])
-
-        #diagrams
-        # [['2016',5], ['2017',1], ['2018',4], ['2019',1]] data for diagrams
-        data['di_data'] = {'BS':[], 'PL':[],'CS':[]}
-
-        data['di_data']['BS'] = [[str(year-3), self._get_lines({'ir_filters': None,
-                                                                'date': {'date_to': str(year-3)+'-12-31', 'string': str(year-3), 'filter': 'this_year',
-                                                                'date_from': str(year-3)+'-01-01'}}, bz_id)[0]['columns'][0]['no_format_name']],
-                                 [str(year-2), self._get_lines({'ir_filters': None,
-                                                                'date': {'date_to': str(year-2)+'-12-31', 'string': str(year-2), 'filter': 'this_year',
-                                                                'date_from': str(year-2)+'-01-01'}}, bz_id)[0]['columns'][0]['no_format_name']],
-                                 [str(year-1),self._get_lines({'ir_filters': None,
-                                                                'date': {'date_to': str(year-1)+'-12-31', 'string': str(year-1), 'filter': 'this_year',
-                                                                'date_from': str(year-1)+'-01-01'}}, bz_id)[0]['columns'][0]['no_format_name']],
-                                 [str(year), data['bz_d']]]
-
-        data['di_data']['PL'] = [[str(year - 3), self._get_lines({'ir_filters': None,
-                                                                  'date': {'date_to': str(year - 3) + '-12-31',
-                                                                           'string': str(year - 3),
-                                                                           'filter': 'this_year',
-                                                                           'date_from': str(year - 3) + '-01-01'}},
-                                                                 xl_id)[0]['columns'][0]['no_format_name']],
-                                 [str(year - 2), self._get_lines({'ir_filters': None,
-                                                                  'date': {'date_to': str(year - 2) + '-12-31',
-                                                                           'string': str(year - 2),
-                                                                           'filter': 'this_year',
-                                                                           'date_from': str(year - 2) + '-01-01'}},
-                                                                 xl_id)[0]['columns'][0]['no_format_name']],
-                                 [str(year - 1), data['xl-1_d']],
-                                 [str(year), data['xl_d']]]
-        # [{count: 1, l_month: "2016"},{count: 5, l_month: "2017"},{count: 4, l_month: "2018"},{count: 6, l_month: "2019"}]}]
-
-        data['di_data']['CS'] = [{'l_month': str(year - 3),'count': self._get_lines({'ir_filters': None,
-                                                                  'date': {'date_to': str(year - 3) + '-12-31',
-                                                                           'string': str(year - 3),
-                                                                           'filter': 'this_year',
-                                                                           'date_from': str(year - 3) + '-01-01'}},
-                                                                 zh_id)[0]['columns'][0]['no_format_name']},
-                                 {'l_month': str(year - 2), 'count': self._get_lines({'ir_filters': None,
-                                                                  'date': {'date_to': str(year - 2) + '-12-31',
-                                                                           'string': str(year - 2),
-                                                                           'filter': 'this_year',
-                                                                           'date_from': str(year - 2) + '-01-01'}},
-                                                                 zh_id)[0]['columns'][0]['no_format_name']},
-                                 {'l_month': str(year - 1), 'count': data['zh-1_d']},
-                                 {'l_month': str(year), 'count': data['zh_d']}]
-
-        reports = ['ohada_reports.action_account_report_cs',
-                   'ohada_reports.action_account_report_ohada_balancesheet',
-                   'ohada_reports.account_financial_report_ohada_profitlost',]
-
-        data['menu_id'] = self.env.ref('account_accountant.menu_accounting').id
-
-        for i in reports:
-            data[self.env.ref(i).name] = self.env.ref(i).id
-        return data
 
     def _get_column_name(self, field_content, field):
         comodel_name = self.env['account.move.line']._fields[field].comodel_name
@@ -717,7 +584,7 @@ class OhadaFinancialReportLine(models.Model):
     symbol = fields.Char(string="Symbol", default='none')
     header = fields.Boolean(default=False)
     letter = fields.Char(string="letter", default=None)
-
+    note_id = fields.Char(string="note action id", default='none')
     _sql_constraints = [
         ('code_uniq', 'unique (code)', "A report line with the same code already exists."),
     ]
@@ -1465,12 +1332,12 @@ class OhadaFinancialReportLine(models.Model):
                 continue
 
             # Post-processing ; creating line dictionnary, building comparison, computing total for extended, formatting
-
             vals = {
                 'id': line.id,
                 'name': line.name,
                 'reference': line.reference,        #E+
-                'note': line.note,                  #E+
+                'note': line.note,
+                'note_id': line.note_id,
                 'symbol': line.symbol,
                 'level': line.level,
                 'class': '',
@@ -1481,6 +1348,7 @@ class OhadaFinancialReportLine(models.Model):
                 'letter': line.letter,
                 'header': line.header,
             }
+
             # wdb.set_trace()
             if financial_report.tax_report and line.domain and not line.action_id:
                 vals['caret_options'] = 'tax.report.line'
@@ -1523,7 +1391,6 @@ class OhadaFinancialReportLine(models.Model):
                     vals['columns'] = [line._format(v) for v in vals['columns']]
                 if not line.formulas:
                     vals['columns'] = [{'name': ''} for k in vals['columns']]
-
             if line.reference == 'REF':
                 vals['columns'][0]['name'] = ['EXERPRICE', 'au 31/12/' + line._context['date_from'][0:4]]
                 if financial_report.name == 'Balance Sheet - Assets' and options['comparison']['filter'] == 'no_comparison':
@@ -1560,6 +1427,8 @@ class OhadaFinancialReportLine(models.Model):
                     result = lines + new_lines
             else:
                 result = lines
+            if line.note != 'NET' or 'none' or 'NOTE':
+                line.note_id = str(self.env['ir.actions.client'].search([('name', 'ilike', 'Note '+line.note+' ')]).id)
             if result[0]['note'] == 'NET':
                 if financial_report.name == 'Balance Sheet - Assets' and options['comparison']['filter'] == 'no_comparison':
                     result[0]['columns'][0]['name'] = 'BRUT'
@@ -1715,3 +1584,143 @@ class IrModuleModule(models.Model):
         """)
 
         return res
+
+class OhadaFinancialReportLine(models.Model):
+    _name = "ohada.dashboard"
+    _description = "OHADA Dashboard"
+
+    @api.model
+    def fetch_data(self, year=None):
+        report = self.env['ohada.financial.html.report']
+        data = dict()
+        if year:
+            data['this_year'] = year
+            data['prev_year'] = year - 1
+        else:
+            year = datetime.now().year
+            data['this_year'] = datetime.now().year
+            data['prev_year'] = datetime.now().year - 1
+
+        options = {'ir_filters': None,
+                   'date': {'date_to': str(year) + '-12-31', 'string': str(year), 'filter': 'this_year',
+                            'date_from': str(year) + '-01-01'}}
+
+        data['options'] = report.make_temp_options(year)
+
+        data['years'] = [datetime.now().year, datetime.now().year - 1, datetime.now().year - 2, datetime.now().year - 3]
+        data['company_name'] = self.env['res.users'].browse(request.session.uid).company_id.name
+
+        bz_id = self.env.ref('ohada_reports.account_financial_report_balancesheet_BZ').id
+        dz_id = self.env.ref('ohada_reports.account_financial_report_balancesheet_DZ').id
+        xl_id = self.env.ref('ohada_reports.account_financial_report_ohada_profitlost_XI').id
+        zh_id = self.env.ref('ohada_reports.account_financial_report_ohada_cashflow_ZH').id
+
+        data['bs_id'] = self.env.ref('ohada_reports.ohada_financial_report_balancesheet0').id
+        data['pl_id'] = self.env.ref('ohada_reports.account_financial_report_ohada_profitlost').id
+        data['cf_id'] = self.env.ref('ohada_reports.account_financial_report_ohada_cashflow').id
+        # wdb.set_trace()
+        # 1st
+        data['bz'] = data['bz_d'] = report._get_lines(options, bz_id)[0]['columns'][0]['no_format_name']
+        data['dz'] = report._get_lines(options, dz_id)[0]['columns'][0]['no_format_name']
+        data['dif_1'] = '$ {:,.2f}'.format(data['bz'] + data['dz'])
+        data['bz'] = '$ {:,.2f}'.format(data['bz'])
+        data['dz'] = '$ {:,.2f}'.format(data['dz'])
+
+        # 2nd
+        data['xl'] = data['xl_d'] = report._get_lines(options, xl_id)[0]['columns'][0]['no_format_name']
+        data['xl-1'] = data['xl-1_d'] = report._get_lines({'ir_filters': None,
+                                                         'date': {'date_to': str(year - 1) + '-12-31',
+                                                                  'string': str(year - 1), 'filter': 'this_year',
+                                                                  'date_from': str(year - 1) + '-01-01'}}, xl_id)[0][
+            'columns'][0]['no_format_name']
+        data['xl_dif'] = '$ {:,.2f}'.format(data['xl'] - data['xl-1'])
+        data['xl'] = '$ {:,.2f}'.format(data['xl'])
+        data['xl-1'] = '$ {:,.2f}'.format(data['xl-1'])
+
+        # 3st
+        data['zh'] = data['zh_d'] = report._get_lines(options, zh_id)[0]['columns'][0]['no_format_name']
+        data['zh-1'] = data['zh-1_d'] = report._get_lines({'ir_filters': None,
+                                                         'date': {'date_to': str(year - 1) + '-12-31',
+                                                                  'string': str(year - 1), 'filter': 'this_year',
+                                                                  'date_from': str(year - 1) + '-01-01'}}, zh_id)[0][
+            'columns'][0]['no_format_name']
+        data['zh_dif'] = '$ {:,.2f}'.format(data['zh'] - data['zh-1'])
+        data['zh'] = '$ {:,.2f}'.format(data['zh'])
+        data['zh-1'] = '$ {:,.2f}'.format(data['zh-1'])
+
+        # diagrams
+        # [['2016',5], ['2017',1], ['2018',4], ['2019',1]] data for diagrams
+        data['di_data'] = {'BS': [], 'PL': [], 'CS': []}
+
+        data['di_data']['BS'] = [[str(year - 3), report._get_lines({'ir_filters': None,
+                                                                  'date': {'date_to': str(year - 3) + '-12-31',
+                                                                           'string': str(year - 3),
+                                                                           'filter': 'this_year',
+                                                                           'date_from': str(year - 3) + '-01-01'}},
+                                                                 bz_id)[0]['columns'][0]['no_format_name']],
+                                 [str(year - 2), report._get_lines({'ir_filters': None,
+                                                                  'date': {'date_to': str(year - 2) + '-12-31',
+                                                                           'string': str(year - 2),
+                                                                           'filter': 'this_year',
+                                                                           'date_from': str(year - 2) + '-01-01'}},
+                                                                 bz_id)[0]['columns'][0]['no_format_name']],
+                                 [str(year - 1), report._get_lines({'ir_filters': None,
+                                                                  'date': {'date_to': str(year - 1) + '-12-31',
+                                                                           'string': str(year - 1),
+                                                                           'filter': 'this_year',
+                                                                           'date_from': str(year - 1) + '-01-01'}},
+                                                                 bz_id)[0]['columns'][0]['no_format_name']],
+                                 [str(year), data['bz_d']]]
+
+        data['di_data']['PL'] = [[str(year - 3), report._get_lines({'ir_filters': None,
+                                                                  'date': {'date_to': str(year - 3) + '-12-31',
+                                                                           'string': str(year - 3),
+                                                                           'filter': 'this_year',
+                                                                           'date_from': str(year - 3) + '-01-01'}},
+                                                                 xl_id)[0]['columns'][0]['no_format_name']],
+                                 [str(year - 2), report._get_lines({'ir_filters': None,
+                                                                  'date': {'date_to': str(year - 2) + '-12-31',
+                                                                           'string': str(year - 2),
+                                                                           'filter': 'this_year',
+                                                                           'date_from': str(year - 2) + '-01-01'}},
+                                                                 xl_id)[0]['columns'][0]['no_format_name']],
+                                 [str(year - 1), data['xl-1_d']],
+                                 [str(year), data['xl_d']]]
+        # [{count: 1, l_month: "2016"},{count: 5, l_month: "2017"},{count: 4, l_month: "2018"},{count: 6, l_month: "2019"}]}]
+
+        data['di_data']['CS'] = [{'l_month': str(year - 3), 'count': report._get_lines({'ir_filters': None,
+                                                                                      'date': {'date_to': str(
+                                                                                          year - 3) + '-12-31',
+                                                                                               'string': str(year - 3),
+                                                                                               'filter': 'this_year',
+                                                                                               'date_from': str(
+                                                                                                   year - 3) + '-01-01'}},
+                                                                                     zh_id)[0]['columns'][0][
+            'no_format_name']},
+                                 {'l_month': str(year - 2), 'count': report._get_lines({'ir_filters': None,
+                                                                                      'date': {'date_to': str(
+                                                                                          year - 2) + '-12-31',
+                                                                                               'string': str(year - 2),
+                                                                                               'filter': 'this_year',
+                                                                                               'date_from': str(
+                                                                                                   year - 2) + '-01-01'}},
+                                                                                     zh_id)[0]['columns'][0][
+                                     'no_format_name']},
+                                 {'l_month': str(year - 1), 'count': data['zh-1_d']},
+                                 {'l_month': str(year), 'count': data['zh_d']}]
+
+        data['menu_id'] = self.env.ref('account_accountant.menu_accounting').id
+
+        data['notes'] = []
+        for report in self.env['ohada.financial.html.report'].search([('type', '=', 'note')]):
+            data['notes'].append({'name': report.name[0:8].replace("-", "").rstrip().upper(),
+                                  'action_id': self.env['ir.actions.client'].search([('name', '=', report.name)]).id})
+
+        reports = ['ohada_reports.action_account_report_cs',
+                   'ohada_reports.action_account_report_bs',
+                   'ohada_reports.action_account_report_ohada_profitlost', ]
+
+        for i in reports:
+            data[self.env.ref(i).name] = self.env.ref(i).id
+
+        return data

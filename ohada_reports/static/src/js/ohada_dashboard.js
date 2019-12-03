@@ -30,7 +30,24 @@ var OhadaDashboard = AbstractAction.extend(ControlPanelMixin, {
         'click .close': 'close_popup',
         'click .export_pdf': 'print_bundle_pdf',
         'click .export_xlsx': 'print_bundle_xlsx',
+        'click .print_bs_pdf': 'print_bs_pdf',
+        'click .print_lands_bs_pdf': 'print_lands_bs_pdf',
+        'click .print_pl_pdf': 'print_pl_pdf',
+        'click .print_cf_pdf': 'print_cf_pdf'
     },
+
+    fetch_data: function(year=false) {
+        var self = this;
+        var def1 = this._rpc({
+                model: 'ohada.dashboard',
+                method: 'fetch_data',
+                args: [year],
+        }).done(function(result) {
+            self.data =  result;
+        });
+        return $.when(def1);
+    },
+
     close_popup: function(){
         document.getElementById("myForm").style.display = "none";
         document.getElementById("modal-backdrop").style.display = "none";
@@ -41,18 +58,96 @@ var OhadaDashboard = AbstractAction.extend(ControlPanelMixin, {
             self._updateTemplateBody();
         });
     },
+    print_lands_bs_pdf: function() {
+        var self = this;
+        framework.blockUI();
+        var def = $.Deferred();
+        session.get_file({
+            url: '/ohada_reports',
+            data: {"model": 'ohada.financial.html.report',
+                    "options": JSON.stringify(self.data['options']),
+                    "financial_id": self.data['bs_id'],
+                    "output_format": "pdf",
+                    "horizontal": "True"},
+            success: def.resolve.bind(def),
+            error: function () {
+                crash_manager.rpc_error.apply(crash_manager, arguments);
+                def.reject();
+            },
+            complete: framework.unblockUI,
+        });
+        return def;
+    },
+    print_bs_pdf: function() {
+        var self = this;
+        framework.blockUI();
+        var def = $.Deferred();
+        session.get_file({
+            url: '/ohada_reports',
+            data: {"model": 'ohada.financial.html.report',
+                    "options": JSON.stringify(self.data['options']),
+                    "financial_id": self.data['bs_id'],
+                    "output_format": "pdf"},
+            success: def.resolve.bind(def),
+            error: function () {
+                crash_manager.rpc_error.apply(crash_manager, arguments);
+                def.reject();
+            },
+            complete: framework.unblockUI,
+        });
+        return def;
+    },
+    print_pl_pdf: function() {
+        var self = this;
+        framework.blockUI();
+        var def = $.Deferred();
+        session.get_file({
+            url: '/ohada_reports',
+            data: {"model": 'ohada.financial.html.report',
+                    "options": JSON.stringify(self.data['options']),
+                    "financial_id": self.data['pl_id'],
+                    "output_format": "pdf"},
+            success: def.resolve.bind(def),
+            error: function () {
+                crash_manager.rpc_error.apply(crash_manager, arguments);
+                def.reject();
+            },
+            complete: framework.unblockUI,
+        });
+        return def;
+    },
+    print_cf_pdf: function() {
+        var self = this;
+        framework.blockUI();
+        var def = $.Deferred();
+        session.get_file({
+            url: '/ohada_reports',
+            data: {"model": 'ohada.financial.html.report',
+                    "options": JSON.stringify(self.data['options']),
+                    "financial_id": self.data['cf_id'],
+                    "output_format": "pdf"},
+            success: def.resolve.bind(def),
+            error: function () {
+                crash_manager.rpc_error.apply(crash_manager, arguments);
+                def.reject();
+            },
+            complete: framework.unblockUI,
+        });
+        return def;
+    },
     print_bundle: function() {
         document.getElementById("myForm").style.display = "block";
         document.getElementById("modal-backdrop").style.display = "block";
     },
 
     print_bundle_xlsx: function() {
+        self = this;
         framework.blockUI();
         var def = $.Deferred();
         session.get_file({
             url: '/ohada_reports',
             data: {"model": "ohada.financial.html.report",
-                   "options": '{"all_entries": false, "unfolded_lines": []}',
+                   "options": JSON.stringify(self.data['options']),
                    "financial_id": 3,
                    "output_format": "xlsx_bundle"},
             success: def.resolve.bind(def),
@@ -66,12 +161,13 @@ var OhadaDashboard = AbstractAction.extend(ControlPanelMixin, {
     },
 
     print_bundle_pdf: function() {
+        self = this;
         framework.blockUI();
         var def = $.Deferred();
         session.get_file({
             url: '/ohada_reports',
             data: {"model": "ohada.financial.html.report",
-                   "options": '{"all_entries": false, "unfolded_lines": []}',
+                   "options": JSON.stringify(self.data['options']),
                    "financial_id": 3,
                    "output_format": "pdf_bundle"},
             success: def.resolve.bind(def),
@@ -89,6 +185,10 @@ var OhadaDashboard = AbstractAction.extend(ControlPanelMixin, {
         this.$el.append(core.qweb.render('ManagerDashboard', {widget: this}));
         this.render_graphs();
         document.getElementById("myForm").style.display = "none";
+        if (document.getElementsByClassName('o_cp_buttons')[0]){
+            document.getElementsByClassName('o_cp_buttons')[0].style.display = 'none';
+            document.getElementsByClassName('o_cp_right')[0].style.display = 'none';
+        };
     },
 
     init: function(parent, context) {
@@ -110,19 +210,11 @@ var OhadaDashboard = AbstractAction.extend(ControlPanelMixin, {
             self.render_dashboards();
             self.render_graphs();
             self.$el.parent().addClass('oe_background_grey');
+            if (document.getElementsByClassName('o_cp_buttons')[0]){
+                document.getElementsByClassName('o_cp_buttons')[0].style.display = 'none';
+                document.getElementsByClassName('o_cp_right')[0].style.display = 'none';
+            };
         });
-    },
-
-    fetch_data: function(year=false) {
-        var self = this;
-        var def1 = this._rpc({
-                model: 'ohada.financial.html.report',
-                method: 'get_link',
-                args: [year],
-        }).done(function(result) {
-            self.data =  result;
-        });
-        return $.when(def1);
     },
 
     render_dashboards: function() {
@@ -145,18 +237,6 @@ var OhadaDashboard = AbstractAction.extend(ControlPanelMixin, {
             self.update_join_resign_trends();
         }
     },
-
-    get_link: function() {
-        var self = this;
-        var def1 =  this._rpc({
-                model: 'ohada.financial.html.report',
-                method: 'get_link',
-        }).done(function(result) {
-            console.log(result)
-        });
-        return $.when(def1);
-    },
-
 
     update_join_resign_trends: function(){
         var elem = this.$('.join_resign_trend');

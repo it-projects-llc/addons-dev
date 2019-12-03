@@ -667,15 +667,17 @@ class OhadaReport(models.AbstractModel):
         # Prevent inconsistency between options and context.
         self = self.with_context(self._set_context(options))
 
+        # wdb.set_trace()
         templates = self._get_templates()
         report_manager = self._get_report_manager(options)
+        date = options['date'].get('date_from') or options['date'].get('date')
         report = {'name': self._get_report_name(),
                   'summary': report_manager.summary,
                   'company_name': self.env.user.company_id.name,
                   'type': self.type,
                   'vat': self.env.user.company_id.vat,
-                  'year': options['date']['date_from'][0:4],
-                  'header': self.header and self.header + ' ' + options['date']['date_from'][0:4],}
+                  'year': date[0:4],
+                  'header': self.header and self.header + ' ' + date[0:4],}
         lines = self._get_lines(options, line_id=line_id)
 
         if options.get('hierarchy'):
@@ -699,7 +701,8 @@ class OhadaReport(models.AbstractModel):
                     'options': options,
                     'context': self.env.context,
                     'model': self,
-                }
+                    'menu_id': str(self.env.ref('account_accountant.menu_accounting').id),
+                    }
         if additional_context and type(additional_context) == dict:
             rcontext.update(additional_context)
         if self.env.context.get('analytic_account_ids'):
@@ -1062,7 +1065,7 @@ class OhadaReport(models.AbstractModel):
         """
         return {b'o_account_reports_no_print': b'', b'table-responsive': b'', b'<a': b'<span', b'</a>': b'</span>'}
 
-    def get_pdf(self, options, minimal_layout=True):
+    def get_pdf(self, options, minimal_layout=True, horizontal=False):
         # As the assets are generated during the same transaction as the rendering of the
         # templates calling them, there is a scenario where the assets are unreachable: when
         # you make a request to read the assets while the transaction creating them is not done.
@@ -1089,10 +1092,24 @@ class OhadaReport(models.AbstractModel):
             values=dict(rcontext),
         )
 
-        # body_html = self.with_context(print_mode=True).get_html(options)
-        body_html = self.get_html(options)
-
+        if self.name == 'Balance Sheet' and horizontal is False:
+            if not options['date'].get('date_from'):
+                options = self.make_temp_options(int(options['date']['date'][0:4]))
+            body_html = b''
+            body_html += self.env.ref('ohada_reports.account_financial_report_ohada_balancesheet').get_html(options)
+            body_html += self.env.ref('ohada_reports.account_financial_report_ohada_balancesheet_liabilitites0').get_html(options)
+        else:
+            body_html = self.get_html(options)
+        # wdb.set_trace()
         body = body.replace(b'<body class="o_account_reports_body_print">', b'<body class="o_account_reports_body_print">' + body_html)
+
+        if self.name == 'Balance Sheet' and horizontal is True:
+            body = body.replace(b'<div class="container o_account_reports_page o_account_reports_no_print page" style="padding-top:0px;padding-bottom:0px;">', b'<div class="o_account_reports_page o_account_reports_no_print page" style="padding-top:0px;padding-bottom:0px;">')
+            body = body.replace(b'<table style="margin-top:10px;margin-bottom:10px;color:#001E5A;font-weight:normal;float:left;"', b'<table style="font-size:8px !important;width:30%;margin-bottom:10px;color:#001E5A;font-weight:normal;float:left;"')
+            body = body.replace(b'<table style="margin-bottom:10px;color:#001E5A;font-weight:normal;float:left;"', b'<table style="margint-left:-9px;font-size:8px !important;width:30%;margin-bottom:10px;color:#001E5A;font-weight:normal;float:left;"')
+        else:
+            body = body.replace(b'<table style="margin-top:10px;margin-bottom:10px;color:#001E5A;font-weight:normal;"', b'<table style="font-size:8px !important;margin-top:10px;margin-bottom:10px;color:#001E5A;font-weight:normal;"')
+
         if minimal_layout:
             header = ''
             footer = self.env['ir.actions.report'].render_template("ohada_reports.internal_layout_ohada", values=rcontext)
@@ -1128,7 +1145,7 @@ class OhadaReport(models.AbstractModel):
                 footer = b''
             header = headers
 
-        landscape = False
+        landscape = horizontal
         if len(self.with_context(print_mode=True).get_header(options)[-1]) > 5:
             landscape = True
 
@@ -1239,123 +1256,144 @@ class OhadaReport(models.AbstractModel):
             sheet.set_column(2, 2, 50)
             sheet.set_row(7, 50)
             sheet.set_row(8, 30)
-        else:
+        elif self.name != 'Balance Sheet':
             sheet.set_column(1, 1, 50)
             sheet.set_row(7, 50)
 
         #write all data rows
-        for y in range(0, len(lines)):
-            level = lines[y].get('level')
-            sheet.write(y, 0, '', workbook.add_format({}))
-            x_index = 1
-            y_offset = 7
-            if lines[y].get('caret_options'):
-                style = level_3_style
-                col1_style = level_3_col1_style
-            elif level == 0:
-                # y_offset += 1
-                style = level_0_style
-                col1_style = style
-            elif level == 1:
-                style = level_1_style
-                col1_style = style
-            elif level == 2:
-                style = level_2_style
-                col1_style = 'total' in lines[y].get('class', '').split(' ') and level_2_col1_total_style or level_2_col1_style
-            elif level == 3:
-                style = level_3_style
-                col1_style = 'total' in lines[y].get('class', '').split(' ') and level_3_col1_total_style or level_3_col1_style
-            else:
-                style = default_style
-                col1_style = default_col1_style
-
-            if lines[y].get('note') == 'NET':
-                for x in range(1, len(lines[y]['columns']) + 1):
-                    cell = lines[y]['columns'][x - 1]
-                    loc_style = copy.copy(style)
-                    loc_style.set_align('center')
-                    workbook.formats.append(loc_style)
-                    sheet.write(y + y_offset, net_x, cell.get('name', ''), loc_style)
-                    net_x += 1
-            else:
-                if lines[y].get('reference') or lines[0].get('reference'):
-                    loc_style = copy.copy(style)
-                    loc_style.set_align('left')
-                    workbook.formats.append(loc_style)
-                    cell_name = lines[y].get('reference')
-                    if lines[y].get('reference') == 'REF':
-                        sheet.merge_range(y + y_offset, x_index, y + y_offset + 1, x_index, cell_name, loc_style)
-                        x_index += 1
-                    else:
-                        sheet.write(y + y_offset, x_index, cell_name, loc_style)
-                        x_index += 1
-
-                # write the first column, with a specific style to manage the indentation
-                cell_name = lines[y]['name']
-                if lines[y].get('reference') == 'REF':
-                    sheet.merge_range(y + y_offset, x_index, y + y_offset + 1, x_index, cell_name, style)
-                    x_index += 1
+        def write_data(lines, x_ind=None):
+            for y in range(0, len(lines)):
+                level = lines[y].get('level')
+                sheet.write(y, 0, '', workbook.add_format({}))
+                x_index = x_ind or 1
+                y_offset = 7
+                if lines[y].get('caret_options'):
+                    style = level_3_style
+                    col1_style = level_3_col1_style
+                elif level == 0:
+                    # y_offset += 1
+                    style = level_0_style
+                    col1_style = style
+                elif level == 1:
+                    style = level_1_style
+                    col1_style = style
+                elif level == 2:
+                    style = level_2_style
+                    col1_style = 'total' in lines[y].get('class', '').split(' ') and level_2_col1_total_style or level_2_col1_style
+                elif level == 3:
+                    style = level_3_style
+                    col1_style = 'total' in lines[y].get('class', '').split(' ') and level_3_col1_total_style or level_3_col1_style
                 else:
-                    sheet.write(y + y_offset, x_index, cell_name, style)
-                    x_index += 1
+                    style = default_style
+                    col1_style = default_col1_style
 
-                if lines[y].get('symbol') != 'none':
-                    loc_style = copy.copy(style)
-                    loc_style.set_align('center')
-                    workbook.formats.append(loc_style)
-                    cell_name = lines[y].get('symbol')
-                    if lines[y].get('reference') == 'REF':
-                        sheet.merge_range(y + y_offset, x_index, y + y_offset + 1, x_index, cell_name, loc_style)
-                        x_index += 1
-                    else:
-                        sheet.write(y + y_offset, x_index, cell_name, loc_style)
-                        x_index += 1
-
-                if lines[y].get('note') != 'none' and lines[y].get('note') != None:
-                    loc_style = copy.copy(style)
-                    loc_style.set_align('center')
-                    workbook.formats.append(loc_style)
-                    cell_name = lines[y].get('note')
-                    if lines[y].get('reference') == 'REF':
-                        sheet.merge_range(y + y_offset, x_index, y + y_offset + 1, x_index, cell_name, loc_style)
-                        x_index += 1
-                    else:
-                        sheet.write(y + y_offset, x_index, cell_name, loc_style)
-                        x_index += 1
-
-                # write all the remaining cells
-                for x in range(1, len(lines[y]['columns']) + 1):
-                    cell = lines[y]['columns'][x - 1]
-                    if lines[y].get('reference') == 'REF' or lines[y].get('header') is True:
-                        if x == 1:
-                            net_x = x_index
+                if lines[y].get('note') == 'NET':
+                    for x in range(1, len(lines[y]['columns']) + 1):
+                        cell = lines[y]['columns'][x - 1]
                         loc_style = copy.copy(style)
                         loc_style.set_align('center')
                         workbook.formats.append(loc_style)
-                        sheet.set_column(y + y_offset, x_index, 10)
-                    else:
+                        sheet.write(y + y_offset, net_x, cell.get('name', ''), loc_style)
+                        net_x += 1
+                else:
+                    if lines[y].get('reference') or lines[0].get('reference'):
                         loc_style = copy.copy(style)
-                        loc_style.set_align('right')
+                        loc_style.set_align('left')
                         workbook.formats.append(loc_style)
+                        cell_name = lines[y].get('reference')
+                        if lines[y].get('reference') == 'REF':
+                            sheet.merge_range(y + y_offset, x_index, y + y_offset + 1, x_index, cell_name, loc_style)
+                            x_index += 1
+                        else:
+                            sheet.write(y + y_offset, x_index, cell_name, loc_style)
+                            x_index += 1
 
-                    if lines[y].get('reference') == 'REF' and self.name == 'Balance Sheet - Assets' and x == 1\
-                            and options['comparison']['filter'] == 'no_comparison':
-                        cell_name = str()
-                        for i in cell.get('name', ''):
-                            cell_name += i
-                            cell_name += '\n'
-                        sheet.merge_range(y + y_offset, x_index, y + y_offset, x_index + 2, cell_name, loc_style)
-                        x_index += 3
-                    elif isinstance(cell.get('name', ''), list):
-                        cell_name = str()
-                        for i in cell.get('name', ''):
-                            cell_name += i
-                            cell_name += '\n'
-                        sheet.write(y + y_offset, x_index, cell_name, loc_style)
+                    # write the first column, with a specific style to manage the indentation
+                    cell_name = lines[y]['name']
+                    if lines[y].get('reference') == 'REF':
+                        sheet.merge_range(y + y_offset, x_index, y + y_offset + 1, x_index, cell_name, style)
                         x_index += 1
                     else:
-                        sheet.write(y + y_offset, x_index, cell.get('name', ''), loc_style)
+                        sheet.write(y + y_offset, x_index, cell_name, style)
                         x_index += 1
+
+                    if lines[y].get('symbol') != 'none':
+                        loc_style = copy.copy(style)
+                        loc_style.set_align('center')
+                        workbook.formats.append(loc_style)
+                        cell_name = lines[y].get('symbol')
+                        if lines[y].get('reference') == 'REF':
+                            sheet.merge_range(y + y_offset, x_index, y + y_offset + 1, x_index, cell_name, loc_style)
+                            x_index += 1
+                        else:
+                            sheet.write(y + y_offset, x_index, cell_name, loc_style)
+                            x_index += 1
+
+                    if lines[y].get('note') != 'none' and lines[y].get('note') != None:
+                        loc_style = copy.copy(style)
+                        loc_style.set_align('center')
+                        workbook.formats.append(loc_style)
+                        cell_name = lines[y].get('note')
+                        if lines[y].get('reference') == 'REF':
+                            sheet.merge_range(y + y_offset, x_index, y + y_offset + 1, x_index, cell_name, loc_style)
+                            x_index += 1
+                        else:
+                            sheet.write(y + y_offset, x_index, cell_name, loc_style)
+                            x_index += 1
+
+                    # write all the remaining cells
+
+                    for x in range(1, len(lines[y]['columns']) + 1):
+                        cell = lines[y]['columns'][x - 1]
+                        if lines[y].get('reference') == 'REF' or lines[y].get('header') is True:
+                            if x == 1:
+                                net_x = x_index
+                            loc_style = copy.copy(style)
+                            loc_style.set_align('center')
+                            workbook.formats.append(loc_style)
+                            # sheet.set_column(y + y_offset, x_index, 10)
+                        else:
+                            loc_style = copy.copy(style)
+                            loc_style.set_align('right')
+                            workbook.formats.append(loc_style)
+
+                        if lines[y].get('colspan0') == 3 and x == 1\
+                                and options['comparison']['filter'] == 'no_comparison':
+                            cell_name = str()
+                            for i in cell.get('name', ''):
+                                cell_name += i
+                                cell_name += '\n'
+                            sheet.merge_range(y + y_offset, x_index, y + y_offset, x_index + 2, cell_name, loc_style)
+                            x_index += 3
+                        elif isinstance(cell.get('name', ''), list):
+                            cell_name = str()
+                            for i in cell.get('name', ''):
+                                cell_name += i
+                                cell_name += '\n'
+                            sheet.write(y + y_offset, x_index, cell_name, loc_style)
+                            x_index += 1
+                        else:
+                            sheet.write(y + y_offset, x_index, cell.get('name', ''), loc_style)
+                            x_index += 1
+            self.x_index = x_index
+        # wdb.set_trace()
+        if self.name == 'Balance Sheet':
+            if not options['date'].get('date_from'):
+                options = self.make_temp_options(int(options['date']['date'][0:4]))
+            ctx = self._set_context(options)
+            ctx.update({'no_format': True, 'print_mode': True, 'prefetch_fields': False})
+            lines = self.env.ref('ohada_reports.account_financial_report_ohada_balancesheet').with_context(ctx)._get_lines(options)
+            write_data(lines)
+            lines = self.env.ref('ohada_reports.account_financial_report_ohada_balancesheet_liabilitites0').with_context(ctx)._get_lines(options)
+            write_data(lines, x_ind=self.x_index)
+            sheet.set_column(1, 1, 3)
+            sheet.set_column(2, 2, 50)
+            sheet.set_column(8, 8, 3)
+            sheet.set_column(9, 9, 50)
+            sheet.set_row(7, 50)
+            sheet.set_row(8, 30)
+        else:
+            write_data(lines)
         # make header above the table
         header = {
             'year': options['date']['date_from'][0:4],
@@ -1371,16 +1409,16 @@ class OhadaReport(models.AbstractModel):
             {'align': 'center', 'font_name': 'NimbusSanL', 'font_size': 13, 'font_color': '#001E5A',
              'bold': True, })
         sheet.write(2, 1, 'Désignation Entité : ' + header['year'], left_style)
-        sheet.write(2, x_index - 1, 'Exercice clos le : ' + '31/12/' + header['year'], right_style)
+        sheet.write(2, self.x_index - 1, 'Exercice clos le : ' + '31/12/' + header['year'], right_style)
         sheet.write(3, 1, "Numéro d'identification : " + (header.get('vat') or ''), left_style)
-        sheet.write(3, x_index - 1, 'Durée (en mois) : 12', right_style)
-        sheet.merge_range(5, 1, 5, x_index - 1, header['title'], title_style)
+        sheet.write(3, self.x_index - 1, 'Durée (en mois) : 12', right_style)
+        sheet.merge_range(5, 1, 5, self.x_index - 1, (header.get('title') or ''), title_style)
 
         #make double border
-        sheet.merge_range(6, 1, 6, x_index - 1, '', top_border)
-        sheet.merge_range(len(lines) + 7, 1, len(lines) + 7, x_index - 1, '', bottom_border)
+        sheet.merge_range(6, 1, 6, self.x_index - 1, '', top_border)
+        sheet.merge_range(len(lines) + 7, 1, len(lines) + 7, self.x_index - 1, '', bottom_border)
         sheet.merge_range(7, 0, len(lines) + 6, 0, '', left_border)
-        sheet.merge_range(7, x_index, len(lines) + 6, x_index, '', right_border)
+        sheet.merge_range(7, self.x_index, len(lines) + 6, self.x_index, '', right_border)
 
         sheet.hide_gridlines(2)
         if print_bundle == True:
@@ -1416,6 +1454,26 @@ class OhadaReport(models.AbstractModel):
     def get_txt(self, options):
         return False
 
+    def make_temp_options(self, year=False):
+        if year is False:
+            year = datetime.now().year
+        options = {'ir_filters': None,
+                   'date': {'date_to': str(year) + '-12-31', 'string': str(year), 'filter': 'this_year',
+                            'date_from': str(year) + '-01-01'},
+                   'comparison': {
+                       'date_from': str(year - 1) + '-01-01',
+                       'date_to': str(year - 1) + '-12-31',
+                       'filter': 'no_comparison',
+                       'number_period': 1,
+                       'periods': [{
+                           'date_from': str(year - 1) + '-01-01',
+                           'date_to': str(year - 1) + '-12-31',
+                           'string': str(year - 1),
+                       }],
+                       'string': 'No comparison', },
+                   }
+        return options
+
     def get_html_bs(self, options, line_id=None, additional_context=None):
         '''
         return the html value of report, or html value of unfolded line
@@ -1423,16 +1481,8 @@ class OhadaReport(models.AbstractModel):
         otherwise it uses the main_template. Reason is for efficiency, when unfolding a line in the report
         we don't want to reload all lines, just get the one we unfolded.
         '''
-
-        options = {'all_entries':	False, 'analytic':	None, 'cash_basis':	None,
-                    'comparison':	{
-                        'date_from':	'2018-01-01', 'date_to':	'2018-12-31', 'filter':	'no_comparison', 'number_period': 1,
-                        'periods': [{'date_from': '2018-01-01', 'date_to':	'2018-12-31', 'string':	'2018'}],
-                        'string': 'No comparison',
-                          },
-                    'date':	{'date_from':	'2019-01-01', 'date_to':	'2019-12-31', 'filter':	'this_year',
-                             'string':	'2019'}, 'hierarchy': None, 'ir_filters':	None,'journals': None,
-                    'partner': None, 'unfold_all':	False, 'unfolded_lines': [], 'unposted_in_period': False}
+        if not options['date'].get('date_from'):
+            options = self.make_temp_options(int(options['date']['date'][0:4]))
         g_rcontext=dict()
         g_rcontext['lines'] = []
         reports = [self.env.ref('ohada_reports.account_financial_report_ohada_balancesheet'),
@@ -1480,7 +1530,6 @@ class OhadaReport(models.AbstractModel):
         g_rcontext['report'] = rcontext['report']
         g_rcontext['options'] = rcontext['options']
         g_rcontext['model'] = rcontext['model']
-        # wdb.set_trace()
         html = self.env['ir.ui.view'].render_template(
             render_template,
             values=dict(g_rcontext),

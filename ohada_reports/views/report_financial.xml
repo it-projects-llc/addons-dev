@@ -327,9 +327,18 @@
                 <t t-if="line.get('note') != 'none'">
                     <t t-if="line.get('note')">
                         <td class="o_account_report_line o_account_report_line_indent" style="width:70px !important;text-align:center;">
-                            <span style="margin:auto;" class="account_report_line_name" >
-                                <t t-esc="line.get('note')"/>
-                            </span>
+                            <t t-if="line.get('note_id') != 'none'">
+                                <a t-att-href="'/web#action=' + line.get('note_id') + '&amp;' + 'menu_id=' + menu_id" style="color:#001E5A;">
+                                    <span style="margin:auto;" class="account_report_line_name" >
+                                        <t t-esc="line.get('note')"/>
+                                    </span>
+                                </a>
+                            </t>
+                            <t t-else="">
+                                <span style="margin:auto;" class="account_report_line_name" >
+                                    <t t-esc="line.get('note')"/>
+                                </span>
+                            </t>
                         </td>
                     </t>
                 </t>
@@ -831,14 +840,14 @@
                 <t t-else="">
                     <t t-if="line.get('header') == true">
                         <td t-att-class="'o_account_report_line ' + (line.get('unfoldable') and ' ' or '') + ('' if hierarchies_enabled else ' o_account_report_line_indent')" style="text-align:center;">
-                            <span class="o_account_report_column_value" style="margin:auto;padding:10px;" t-att-title="column.get('title')">
+                            <span class="o_account_report_column_value" style="margin:auto;padding-top:10px;padding-bottom:10px;" t-att-title="column.get('title')">
                                 <t t-esc="column.get('name')"/>
                             </span>
                         </td>
                     </t>
                     <t t-else="">
                         <td style="padding-right:10px;text-align:right;" t-att-class="'o_account_report_line '  + (line.get('unfoldable') and ' ' or '') + ('' if hierarchies_enabled else ' o_account_report_line_indent')" >
-                            <span class="o_account_report_column_value" t-att-title="column.get('title')">
+                            <span style="margin:auto;padding:15px;" class="o_account_report_column_value" t-att-title="column.get('title')">
                                 <t t-esc="column.get('name')"/>
                             </span>
                         </td>
@@ -1069,7 +1078,7 @@
                     </t>
                     <t t-else="">
                         <td style="padding-right:10px;text-align:right;" t-att-class="'o_account_report_line '  + (line.get('unfoldable') and ' ' or '') + ('' if hierarchies_enabled else ' o_account_report_line_indent')" >
-                            <span class="o_account_report_column_value" t-att-title="column.get('title')">
+                            <span style="margin:auto;padding:15px;" class="o_account_report_column_value" t-att-title="column.get('title')">
                                 <t t-esc="column.get('name')"/>
                             </span>
                         </td>
