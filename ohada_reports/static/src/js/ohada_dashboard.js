@@ -141,7 +141,14 @@ var OhadaDashboard = AbstractAction.extend(ControlPanelMixin, {
     },
 
     print_bundle_xlsx: function() {
-        self = this;
+        var self = this;
+        var checked_reports = [];
+        this.$('.bundle_item input:checked').each(function() {
+            checked_reports.push($(this)[0].dataset['recordId']);
+        });
+        if(checked_reports.length == 0){
+            return true;
+        }
         framework.blockUI();
         var def = $.Deferred();
         session.get_file({
@@ -149,7 +156,8 @@ var OhadaDashboard = AbstractAction.extend(ControlPanelMixin, {
             data: {"model": "ohada.financial.html.report",
                    "options": JSON.stringify(self.data['options']),
                    "financial_id": 3,
-                   "output_format": "xlsx_bundle"},
+                   "output_format": "xlsx_bundle",
+                   "bundle_items": checked_reports},
             success: def.resolve.bind(def),
             error: function () {
                 crash_manager.rpc_error.apply(crash_manager, arguments);
@@ -161,15 +169,23 @@ var OhadaDashboard = AbstractAction.extend(ControlPanelMixin, {
     },
 
     print_bundle_pdf: function() {
-        self = this;
+        var self = this;
+        var checked_reports = [];
+        this.$('.bundle_item input:checked').each(function() {
+            checked_reports.push($(this)[0].dataset['recordId']);
+        });
+        if(checked_reports.length == 0){
+            return true;
+        }
         framework.blockUI();
         var def = $.Deferred();
         session.get_file({
             url: '/ohada_reports',
             data: {"model": "ohada.financial.html.report",
                    "options": JSON.stringify(self.data['options']),
-                   "financial_id": 3,
-                   "output_format": "pdf_bundle"},
+                   "output_format": "pdf_bundle",
+                   "financial_id": 1,
+                   "bundle_items": checked_reports},
             success: def.resolve.bind(def),
             error: function () {
                 crash_manager.rpc_error.apply(crash_manager, arguments);

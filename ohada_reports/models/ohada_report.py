@@ -26,7 +26,7 @@ from odoo.tools.misc import formatLang, format_date, get_user_companies
 from odoo.addons.web.controllers.main import clean_action
 from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError
-# import wdb
+
 
 _logger = logging.getLogger(__name__)
 
@@ -682,7 +682,6 @@ class OhadaReport(models.AbstractModel):
 
         if options.get('hierarchy'):
             lines = self._create_hierarchy(lines)
-
         footnotes_to_render = []
         # if self.env.context.get('print_mode', False):
         #     # we are in print mode, so compute footnote number and include them in lines values, otherwise, let the js compute the number correctly as
@@ -695,7 +694,7 @@ class OhadaReport(models.AbstractModel):
         #             number += 1
         #             line['footnote'] = str(number)
         #             footnotes_to_render.append({'id': f.id, 'number': number, 'text': f.text})
-
+        # wdb.set_trace()
         rcontext = {'report': report,
                     'lines': {'columns_header': self.get_header(options), 'lines': lines},
                     'options': options,
@@ -1074,7 +1073,8 @@ class OhadaReport(models.AbstractModel):
         # This scenario happens when you want to print a PDF report for the first time, as the
         # assets are not in cache and must be generated. To workaround this issue, we manually
         # commit the writes in the `ir.attachment` table. It is done thanks to a key in the context.
-
+        if self.name == 'Balance Sheet':
+            horizontal=True
         if not config['test_enable']:
             self = self.with_context(commit_assetsbundle=True)
 
@@ -1105,8 +1105,8 @@ class OhadaReport(models.AbstractModel):
 
         if self.name == 'Balance Sheet' and horizontal is True:
             body = body.replace(b'<div class="container o_account_reports_page o_account_reports_no_print page" style="padding-top:0px;padding-bottom:0px;">', b'<div class="o_account_reports_page o_account_reports_no_print page" style="padding-top:0px;padding-bottom:0px;">')
-            body = body.replace(b'<table style="margin-top:10px;margin-bottom:10px;color:#001E5A;font-weight:normal;float:left;"', b'<table style="font-size:8px !important;width:30%;margin-bottom:10px;color:#001E5A;font-weight:normal;float:left;"')
-            body = body.replace(b'<table style="margin-bottom:10px;color:#001E5A;font-weight:normal;float:left;"', b'<table style="margint-left:-9px;font-size:8px !important;width:30%;margin-bottom:10px;color:#001E5A;font-weight:normal;float:left;"')
+            body = body.replace(b'<table style="margin-top:10px;margin-bottom:10px;color:#001E5A;font-weight:normal;float:left;"', b'<table style="font-size:6px !important;width:30%;margin-bottom:10px;color:#001E5A;font-weight:normal;float:left;"')
+            body = body.replace(b'<table style="margin-bottom:10px;color:#001E5A;font-weight:normal;float:left;"', b'<table style="margint-left:-9px;font-size:6px !important;width:30%;margin-bottom:10px;color:#001E5A;font-weight:normal;float:left;"')
         else:
             body = body.replace(b'<table style="margin-top:10px;margin-bottom:10px;color:#001E5A;font-weight:normal;"', b'<table style="font-size:8px !important;margin-top:10px;margin-bottom:10px;color:#001E5A;font-weight:normal;"')
 
@@ -1205,8 +1205,8 @@ class OhadaReport(models.AbstractModel):
         default_style = workbook.add_format({'font_name': 'NimbusSanL', 'font_size': 12, 'font_color': '#001E5A'})
         title_style = workbook.add_format({'font_name': 'NimbusSanL', 'bold': True, 'bottom': 2})
         super_col_style = workbook.add_format({'font_name': 'NimbusSanL', 'bold': True, 'align': 'center'})
-        level_0_style = workbook.add_format({'valign': 'vcenter', 'border_color': '#001E5A', 'shrink': True, 'align': 'center', 'bg_color': '#CDEBFF', 'font_name': 'NimbusSanL', 'bold': True, 'font_size': 8, 'border': 1, 'font_color': '#001E5A'})
-        level_1_style = workbook.add_format({'valign': 'vcenter', 'border_color': '#001E5A', 'border': 1, 'align': 'center', 'bold': True, 'bg_color':'#FFDCDC','font_name': 'NimbusSanL', 'font_size': 8, 'bottom': 1, 'font_color': '#001E5A'})
+        level_0_style = workbook.add_format({'valign': 'vcenter', 'border_color': '#001E5A', 'shrink': True, 'align': 'left', 'bg_color': '#CDEBFF', 'font_name': 'NimbusSanL', 'bold': True, 'font_size': 8, 'border': 1, 'font_color': '#001E5A'})
+        level_1_style = workbook.add_format({'valign': 'vcenter', 'border_color': '#001E5A', 'border': 1, 'align': 'left', 'bold': True, 'bg_color':'#FFDCDC','font_name': 'NimbusSanL', 'font_size': 8, 'bottom': 1, 'font_color': '#001E5A'})
         level_2_col1_style = workbook.add_format({'border_color': '#001E5A', 'border': 1, 'font_name': 'NimbusSanL', 'font_size': 8, 'font_color': '#001E5A', 'indent': 1})
         level_2_col1_total_style = workbook.add_format({'border_color': '#001E5A', 'border': 1, 'font_name': 'NimbusSanL', 'font_size': 8, 'font_color': '#001E5A'})
         level_2_style = workbook.add_format({'border_color': '#001E5A', 'border': 1, 'font_name': 'NimbusSanL', 'font_size': 8, 'font_color': '#001E5A'})
@@ -1250,7 +1250,7 @@ class OhadaReport(models.AbstractModel):
 
         if options.get('hierarchy'):
             lines = self._create_hierarchy(lines)
-
+        # wdb.set_trace()
         if lines[0].get('reference'):
             sheet.set_column(1, 1, 3)
             sheet.set_column(2, 2, 50)
@@ -1311,11 +1311,21 @@ class OhadaReport(models.AbstractModel):
                     # write the first column, with a specific style to manage the indentation
                     cell_name = lines[y]['name']
                     if lines[y].get('reference') == 'REF':
-                        sheet.merge_range(y + y_offset, x_index, y + y_offset + 1, x_index, cell_name, style)
+                        loc_style = copy.copy(style)
+                        loc_style.set_align('center')
+                        workbook.formats.append(loc_style)
+                        sheet.merge_range(y + y_offset, x_index, y + y_offset + 1, x_index, cell_name, loc_style)
                         x_index += 1
                     else:
-                        sheet.write(y + y_offset, x_index, cell_name, style)
-                        x_index += 1
+                        if lines[y].get('header') is True:
+                            loc_style = copy.copy(style)
+                            loc_style.set_align('center')
+                            workbook.formats.append(loc_style)
+                            sheet.write(y + y_offset, x_index, cell_name, loc_style)
+                            x_index += 1
+                        else:
+                            sheet.write(y + y_offset, x_index, cell_name, style)
+                            x_index += 1
 
                     if lines[y].get('symbol') != 'none':
                         loc_style = copy.copy(style)

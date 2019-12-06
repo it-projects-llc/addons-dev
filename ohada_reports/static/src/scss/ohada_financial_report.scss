@@ -57,7 +57,7 @@
         font-weight: bold;
         // border-top-style: $border-top-style;
         background-color: #CDEBFF;
-        text-align: center;
+        text-align: left;
         vertical-align: middle;
     }
     .o_account_reports_table {
@@ -276,7 +276,7 @@
     .o_account_reports_level1 {
         font-weight: bold;
         background-color: #FFDCDC;
-        text-align: center;
+        text-align: left;
         vertical-align: middle;
         & td {
             padding-top: 2px;
