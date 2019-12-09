@@ -26,7 +26,7 @@ from odoo.tools.misc import formatLang, format_date, get_user_companies
 from odoo.addons.web.controllers.main import clean_action
 from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError
-
+# import wdb
 
 _logger = logging.getLogger(__name__)
 
@@ -662,6 +662,8 @@ class OhadaReport(models.AbstractModel):
         # Check the security before updating the context to make sure the options are safe.
         if self.name == 'Balance Sheet':
             return self.get_html_bs(options, line_id, additional_context)
+        if self.double_report is True:
+            return self.get_html_double(options, line_id, additional_context)
         self._check_report_security(options)
 
         # Prevent inconsistency between options and context.
@@ -1250,7 +1252,6 @@ class OhadaReport(models.AbstractModel):
 
         if options.get('hierarchy'):
             lines = self._create_hierarchy(lines)
-        # wdb.set_trace()
         if lines[0].get('reference'):
             sheet.set_column(1, 1, 3)
             sheet.set_column(2, 2, 50)
@@ -1538,6 +1539,71 @@ class OhadaReport(models.AbstractModel):
             g_rcontext['lines'].append({report_bs.name: rcontext['lines']})
         rcontext['report']['name'] = 'Balance Sheet'
         g_rcontext['report'] = rcontext['report']
+        g_rcontext['options'] = rcontext['options']
+        g_rcontext['model'] = rcontext['model']
+        html = self.env['ir.ui.view'].render_template(
+            render_template,
+            values=dict(g_rcontext),
+        )
+        return html
+
+
+    def get_html_double(self, options, line_id=None, additional_context=None):
+        '''
+        return the html value of report, or html value of unfolded line
+        * if line_id is set, the template used will be the line_template
+        otherwise it uses the main_template. Reason is for efficiency, when unfolding a line in the report
+        we don't want to reload all lines, just get the one we unfolded.
+        '''
+        if not options['date'].get('date_from'):
+            options = self.make_temp_options(int(options['date']['date'][0:4]))
+        g_rcontext=dict()
+        g_rcontext['lines_notes'] = []
+        reports = [self, self.env['ohada.financial.html.report'].search([('name', '=', self.name+'_1')])]
+        for report_bs in reports:
+        # Check the security before updating the context to make sure the options are safe.
+            self._check_report_security(options)
+
+        # Prevent inconsistency between options and context.
+            report_bs = report_bs.with_context(report_bs._set_context(options))
+
+            templates = report_bs._get_templates()
+            report_manager = report_bs._get_report_manager(options)
+            report = {'name': report_bs._get_report_name(),
+                      'summary': report_manager.summary,
+                      'company_name': report_bs.env.user.company_id.name,
+                      'type': report_bs.type,
+                      'vat': report_bs.env.user.company_id.vat,
+                      'year': options['date']['date_from'][0:4],
+                      'header': report_bs.header and report_bs.header + ' ' + options['date']['date_from'][0:4],}
+            lines = report_bs._get_lines(options, line_id=line_id)
+
+            if options.get('hierarchy'):
+                lines = report_bs._create_hierarchy(lines)
+
+            rcontext = {'report': report,
+                        'lines': {'columns_header': report_bs.get_header(options), 'lines': lines},
+                        'options': options,
+                        'context': report_bs.env.context,
+                        'model': report_bs,
+                    }
+
+            if additional_context and type(additional_context) == dict:
+                rcontext.update(additional_context)
+            if report_bs.env.context.get('analytic_account_ids'):
+                rcontext['options']['analytic_account_ids'] = [
+                    {'id': acc.id, 'name': acc.name} for acc in report_bs.env.context['analytic_account_ids']
+                ]
+
+            render_template = templates.get('main_template', 'ohada_reports.main_template')
+            if line_id is not None:
+                render_template = templates.get('line_template', 'ohada_reports.line_template')
+            g_rcontext['lines_notes'].append(rcontext['lines'])
+        rcontext['report']['name'] = self.name
+        g_rcontext['report'] = rcontext['report']
+        g_rcontext['report']['double_report'] = True
+        g_rcontext['report']['header'] = self.header + ' ' + options['date']['date_from'][0:4]
+        g_rcontext['report']['header_2'] = reports[1].header + ' ' + options['date']['date_from'][0:4]
         g_rcontext['options'] = rcontext['options']
         g_rcontext['model'] = rcontext['model']
         html = self.env['ir.ui.view'].render_template(

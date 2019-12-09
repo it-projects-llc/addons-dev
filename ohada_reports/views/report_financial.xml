@@ -169,17 +169,10 @@
             </t>
         </t>
 
-        <t t-if="line.get('page_break') == true">
-            <tr t-attf-class="#{trclass} #{line.get('class', '')} #{'o_js_account_report_parent_row_unfolded' if line.get('unfolded', False) else ''}"
-            t-att-data-pagebreak="'before' if (line.get('page_break') and context.get('print_mode')) else None"
-            t-att-data-parent-id="line.get('parent_id', False)"
-            t-att-style="line.get('style', '')">
-                <td t-att-class="'o_account_report_line ' + (line.get('unfoldable') or '') + ('' if hierarchies_enabled else ' o_account_report_line_indent')" style="text-align: center;">
-                    <span style="margin:auto;padding:10px;" class="o_account_report_column_value">
+        <t t-if="line.get('table_spacer') == true">
+            <span style="margin:auto;padding:10px;" class="o_account_report_column_value">
                         kek
-                    </span>
-                </td>
-            </tr>
+            </span>
         </t>
         <t t-else="">
 
@@ -480,28 +473,51 @@
                 <tr><td style="text-align:center;" colspan="2"><h4><t t-esc="report.get('header')"/></h4></td></tr>
             </table>
             <div class="table-responsive">
-                <t t-if="report['name'] == 'Balance Sheet'">
-                    <div>
-                        <table style="margin-top:10px;margin-bottom:10px;color:#001E5A;font-weight:normal;float:left;" class="o_account_reports_table">
+                <t t-if="report.get('double_report') == True">
+                    <t t-set="lines" t-value="lines_notes[0]"/>
+                    <table style="margin-top:10px;margin-bottom:10px;color:#001E5A;font-weight:normal;" class="o_account_reports_table">
                             <tbody class="ohada_table">
-                                <t t-call="{{model._get_templates()['bs_line_template']}}"/>
+                                <t t-if="lines.get('lines')">
+                                    <t t-call="{{model._get_templates()['line_template']}}"/>
+                                </t>
                             </tbody>
-                        </table>
-                        <table style="margin-bottom:10px;color:#001E5A;font-weight:normal;float:left;" class="o_account_reports_table page">
-                           <tbody class="ohada_table">
-                                <t t-call="{{model._get_templates()['bs2_line_template']}}"/>
+                    </table>
+                    <table style="color:#001E5A;font-family:NimbusSanL-Regu;width:100%;margin-bottom:0px;margin-top:50px;">
+                        <tr><td style="text-align:center;" colspan="2"><h4><t t-esc="report.get('header_2')"/></h4></td></tr>
+                    </table>
+                    <t t-set="lines" t-value="lines_notes[1]"/>
+                    <table style="margin-top:10px;margin-bottom:10px;color:#001E5A;font-weight:normal;" class="o_account_reports_table">
+                            <tbody class="ohada_table">
+                                <t t-if="lines.get('lines')">
+                                    <t t-call="{{model._get_templates()['line_template']}}"/>
+                                </t>
                             </tbody>
-                        </table>
-                    </div>
+                    </table>
                 </t>
                 <t t-else="">
-                    <table style="margin-top:10px;margin-bottom:10px;color:#001E5A;font-weight:normal;" class="o_account_reports_table">
-                        <tbody class="ohada_table">
-                            <t t-if="lines.get('lines')">
-                                <t t-call="{{model._get_templates()['line_template']}}"/>
-                            </t>
-                        </tbody>
-                    </table>
+                    <t t-if="report['name'] == 'Balance Sheet'">
+                        <div>
+                            <table style="margin-top:10px;margin-bottom:10px;color:#001E5A;font-weight:normal;float:left;" class="o_account_reports_table">
+                                <tbody class="ohada_table">
+                                    <t t-call="{{model._get_templates()['bs_line_template']}}"/>
+                                </tbody>
+                            </table>
+                            <table style="margin-bottom:10px;color:#001E5A;font-weight:normal;float:left;" class="o_account_reports_table page">
+                               <tbody class="ohada_table">
+                                    <t t-call="{{model._get_templates()['bs2_line_template']}}"/>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <table style="margin-top:10px;margin-bottom:10px;color:#001E5A;font-weight:normal;" class="o_account_reports_table">
+                            <tbody class="ohada_table">
+                                <t t-if="lines.get('lines')">
+                                    <t t-call="{{model._get_templates()['line_template']}}"/>
+                                </t>
+                            </tbody>
+                        </table>
+                    </t>
                 </t>
             </div>
             <div class="o_account_reports_summary_edit no_print">

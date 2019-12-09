@@ -23,6 +23,7 @@ from odoo.osv import expression
 from odoo.tools.pycompat import izip
 from odoo import http
 from odoo.http import content_disposition, request
+# import wdb
 
 
 class ReportOhadaFinancialReport(models.Model):
@@ -58,6 +59,8 @@ class ReportOhadaFinancialReport(models.Model):
                             default=False)
     sequence = fields.Integer()
     header = fields.Char(default=False)
+    double_report = fields.Boolean(default=False)
+    secondary = fields.Boolean(default=False)
 
     #    _sql_constraints = [
     #        ('code_uniq', 'unique (code)', "A report with the same code already exists."),
@@ -110,7 +113,7 @@ class ReportOhadaFinancialReport(models.Model):
         body_html = b''
         for report_id in reports_ids:
             if report_id != 'notes':
-                body_html += self.env['ohada.financial.html.report'].browse(int(report_id)).get_html(options)
+                body_html += self.env['ohada.financial.html.report'].browse(int(report_id)).Z (options)
             else:
                 options['comparison']['filter'] = 'previous_period'
                 for report in self.env['ohada.financial.html.report'].search([('type', '=', 'note')]):
@@ -377,7 +380,7 @@ class ReportOhadaFinancialReport(models.Model):
         module = self._context.get('install_module', 'ohada_reports')
         IMD = self.env['ir.model.data']
         for report in self:
-            if not report.generated_menu_id:
+            if not report.generated_menu_id and report.secondary != True:
                 action_vals = {
                     'name': report._get_report_name(),
                     'tag': 'ohada_report',
@@ -580,6 +583,7 @@ class OhadaFinancialReportLine(models.Model):
     header = fields.Boolean(default=False)
     letter = fields.Char(string="letter", default=None)
     note_id = fields.Char(string="note action id", default='none')
+    table_spacer = fields.Boolean(default=False)
 
     _sql_constraints = [
         ('code_uniq', 'unique (code)', "A report line with the same code already exists."),
@@ -1329,6 +1333,7 @@ class OhadaFinancialReportLine(models.Model):
                 continue
 
             # Post-processing ; creating line dictionnary, building comparison, computing total for extended, formatting
+            # wdb.set_trace()
             vals = {
                 'id': line.id,
                 'name': line.name,
@@ -1344,6 +1349,7 @@ class OhadaFinancialReportLine(models.Model):
                 'page_break': line.print_on_new_page,
                 'letter': line.letter,
                 'header': line.header,
+                'table_spacer': line.table_spacer,
             }
 
             # wdb.set_trace()

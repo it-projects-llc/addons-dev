@@ -2975,7 +2975,7 @@
         <field name="green_on_positive" eval="False"/>
         <field name="level" eval="1" />
     </record>
-   
+
 
 
 </odoo>
