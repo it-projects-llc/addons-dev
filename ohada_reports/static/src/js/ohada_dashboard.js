@@ -1,4 +1,4 @@
-odoo.define('hrms_dashboard.Dashboard', function (require) {
+odoo.define('ohada_dashboard.Dashboard', function (require) {
 "use strict";
 
 var AbstractAction = require('web.AbstractAction');
@@ -46,6 +46,11 @@ var OhadaDashboard = AbstractAction.extend(ControlPanelMixin, {
             self.data =  result;
         });
         return $.when(def1);
+    },
+
+    update_cp: function() {
+        var self = this;
+        this.update_control_panel();
     },
 
     close_popup: function(){
@@ -201,10 +206,7 @@ var OhadaDashboard = AbstractAction.extend(ControlPanelMixin, {
         this.$el.append(core.qweb.render('ManagerDashboard', {widget: this}));
         this.render_graphs();
         document.getElementById("myForm").style.display = "none";
-        if (document.getElementsByClassName('o_cp_buttons')[0]){
-            document.getElementsByClassName('o_cp_buttons')[0].style.display = 'none';
-            document.getElementsByClassName('o_cp_right')[0].style.display = 'none';
-        };
+        this.update_cp();
     },
 
     init: function(parent, context) {
@@ -226,10 +228,7 @@ var OhadaDashboard = AbstractAction.extend(ControlPanelMixin, {
             self.render_dashboards();
             self.render_graphs();
             self.$el.parent().addClass('oe_background_grey');
-            if (document.getElementsByClassName('o_cp_buttons')[0]){
-                document.getElementsByClassName('o_cp_buttons')[0].style.display = 'none';
-                document.getElementsByClassName('o_cp_right')[0].style.display = 'none';
-            };
+            self.update_cp();
         });
     },
 

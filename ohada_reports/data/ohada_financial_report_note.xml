@@ -364,7 +364,7 @@
     <!-- NOTE 6 -->
 
     <record id="ohada_financial_report_note6" model="ohada.financial.html.report">
-        <field name="name">Note 6 - Stocks et encours</field>
+        <field name="name">Note 6</field>
         <field name="debit_credit" eval="False"/>
         <field name="analytic" eval="True"/>
         <field name="type">note</field>
@@ -532,7 +532,7 @@
 
      <!-- NOTE 21 -->
     <record id="ohada_financial_report_note21" model="ohada.financial.html.report">
-        <field name="name">Note 21 </field>
+        <field name="name">Note 21</field>
         <field name="debit_credit" eval="False"/>
         <field name="analytic" eval="True"/>
         <field name="type">note</field>
@@ -823,7 +823,7 @@
 
     <!-- NOTE 22 -->
     <record id="ohada_financial_report_note22" model="ohada.financial.html.report">
-        <field name="name">Note 22 </field>
+        <field name="name">Note 22</field>
         <field name="debit_credit" eval="False"/>
         <field name="analytic" eval="True"/>
         <field name="type">note</field>
@@ -1120,7 +1120,7 @@
 
     <!-- NOTE 23 -->
     <record id="ohada_financial_report_note23" model="ohada.financial.html.report">
-        <field name="name">Note 23 </field>
+        <field name="name">Note 23</field>
         <field name="debit_credit" eval="False"/>
         <field name="analytic" eval="True"/>
         <field name="type">note</field>

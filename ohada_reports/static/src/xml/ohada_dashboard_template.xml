@@ -141,7 +141,6 @@
                               </button>
                               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <a class="dropdown-item print_bs_pdf" style="cursor:pointer;">Export report</a>
-                                <a class="dropdown-item print_lands_bs_pdf" style="cursor:pointer;">Export landscape report</a>
                               </div>
                             </div>
                                                     </div>

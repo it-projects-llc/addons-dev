@@ -84,7 +84,7 @@ class ReportOhadaFinancialReport(models.Model):
                                                                                                      workbook=workbook)
             else:
                 options['comparison']['filter'] = 'previous_period'
-                for report in self.env['ohada.financial.html.report'].search([('type', '=', 'note')]):
+                for report in self.env['ohada.financial.html.report'].search([('type', '=', 'note'), ('secondary', '=', False)]):
                     report.get_xlsx(options, response, print_bundle=True, workbook=workbook)
 
 
@@ -113,10 +113,10 @@ class ReportOhadaFinancialReport(models.Model):
         body_html = b''
         for report_id in reports_ids:
             if report_id != 'notes':
-                body_html += self.env['ohada.financial.html.report'].browse(int(report_id)).Z (options)
+                body_html += self.env['ohada.financial.html.report'].browse(int(report_id)).get_html(options)
             else:
                 options['comparison']['filter'] = 'previous_period'
-                for report in self.env['ohada.financial.html.report'].search([('type', '=', 'note')]):
+                for report in self.env['ohada.financial.html.report'].search([('type', '=', 'note'), ('secondary', '=', False)]):
                     body_html += report.get_html(options)
 
         body = body.replace(b'<body class="o_account_reports_body_print">',
@@ -1292,7 +1292,6 @@ class OhadaFinancialReportLine(models.Model):
                 1) add fields reference and note in the lines
                 2) hide balance sheet lines for gross and depreciation values using field hidden_line
         '''
-        # wdb.set_trace()
         final_result_table = []
         comparison_table = [options.get('date')]
         comparison_table += options.get('comparison') and options['comparison'].get('periods', []) or []
@@ -1333,7 +1332,6 @@ class OhadaFinancialReportLine(models.Model):
                 continue
 
             # Post-processing ; creating line dictionnary, building comparison, computing total for extended, formatting
-            # wdb.set_trace()
             vals = {
                 'id': line.id,
                 'name': line.name,
@@ -1409,17 +1407,39 @@ class OhadaFinancialReportLine(models.Model):
                     for i in range(len(vals['columns'][1:])-1):
                         vals['columns'][i+1]['name'] = ['EXERPRICE', 'au 31/12/' + line._context['periods'][i]['string']]
             elif line.header == True and financial_report.type == 'note':
-                vals['columns'][0]['name'] = 'ANNEE ' + line._context['date_from'][0:4]
+                vals['columns'][0]['name'] = ['ANNEE ' + line._context['date_from'][0:4]]
                 if len(vals['columns']) > 1 and line._context.get('periods') != None \
                         and options['comparison']['filter'] == 'no_comparison' or len(
                     options['comparison']['periods']) > 1:
                     for i in range(len(vals['columns'][1:])):
-                        vals['columns'][i + 1]['name'] = 'ANNEE ' + line._context['periods'][i]['string']
+                        vals['columns'][i + 1]['name'] = ['ANNEE ' + line._context['periods'][i]['string']]
                     vals['columns'][- 1]['name'] = 'Variation en %'
                 elif len(vals['columns']) > 1 and line._context.get('periods') != None:
                     for i in range(len(vals['columns'][1:]) - 1):
-                        vals['columns'][i + 1]['name'] = 'ANNEE ' + line._context['periods'][i]['string']
-                    vals['columns'][- 1]['name'] = 'Variation en %'
+                        vals['columns'][i + 1]['name'] = ['ANNEE ' + line._context['periods'][i]['string']]
+                    vals['columns'][- 1]['name'] = ['Variation en %']
+            #==============================DELETE============================
+            if line.header is True and financial_report.type == 'note' and financial_report.name == 'Note 4':
+                header_list = [["Créances à un", "an au plus"], ["Créances à plus", "d'un an à deux", "ans au plus"],
+                               ["Créances à plus", "de deux ans au", "plus"]]
+                for i in header_list:
+                    vals['columns'].append({'name': i})
+            elif financial_report.type == 'note' and financial_report.name == 'Note 4':
+                for i in range(3):
+                    vals['columns'].append({'name': 0})
+
+            if line.header is True and financial_report.type == 'note' and financial_report.name == 'Note 4_1':
+                vals['columns'] = []
+                header_list = [["Localisation", "(Ville/Pays)"], ["Valeur" ,"d'acquisition"], ["% détenu"],
+                               ["Montants des", "capitaux propres", "filiale"], ["Résultat dernier", "exercice filiale"]]
+
+                for i in header_list:
+                    vals['columns'].append({'name': i})
+            elif financial_report.type == 'note' and financial_report.name == 'Note 4_1':
+                for i in range(2):
+                    vals['columns'].append({'name': ' '})
+
+            # ===============================================================
 
             if len(lines) == 1:
                 new_lines = line.children_ids._get_lines(financial_report, currency_table, options, linesDicts)
@@ -1429,8 +1449,9 @@ class OhadaFinancialReportLine(models.Model):
                     result = lines + new_lines
             else:
                 result = lines
-            if line.note != 'NET' or 'none' or 'NOTE':
-                line.note_id = str(self.env['ir.actions.client'].search([('name', 'ilike', 'Note '+line.note+' ')]).id)
+            if line.note != 'NET' and line.note != ' ':
+                # wdb.set_trace()
+                line.note_id = str(self.env['ir.actions.client'].search([('name', '=', 'Note '+line.note)]).id)
             if result[0]['note'] == 'NET':
                 if financial_report.name == 'Balance Sheet - Assets' and options['comparison']['filter'] == 'no_comparison':
                     result[0]['columns'][0]['name'] = 'BRUT'
@@ -1717,7 +1738,7 @@ class OhadaFinancialReportLine(models.Model):
             data['print_bundle_reports'].append({'name': i.name, 'id': i.id})
         data['print_bundle_reports'].append({'name': 'Notes', 'id': 'notes'})
         data['notes'] = []
-        for report in self.env['ohada.financial.html.report'].search([('type', '=', 'note')]):
+        for report in self.env['ohada.financial.html.report'].search([('type', '=', 'note'), ('secondary', '=', False)]):
             data['notes'].append({'name': report.name[0:8].replace("-", "").rstrip().upper(),
                                   'action_id': self.env['ir.actions.client'].search([('name', '=', report.name)]).id})
 
