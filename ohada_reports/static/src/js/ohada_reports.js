@@ -158,6 +158,16 @@ var accountReportsWidget = AbstractAction.extend(ControlPanelMixin, {
     },
     start: function() {
         var self = this;
+        if (this.financial_id == false) {
+            return this.do_action({
+                name: 'Dashboard',
+                tag: 'ohada_dashboard',
+                type: 'ir.actions.client',
+                context: {
+                    model : 'ohada.dashboard',
+                },
+            });
+        }
         var extra_info = this._rpc({
                 model: self.report_model,
                 method: 'get_report_informations',

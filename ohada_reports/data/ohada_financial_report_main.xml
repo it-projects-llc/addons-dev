@@ -6,6 +6,7 @@
    <record id="ohada_financial_report_balancesheet0" model="ohada.financial.html.report">
         <field name="name">Balance Sheet</field>
         <field name="cash_basis" eval="True"/>
+        <field name="header">BILAN AU 31 DECEMBRE</field>
         <field name="debit_credit" eval="False"/>
         <field name="date_range" eval="False"/>
         <field name="analytic" eval="True"/>

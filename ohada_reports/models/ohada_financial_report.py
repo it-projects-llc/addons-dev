@@ -1413,7 +1413,7 @@ class OhadaFinancialReportLine(models.Model):
                     options['comparison']['periods']) > 1:
                     for i in range(len(vals['columns'][1:])):
                         vals['columns'][i + 1]['name'] = ['ANNEE ' + line._context['periods'][i]['string']]
-                    vals['columns'][- 1]['name'] = 'Variation en %'
+                    vals['columns'][- 1]['name'] = ['Variation en %']
                 elif len(vals['columns']) > 1 and line._context.get('periods') != None:
                     for i in range(len(vals['columns'][1:]) - 1):
                         vals['columns'][i + 1]['name'] = ['ANNEE ' + line._context['periods'][i]['string']]
@@ -1739,11 +1739,13 @@ class OhadaFinancialReportLine(models.Model):
         data['print_bundle_reports'].append({'name': 'Notes', 'id': 'notes'})
         data['notes'] = []
         for report in self.env['ohada.financial.html.report'].search([('type', '=', 'note'), ('secondary', '=', False)]):
-            data['notes'].append({'name': report.name[0:8].replace("-", "").rstrip().upper(),
-                                  'action_id': self.env['ir.actions.client'].search([('name', '=', report.name)]).id})
+            data['notes'].append({'name': report.name.upper(), 'id': report.id, 'report_name': report.name})
 
-        data['Cash Flow Statement'] = self.env['ir.actions.client'].search([('name', '=', 'Tableau des flux de trésorerie')]).id
-        data['Profit and lost'] = self.env['ir.actions.client'].search([('name', '=', 'Profit and Lost')]).id
-        data['Balance Sheet'] = self.env['ir.actions.client'].search([('name', '=', 'Balance Sheet')]).id
+        data['Cash Flow Statement'] = {'name': 'Tableau des flux de trésorerie',
+                                        'id': self.env.ref('ohada_reports.account_financial_report_ohada_cashflow').id}
+        data['Profit and lost'] = {'name': 'Profit and Lost',
+                                    'id': self.env.ref('ohada_reports.account_financial_report_ohada_profitlost').id}
+        data['Balance Sheet'] = {'name': 'Balance Sheet',
+                                    'id': self.env.ref('ohada_reports.ohada_financial_report_balancesheet0').id}
 
         return data

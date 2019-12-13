@@ -14,6 +14,7 @@ var crash_manager = require('web.crash_manager');
 var _t = core._t;
 var QWeb = core.qweb;
 
+
 var OhadaDashboard = AbstractAction.extend(ControlPanelMixin, {
     template: 'OhadaDashboardMain',
     cssLibs: [
@@ -33,7 +34,23 @@ var OhadaDashboard = AbstractAction.extend(ControlPanelMixin, {
         'click .print_bs_pdf': 'print_bs_pdf',
         'click .print_lands_bs_pdf': 'print_lands_bs_pdf',
         'click .print_pl_pdf': 'print_pl_pdf',
-        'click .print_cf_pdf': 'print_cf_pdf'
+        'click .print_cf_pdf': 'print_cf_pdf',
+        'click .open_report': 'open_report',
+    },
+
+    open_report: function(event) {
+        var self = this;
+        event.stopPropagation();
+        event.preventDefault();
+        return self.do_action({
+            name: event.target.getAttribute('name'),
+            tag: 'ohada_report',
+            type: 'ir.actions.client',
+            context: {
+                id : parseInt(event.target.getAttribute('report-id')),
+                model : 'ohada.financial.html.report',
+            },
+        },{on_reverse_breadcrumb: function(){ return self.update_cp();}});
     },
 
     fetch_data: function(year=false) {

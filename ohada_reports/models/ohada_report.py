@@ -368,6 +368,7 @@ class OhadaReport(models.AbstractModel):
         return action
 
     def open_journal_items(self, options, params):
+        # wdb.set_trace()
         action = self.env.ref('account.action_move_line_select').read()[0]
         action = clean_action(action)
         ctx = self.env.context.copy()
@@ -404,6 +405,17 @@ class OhadaReport(models.AbstractModel):
                 ctx['search_default_posted'] = True
 
             action['domain'] = domain
+        action['context'] = ctx
+        return action
+
+    def open_notes(self, options, params):
+        action = self.env['ir.actions.client'].browse(params['id']).read()[0]
+        action = clean_action(action)
+        ctx = self.env.context.copy()
+        if params and 'note' in params:
+            ctx.update({
+                    'id': self.env['ohada.financial.html.report'].search([('name', '=', 'Note '+str(params.get('note')))]).id
+            })
         action['context'] = ctx
         return action
 
@@ -660,6 +672,7 @@ class OhadaReport(models.AbstractModel):
         otherwise it uses the main_template. Reason is for efficiency, when unfolding a line in the report
         we don't want to reload all lines, just get the one we unfolded.
         '''
+        # wdb.set_trace()
         # Check the security before updating the context to make sure the options are safe.
         if self.name == 'Balance Sheet':
             return self.get_html_bs(options, line_id, additional_context)
@@ -670,7 +683,7 @@ class OhadaReport(models.AbstractModel):
         # Prevent inconsistency between options and context.
         self = self.with_context(self._set_context(options))
 
-        # wdb.set_trace()
+
         templates = self._get_templates()
         report_manager = self._get_report_manager(options)
         date = options['date'].get('date_from') or options['date'].get('date')

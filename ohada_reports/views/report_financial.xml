@@ -154,13 +154,10 @@
 </template>
 
 <template id="my_layout" inherit_id="web.report_layout">
-
     <xpath expr="//head" position="after">
 
         <link href="ohada_reports/static/src/scss/ohada_financial_report.scss" rel="stylesheet"/>
-
     </xpath>
-
 </template>
 
 <template id="line_template">
@@ -341,10 +338,8 @@
                     <t t-if="line.get('note')">
                         <td class="o_account_report_line o_account_report_line_indent" style="width:70px !important;text-align:center;">
                             <t t-if="line.get('note_id') != 'False' and line.get('note_id') != 'none'">
-                                <a t-att-href="'/web#action=' + line.get('note_id') + '&amp;' + 'menu_id=' + menu_id" style="color:#001E5A;">
-                                    <span style="margin:auto;" class="account_report_line_name" >
-                                        <t t-esc="line.get('note')"/>
-                                    </span>
+                                <a style="cursor:pointer;" role="menuitem" t-att-data-id="line.get('note_id')" t-att-data-note="line.get('note')" action="open_notes" class="account_report_line_name" >
+                                    <t t-esc="line.get('note')"/>
                                 </a>
                             </t>
                             <t t-else="">
@@ -839,10 +834,8 @@
                     <t t-if="line.get('note')">
                         <td class="o_account_report_line o_account_report_line_indent" style="width:70px !important;text-align:center;">
                             <t t-if="line.get('note_id') != 'False' and line.get('note_id') != 'none'">
-                                <a t-att-href="'/web#action=' + line.get('note_id') + '&amp;' + 'menu_id=' + menu_id" style="color:#001E5A;">
-                                    <span style="margin:auto;" class="account_report_line_name" >
-                                        <t t-esc="line.get('note')"/>
-                                    </span>
+                                <a style="cursor:pointer;" role="menuitem" t-att-data-id="line.get('note_id')" t-att-data-note="line.get('note')" action="open_notes" class="account_report_line_name" >
+                                    <t t-esc="line.get('note')"/>
                                 </a>
                             </t>
                             <t t-else="">
@@ -1079,10 +1072,8 @@
                     <t t-if="line.get('note')">
                         <td class="o_account_report_line o_account_report_line_indent" style="width:70px !important;text-align:center;">
                             <t t-if="line.get('note_id') != 'False' and line.get('note_id') != 'none'">
-                                <a t-att-href="'/web#action=' + line.get('note_id') + '&amp;' + 'menu_id=' + menu_id" style="color:#001E5A;">
-                                    <span style="margin:auto;" class="account_report_line_name" >
-                                        <t t-esc="line.get('note')"/>
-                                    </span>
+                                <a style="cursor:pointer;" role="menuitem" t-att-data-id="line.get('note_id')" t-att-data-note="line.get('note')" action="open_notes" class="account_report_line_name" >
+                                    <t t-esc="line.get('note')"/>
                                 </a>
                             </t>
                             <t t-else="">
