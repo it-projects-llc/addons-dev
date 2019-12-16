@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+<odoo>
+
+    <template id="details_passport" inherit_id="website_portal.details">
+        <xpath expr="//input[@name='email']/.." position="after">
+            <div t-attf-class="form-group #{error.get('passport') and 'has-error' or ''} col-lg-6">
+                <label class="control-label" for="passport">Passport</label>
+                <input type="text" name="passport" class="form-control" t-att-value="passport or partner.passport" />
+            </div>
+        </xpath>
+    </template>
+
+<!--    <template id="portal_layout_passport" name="Portal Layout" inherit_id="website_portal.portal_layout">-->
+<!--        <xpath expr="//div[@t-field='user.partner_id']" position="attributes">-->
+<!--            <attribute name="t-options">{"widget": "contact", "fields": ["email", "phone", "address", "name", "passport"]}</attribute>-->
+<!--        </xpath>-->
+<!--    </template>-->
+</odoo>
