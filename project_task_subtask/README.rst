@@ -12,9 +12,9 @@ Features:
 * All subtasks have a certain color, informing about their state
 * Each subtask has buttons to switch state:
 
- * DONE
- * TODO
- * CANCELLED
+  * DONE
+  * TODO
+  * CANCELLED
 
 * Added new "Checklist" menu 
 
