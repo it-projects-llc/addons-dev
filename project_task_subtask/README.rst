@@ -18,8 +18,8 @@ Features:
 
 * Added new "Checklist" menu 
 
- * default filter: "My", "TODO"
- * optional group by: "Project", "Task", "User", "State"
+  * default filter: "My", "TODO"
+  * optional group by: "Project", "Task", "User", "State"
 
 Credits
 =======
