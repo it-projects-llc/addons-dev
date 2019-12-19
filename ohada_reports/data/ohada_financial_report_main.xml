@@ -2972,7 +2972,9 @@
         <xpath expr="." position="inside">
             <script type="text/javascript" src="/ohada_reports/static/src/js/ohada_reports.js"></script>
             <script type="text/javascript" src="/ohada_reports/static/src/js/action_manager_account_report_dl.js"></script>
+            <script type="text/javascript" src="/ohada_reports/static/src/js/summernote-bs4.js"></script>
             <link rel="stylesheet" type="text/scss" href="/ohada_reports/static/src/scss/ohada_financial_report.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/ohada_reports/static/src/css/summernote-bs4.css"/>
         </xpath>
     </template>
 

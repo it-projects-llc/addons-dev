@@ -26,7 +26,9 @@ from odoo.tools.misc import formatLang, format_date, get_user_companies
 from odoo.addons.web.controllers.main import clean_action
 from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError
-# import wdb
+
+import html2text
+
 
 _logger = logging.getLogger(__name__)
 
@@ -38,7 +40,7 @@ class OhadaReportManager(models.Model):
 
     # must work with multi-company, in case of multi company, no company_id defined
     report_name = fields.Char(required=True, help='name of the model of the report')
-    summary = fields.Char()
+    summary = fields.Char(default='')
     footnotes_ids = fields.One2many('ohada.report.footnote', 'manager_id')
     company_id = fields.Many2one('res.company')
     financial_report_id = fields.Many2one('ohada.financial.html.report')
@@ -368,7 +370,6 @@ class OhadaReport(models.AbstractModel):
         return action
 
     def open_journal_items(self, options, params):
-        # wdb.set_trace()
         action = self.env.ref('account.action_move_line_select').read()[0]
         action = clean_action(action)
         ctx = self.env.context.copy()
@@ -1230,6 +1231,9 @@ class OhadaReport(models.AbstractModel):
         level_3_col1_style = workbook.add_format({'border_color': '#001E5A', 'border': 1, 'font_name': 'NimbusSanL', 'font_size': 8, 'font_color': '#001E5A', 'indent': 2})
         level_3_col1_total_style = workbook.add_format({'border_color': '#001E5A', 'border': 1, 'font_name': 'NimbusSanL', 'font_size': 8, 'font_color': '#001E5A', 'indent': 1})
         level_3_style = workbook.add_format({'border_color': '#001E5A', 'border': 1, 'font_name': 'NimbusSanL', 'font_size': 8, 'font_color': '#001E5A'})
+        summary_style = workbook.add_format({'valign': 'top', 'align': 'left', 'font_name': 'NimbusSanL', 'font_size': 8, 'font_color': '#001E5A'})
+
+        summary = html2text.html2text(self._get_report_manager(options).summary)
 
         if not options['date'].get('date_from'):
             year = options['date'].get('date')[0:4]
@@ -1457,6 +1461,8 @@ class OhadaReport(models.AbstractModel):
             sheet.merge_range(y_ind, self.x_index, len(lines) + y_ind - 1, self.x_index, '', right_border)
             sheet.set_row(y_ind, 50)
             sheet.merge_range(y_ind - 2, 1, y_ind - 2, self.x_index - 1, (second_report.header and second_report.header + ' ' + options['date']['date_from'][0:4] or ''), title_style)
+            sheet.merge_range(len(lines) + y_ind + 2, 1, len(lines) + y_ind + 2, self.x_index - 1, summary, summary_style)
+            sheet.set_row(len(lines) + y_ind + 2, 200)
         else:
             write_data(lines)
         # make header above the table
@@ -1473,6 +1479,8 @@ class OhadaReport(models.AbstractModel):
             sheet.merge_range(len(lines) + 7, 1, len(lines) + 7, self.x_index - 1, '', bottom_border)
             sheet.merge_range(7, 0, len(lines) + 6, 0, '', left_border)
             sheet.merge_range(7, self.x_index, len(lines) + 6, self.x_index, '', right_border)
+            sheet.merge_range(len(lines) + 9, 1, len(lines) + 9, self.x_index - 1, summary, summary_style)
+            sheet.set_row(len(lines) + 9, 200)
         if self.type == 'note' and self.double_report is False:
             sheet.merge_range(4, 1, 4, self.x_index - 1, (self.name.upper() or ''), title_style)
 
@@ -1554,6 +1562,7 @@ class OhadaReport(models.AbstractModel):
         g_rcontext['lines'] = {}
         reports = [self.env.ref('ohada_reports.account_financial_report_ohada_balancesheet'),
         self.env.ref('ohada_reports.account_financial_report_ohada_balancesheet_liabilitites0')]
+        summary = self._get_report_manager(options).summary
         for report_bs in reports:
         # Check the security before updating the context to make sure the options are safe.
             self._check_report_security(options)
@@ -1596,6 +1605,7 @@ class OhadaReport(models.AbstractModel):
         rcontext['report']['name'] = 'Balance Sheet'
         g_rcontext['report'] = rcontext['report']
         g_rcontext['options'] = rcontext['options']
+        g_rcontext['report']['summary'] = summary
         g_rcontext['model'] = rcontext['model']
         g_rcontext['bsa_name'] = 'Balance Sheet - Assets'
         g_rcontext['menu_id'] = str(self.env.ref('account_accountant.menu_accounting').id)
@@ -1620,6 +1630,7 @@ class OhadaReport(models.AbstractModel):
         g_rcontext=dict()
         g_rcontext['lines_notes'] = []
         reports = [self, self.env['ohada.financial.html.report'].search([('name', '=', self.name+'_1')])]
+        summary = self._get_report_manager(options).summary
         for report_bs in reports:
         # Check the security before updating the context to make sure the options are safe.
             self._check_report_security(options)
@@ -1662,6 +1673,7 @@ class OhadaReport(models.AbstractModel):
         rcontext['report']['name'] = self.name
         g_rcontext['report'] = rcontext['report']
         g_rcontext['report']['double_report'] = True
+        g_rcontext['report']['summary'] = summary
         g_rcontext['model'] = self.header + ' ' + options['date']['date_from'][0:4]
         g_rcontext['report']['header'] = self.header + ' ' + options['date']['date_from'][0:4]
         g_rcontext['report']['header_2'] = reports[1].header + ' ' + options['date']['date_from'][0:4]

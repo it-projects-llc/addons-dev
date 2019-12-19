@@ -23,7 +23,6 @@ from odoo.osv import expression
 from odoo.tools.pycompat import izip
 from odoo import http
 from odoo.http import content_disposition, request
-# import wdb
 
 
 class ReportOhadaFinancialReport(models.Model):
@@ -61,6 +60,9 @@ class ReportOhadaFinancialReport(models.Model):
     header = fields.Char(default=False)
     double_report = fields.Boolean(default=False)
     secondary = fields.Boolean(default=False)
+    description = fields.Text('Notes', track_visibility=False)
+    description_pad = fields.Char('Description PAD', pad_content_field='description')
+
 
     #    _sql_constraints = [
     #        ('code_uniq', 'unique (code)', "A report with the same code already exists."),
@@ -71,6 +73,13 @@ class ReportOhadaFinancialReport(models.Model):
     #    def _code_constrains(self):
     #        if self.code and self.code.strip().lower() in __builtins__.keys():
     #            raise ValidationError('The code "%s" is invalid on report with name "%s"' % (self.code, self.name))
+
+    @api.model
+    def write_description(self, id, **kw):
+        self = self.env.browse(id)
+        self.description = kw['summary']
+        return True
+
     @api.model
     def print_bundle_xlsx(self, options, response, reports_ids=None):
         reports_ids = reports_ids.split(',')

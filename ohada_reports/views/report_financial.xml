@@ -511,22 +511,28 @@
                     </t>
                 </t>
             </div>
-            <div class="o_account_reports_summary_edit no_print">
-                <textarea name="summary"><t t-if="report.get('summary')" t-esc="report['summary']" /></textarea>
-                <button class="btn btn-primary js_account_report_save_summary">Save</button>
+            <div class="o_account_report_summary no_print" style="margin-bottom:0px;color:#001E5A;font-family:NimbusSanL-Regu;">
+                <span t-if="not report.get('summary')" id="add_a_note" class="js_account_reports_add_footnote" name='summary' style="cursor:pointer;">Add a note</span>
             </div>
-            <div class="o_account_reports_summary no_print">
-                <i class="fa fa-fw fa-pencil o_account_reports_edit_summary_pencil no_print" role="img" aria-label="Edit Summary" title="Edit Summary"></i>
+            <div id="summernote"><span t-if="report.get('summary')"><t t-esc="report['summary']" t-options="{'widget': 'html'}"/></span></div>
+            <button t-if="report.get('summary')" id="edit_a_note" class="btn btn-primary js_account_reports_edit_footnote no_print" name='summary'>Edit a note</button>
+            <button id="edit_a_note2" class="btn btn-primary js_account_reports_edit_footnote no_print" name='summary' style="display:none;">Edit a note</button>
+            <button class="btn btn-primary js_account_report_save_summary" id="save_summary" style="display:none;margin-top:10px;">Save</button>
+            <div style="height:100px;" class="no_print"/>
+            <!--<div class="o_account_reports_summary_edit no_print">-->
+                <!--<textarea name="summary"><t t-if="report.get('summary')" t-esc="report['summary']" /></textarea>-->
+                <!--<button class="btn btn-primary js_account_report_save_summary">Save</button>-->
+            <!--</div>-->
+            <!--<div class="o_account_reports_summary">-->
+                <!--<i class="fa fa-fw fa-pencil o_account_reports_edit_summary_pencil no_print" role="img" aria-label="Edit Summary" title="Edit Summary"></i>-->
 
-                <div class="o_account_report_summary" style="margin-bottom:0px;color:#001E5A;font-family:NimbusSanL-Regu;" role="alert">
-                    <span t-if="report.get('summary')"><t t-esc="report['summary']" t-options="{'widget': 'text'}"/></span>
-                    <input t-if="not report.get('summary')" type='text' class="o_input no_print" name='summary' placeholder='Add a note'/>
-                </div>
-                <div style="height:100px;" class="no_print">
-
-                </div>
-            </div>
-            <div class="js_account_report_footnotes no_print"/>
+                <!--<div class="o_account_report_summary" style="margin-bottom:0px;color:#001E5A;font-family:NimbusSanL-Regu;" role="alert">-->
+                    <!--<span t-if="report.get('summary')"><t t-esc="report['summary']" t-options="{'widget': 'text'}"/></span>-->
+                    <!--<input t-if="not report.get('summary')" type='text' class="o_input no_print" name='summary' placeholder='Add a note'/>-->
+                <!--</div>-->
+                <!--<div style="height:100px;" class="no_print"/>-->
+            <!--</div>-->
+            <!--<div class="js_account_report_footnotes no_print"/>-->
 
         </div>
     </div>
