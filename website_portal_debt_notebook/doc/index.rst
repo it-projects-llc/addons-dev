@@ -14,3 +14,5 @@ Usage
 * Click on the User Name
 * Click ``My Account``
 * Click ``Debt / Credit History``
+
+RESULT: Debt/credit history from website are shown to portal User.
