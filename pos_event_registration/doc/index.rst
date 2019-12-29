@@ -51,3 +51,5 @@ Ticket sales
 * In POS sell a ticket to a customer like a regular product
 * On the receipt screen as attendee is created a *Open Attendee* button is appeared, Click on it
 * In opened Attendee screen you proceed an attendee as it is written above
+
+RESULT: Attendees are processed and Tickets are sold out via POS
