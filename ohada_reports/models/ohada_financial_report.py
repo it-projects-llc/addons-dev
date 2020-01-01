@@ -1428,12 +1428,12 @@ class OhadaFinancialReportLine(models.Model):
                         vals['columns'][i + 1]['name'] = ['ANNEE ' + line._context['periods'][i]['string']]
                     vals['columns'][- 1]['name'] = ['Variation en %']
             #==============================DELETE============================
-            if line.header is True and financial_report.type == 'note' and financial_report.name == 'Note 4':
+            if line.header is True and financial_report.type == 'note' and (financial_report.name == 'Note 4' or financial_report.name == 'Note 7' or financial_report.name == 'Note 8' or financial_report.name == 'Note 17'):
                 header_list = [["Créances à un", "an au plus"], ["Créances à plus", "d'un an à deux", "ans au plus"],
                                ["Créances à plus", "de deux ans au", "plus"]]
                 for i in header_list:
                     vals['columns'].append({'name': i})
-            elif financial_report.type == 'note' and financial_report.name == 'Note 4':
+            elif financial_report.type == 'note' and (financial_report.name == 'Note 4' or financial_report.name == 'Note 7' or financial_report.name == 'Note 8' or financial_report.name == 'Note 17'):
                 for i in range(3):
                     vals['columns'].append({'name': 0})
 
