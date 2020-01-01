@@ -1617,7 +1617,7 @@ class IrModuleModule(models.Model):
 
         return res
 
-class OhadaFinancialReportLine(models.Model):
+class OhadaDashboard(models.Model):
     _name = "ohada.dashboard"
     _description = "OHADA Dashboard"
 

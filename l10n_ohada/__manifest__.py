@@ -26,7 +26,6 @@ Countries that belong to OHADA are the following:
     Replica of Democratic Congo, Senegal, Chad, Togo.
     
     """,
-    'category': 'Accounting',
     'depends' : [
         'account', 
         'base_vat', 
