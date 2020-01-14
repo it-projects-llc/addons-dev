@@ -2,8 +2,8 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
 {
-    "name": """Manufactofing Eurodesign""",
-    "summary": """Custom features for Manufactoring""",
+    "name": """Manufacturing Eurodesign""",
+    "summary": """Custom features for Manufacturing""",
     "category": "Manufacturing",
     # "live_test_url": "http://apps.it-projects.info/shop/product/DEMO-URL?version=12.0",
     "images": [],
@@ -18,13 +18,15 @@
     # "currency": "EUR",
 
     "depends": [
-        'mrp_workorder',
+        # 'mrp_workorder',
+        'mrp',
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
         # 'security/ir.model.access.csv',
         'views/mrp_production_view.xml',
         'views/mrp_workorder_view.xml',
+        'views/product_view.xml',
     ],
     "demo": [
     ],
@@ -39,13 +41,13 @@
     "auto_install": False,
     "installable": True,
 
-    # "demo_title": "Manufactofing Eurodesign",
+    # "demo_title": "Manufacturing Eurodesign",
     # "demo_addons": [
     # ],
     # "demo_addons_hidden": [
     # ],
     # "demo_url": "DEMO-URL",
-    # "demo_summary": "Custom features for Manufactoring",
+    # "demo_summary": "Custom features for Manufacturing",
     # "demo_images": [
     #    "images/MAIN_IMAGE",
     # ]

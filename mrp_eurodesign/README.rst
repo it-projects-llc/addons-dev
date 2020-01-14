@@ -6,9 +6,9 @@
  Manufactofing Eurodesign
 ==========================
 
-Custom features for Manufactoring
+Custom features for Manufacturing
 
-Custom features for Manufactoring
+Custom features for Manufacturing
 
 Credits
 =======
