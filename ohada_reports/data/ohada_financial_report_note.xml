@@ -2723,6 +2723,247 @@
         <field name="groupby">account_id</field>
     </record>
 
+     <!--NOTE 19-->
+
+    <record id="ohada_financial_report_note19" model="ohada.financial.html.report">
+        <field name="name">Note 19</field>
+        <field name="debit_credit" eval="False"/>
+        <field name="analytic" eval="True"/>
+        <field name="double_report" eval="False"/>
+        <field name="type">note</field>
+        <field name="header">VALEURS A ENCAISSER</field>
+        <field name="unfold_all_filter" eval="True"/>
+        <field name="show_journal_filter" eval="True"/>
+        <field name='parent_id' ref='menu_ohada_legal_statements_note'/>
+    </record>
+
+    <record id="ohada_financial_report_note19_header" model="ohada.financial.html.report.line">
+        <field name="name">LIBELLES</field>
+        <field name="code">_n19_1</field>
+        <field name="header" eval="True"/>
+        <field name="reference"></field>
+        <field name="financial_report_id" ref="ohada_financial_report_note19"/>
+        <field name="sequence" eval="1"/>
+        <field name="level" eval="0" />
+    </record>
+
+    <record id="ohada_financial_report_note19_1" model="ohada.financial.html.report.line">
+        <field name="name">Organismes internationaux</field>
+        <field name="code">N19_1</field>
+        <field name="financial_report_id" ref="ohada_financial_report_note19"/>
+        <field name="domain" eval="[('account_id.code', '=like', '45%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="2"/>
+        <field name="groupby">account_id</field>
+    </record>
+
+    <record id="ohada_financial_report_note19_2" model="ohada.financial.html.report.line">
+        <field name="name">Apporteurs, opérations sur le capital</field>
+        <field name="code">N19_2</field>
+        <field name="financial_report_id" ref="ohada_financial_report_note19"/>
+        <field name="domain" eval="[('account_id.code', '=like', '461%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="3"/>
+        <field name="groupby">account_id</field>
+    </record>
+
+    <record id="ohada_financial_report_note19_3" model="ohada.financial.html.report.line">
+        <field name="name">Associés, compte courant</field>
+        <field name="code">N19_3</field>
+        <field name="financial_report_id" ref="ohada_financial_report_note19"/>
+        <field name="domain" eval="[('account_id.code', '=like', '462%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="4"/>
+        <field name="groupby">account_id</field>
+    </record>
+
+    <record id="ohada_financial_report_note19_4" model="ohada.financial.html.report.line">
+        <field name="name">Associés, dividendes à payer</field>
+        <field name="code">N19_4</field>
+        <field name="financial_report_id" ref="ohada_financial_report_note19"/>
+        <field name="domain" eval="[('account_id.code', '=like', '465%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="5"/>
+        <field name="groupby">account_id</field>
+    </record>
+
+    <record id="ohada_financial_report_note19_5" model="ohada.financial.html.report.line">
+        <field name="name">Groupe, compte courant</field>
+        <field name="code">N19_5</field>
+        <field name="financial_report_id" ref="ohada_financial_report_note19"/>
+        <field name="domain" eval="[('account_id.code', '=like', '466%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="6"/>
+        <field name="groupby">account_id</field>
+    </record>
+
+    <record id="ohada_financial_report_note19_6" model="ohada.financial.html.report.line">
+        <field name="name">Autres dettes associés</field>
+        <field name="code">N19_6</field>
+        <field name="financial_report_id" ref="ohada_financial_report_note19"/>
+        <field name="domain" eval="['|', '|', ('account_id.code', '=like', '463%'), ('account_id.code', '=like', '467%'), ('account_id.code', '=like', '469%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="7"/>
+        <field name="groupby">account_id</field>
+    </record>
+
+    <record id="ohada_financial_report_note19_7" model="ohada.financial.html.report.line">
+        <field name="name">TOTAL DETTES ASSOCIES</field>
+        <field name="code">N19_7</field>
+        <field name="financial_report_id" ref="ohada_financial_report_note19"/>
+        <field name="formulas">balance = N19_1.balance + N19_2.balance + N19_3.balance + N19_4.balance + N19_5.balance + N19_6.balance</field>
+        <field name="level" eval="0" />
+        <field name="sequence" eval="8"/>
+        <field name="groupby">account_id</field>
+    </record>
+
+    <record id="ohada_financial_report_note19_8" model="ohada.financial.html.report.line">
+        <field name="name">Créditeurs divers</field>
+        <field name="code">N19_8</field>
+        <field name="financial_report_id" ref="ohada_financial_report_note19"/>
+        <field name="domain" eval="[('account_id.code', '=like', '4712%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="9"/>
+        <field name="groupby">account_id</field>
+    </record>
+
+    <record id="ohada_financial_report_note19_9" model="ohada.financial.html.report.line">
+        <field name="name">Obligataires</field>
+        <field name="code">N19_9</field>
+        <field name="financial_report_id" ref="ohada_financial_report_note19"/>
+        <field name="domain" eval="[('account_id.code', '=like', '4713%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="10"/>
+        <field name="groupby">account_id</field>
+    </record>
+
+    <record id="ohada_financial_report_note19_10" model="ohada.financial.html.report.line">
+        <field name="name">Rémunérations d'administrateurs</field>
+        <field name="code">N19_10</field>
+        <field name="financial_report_id" ref="ohada_financial_report_note19"/>
+        <field name="domain" eval="[('account_id.code', '=like', '4715%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="11"/>
+        <field name="groupby">account_id</field>
+    </record>
+
+    <record id="ohada_financial_report_note19_11" model="ohada.financial.html.report.line">
+        <field name="name">Compte du factor</field>
+        <field name="code">N19_11</field>
+        <field name="financial_report_id" ref="ohada_financial_report_note19"/>
+        <field name="domain" eval="[('account_id.code', '=like', '4716%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="12"/>
+        <field name="groupby">account_id</field>
+    </record>
+
+    <record id="ohada_financial_report_note19_12" model="ohada.financial.html.report.line">
+        <field name="name">Versements restants à effectuer sur titres de placement non libérés</field>
+        <field name="code">N19_12</field>
+        <field name="financial_report_id" ref="ohada_financial_report_note19"/>
+        <field name="domain" eval="[('account_id.code', '=like', '4726%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="13"/>
+        <field name="groupby">account_id</field>
+    </record>
+
+    <record id="ohada_financial_report_note19_13" model="ohada.financial.html.report.line">
+        <field name="name">Compte transitoire, ajustement spécial lié à la révision du SYSCOHADA</field>
+        <field name="code">N19_13</field>
+        <field name="financial_report_id" ref="ohada_financial_report_note19"/>
+        <field name="domain" eval="[('account_id.code', '=like', '475%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="14"/>
+        <field name="groupby">account_id</field>
+    </record>
+
+    <record id="ohada_financial_report_note19_14" model="ohada.financial.html.report.line">
+        <field name="name">Autres créditeurs divers</field>
+        <field name="code">N19_14</field>
+        <field name="financial_report_id" ref="ohada_financial_report_note19"/>
+        <field name="domain" eval="['|', '|', ('account_id.code', '=like', '4711%'), ('account_id.code', '=like', '4717%'), ('account_id.code', '=like', '4718%'), ('account_id.code', '=like', '4719%'), ('account_id.code', '=like', '472%'), ('account_id.code', '=like', '473%'), ('account_id.code', '=like', '474%'), ('account_id.code', '=like', '476%'), ('account_id.code', '=like', '477%'), ('account_id.code', '=like', '478%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="15"/>
+        <field name="groupby">account_id</field>
+    </record>
+
+    <record id="ohada_financial_report_note19_15" model="ohada.financial.html.report.line">
+        <field name="name">TOTAL CREDITEURS DIVERS</field>
+        <field name="code">N19_15</field>
+        <field name="financial_report_id" ref="ohada_financial_report_note19"/>
+        <field name="formulas">balance = N19_8.balance + N19_9.balance + N19_10.balance + N19_11.balance + N19_12.balance + N19_13.balance + N19_14.balance</field>
+        <field name="level" eval="0" />
+        <field name="sequence" eval="16"/>
+        <field name="groupby">account_id</field>
+    </record>
+
+    <record id="ohada_financial_report_note19_16" model="ohada.financial.html.report.line">
+        <field name="name">Comptes permanents non bloqués des etablissements et des succursales</field>
+        <field name="code">N19_16</field>
+        <field name="financial_report_id" ref="ohada_financial_report_note19"/>
+        <field name="domain" eval="[('account_id.code', '=like', '185%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="17"/>
+        <field name="groupby">account_id</field>
+    </record>
+
+    <record id="ohada_financial_report_note19_17" model="ohada.financial.html.report.line">
+        <field name="name">Comptes de liaison charges et produits</field>
+        <field name="code">N19_17</field>
+        <field name="financial_report_id" ref="ohada_financial_report_note19"/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '186%'), ('account_id.code', '=like', '187%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="19"/>
+        <field name="groupby">account_id</field>
+    </record>
+
+    <record id="ohada_financial_report_note19_18" model="ohada.financial.html.report.line">
+        <field name="name">Comptes de liaison des sociétés en participation</field>
+        <field name="code">N19_18</field>
+        <field name="financial_report_id" ref="ohada_financial_report_note19"/>
+        <field name="domain" eval="[('account_id.code', '=like', '188%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="19"/>
+        <field name="groupby">account_id</field>
+    </record>
+
+    <record id="ohada_financial_report_note19_19" model="ohada.financial.html.report.line">
+        <field name="name">TOTAL COMPTES DE LIAISON</field>
+        <field name="code">N19_19</field>
+        <field name="financial_report_id" ref="ohada_financial_report_note19"/>
+        <field name="formulas">balance = N19_16.balance + N19_17.balance + N19_18.balance</field>
+        <field name="level" eval="0" />
+        <field name="sequence" eval="20"/>
+        <field name="groupby">account_id</field>
+    </record>
+
+    <record id="ohada_financial_report_note19_20" model="ohada.financial.html.report.line">
+        <field name="name">Provisions pour risques à court terme (voir note 28)</field>
+        <field name="code">N19_20</field>
+        <field name="financial_report_id" ref="ohada_financial_report_note19"/>
+        <field name="domain" eval="['|', ('account_id.code', '=like', '499%'), ('account_id.code', '=like', '599%'), '&amp;', ('account_id.code', 'not like', '4998%')]" />
+        <field name="formulas">balance = sum.balance</field>
+        <field name="level" eval="2" />
+        <field name="sequence" eval="20"/>
+        <field name="groupby">account_id</field>
+    </record>
+
     <!--NOTE 20-->
 
     <record id="ohada_financial_report_note20" model="ohada.financial.html.report">
@@ -4599,5 +4840,7 @@
         <field name="sequence" eval="20"/>
         <field name="groupby">account_id</field>
     </record>
+
+
 
 </odoo>

@@ -23,7 +23,7 @@ from odoo.osv import expression
 from odoo.tools.pycompat import izip
 from odoo import http
 from odoo.http import content_disposition, request
-import wdb
+# import wdb
 
 class ReportOhadaFinancialReport(models.Model):
     _name = "ohada.financial.html.report"
@@ -1399,7 +1399,7 @@ class OhadaFinancialReportLine(models.Model):
                     for i in range(len(vals['columns'])):
                         vals['columns'][i] = line._format(vals['columns'][i])
                 elif len(comparison_table) == 2 and not options.get('groups'):
-                    if financial_report.name in ['Note 15A', 'Note 16A', 'Note 18'] and line.header is not True:
+                    if financial_report.name in ['Note 15A', 'Note 16A', 'Note 18', 'Note 19'] and line.header is not True:
                         vals['columns'].append(line._build_abs(vals['columns'][0]['name'], vals['columns'][1]['name']))
                         vals['columns'].append(line._build_cmp(vals['columns'][0]['name'], vals['columns'][1]['name']))
                         for i in [0, 1]:
@@ -1437,7 +1437,7 @@ class OhadaFinancialReportLine(models.Model):
                 elif len(vals['columns']) > 1 and line._context.get('periods') != None:
                     for i in range(len(vals['columns'][1:]) - 1):
                         vals['columns'][i + 1]['name'] = ['ANNEE ' + line._context['periods'][i]['string']]
-                    if financial_report.name in ['Note 15A', 'Note 16A', 'Note 18']:
+                    if financial_report.name in ['Note 15A', 'Note 16A', 'Note 18', 'Note 19']:
                         # wdb.set_trace()
                         vals['columns'][- 1]['name'] = ['Variation en valeur', 'absolue']
                         vals['columns'].append({'name': ['Variation en %']})
@@ -1449,7 +1449,7 @@ class OhadaFinancialReportLine(models.Model):
             #     for i in header_list:
             #         vals['columns'].append({'name': i})
             #==============================DELETE============================
-            if line.header is True and financial_report.name in ['Note 4', 'Note 7', 'Note 8', 'Note 17', 'Note 15A', 'Note 16A', 'Note 18'] and  len(comparison_table) == 2:
+            if line.header is True and financial_report.name in ['Note 4', 'Note 7', 'Note 8', 'Note 17', 'Note 15A', 'Note 16A', 'Note 18', 'Note 19'] and  len(comparison_table) == 2:
                 header_list = [["Créances à un", "an au plus"], ["Créances à plus", "d'un an à deux", "ans au plus"],
                                ["Créances à plus", "de deux ans au", "plus"]]
                 for i in header_list:
@@ -1458,7 +1458,7 @@ class OhadaFinancialReportLine(models.Model):
                 header_list = [["Régime fiscale"], ["Échéance"]]
                 for i in header_list:
                     vals['columns'].append({'name': i})
-            elif financial_report.name in ['Note 4', 'Note 7', 'Note 8', 'Note 17', 'Note 15A', 'Note 16A', 'Note 18'] and len(comparison_table) == 2:
+            elif financial_report.name in ['Note 4', 'Note 7', 'Note 8', 'Note 17', 'Note 15A', 'Note 16A', 'Note 18', 'Note 19'] and len(comparison_table) == 2:
                 # wdb.set_trace()
                 amount_of_periods = 4
                 amount_of_group_ids = len(options.get('groups', {}).get('ids') or []) or 1
