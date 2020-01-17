@@ -28,7 +28,6 @@ from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError
 
 import html2text
-# import wdb
 
 
 _logger = logging.getLogger(__name__)
