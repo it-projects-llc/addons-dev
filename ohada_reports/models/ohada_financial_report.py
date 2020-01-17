@@ -23,7 +23,7 @@ from odoo.osv import expression
 from odoo.tools.pycompat import izip
 from odoo import http
 from odoo.http import content_disposition, request
-# import wdb
+import wdb
 
 class ReportOhadaFinancialReport(models.Model):
     _name = "ohada.financial.html.report"
@@ -1454,6 +1454,10 @@ class OhadaFinancialReportLine(models.Model):
                                ["Créances à plus", "de deux ans au", "plus"]]
                 for i in header_list:
                     vals['columns'].append({'name': i})
+            elif line.header is True and financial_report.name in ['Note 15B'] and  len(comparison_table) == 2:
+                header_list = [["Régime fiscale"], ["Échéance"]]
+                for i in header_list:
+                    vals['columns'].append({'name': i})
             elif financial_report.name in ['Note 4', 'Note 7', 'Note 8', 'Note 17', 'Note 15A', 'Note 16A', 'Note 18'] and len(comparison_table) == 2:
                 # wdb.set_trace()
                 amount_of_periods = 4
@@ -1476,6 +1480,10 @@ class OhadaFinancialReportLine(models.Model):
                                                                                    groups=options.get('groups'))
 
                     vals['columns'].append(line._format({'name': r[0]['line']['balance']}))
+            elif financial_report.name in ['Note 15B'] and len(comparison_table) == 2:
+                vals['columns'].append({'name': " "})
+                vals['columns'].append({'name': " "})
+
 
             if line.header is True and financial_report.type == 'note' and financial_report.name == 'Note 4_1':
                 vals['columns'] = []
