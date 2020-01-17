@@ -9,3 +9,6 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     scrap_percent = fields.Float(default=0)
+
+    # Пока не продумал, как это поле использовать. Если будет время доработаю этот момент.
+    # is_scrap_applied = fields.Boolean(default=False)

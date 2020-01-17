@@ -18,8 +18,7 @@
     # "currency": "EUR",
 
     "depends": [
-        # 'mrp_workorder',
-        'mrp',
+        'mrp_workorder',
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
