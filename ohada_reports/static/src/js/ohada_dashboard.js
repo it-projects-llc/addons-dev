@@ -1,0 +1,551 @@
+odoo.define('ohada_dashboard.Dashboard', function (require) {
+"use strict";
+
+var AbstractAction = require('web.AbstractAction');
+var ajax = require('web.ajax');
+var ControlPanelMixin = require('web.ControlPanelMixin');
+var core = require('web.core');
+var rpc = require('web.rpc');
+var session = require('web.session');
+var web_client = require('web.web_client');
+var framework = require('web.framework');
+var crash_manager = require('web.crash_manager');
+
+var _t = core._t;
+var QWeb = core.qweb;
+
+
+var OhadaDashboard = AbstractAction.extend(ControlPanelMixin, {
+    template: 'OhadaDashboardMain',
+    cssLibs: [
+        '/web/static/lib/nvd3/nv.d3.css'
+    ],
+    jsLibs: [
+        '/web/static/lib/nvd3/d3.v3.js',
+        '/web/static/lib/nvd3/nv.d3.js',
+        '/web/static/src/js/libs/nvd3.js'
+    ],
+    events: {
+        'change .o_mrp_bom_report_variants': 'change_year',
+        'click .print_bundle': 'print_bundle',
+        'click .close': 'close_popup',
+        'click .export_pdf': 'print_bundle_pdf',
+        'click .export_xlsx': 'print_bundle_xlsx',
+        'click .print_bs_pdf': 'print_bs_pdf',
+        'click .print_lands_bs_pdf': 'print_lands_bs_pdf',
+        'click .print_pl_pdf': 'print_pl_pdf',
+        'click .print_cf_pdf': 'print_cf_pdf',
+        'click .open_report': 'open_report',
+    },
+
+    open_report: function(event) {
+        var self = this;
+        event.stopPropagation();
+        event.preventDefault();
+        return self.do_action({
+            name: event.target.getAttribute('name'),
+            tag: 'ohada_report',
+            type: 'ir.actions.client',
+            context: {
+                id : parseInt(event.target.getAttribute('report-id')),
+                model : 'ohada.financial.html.report',
+            },
+        },{on_reverse_breadcrumb: function(){ return self.update_cp();}});
+    },
+
+    fetch_data: function(year=false) {
+        var self = this;
+        var def1 = this._rpc({
+                model: 'ohada.dashboard',
+                method: 'fetch_data',
+                args: [year],
+        }).done(function(result) {
+            self.data =  result;
+        });
+        return $.when(def1);
+    },
+
+    update_cp: function() {
+        var self = this;
+        this.update_control_panel();
+    },
+
+    close_popup: function(){
+        document.getElementById("myForm").style.display = "none";
+        document.getElementById("modal-backdrop").style.display = "none";
+    },
+    change_year: function(ev) {
+        var self = this;
+        this.fetch_data(parseInt(ev['currentTarget']['value'])).then(function() {
+            self._updateTemplateBody();
+        });
+    },
+    print_lands_bs_pdf: function() {
+        var self = this;
+        framework.blockUI();
+        var def = $.Deferred();
+        session.get_file({
+            url: '/ohada_reports',
+            data: {"model": 'ohada.financial.html.report',
+                    "options": JSON.stringify(self.data['options']),
+                    "financial_id": self.data['bs_id'],
+                    "output_format": "pdf",
+                    "horizontal": "True"},
+            success: def.resolve.bind(def),
+            error: function () {
+                crash_manager.rpc_error.apply(crash_manager, arguments);
+                def.reject();
+            },
+            complete: framework.unblockUI,
+        });
+        return def;
+    },
+    print_bs_pdf: function() {
+        var self = this;
+        framework.blockUI();
+        var def = $.Deferred();
+        session.get_file({
+            url: '/ohada_reports',
+            data: {"model": 'ohada.financial.html.report',
+                    "options": JSON.stringify(self.data['options']),
+                    "financial_id": self.data['bs_id'],
+                    "output_format": "pdf"},
+            success: def.resolve.bind(def),
+            error: function () {
+                crash_manager.rpc_error.apply(crash_manager, arguments);
+                def.reject();
+            },
+            complete: framework.unblockUI,
+        });
+        return def;
+    },
+    print_pl_pdf: function() {
+        var self = this;
+        framework.blockUI();
+        var def = $.Deferred();
+        session.get_file({
+            url: '/ohada_reports',
+            data: {"model": 'ohada.financial.html.report',
+                    "options": JSON.stringify(self.data['options']),
+                    "financial_id": self.data['pl_id'],
+                    "output_format": "pdf"},
+            success: def.resolve.bind(def),
+            error: function () {
+                crash_manager.rpc_error.apply(crash_manager, arguments);
+                def.reject();
+            },
+            complete: framework.unblockUI,
+        });
+        return def;
+    },
+    print_cf_pdf: function() {
+        var self = this;
+        framework.blockUI();
+        var def = $.Deferred();
+        session.get_file({
+            url: '/ohada_reports',
+            data: {"model": 'ohada.financial.html.report',
+                    "options": JSON.stringify(self.data['options']),
+                    "financial_id": self.data['cf_id'],
+                    "output_format": "pdf"},
+            success: def.resolve.bind(def),
+            error: function () {
+                crash_manager.rpc_error.apply(crash_manager, arguments);
+                def.reject();
+            },
+            complete: framework.unblockUI,
+        });
+        return def;
+    },
+    print_bundle: function() {
+        document.getElementById("myForm").style.display = "block";
+        document.getElementById("modal-backdrop").style.display = "block";
+    },
+
+    print_bundle_xlsx: function() {
+        var self = this;
+        var checked_reports = [];
+        this.$('.bundle_item input:checked').each(function() {
+            checked_reports.push($(this)[0].dataset['recordId']);
+        });
+        if(checked_reports.length == 0){
+            return true;
+        }
+        framework.blockUI();
+        var def = $.Deferred();
+        session.get_file({
+            url: '/ohada_reports',
+            data: {"model": "ohada.financial.html.report",
+                   "options": JSON.stringify(self.data['options']),
+                   "financial_id": 3,
+                   "output_format": "xlsx_bundle",
+                   "bundle_items": checked_reports},
+            success: def.resolve.bind(def),
+            error: function () {
+                crash_manager.rpc_error.apply(crash_manager, arguments);
+                def.reject();
+            },
+            complete: framework.unblockUI,
+        });
+        return def;
+    },
+
+    print_bundle_pdf: function() {
+        var self = this;
+        var checked_reports = [];
+        this.$('.bundle_item input:checked').each(function() {
+            checked_reports.push($(this)[0].dataset['recordId']);
+        });
+        if(checked_reports.length == 0){
+            return true;
+        }
+        framework.blockUI();
+        var def = $.Deferred();
+        session.get_file({
+            url: '/ohada_reports',
+            data: {"model": "ohada.financial.html.report",
+                   "options": JSON.stringify(self.data['options']),
+                   "output_format": "pdf_bundle",
+                   "financial_id": 1,
+                   "bundle_items": checked_reports},
+            success: def.resolve.bind(def),
+            error: function () {
+                crash_manager.rpc_error.apply(crash_manager, arguments);
+                def.reject();
+            },
+            complete: framework.unblockUI,
+        });
+        return def;
+    },
+
+    _updateTemplateBody: function () {
+        this.$el.empty();
+        this.$el.append(core.qweb.render('ManagerDashboard', {widget: this}));
+        this.render_graphs();
+        document.getElementById("myForm").style.display = "none";
+        this.update_cp();
+    },
+
+    init: function(parent, context) {
+        this._super(parent, context);
+        this.dashboards_templates = ['ManagerDashboard'];
+    },
+
+    willStart: function() {
+        var self = this;
+        return $.when(ajax.loadLibs(this), this._super()).then(function() {
+            return self.fetch_data();
+        });
+    },
+
+    start: function() {
+        var self = this;
+        this.set("title", 'Dashboard');
+        return this._super().then(function() {
+            self.render_dashboards();
+            self.render_graphs();
+            self.$el.parent().addClass('oe_background_grey');
+            self.update_cp();
+        });
+    },
+
+    render_dashboards: function() {
+        var self = this;
+        if (this.data){
+            _.each(this.dashboards_templates, function(template) {
+                self.$('.o_ohada_dashboard').append(QWeb.render(template, {widget: self}));
+            });
+            }
+        else{
+            self.$('.o_ohada_dashboard').append(QWeb.render('OhadaWarning', {widget: self}));
+            }
+    },
+
+    render_graphs: function(){
+        var self = this;
+        if (this.data){
+            self.render_leave_graph();
+            self.render_leave_graph2();
+            self.update_join_resign_trends();
+        }
+    },
+
+    update_join_resign_trends: function(){
+        var elem = this.$('.join_resign_trend');
+        var colors = ['#934da5'];
+        var color = d3.scale.ordinal().range(colors);
+        var data = [{'values': this.data['di_data']['CS']}]
+        data.forEach(function(d) {
+          d.values.forEach(function(d) {
+            d.l_month = d.l_month;
+            d.count = +d.count;
+          });
+        });
+        var margin = {top: 30, right: -50, bottom: 30, left: -50},
+            width = 250 - margin.left - margin.right,
+            height = 100 - margin.top - margin.bottom;
+
+        // Set the ranges
+        var x = d3.scale.ordinal()
+            .rangeRoundBands([0, width], 1);
+
+        var y = d3.scale.linear()
+            .range([height, 0]);
+
+        // Define the axes
+        var xAxis = d3.svg.axis().scale(x)
+            .orient("bottom");
+
+        var yAxis = d3.svg.axis().scale(y)
+            .orient("left").ticks(5);
+
+        x.domain(data[0].values.map(function(d) { return d.l_month; }));
+        y.domain([0, d3.max(data[0].values, d => d.count)])
+
+        var svg = d3.select(elem[0]).append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        // Add the X Axis
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+        var line = d3.svg.line()
+            .x(function(d) {return x(d.l_month); })
+            .y(function(d) {return y(d.count); });
+
+        let lines = svg.append('g')
+          .attr('class', 'lines');
+
+        lines.selectAll('.line-group')
+            .data(data).enter()
+            .append('g')
+            .attr('class', 'line-group')
+            .append('path')
+            .attr('class', 'line')
+            .attr('d', function(d) { return line(d.values); })
+            .style('stroke', (d, i) => color(i));
+
+        lines.selectAll("circle-group")
+            .data(data).enter()
+            .append("g")
+            .selectAll("circle")
+            .data(function(d) { return d.values;}).enter()
+            .append("g")
+            .attr("class", "circle")
+            .append("circle")
+            .attr("cx", function(d) { return x(d.l_month)})
+            .attr("cy", function(d) { return y(d.count)})
+            .attr("r", 3);
+    },
+
+
+    render_leave_graph2:function(){
+        var self = this;
+        var colors = ['#934da5'];
+        var color = d3.scale.ordinal().range(colors);
+        var fData = [{'l_month': "May 2019", 'leave': {Administration: 0, Management: 0, Sales: 0}},{'l_month': "May 2019", 'leave': {Administration: 0, Management: 0, Sales: 0}},{'l_month': "May 2019", 'leave': {Administration: 0, Management: 0, Sales: 0}}];
+        var dept = ["Administration", "Sales", "Management"];
+        var id = self.$('.leave_graph2')[0];
+        var barColor = '#934da5';
+        // compute total for each state.
+        fData.forEach(function(d){
+            var total = 0;
+            for (var dpt in dept){
+                total += d.leave[dept[dpt]];
+            }
+        d.total=total;
+        });
+
+        // function to handle histogram.
+        function histoGram(fD){
+            var hG={},    hGDim = {t: 60, r: 0, b: 30, l: 0};
+            hGDim.w = 230 - hGDim.l - hGDim.r,
+            hGDim.h = 120 - hGDim.t - hGDim.b;
+
+            //create svg for histogram.
+            var hGsvg = d3.select(id).append("svg")
+                .attr("width", hGDim.w + hGDim.l + hGDim.r)
+                .attr("height", hGDim.h + hGDim.t + hGDim.b).append("g")
+                .attr("transform", "translate(" + hGDim.l + "," + hGDim.t + ")");
+
+            // create function for x-axis mapping.
+            var x = d3.scale.ordinal().rangeRoundBands([0, hGDim.w], 0.1)
+                    .domain(fD.map(function(d) { return d[0]; }));
+
+            // Add x-axis to the histogram svg.
+            hGsvg.append("g").attr("class", "x axis")
+                .attr("transform", "translate(0," + hGDim.h + ")")
+                .call(d3.svg.axis().scale(x).orient("bottom"));
+
+            // Create function for y-axis map.
+            var y = d3.scale.linear().range([hGDim.h, 0])
+                    .domain([0, d3.max(fD, function(d) { return d[1]; })]);
+
+            // Create bars for histogram to contain rectangles and freq labels.
+            var bars = hGsvg.selectAll(".bar").data(fD).enter()
+                    .append("g").attr("class", "bar");
+
+            //create the rectangles.
+            bars.append("rect")
+                .attr("x", function(d) { return x(d[0]); })
+                .attr("y", function(d) { return y(d[1]); })
+                .attr("width", x.rangeBand())
+                .attr("height", function(d) { return hGDim.h - y(d[1]); })
+                .attr('fill',barColor);
+//                        .on("mouseover",mouseover)// mouseover is defined below.
+//                        .on("mouseout",mouseout);// mouseout is defined below.
+
+            //Create the frequency labels above the rectangles.
+            bars.append("text").text(function(d){ return d3.format(",")(d[1])})
+                .attr("x", function(d) { return x(d[0])+x.rangeBand()/2; })
+                .attr("y", function(d) { return y(d[1])-5; })
+                .attr("text-anchor", "middle");
+
+            function mouseover(d){  // utility function to be called on mouseover.
+                // filter for selected state.
+                var st = fData.filter(function(s){ return s.l_month == d[0];})[0],
+                    nD = d3.keys(st.leave).map(function(s){ return {type:s, leave:st.leave[s]};});
+
+                // call update functions of pie-chart and legend.
+            }
+
+            // create function to update the bars. This will be used by pie-chart.
+            hG.update = function(nD, color){
+                // update the domain of the y-axis map to reflect change in frequencies.
+                y.domain([0, d3.max(nD, function(d) { return d[1]; })]);
+
+                // Attach the new data to the bars.
+                var bars = hGsvg.selectAll(".bar").data(nD);
+
+                // transition the height and color of rectangles.
+                bars.select("rect").transition().duration(500)
+                    .attr("y", function(d) {return y(d[1]); })
+                    .attr("height", function(d) { return hGDim.h - y(d[1]); })
+                    .attr("fill", color);
+
+                // transition the frequency labels location and change value.
+                bars.select("text").transition().duration(500)
+                    .text(function(d){ return d3.format(",")(d[1])})
+                    .attr("y", function(d) {return y(d[1])-5; });
+            }
+            return hG;
+        }
+
+        // calculate total frequency by segment for all state.
+        var tF = dept.map(function(d){
+            return {type:d, leave: d3.sum(fData.map(function(t){ return t.leave[d];}))};
+        });
+
+        // calculate total frequency by state for all segment.
+//                var sF = fData.map(function(d){return [d.l_month,d.total];});
+        var sF = [['2016',1], ['2017',6], ['2018',3], ['2019',2]];
+        var sF = self.data['di_data']['PL'];
+        var hG = histoGram(sF); // create the histogram.
+    },
+
+    render_leave_graph:function(){
+        var self = this;
+//        var color = d3.scale.category10();
+        var colors = ['#934da5'];
+        var color = d3.scale.ordinal().range(colors);
+        var fData = [{'l_month': "May 2019", 'leave': {Administration: 0, Management: 0, Sales: 0}},{'l_month': "May 2019", 'leave': {Administration: 0, Management: 0, Sales: 0}},{'l_month': "May 2019", 'leave': {Administration: 0, Management: 0, Sales: 0}}];
+        var dept = ["Administration", "Sales", "Management"];
+        var id = self.$('.leave_graph')[0];
+        var barColor = '#934da5';
+        // compute total for each state.
+        fData.forEach(function(d){
+            var total = 0;
+            for (var dpt in dept){
+                total += d.leave[dept[dpt]];
+            }
+        d.total=total;
+        });
+
+        // function to handle histogram.
+        function histoGram(fD){
+            var hG={},    hGDim = {t: 60, r: 0, b: 30, l: 0};
+            hGDim.w = 230 - hGDim.l - hGDim.r,
+            hGDim.h = 120 - hGDim.t - hGDim.b;
+
+            //create svg for histogram.
+            var hGsvg = d3.select(id).append("svg")
+                .attr("width", hGDim.w + hGDim.l + hGDim.r)
+                .attr("height", hGDim.h + hGDim.t + hGDim.b).append("g")
+                .attr("transform", "translate(" + hGDim.l + "," + hGDim.t + ")");
+
+            // create function for x-axis mapping.
+            var x = d3.scale.ordinal().rangeRoundBands([0, hGDim.w], 0.1)
+                    .domain(fD.map(function(d) { return d[0]; }));
+
+            // Add x-axis to the histogram svg.
+            hGsvg.append("g").attr("class", "x axis")
+                .attr("transform", "translate(0," + hGDim.h + ")")
+                .call(d3.svg.axis().scale(x).orient("bottom"));
+
+            // Create function for y-axis map.
+            var y = d3.scale.linear().range([hGDim.h, 0])
+                    .domain([0, d3.max(fD, function(d) { return d[1]; })]);
+
+            // Create bars for histogram to contain rectangles and freq labels.
+            var bars = hGsvg.selectAll(".bar").data(fD).enter()
+                    .append("g").attr("class", "bar");
+
+            //create the rectangles.
+            bars.append("rect")
+                .attr("x", function(d) { return x(d[0]); })
+                .attr("y", function(d) { return y(d[1]); })
+                .attr("width", x.rangeBand())
+                .attr("height", function(d) { return hGDim.h - y(d[1]); })
+                .attr('fill',barColor);
+//                        .on("mouseover",mouseover)// mouseover is defined below.
+//                        .on("mouseout",mouseout);// mouseout is defined below.
+
+            //Create the frequency labels above the rectangles.
+            bars.append("text").text(function(d){ return d3.format(",")(d[1])})
+                .attr("x", function(d) { return x(d[0])+x.rangeBand()/2; })
+                .attr("y", function(d) { return y(d[1])-5; })
+                .attr("text-anchor", "middle");
+
+            // create function to update the bars. This will be used by pie-chart.
+            hG.update = function(nD, color){
+                // update the domain of the y-axis map to reflect change in frequencies.
+                y.domain([0, d3.max(nD, function(d) { return d[1]; })]);
+
+                // Attach the new data to the bars.
+                var bars = hGsvg.selectAll(".bar").data(nD);
+
+                // transition the height and color of rectangles.
+                bars.select("rect").transition().duration(500)
+                    .attr("y", function(d) {return y(d[1]); })
+                    .attr("height", function(d) { return hGDim.h - y(d[1]); })
+                    .attr("fill", color);
+
+                // transition the frequency labels location and change value.
+                bars.select("text").transition().duration(500)
+                    .text(function(d){ return d3.format(",")(d[1])})
+                    .attr("y", function(d) {return y(d[1])-5; });
+            }
+            return hG;
+        }
+
+        // calculate total frequency by state for all segment.
+//                var sF = fData.map(function(d){return [d.l_month,d.total];});
+//                var sF = [['2016',5], ['2017',1], ['2018',4], ['2019',1]];
+        var sF = self.data['di_data']['BS'];
+        var hG = histoGram(sF); // create the histogram.
+    },
+
+
+});
+
+
+core.action_registry.add('ohada_dashboard', OhadaDashboard);
+
+return OhadaDashboard;
+
+});
