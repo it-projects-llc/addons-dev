@@ -25,7 +25,7 @@ Countries that belong to OHADA are the following:
         'base_vat', 
     ],
     'data': [
-        'data/res.country.group.csv',
+        # 'data/res.country.group.csv',
         'data/account_chart_template_data.xml',
         'data/account_tax_data.xml',
         'data/account_tax_template_data.xml',
