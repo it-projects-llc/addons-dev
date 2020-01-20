@@ -17,12 +17,15 @@ class PosConfig(models.Model):
 
     @api.multi
     def create_temporary_inventory(self, stock_inventory_stage_id):
+        default_nomenclature_id = self.env.ref("barcodes.default_barcode_nomenclature").id
         stock_inventory_stage_id = self.env['stock.inventory.stage'].browse(stock_inventory_stage_id)
         return self.create({
             'name': stock_inventory_stage_id.name + 'POS',
             'stock_location_id': stock_inventory_stage_id.inventory_id.location_id.id,
             'inventory_adjustment': True,
             'inventory_adjustment_temporary_inv_id': stock_inventory_stage_id.id,
+            'barcode_scanner': True,
+            'barcode_nomenclature_id': default_nomenclature_id,
         })
 
     def close_and_validate_entries_on_pos_closing(self, session):
