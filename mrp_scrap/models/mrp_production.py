@@ -21,5 +21,5 @@ class MrpProduction(models.Model):
 
     def button_apply_scrap(self):
         self.ensure_one()
-        qty = math.ceil(self.product_qty * self.scrap_percent / 100 + self.product_qty)
+        qty = math.ceil(self.product_qty / (1 - self.scrap_percent / 100))
         self.change_prod_qty(qty)
