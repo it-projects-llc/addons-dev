@@ -1,5 +1,6 @@
 # Copyright 2020 Denis Mudarisov <https://it-projects.info/team/trojikman>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+import math
 
 from odoo import api, fields, models
 
@@ -12,8 +13,10 @@ class StockPicking(models.Model):
     def button_apply_package_piking(self):
         self.ensure_one()
         for unit in self.move_ids_without_package:
-            unit.product_uom_qty = unit.product_id.product_qty
-        print('Picking applied')
+            qty = unit.product_id.product_qty
+            if qty:
+                new_qty = math.ceil(unit.product_uom_qty / qty) * qty
+                unit.product_uom_qty = new_qty
 
 
 class EuroDesign(models.Model):

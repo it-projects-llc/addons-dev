@@ -2,28 +2,41 @@
 <!-- Copyright 2020 Denis Mudarisov <https://it-projects.info/team/trojikman>
     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
 <odoo>
-    <!--  Maybe to remove  -->
+    <record id="custom_view_picking_form" model="ir.ui.view">
+        <field name="name">stock.picking.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                    <button name="button_apply_package_piking" type="object" string="Apply package picking" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="custom_product_template_tree_view" model="ir.ui.view">
+        <field name="name">product.template.product.tree</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <tree string="Product">
+                <field name="default_code"/>
+                <field name="name"/>
+                <field name="product_qty" string="Product QTY"/>
+            </tree>
+        </field>
+    </record>
+
     <record id="picking_list_action" model="ir.actions.act_window">
         <field name="name">Picking List</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">mrp.eurodesign</field>
+        <field name="res_model">product.template</field>
         <field name="view_mode">tree,form</field>
         <field name="view_type">form</field>
+        <field name="view_id" ref="custom_product_template_tree_view"/>
+        <field name="domain">[('product_qty', '!=', None)]</field>
     </record>
 
     <menuitem
         action="picking_list_action" id="menu_picking_list_action"
         parent="stock.menu_product_in_config_stock" sequence="7" groups="product.group_product_variant"/>
-    <!--  End  -->
-    <record id="product_template_form_view" model="ir.ui.view">
-        <field name="name">stock.picking.form</field>
-        <field name="model">stock.picking</field>
-        <field name="inherit_id" ref="stock.view_picking_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//header/button[@name='button_scrap']" position="after">
-                    <button name="button_apply_package_piking" type="object" string="Apply package picking" groups="base.group_user" />
-            </xpath>
-        </field>
-    </record>
 
 </odoo>
