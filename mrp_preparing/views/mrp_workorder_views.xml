@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2020 Denis Mudarisov <https://it-projects.info/team/trojikman>
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+<odoo>
+    <record id="mrp_workorder_view_form_tablet_menu_inherit" model="ir.ui.view">
+        <field name="name">mrp.workorder.view.form.tablet.menu.inherit</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp_workorder.mrp_workorder_view_form_tablet_menu"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='button_unblock']" position="after">
+                <button name="button_preparing" type="object" string="Preparing" class="btn-primary btn-block btn btn-lg"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
