@@ -9,8 +9,6 @@ class MrpProduction(models.Model):
 
     _inherit = 'mrp.production'
 
-    scrap_percent = fields.Float(related='product_id.product_tmpl_id.scrap_percent')
-
     def change_prod_qty(self, qty):
         self.ensure_one()
         update_qty = self.env['change.production.qty'].create({
@@ -24,8 +22,3 @@ class MrpProduction(models.Model):
         self.change_prod_qty(len(self.finished_move_line_ids))
 
         self.button_mark_done()
-
-    def button_apply_scrap(self):
-        self.ensure_one()
-        qty = math.ceil(self.product_qty * self.scrap_percent / 100 + self.product_qty)
-        self.change_prod_qty(qty)

@@ -22,10 +22,9 @@
     ],
     "external_dependencies": {"python": [], "bin": []},
     "data": [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'views/mrp_production_view.xml',
         'views/mrp_workorder_view.xml',
-        'views/product_view.xml',
     ],
     "demo": [
     ],

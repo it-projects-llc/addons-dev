@@ -10,12 +10,6 @@
             <xpath expr="//header" position="inside">
                 <button name="button_mark_as_done_force" string="Force Mark as Done" attrs="{'invisible': ['|', ('state', 'in', ['done', 'cancel']), ('finished_move_line_ids', '=', [])]}" type="object" confirm="Are you sure?"/>
             </xpath>
-            <xpath expr="//sheet//div[@class='o_row']/button" position="after">
-                <button name="button_apply_scrap" string="Apply Scrap %" type="object" class="oe_link"/>
-            </xpath>
-            <xpath expr="//field[@name='bom_id']" position="before">
-                <field name="scrap_percent"/>
-            </xpath>
         </field>
     </record>
 </odoo>
