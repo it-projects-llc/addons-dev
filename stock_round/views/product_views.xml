@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2020 Denis Mudarisov <https://it-projects.info/team/trojikman>
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+<odoo>
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">product.template.common.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='inventory']//group[@name='group_lots_and_weight']" position="inside">
+                    <label for="product_qty" />
+                    <div class="o_row" name="product_qty">
+                        <field name="product_qty" string="Product QTY"/>
+                    </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
