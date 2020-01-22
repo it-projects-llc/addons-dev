@@ -7,8 +7,11 @@
         <field name="model">mrp.workorder</field>
         <field name="inherit_id" ref="mrp_workorder.mrp_workorder_view_form_tablet"/>
         <field name="arch" type="xml">
+            <xpath expr="//button[@name='record_production']" position="before">
+                <button name="button_force_workorder" type="object" string="Force mark as done" attrs="{'invisible': ['|', '|', '|', '|', ('is_user_working', '=', False), ('is_last_step', '!=', True), ('skipped_check_ids', '!=', []), ('is_last_lot', '=', True)]}" barcode_trigger="record" class="btn-primary" confirm="Are you sure?" />
+            </xpath>
             <xpath expr="//button[@name='do_finish']" position="attributes">
-                <attribute name="confirm">Do you really want to mark as done?</attribute>
+                <attribute name="confirm">Do you really want to mark it as done?</attribute>
             </xpath>
         </field>
     </record>
