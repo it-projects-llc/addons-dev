@@ -20,6 +20,9 @@ class MrpWorkorder(models.Model):
         self.ensure_one()
         new_produced = self.qty_produced + self.qty_producing
         self.production_id.product_qty = new_produced
-        if self.next_work_order_id:
-            self.next_work_order_id.qty_producing = new_produced
+        work_order_ids = self.env['mrp.workorder'].search([('production_id', '=', self.production_id.id)])
+        work_order_ids.write({
+            'qty_producing': new_produced
+        })
+
         return self.do_finish()
