@@ -23,7 +23,7 @@ from odoo.osv import expression
 from odoo.tools.pycompat import izip
 from odoo import http
 from odoo.http import content_disposition, request
-import wdb
+# import wdb
 
 class ReportOhadaFinancialReport(models.Model):
     _name = "ohada.financial.html.report"
@@ -104,8 +104,8 @@ class ReportOhadaFinancialReport(models.Model):
 
     @api.model
     def print_bundle_pdf(self, options, reports_ids=None, minimal_layout=True):
-        # base_url = self.env['ir.config_parameter'].sudo().get_param('report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        base_url = 'http://127.0.0.1:8069'
+        base_url = self.env['ir.config_parameter'].sudo().get_param('report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        # base_url = 'http://127.0.0.1:8069'
         reports_ids = reports_ids.split(',')
         rcontext = {
             'mode': 'print',
