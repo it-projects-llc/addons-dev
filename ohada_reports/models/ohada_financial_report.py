@@ -23,7 +23,7 @@ from odoo.osv import expression
 from odoo.tools.pycompat import izip
 from odoo import http
 from odoo.http import content_disposition, request
-# import wdb
+import wdb
 
 class ReportOhadaFinancialReport(models.Model):
     _name = "ohada.financial.html.report"
@@ -104,8 +104,8 @@ class ReportOhadaFinancialReport(models.Model):
 
     @api.model
     def print_bundle_pdf(self, options, reports_ids=None, minimal_layout=True):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        # base_url = 'http://127.0.0.1:8069'
+        # base_url = self.env['ir.config_parameter'].sudo().get_param('report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = 'http://127.0.0.1:8069'
         reports_ids = reports_ids.split(',')
         rcontext = {
             'mode': 'print',
@@ -592,6 +592,8 @@ class OhadaFinancialReportLine(models.Model):
     header_columns = fields.Char(default=False)
     letter = fields.Char(string="letter", default=None)
     note_id = fields.Char(string="note action id", default='none')
+    colspan = fields.Integer(default=1)
+    rowspan = fields.Integer(default=1)
 
     _sql_constraints = [
         ('code_uniq', 'unique (code)', "A report line with the same code already exists."),
@@ -1362,6 +1364,9 @@ class OhadaFinancialReportLine(models.Model):
                 'page_break': line.print_on_new_page,
                 'letter': line.letter,
                 'header': line.header,
+                'colspan': line.colspan,
+                'rowspan': line.rowspan,
+                'sequence': line.sequence,
             }
 
             # wdb.set_trace()
@@ -1412,6 +1417,8 @@ class OhadaFinancialReportLine(models.Model):
                     vals['columns'] = [line._format(v) for v in vals['columns']]
                 if not line.formulas:
                     vals['columns'] = [{'name': ''} for k in vals['columns']]
+
+            # ====================== headers for BS reports ===========================================================
             if line.reference == 'REF':
                 vals['columns'][0]['name'] = ['EXERPRICE', 'au 31/12/' + line._context['date_from'][0:4]]
                 if financial_report.name == 'Balance Sheet - Assets' and options['comparison']['filter'] == 'no_comparison':
@@ -1426,29 +1433,136 @@ class OhadaFinancialReportLine(models.Model):
                 elif len(vals['columns']) > 1 and line._context.get('periods') != None:
                     for i in range(len(vals['columns'][1:])-1):
                         vals['columns'][i+1]['name'] = ['EXERPRICE', 'au 31/12/' + line._context['periods'][i]['string']]
+
+            # ====================== headers for notes ================================================================
+
             elif line.header == True and financial_report.type == 'note':
-                vals['columns'][0]['name'] = ['ANNEE ' + line._context['date_from'][0:4]]
-                if len(vals['columns']) > 1 and line._context.get('periods') != None \
-                        and options['comparison']['filter'] == 'no_comparison' or len(
-                    options['comparison']['periods']) > 1:
-                    for i in range(len(vals['columns'][1:])):
-                        vals['columns'][i + 1]['name'] = ['ANNEE ' + line._context['periods'][i]['string']]
-                    vals['columns'][- 1]['name'] = ['Variation en %']
-                elif len(vals['columns']) > 1 and line._context.get('periods') != None:
-                    for i in range(len(vals['columns'][1:]) - 1):
-                        vals['columns'][i + 1]['name'] = ['ANNEE ' + line._context['periods'][i]['string']]
-                    if financial_report.name in ['Note 15A', 'Note 16A', 'Note 18', 'Note 19']:
-                        # wdb.set_trace()
-                        vals['columns'][- 1]['name'] = ['Variation en valeur', 'absolue']
-                        vals['columns'].append({'name': ['Variation en %']})
-                    else:
+                if financial_report.name == "Note 1" and line.sequence == 1:
+                    vals['columns'][0]['name'] = ['Montant brut']
+                    vals['columns'].append({'name': ['SURETES REELLES']})
+                    vals['colspan0'] = 3
+                elif financial_report.name == "Note 3A" and line.sequence == 1:
+                    header_list = [["MOUVEMENTS", "BRUTS À", "L'OUVERTURE", "DE L EXERCICE"],
+                                   ["ACQUISITIONS,", "APPORTS,", "CREATIONS"],
+                                   ["VIREMENTS DE", "POSTE À", "POSTE"],
+                                   ["Suite à une", "réévaluation", "pratiquée au cours", "de l'exercice"],
+                                   ["Cessions,", "scissions, hors-", "service"],
+                                   ["Virements de", "poste à poste"],
+                                   ["MOUVEMENTS", "BRUTS À LA", "CLÔTURE DE", "L'EXERCICE"]]
+                    vals['columns'] = []
+                    for i in range(len(header_list)):
+                        vals['columns'].append({'name': header_list[i]})
+                elif financial_report.name == "Note 3B" and line.sequence == 1:
+                    vals['name'] = ['LIBELLES']
+                    vals['columns'] = [{'name': ["NATURE DU", "CONTRAT", "(I ; M ; A) [1]"], 'colspan': 1, 'rowspan': 2},
+                                       {'name': ["A"], 'colspan': 1, 'rowspan': 1},
+                                       {'name': ["AUGMENTATIONS  B"], 'colspan': 3, 'rowspan': 1},
+                                       {'name': ["DIMINUTIONS  B"], 'colspan': 2, 'rowspan': 1},
+                                       {'name': ["D = A + B - C"], 'colspan': 1, 'rowspan': 1}]
+                elif financial_report.name == "Note 3B" and line.sequence == 2:
+                    vals['name'] = ["MOUVEMENTS", "BRUTS À", "L'OUVERTURE", "DE L EXERCICE"]
+                    subheader_list = [
+                                     ["ACQUISITIONS,", "APPORTS,", "CREATIONS"],
+                                     ["VIREMENTS DE", "POSTE À", "POSTE"],
+                                     ["Suite à une", "réévaluation", "pratiquée au cours", "de l'exercice"],
+                                     ["Cessions,", "scissions, hors-", "service"],
+                                     ["Virements de", "poste à poste"],
+                                     ["MOUVEMENTS", "BRUTS À LA", "CLÔTURE DE", "L'EXERCICE"]]
+                    vals['columns'] = []
+                    for i in range(len(subheader_list)):
+                        vals['columns'].append({'name': subheader_list[i]})
+                elif financial_report.name == "Note 3C" and line.sequence == 1:
+                    vals['name'] = ['LIBELLES']
+                    header_list = [["A"],
+                                   ["B"],
+                                   ["C"],
+                                   ["D = A + B - C"]]
+                    vals['columns'] = []
+                    for i in range(len(header_list)):
+                        vals['columns'].append({'name': header_list[i]})
+                elif financial_report.name == "Note 3C" and line.sequence == 2:
+                    vals['name'] = ["AMORTISSEMENTS", "CUMULES À", "L'OUVERTURE DE", "L'EXERCICE"]
+                    subheader_list = [
+                                      ["AUGMENTATIONS:", "DOTATIONS DE", "L'EXERCICE"],
+                                      ["DIMINUTIONS:", "AMORTISSEMENTS", "RELATIFS AUX", "SORTIES DE", "L'ACTIF"],
+                                      ["CUMULS DES", "AMORTISSEMENTS", "À LA CLÔTURE DE", "L'EXERCICE"]]
+                    vals['columns'] = []
+                    for i in range(len(subheader_list)):
+                        vals['columns'].append({'name': subheader_list[i]})
+                elif financial_report.name == "Note 3D" and line.sequence == 1:
+                    vals['name'] = ['LIBELLES']
+                    header_list = [["MONTANT BRUT"],
+                                   ["AMORTISSEMENTS", "PRATIQUES"],
+                                   ["VALEUR", "COMPTABLE", "NETTE"],
+                                   ["PRIX DE CESSION"],
+                                   ["PLUS-VALUE", "OU", "MOINS-VALUE"]]
+                    vals['columns'] = []
+                    for i in range(len(header_list)):
+                        vals['columns'].append({'name': header_list[i]})
+                elif financial_report.name == "Note 3D" and line.sequence == 2:
+                    vals['name'] = ["A"]
+                    subheader_list = [
+                                      ["B"],
+                                      ["C = A - B"],
+                                      ["D"],
+                                      ["E = D - C"]]
+                    vals['columns'] = []
+                    for i in range(len(subheader_list)):
+                        vals['columns'].append({'name': subheader_list[i]})
+                elif financial_report.name == "Note 3E" and line.sequence == 2:
+                    header_list = [["Montants côuts historiques"],
+                                   ["Amortissements supplémentaires"]]
+                    vals['columns'] = []
+                    for i in range(len(header_list)):
+                        vals['columns'].append({'name': header_list[i]})
+                elif financial_report.name in ["Note 13", "Note 31"] and line.sequence == 1:
+                    header_list = [["DUMMY LINE NAME"],
+                                   ["DUMMY LINE NAME"],
+                                   ["DUMMY LINE NAME"],
+                                   ["DUMMY LINE NAME"],
+                                   ["DUMMY LINE NAME"]]
+                    vals['columns'] = []
+                    for i in range(len(header_list)):
+                        vals['columns'].append({'name': header_list[i]})
+                elif (financial_report.name == "Note 16B Bis" or financial_report.name == "Note 16B Bis_1") and line.sequence == 1:
+                    vals['name'] = "DUMMY LINE NAME"
+                    vals['columns'] = []
+                elif financial_report.name == "Note 32" and line.sequence in [1, 2]:
+                    header_list = [["DUMMY LINE NAME"],
+                                   ["DUMMY LINE NAME"],
+                                   ["DUMMY LINE NAME"],
+                                   ["DUMMY LINE NAME"],
+                                   ["DUMMY LINE NAME"],
+                                   ["DUMMY LINE NAME"],
+                                   ["DUMMY LINE NAME"],
+                                   ["DUMMY LINE NAME"],
+                                   ["DUMMY LINE NAME"],
+                                   ["DUMMY LINE NAME"],
+                                   ["DUMMY LINE NAME"],
+                                   ["DUMMY LINE NAME"],
+                                   ["DUMMY LINE NAME"]]
+                    vals['columns'] = []
+                    for i in range(len(header_list)):
+                        vals['columns'].append({'name': header_list[i]})
+                elif line.sequence == 1 or ((financial_report.name == "Note 16B Bis" or financial_report.name == "Note 16B Bis_1") and line.sequence == 2):
+                    vals['columns'][0]['name'] = ['ANNEE ' + line._context['date_from'][0:4]]
+                    if len(vals['columns']) > 1 and line._context.get('periods') != None \
+                            and options['comparison']['filter'] == 'no_comparison' or len(
+                        options['comparison']['periods']) > 1:
+                        for i in range(len(vals['columns'][1:])):
+                            vals['columns'][i + 1]['name'] = ['ANNEE ' + line._context['periods'][i]['string']]
                         vals['columns'][- 1]['name'] = ['Variation en %']
-            # wdb.set_trace()
-            # if line.header_columns and len(comparison_table) == 2:
-            #     header_list = list(map(lambda x: list(x.split('\\n')), line.header_columns.split('|')))
-            #     for i in header_list:
-            #         vals['columns'].append({'name': i})
-            #==============================DELETE============================
+                    elif len(vals['columns']) > 1 and line._context.get('periods') != None:
+                        for i in range(len(vals['columns'][1:]) - 1):
+                            vals['columns'][i + 1]['name'] = ['ANNEE ' + line._context['periods'][i]['string']]
+                        if financial_report.name in ['Note 15A', 'Note 16A', 'Note 18', 'Note 19']:
+                            vals['columns'][- 1]['name'] = ['Variation en valeur', 'absolue']
+                            vals['columns'].append({'name': ['Variation en %']})
+                        else:
+                            vals['columns'][- 1]['name'] = ['Variation en %']
+
+            # ============= For Notes 4, 7, 8, 17, 15A, 16A, 18, 19 =====================
+
             if line.header is True and financial_report.name in ['Note 4', 'Note 7', 'Note 8', 'Note 17', 'Note 15A', 'Note 16A', 'Note 18', 'Note 19'] and  len(comparison_table) == 2:
                 header_list = [["Créances à un", "an au plus"], ["Créances à plus", "d'un an à deux", "ans au plus"],
                                ["Créances à plus", "de deux ans au", "plus"]]
@@ -1507,7 +1621,6 @@ class OhadaFinancialReportLine(models.Model):
             else:
                 result = lines
             if line.note != 'NET' and line.note != ' ':
-                # wdb.set_trace()
                 line.note_id = str(self.env['ir.actions.client'].search([('name', '=', 'Note '+line.note)]).id)
             if result[0]['note'] == 'NET':
                 if financial_report.name == 'Balance Sheet - Assets' and options['comparison']['filter'] == 'no_comparison':
@@ -1526,8 +1639,58 @@ class OhadaFinancialReportLine(models.Model):
                 else:
                     result[0]['columns'][0]['name'] = 'NET'
 
-            if financial_report.name == 'Note 2':
-                vals['columns'] = []
+            # ==================== temporary solution for special notes =============================================
+            if financial_report.type == 'note':
+                if financial_report.name == "Note 1" and line.sequence == 2:
+                    del vals['note']
+                    vals['name'] = 'Hypothèque'
+                    vals['columns'][0]['name'] = 'Nantissements'
+                    vals['columns'].append({'name': 'Gages/Autres'})
+                elif financial_report.name == 'Note 1' and line.sequence == 26:
+                    vals['columns'].append({'name': ['Engagements', 'donnés']})
+                    vals['columns'].append({'name': ['Engagements', 'recus']})
+                elif financial_report.name == 'Note 1' and line.sequence > 25:
+                    vals['columns'].append({'name': ' '})
+                    vals['columns'].append({'name': ' '})
+                elif financial_report.name == 'Note 1' and line.header is not True:
+                    vals['columns'].append({'name': ' '})
+                    vals['columns'].append({'name': ' '})
+                    vals['columns'].append({'name': ' '})
+                elif financial_report.name in ['Note 2', "Note 35"]:
+                    vals['columns'] = []
+                elif financial_report.name in ['Note 3A', 'Note 3B'] and line.sequence > 2:
+                    vals['columns'] = []
+                    for i in range(7):
+                        vals['columns'].append({'name': ' '})
+                elif financial_report.name == 'Note 3C' and line.sequence > 2:
+                    vals['columns'] = []
+                    for i in range(4):
+                        vals['columns'].append({'name': ' '})
+                elif (financial_report.name == 'Note 3D' and line.sequence > 2) or (financial_report.name in ['Note 13', 'Note 31'] and line.sequence > 1) or financial_report.name in ["Note 12", "Note 36"]:
+                    vals['columns'] = []
+                    for i in range(5):
+                        vals['columns'].append({'name': ' '})
+                elif financial_report.name == 'Note 3E' and not line.sequence == 2:
+                    vals['columns'] = []
+                    for i in range(2):
+                        vals['columns'].append({'name': ' '})
+                elif (financial_report.name in ["Note 16B Bis", "Note 16B Bis_1"]  and line.sequence != 1) or financial_report.name in ["Note 16B", "Note 16B_1"]:
+                    vals['columns'].pop()
+                elif financial_report.name in ["Note 32", "Note 27B"]:
+                    vals['columns'] = []
+                    for i in range(13):
+                        vals['columns'].append({'name': ' '})
+                elif financial_report.name in ["Note 33", "Note 28", "Note 27B_1"]:
+                    vals['columns'] = []
+                    for i in range(8):
+                        vals['columns'].append({'name': ' '})
+                elif financial_report.name == "Note 37":
+                    vals['columns'] = []
+                    vals['columns'].append({'name': ' '})
+                elif financial_report.name == 'Note 8A':
+                    vals['columns'] = []
+                    for i in range(3):
+                        vals['columns'].append({'name': ' '})
 
             final_result_table += result
 
