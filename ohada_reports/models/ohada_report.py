@@ -1014,9 +1014,25 @@ class OhadaReport(models.AbstractModel):
                 options['comparison']['filter'] = 'no_comparison'
                 options['comparison']['string'] = _('No comparison')
                 return
-            if self.type == 'note':
+            if self.name == "Note 1":
+                number_period = 0
                 periods = []
+                for index in range(0, number_period):
+                    if cmp_filter == 'previous_period':
+                        period_vals = self._get_dates_previous_period(options, period_vals)
+                    else:
+                        period_vals = self._get_dates_previous_year(options, period_vals)
+                    periods.append(create_vals(period_vals))
+
+                if len(periods) > 0:
+                    options['comparison'].update(periods[-1])
+                options['comparison']['periods'] = periods
+                options['comparison']['filter'] = 'no_comparison'
+                options['comparison']['string'] = _('No comparison')
+                return
+            if self.type == 'note':
                 number_period = 1
+                periods = []
                 for index in range(0, number_period):
                     if cmp_filter == 'previous_period':
                         period_vals = self._get_dates_previous_period(options, period_vals)
@@ -1232,6 +1248,8 @@ class OhadaReport(models.AbstractModel):
         level_3_col1_style = workbook.add_format({'border_color': '#001E5A', 'border': 1, 'font_name': 'NimbusSanL', 'font_size': 8, 'font_color': '#001E5A', 'indent': 2})
         level_3_col1_total_style = workbook.add_format({'border_color': '#001E5A', 'border': 1, 'font_name': 'NimbusSanL', 'font_size': 8, 'font_color': '#001E5A', 'indent': 1})
         level_3_style = workbook.add_format({'border_color': '#001E5A', 'border': 1, 'font_name': 'NimbusSanL', 'font_size': 8, 'font_color': '#001E5A'})
+        level_5_style = workbook.add_format({'valign': 'vcenter', 'border_color': '#001E5A', 'shrink': True, 'align': 'center', 'bg_color': '#CDEBFF', 'font_name': 'NimbusSanL', 'bold': True, 'font_size': 8, 'border': 1, 'font_color': '#001E5A'})
+        level_6_style = workbook.add_format({'border_color': '#001E5A', 'border': 1, 'font_name': 'NimbusSanL', 'font_size': 8, 'font_color': '#001E5A'})
         summary_style = workbook.add_format({'valign': 'top', 'align': 'left', 'font_name': 'NimbusSanL', 'font_size': 8, 'font_color': '#001E5A'})
 
         summary = html2text.html2text(self._get_report_manager(options).summary)
@@ -1321,6 +1339,14 @@ class OhadaReport(models.AbstractModel):
                 elif level == 3:
                     style = level_3_style
                     col1_style = 'total' in lines[y].get('class', '').split(' ') and level_3_col1_total_style or level_3_col1_style
+                elif level == 5:
+                    # y_offset += 1
+                    style = level_5_style
+                    col1_style = style
+                elif level == 6:
+                    # y_offset += 1
+                    style = level_6_style
+                    col1_style = style
                 else:
                     style = default_style
                     col1_style = default_col1_style
@@ -1623,6 +1649,7 @@ class OhadaReport(models.AbstractModel):
         otherwise it uses the main_template. Reason is for efficiency, when unfolding a line in the report
         we don't want to reload all lines, just get the one we unfolded.
         '''
+        # wdb.set_trace()
         if not options['date'].get('date_from'):
             options = self.make_temp_options(int(options['date']['date'][0:4]))
         g_rcontext=dict()
