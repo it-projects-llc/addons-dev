@@ -23,7 +23,7 @@ from odoo.osv import expression
 from odoo.tools.pycompat import izip
 from odoo import http
 from odoo.http import content_disposition, request
-# import wdb
+
 
 class ReportOhadaFinancialReport(models.Model):
     _name = "ohada.financial.html.report"
