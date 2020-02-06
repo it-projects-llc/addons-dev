@@ -71,7 +71,7 @@ $ohada-font-bold: 'NimbusSanL-Bold';
     .o_ohada_reports_table {
         white-space: nowrap;
         margin-bottom: 0px;
-        tbody tr:not(.o_ohada_reports_level0, .o_ohada_reports_level1):hover {
+        tbody tr:not(.o_ohada_reports_level0, .o_ohada_reports_level1, .o_ohada_reports_level8):hover {
             background-color: #f0f0f0;
         }
     }
@@ -397,7 +397,12 @@ $ohada-font-bold: 'NimbusSanL-Bold';
         }
     }
     .o_ohada_reports_level8 {
-        border-bottom: 1px solid $ohada-primary-color;
+        border-width: 3px;
+        font-weight: bold;
+        background-color: $ohada-secondary-color;
+        text-align: left;
+        vertical-align: middle;
+        height: 150px;
         > td.o_ohada_report_line_indent > span:last-child {
             margin-left: 80px;
         }
