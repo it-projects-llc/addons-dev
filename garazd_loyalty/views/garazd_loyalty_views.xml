@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <act_window id="action_loyalty_program"
+        name="Loyalty Program"
+        res_model="garazd.loyalty"
+        view_mode="tree,form" />
+
+    <menuitem id="menu_garazd_loyalty"
+        name="Loyalty Program"
+        parent="point_of_sale.menu_point_config_product"
+        sequence="20"
+        groups="garazd_loyalty.loyalty_group_user"
+        action="action_loyalty_program" />
+
+    <record id="garazd_loyalty_view_tree" model="ir.ui.view">
+        <field name="name">garazd.loyalty.view.tree</field>
+        <field name="model">garazd.loyalty</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="name"/>
+                <field name="percent"/>
+                <field name="amount_from"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>

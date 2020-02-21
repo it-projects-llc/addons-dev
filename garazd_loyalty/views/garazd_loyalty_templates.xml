@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="pos_loyalty_assets" inherit_id="point_of_sale.assets">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/garazd_loyalty/static/src/js/pos_partner.js"></script>
+            <script type="text/javascript" src="/garazd_loyalty/static/src/js/screens.js"></script>
+        </xpath>
+    </template>
+</odoo>

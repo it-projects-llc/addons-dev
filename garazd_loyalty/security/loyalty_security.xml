@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="loyalty_group_user" model="res.groups">
+            <field name="name">Loyalty System User</field>
+            <field name="comment">Management of the Loyalty System</field>
+        </record>
+    </data>
+</odoo>
