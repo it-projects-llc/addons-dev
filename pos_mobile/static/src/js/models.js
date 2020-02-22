@@ -3,7 +3,7 @@ odoo.define('pos_mobile.models', function (require) {
     if (!odoo.is_mobile) {
         return;
     }
-
+//test
     var models = require('point_of_sale.models');
 
     var _super_order = models.Order.prototype;
