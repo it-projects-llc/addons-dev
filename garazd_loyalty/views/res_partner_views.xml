@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_partner_form_inherit_garazd_loyalty" model="ir.ui.view">
+        <field name="name">res.partner.view.form.inherit.garazd.loyalty</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sales_purchases']/group" position="inside">
+                <group string="Loyalty" name="loyalty"
+                        attrs="{'invisible':[('customer','!=',True)]}"
+                        groups="garazd_loyalty.loyalty_group_user">
+                    <field name="loyalty_date" readonly="True"/>
+                    <field name="loyalty_type"/>
+                    <field name="amount_before_loyalty"
+                        attrs="{'invisible':[('loyalty_type','!=','purchase')]}"/>
+                    <field name="loyalty_id" string="Loyalty Level"
+                        readonly="True"
+                        attrs="{'invisible':[('loyalty_type','!=','purchase')]}"
+                        options="{'no_open': True,'no_create': True}"/>
+                    <field name="loyalty_discount"
+                        attrs="{'invisible':[('loyalty_type','in',[False,'none'])], 'readonly':[('loyalty_type','!=','fixed')]}"/>
+                    <button name="set_loyalty_level" type="object"
+                        string="Determine Loyalty Level"
+                        attrs="{'invisible':[('loyalty_type','!=','purchase')]}" class="oe_highlight"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_res_partner_filter_inherit_garazd_loyalty" model="ir.ui.view">
+        <field name="name">res.partner.view.filter.inherit.garazd.loyalty</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+               <filter string="To approve discount" name="new_discount"
+                   domain="[('customer','=',1), ('parent_id','=',False), ('loyalty_type','=','none'), ('barcode','!=',False)]"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

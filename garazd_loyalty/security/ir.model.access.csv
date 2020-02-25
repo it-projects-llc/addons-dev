@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_garazd_loyalty_user,Read-Write-Create access on garazd.loyalty to Base User,model_garazd_loyalty,base.group_user,1,1,1,0
+access_garazd_loyalty_admin,Read-Write-Create-Delete access on garazd.loyalty to Admin User,model_garazd_loyalty,base.group_system,1,1,1,1

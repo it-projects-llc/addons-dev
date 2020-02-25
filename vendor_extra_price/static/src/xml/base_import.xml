@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ProductImportView">
+        <div name="product_import">
+            <select name="vendor_id" id="vendor-select">
+                <option t-att-value="0"></option>
+                <t t-foreach="vendors" t-as="vendor">
+                    <option t-att-value="vendor.id"><t t-esc="vendor.name"/></option>
+                </t>
+            </select>
+
+<!--            <select name="pricelist_id" id="pricelist-select">-->
+<!--                <option t-att-value="0"></option>-->
+<!--                <t t-foreach="pricelists" t-as="pl">-->
+<!--                    <option t-att-value="pl.id"><t t-esc="pl.name"/></option>-->
+<!--                </t>-->
+<!--            </select>-->
+        </div>
+    </t>
+</templates>

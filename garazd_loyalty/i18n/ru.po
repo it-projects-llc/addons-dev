@@ -1,0 +1,264 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* garazd_loyalty
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-26 14:33+0000\n"
+"PO-Revision-Date: 2018-06-26 14:33+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: garazd_loyalty
+#: model:ir.model.fields,field_description:garazd_loyalty.field_res_partner_amount_before_loyalty
+#: model:ir.model.fields,field_description:garazd_loyalty.field_res_users_amount_before_loyalty
+msgid "Amount of purchases"
+msgstr "Сумма покупок"
+
+#. module: garazd_loyalty
+#: model:ir.model.fields,help:garazd_loyalty.field_res_partner_amount_before_loyalty
+#: model:ir.model.fields,help:garazd_loyalty.field_res_users_amount_before_loyalty
+msgid "Amount of purchases before using the loyalty system."
+msgstr "Сумма покупок до запуска системы лояльности."
+
+#. module: garazd_loyalty
+#: model:ir.model.fields,field_description:garazd_loyalty.field_res_partner_loyalty_date
+#: model:ir.model.fields,field_description:garazd_loyalty.field_res_users_loyalty_date
+msgid "Card Issued"
+msgstr "Дата выдачи карты"
+
+#. module: garazd_loyalty
+#: model:ir.model,name:garazd_loyalty.model_res_company
+msgid "Companies"
+msgstr "Компании"
+
+#. module: garazd_loyalty
+#: model:ir.model.fields,field_description:garazd_loyalty.field_pos_config_settings_company_id
+msgid "Company"
+msgstr "Компания"
+
+#. module: garazd_loyalty
+#: model:ir.model.fields,field_description:garazd_loyalty.field_garazd_loyalty_create_uid
+msgid "Created by"
+msgstr "Создал"
+
+#. module: garazd_loyalty
+#: model:ir.model.fields,field_description:garazd_loyalty.field_garazd_loyalty_create_date
+msgid "Created on"
+msgstr "Создано"
+
+#. module: garazd_loyalty
+#: model:ir.ui.view,arch_db:garazd_loyalty.view_sale_config_settings_form_pos_inherit_garazd_loyalty
+msgid "Customer Loyalty"
+msgstr "Система лояльности для покупателей"
+
+#. module: garazd_loyalty
+#: selection:res.partner,loyalty_type:0
+msgid "Customer discount based on purchases amount"
+msgstr "Скидка зависит от суммы покупок клиента"
+
+#. module: garazd_loyalty
+#: model:ir.ui.view,arch_db:garazd_loyalty.view_partner_form_inherit_garazd_loyalty
+msgid "Determine Loyalty Level"
+msgstr "Определить уровень скидок"
+
+#. module: garazd_loyalty
+#. openerp-web
+#: code:addons/garazd_loyalty/static/src/xml/pos.xml:6
+#, python-format
+msgid "Discount"
+msgstr "Скидка"
+
+#. module: garazd_loyalty
+#: model:ir.model.fields,field_description:garazd_loyalty.field_garazd_loyalty_percent
+msgid "Discount Percent"
+msgstr "Процент скидки"
+
+#. module: garazd_loyalty
+#: selection:res.partner,loyalty_type:0
+msgid "Discount not provided"
+msgstr "Скидки не предоставляются"
+
+#. module: garazd_loyalty
+#: model:ir.model.fields,field_description:garazd_loyalty.field_res_partner_loyalty_discount
+#: model:ir.model.fields,field_description:garazd_loyalty.field_res_users_loyalty_discount
+msgid "Discount, %"
+msgstr "Cкидка, %"
+
+#. module: garazd_loyalty
+#: model:ir.model.fields,field_description:garazd_loyalty.field_garazd_loyalty_display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#. module: garazd_loyalty
+#. openerp-web
+#: code:addons/garazd_loyalty/static/src/js/screens.js:56
+#, python-format
+msgid "Error: Could not Save Changes"
+msgstr "Ошибка: Невозможно сохранить изменения"
+
+#. module: garazd_loyalty
+#: selection:res.partner,loyalty_type:0
+msgid "Fixed customer discount"
+msgstr "Фиксированная скидка для клиента"
+
+#. module: garazd_loyalty
+#: model:ir.model.fields,field_description:garazd_loyalty.field_garazd_loyalty_id
+msgid "ID"
+msgstr "ID"
+
+#. module: garazd_loyalty
+#. openerp-web
+#: code:addons/garazd_loyalty/static/src/js/screens.js:28
+#, python-format
+msgid "Issue a card to the client?"
+msgstr "Выдать карту клиенту?"
+
+#. module: garazd_loyalty
+#: model:ir.model.fields,field_description:garazd_loyalty.field_garazd_loyalty___last_update
+msgid "Last Modified on"
+msgstr "Последний раз изменено"
+
+#. module: garazd_loyalty
+#: model:ir.model.fields,field_description:garazd_loyalty.field_garazd_loyalty_write_uid
+msgid "Last Updated by"
+msgstr "Последний раз обновил"
+
+#. module: garazd_loyalty
+#: model:ir.model.fields,field_description:garazd_loyalty.field_garazd_loyalty_write_date
+msgid "Last Updated on"
+msgstr "Последний раз обновлено"
+
+#. module: garazd_loyalty
+#: model:ir.model.fields,field_description:garazd_loyalty.field_res_partner_loyalty_id
+#: model:ir.model.fields,field_description:garazd_loyalty.field_res_users_loyalty_id
+msgid "Level"
+msgstr "Уровень"
+
+#. module: garazd_loyalty
+#: model:ir.model.fields,field_description:garazd_loyalty.field_garazd_loyalty_name
+msgid "Level Name"
+msgstr "Наименование уровня"
+
+#. module: garazd_loyalty
+#: model:ir.ui.view,arch_db:garazd_loyalty.view_partner_form_inherit_garazd_loyalty
+msgid "Loyalty"
+msgstr "Лояльность"
+
+#. module: garazd_loyalty
+#: model:ir.ui.view,arch_db:garazd_loyalty.view_partner_form_inherit_garazd_loyalty
+msgid "Loyalty Level"
+msgstr "Уровень"
+
+#. module: garazd_loyalty
+#: model:ir.actions.act_window,name:garazd_loyalty.action_loyalty_program
+#: model:ir.ui.menu,name:garazd_loyalty.menu_garazd_loyalty
+msgid "Loyalty Program"
+msgstr "Система лояльности"
+
+#. module: garazd_loyalty
+#: model:res.groups,name:garazd_loyalty.loyalty_group_user
+msgid "Loyalty System User"
+msgstr "Управление системой лояльности"
+
+#. module: garazd_loyalty
+#: model:ir.model.fields,field_description:garazd_loyalty.field_res_partner_loyalty_type
+#: model:ir.model.fields,field_description:garazd_loyalty.field_res_users_loyalty_type
+msgid "Loyalty Type"
+msgstr "Тип системы лояльности"
+
+#. module: garazd_loyalty
+#: model:ir.model.fields,help:garazd_loyalty.field_res_partner_loyalty_type
+#: model:ir.model.fields,help:garazd_loyalty.field_res_users_loyalty_type
+msgid "Loyalty type for customer."
+msgstr "Тип системы лояльности."
+
+#. module: garazd_loyalty
+#: model:res.groups,comment:garazd_loyalty.loyalty_group_user
+msgid "Management of the Loyalty System"
+msgstr "Управление системой лояльности"
+
+#. module: garazd_loyalty
+#: model:ir.model.fields,field_description:garazd_loyalty.field_pos_config_settings_loyalty_approval
+msgid "Manager approve Loyalty for Customer."
+msgstr "Менеджер утверждает тип скидок для клиента."
+
+#. module: garazd_loyalty
+#. openerp-web
+#: code:addons/garazd_loyalty/static/src/js/pos_partner.js:188
+#, python-format
+msgid "Minimal Purchases Amount"
+msgstr "Набрана минимальная сумма для выдачи карты"
+
+#. module: garazd_loyalty
+#: model:ir.model.fields,help:garazd_loyalty.field_pos_config_settings_amount_for_card
+msgid "Minimum One-time Purchase Amount for issuing a discount card."
+msgstr "Сумма единоразовой покупки для выдачи дисконтной карты."
+
+#. module: garazd_loyalty
+#. openerp-web
+#: code:addons/garazd_loyalty/static/src/js/screens.js:27
+#, python-format
+msgid "New Discount Card scanned."
+msgstr "Просканирована новая карта клиента."
+
+#. module: garazd_loyalty
+#. openerp-web
+#: code:addons/garazd_loyalty/static/src/js/pos_partner.js:189
+#, python-format
+msgid "Offer the client a discount card."
+msgstr "Предложите клиенту дисконтную карту."
+
+#. module: garazd_loyalty
+#: model:ir.model,name:garazd_loyalty.model_res_partner
+msgid "Partner"
+msgstr "Партнёр"
+
+#. module: garazd_loyalty
+#: model:ir.model,name:garazd_loyalty.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Заказы точки продажи"
+
+#. module: garazd_loyalty
+#: model:ir.model.fields,field_description:garazd_loyalty.field_pos_config_settings_amount_for_card
+#: model:ir.model.fields,field_description:garazd_loyalty.field_res_company_amount_for_card
+msgid "Purchase amount"
+msgstr "Минимальная сумма для выдачи карты"
+
+#. module: garazd_loyalty
+#: model:ir.model.fields,field_description:garazd_loyalty.field_garazd_loyalty_amount_from
+msgid "Purchases from"
+msgstr "Сумма покупок от"
+
+#. module: garazd_loyalty
+#: model:ir.ui.view,arch_db:garazd_loyalty.view_res_partner_filter_inherit_garazd_loyalty
+msgid "To approve discount"
+msgstr "На утверждение скидок"
+
+#. module: garazd_loyalty
+#. openerp-web
+#: code:addons/garazd_loyalty/static/src/js/screens.js:50
+#, python-format
+msgid "Your Internet connection is probably down."
+msgstr "Возможно нет подключения к интернет."
+
+#. module: garazd_loyalty
+#: model:ir.model,name:garazd_loyalty.model_garazd_dashboard
+msgid "garazd.dashboard"
+msgstr "garazd.dashboard"
+
+#. module: garazd_loyalty
+#: model:ir.model,name:garazd_loyalty.model_garazd_loyalty
+msgid "garazd.loyalty"
+msgstr "garazd.loyalty"
+
+#. module: garazd_loyalty
+#: model:ir.model,name:garazd_loyalty.model_pos_config_settings
+msgid "pos.config.settings"
+msgstr "pos.config.settings"
