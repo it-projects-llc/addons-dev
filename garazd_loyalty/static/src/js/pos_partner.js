@@ -8,7 +8,7 @@ odoo.define('garazd_loyalty.pos_partner', function(require){
     var _t = core._t;
 
 
-    models.load_fields('res.partner',['loyalty_id', 'loyalty_discount']);
+    models.load_fields('res.partner',['loyalty_id', 'loyalty_discount', 'not_apply_loyalty']);
     models.load_fields('res.company',['amount_for_card']);
     models.load_fields('pos.config',['loyalty_card_offer']);
     models.load_fields('product.product', ['standard_price', 'vendor_id']);
@@ -62,15 +62,21 @@ odoo.define('garazd_loyalty.pos_partner', function(require){
                 }
 
                 if(partner && partner.loyalty_discount) {
-                    if(!item) {
-                        var product = self.product;
+                    var product = self.product;
+                    if(!item &&
+                        (!product.vendor_id ||
+                            (product.vendor_id &&
+                                !self.pos.db.get_partner_by_id(product.vendor_id[0]).not_apply_loyalty
+                            )
+                        )
+                    ) {
                         new_discount = Math.min(Math.max(parseFloat(partner.loyalty_discount) || 0, 0),100);
-                        if (product.vendor_id) {
-                            var extra = (product.list_price - (product.standard_price || 0)) * 100 / product.list_price;
-                            if (new_discount >= extra) {
-                                new_discount = 0;
-                            }
-                        }
+                        // if (product.vendor_id && !product.vendor_id.not_apply_loyalty) {
+                        //     var extra = (product.list_price - (product.standard_price || 0)) * 100 / product.list_price;
+                        //     if (new_discount >= extra) {
+                        //         new_discount = 0;
+                        //     }
+                        // }
                     } else { // Skip if Product has special price in default pricelist
                         new_discount = 0;
                     }
