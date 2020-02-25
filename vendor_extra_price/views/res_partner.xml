@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <group name="purchase" position="inside">
                 <field name="extra_price"/>
+                <field name="not_apply_loyalty"/>
             </group>
         </field>
     </record>
