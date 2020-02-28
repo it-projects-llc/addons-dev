@@ -1,0 +1,91 @@
+.cell-b4{
+    border:solid 1px white;
+}
+
+.cell-b0{
+    border:0;
+}
+
+.cell-tl{
+    border:solid 1px white;
+    border-top:0;
+    border-left:0;
+}
+
+.cell-tr{
+    border:solid 1px white;
+    border-top:0;
+    border-right:0;
+}
+
+.cell-t{
+    border:solid 1px white;
+    border-top:0;
+}
+
+.cell-r{
+    border:solid 1px white;
+    border-right:0;
+}
+
+.cell-l{
+    border:solid 1px white;
+    border-right:0;
+}
+
+.table-container {
+    border:solid 1px white;
+    display: block;
+    border-radius:5px;
+    max-width:632px;
+    margin-top:4px;
+    font-size:8px;
+}
+
+.table-b0 {
+    border:0;
+    border-collapse: collapse;
+    display: table;
+    width:635px;
+    font-size:8px;
+    font-weight: normal;
+}
+
+.top-block {
+    height:76px;
+    border:solid 1px white;
+    float: left;
+    border-radius:5px;
+    padding-left:5px;
+}
+
+.tr-tlr {
+    border:solid 1px white;
+    border-top:0;
+    border-left:0;
+    border-right:0;
+}
+
+.tr-lr {
+    border:solid 1px white;
+    border-left:0;
+    height:160px;
+    border-right:0;
+}
+
+.tr-b0 {
+    border:0;
+}
+
+.table-header {
+    text-align: center;
+}
+
+.checkbox-t {
+    height: 12px;
+    width: 12px;
+    border:solid 1px white;
+    display:inline-block;
+    border-radius:5px;
+}
+
