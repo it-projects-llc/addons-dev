@@ -181,6 +181,25 @@ odoo.define('pos_durak.model', function (require){
     }
 
     var triangle_button_pushed = false;
+    function arrow_blinking(arrow_color){
+        if(triangle_button_pushed){
+            return;
+        }
+
+        try{
+            var triangle = document.getElementById('triangle');
+            if(arrow_color === 1){
+                triangle.style.setProperty('color', 'red');
+                setTimeout(arrow_blinking, 500, 2);
+            }else if(arrow_color === 2){
+                triangle.style.setProperty('color', 'blue');
+                setTimeout(arrow_blinking, 500, 1);
+            }
+        }catch(e){
+            Tip("Arrow cant blink");
+        }
+    }
+
     function ControlOnClick(e){
         var elem = e ? e.target : window.event.srcElement;
         var num = '';
@@ -250,6 +269,7 @@ odoo.define('pos_durak.model', function (require){
                 chat.style.setProperty('transform','scaleX(0)');
                 chat.style.setProperty('-webkit-transform','scaleX(0)');
                 chat.style.setProperty('-ms-transform','scaleX(0)');
+                arrow_blinking(1);
             }
         }else{
             // If you missed
@@ -285,6 +305,7 @@ odoo.define('pos_durak.model', function (require){
                 method: "create_the_game",
                 args: [session.uid]
             });
+            arrow_blinking(1);
         }
     });
 
@@ -358,6 +379,7 @@ odoo.define('pos_durak.model', function (require){
                 document.getElementById('picture-'+NumInQueue(item.uid)).style.setProperty('display', 'none');
             });
             document.getElementById('cards').innerHTML = '';
+            document.getElementById('cards-left').innerHTML = '';
             buttons_opacity(0);
             document.getElementById('enemy-cards').innerHTML = '';
             document.getElementById('suit').style.display = 'none';
@@ -503,6 +525,20 @@ function SetPos(avatar, uid){
         }
     }
 
+    function ShowExtraCards(num, last){
+        try{
+            var temp = document.getElementById('cards-left');
+            temp.innerHTML = '';
+            temp.innerHTML += '<img style="position:absolute;left:0%; top:-30%; width: 54%; height: 170%; transform: rotate(90deg)" draggable="false" src="/pos_durak/static/src/img/kards/'+
+            last+'.png"/>';
+            for(i = 1; i <= num; i++){
+                temp.innerHTML += '<img style="position:absolute;left:'+i+'%; width: 24%; height: 100%;" src="/pos_durak/static/src/img/reverse-card.png"/>';
+            }
+        }catch(e){
+            Tip("Can't display extra cards", 1000);
+        }
+    }
+
     function DownloadEnemyCards(num, uid){
         chat_users[NumInQueue(uid)].cards.push({
            power: -1,
@@ -557,6 +593,12 @@ function SetPos(avatar, uid){
             Tip('Transition to the first scene error!', 3000);
         }
         ShowCards();
+
+        self._rpc({
+            model: "game",
+            method: 'cards_left',
+            args: [my_game_id]
+        });
     }
 
     function Second_scene(data){
@@ -833,9 +875,9 @@ function SetPos(avatar, uid){
                     Show_all_cards();
                 }
             }else if(data.command === 'Trump'){
+                First_scene(0);
                 game_started = true;
                 trump = data.trump;
-                buttons_opacity(0);
                 Show_all_cards();
                 // Show suit
                 var temp_window = document.getElementById('card-suit');
@@ -860,6 +902,8 @@ function SetPos(avatar, uid){
                 Show_all_cards();
             }else if(data.command === 'HowMuchCards'){
                 ShowHowMuchCards(data.number, data.uid);
+            }else if(data.command === 'cards_left'){
+                ShowExtraCards(data.n, data.last);
             }else if(data.command === 'Move_done'){
                 First_scene(data.took_cards);
             }else if(data.command === 'Defence'){
@@ -900,9 +944,13 @@ function SetPos(avatar, uid){
                 // When game id is recieved, then adding new user
                 CreatePlayer();
             }else if(data.command === 'ready'){
-                var sign = document.getElementById('user-name-'+String(data.uid));
-                sign.style.setProperty('background', 'green');
-                chat_users[NumInQueue(data.uid)].ready = true;
+                try{
+                    var sign = document.getElementById('user-name-'+String(data.uid));
+                    sign.style.setProperty('background', 'green');
+                    chat_users[NumInQueue(data.uid)].ready = true;
+                }catch(e){
+                    Tip("Can't make nickname green", 1000);
+                }
             }else if(data.command === 'Who_steps'){
                 for(i = 0; i < chat_users.length; i++){
                     if(data.first !== i){

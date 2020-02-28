@@ -175,7 +175,6 @@ class Game(models.Model):
                 if len(player) == i:
                     break
 
-            cur_game.write({'trump': player[0].cards[0].suit})
             for num in temp_seq:
                 seq.remove(num)
         except Exception:
@@ -185,8 +184,8 @@ class Game(models.Model):
             for num in seq:
                 card = cur_game.extra_cards.card_power(num)
                 cur_game.extra_cards += cur_game.extra_cards.create({'power': card[0], 'suit': card[1], 'num': num, 'in_game': True})
-            self.env['pos.config'].send_to_all_poses(cur_game.name, {'command': 'Trump',
-                                                                     'trump': cur_game.trump})
+            cur_game.write({'trump': cur_game.extra_cards[len(cur_game.extra_cards) - 1].suit})
+            self.env['pos.config'].send_to_all_poses(cur_game.name, {'command': 'Trump', 'trump': cur_game.trump})
         except Exception:
             _logger.error('Extra cards assignment error!!!')
 
@@ -485,6 +484,15 @@ class Game(models.Model):
                 temp_cards.append(tcard)
         for tcard in temp_cards:
             data = {'winner': card, 'loser': tcard.num, 'command': 'Can_beat_this_card', 'n': len(temp_cards)}
+            channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, cur_game.name)
+            self.env['bus.bus'].sendmany([[channel, data]])
+        return 1
+
+    @api.model
+    def cards_left(self, game_id):
+        cur_game = self.search([('id', '=', game_id)])
+        for player in cur_game.players:
+            data = {'command': 'cards_left', 'n': len(cur_game.extra_cards), 'last': cur_game.extra_cards[len(cur_game.extra_cards) - 1].num}
             channel = self.env['pos.config']._get_full_channel_name_by_id(self.env.cr.dbname, player.pos_id, cur_game.name)
             self.env['bus.bus'].sendmany([[channel, data]])
         return 1

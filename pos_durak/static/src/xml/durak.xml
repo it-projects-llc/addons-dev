@@ -22,6 +22,7 @@
                      Back
                 </span>
         </div>
+        <div id="cards-left"></div>
         <div id="cards"></div>
         <div id="enemy-cards"></div>
         <div id="sounds"></div>
