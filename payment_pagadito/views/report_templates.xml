@@ -6,6 +6,7 @@
         <xpath expr="//tbody[@class='sale_tbody']/tr/td[1]" position="inside">
             <t t-if="doc.payment_acquirer_id.provider == 'pagadito'">
                 <br/><strong>Payment confirmation codes:</strong> NAP=<t t-raw="doc.payment_tx_id.acquirer_reference" />, ERN=<t t-raw="doc.payment_tx_id.reference" />
+                <br/><strong>Customer ID:</strong> <t t-raw="doc.partner_id.passport"/>
             </t>
         </xpath>
 

@@ -7,6 +7,8 @@
             <t t-if="order.payment_acquirer_id.provider == 'pagadito'">
                 <div class="alert alert-success" role="alert">
                     Payment confirmation codes: NAP=<t t-raw="order.payment_tx_id.acquirer_reference" />, ERN=<t t-raw="order.payment_tx_id.reference" />
+                    <br/>
+                    Customer ID: <t t-raw="order.partner_id.passport"/>
                 </div>
             </t>
         </xpath>
