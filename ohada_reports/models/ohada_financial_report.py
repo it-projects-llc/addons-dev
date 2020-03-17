@@ -1407,6 +1407,7 @@ class OhadaFinancialReportLine(models.Model):
                             'colspan': i.colspan,
                             'rowspan': i.rowspan,
                             'rotate': i.rotate,
+                            'align':i.align,
                         })
                 else:
                     pass
