@@ -448,7 +448,7 @@
                         </td>
                     </t>
                     <t t-else="">
-                        <td t-att-rowspan="column.get('rowspan', 1)" t-att-colspan="column.get('colspan', 1)" style="'padding-right:10px;text-align:' + (column.get('align', 'right'))" t-att-class="'o_ohada_report_line '  + (line.get('unfoldable') and ' ' or '') + ('' if hierarchies_enabled else ' o_ohada_report_line_indent')" >
+                        <td t-att-rowspan="column.get('rowspan', 1)" t-att-colspan="column.get('colspan', 1)" t-att-style="'padding-right:10px;text-align:' + (column.get('align', 'right'))" t-att-class="'o_ohada_report_line '  + (line.get('unfoldable') and ' ' or '') + ('' if hierarchies_enabled else ' o_ohada_report_line_indent')" >
                             <span class="o_ohada_report_column_value" t-att-title="column.get('title')">
                                 <t t-esc="column.get('name')"/>
                             </span>
