@@ -4,17 +4,33 @@
 <odoo>
 
     <template id="details_passport" inherit_id="website_portal.details">
-        <xpath expr="//input[@name='email']/.." position="after">
+        <xpath expr="//select[@name='state_id']/.." position="after">
+            <br />
+            <div t-attf-class="form-group col-lg-12">
+                <h1>Identification</h1>
+            </div>
+            <br />
             <div t-attf-class="form-group #{error.get('passport') and 'has-error' or ''} col-lg-6">
                 <label class="control-label" for="passport">Passport</label>
                 <input type="text" name="passport" class="form-control" t-att-value="passport or partner.passport" />
             </div>
+            <div t-attf-class="form-group #{error.get('birthdate_date') and 'has-error' or ''} col-lg-6">
+                <label class="control-label" for="birthdate_date">Date of Birth</label>
+                <input type="date" name="birthdate_date" class="form-control" t-att-value="birthdate_date or partner.birthdate_date" />
+            </div>
+            <div t-attf-class="form-group #{error.get('birthdate_date') and 'has-error' or ''} col-lg-6">
+                <label class="control-label" for="birthdate_date">Country of Citizenship</label>
+                <select name="nationality_id" class="form-control">
+                    <option value="">Country of Citizenship</option>
+                    <t t-foreach="countries or []" t-as="country">
+                        <option t-att-value="country.id" t-att-selected="country.id == int(country_id) if country_id else country.id == partner.country_id.id">
+                            <t t-esc="country.name" />
+                        </option>
+                    </t>
+                </select>
+            </div>
+            <br />
         </xpath>
     </template>
 
-<!--    <template id="portal_layout_passport" name="Portal Layout" inherit_id="website_portal.portal_layout">-->
-<!--        <xpath expr="//div[@t-field='user.partner_id']" position="attributes">-->
-<!--            <attribute name="t-options">{"widget": "contact", "fields": ["email", "phone", "address", "name", "passport"]}</attribute>-->
-<!--        </xpath>-->
-<!--    </template>-->
 </odoo>

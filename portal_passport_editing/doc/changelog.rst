@@ -1,4 +1,4 @@
-`1.0.1`
+`1.0.2`
 -------
 
 - **FIX** Updated ticket form, `as on ID` was added for name fields
