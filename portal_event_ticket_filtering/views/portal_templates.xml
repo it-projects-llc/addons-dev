@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <template name="filtered ticket template" id="registration_template_filtered" inherit_id="website_event_sale.registration_template">
+
+        <xpath expr="//t[@t-foreach='event.event_ticket_ids']" position="before">
+            <t t-set="tickets" t-value="tickets or event.event_ticket_ids"/>
+        </xpath>
+
+        <xpath expr="//t[@t-foreach='event.event_ticket_ids']" position="attributes">
+            <attribute name="t-foreach">tickets</attribute>
+        </xpath>
+
+        <xpath expr="//t[@t-if='(ticket.price-website.get_current_pricelist().currency_id.compute(ticket.price_reduce, event.company_id.sudo().currency_id)) &gt; 1']" position="replace">
+        </xpath>
+
+        <xpath expr="//span[@t-field='ticket.price_reduce']" position="replace">
+        </xpath>
+
+        <xpath expr="//span[@t-field='ticket.price_reduce_taxinc']" position="replace">
+            <span t-field="ticket.price" t-options='{
+             "widget": "monetary",
+             "display_currency": website.pricelist_id.currency_id
+            }'/>
+        </xpath>
+
+    </template>
+
+</odoo>
