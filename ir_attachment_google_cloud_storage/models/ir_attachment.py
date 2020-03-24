@@ -97,3 +97,29 @@ class IrAttachment(models.Model):
         blob = bucket.get_blob(file_id)
 
         blob.delete()
+
+    def force_storage_google_cloud_storage(self):
+        bucket = self.env["res.config.settings"].get_google_cloud_storage_bucket()
+
+        attachment_ids = self._search([
+            ('store_fname', 'not ilike', PREFIX),
+            ('store_fname', '!=', False),
+            ('res_model', 'not in', ["ir.ui.view", "ir.ui.menu"]),
+        ])
+
+        _logger.info("%s attachments to store to google cloud storage" % len(attachment_ids))
+        for attach in map(self.browse, attachment_ids):
+            _logger.info("storing %s", repr(attach))
+
+            old_store_fname = attach.store_fname
+            data = self._file_read(old_store_fname, bin_size=False)
+            bin_data = base64.b64decode(data) if data else b''
+            checksum = self._compute_checksum(bin_data) if not attach.checksum else attach.checksum
+
+            new_store_fname = self._file_write_google_cloud_storage(bucket, bin_data, checksum)
+            attach.write({
+                'store_fname': new_store_fname,
+            })
+            self._file_delete(old_store_fname)
+
+        self.env.cr.commit()

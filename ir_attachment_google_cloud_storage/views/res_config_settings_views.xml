@@ -13,15 +13,17 @@
                     </div>
                     <div class="o_setting_right_pane">
                         <label for="google_cloud_storage_credentials"/>
-                        <field name="google_cloud_storage_credentials" widget="text" />
+                        <field name="is_google_cloud_storage_credentials_in_env" attrs="{'invisible': 1}"/>
+                        <field name="google_cloud_storage_credentials" widget="text" attrs="{'invisible': [('is_google_cloud_storage_credentials_in_env', '=', True)]}"/>
+                        <p attrs="{'invisible': [('is_google_cloud_storage_credentials_in_env', '=', False)]}">Defined in enviroment</p>
                     </div>
-                </div>
-                <div class="col-12 col-lg-6 o_setting_box">
                     <div class="o_setting_left_pane">
                     </div>
                     <div class="o_setting_right_pane">
                         <label for="google_cloud_storage_bucket"/>
-                        <field name="google_cloud_storage_bucket" />
+                        <field name="is_google_cloud_storage_bucket_in_env" attrs="{'invisible': 1}"/>
+                        <field name="google_cloud_storage_bucket" attrs="{'invisible': [('is_google_cloud_storage_bucket_in_env', '=', True)]}"/>
+                        <p attrs="{'invisible': [('is_google_cloud_storage_bucket_in_env', '=', False)]}">Defined in environment</p>
                     </div>
                 </div>
             </xpath>
