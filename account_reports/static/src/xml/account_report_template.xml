@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+
+    <t t-name="CustomerStatements.buttons">
+        <div>
+            <button type="button" class="btn btn-primary o_account_reports_followup_print_letter_button">
+                Print letter
+            </button>
+            <button type="button" class="btn btn-primary o_account_reports_followup_send_mail_button">
+                Send by email
+            </button>
+            <button type="button" class="btn btn-secondary o_account_reports_followup_do_it_later_button" data-toggle='tooltip' title='Odoo will remind you to take care of this follow-up on the next reminder date.'>
+                Remind me later
+            </button>
+            <button type="button" class="btn btn-primary o_account_reports_followup_done_button" style="display:none">
+                Done
+            </button>
+        </div>
+    </t>
+
+    <t t-name="CustomerStatements.nothing_to_send">
+        <div class="alert alert-info" role="alert">
+            No followup to send!
+        </div>
+    </t>
+
+    <t t-name="CustomerStatements.send_mail">
+        <div class="alert alert-info alert-dismissible" role="status" >
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span>&amp;times;</span></button>
+            The follow-up report was successfully emailed!
+        </div>
+    </t>
+
+    <div t-name="CustomerStatements.followupProgressbar" class="progress o_account-progress" style="height:1.5rem" data-toggle="tooltip" title="Follow-ups Done / Total Follow-ups">
+        <div class="progress-bar" role="context" t-att-aria-valuenow="current" aria-valuemin="0" t-att-aria-valuemax="max" t-att-style="'width: ' + percent + '%;'">
+            <span style="color:#666666; font-size:1rem;" class="justify-content-center d-flex position-absolute w-50 o_account-progress-bar-content text-muted"><b><t t-esc="current + '/' + max" /></b></span>
+        </div>
+    </div>
+
+    <t t-name="accountReports.footnote_dialog">
+        <form role="form">
+            <textarea name="note" rows='4' class="js_account_reports_footnote_note" t-att-data-line="id" placeholder="Insert foot note here"><t t-esc="text"/></textarea>
+        </form>
+    </t>
+
+    <t t-name="accountReports.buttons">
+        <t t-foreach="buttons" t-as="button">
+            <button type="button" class="btn btn-primary" t-att-action="button.action"><t t-esc="button.name"/></button>
+        </t>
+    </t>
+
+    <div t-name='paymentDateForm'>
+        <form role="form">
+            <label for="expectedDate">Expected Payment Date</label>
+            <div class='o_account_reports_payment_date_picker' />
+            <input type="hidden" id='target_id' t-att-value='target_id' />
+        </form>
+    </div>
+
+</templates>
