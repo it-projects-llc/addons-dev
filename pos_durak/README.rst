@@ -1,6 +1,6 @@
-==============================
+===========
  POS Durak
-==============================
+===========
 
 The module allows to play card game 'Durak' in pos.
 
