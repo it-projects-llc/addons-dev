@@ -28,7 +28,7 @@ from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError
 
 import html2text
-# import wdb
+
 _logger = logging.getLogger(__name__)
 
 
@@ -486,7 +486,6 @@ class OhadaReport(models.AbstractModel):
             options['unposted_in_period'] = bool(self.env['account.move'].search_count(period_domain))
 
         report_manager = self._get_report_manager(options)
-
         info = {'options': options,
                 'context': self.env.context,
                 'report_manager_id': report_manager.id,
@@ -569,6 +568,7 @@ class OhadaReport(models.AbstractModel):
 
         # Get_lines for the newly computed hierarchy.
         def get_hierarchy_lines(values, depth=1):
+            # wdb.set_trace()
             lines = []
             sum_sum_columns = []
             for base_line in values.get('lines', []):
@@ -675,6 +675,7 @@ class OhadaReport(models.AbstractModel):
         otherwise it uses the main_template. Reason is for efficiency, when unfolding a line in the report
         we don't want to reload all lines, just get the one we unfolded.
         '''
+        # wdb.set_trace()
         # Check the security before updating the context to make sure the options are safe.
         if self.code == 'BS':
             return self.get_html_bs(options, line_id, additional_context)
@@ -1157,8 +1158,8 @@ class OhadaReport(models.AbstractModel):
 
         if self.code == 'BS' and horizontal is True:
             body = body.replace(b'<div class="container o_ohada_reports_page o_ohada_reports_no_print page" style="padding-top:0px;padding-bottom:0px;">', b'<div class="o_ohada_reports_page o_ohada_reports_no_print page" style="padding-top:0px;padding-bottom:0px;">')
-            body = body.replace(b'<table style="margin-top:10px;margin-bottom:10px;color:#001E5A;font-weight:normal;float:left;"', b'<table style="font-size:6px !important;width:30%;margin-bottom:10px;color:#001E5A;font-weight:normal;float:left;"')
-            body = body.replace(b'<table style="margin-bottom:10px;color:#001E5A;font-weight:normal;float:left;"', b'<table style="margint-left:-9px;font-size:6px !important;width:30%;margin-bottom:10px;color:#001E5A;font-weight:normal;float:left;"')
+            body = body.replace(b'<table style="margin-top:10px;margin-bottom:10px;color:#001E5A;font-weight:normal;float:left;"', b'<table style="font-size:6px !important;width:50%;margin-bottom:10px;color:#001E5A;font-weight:normal;float:left;"')
+            body = body.replace(b'<table style="margin-bottom:10px;color:#001E5A;font-weight:normal;float:left;"', b'<table style="margint-left:-9px;font-size:6px !important;width:50%;margin-bottom:10px;color:#001E5A;font-weight:normal;float:left;"')
         else:
             body = body.replace(b'<table style="margin-top:10px;margin-bottom:10px;color:#001E5A;font-weight:normal;"', b'<table style="font-size:8px !important;margin-top:10px;margin-bottom:10px;color:#001E5A;font-weight:normal;"')
 
@@ -1590,7 +1591,7 @@ class OhadaReport(models.AbstractModel):
         otherwise it uses the main_template. Reason is for efficiency, when unfolding a line in the report
         we don't want to reload all lines, just get the one we unfolded.
         '''
-
+        # wdb.set_trace()
         def get_financial_report(line):
             if line.financial_report_id.id is False:
                 return get_financial_report(line.parent_id)
@@ -1599,10 +1600,10 @@ class OhadaReport(models.AbstractModel):
 
         if options.get('unfolded_lines'):
             unfolded_lines = options['unfolded_lines']
-        if not options['date'].get('date_from'):
-            options = self.make_temp_options(int(options['date']['date'][0:4]))
-        if line_id is not None:
-            options['unfolded_lines'] = unfolded_lines
+        # if not options['date'].get('date_from'):
+        #     options = self.make_temp_options(int(options['date']['date'][0:4]))
+        # if line_id is not None:
+        #     options['unfolded_lines'] = unfolded_lines
         g_rcontext=dict()
         g_rcontext['lines'] = {}
         reports = [self.env.ref('ohada_reports.account_financial_report_ohada_balancesheet'),
@@ -1617,14 +1618,15 @@ class OhadaReport(models.AbstractModel):
 
             templates = report_bs._get_templates()
             report_manager = report_bs._get_report_manager(options)
+            date = options['date'].get('date_from') or options['date'].get('date')
             report = {'name': report_bs._get_report_name(),
                       'summary': report_manager.summary,
                       'company_name': report_bs.env.user.company_id.name,
                       'type': report_bs.type,
                       'code': self.code,
                       'vat': report_bs.env.user.company_id.vat,
-                      'year': options['date']['date_from'][0:4],
-                      'header': report_bs.header and report_bs.header + ' ' + options['date']['date_from'][0:4],}
+                      'year': date[0:4],
+                      'header': self.header and self.header + ' ' + date[0:4],}
             lines = report_bs._get_lines(options, line_id=line_id)
 
             if options.get('hierarchy'):
@@ -1672,13 +1674,15 @@ class OhadaReport(models.AbstractModel):
         otherwise it uses the main_template. Reason is for efficiency, when unfolding a line in the report
         we don't want to reload all lines, just get the one we unfolded.
         '''
-        if not options['date'].get('date_from'):
-            options = self.make_temp_options(int(options['date']['date'][0:4]))
+        # if not options['date'].get('date_from'):
+        #     options = self.make_temp_options(int(options['date']['date'][0:4]))
         g_rcontext=dict()
         g_rcontext['lines_notes'] = []
         r_name = self.name.upper()
         r_shortname = self.shortname.upper()
         reports = [self, self.env['ohada.financial.html.report'].search([('code', '=', self.code + '_1')])]
+        if self.code == "N16B":
+            reports.append(self.env.ref('ohada_reports.ohada_financial_report_note16b_2'))
         summary = self._get_report_manager(options).summary
         for report_bs in reports:
             # Check the security before updating the context to make sure the options are safe.
@@ -1689,6 +1693,7 @@ class OhadaReport(models.AbstractModel):
 
             templates = report_bs._get_templates()
             report_manager = report_bs._get_report_manager(options)
+            date = options['date'].get('date_from') or options['date'].get('date')
             report = {'name': r_name,
                       'shortname': r_shortname,
                       'summary': report_manager.summary,
@@ -1696,8 +1701,8 @@ class OhadaReport(models.AbstractModel):
                       'type': report_bs.type,
                       'code': self.code,
                       'vat': report_bs.env.user.company_id.vat,
-                      'year': options['date']['date_from'][0:4],
-                      'header': report_bs.header and report_bs.header + ' ' + options['date']['date_from'][0:4],}
+                      'year': date[0:4],
+                      'header': self.header and self.header + ' ' + date[0:4],}
             lines = report_bs._get_lines(options, line_id=line_id)
 
             if options.get('hierarchy'):
@@ -1728,7 +1733,7 @@ class OhadaReport(models.AbstractModel):
         g_rcontext['model'] = self.header + ' ' + options['date']['date_from'][0:4]
         g_rcontext['report']['header'] = self.header + ' ' + options['date']['date_from'][0:4]
 #        g_rcontext['report']['header_2'] = reports[1].header + ' ' + options['date']['date_from'][0:4]       #E-
-        g_rcontext['report']['header_2'] = reports[0].header + ' ' + options['date']['date_from'][0:4]        #E+
+        g_rcontext['report']['header_2'] = reports[0].header + ' ' + options['date']['date_from'][0:4] if self.code != 'N16B' else ' '#E+
         g_rcontext['options'] = rcontext['options']
         g_rcontext['report']['name'] = self.name.upper()
         g_rcontext['model'] = rcontext['model']
