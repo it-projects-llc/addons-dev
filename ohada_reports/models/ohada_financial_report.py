@@ -1382,7 +1382,8 @@ class OhadaFinancialReportLine(models.Model):
             # wdb.set_trace()
             if financial_report.tax_report and line.domain and not line.action_id:
                 vals['caret_options'] = 'tax.report.line'
-
+            if line.note_report_ids:
+                vals['note_id'] = str(self.env['ir.actions.client'].search([('name', '=', line.note_report_ids.name)]).id)
             if line.action_id:
                 vals['action_id'] = line.action_id.id
             domain_ids.remove('line')
@@ -1665,8 +1666,6 @@ class OhadaFinancialReportLine(models.Model):
                         result = lines + new_lines
                 else:
                     result = lines
-                if line.note_report_ids:
-                    line.note_id = str(self.env['ir.actions.client'].search([('name', '=', line.note_report_ids.name)]).id)
                 if result[0]['note'] == 'NET':
                     if financial_report.code == 'BS1' and options['comparison']['filter'] == 'no_comparison':
                         result[0]['columns'][0]['name'] = 'BRUT'
