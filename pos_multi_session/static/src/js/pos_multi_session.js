@@ -2,7 +2,7 @@
  * Copyright 2015-2016 Ilyas Rakhimkulov
  * Copyright 2016 Gael Torrecillas
  * Copyright 2016-2018 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
- * Copyright 2017-2018 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+ * Copyright 2017-2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
  * Copyright 2017 David Arnold
  * License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). */
 
@@ -17,9 +17,7 @@ odoo.define('pos_multi_session', function(require){
     var chrome = require('point_of_sale.chrome');
     var longpolling = require('pos_longpolling.connection');
     var rpc = require('web.rpc');
-    var PosBaseWidget = require('point_of_sale.BaseWidget');
     var gui = require('point_of_sale.gui');
-    var framework = require('web.framework');
     var posDB = require('point_of_sale.DB');
 
 
@@ -289,7 +287,10 @@ odoo.define('pos_multi_session', function(require){
                     });
                     this.pos_session.order_ID = data.order_ID;
                     var sequence_number = this.pos_session.sequence_number;
-                    this.pos_session.sequence_number = data.order_ID + 1 || 1;
+                    if (sequence_number && sequence_number < (data.order_ID + 1 || 1)) {
+                        // that's a case when sync_all request response comes earlier than created offline orders were sent
+                        this.pos_session.sequence_number = data.order_ID + 1 || 1;
+                    }
                     this.ms_syncing_in_progress = false;
                     if (!data.uid){
                         // if it wasnt sync for only one order
@@ -677,7 +678,11 @@ odoo.define('pos_multi_session', function(require){
             }
             var f = function(){
                 self.enquied=false;
-                return self.pos.multi_session.remove_order({'uid': self.uid, 'revision_ID': self.revision_ID}).done();
+                return self.pos.multi_session.remove_order({
+                    'uid': self.uid,
+                    'revision_ID': self.revision_ID,
+                    'finalized': self.finalized,
+                }).done();
             };
             if (!this.pos.multi_session_active){
                 return;
@@ -712,24 +717,6 @@ odoo.define('pos_multi_session', function(require){
                 return self.pos.multi_session.update(data).done(function(res){
                     self.order_on_server = true;
                     self.set_orderlines_offline();
-                    if (res && res.action === "update_revision_ID") {
-                        var server_revision_ID = res.revision_ID;
-                        var order_ID = res.order_ID;
-                        if (order_ID && self.sequence_number !== order_ID) {
-                            self.sequence_number = order_ID;
-                            // sequence number replace
-                            self.pos.pos_session.order_ID = order_ID;
-                            var sequence_number = self.pos.pos_session.sequence_number;
-                            self.pos.pos_session.sequence_number = Math.max(Boolean(sequence_number) && sequence_number, order_ID + 1 || 1);
-                            // rerender order
-                            self.trigger('change');
-                        }
-                        if (server_revision_ID && server_revision_ID > self.revision_ID) {
-                            self.revision_ID = server_revision_ID;
-                            self.save_to_db();
-                        }
-
-                    }
                 });
             };
             if (!this.pos.multi_session_active){
@@ -737,7 +724,25 @@ odoo.define('pos_multi_session', function(require){
             }
             this.enquied = true;
             this.pos.multi_session.enque(f);
-        }
+        },
+
+        update_revision_id: function(res){
+            var server_revision_ID = res.revision_ID;
+            var order_ID = res.order_ID;
+            if (order_ID && (this.sequence_number !== order_ID || this.pos.pos_session.sequence_number === order_ID)) {
+                this.sequence_number = order_ID;
+                // sequence number replace
+                this.pos.pos_session.order_ID = order_ID;
+                var sequence_number = this.pos.pos_session.sequence_number;
+                this.pos.pos_session.sequence_number = Math.max(Boolean(sequence_number) && sequence_number, order_ID + 1 || 1);
+                // rerender order
+                this.trigger('change');
+            }
+            if (server_revision_ID && server_revision_ID > this.revision_ID) {
+                this.revision_ID = server_revision_ID;
+                this.save_to_db();
+            }
+        },
     });
     var OrderlineSuper = models.Orderline;
     models.Orderline = models.Orderline.extend({
@@ -847,9 +852,18 @@ odoo.define('pos_multi_session', function(require){
             if (this.on_syncing) {
                 return false;
             }
+            this.on_syncing = true;
+            if (this.pos.db.get_orders().length) {
+                var self = this;
+                return this.send_paid_offline_orders().then(function () {
+                    return self.sync_all(options);
+                });
+            }
+            return this.sync_all(options);
+        },
+        sync_all: function(options) {
             options = options || {};
             var self = this;
-            this.on_syncing = true;
             var data = {run_ID: this.pos.multi_session_run_ID};
             var message = {'action': 'sync_all', data: data};
             if (options.uid) {
@@ -948,7 +962,7 @@ odoo.define('pos_multi_session', function(require){
                 if (res.action === "revision_error") {
                     if (res.state == 'deleted') {
                         var removed_order = self.pos.get('orders').find(function(order){
-                             order.uid === res.order_uid;
+                             return order.uid === res.order_uid;
                         });
                         if (removed_order) {
                             removed_order.destroy({'reason': 'abandon'});
@@ -968,6 +982,15 @@ odoo.define('pos_multi_session', function(require){
                 }
                 if (self.pos.sync_bus) {
                     self.pos.sync_bus.longpolling_connection.network_is_on();
+                }
+
+                if (res && res.action === "update_revision_ID" && res.uid) {
+                    var order = _.find(self.pos.get_order_list(), function(o){
+                        return o.uid === res.uid;
+                    });
+                    if (order) {
+                        order.update_revision_id(res);
+                    }
                 }
             });
         },
@@ -990,7 +1013,7 @@ odoo.define('pos_multi_session', function(require){
                     order.destroy({'reason': 'abandon'});
                 }
             });
-            self.send_offline_orders();
+            self.send_draft_offline_orders();
         },
         warning: function(warning_message){
             console.info('warning', warning_message);
@@ -1002,7 +1025,7 @@ odoo.define('pos_multi_session', function(require){
                 });
             }
         },
-        send_offline_orders: function() {
+        send_draft_offline_orders: function() {
             var self = this;
             var orders = this.pos.get("orders");
             orders.each(function(item) {
@@ -1010,6 +1033,24 @@ odoo.define('pos_multi_session', function(require){
                     item.new_updates_to_send();
                 }
             });
+        },
+        send_paid_offline_orders: function() {
+            var self = this;
+            var orders = this.pos.db.get_orders();
+            // sends multi_session updates for paid orders
+            _.each(orders, function(item) {
+                var f = function(){
+                    return self.remove_order({
+                        'uid': item.data.uid,
+                        'revision_ID': item.data.revision_ID,
+                        'finalized': true,
+                        'order_data': JSON.stringify(item),
+                    });
+                };
+                self.enque(f);
+            });
+            // sends paid offline orders to the server
+            return this.pos.push_order();
         },
         start_offline_sync_timer: function(){
             var self = this;

@@ -1,11 +1,12 @@
 //  Copyright 2019 Dinar Gabbasov <https://it-projects.info/team/GabbasovDinar>
+//  Copyright 2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
 //  License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 odoo.define('pos_sale_coupons.models', function (require) {
     'use_strict';
 
     var models = require('point_of_sale.models');
-    var longpolling = require('pos_longpolling.connection');
     var core = require('web.core');
+    var rpc = require('web.rpc');
     var _t = core._t;
 
     models.load_models({
@@ -36,19 +37,35 @@ odoo.define('pos_sale_coupons.models', function (require) {
     models.PosModel = models.PosModel.extend({
         initialize: function (session, attributes) {
             _super_posmodel.initialize.apply(this, arguments);
-            this.bus.add_channel_callback("pos_sale_coupons", this.on_coupons_notification, this);
+            var self = this;
+            this.ready.then(function () {
+                self.bus.add_channel_callback('pos_sale_coupons', self.on_coupons_notification, self);
+            });
         },
         on_coupons_notification: function(message) {
             var self = this;
-            var coupons = message.data;
-            _.each(coupons, function(coupon) {
-                var exist_sale_coupon = self.db.get_sale_coupon_by_id(coupon.id);
-                if (exist_sale_coupon) {
-                    self.db.update_sale_coupons([coupon]);
-                } else {
-                    self.db.add_sale_coupons([coupon]);
-                }
-            });
+            var coupon_programs = message.coupon_program_data;
+            if (coupon_programs) {
+                _.each(coupon_programs, function(coupon_program) {
+                    var exist_sale_coupon_program = self.db.get_sale_coupon_program_by_id(coupon_program.id);
+                    if (exist_sale_coupon_program) {
+                        self.db.update_sale_coupon_programs([coupon_program]);
+                    } else {
+                        self.db.add_sale_coupon_programs([coupon_program]);
+                    }
+                });
+            }
+            var coupons = message.coupon_data;
+            if (coupons) {
+                _.each(coupons, function(coupon) {
+                    var exist_sale_coupon = self.db.get_sale_coupon_by_id(coupon.id);
+                    if (exist_sale_coupon) {
+                        self.db.update_sale_coupons([coupon]);
+                    } else {
+                        self.db.add_sale_coupons([coupon]);
+                    }
+                });
+            }
         },
         delete_current_order: function() {
             var self = this;
@@ -62,7 +79,7 @@ odoo.define('pos_sale_coupons.models', function (require) {
                 })
             }
             _super_posmodel.delete_current_order.apply(this, arguments);
-        }
+        },
     });
 
     var _super_order = models.Order.prototype;
@@ -83,6 +100,11 @@ odoo.define('pos_sale_coupons.models', function (require) {
                 this.apply_discount_program(coupon, program);
             } else if (program.reward_type === 'product') {
                 this.apply_product_reward_program(coupon, program);
+            }
+            var partner_id = coupon.partner_id && coupon.partner_id[0];
+            if (partner_id) {
+                partner_id = this.pos.db.get_partner_by_id(partner_id);
+                this.set_client(partner_id);
             }
         },
         apply_discount_program: function(coupon, program) {
@@ -194,7 +216,8 @@ odoo.define('pos_sale_coupons.models', function (require) {
             if (options.product && options.product.coupon && options.product.coupon.id) {
                 this.coupon = {
                     id: options.product.coupon.id,
-                    state: options.product.coupon.state
+                    state: options.product.coupon.state,
+                    coupon_value: options.product.coupon.coupon_value
                 };
                 // update old coupon ids after reload page
                 this.pos.db.update_old_coupon_ids(this.coupon.id);
@@ -211,6 +234,10 @@ odoo.define('pos_sale_coupons.models', function (require) {
             if (this.coupon) {
                 data.coupon_id = this.coupon.id;
                 data.coupon_state = this.coupon.state;
+                data.coupon_value = data.price_unit || this.coupon.coupon_value || 0;
+            }
+            if (!data.price_unit && this.coupon && this.coupon.coupon_value) {
+                data.price_unit = parseInt(this.coupon.coupon_value);
             }
             return data;
         },
@@ -218,7 +245,8 @@ odoo.define('pos_sale_coupons.models', function (require) {
             if (json.coupon_id) {
                 this.coupon = {
                     id: json.coupon_id,
-                    state: json.coupon_state
+                    state: json.coupon_state,
+                    coupon_value: json.coupon_value
                 };
             }
             _super_orderline.init_from_JSON.call(this, json);
@@ -230,7 +258,15 @@ odoo.define('pos_sale_coupons.models', function (require) {
             }
             this.coupon = data.coupon || false;
             this.trigger('change', this);
-        }
+        },
+
+        set_unit_price: function(price){
+            if (this.coupon) {
+                var coupon_price = this.coupon.coupon_value && parseInt(this.coupon.coupon_value);
+                price = coupon_price || price;
+            }
+            _super_orderline.set_unit_price.apply(this, arguments);
+        },
     });
 
     return models;

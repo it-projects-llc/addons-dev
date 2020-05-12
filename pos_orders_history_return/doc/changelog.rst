@@ -1,7 +1,13 @@
-.. _changelog:
+`1.0.6`
+-------
 
-Updates
-=======
+**Fix:** Unavailability to return fractional product amount
+
+`1.0.5`
+-------
+
+**Fix:** Error related to return a specific order after barcode scanning
+**Fix:** Order duplication in case of poor connection in POS
 
 `1.0.4`
 -------

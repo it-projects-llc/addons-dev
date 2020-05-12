@@ -2,6 +2,7 @@
 .popup-confirm-note textarea {
     margin-top: 10px;
     resize: none;
+    width: 460px;
 }
 .popup-confirm-note .button {
     width: 150px !important;
@@ -13,7 +14,7 @@
     float: none !important;
 }
 .popup-confirm-note {
-    height: 400px !important;
+    height: 500px!important;
 }
 .popup-confirm-note .header{
     height: 70px;
@@ -32,6 +33,18 @@
 .popup-confirm-note  textarea:focus:-ms-input-placeholder {color: transparent}
 
 /*ScreenWidget*/
+.pos .notelist-screen .window,
+.pos .notelist-screen .full-content .subwindow{
+    display: block;
+}
+.pos .notelist-screen .full-content .subwindow-container{
+    display: block;
+    height: 100%;
+}
+.pos .notelist-screen .full-content .subwindow.collapsed,
+.pos .notelist-screen .full-content .subwindow-container.collapsed{
+    height: auto;
+}
 .pos .notelist-screen .note-list{
     font-size: 16px;
     width: 100%;
@@ -94,7 +107,7 @@
 .pos.mobile .modal-dialog .popup.popup-confirm-note {
     max-width: initial;
     width: 100%;
-    height: 850px!important;
+    height: 900px!important;
     top: initial;
     background: white;
 }
@@ -130,6 +143,7 @@
     margin-right: 35px;
     height: 400px;
     overflow-y: auto;
+    padding-bottom: 10px;
 }
 .pos.mobile .modal-dialog .popup.popup-confirm-note .product_note .button.active{
     background: #555555;

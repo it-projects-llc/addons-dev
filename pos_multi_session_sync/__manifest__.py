@@ -1,13 +1,13 @@
 # Copyright 2017 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
-# Copyright 2017 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
+# Copyright 2017,2019 Kolushov Alexandr <https://it-projects.info/team/KolushovAlexandr>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 {
     "name": """Sync Server for POS orders""",
     "summary": """Sync orders via main or separate (e.g. local) server""",
     "category": "Point of Sale",
-    "live_test_url": 'http://apps.it-projects.info/shop/product/pos-multi-session?version=12.0',
+    # "live_test_url": 'http://apps.it-projects.info/shop/product/pos-multi-session?version=12.0',
     "images": [],
-    "version": "12.0.1.0.3",
+    "version": "12.0.1.0.6",
     "application": False,
 
     "author": "IT-Projects LLC, Kolushov Alexandr",
