@@ -1,0 +1,560 @@
+<odoo>
+    <!-- Project task Form View Inherited -->
+    <record id="view_jobs_form" model="ir.ui.view">
+        <field name="name">view.jobs.form.inherited</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <header>
+                <button name="create_invoice" type="object"
+                        string="Create Invoice" class="oe_highlight oe_inline"
+                        context="{'partner_id':partner_id, 'user_id':user_id}"
+                        attrs="{'invisible': ['|',('invoice_id','!=', False),('invoice_check','!=',False)]}"
+                        groups='field_service_management.group_operator'/>
+                <button name="open_invoice" type="object"
+                        string="Open Invoice" class="oe_highlight oe_inline"
+                        context="{'partner_id':partner_id, 'user_id':user_id}"
+                        attrs="{'invisible': [('invoice_id','=', False)]}"
+                        groups='field_service_management.group_operator'/>
+                <button name="action_notify_customer" type="object"
+                        string="Notify to Customer" class="oe_link btn-link oe_inline"
+                        groups='field_service_management.group_operator'/>
+                <button name="action_notify_serviceman" type="object"
+                        string="Notify Technician" class="oe_link btn-link oe_inline"
+                        groups='field_service_management.group_operator'/>
+                <button name="suggest_best_serviceman" type="object"
+                        string="Suggest Best Technician" class="oe_link btn-link oe_inline"
+                        attrs="{'invisible':[('state','=','done')]}"
+                        groups='field_service_management.group_operator'/>
+                <!--<field name="state" widget="statusbar" clickable="True"/>-->
+            </header>
+            <div class="oe_button_box"
+                 name="button_box"
+                 position="inside">
+                <button name="fetch_address"
+                        string="Map It"
+                        type="object"
+                        icon="fa-location-arrow"
+                        class="oe_stat_button"/>
+
+
+                <button name="button_view_feedbacks"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-pencil-square-o"
+                        attrs="{'invisible': [('feedback_count', '=', 0)]}">
+                    <field name="feedback_count" widget="statinfo" string="Feedbacks"/>
+                </button>
+            </div>
+
+            <xpath expr="//field[@name='partner_id']" position="replace">
+            </xpath>
+
+            <xpath expr="//field[@name='priority']" position="replace">
+            </xpath>
+
+            <xpath expr="//form/sheet/group/group/field[@name='user_id']" position="replace">
+                <label for="user_id" string="Assigned To" invisible="True"/>
+                <div class="o_address_format" >
+                    <field name="user_id"
+                           class="o_task_user_field oe_inline"
+                           options='{"no_open": True}' invisible="True" />
+                    <button name="action_resource_availibility" class ="fa fa-calendar-check-o fa-4x"
+                            type="object" style="color:#4c4c4c"
+                            context="{'attendee_ids': user_id,'user_id':user_id}" invisible="True"/>
+                </div>
+                <seperator><h1>Customer</h1></seperator><br/>
+                <label for="partner_id" string="Customer"/>
+                <!--<label for="partner_id" string="Customer"/>-->
+                <field name="partner_id" nolabel="1" placeholder="Customer" required="1" options="{'no_create':True,'no_open':True}" attrs="{'readonly':[('state','=','done')]}" domain="[('customer', '=', True)]"/>
+                <field name="phone" widget="phone" attrs="{'readonly':[('state','=','done')]}"/>
+                <field name="invoice_id" readonly="1" invisible="True"/>
+                <field name="invoice_check" readonly="1" invisible="True"/>
+                <field name="state" readonly="1" invisible="True"/>
+                <label for="street" string="Service Address"/>
+                <div class="o_address_format">
+                    <field name="street" placeholder="Street..."
+                           class="o_address_street" attrs="{'readonly':[('state','=','done')]}"/>
+                    <field name="street2" placeholder="Street 2..."
+                           class="o_address_street" attrs="{'readonly':[('state','=','done')]}"/>
+                    <field name="area_id" placeholder="Area"
+                           class="o_address_area" attrs="{'readonly':[('state','=','done')]}"/>
+                    <field name="city_id" placeholder="City"
+                           class="o_address_city" attrs="{'readonly':[('state','=','done')]}"/>
+                    <field name="state_id" class="o_address_state"
+                           placeholder="State" options='{"no_open": True}' attrs="{'readonly':[('state','=','done')]}"/>
+                    <field name="zip" placeholder="ZIP" class="o_address_zip" attrs="{'readonly':[('state','=','done')]}"/>
+                    <field name="zone_id" placeholder="ZONE" invisible="True"
+                           class="o_address_zone" attrs="{'readonly':[('state','=','done')]}"/>
+                    <field name="country_id" placeholder="Country" invisible="True"
+                           class="o_address_country" options='{"no_open": True, "no_create": True}' attrs="{'readonly':[('state','=','done')]}"/>
+                </div>
+            </xpath>
+
+            <xpath expr="//field[@name='planned_hours']" position="before">
+                <label for="same_as_above" string="Billing Address"/>
+                <div class="o_address_format">
+                    <label for="same_as_above" string="Same as above"/>
+                    <field name="same_as_above"
+                           class="o_address_zip"/>
+                    <field name="formatted_address" placeholder="Street..."
+                       class="o_address_street" attrs="{'readonly':[('state','=','done')]}"/>
+                    <field name="bil_street2" placeholder="Street 2..."
+                           class="o_address_street" attrs="{'readonly':[('state','=','done')]}"/>
+                    <field name="bil_area_id" placeholder="Area"
+                           class="o_address_area" attrs="{'readonly':[('state','=','done')]}"/>
+                    <field name="bil_city_id" placeholder="City"
+                           class="o_address_city" attrs="{'readonly':[('state','=','done')]}"/>
+                    <field name="bil_state_id" class="o_address_state"
+                           placeholder="State" options='{"no_open": True}' attrs="{'readonly':[('state','=','done')]}"/>
+                    <field name="bil_zip" placeholder="ZIP" class="o_address_zip" attrs="{'readonly':[('state','=','done')]}"/>
+                    <field name="bil_zone_id" placeholder="ZONE" invisible="True"
+                           class="o_address_zone" attrs="{'readonly':[('state','=','done')]}"/>
+                    <field name="bil_country_id" placeholder="Country" invisible="True"
+                           class="o_address_country" options='{"no_open": True, "no_create": True}' attrs="{'readonly':[('state','=','done')]}"/>
+                </div>
+                <field name="site_cross_street"/>
+                <field name="latitude" attrs="{'readonly':[('state','=','done')]}"/>
+                <field name="longitude" attrs="{'readonly':[('state','=','done')]}"/>
+
+            </xpath>
+
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name='context'>{'assign_job': project_id}</attribute>
+                <attribute name="placeholder">Serviceman</attribute>
+                <attribute name="options">{'no_create':True,'no_open':True}</attribute>
+                <attribute name="attrs">{'readonly':[('state','=','done')]}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='date_deadline']" position="attributes">
+                <attribute name='attrs'>{'readonly':[('state','=','done')]}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name='context'>{'assign_job': project_id}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='tag_ids']" position="attributes">
+                <attribute name='attrs'>{'readonly':[('state','=','done')]}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='planned_hours']" position="attributes">
+                <attribute name='attrs'>{'readonly':[('state','=','done')]}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <!--<field name="state" readonly="1"/>-->
+                <!--<field name="phone" widget="phone" attrs="{'readonly':[('state','=','done')]}"/>-->
+                <!--<field name="latitude" attrs="{'readonly':[('state','=','done')]}"/>-->
+                <!--<field name="longitude" attrs="{'readonly':[('state','=','done')]}"/>-->
+                <field name="jobs_rejected" attrs="{'readonly':[('state','=','done')]}"/>
+                <field name="rejected_reason"
+                       attrs="{'invisible':[('jobs_rejected','=',False)],'readonly':[('jobs_rejected','!=',True)],'readonly':[('state','=','done')]}"/>
+                <field name="is_express_service" attrs="{'readonly':[('state','=','done')]}"/>
+            </xpath>
+
+            <xpath expr="//form/sheet/div/h1/field[@name='name']"
+                   position="attributes">
+                <attribute name="placeholder">Job Title...</attribute>
+                <attribute name='attrs'>{'readonly':[('state','=','done')]}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='project_id']"
+                   position="attributes">
+                <attribute name="placeholder">Service</attribute>
+                <attribute name="options">{'no_create':True,'no_open':True}</attribute>
+                <attribute name="attrs">{'readonly':[('state','=','done')]}</attribute>
+            </xpath>
+
+            <page string="Extra Info">
+                <group>
+                    <field name="signature" widget="signature"
+                           class="oe_avatar oe_left" style="max-width:100px;max-height:117px;"
+                           attrs="{'readonly':[('state','=','done')]}"/>
+                </group>
+            </page>
+
+            <xpath expr="//form/sheet/notebook/page/group/group/field[@name='sequence']" position="attributes">
+                <attribute name="attrs">{'readonly':[('state','=','done')]}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='billable_type']" position="attributes">
+                <attribute name="attrs">{'readonly':[('state','=','done')]}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='sale_line_id']" position="attributes">
+                <attribute name="attrs">{'readonly':[('state','=','done')]}</attribute>
+            </xpath>
+
+            <xpath expr="//form/sheet/notebook/page/group/group/field[@name='displayed_image_id']" position="attributes">
+                <attribute name="attrs">{'readonly':[('state','=','done')]}</attribute>
+            </xpath>
+
+            <xpath expr="//form/sheet/notebook/page/group/group/field[@name='company_id']" position="attributes">
+                <attribute name="attrs">{'readonly':[('state','=','done')]}</attribute>
+            </xpath>
+
+            <field name="kanban_state" position="after">
+                <h1>
+                    <field name="job_sequence" readonly="1"/>
+                </h1>
+            </field>
+        </field>
+    </record>
+
+    <!-- Project Hr Timesheet Form View Inherited -->
+    <record id="hr_timesheet.view_task_form2_inherited" model="ir.ui.view">
+        <field name="name">project.task.form.inherited</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
+        <field name="arch" type="xml">
+            <field name="tag_ids" position="after">
+                <field name="progress" widget="progressbar"/>
+            </field>
+            <field name="tag_ids" position="before">
+                <field name="state" readonly="1"/>
+            </field>
+            <field name="user_id" position="after">
+                <field name="planned_hours" widget="float_time"/>
+            </field>
+
+            <field name="date_deadline" position="before">
+                <label for="schedule_date" string="Scheduled On" />
+                    <div class="o_address_format">
+                        <field name="schedule_date"
+                       class="o_task_user_field oe_inline"
+                       attrs="{'readonly':[('state','=','done')]}"/>
+                     </div>
+                <!--<field name="plan_hours" widget="float_time" />-->
+            </field>
+            <field name="partner_id" position="after">
+                <field name="parent_id"
+                       attrs="{'invisible' : [('parent_id', '=', False)]}"/>
+                <field name="child_ids" invisible="1"/>
+                <field name="subtask_project_id" invisible="1"/>
+            </field>
+            <xpath expr="//notebook/page[@name='description_page']"
+                   position="after">
+                <page string="Timesheets" autofocus="1">
+                    <field name="timesheet_ids"
+                           context="{'default_project_id': project_id}"
+                           attrs="{'readonly':[('state','=','done')]}">
+                        <tree editable="bottom" string="Timesheet Activities"
+                              default_order="date">
+                            <field name="date"/>
+                            <field name="user_id" required="1"/>
+                            <field name="name"/>
+                            <field name="unit_amount" string="Duration"
+                                   widget="float_time"/>
+                            <field name="project_id" invisible="1"/>
+                        </tree>
+                    </field>
+                    <group>
+                        <group class="oe_subtotal_footer oe_right"
+                               name="project_hours">
+                            <field name="effective_hours" widget="float_time"/>
+                            <field name="subtask_effective_hours" widget="float_time"
+                                   attrs="{'invisible' : [('subtask_effective_hours', '=', 0.0)]}" />
+                            <field name="total_hours_spent"
+                                   widget="float_time" class="oe_subtotal_footer_separator"
+                                   attrs="{'invisible' : [('subtask_effective_hours', '=', 0.0)]}"/>
+                            <field name="remaining_hours" widget="float_time"
+                                   class="oe_subtotal_footer_separator"
+                                   readonly="1"/>
+                        </group>
+                    </group>
+                </page>
+                <page name="job_cart" string="Services" >
+                    <field name="order_line_ids" attrs="{'readonly':[('state','=','done')]}">
+                        <tree string="Job Line" editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="check_box"/>
+                            <field name="product_id"/>
+                            <field name="name"/>
+                            <field name="product_uom_qty" string="Ordered Qty"/>
+                            <field name="product_uom" groups="uom.group_uom"
+                                   options='{"no_open": True}' />
+                            <field name="price_unit"/>
+                            <field name="price_subtotal" widget="monetary"
+                                   groups="account.group_show_line_subtotals_tax_excluded"/>
+                            <field name="price_total" widget="monetary"
+                                   groups="account.group_show_line_subtotals_tax_included"/>
+                        </tree>
+                    </field>
+                    <button name="custom_create_invoice" type="object" class="oe_highlight" string="Create Invoice" attrs="{'invisible': ['|',('invoice_check','=', True),('invoice_id','!=', False)]}"/>
+                    <button name="new_job_with_uninstall_products" type="object" class="oe_highlight" string="Create Site Visit" attrs="{'invisible': ['|',('site_check','=', True),('invoice_id','!=', False)]}"/>
+                    <field name="invoice_check" invisible="1"/>
+                    <field name="site_check" invisible="1"/>
+                </page>
+
+                <!--<page string="Feedbacks">-->
+                    <!--<field name="feedback_line_ids" attrs="{'readonly':[('state','=','done')]}"-->
+                           <!--context="{'default_user_id':user_id,'default_partner_id':partner_id'}"/>-->
+                <!--</page>-->
+            </xpath>
+
+            <xpath expr="//form/sheet/notebook/page[@name='description_page']/field[@name='description']"
+                   position="attributes">
+                <attribute name='attrs'>{'readonly':[('state','=','done')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Project Task Tree View Inherited -->
+    <record id="view_jobs_tree" model="ir.ui.view">
+        <field name="name">view.jobs.tree.inherited</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_tree2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="jobs_rejected"/>
+                <field name="rejected_reason"/>
+                <field name="is_express_service"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Res Partner Model Project Form View Inherited -->
+    <record id="view_project_form" model="ir.ui.view">
+        <field name="name">view.project.form.inherited</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="project.view_task_partner_info_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='task_count']" position="attributes">
+                <attribute name="string">Jobs</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Project Task Search View -->
+    <record id="project.view_task_search_form" model="ir.ui.view">
+        <field name="name">project.task.search.form</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <search string="Jobs">
+                <field name="name" string="Job Title"/>
+                <field name="job_sequence" string="Job Sequence"/>
+                <field name="tag_ids"/>
+                <field name="partner_id"/>
+                <field name="project_id"/>
+                <field name="user_id"/>
+                <field name="invoice_id"/>
+                <field name="stage_id"/>
+                <field name="area_id"/>
+                <field name="city_id"/>
+                <field name="state_id"/>
+                <filter string="Unassigned" name="unassigned"
+                        domain="[('user_id', '=', False)]"/>
+                <filter string="Rejected" name="rejected"
+                        domain="[('user_id', '=', False)]"/>
+                <separator/>
+                <filter string="New" name="draft"
+                        domain="[('stage_id.sequence', '&lt;=', 1)]"/>
+                <separator/>
+                <filter string="Unread Messages" name="message_needaction"
+                        domain="[('message_needaction','=',True)]"/>
+                <filter string="Archived" name="inactive"
+                        domain="[('active','=',False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Project" name="project"
+                            context="{'group_by':'project_id'}"/>
+                    <filter string="Job" name="job"
+                            context="{'group_by':'name'}"/>
+                    <filter string="Assigned to" name="User"
+                            context="{'group_by':'user_id'}"/>
+                    <filter string="Customer" name="Partner"
+                            context="{'group_by':'partner_id'}"/>
+                    <filter string="Stage" name="Stage"
+                            context="{'group_by':'stage_id'}"/>
+                    <filter string="Area" name="Area"
+                            context="{'group_by':'area_id'}"/>
+                    <filter string="City" name="City"
+                            context="{'group_by':'city_id'}"/>
+                    <filter string="State" name="State"
+                            context="{'group_by':'state_id'}"/>
+                    <filter string="Company" name="company"
+                            context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <!--added by mayur-->
+    <!--<record id="view_jobs_form_01" model="ir.ui.view">-->
+        <!--<field name="name">view.jobs.form.inherited.01</field>-->
+        <!--<field name="model">project.task</field>-->
+        <!--<field name="inherit_id" ref="fsm_custom.view_jobs_form_23"/>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<xpath expr="//field[@name='site_cross_street']" position="after">-->
+                <!--<field name="latitude" attrs="{'readonly':[('state','=','done')]}"/>-->
+                <!--<field name="longitude" attrs="{'readonly':[('state','=','done')]}"/>-->
+            <!--</xpath>-->
+        <!--</field>-->
+    <!--</record>-->
+
+    <!-- Project Task Kanban View -->
+    <record model="ir.ui.view" id="project.view_task_kanban">
+        <field name="name">project.task.kanban</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_small_column o_kanban_project_tasks" on_create="quick_create">
+                <field name="color"/>
+                <field name="priority"/>
+                <field name="stage_id" options='{"group_by_tooltip": {"description": "Stage Description", "legend_priority": "Use of stars"}}'/>
+                <field name="user_id"/>
+                <field name="project_id"/>
+                <field name="partner_id"/>
+                <field name="job_sequence"/>
+                <field name="street"/>
+                <field name="area_id"/>
+                <field name="city_id"/>
+                <field name="description"/>
+                <field name="sequence"/>
+                <field name="schedule_date"/>
+                <field name="date_deadline"/>
+                <field name="message_needaction_counter"/>
+                <field name="tag_ids"/>
+                <field name="attachment_ids"/>
+                <field name="displayed_image_id"/>
+                <field name="active"/>
+                <field name="legend_blocked"/>
+                <field name="legend_normal"/>
+                <field name="legend_done"/>
+                <field name="timesheet_count"/>
+                <field name="progress"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+
+                            <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                                <a class="dropdown-toggle btn" data-toggle="dropdown" href="#">
+                                    <span class="fa fa-bars fa-lg"/>
+                                </a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <t t-if="widget.editable"><li><a type="edit">Edit Jobs</a></li></t>
+                                    <t t-if="widget.editable"><li><a type="delete">Delete Jobs</a></li></t>
+                                    <li t-if="! record.active.value"><a name="action_set_active" type="object">Unarchive</a></li>
+                                    <li t-if="record.active.value"><a name="action_set_unactive" type="object">Archive</a></li>
+                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                </ul>
+                            </div>
+                            <div class="oe_kanban_content">
+                                <strong style="font-size:15px;color:red;"><field name="job_sequence"/></strong>
+                                <div>
+                                    <strong style="font-size:15px;color:blue;"><field name="name"/></strong>
+                                </div>
+                                <div style="font-size:14px;"><b><h7>Assigned:</h7></b>
+                                    <strong><field name="user_id"/></strong>
+                                </div>
+                                <div style="font-size:14px;"><b><h7>Customer:</h7></b>
+                                    <strong><field name="partner_id"/></strong>
+                                </div>
+                                <div style="font-size:14px;"><b><h7>Service:</h7></b>
+                                    <strong><field name="project_id"/></strong>
+                                </div>
+                                <div style="font-size:14px;"><b><h7>Timesheet:</h7></b>
+                                    <strong style="font-size:17px;color:red;"><field name="timesheet_count"/></strong>
+                                </div>
+                                <div style="font-size:14px;"><b><h7>Address:</h7></b>
+                                    <strong><field name="street"/></strong>
+                                    <strong><field name="area_id"/></strong>
+                                    <strong><field name="city_id"/></strong>
+                                </div>
+                                <div style="font-size:14px;"><b><h7>Schedule on:</h7></b>
+                                    <strong><field name="schedule_date"/></strong>
+                                </div>
+                                <div class="oe_kanban_bottom_left" style="margin-left:245px;margin-top:12px;">
+                                    <field name="priority" widget="priority"/>
+                                    <t t-if="record.message_needaction_counter.raw_value">
+                                        <span class='oe_kanban_mail_new'
+                                              title='Unread Messages'>
+                                            <i class='fa fa-comments'/>
+                                            <t t-raw="record.message_needaction_counter.raw_value"/>
+                                        </span>
+                                    </t>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="40" height="34" class="oe_kanban_avatar pull-right"/>
+                                </div>
+                                <div class="oe_clear"></div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Hr Timesheet Search view Inherited-->
+    <record id="hr_timesheet.hr_timesheet_line_search" model="ir.ui.view">
+        <field name="name">account.analytic.line.search</field>
+        <field name="model">account.analytic.line</field>
+        <field name="arch" type="xml">
+            <search string="Timesheet">
+                <field name="date"/>
+                <field name="user_id"/>
+                <field name="project_id"/>
+                <field name="task_id"/>
+                <field name="name"/>
+                <field name="department_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Users" name="users" domain="[]"
+                            context="{'group_by':'user_id'}"/>
+                    <filter string="Project" name="project" domain="[]"
+                            context="{'group_by':'project_id'}"/>
+                    <filter string="Job" name="job" domain="[]"
+                            context="{'group_by':'task_id'}"/>
+                    <filter string="Product" name="product" domain="[]"
+                            context="{'group_by':'product_id'}"/>
+                    <filter string="Customer" name="partner"
+                            context="{'group_by':'partner_id'}"/>
+                    <filter string="Timesheet Month" name="month" domain="[]"
+                            context="{'group_by':'date'}" help="Timesheet by Month"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Account Invoice Form View Inherited -->
+    <record id="account.view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">account.invoice.select</field>
+        <field name="model">account.invoice</field>
+        <field name="arch" type="xml">
+            <search string="Search Invoice">
+                <field name="number" string="Invoice"
+                       filter_domain="['|','|','|', ('number','ilike',self), ('origin','ilike',self), ('reference', 'ilike', self), ('partner_id', 'child_of', self)]"/>
+                <field name="journal_id"/>
+                <filter name="draft" string="Draft"
+                        domain="[('state','in',('draft', 'proforma'))]"/>
+                <filter name="proforma" string="Proforma"
+                        domain="[('state','=','proforma2')]" groups="account.group_proforma_invoices"/>
+                <filter name="invoices" string="Invoices"
+                        domain="['&amp;', ('state','in',['open','paid']),('type','in',('out_invoice','in_invoice'))]"/>
+                <filter name="refunds" string="Refunds"
+                        domain="['&amp;', ('state','in',['open','paid']),('type','in',('out_refund','in_refund'))]"/>
+                <separator/>
+                <filter name="unpaid" string="Not Paid"
+                        domain="[('state','=','open')]"/>
+                <filter name="late" string="Overdue"
+                        domain="['&amp;', ('date_due', '&lt;', time.strftime('%%Y-%%m-%%d')), ('state', '=', 'open')]"
+                        help="Overdue invoices, maturity date passed"/>
+                <separator/>
+                <field name="partner_id" operator="child_of"/>
+                <field name="user_id" string="Salesperson"/>
+                <field name="date" string="Period"/>
+                <separator/>
+                <filter domain="[('user_id','=',uid)]" name="group_by_user_id" help="My Invoices"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_partner_id" string="Partner"
+                            context="{'group_by':'commercial_partner_id'}"/>
+                    <filter string="Salesperson" name="salesperson"  context="{'group_by':'user_id'}"/>
+                    <filter name="status" string="Status"
+                            context="{'group_by':'state'}"/>
+                    <separator/>
+                    <filter string="Invoice Date" name="invoice_date" context="{'group_by':'date_invoice'}"/>
+                    <filter string="Due Date" name="due_date" context="{'group_by':'date_due'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

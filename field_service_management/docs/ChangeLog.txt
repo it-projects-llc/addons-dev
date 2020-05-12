@@ -1,0 +1,323 @@
+===================================================================
+Maintaining the change log of the module for each commit.
+===================================================================
+1.51 :Chaudhari Tejaskumar : 7 October 2017
+	* Updated emp_skill_line model demo data rate card and experess service rate price
+	* Depends document model in manifest file.
+
+1.50 :Chaudhari Tejaskumar : 6 October 2017
+	* add api constraint and check rate card and express service rate in express service rate should be greater than Service rate
+	* Updated controller method and is_available_for_service boolean true domain add
+
+1.49 :Chaudhari Tejaskumar : 6 October 2017
+	* Updated create user method to set email id in res partner model
+	* menuitem id change for xml file
+
+1.48 :Chaudhari Tejaskumar : 5 October 2017
+	* Updated csv file in add security access right for account_partial_reconcile,account_move and account_journal model
+	* add comment statement in project task methods
+
+1.47 :Chaudhari Tejaskumar : 5 October 2017
+	* Improve the create method and get serviceman from android side
+	* Remove group customer in customers menu
+	* updated res partner rule for customer
+	* suggest best serviceman button add attrs in done state
+	* add sorting descending order in project.task model
+
+1.47 :Burhan Vakharia : 4 October 2017
+	* Updated the controller method to get email id and partner user id
+
+1.46 :Chaudhari Tejaskumar : 3 October 2017
+	* Improve the partner create user method and set the users in res users model
+	* create the security rule for res partner
+
+1.45 :Chaudhari Tejaskumar : 3 October 2017
+	* Security rights remove for base portal in serviceman user
+	* remove commented code
+
+1.44 :Chaudhari Tejaskumar : 28 September 2017
+	* added state field readonly
+
+1.43 :Chaudhari Tejaskumar : 28 September 2017
+	* Improve create user method in res partner model
+	* add attrs in jobs xml file
+	* change lebel for automatic fetch address
+	* delete the unnecessary images
+
+1.42 :Chaudhari Tejaskumar : 27 September 2017
+	* Improved the help tooltips
+	* Index file improve and set screenshot
+	* notify customer and serviceman template content set
+	* Added Comment statement
+	* Added security rights for serviceman
+
+1.41 :Chaudhari Tejaskumar : 26 September 2017
+	* Added Security Access and improved csv file
+	* Removed Commented Code
+	* Unlink method overite and jobs draft state only deleted warning raised
+
+1.40 :Burhan Vakharia : 22 September 2017
+	* Improved the working of the project and the stages.
+	* Added auto assiging of the stages to the new created projects.
+
+1.39 :Chaudhari Tejaskumar : 22 September 2017
+	* Fix and add security rights in csv file
+	* Fix create invoice method
+
+1.38 :Chaudhari Tejaskumar : 21 September 2017
+	* Updated the customer user method
+	* Fix testing issued
+	* improve index file
+	* Added security access right for customer and serviceman and operator
+	* Add attrs in jobs functional fields and page in stage in Done state
+	* Fix xpath issued
+
+1.37 :Burhan Vakharia : 21 September 2017
+	* Added the feedback functionality on Job.
+
+1.36 :Burhan Vakharia : 21 September 2017
+	* Updated the controller method to get the services rate 
+	  while registering the servicemen from android application.
+
+1.35 :Chaudhari Tejaskumar : 18 September 2017
+	* Fix Xml file formating and whitespace remove
+
+1.34 :Burhan Vakharia : 18 September 2017
+	* changed the working of express service when creating invoice.
+	* Improved the demo data according to the new employee flow.
+
+1.33 :Chaudhari Tejaskumar : 18 September 2017
+	* Changed the flow of creating the customers
+	* Added methods to create customers users.
+
+1.33 :Burhan Vakharia : 18 September 2017
+	* Added Manager's flow in the system.
+
+1.32 :Burhan Vakharia : 16 September 2017
+	* Changed the flow of creating the serviceman and operators
+	* Added methods to create serviceman and operator users.
+	* Added Servieman and operators menuitems.
+	* Modified the controller according to the new user flow.
+
+1.31 :Chaudhari Tejaskumar : 1 to 6 September 2017
+	* call fetch address method in create jobs
+	* res.company boolean field add if this field is true fetch address fill in jobs view
+	* jobs and res users demo data id change
+	* employee create in demo data and add link user_id
+	* create a demo data for emp.skill.line in different types of services
+	* testing the module in new database and solve the issued
+	* change manifest file sequence change
+	* Code Improvement and Testing the module
+	* Set the font size in index file
+	* Remove fetch address in area code and index file change tag and class
+	* Improved ChangeLog file
+	* Delete a access right for res.partner model and product_template
+	* Change customer rights for area,city and zone
+	* Remove unused code
+	* Security Access right for serviceman in project_task model all access
+	* Access right for serviceman in job_line model delete access
+
+1.31 : Burhan Vakharia : 5 September 2017
+	* Improved the help and Removed the unused fields and models
+
+1.30 :Burhan Vakharia : 31 August 2017
+
+	* Removed the unnecessary field of invoice check
+	* Improve the invoice creation logic to manage the accounting.
+
+1.29 :Chaudhari Tejaskumar : 28 August 2017
+
+	* Change demo data in city and area
+	* Solve the issued for click employee
+	* create a new customer and employee data in view
+	* Base project task delete
+	* New create Users and Jobs in view
+	* Fetch Address throw latitude and longitude fetch
+	* Create Jobs Demo data
+	* Improved fetch address method and add key
+	* jobs view formatted_address char field add
+
+1.28 :Chaudhari Tejaskumar : 25 August 2017
+
+	* Suggest best service person issued fix in live server
+	* Added security groups in android controllers file
+	* Improve a search method for res.users model
+	* Create a method for suggest service person in area wise
+	* Change the xml file code in fsm Deshboard module
+
+1.27 :Chaudhari Tejaskumar : 24 August 2017
+
+	* Change Functinal field in string and help add
+	* Format set xml file
+	* Changed Label in per hour rate card
+	* Changed demo data mail domains
+	* Changed 2 module Index file and set the content and screenshot
+	* Comment statement add for python and xml
+	* Improve the index file
+
+1.26 :Chaudhari Tejaskumar : 23 August 2017
+
+	* Used pylint and pep8 format and change the code
+
+1.26 :Chaudhari Tejaskumar : 22 August 2017
+
+	* Added hr.employee model in service page in express service rate add or jobs view is_express service rate fields true to method call
+	* Added emp.skill model remove from manifest and code optimize or testing the module
+
+1.25 :Chaudhari Tejaskumar : 21 August 2017
+
+	* Create a users demo data
+	* Added jobs view in is_express_service_rate for true method call in timesheet and invoiceline new create for this service
+	* Remove emp.skill model code
+	* Added hr.employee model for Express service rate and this field is link in jobs view
+	* emp.skill access right remove in security csv file change
+
+1.24 :Chaudhari Tejaskumar : 18 August 2017
+
+	* Change the demo data icon set in service
+	* Testing the module and solve the issued for this flow
+	* New db create and testing the module 
+	* Added hr.employee module widget add state,area,city and country 
+	* Added access right for sales_team module
+
+1.23 :Chaudhari Tejaskumar : 10 to 17 August 2017
+
+	* Added Suggested best serviceman button and wizard open serviceman set in job view in method throw data find out
+	* Added set button data are link in employee module
+	* Change kanban view and count the records from method throw
+	* stage configuration for jobs view and default state is new set
+	* Testing the module and demo data change for area,city,state
+	* Update a fsm index file and New create a Index file fsm Deshboard
+	* Change the index.html file screenshot or added menu name and Author 
+	* Change the index.html file screenshot
+	* Added menuitem,action
+	* change jobs Groupby and Search
+	* Changed the project to skill in flow
+	* Create demo data file change and service_id change and used project_id in all model
+	* Inherit base project.project model and change the view,action
+
+1.22 : Kapil Patel : 9 August 2017
+
+	* Added licence file.
+	* Added button  for open invoice in jobs.
+	* Improve code as  per oca standard and migrate method.
+	* Fix issue of creating invoice.
+	* Fix traceback of get loaction.
+	* Remove unused imports statement
+
+1.21 : Chaudhari Tejaskumar : 2 August 2017
+
+	* Added Functinality for automatically assign jobs for serviceman and fix method
+	* code improvement for hr_employee record and area_area model
+
+1.20 : Chaudhari Tejaskumar : 31 July 2017
+
+	* Fix Timesheet issue
+	* Added demo data for emp.skill and Image and Icon
+	* Code improvement in this flow
+
+1.19 : Chaudhari Tejaskumar : 26 July 2017
+
+	* Code improvement and optimize or new buttons added notify to customer and notify to serviceman
+
+1.18 : Chaudhari Tejaskumar : 25 July 2017
+
+	* Inherit project.task.type model and add state fields in stages menu,jobs view signature widget add
+	* Modify a jobs report timesheet and invoice lines display and set the paper format 
+
+1.17 : Chaudhari Tejaskumar : 21 July 2017
+
+	* Added a employee area,state,city and zone
+
+1.16 : Chaudhari Tejaskumar : 20 July 2017
+
+	* Added a security groups
+
+1.15 : Chaudhari Tejaskumar : 19 July 2017
+
+	* Create a new Deshboard for My jobs and method throw record count
+
+1.14 : Chaudhari Tejaskumar : 19 July 2017
+
+	* Added jobs and unassigned jobs and change the count method in js file
+
+1.13 : Chaudhari Tejaskumar : 18 July 2017
+
+	* Change the Functional fields
+	* Deshboard design change and add a Domain
+
+1.12 : Chaudhari Tejaskumar : 17 July 2017
+
+	* Added a Security groups and rule
+	* Change the Deshboard design
+	* Added a Functional fields
+
+1.11 : Chaudhari Tejaskumar : 12 July 2017
+
+	* Index file change in fsm project
+	* Added controller key and value
+	* Added stages menu 
+	* Added field_service_dashboard module
+	* Added images in skills
+
+1.10 : Chaudhari Tejaskumar : 10 July 2017
+
+	* Added index.html file in fsm project
+	* Pylint and pep8 format follow and code change
+
+1.9 : Chaudhari Tejaskumar : 7 July 2017
+
+	* Access right add in csv file
+
+1.8 : Chaudhari Tejaskumar : 6 July 2017
+
+	* Change menu or action in flow
+	* Added groups and rules 
+	* Code white spaces remove
+
+1.7 : Chaudhari Tejaskumar : 6 July 2017
+
+	* Added menuitems_hide.xml file and add security groups
+	* Added a action and menu for my invoice
+
+1.6 : Chaudhari Tejaskumar : 5 July 2017
+
+	* Create a demo data for emp.skill
+
+1.5 : Chaudhari Tejaskumar : 5 July 2017
+
+	* Change the search,filter,context in job view
+
+1.4 : Chaudhari Tejaskumar : 5 July 2017
+
+	* Added menu my jobs and unassigned jobs
+
+1.3 : Chaudhari Tejaskumar : 4 July 2017
+
+	* Code improvement and unused code remove
+	* Added a new Functinality in job view for create a customer invoice in button object through
+
+1.2 : Chaudhari Tejaskumar : 30 June 2017
+
+	* Added Functinality for job to invoice Create invoice button in popup open for wizard to customer invoices
+	* Job view Functional fields add and unused field remove
+	* Inherit base product and product configration
+	
+1.1 : Chaudhari Tejaskumar : 29 June 2017
+
+	* Added Security Groups and rule
+    * task_rule_user can access his particular task display in project_task module
+    * group_hr_user can access his particular employee task display in hr.employee
+    * New csv file create
+    * portal user rights
+	* Added user setting under the project groups in category add fields in reporting_manager
+    * Functional fields change
+    * Added Controllers in android application data fetch 
+
+1.0	* Previous development
+
+	* Added res.users to create automatically record in hr.employee
+	* Develop new module of field_service_management
+    * Added Python code and Functional field
+	* Code Improvement in this module
+	

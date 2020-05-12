@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Zone Form View -->
+    <record id="zone_zone_form_view" model="ir.ui.view">
+        <field name="name">zone.zone.form.view</field>
+        <field name="model">zone.zone</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Zone Tree View -->
+    <record id="zone_zone_tree_view" model="ir.ui.view">
+        <field name="name">zone.zone.tree.view</field>
+        <field name="model">zone.zone</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Zone Action View -->
+    <record id="action_zone_zone" model="ir.actions.act_window">
+        <field name="name">Zones</field>
+        <field name="res_model">zone.zone</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Zone Menuitem -->
+    <menuitem
+        id="zone_zone_menu"
+        action="action_zone_zone"
+        parent="localization_main_menu"/>
+</odoo>

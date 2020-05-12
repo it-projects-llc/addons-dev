@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="employee_demo" model="hr.employee">
+            <field name="name">serviceman</field>
+            <field name="work_location">Building 1, Second Floor</field>
+            <field name="work_phone">+3281813700</field>
+            <field name="is_serviceman" eval="1"/>
+            <field name="work_email">serviceman@fsm.example.com</field>
+            <field name="image" type="base64" file="field_service_management/static/image/serviceman.png"/>
+            <field name="user_id" ref="field_service_management.service_demo"/>
+        </record>
+
+        <record id="operator1_demo" model="hr.employee">
+            <field name="name">Operator</field>
+            <field name="is_operator" eval="1"/>
+            <field name="work_email">operator@fsm.example.com</field>
+            <field name="image" type="base64" file="field_service_management/static/image/operator.png"/>
+            <field name="user_id" ref="field_service_management.operator_user_demo"/>
+        </record>
+
+        <record id="manager1_demo" model="hr.employee">
+            <field name="name">Manager</field>
+            <field name="is_manager" eval="1"/>
+            <field name="work_email">manager@fsm.example.com</field>
+            <field name="image" type="base64" file="field_service_management/static/image/manager.png"/>
+            <field name="user_id" ref="field_service_management.manager_user_demo"/>
+        </record>
+    </data>
+</odoo>

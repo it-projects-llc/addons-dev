@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_project_task_form_inherit_fsm" model="ir.ui.view">
+            <field name="name">view.project.task.form.inherit.fsm</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="field_service_management.view_jobs_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="attributes">
+                    <attribute name='string'>Status</attribute>
+
+                </xpath>
+            </field>
+        </record>
+
+
+
+        <record id="view_project_task_form_inherit_fsm_field" model="ir.ui.view">
+            <field name="name">view.project.task.form.inherit.fsm.field</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+
+
+                <div class="oe_button_box"
+                     name="button_box"
+                     position="inside">
+
+                    <button name="fsm_button" type="object" icon="fa-tasks" class="oe_stat_button">
+                        <field  name="child_count" widget="statinfo"/>
+                    </button>
+
+                     <button type="object" name="action_view_invoices" class="oe_stat_button" icon="fa-pencil-square-o">
+                        <field name="invoice_count" widget="statinfo" string="Invoice"/>
+                    </button>
+
+                    <button name="sale_button" type="object" string="Estimates" icon="fa-file" class="oe_stat_button">
+
+                    </button>
+                </div>
+                 <xpath expr="//form/header/field[@name='stage_id']" position="replace">
+                      <field name="stage_id" widget="statusbar" attrs="{'invisible':[('kanban_state','=','blocked')]}" options="{'clickable':[('kanban_state','=','blocked')]}"/>
+                            <!--options="{'fold_field': 'fold'}"/>-->
+                 </xpath>
+                <xpath expr="//form/header/field[@name='stage_id']" position="after">
+                      <field name="stage_copy_id" widget="statusbar" attrs="{'invisible':[('kanban_state','!=','blocked')]}"/>
+                 </xpath>
+
+
+                 <!--<xpath expr="//field[@name='stage_id']" position="attributes">-->
+                    <!--<attribute name='options'>{'clickable':False}</attribute>-->
+                <!--</xpath>-->
+
+                <!--<xpath expr="//field[@name='project_id']" position="attributes">-->
+                    <!--<attribute name='string'>Job Type</attribute>-->
+                <!--</xpath>-->
+
+
+                <xpath expr="//form/sheet/notebook/page[@name='description_page']" position="attributes">
+                    <attribute name='string'>Notes</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('copy_check', '=', True)]}</attribute>
+                </xpath>
+
+                <xpath expr="//page[2]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[5]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='job_cart']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('copy_check', '=', True)]}</attribute>
+                </xpath>
+
+
+                <xpath expr="//field[@name='project_id']" position="after">
+                    <field name="sale_ord" invisible="True"/>
+                    <field name="parent_name" invisible="True"/>
+                    <field name="copy_check" invisible="True"/>
+                    <field name="po_no"/>
+                    <field name="rma_rmt_no" />
+                </xpath>
+                <!--<xpath expr="//field[@name='partner_id']" position="before">-->
+
+                <!--</xpath>-->
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="dob" invisible="True" />
+                    <field name="mobile_no" widget="phone" />
+                </xpath>
+
+               <xpath expr="//label[@for='schedule_date']" position="before">
+                    <field name="fast_view" widget="many2many_tags"/>
+               </xpath>
+
+                 <xpath expr="//field[@name='planned_hours']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+
+                <xpath expr="//field[@name='date_deadline']" position="before">
+                    <label for="plan_hours" string="Planned Hours" />
+                     <div class="o_address_format">
+                        <field name="plan_hours" widget="float_time"
+                       class="o_task_user_field oe_inline"
+                       attrs="{'readonly':[('state','=','done')]}"/>
+                     </div>
+                    <label for="product_availability_date" string="Product Avail Date" />
+                    <div class="o_address_format">
+                        <field name="product_availability_date"
+                       class="o_task_user_field oe_inline"
+                       attrs="{'readonly':[('state','=','done')]}"/>
+                     </div>
+                    <label for="product_location" string="Product Location" />
+                     <div class="o_address_format">
+                        <field name="product_location"
+                       style="width:41%"
+                       attrs="{'readonly':[('state','=','done')]}"/>
+                     </div>
+                </xpath>
+
+                 <xpath expr="//field[@name='date_deadline']" position="replace">
+                    <label for="date_deadline" string="Deadline" />
+                    <div class="o_address_format">
+                        <field name="date_deadline"
+                       class="o_task_user_field oe_inline"
+                       attrs="{'readonly':[('state','=','done')]}" />
+                     </div>
+                </xpath>
+
+                <xpath expr="//field[@name='state']" position="before">
+                <label for="user_id" string="Assigned To"/>
+                    <div >
+                        <field name="user_id"
+                             style="width:91%"
+                            options='{"no_open": True}'/>
+                        <button name="action_resource_availibility" class ="fa fa-calendar-check-o fa-4x"
+                        type="object" style="color:#4c4c4c"/>
+                    </div>
+                </xpath>
+
+                <xpath expr="//field[@name='schedule_date']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('copy_check', '=', True)]}</attribute>
+                </xpath>
+
+                <xpath expr="//label[@for='schedule_date']" position="attributes">
+                   <attribute name="attrs">{'invisible': [('copy_check', '=', True)]}</attribute>
+               </xpath>
+
+                <xpath expr="//page[4]" position="after">
+                    <page string="Reviews" >
+                        <header>
+                        <button name="send_feedback_email" string="Send Email" type="object" class="btn-danger"/>
+                        </header>
+                        <group>
+                            <field name="give_rating" widget='priority'/>
+                            <field name="give_feedback"/>
+                            <field name="give_signature" invisible="1"/>
+                        </group>
+                    </page>
+                </xpath>
+
+
+
+                <xpath expr="/form/sheet/notebook" position="inside">
+                    <page string="Site Ready" >
+                        <group>
+                            <group>
+
+                                <field name="property_type"/>
+                                <field name="driveway_type"/>
+                                <field name="high_rise_acc"/>
+                                <field name="type_of_flooring"/>
+                                <field name="number_of_steps"/>
+                                <field name="number_of_landing"/>
+                                <field name="fix_repairs"/>
+                            </group>
+
+                            <group>
+                                <field name="cabinets_installed"/>
+                                <field name="counter_tops_installed"/>
+                                <field name="counter_tops_installed"/>
+                                <field name="back_splash_installed"/>
+                                <field name="gas_installed"/>
+                                <field name="electrical_complete"/>
+                                <field name="plumbing_complete"/>
+                            </group>
+
+                        </group>
+                    </page>
+                    <page string="Install Checklist" class="o_check_value">
+                        <header>
+                        <button name="send_install_email" string="Send Job Card" type="object" class="btn-danger"/>
+                        </header>
+                        <h3> The blocks below ensure the installer has completed the installation as required.
+                            Check all blocks that pertain to the installation </h3>
+                        <!--<group colspan="3" col="3" style="width:100%">-->
+                        <group colspan="3" col="3" style="width:100%">
+                            <group>
+                                <!--<separator string = "Dishwasher"  />-->
+                                <!--<label for="dishwasher" string="Dishwasher1"></label>-->
+
+                                <field name="custom_install_color" invisible="1"/>
+
+                                <h3>Dishwasher</h3>
+                                <field name="dishwasher" nolabel="1" style="padding: 0px 0px 0px 25px;" />
+                                <field name="appliance_secure_1" attrs="{'readonly': False}"/>
+                                <field name="supply_line_connected_1" attrs="{'readonly': False}"/>
+                                <field name="checked_function_1" attrs="{'readonly': False}"/>
+                                <field name="operation_explained_1" attrs="{'readonly': False}"/>
+                                <field name="drain_connected_1" attrs="{'readonly': False}"/>
+                                <field name="tci" attrs="{'readonly': False}"/>
+                                <field name="packing_material_removed_1" attrs="{'readonly': False}"/>
+                            </group>
+                            <group>
+                                <!--<separator string = "Washer"/>-->
+                                <h3>Washer</h3>
+                                <field name="washer" nolabel="1" style="padding: 0px 0px 0px 25px;" />
+                                <field name="appliance_secure_2" attrs="{'readonly': False}"/>
+                                <field name="supply_line_connected_2" attrs="{'readonly': False}"/>
+                                <field name="checked_function_2" attrs="{'readonly': False}"/>
+                                <field name="operation_explained_2" attrs="{'readonly': False}"/>
+                                <field name="drain_connected_2" attrs="{'readonly': False}"/>
+                                <field name="shipping_struts_removed_2" attrs="{'readonly': False}"/>
+                                <field name="packing_material_removed_2" attrs="{'readonly': False}"/>
+                            </group>
+                            <group>
+                                <!--<separator string = "Dryer"/>-->
+                                <h3>Dryer</h3>
+                                <field name="dryer" nolabel="1" style="padding: 0px 0px 0px 25px;" />
+                                <field name="appliance_secure_3" attrs="{'readonly': False}"/>
+                                <field name="supply_line_connected_3" attrs="{'readonly': False}"/>
+                                <field name="checked_function_3" attrs="{'readonly': False}"/>
+                                <field name="operation_explained_3" attrs="{'readonly': False}"/>
+                                <field name="drain_connected_3" attrs="{'readonly': False}"/>
+                                <field name="shipping_struts_removed_3" attrs="{'readonly': False}"/>
+                                <field name="packing_material_removed_3" attrs="{'readonly': False}"/>
+                            </group>
+                        </group>
+                        <group colspan="3" col="3" style="width:100%">
+                            <group>
+                                <!--<separator string = "Cooktop"/>-->
+                                <h3>Cooktop</h3>
+                                <field name="cooktop" nolabel="1" style="padding: 0px 0px 0px 25px;" />
+                                <field name="appliance_secure_4" attrs="{'readonly': False}"/>
+                                <field name="electrical_connected_4" attrs="{'readonly': False}"/>
+                                <field name="gas_connected_4" attrs="{'readonly': False}"/>
+                                <field name="operation_explained_4" attrs="{'readonly': False}"/>
+                                <field name="all_bnr_ignite_4" attrs="{'readonly': False}"/>
+                                <field name="packing_material_removed_4" attrs="{'readonly': False}"/>
+                                <field name="grates_knob_4" attrs="{'readonly': False}"/>
+                            </group>
+                            <group>
+                                <!--<separator string = "Range"/>-->
+                                <h3>Range</h3>
+                                <field name="range" nolabel="1" style="padding: 0px 0px 0px 25px;" />
+                                <field name="appliance_secure_5" attrs="{'readonly': False}"/>
+                                <field name="electrical_connected_5" attrs="{'readonly': False}"/>
+                                <field name="gas_connected_5" attrs="{'readonly': False}"/>
+                                <field name="operation_explained_5" attrs="{'readonly': False}"/>
+                                <field name="all_bnr_ignite_5" attrs="{'readonly': False}"/>
+                                <field name="packing_material_removed_5" attrs="{'readonly': False}"/>
+                                <field name="grates_knob_5" attrs="{'readonly': False}"/>
+                            </group>
+                            <group>
+                                <!--<separator string = "Downdraft"/>-->
+                                <h3>Downdraft</h3>
+                                <field name="downdraft" nolabel="1" style="padding: 0px 0px 0px 25px;" />
+                                <field name="appliance_secure_6" attrs="{'readonly': False}"/>
+                                <field name="raise_lowers_6" attrs="{'readonly': False}"/>
+                                <field name="remote_mounted_6" attrs="{'readonly': False}"/>
+                                <field name="filters_installed_6" attrs="{'readonly': False}"/>
+                                <field name="electrical_connected_6" attrs="{'readonly': False}"/>
+                                <field name="operation_explained_6" attrs="{'readonly': False}"/>
+                                <field name="packing_material_removed_6" attrs="{'readonly': False}"/>
+                            </group>
+                        </group>
+                        <group colspan="3" col="3" style="width:100%">
+                            <group>
+                                <!--<separator string = "Ice Machine"/>-->
+                                <h3>Ice Machine</h3>
+                                <field name="ice_machine" nolabel="1" style="padding: 0px 0px 0px 25px;" />
+                                <field name="appliance_secure_7" attrs="{'readonly': False}"/>
+                                <field name="electrical_connected_7" attrs="{'readonly': False}"/>
+                                <field name="supply_line_connected_7" attrs="{'readonly': False}"/>
+                                <field name="drain_line_connected_7" attrs="{'readonly': False}"/>
+                                <field name="functions_properly_7" attrs="{'readonly': False}"/>
+                                <field name="panel_installed_7" attrs="{'readonly': False}"/>
+                                <field name="pump_working_7" attrs="{'readonly': False}"/>
+                            </group>
+                            <group>
+                                <!--<separator string = "Refrigerator"/>-->
+                                <h3>Refrigerator</h3>
+                                <field name="refrigerator" nolabel="1" style="padding: 0px 0px 0px 25px;" />
+                                <field name="appliance_secure_8" attrs="{'readonly': False}"/>
+                                <field name="anti_tip_mounted_8" attrs="{'readonly': False}"/>
+                                <field name="electrical_connected_8" attrs="{'readonly': False}"/>
+                                <field name="water_line_connected_8" attrs="{'readonly': False}"/>
+                                <field name="operation_explained_8" attrs="{'readonly': False}"/>
+                                <field name="water_purged_8" attrs="{'readonly': False}"/>
+                                <field name="ice_maker_on_8" attrs="{'readonly': False}"/>
+                            </group>
+                            <group>
+                                <!--<separator string = "Freezer"/>-->
+                                <h3>Freezer</h3>
+                                <field name="freezer" nolabel="1" style="padding: 0px 0px 0px 25px;" />
+                                <field name="appliance_secure_9" attrs="{'readonly': False}"/>
+                                <field name="anti_tip_mounted_9" attrs="{'readonly': False}"/>
+                                <field name="electrical_connected_9" attrs="{'readonly': False}"/>
+                                <field name="water_line_connected_9" attrs="{'readonly': False}"/>
+                                <field name="operation_explained_9" attrs="{'readonly': False}"/>
+                                <field name="water_purged_9" attrs="{'readonly': False}"/>
+                                <field name="ice_maker_on_9" attrs="{'readonly': False}"/>
+                            </group>
+                        </group>
+                        <group colspan="3" col="3" style="width:100%">
+                            <group>
+                                <!--<separator string = "Hood"/>-->
+                                <h3>Hood</h3>
+                                <field name="hood" nolabel="1" style="padding: 0px 0px 0px 25px;" />
+                                <field name="appliance_secure_10" attrs="{'readonly': False}"/>
+                                <field name="electrical_connected_10" attrs="{'readonly': False}"/>
+                                <field name="duct_connected_sealed_10" attrs="{'readonly': False}"/>
+                                <field name="functions_properly_10" attrs="{'readonly': False}"/>
+                                <field name="packing_material_removed_10" attrs="{'readonly': False}"/>
+                                <field name="grates_installed_10" attrs="{'readonly': False}"/>
+                                <field name="flow_test_10" attrs="{'readonly': False}"/>
+                            </group>
+                            <group>
+                                <!--<separator string = "Microwave Oven"/>-->
+                                <h3>Microwave Oven</h3>
+                                <field name="microwave_oven" nolabel="1" style="padding: 0px 0px 0px 25px;" />
+                                <field name="trim_kit_open_11" attrs="{'readonly': False}"/>
+                                <field name="appliance_secure_11" attrs="{'readonly': False}"/>
+                                <field name="electrical_connected_11" attrs="{'readonly': False}"/>
+                                <field name="trim_kit_11" attrs="{'readonly': False}"/>
+                                <field name="packing_material_removed_11" attrs="{'readonly': False}"/>
+                                <field name="operation_explained_11" attrs="{'readonly': False}"/>
+                                <field name="open_closes_11" attrs="{'readonly': False}"/>
+                                <field name="functions_properly_11" attrs="{'readonly': False}"/>
+                            </group>
+                            <group>
+                                <!--<separator string = "Other"/>-->
+                                <h3>Other</h3>
+                                <field name="other" nolabel="1" style="padding: 0px 0px 0px 25px;" />
+                                <field name="appliance_secure_12" attrs="{'readonly': False}"/>
+                                <field name="power_water_12" attrs="{'readonly': False}"/>
+                                <field name="trim_kit_12" attrs="{'readonly': False}"/>
+                                <field name="operation_explained_12" attrs="{'readonly': False}"/>
+                                <field name="packing_material_removed_12" attrs="{'readonly': False}"/>
+                            </group>
+                        </group>
+                        <field name="image_o2m" mode="kanban" >
+                            <kanban>
+                                <field name="id"/>
+                                <field name="image_m2o"/>
+                                <field name="store_fname" invisible="1"/>
+                                <!--<field name="image_set" widget="many2many_binary" string="Image"/>-->
+                                <field name="image_set" widget="image"  filename="store_fname" />
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <!--<t t-set="color" t-value="kanban_color(record.color.raw_value)"/>-->
+                                        <div class="oe_kanban_global_click oe_kanban_card">
+                                            <a t-if="!read_only_mode" type="delete" class="fa fa-times pull-right"/>
+                                            <div class="o_kanban_image">
+                                                <img t-if="record.image_set.raw_value" t-att-src="kanban_image('project_task', 'image_set',record.id.raw_value)"
+                                                     class="oe_kanban_picture oe_right oe_avatar"/>
+                                                <!--<t t-if="!record.image.raw_value">-->
+                                                <!--<img t-if="record.type.raw_value === 'delivery'" t-att-src='_s + "/base/static/src/img/truck.png"'/>-->
+                                                <!--<img t-if="record.type.raw_value === 'invoice'" t-att-src='_s + "/base/static/src/img/money.png"'/>-->
+                                                <!--<t t-if="record.type.raw_value !== 'invoice'  record.type.raw_value !== 'delivery'">-->
+                                                <!--<img t-if="record.is_company.raw_value === true" t-att-src='_s + "/base/static/src/img/company_image.png"'/>-->
+                                                <!--<img t-if="record.is_company.raw_value === false" t-att-src='_s + "/base/static/src/img/avatar.png"'/>-->
+                                                <!--</t>-->
+                                                <!--</t>-->
+                                            </div>
+                                            <div class="oe_kanban_details">
+                                                <!--<field name="image_set" widget="image"/>-->
+                                                <div t-if="record.store_fname.raw_value">File Name:<field name="store_fname"/></div>
+
+                                                <div t-if="record.image_set.raw_value"><field name="image_set" widget="image"  filename="store_fname" invisible="1" /></div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                            <form string="Attach Image">
+                                <sheet>
+                                    <field name="store_fname" invisible="1"/>
+                                    <field name="image_set" widget="image" filename="store_fname" />
+                                </sheet>
+                            </form>
+                        </field>
+                        <group colspan="2" col="2" style="width:100%" name="description_details">
+                            <group>
+                                <p style="font-size: 70%">THE APPLIANCE(S) HAVE BEEN INSTALLED IN ACCORDANCE WITH ALL LOCAL CODES AND PER MANUFACTURER SPECIFICATIONS BY AUTHORIZED INSTALLER. ADDITIONALLY, THE APPLIANCE(S)
+                                    HAVE BEEN CHECKED FOR PROPER OPERATION. THE OPERATION AND USAGE OF THE APPLIANCE HAS BEEN EXPLAINED TO THE CUSTOMER OR AUTHORIZED VERIFYING AGENT. CUSTOMER MAY INCURE ADDTIONAL CHARGES FOR ANY ADDITIONAL
+                                    WORK AND/OR RETURN TRIP FOR CONNECTIONS NOT
+                                    AVAILABLE AT TIME OF INSTALL.</p>
+                            </group>
+
+                            <group colspan="1" col="1" style="width:50%">
+                                <B>Description</B>
+                                <field  name="description"  nolabel="1"/>
+                            </group>
+                        </group>
+
+                        <!--<table width="100%" height="10%"  cellpadding="50" border = "1">-->
+                            <!--<tr>-->
+                                <!--<td height="60"><B>Customer Signature:</B></td>-->
+                                <!--<td  height="60"><B> Signature:</B></td>-->
+                                <!--<td  height="60"><B>Dealer:</B></td>-->
+                            <!--</tr>-->
+                            <!--&lt;!&ndash;<tr>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<td >&nbsp;</td>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<td >&nbsp;</td>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<td >&nbsp;</td>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+                        <!--</table>-->
+
+                    </page>
+                    <!--<page string="Image" >-->
+
+                    <!--</page>-->
+
+                    <page string="Pre-Existing Damage" class="o_check_value_damage">
+                        <header>
+                            <button name="send_damage_email" string="Send Email" type="object" class="btn-danger"/>
+                        </header>
+                        <group>
+                        <group>
+                            <field name="signature_damage" invisible="1"/>
+                        </group>
+                        </group>
+                            <field name="custom_damage_color" invisible="1"/>
+                            <field name="many_image" mode="kanban" >
+                                <kanban>
+                                    <field name="id"/>
+                                    <field name="damage_id"/>
+                                    <field name="store_fname" invisible="1"/>
+                                    <!--<field name="image_set" widget="many2many_binary" string="Image"/>-->
+                                    <field name="damage_image" widget="image"  filename="store_fname" />
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <!--<t t-set="color" t-value="kanban_color(record.color.raw_value)"/>-->
+                                            <div class="oe_kanban_global_click oe_kanban_card">
+                                                <a t-if="!read_only_mode" type="delete" class="fa fa-times pull-right"/>
+                                                <div class="o_kanban_image">
+                                                    <img t-if="record.damage_image.raw_value" t-att-src="kanban_image('project_task', 'damage_image',record.id.raw_value)"
+                                                         class="oe_kanban_picture oe_right oe_avatar"/>
+                                                    <!--<t t-if="!record.image.raw_value">-->
+                                                    <!--<img t-if="record.type.raw_value === 'delivery'" t-att-src='_s + "/base/static/src/img/truck.png"'/>-->
+                                                    <!--<img t-if="record.type.raw_value === 'invoice'" t-att-src='_s + "/base/static/src/img/money.png"'/>-->
+                                                    <!--<t t-if="record.type.raw_value !== 'invoice' record.type.raw_value !== 'delivery'">-->
+                                                    <!--<img t-if="record.is_company.raw_value === true" t-att-src='_s + "/base/static/src/img/company_image.png"'/>-->
+                                                    <!--<img t-if="record.is_company.raw_value === false" t-att-src='_s + "/base/static/src/img/avatar.png"'/>-->
+                                                    <!--</t>-->
+                                                    <!--</t>-->
+                                                </div>
+                                                <div class="oe_kanban_details">
+                                                    <!--<field name="image_set" widget="image"/>-->
+                                                    <div t-if="record.store_fname.raw_value">File Name:<field name="store_fname"/></div>
+
+                                                    <div t-if="record.damage_image.raw_value"><field name="damage_image" widget="image"  filename="store_fname" invisible="1" /></div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                 <form string="Attach Image">
+                                    <sheet>
+                                        <field name="store_fname" invisible="1"/>
+                                        <field name="damage_image" widget="image" filename="store_fname" />
+                                    </sheet>
+                                </form>
+
+                            </field>
+                        <group colspan="2" col="2" style="width:100%">
+                            <group>
+                                <field name="text_damage"/>
+                            </group>
+                        </group>
+
+                    </page>
+
+                   <page name="modify_lines" string="Modification" >
+                       <header>
+                        <button name="email_modify_lines" string="Send Email By" type="object" class="btn-danger"/>
+                        </header>
+                    <field name="modify_line_ids" attrs="{'readonly':[('state','=','done')]}">
+                        <tree string="Modify Line" editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="product_id"/>
+                            <field name="name"/>
+                            <field name="product_uom_qty" string="Ordered Qty"/>
+                            <field name="product_uom" groups="uom.group_uom"
+                                   options='{"no_open": True}' />
+                            <field name="price_unit"/>
+                            <field name="price_subtotal" widget="monetary"
+                                   groups="account.group_show_line_subtotals_tax_excluded"/>
+                            <field name="price_total" widget="monetary"
+                                   groups="account.group_show_line_subtotals_tax_included"/>
+                        </tree>
+                    </field>
+
+                   </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!--<template id="assets_backend_string" name="project install assets" inherit_id="web.assets_backend">-->
+            <!--<xpath expr="." position="inside">-->
+                <!--<link rel="stylesheet" href="fsm_custom/static/css/styles.css"/>-->
+            <!--</xpath>-->
+        <!--</template>-->
+
+        <report
+                string="Install Template"
+                id="action_report_custom_install"
+                model="project.task"
+                report_type="qweb-pdf"
+                name="fsm_custom.report_custom_template_install"
+                file="fsm_custom.report_custom_template_install"
+        />
+        <report
+                string="Damage Template"
+                id="action_report_custom_damage"
+                model="project.task"
+                report_type="qweb-pdf"
+                name="fsm_custom.report_custom_template_damage"
+                file="fsm_custom.report_custom_template_damage"
+                attachment_use="True"
+        />
+        <report
+                string="Feedback Template"
+                id="action_report_custom_feedback"
+                model="project.task"
+                report_type="qweb-pdf"
+                name="fsm_custom.report_custom_template_feedback"
+                file="fsm_custom.report_custom_template_feedback"
+                attachment_use="True"
+        />
+        <report
+                string="Modification Template"
+                id="action_report_modification_lines"
+                model="project.task"
+                report_type="qweb-pdf"
+                name="fsm_custom.report_custom_modification"
+                file="fsm_custom.report_custom_modification"
+        />
+
+
+
+
+
+        <!--<record id="image_order_line_01" model="ir.ui.view">-->
+        <!--<field name="name">image.line.form</field>-->
+        <!--<field name="model">image.line</field>-->
+        <!--<field name="arch" type="xml">-->
+        <!--<form string="Images">-->
+        <!--<field name="image_m2o"/>-->
+        <!--<field name="name"/>-->
+        <!--<field name="age"/>-->
+        <!--</form>-->
+        <!--</field>-->
+        <!--</record>-->
+
+
+    <!--<template id="assets_backend" name="autoswitchcolor assets" inherit_id="web.assets_backend">-->
+            <!--<xpath expr="." position="inside">-->
+                <!--<script type="text/javascript" src="/fsm_custom/static/src/js/switch.js"></script>-->
+            <!--</xpath>-->
+    <!--</template>-->
+
+    </data>
+</odoo>
+

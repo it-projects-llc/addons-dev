@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="project_task_form_inherit" model="ir.ui.view">
+            <field name="name">inherited.project.task.form</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="fsm_custom.view_project_task_form_inherit_fsm_field"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='text_damage']"
+                       position="before">
+                    <!--customer signature in damage-->
+                        <separator string="Signature" colspan="2" col="2"/>
+                        <field name="signature_damage_image" widget="image" options='{"size": [200, 80]}'
+                             attrs ="{'invisible':[('signature__damage_added','=',False)]}" readonly="1" />
+                        <field name="signature__damage_added" invisible="1"/>
+
+                </xpath>
+                <!--button for Customer signature in damage-->
+                 <xpath expr="//header/button[@name='send_damage_email']" position="after">
+                     <button type="action" name="%(action_digital_signature)d"
+                            string="Add Customer Signature" class="oe_highlight" context="{'search_default_damage_1':True }"
+                            attrs="{'invisible':[('signature__damage_added','!=',False)]}"
+                            />
+                 </xpath>
+
+                <!--binary field for customer signature installation-->
+                <xpath expr="//group[@name='description_details']"
+                       position="after">
+                    <!--customer signature-->
+                        <separator string="Customer Signature" colspan="2" col="2"/>
+                        <field name="signature_cust_install_image" widget="image" options='{"size": [200, 80]}'
+                             attrs ="{'invisible':[('signature__cust_intall_added','=',False)]}" readonly="1" />
+                        <field name="signature__cust_intall_added" invisible="1"/>
+                    <!--signature -->
+                        <separator string="Signature" colspan="2" col="2"/>
+                        <field name="signature_signature_install_image" widget="image" options='{"size": [200, 80]}'
+                             attrs ="{'invisible':[('signature__signature_intall_added','=',False)]}" readonly="1" />
+                        <field name="signature__signature_intall_added" invisible="1"/>
+
+                        <separator string="Dealer" colspan="2" col="2" invisible="1"/>
+                            <field name="signature_dealer_install_image" widget="image" options='{"size": [200, 80]}'
+                                 attrs ="{'invisible':[('signature__dealer_intall_added','=',False)]}" readonly="1" invisible="1" />
+                            <field name="signature__dealer_intall_added" invisible="1"/>
+
+                </xpath>
+
+                <!--customer signature button installation-->
+                <xpath expr="//header/button[@name='send_install_email']" position="after">
+                    <!--button for customer signature in installation-->
+                     <button type="action" name="%(action_digital_signature)d"
+                            string="Add Customer Signature" class="oe_highlight" context="{'search_default_customer_1':True }"
+                            attrs="{'invisible':[('signature__cust_intall_added','!=',False)]}"
+                            />
+                    <!--button for signature in installation-->
+                    <button type="action" name="%(action_digital_signature)d"
+                            string="Add Signature" class="oe_highlight" context="{'search_default_signature_1':True }"
+                            attrs="{'invisible':[('signature__signature_intall_added','!=',False)]}"
+                            />
+                    <!--button for dealer signature in installation-->
+                    <button type="action" name="%(action_digital_signature)d" invisible = "True"
+                            string="Add Dealer Signature" class="oe_highlight" context="{'search_default_dealer_1':True }"
+                            attrs="{'invisible':[('signature__dealer_intall_added','!=',False)]}"
+                            />
+
+                </xpath>
+
+
+                <xpath expr="//field[@name='give_feedback']"
+                       position="after">
+                    <!--Feedback signature-->
+                        <separator string="Signature" colspan="2" col="2"/>
+                        <field name="feedback_signature_image" widget="image" options='{"size": [200, 80]}'
+                             attrs ="{'invisible':[('feedback_signature_added','=',False)]}" readonly="1" />
+                        <field name="feedback_signature_added" invisible="1"/>
+
+                </xpath>
+                <!--button for Feedback signature -->
+                 <xpath expr="//header/button[@name='send_feedback_email']" position="after">
+                     <button type="action" name="%(action_digital_signature)d"
+                            string="Add Signature" class="oe_highlight" context="{'search_default_feedback_1':True }"
+                            attrs="{'invisible':[('feedback_signature_added','!=',False)]}"
+                            />
+                 </xpath>
+
+                <xpath expr="//header/button[@name='email_modify_lines']" position="after">
+                     <button type="action" name="%(action_digital_signature)d"
+                            string="Add Signature" class="oe_highlight" context="{'search_default_modify_1':True }"
+                            attrs="{'invisible':[('signature_modify_added','!=',False)]}"
+                            />
+                </xpath>
+
+                 <xpath expr="//field[@name='modify_line_ids']" position="after">
+                    <separator string="Signature" colspan="2" col="2"/>
+                      <field name="signature_modify_install_image" widget="image" options='{"size": [200, 80]}'
+                             attrs ="{'invisible':[('signature_modify_added','=',False)]}" readonly="1" />
+                        <field name="signature_modify_added" invisible="1" />
+                </xpath>
+                <xpath expr="//header/button[@name='email_modify_lines']">
+                 <button type="action" name="%(action_digital_signature)d"
+                            string="Add Signature" class="oe_highlight" context="{'search_default_modify_1':True }"
+                        attrs="{'invisible':[('signature_modify_added','!=',False)]}"
+                            />
+                </xpath>
+
+
+
+
+
+
+            </field>
+        </record>
+    </data>
+</odoo>

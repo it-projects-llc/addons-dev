@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="emp_skill_line1" model="emp.skill.line">
+            <field name="project_id" ref="field_service_management.service_ac_repair"/>
+            <field name="rate_card">500</field>
+            <field name="express_service_rate">1500</field>
+            <field name="employee_id" ref="field_service_management.employee_demo"/>
+        </record>
+
+        <record id="emp_skill_line2" model="emp.skill.line">
+            <field name="project_id" ref="field_service_management.service_plumbing"/>
+            <field name="rate_card">1000</field>
+            <field name="express_service_rate">1200</field>
+            <field name="employee_id" ref="field_service_management.employee_demo"/>
+        </record>
+
+        <record id="emp_skill_line3" model="emp.skill.line">
+            <field name="project_id" ref="field_service_management.service_vehicle_repair"/>
+            <field name="rate_card">3000</field>
+            <field name="express_service_rate">3300</field>
+            <field name="employee_id" ref="field_service_management.employee_demo"/>
+        </record>
+
+        <record id="emp_skill_line4" model="emp.skill.line">
+            <field name="project_id" ref="field_service_management.service_electronics_repair"/>
+            <field name="rate_card">2500</field>
+            <field name="express_service_rate">2600</field>
+            <field name="employee_id" ref="field_service_management.employee_demo"/>
+        </record>
+
+        <record id="emp_skill_line5" model="emp.skill.line">
+            <field name="project_id" ref="field_service_management.service_gardening"/>
+            <field name="rate_card">600</field>
+            <field name="express_service_rate">800</field>
+            <field name="employee_id" ref="field_service_management.employee_demo"/>
+        </record>
+    </data>
+</odoo>

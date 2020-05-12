@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Feedback Tree view -->
+        <record id="view_job_feedback_tree" model="ir.ui.view">
+            <field name="name">job.feedback.tree</field>
+            <field name="model">job.feedback</field>
+            <field name="arch" type="xml">
+                <tree string="Job Feedback">
+                    <field name="rating"/>
+                    <field name="feedback"/>
+                    <field name="create_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Feedback Form View -->
+        <record id="view_job_feedback_form" model="ir.ui.view">
+            <field name="name">job.feedback.from</field>
+            <field name="model">job.feedback</field>
+            <field name="arch" type="xml">
+                <form string="Job Feedback">
+                    <sheet>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="user_id"/>
+                            <field name="create_date"/>
+                            <field name="rating" widget='priority'/>
+                            <field name="feedback"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Feedback Search View -->
+        <record model="ir.ui.view" id="view_job_feedback_search">
+            <field name="name">job.feedback.search</field>
+            <field name="model">job.feedback</field>
+            <field name="arch" type="xml">
+                <search string="Ratings">
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="task_id"/>
+                    <field name="rating"/>
+                    <filter string="Happy" name="happy" domain="[('rating', '&gt;=', 5)]"/>
+                    <filter string="Okay" name="okay" domain="[('rating', '&gt;', 1), ('rating', '&lt;', 5)]"/>
+                    <filter string="Unhappy" name="unhappy" domain="[('rating', '=', 1)]"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="Task" name="task" domain="[]" context="{'group_by':'task_id'}"/>
+                        <filter string="Customer" name="customer" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Serviceman" name="serviceman" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Rating" name="rating" domain="[]" context="{'group_by':'rating'}"/>
+                        <filter string="Day" name="day"  domain="[]" context="{'group_by':'create_date:day'}"/>
+                        <filter string="Month" name="month" domain="[]" context="{'group_by':'create_date:month'}"/>
+                        <filter string="Year" name="year" domain="[]" context="{'group_by':'create_date:year'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+    </data>
+</odoo>

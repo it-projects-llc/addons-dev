@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- ======== Res Company Configuration Form Inherited ======== -->
+    <record id="view_res_company_form_inherited" model="ir.ui.view">
+        <field name="name">view.res.company.form.inherited</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form" />
+        <field name="arch" type="xml">
+            <xpath expr="///field[@name='website']" position="after">
+                <field name="automatically_assign_jobs"/>
+                <field name="automatic_fetch_address"/>
+            </xpath>
+
+             <xpath expr="//field[@name='name']" position="after">
+                <div>
+                     <label for="default_password" class="oe_edit_only"/>
+                     <field name= "default_password"/>
+                 </div>
+             </xpath>
+        </field>
+    </record>
+</odoo>

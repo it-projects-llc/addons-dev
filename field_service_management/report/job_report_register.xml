@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <!--Report for Fsm Job -->
+    <report id="report_fsm_job" string="Job report"
+        model="project.task"
+        name="field_service_management.fsm_job_report"
+        file="field_service_management.fsm_job_report"
+        report_type="qweb-pdf"
+        groups='group_operator'/>
+</odoo>

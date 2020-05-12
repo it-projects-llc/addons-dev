@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="fsm_job_report_tem">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <h2 class="text-center">Job Report</h2>
+                    <table class="table table-bordered"
+                        style="text-align:center">
+                        <tr style="font-weight:bold;background-color:
+                                    #00897B">
+                            <td style="border:1px solid black">Name</td>
+                            <td style="border:1px solid black">Service</td>
+                            <td style="border:1px solid black">Assigned to</td>
+                            <td style="border:1px solid black">Customer</td>
+                            <td style="border:1px solid black">Initially Planned Hours</td>
+                            <td style="border:1px solid black">Deadline</td>
+                            <td style="border:1px solid black">Tags</td>
+                            <td style="latitude:1px solid black">Latitude</td>
+                            <td style="longitude:1px solid black">Longitude</td>
+                            <td style="border:1px solid black">Rejected Job</td>
+                            <td style="border:1px solid black">Rejected Reason</td>
+                            <td style="border:1px solid black">Express service rate</td>
+                        </tr>
+                        <tr>
+                            <td style="border:1px solid black">
+                                <span t-esc="o.name"/>
+                            </td>
+                            <td style="border:1px solid black">
+                                <span t-esc="o.project_id.name"/>
+                            </td>
+                            <td style="border:1px solid black">
+                                <span t-esc="o.user_id.name"/>
+                            </td>
+                            <td style="border:1px solid black">
+                                <span t-esc="o.partner_id.name"/>
+                            </td>
+                            <td style="border:1px solid black">
+                                <span t-esc="o.planned_hours"/>
+                            </td>
+                            <td style="border:1px solid black">
+                                <span t-esc="o.date_deadline"/>
+                            </td>
+                            <td style="border:1px solid black">
+                                <t t-foreach="o.tag_ids" t-as="tag">
+                                    <span t-esc="tag.name"/>
+                                </t>
+                            </td>
+                            <td style="border:1px solid black">
+                                <span t-esc="o.latitude"/>
+                            </td>
+                            <td style="border:1px solid black">
+                                <span t-esc="o.longitude"/>
+                            </td>
+                            <td style="border:1px solid black">
+                                <span t-esc="o.jobs_rejected"/>
+                            </td>
+                            <td style="border:1px solid black">
+                                <span t-esc="o.rejected_reason"/>
+                            </td>
+                            <td style="border:1px solid black">
+                                <span t-esc="o.is_express_service"/>
+                            </td>
+                        </tr>
+                    </table>
+                    <h2 class="text-leftside">Products</h2>
+                    <table class="table table-bordered"
+                            style="text-align:center">
+                        <tr style="font-weight:bold;background-color:
+                                    #00897B">
+                            <td>Product</td>
+                            <td>Description</td>
+                            <td>Ordered Qty</td>
+                            <td>Unit Price</td>
+                            <td>Subtotal</td>
+                        </tr>
+                        <tr t-foreach="o.order_line_ids" t-as="t_w">
+                            <td style="border:1px solid black">
+                                <span t-esc="t_w.product_id.name"/>
+                            </td>
+                            <td style="border:1px solid black">
+                                <span t-esc="t_w.name"/>
+                            </td>
+                            <td style="border:1px solid black">
+                                <span t-esc="t_w.product_uom_qty"/>
+                            </td>
+                            <td style="border:1px solid black">
+                                <span t-esc="t_w.price_unit"/>
+                            </td>
+                            <td style="border:1px solid black">
+                                <span t-esc="t_w.price_subtotal"/>
+                            </td>
+                        </tr>
+                    </table>
+                    <h2 class="text-leftside">Timesheet</h2>
+                    <table class="table table-bordered"
+                            style="text-align:center">
+                        <tr style="font-weight:bold;background-color:
+                                    #00897B">
+                            <td>Date</td>
+                            <td>User</td>
+                            <td>Description</td>
+                            <td>Duration</td>
+                        </tr>
+                        <tr t-foreach="o.timesheet_ids" t-as="t_m">
+                            <td style="border:1px solid black">
+                                <span t-esc="t_m.date"/>
+                            </td>
+                            <td style="border:1px solid black">
+                                <span t-esc="t_m.user_id.name"/>
+                            </td>
+                            <td style="border:1px solid black">
+                                    <span t-esc="t_m.name"/>
+                            </td>
+                            <td style="border:1px solid black">
+                                <span t-esc="t_m.unit_amount"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+    </template>
+
+    <template id="fsm_job_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="field_service_management.fsm_job_report_tem" t-lang="o.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+</odoo>

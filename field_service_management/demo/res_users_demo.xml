@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="serviceman_demo" model="res.partner">
+            <field name="name">Serviceman</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="email">serviceman@fsm.example.com</field>
+            <field name="is_serviceman" eval="1"/>
+            <field name="customer" eval="0"/>
+            <field name="company_name">YourCompany</field>
+        </record>
+
+        <record id="service_demo" model="res.users">
+            <field name="partner_id" ref="field_service_management.serviceman_demo"/>
+            <field name="login">serviceman@fsm.example.com</field>
+            <field name="password">demo</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="groups_id" eval="[(6,0,[ref('field_service_management.group_serviceman')])]"/>
+            <field name="image" type="base64" file="field_service_management/static/image/serviceman.png"/>
+        </record>
+
+        <record id="customer_demo" model="res.partner">
+            <field name="name">Customer</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="email">customer@fsm.example.com</field>
+            <field name="customer" eval="1"/>
+            <field name="company_name">YourCompany</field>
+        </record>
+
+        <record id="customer_user_demo" model="res.users">
+            <field name="partner_id" ref="field_service_management.customer_demo"/>
+            <field name="login">customer@fsm.example.com</field>
+            <field name="password">demo</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="groups_id" eval="[(6,0,[ref('field_service_management.group_customer')])]"/>
+            <field name="image" type="base64" file="field_service_management/static/image/customer.png"/>
+        </record>
+
+        <record id="opertor_demo" model="res.partner">
+            <field name="name">Operator</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="email">operator@fsm.example.com</field>
+            <field name="is_operator" eval="1"/>
+            <field name="customer" eval="0"/>
+            <field name="company_name">YourCompany</field>
+        </record>
+
+        <record id="operator_user_demo" model="res.users">
+            <field name="partner_id" ref="field_service_management.opertor_demo"/>
+            <field name="login">operator@fsm.example.com</field>
+            <field name="password">demo</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="groups_id" eval="[(6,0,[ref('field_service_management.group_operator')])]"/>
+            <field name="image" type="base64" file="field_service_management/static/image/operator.png"/>
+        </record>
+
+        <record id="manager_demo" model="res.partner">
+            <field name="name">Manager</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="email">manager@fsm.example.com</field>
+            <field name="is_manager" eval="1"/>
+            <field name="customer" eval="0"/>
+            <field name="company_name">YourCompany</field>
+        </record>
+
+        <record id="manager_user_demo" model="res.users">
+            <field name="partner_id" ref="field_service_management.manager_demo"/>
+            <field name="login">manager@fsm.example.com</field>
+            <field name="password">demo</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="groups_id" eval="[(6,0,[ref('field_service_management.group_fsm_manager')])]"/>
+            <field name="image" type="base64" file="field_service_management/static/image/manager.png"/>
+        </record>
+    </data>
+</odoo>

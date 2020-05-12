@@ -1,0 +1,10 @@
+<template>
+    <t t-extend="KanbanView.buttons">
+        <t t-jquery="button.o-kanban-button-new" t-operation="replace">
+            <button type="button" class="btn btn-primary btn-sm o-kanban-button-new" accesskey="c">
+            <t t-if="widget.model == 'image.damage' || widget.model =='image.line'"><t t-esc="_t('Add Image')"/></t>
+            <t t-else=""><t t-esc="widget.options.create_text || _t('Create')"/></t>
+            </button>
+        </t>
+    </t>
+</template>

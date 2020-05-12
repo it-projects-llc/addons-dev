@@ -1,0 +1,84 @@
+<odoo>
+    <data>
+        <record id="view_sale_order_fsm" model="ir.ui.view">
+            <field name="name">view.sale.order.fsm</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+
+                <div class="oe_button_box"
+                     name="button_box"
+                     position="inside">
+
+                    <button name="action_create_fsm"  type="object"
+                            icon="fa-tasks" class="oe_stat_button">
+                        <field  name="sales_count" widget="statinfo"/>
+                    </button>
+                </div>
+
+                <xpath expr="/form/header" position="inside">
+                    <button name="convert_to_job" type="object"
+                            string="Convert To Job" attrs="{'invisible': [('state', 'in', ['draft','sent'])]}" />
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="project_ref" invisible="1"/>
+                    <field name="date_deadline" invisible="1"/>
+                    <field name="job_name" invisible="1"/>
+                </xpath>
+
+                     <xpath expr="//field[@name='partner_shipping_id']" position="attributes">
+                    <attribute name='string'>Service Address</attribute>
+                </xpath>
+
+            </field>
+        </record>
+         <!--<record id="view_quotation_stock_01" model="ir.ui.view">-->
+            <!--<field name="name">view.quotation.stock.1</field>-->
+            <!--<field name="model">sale.order</field>-->
+            <!--<field name="inherit_id" ref="website_quote.sale_order_form_quote"/>-->
+            <!--<field name="arch" type="xml">-->
+                  <!--<xpath expr="//field[@name='template_id']" position="attributes">-->
+                    <!--<attribute name='string'>Estimates</attribute>-->
+                <!--</xpath>-->
+            <!--</field>-->
+         <!--</record>-->
+
+        <!--<record id="view_sale_order_fsm_26" model="ir.ui.view">-->
+        <!--<field name="name">view.sale.order.fsm.01</field>-->
+        <!--<field name="model">sale.order</field>-->
+        <!--<field name="type">tree</field>-->
+        <!--<field name="inherit_id" ref=" sale.view_quotation_tree"/>-->
+        <!--<field name="arch" type="xml">-->
+        <!--<xpath expr="//tree[@name=’Quotation’]" position="attributes">-->
+        <!--<attribute name="string">Estimates</attribute>-->
+        <!--</xpath>-->
+
+        <!--</field>-->
+        <!--</record>-->
+
+        <!--<record id="sale.view_quotation_tree" model="ir.ui.view" >-->
+        <!--<field name="name">sale.order.tree.inherit</field>-->
+        <!--<field name="model">sale.order</field>-->
+        <!--<field name="type">tree</field>-->
+        <!--<field name="inherit_id" ref="sale.view_quotation_tree"/>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<xpath expr="//tree[@name='Quotation']" position="attributes">-->
+                <!--<attribute name="string">Estimates</attribute>-->
+            <!--</xpath>-->
+        <!--</field>-->
+        <!--</record>-->
+
+        <record id="sale.action_quotations" model="ir.actions.act_window">
+            <field name="name">Estimates</field>
+        </record>
+
+         <menuitem id="sale.menu_sale_quotations" name="Estimates"
+                action="sale.action_quotations" parent="sale.sale_order_menu"
+                sequence="11"/>
+
+        <menuitem name="Estimates" id="sales_team.menu_base_partner" web_icon="sale,static/description/icon.png"/>
+        <menuitem name="Accounting" id="account.menu_finance" groups="account.group_account_user,account.group_account_manager,account.group_account_invoice" web_icon="account,static/description/icon.png" sequence="40"/>
+        <menuitem id="hr.menu_hr_root" name="Field Teams" groups="hr.group_hr_manager,hr.group_hr_user,base.group_user" web_icon="hr,static/description/icon.png" sequence="75"/>
+
+    </data>
+</odoo>

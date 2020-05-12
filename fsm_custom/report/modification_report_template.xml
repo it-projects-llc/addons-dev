@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_custom_modification_lines">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <div class="oe_structure"/>
+                 <div class="row">
+                    <h2 colspan="4" col="4" style="color:#2E86C1">
+                        <span t-field="doc.job_sequence"/>
+                    </h2>
+                    <h2 colspan="4" col="4" style="color:#2E86C1">
+                        <span t-field="doc.name"/>
+                    </h2>
+                </div>
+                <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+
+
+
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Description</th>
+                            <th>Product Quantity</th>
+                            <th>Price Unit</th>
+                            <th>Measure</th>
+                        </tr>
+                    </thead>
+                        <tbody>
+                            <tr t-foreach="doc.modify_line_ids" t-as="res">
+                                <td><span t-esc="res.product_id.name"/></td>
+                                <td class="text-center"><span t-field="res.name"/></td>
+                                <td class="text-center"><span t-field="res.product_uom_qty"/></td>
+                                <td class="text-center"><span t-field="res.price_unit"/></td>
+                                <td class="text-center"><span t-field="res.product_uom"/></td>
+                            </tr>
+                        </tbody>
+                        <tr>
+                                <td>Signature :<t t-if="doc.signature_modify_install_image">
+                                    <div>
+                                        <img t-att-src="image_data_uri(doc.signature_modify_install_image)" width="200" height="150"/>
+                                    </div>
+                                </t>
+                                </td>
+
+                            </tr>
+                    </table>
+
+
+                </div>
+                <div class="oe_structure"/>
+            </div>
+        </t>
+
+    </template>
+    <template id="report_custom_modification">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="fsm_custom.report_custom_modification_lines" t-lang="doc.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+</odoo>
